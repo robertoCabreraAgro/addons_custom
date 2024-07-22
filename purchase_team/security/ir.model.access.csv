@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_srm_team_base,srm.team.base,model_srm_team,base.group_user,1,0,0,0
+access_srm_team_manager,srm.team.manager,model_srm_team,purchase.group_purchase_manager,1,1,1,1
+access_srm_team_member_base,access.srm.team.member.base,model_srm_team_member,base.group_user,1,0,0,0
+access_srm_team_member_manager,access.srm.team.member.manager,model_srm_team_member,purchase.group_purchase_manager,1,1,1,1
+access_srm_tag_base,srm.tag.base,model_srm_tag,base.group_user,1,0,0,0
+access_srm_tag_manager,srm.tag.manager,model_srm_tag,purchase.group_purchase_manager,1,1,1,1

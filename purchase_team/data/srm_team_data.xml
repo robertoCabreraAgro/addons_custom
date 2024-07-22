@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+    <record id="team_purchases_department" model="srm.team">
+        <field name="name">Purchases</field>
+        <field name="company_id" eval="False" />
+        <field name="sequence">0</field>
+    </record>
+
+    <record id="srm_team_member_admin_purchases" model="srm.team.member" forcecreate="0">
+        <field name="srm_team_id" ref="team_purchases_department" />
+        <field name="user_id" ref="base.user_admin" />
+    </record>
+
+    <function
+        model="srm.team"
+        name="message_unsubscribe"
+        eval="
+            [
+                ref('purchase_team.team_purchases_department'),
+                ],
+                [ref('base.partner_root')
+            ]
+        "
+    />
+</odoo>

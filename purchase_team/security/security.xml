@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="group_purchase_team_user" model="res.groups">
+        <field name="name">Purchase: own documents</field>
+        <field name="category_id" ref="base.module_category_inventory_purchase" />
+        <field name="implied_ids" eval="[(4, ref('purchase.group_purchase_user'))]" />
+        <field name="comment">the user will have access to his own data in the purchase application.</field>
+    </record>
+
+    <record id="group_purchase_team_team" model="res.groups">
+        <field name="name">Purchase: team documents</field>
+        <field name="category_id" ref="base.module_category_inventory_purchase" />
+        <field name="implied_ids" eval="[(4, ref('purchase_team.group_purchase_team_user'))]" />
+        <field name="comment">the user will have access to his team data in the purchase application.</field>
+    </record>
+
+    <record id="purchase.group_purchase_manager" model="res.groups">
+        <field
+            name="implied_ids"
+            eval="[
+                (3, ref('purchase.group_purchase_user')),
+                (4, ref('group_purchase_team_user')),
+                (4, ref('group_purchase_team_team'))
+            ]"
+        />
+    </record>
+
+    <data noupdate="1">
+        <record id="rule_srm_team_multicompany" model="ir.rule">
+            <field name="name">Purchases teams multicompany</field>
+            <field name="model_id" ref="purchase_team.model_srm_team" />
+            <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+        </record>
+
+        <record id="rule_purchase_order_group_purchase_manager" model="ir.rule">
+            <field name="name">Purchase orders all</field>
+            <field name="model_id" ref="purchase.model_purchase_order" />
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('purchase.group_purchase_manager'))]" />
+        </record>
+
+        <record id="rule_purchase_order_group_purchase_team_team" model="ir.rule">
+            <field name="name">Purchase orders team</field>
+            <field name="model_id" ref="purchase.model_purchase_order" />
+            <field name="domain_force">[('team_id.member_ids', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_purchase_team_team'))]" />
+        </record>
+
+        <record id="rule_purchase_order_group_purchase_team_user" model="ir.rule">
+            <field name="name">Purchase orders own</field>
+            <field name="model_id" ref="purchase.model_purchase_order" />
+            <field
+                name="domain_force"
+            >['|', ('user_id', '=', user.id), '&amp;', ('user_id', '=', False), ('team_id', '=', False)]</field>
+            <field name="groups" eval="[(4, ref('group_purchase_team_user'))]" />
+        </record>
+
+        <record id="rule_purchase_order_line_group_purchase_manager" model="ir.rule">
+            <field name="name">Purchase order lines all</field>
+            <field name="model_id" ref="purchase.model_purchase_order_line" />
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('purchase.group_purchase_manager'))]" />
+        </record>
+
+        <record id="rule_purchase_order_line_group_purchase_team_team" model="ir.rule">
+            <field name="name">Purchase order lines team</field>
+            <field name="model_id" ref="purchase.model_purchase_order_line" />
+            <field name="domain_force">[('order_id.team_id.member_ids', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_purchase_team_team'))]" />
+        </record>
+
+        <record id="rule_purchase_order_line_group_purchase_team_user" model="ir.rule">
+            <field name="name">Purchase order lines own</field>
+            <field name="model_id" ref="purchase.model_purchase_order_line" />
+            <field
+                name="domain_force"
+            >['|', ('order_id.user_id', '=', user.id), '&amp;', ('order_id.user_id', '=', False), ('order_id.team_id', '=', False)]</field>
+            <field name="groups" eval="[(4, ref('group_purchase_team_user'))]" />
+        </record>
+    </data>
+</odoo>
