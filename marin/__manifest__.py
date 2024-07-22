@@ -160,9 +160,9 @@
         "web.assets_backend": [
             "marin/static/src/widgets/**/*",
         ],
-        "point_of_sale._assets_pos": [
-            "marin/static/src/pos/app/**/*",
-        ],
+        # "point_of_sale._assets_pos": [
+        #     "marin/static/src/pos/app/**/*",
+        # ],
     },
     "installable": True,
     "application": True,
