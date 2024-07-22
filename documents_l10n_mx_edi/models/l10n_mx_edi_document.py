@@ -441,7 +441,7 @@ class L10nMxEdiDocument(models.Model):
             price = round(tax.get("amount") / (tax.get("rate") / 100), 2)
             partner = self.search_partner_ecc12(rec)
             vehicle = self.search_vehicle_ecc12(rec)
-            invoice_lines.append(
+            invoice_lines.extend(
                 Command.create(
                     {
                         "name": _(
@@ -463,7 +463,7 @@ class L10nMxEdiDocument(models.Model):
                     },
                 )
             )
-            invoice_lines.append(
+            invoice_lines.extend(
                 Command.create(
                     {
                         "name": _("Fuel - IEPS"),
@@ -536,7 +536,7 @@ class L10nMxEdiDocument(models.Model):
                 }
             )
 
-        invoice_lines.append(
+        invoice_lines.extend(
             Command.create(
                 {
                     "product_id": product_exist.id or False,
@@ -555,7 +555,7 @@ class L10nMxEdiDocument(models.Model):
         if line_product_sat_code in self.l10n_mx_edi_get_fuel_codes():
             tax = self.collect_taxes(line.Impuestos.Traslados.Traslado)
             fuel_line_price = tax[0].get("amount") / (tax[0].get("rate") / 100)
-            invoice_lines.append(
+            invoice_lines.extend(
             Command.create(
                     {
                         "name": _("Fuel - IEPS"),
@@ -609,14 +609,14 @@ class L10nMxEdiDocument(models.Model):
             for line in cfdi_etree.Conceptos.Concepto:
                 line_vals = self.prepare_invoice_lines(line, global_line_discount)
                 # Update here account
-                invoice_lines.append(line_vals)
+                invoice_lines.extend(line_vals)
 
             local_taxes = self.prepare_taxes_local(cfdi_etree)
             if local_taxes:
                 taxes_to_omit = self.get_taxes_to_omit()
                 for _tax in local_taxes:
                     if _tax["name"] in taxes_to_omit:
-                        invoice_lines.append(
+                        invoice_lines.extend(
                             Command.create(
                                 {
                                     "name": _tax["name"],
