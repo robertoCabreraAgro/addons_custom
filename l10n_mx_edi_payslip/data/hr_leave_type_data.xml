@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+
+    <record id="mexican_holiday" model="hr.leave.type">
+        <field name="name" eval="'Vacaciones'" />
+        <field name="requires_allocation">yes</field>
+        <field name="work_entry_type_id" ref="hr_work_entry_contract.work_entry_type_legal_leave" />
+        <field name="responsible_ids" eval="[Command.link(ref('base.user_admin'))]" />
+        <field name="company_id" eval="False" />
+    </record>
+
+    <record id="mexican_maternity" model="hr.leave.type">
+        <field name="name" eval="'Maternidad'" />
+        <field name="requires_allocation">no</field>
+        <field name="work_entry_type_id" ref="l10n_mx_edi_payslip.work_entry_type_sick_leave_maternity" />
+        <field name="l10n_mx_edi_payslip_use_calendar_days">True</field>
+        <field name="responsible_ids" eval="[Command.link(ref('base.user_admin'))]" />
+        <field name="company_id" eval="False" />
+    </record>
+
+    <record id="mexican_riesgo_de_trabajo" model="hr.leave.type">
+        <field name="name" eval="'Incapacidad por riesgo de trabajo'" />
+        <field name="requires_allocation">no</field>
+        <field name="work_entry_type_id" ref="l10n_mx_edi_payslip.work_entry_type_sick_leave_riesgo_de_trabajo" />
+        <field name="l10n_mx_edi_payslip_use_calendar_days">True</field>
+        <field name="responsible_ids" eval="[Command.link(ref('base.user_admin'))]" />
+        <field name="company_id" eval="False" />
+    </record>
+
+    <record id="mexican_enfermedad_general" model="hr.leave.type">
+        <field name="name" eval="'Incapacidad por enfermedad general'" />
+        <field name="requires_allocation">no</field>
+        <field name="work_entry_type_id" ref="hr_work_entry_contract.work_entry_type_sick_leave" />
+        <field name="l10n_mx_edi_payslip_use_calendar_days">True</field>
+        <field name="responsible_ids" eval="[Command.link(ref('base.user_admin'))]" />
+        <field name="company_id" eval="False" />
+    </record>
+
+    <record id="mexican_licencia_padres_hijo_cancer" model="hr.leave.type">
+        <field name="name" eval="'Licencia para Padres con Hijos con Cancer'" />
+        <field name="requires_allocation">no</field>
+        <field name="work_entry_type_id" ref="l10n_mx_edi_payslip.work_entry_type_sick_leave_padres_hijo_cancer" />
+        <field name="l10n_mx_edi_payslip_use_calendar_days">True</field>
+        <field name="responsible_ids" eval="[Command.link(ref('base.user_admin'))]" />
+        <field name="company_id" eval="False" />
+    </record>
+
+    <record id="mexican_paternity" model="hr.leave.type">
+        <field name="name" eval="'Permiso por paternidad'" />
+        <field name="requires_allocation">no</field>
+        <field name="work_entry_type_id" ref="work_entry_type_sick_leave_paternity" />
+        <field name="responsible_ids" eval="[Command.link(ref('base.user_admin'))]" />
+        <field name="company_id" eval="False" />
+    </record>
+
+    <record id="mexican_faltas_injustificadas" model="hr.leave.type">
+        <field name="name" eval="'Falta injustificada'" />
+        <field name="requires_allocation">no</field>
+        <field name="work_entry_type_id" ref="hr_work_entry_contract.work_entry_type_unpaid_leave" />
+        <field name="l10n_mx_edi_payslip_use_calendar_days">True</field>
+        <field name="responsible_ids" eval="[Command.link(ref('base.user_admin'))]" />
+        <field name="company_id" eval="False" />
+    </record>
+
+    <record id="mexican_falta_justificada" model="hr.leave.type">
+        <field name="name" eval="'Falta justificada sin goce de salario'" />
+        <field name="requires_allocation">no</field>
+        <field name="work_entry_type_id" ref="l10n_mx_edi_payslip.work_entry_type_mexican_faltas_injustificadas" />
+        <field name="responsible_ids" eval="[Command.link(ref('base.user_admin'))]" />
+        <field name="company_id" eval="False" />
+    </record>
+
+    <record id="mexican_permiso_con_goce" model="hr.leave.type">
+        <field name="name" eval="'Permiso con goce de sueldo'" />
+        <field name="requires_allocation">no</field>
+        <field name="work_entry_type_id" ref="hr_work_entry_contract.work_entry_type_leave" />
+        <field name="responsible_ids" eval="[Command.link(ref('base.user_admin'))]" />
+        <field name="company_id" eval="False" />
+    </record>
+
+    <record id="mexican_licencia_sin_goce" model="hr.leave.type">
+        <field name="name" eval="'Licencia sin goce de salario'" />
+        <field name="requires_allocation">no</field>
+        <field name="work_entry_type_id" ref="l10n_mx_edi_payslip.work_entry_type_mexican_licencia_sin_goce" />
+        <field name="responsible_ids" eval="[Command.link(ref('base.user_admin'))]" />
+        <field name="company_id" eval="False" />
+    </record>
+
+    <record id="mexican_licencia_licencia_adopcion" model="hr.leave.type">
+        <field name="name" eval="'Licencia de Adopción'" />
+        <field name="requires_allocation">no</field>
+        <field name="work_entry_type_id" ref="l10n_mx_edi_payslip.work_entry_type_sick_licencia_adopcion" />
+        <field name="l10n_mx_edi_payslip_use_calendar_days">True</field>
+        <field name="responsible_ids" eval="[Command.link(ref('base.user_admin'))]" />
+        <field name="company_id" eval="False" />
+    </record>
+
+    <record id="mexican_public_holiday" model="hr.leave.type">
+        <field name="name" eval="'Feriado'" />
+        <field name="requires_allocation">no</field>
+        <field name="work_entry_type_id" ref="l10n_mx_edi_payslip.work_entry_type_public_holiday_l10n_mx_payroll" />
+        <field name="responsible_ids" eval="[Command.link(ref('base.user_admin'))]" />
+        <field name="company_id" eval="False" />
+    </record>
+
+    <!-- Missing work entry on Odoo data -->
+    <record id="hr_holidays.holiday_status_comp" model="hr.leave.type">
+        <field name="work_entry_type_id" ref="hr_work_entry_contract.work_entry_type_compensatory" />
+    </record>
+
+    <record id="hr_holidays.holiday_status_unpaid" model="hr.leave.type">
+        <field name="work_entry_type_id" ref="hr_work_entry_contract.work_entry_type_unpaid_leave" />
+    </record>
+
+    <record id="hr_holidays.holiday_status_sl" model="hr.leave.type">
+        <field name="work_entry_type_id" ref="hr_work_entry_contract.work_entry_type_sick_leave" />
+    </record>
+
+    <record id="hr_holidays.holiday_status_cl" model="hr.leave.type">
+        <field name="work_entry_type_id" ref="hr_work_entry_contract.work_entry_type_legal_leave" />
+    </record>
+
+</odoo>

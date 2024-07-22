@@ -1,0 +1,34 @@
+<?xml version="1.0" ?>
+<odoo noupdate="1">
+
+    <record id="hr.departure_fired" model="hr.departure.reason">
+        <field name="l10n_mx_code">1</field>
+        <field name="name">Contract End</field>
+    </record>
+
+    <record id="hr.departure_resigned" model="hr.departure.reason">
+        <field name="l10n_mx_code">2</field>
+        <field name="name">Voluntary separation</field>
+    </record>
+
+    <record id="hr.departure_retired" model="hr.departure.reason">
+        <field name="l10n_mx_code">6</field>
+        <field name="name">Other</field>
+    </record>
+
+    <record id="departure_job_abandonment" model="hr.departure.reason">
+        <field name="l10n_mx_code">3</field>
+        <field name="name">Job Abandonment</field>
+    </record>
+
+    <record id="departure_death" model="hr.departure.reason">
+        <field name="l10n_mx_code">4</field>
+        <field name="name">Death</field>
+    </record>
+
+    <record id="departure_closure" model="hr.departure.reason">
+        <field name="l10n_mx_code">5</field>
+        <field name="name">Closure</field>
+    </record>
+
+</odoo>

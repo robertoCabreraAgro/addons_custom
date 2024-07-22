@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<odoo noupdate="1">
+
+    <record id="hr_payslip_mlc_cfdi0_worked_days_line" model="hr.payslip.worked_days">
+        <field name="name">Normal Working Days paid at 100%</field>
+        <field name="code">WORK100</field>
+        <field name="number_of_days" eval="15" />
+        <field name="number_of_hours" eval="40" />
+        <field name="contract_id" ref="hr_contract_maria" />
+        <field name="payslip_id" ref="hr_payslip_mlc_cfdi0" />
+        <field name="work_entry_type_id" ref="hr_work_entry.work_entry_type_attendance" />
+    </record>
+
+</odoo>

@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="idse_report" model="account.report">
+        <field name="name">IDSE (Reingreso)</field>
+        <field name="filter_show_draft" eval="False" />
+        <field name="filter_period_comparison" eval="False" />
+        <field name="custom_handler_model_id" ref="model_hr_idse_report_handler" />
+        <field name="load_more_limit" eval="80" />
+        <field name="filter_unfold_all" eval="False" />
+        <field name="default_opening_date_filter">this_month</field>
+        <field name="filter_date_range" eval="True" />
+        <field name="filter_partner" eval="True" />
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="idse_employer_register" model="account.report.column">
+                <field name="name">Employer Register</field>
+                <field name="expression_label">employer_register</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="idse_nss" model="account.report.column">
+                <field name="name">NSS</field>
+                <field name="expression_label">nss</field>
+            </record>
+            <record id="idse_sbc" model="account.report.column">
+                <field name="name">SBC</field>
+                <field name="expression_label">sbc</field>
+            </record>
+            <record id="idse_worker_type" model="account.report.column">
+                <field name="name">Worker Type</field>
+                <field name="expression_label">worker_type</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="idse_wage_type" model="account.report.column">
+                <field name="name">Wage type</field>
+                <field name="expression_label">wage_type</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="idse_working_type" model="account.report.column">
+                <field name="name">Working Type</field>
+                <field name="expression_label">working_type</field>
+            </record>
+            <record id="idse_date" model="account.report.column">
+                <field name="name">Date</field>
+                <field name="expression_label">date</field>
+            </record>
+            <record id="idse_family_medicine_unit" model="account.report.column">
+                <field name="name">Family Medicine Unit</field>
+                <field name="expression_label">family_medicine_unit</field>
+            </record>
+            <record id="idse_guide" model="account.report.column">
+                <field name="name">Guide</field>
+                <field name="expression_label">guide</field>
+            </record>
+            <record id="idse_employee_code" model="account.report.column">
+                <field name="name">Employee Code</field>
+                <field name="expression_label">employee_code</field>
+            </record>
+            <record id="idse_curp" model="account.report.column">
+                <field name="name">CURP</field>
+                <field name="expression_label">curp</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="idse_report_line" model="account.report.line">
+                <field name="name">IDSE</field>
+                <field name="expression_ids">
+                    <record id="idse_report_line_counter" model="account.report.expression">
+                        <field name="label">counter</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_idse_report</field>
+                        <field name="subformula">counter</field>
+                    </record>
+                    <record id="idse_report_line_employer_register" model="account.report.expression">
+                        <field name="label">employer_register</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_idse_report</field>
+                        <field name="subformula">employer_register</field>
+                    </record>
+                    <record id="idse_report_line_nss" model="account.report.expression">
+                        <field name="label">nss</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_idse_report</field>
+                        <field name="subformula">nss</field>
+                    </record>
+                    <record id="idse_report_line_sbc" model="account.report.expression">
+                        <field name="label">sbc</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_idse_report</field>
+                        <field name="subformula">sbc</field>
+                    </record>
+                    <record id="idse_report_line_worker_type" model="account.report.expression">
+                        <field name="label">worker_type</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_idse_report</field>
+                        <field name="subformula">worker_type</field>
+                    </record>
+                    <record id="idse_report_line_wage_type" model="account.report.expression">
+                        <field name="label">wage_type</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_idse_report</field>
+                        <field name="subformula">wage_type</field>
+                    </record>
+                    <record id="idse_report_line_working_type" model="account.report.expression">
+                        <field name="label">working_type</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_idse_report</field>
+                        <field name="subformula">working_type</field>
+                    </record>
+                    <record id="idse_report_line_date" model="account.report.expression">
+                        <field name="label">date</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_idse_report</field>
+                        <field name="subformula">date</field>
+                    </record>
+                    <record id="idse_report_line_family_medicine_unit" model="account.report.expression">
+                        <field name="label">family_medicine_unit</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_idse_report</field>
+                        <field name="subformula">family_medicine_unit</field>
+                    </record>
+                    <record id="idse_report_line_guide" model="account.report.expression">
+                        <field name="label">guide</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_idse_report</field>
+                        <field name="subformula">guide</field>
+                    </record>
+                    <record id="idse_report_line_employee_code" model="account.report.expression">
+                        <field name="label">employee_code</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_idse_report</field>
+                        <field name="subformula">employee_code</field>
+                    </record>
+                    <record id="idse_report_line_curp" model="account.report.expression">
+                        <field name="label">curp</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_idse_report</field>
+                        <field name="subformula">curp</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+
+    <record id="idse_baja_report" model="account.report">
+        <field name="name">IDSE (Baja)</field>
+        <field name="filter_show_draft" eval="False" />
+        <field name="filter_period_comparison" eval="False" />
+        <field name="custom_handler_model_id" ref="model_hr_idse_baja_report_handler" />
+        <field name="load_more_limit" eval="80" />
+        <field name="filter_unfold_all" eval="False" />
+        <field name="default_opening_date_filter">this_month</field>
+        <field name="filter_date_range" eval="True" />
+        <field name="filter_partner" eval="True" />
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="idse_baja_employer_register" model="account.report.column">
+                <field name="name">Employer Register</field>
+                <field name="expression_label">employer_register</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="idse_baja_nss" model="account.report.column">
+                <field name="name">NSS</field>
+                <field name="expression_label">nss</field>
+            </record>
+            <record id="idse_baja_date" model="account.report.column">
+                <field name="name">Date</field>
+                <field name="expression_label">date</field>
+            </record>
+            <record id="idse_baja_guide" model="account.report.column">
+                <field name="name">Guide</field>
+                <field name="expression_label">guide</field>
+            </record>
+            <record id="idse_baja_employee_code" model="account.report.column">
+                <field name="name">Employee Code</field>
+                <field name="expression_label">employee_code</field>
+            </record>
+            <record id="idse_baja_reason" model="account.report.column">
+                <field name="name">Reason</field>
+                <field name="expression_label">reason</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="idse_baja_report_line" model="account.report.line">
+                <field name="name">IDSE (Baja)</field>
+                <field name="expression_ids">
+                    <record id="idse_baja_report_line_counter" model="account.report.expression">
+                        <field name="label">counter</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_idse_report</field>
+                        <field name="subformula">counter</field>
+                    </record>
+                    <record id="idse_baja_report_line_employer_register" model="account.report.expression">
+                        <field name="label">employer_register</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_idse_report</field>
+                        <field name="subformula">employer_register</field>
+                    </record>
+                    <record id="idse_baja_report_line_nss" model="account.report.expression">
+                        <field name="label">nss</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_idse_report</field>
+                        <field name="subformula">nss</field>
+                    </record>
+                    <record id="idse_baja_report_line_date" model="account.report.expression">
+                        <field name="label">date</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_idse_report</field>
+                        <field name="subformula">date</field>
+                    </record>
+                    <record id="idse_baja_report_line_guide" model="account.report.expression">
+                        <field name="label">guide</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_idse_report</field>
+                        <field name="subformula">guide</field>
+                    </record>
+                    <record id="idse_baja_report_line_employee_code" model="account.report.expression">
+                        <field name="label">employee_code</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_idse_report</field>
+                        <field name="subformula">employee_code</field>
+                    </record>
+                    <record id="idse_baja_report_line_reason" model="account.report.expression">
+                        <field name="label">reason</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_idse_report</field>
+                        <field name="subformula">reason</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+
+    <record id="idse_wage_report" model="account.report">
+        <field name="name">IDSE (Wage Update)</field>
+        <field name="filter_show_draft" eval="False" />
+        <field name="filter_period_comparison" eval="False" />
+        <field name="custom_handler_model_id" ref="model_hr_idse_wage_report_handler" />
+        <field name="load_more_limit" eval="80" />
+        <field name="filter_unfold_all" eval="False" />
+        <field name="default_opening_date_filter">this_month</field>
+        <field name="filter_date_range" eval="True" />
+        <field name="filter_partner" eval="True" />
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="idse_wage_employer_register" model="account.report.column">
+                <field name="name">Employer Register</field>
+                <field name="expression_label">employer_register</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="idse_wage_nss" model="account.report.column">
+                <field name="name">NSS</field>
+                <field name="expression_label">nss</field>
+            </record>
+            <record id="idse_wage_sbc" model="account.report.column">
+                <field name="name">SBC</field>
+                <field name="expression_label">sbc</field>
+            </record>
+            <record id="idse_wage_worker_type" model="account.report.column">
+                <field name="name">Worker Type</field>
+                <field name="expression_label">worker_type</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="idse_wage_wage_type" model="account.report.column">
+                <field name="name">Wage type</field>
+                <field name="expression_label">wage_type</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="idse_wage_working_type" model="account.report.column">
+                <field name="name">Working Type</field>
+                <field name="expression_label">working_type</field>
+            </record>
+            <record id="idse_wage_date" model="account.report.column">
+                <field name="name">Date</field>
+                <field name="expression_label">date</field>
+            </record>
+            <record id="idse_wage_family_medicine_unit" model="account.report.column">
+                <field name="name">Family Medicine Unit</field>
+                <field name="expression_label">family_medicine_unit</field>
+            </record>
+            <record id="idse_wage_guide" model="account.report.column">
+                <field name="name">Guide</field>
+                <field name="expression_label">guide</field>
+            </record>
+            <record id="idse_wage_employee_code" model="account.report.column">
+                <field name="name">Employee Code</field>
+                <field name="expression_label">employee_code</field>
+            </record>
+            <record id="idse_wage_curp" model="account.report.column">
+                <field name="name">CURP</field>
+                <field name="expression_label">curp</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="idse_wage_report_line" model="account.report.line">
+                <field name="name">IDSE Wage Update</field>
+                <field name="expression_ids">
+                    <record id="idse_wage_report_line_counter" model="account.report.expression">
+                        <field name="label">counter</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_idse_report</field>
+                        <field name="subformula">counter</field>
+                    </record>
+                    <record id="idse_wage_report_line_employer_register" model="account.report.expression">
+                        <field name="label">employer_register</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_idse_report</field>
+                        <field name="subformula">employer_register</field>
+                    </record>
+                    <record id="idse_wage_report_line_nss" model="account.report.expression">
+                        <field name="label">nss</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_idse_report</field>
+                        <field name="subformula">nss</field>
+                    </record>
+                    <record id="idse_wage_report_line_sbc" model="account.report.expression">
+                        <field name="label">sbc</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_idse_report</field>
+                        <field name="subformula">sbc</field>
+                    </record>
+                    <record id="idse_wage_report_line_worker_type" model="account.report.expression">
+                        <field name="label">worker_type</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_idse_report</field>
+                        <field name="subformula">worker_type</field>
+                    </record>
+                    <record id="idse_wage_report_line_wage_type" model="account.report.expression">
+                        <field name="label">wage_type</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_idse_report</field>
+                        <field name="subformula">wage_type</field>
+                    </record>
+                    <record id="idse_wage_report_line_working_type" model="account.report.expression">
+                        <field name="label">working_type</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_idse_report</field>
+                        <field name="subformula">working_type</field>
+                    </record>
+                    <record id="idse_wage_report_line_date" model="account.report.expression">
+                        <field name="label">date</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_idse_report</field>
+                        <field name="subformula">date</field>
+                    </record>
+                    <record id="idse_wage_report_line_family_medicine_unit" model="account.report.expression">
+                        <field name="label">family_medicine_unit</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_idse_report</field>
+                        <field name="subformula">family_medicine_unit</field>
+                    </record>
+                    <record id="idse_wage_report_line_guide" model="account.report.expression">
+                        <field name="label">guide</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_idse_report</field>
+                        <field name="subformula">guide</field>
+                    </record>
+                    <record id="idse_wage_report_line_employee_code" model="account.report.expression">
+                        <field name="label">employee_code</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_idse_report</field>
+                        <field name="subformula">employee_code</field>
+                    </record>
+                    <record id="idse_wage_report_line_curp" model="account.report.expression">
+                        <field name="label">curp</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_idse_report</field>
+                        <field name="subformula">curp</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+
+</odoo>

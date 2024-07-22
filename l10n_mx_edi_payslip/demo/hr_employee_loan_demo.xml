@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+<odoo noupdate="1">
+
+    <record id="infonavit_qdp" model="hr.employee.loan">
+        <field name="name">Credit 1234</field>
+        <field name="amount">18</field>
+        <field name="payment_term">-1</field>
+        <field name="infonavit_type">percentage</field>
+        <field name="employee_id" ref="mx_employee_qdp" />
+        <field name="input_type_id" ref="l10n_mx_edi_payslip.hr_payslip_input_type_deduction_009" />
+        <field eval="time.strftime('%Y-%m')+'-01'" name="date_from" />
+    </record>
+
+    <function model="hr.employee.loan" name="action_confirm">
+        <value eval="[ref('l10n_mx_edi_payslip.infonavit_qdp')]" />
+    </function>
+
+</odoo>

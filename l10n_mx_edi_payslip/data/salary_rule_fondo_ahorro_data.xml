@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="hr_rule_l10n_mx_payroll_other_payment_002_fa" model="hr.salary.rule">
+        <field name="name">Subsidio para el empleo - efectivamente entregado al trabajador</field>
+        <field name="code">002</field>
+        <field name="l10n_mx_edi_code">002</field>
+        <field name="sequence">300</field>
+        <field name="category_id" ref="hr_salary_rule_category_other_mx" />
+        <field name="struct_id" ref="payroll_structure_data_09" />
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = employee.l10n_mx_edi_contract_regime_type == '02'</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = 0.0
+        </field>
+    </record>
+
+    <record id="hr_rule_l10n_mx_payroll_perception_005_fa" model="hr.salary.rule">
+        <field name="name">Fondo de Ahorro Empresa</field>
+        <field name="sequence">310</field>
+        <field name="code">OP999</field>
+        <field name="l10n_mx_edi_code">999</field>
+        <field name="category_id" ref="hr_salary_rule_category_other_mx" />
+        <field name="struct_id" ref="payroll_structure_data_09" />
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['pe_005'].amount if 'pe_005' in inputs else 0.0
+        </field>
+    </record>
+
+    <record id="hr_rule_net_salary_0_fa" model="hr.salary.rule">
+        <field name="name">Net Salary</field>
+        <field name="sequence" eval="1000000" />
+        <field name="code">NET</field>
+        <field name="category_id" ref="hr_payroll.NET" />
+        <field name="struct_id" ref="payroll_structure_data_09" />
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field
+            name="amount_python_compute"
+        >result = categories['PERGRA'] - categories['DED'] + categories['PEREXE'] + categories['OTHER']</field>
+    </record>
+
+</odoo>

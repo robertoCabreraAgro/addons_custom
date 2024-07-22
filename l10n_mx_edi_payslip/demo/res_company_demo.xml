@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+<odoo noupdate="1">
+
+    <record id="l10n_mx.demo_company_mx" model="res.company">
+        <field name="name">ESCUELA KEMPER URGATE</field>
+        <field name="company_registry" eval="1203256" />
+        <field name="l10n_mx_edi_minimum_wage" eval="248.93" />
+        <field name="l10n_mx_edi_uma" eval="108.57" />
+        <field name="country_id" ref="base.mx" />
+        <field name="l10n_mx_edi_company_feeding">True</field>
+    </record>
+
+    <function model="res.company" name="_init_data_resource_calendar" eval="[]" />
+
+</odoo>

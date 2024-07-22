@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="life_ensurance_demo" model="hr.employee.loan">
+        <field name="name">Life Ensurance 1234</field>
+        <field name="amount">1800</field>
+        <field name="payment_term">-1</field>
+        <field name="input_type_id" ref="hr_payroll_loan.hr_rule_input_loan_deduction_life_insurance" />
+        <field name="employee_id" ref="hr.employee_qdp" />
+        <field name="date_from" eval="time.strftime('%Y-%m')+'-01'" />
+    </record>
+
+</odoo>

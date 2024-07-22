@@ -1,0 +1,31 @@
+{
+    "name": "Loans For Payroll",
+    "summary": """Save loans and affect payslips""",
+    "author": "Vauxoo",
+    "website": "https://www.vauxoo.com",
+    "license": "OPL-1",
+    "category": "Human Resources/Payroll",
+    "version": "17.5.1.0.1",
+    "depends": [
+        "hr_payroll",
+        "hr_schedule_payment",
+    ],
+    "data": [
+        "data/decimal_precision_data.xml",
+        "security/ir.model.access.csv",
+        "security/res_groups_security.xml",
+        "views/hr_employee_loan_views.xml",
+        "views/hr_employee_views.xml",
+        "views/hr_payslip_input_type_views.xml",
+        "views/hr_payslip_views.xml",
+        "views/report_payslip_templates.xml",
+        "views/res_config_settings_views.xml",
+    ],
+    "demo": [
+        "demo/hr_payslip_input_type_demo.xml",
+        "demo/hr_employee_loan_demo.xml",
+        "demo/hr_salary_rule_demo.xml",
+    ],
+    "installable": True,
+    "auto_install": False,
+}

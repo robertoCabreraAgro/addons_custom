@@ -1,0 +1,75 @@
+<?xml version="1.0" ?>
+<odoo noupdate="1">
+
+    <record id="hr_contract_maria" model="hr.contract">
+        <field name="name">Contrato Para MARIA OLIVIA MARTINEZ SAGAZ</field>
+        <field name="date_start" eval="time.strftime('%Y-%m')+'-1'" />
+        <field name="date_end" eval="time.strftime('%Y')+'-12-31'" />
+        <field name="employee_id" ref="mx_employee_qdp" />
+        <field name="contract_type_id" ref="hr_contract_type_01" />
+        <field name="structure_type_id" ref="payroll_structure_type_payroll" />
+        <field name="l10n_mx_edi_schedule_pay_id" ref='l10n_mx_edi_payslip.schedule_pay_fortnightly' />
+        <field name="wage">22000</field>
+        <field name="l10n_mx_edi_feeding">60</field>
+        <field name="l10n_mx_edi_working_type">0</field>
+        <field name="company_id" ref="l10n_mx.demo_company_mx" />
+        <field name="resource_calendar_id" ref="l10n_mx_edi_payslip.resource_calendar_std" />
+        <field name="state">open</field>
+    </record>
+
+    <record id="hr_contract_felix" model="hr.contract">
+        <field name="name">Contrato Para FELIX MANUEL ANDRADE BALLADO</field>
+        <field name="date_start" eval="time.strftime('%Y-%m')+'-1'" />
+        <field name="date_end" eval="time.strftime('%Y')+'-12-31'" />
+        <field name="employee_id" ref="mx_employee_felix" />
+        <field name="contract_type_id" ref="hr_contract_type_01" />
+        <field name="structure_type_id" ref="payroll_structure_type_payroll" />
+        <field name="l10n_mx_edi_schedule_pay_id" ref='l10n_mx_edi_payslip.schedule_pay_fortnightly' />
+        <field name="wage">22000</field>
+        <field name="l10n_mx_edi_feeding">60</field>
+        <field name="l10n_mx_edi_working_type">0</field>
+        <field name="company_id" ref="l10n_mx.demo_company_mx" />
+        <field name="resource_calendar_id" ref="l10n_mx_edi_payslip.resource_calendar_std" />
+        <field name="state">open</field>
+    </record>
+
+    <record id="hr_contract_berenice" model="hr.contract">
+        <field name="name">Contrato Para BERENICE XIMO QUEZADA</field>
+        <field name="date_start" eval="time.strftime('%Y-%m')+'-1'" />
+        <field name="date_end" eval="time.strftime('%Y')+'-12-31'" />
+        <field name="employee_id" ref="mx_employee_berenice" />
+        <field name="contract_type_id" ref="hr_contract_type_01" />
+        <field name="structure_type_id" ref="payroll_structure_type_payroll" />
+        <field name="l10n_mx_edi_schedule_pay_id" ref='l10n_mx_edi_payslip.schedule_pay_fortnightly' />
+        <field name="wage">25000</field>
+        <field name="l10n_mx_edi_feeding">60</field>
+        <field name="l10n_mx_edi_working_type">0</field>
+        <field name="company_id" ref="l10n_mx.demo_company_mx" />
+        <field name="resource_calendar_id" ref="l10n_mx_edi_payslip.resource_calendar_std" />
+        <field name="state">open</field>
+    </record>
+
+   <record id="hr_contract_cesar" model="hr.contract">
+        <field name="name">Contrato Para CESAR OSBALDO CRUZ SOLORZANO</field>
+        <field name="date_start" eval="time.strftime('%Y-%m')+'-1'" />
+        <field name="date_end" eval="time.strftime('%Y')+'-12-31'" />
+        <field name="employee_id" ref="mx_employee_cesar" />
+        <field name="contract_type_id" ref="hr_contract_type_01" />
+        <field name="structure_type_id" ref="payroll_structure_type_payroll" />
+        <field name="l10n_mx_edi_schedule_pay_id" ref='l10n_mx_edi_payslip.schedule_pay_fortnightly' />
+        <field name="wage">12000</field>
+        <field name="l10n_mx_edi_feeding">60</field>
+        <field name="l10n_mx_edi_working_type">0</field>
+        <field name="company_id" ref="l10n_mx.demo_company_mx" />
+        <field name="resource_calendar_id" ref="l10n_mx_edi_payslip.resource_calendar_std" />
+        <field name="state">open</field>
+    </record>
+
+    <function model="hr.contract" name="write">
+        <value
+            eval="[ref('l10n_mx_edi_payslip.hr_contract_maria'), ref('l10n_mx_edi_payslip.hr_contract_felix'), ref('l10n_mx_edi_payslip.hr_contract_berenice'), ref('l10n_mx_edi_payslip.hr_contract_cesar')]"
+        />
+        <value eval="{'resource_calendar_id': ref('l10n_mx_edi_payslip.resource_calendar_std')}" />
+    </function>
+
+</odoo>

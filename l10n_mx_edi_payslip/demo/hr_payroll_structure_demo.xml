@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+
+    <record
+        id="payroll_structure_data_09"
+        model="hr.payroll.structure"
+        context="{'allowed_company_ids': [ref('l10n_mx.demo_company_mx')]}"
+    >
+        <field
+            name="journal_id"
+            model="account.journal"
+            search="[('type', '=', 'general'), ('company_id', '=', ref('l10n_mx.demo_company_mx'))]"
+        />
+    </record>
+
+    <record
+        id="payroll_structure_data_08"
+        model="hr.payroll.structure"
+        context="{'allowed_company_ids': [ref('l10n_mx.demo_company_mx')]}"
+    >
+        <field
+            name="journal_id"
+            model="account.journal"
+            search="[('type', '=', 'general'), ('company_id', '=', ref('l10n_mx.demo_company_mx'))]"
+        />
+    </record>
+
+    <record
+        id="payroll_structure_data_07"
+        model="hr.payroll.structure"
+        context="{'allowed_company_ids': [ref('l10n_mx.demo_company_mx')]}"
+    >
+        <field
+            name="journal_id"
+            model="account.journal"
+            search="[('type', '=', 'general'), ('company_id', '=', ref('l10n_mx.demo_company_mx'))]"
+        />
+    </record>
+
+    <record
+        id="payroll_structure_data_06"
+        model="hr.payroll.structure"
+        context="{'allowed_company_ids': [ref('l10n_mx.demo_company_mx')]}"
+    >
+        <field
+            name="journal_id"
+            model="account.journal"
+            search="[('type', '=', 'general'), ('company_id', '=', ref('l10n_mx.demo_company_mx'))]"
+        />
+    </record>
+
+    <record
+        id="payroll_structure_data_05"
+        model="hr.payroll.structure"
+        context="{'allowed_company_ids': [ref('l10n_mx.demo_company_mx')]}"
+    >
+        <field
+            name="journal_id"
+            model="account.journal"
+            search="[('type', '=', 'general'), ('company_id', '=', ref('l10n_mx.demo_company_mx'))]"
+        />
+    </record>
+
+    <record
+        id="payroll_structure_data_04"
+        model="hr.payroll.structure"
+        context="{'allowed_company_ids': [ref('l10n_mx.demo_company_mx')]}"
+    >
+        <field
+            name="journal_id"
+            model="account.journal"
+            search="[('type', '=', 'general'), ('company_id', '=', ref('l10n_mx.demo_company_mx'))]"
+        />
+    </record>
+
+    <record
+        id="payroll_structure_data_03"
+        model="hr.payroll.structure"
+        context="{'allowed_company_ids': [ref('l10n_mx.demo_company_mx')]}"
+    >
+        <field
+            name="journal_id"
+            model="account.journal"
+            search="[('type', '=', 'general'), ('company_id', '=', ref('l10n_mx.demo_company_mx'))]"
+        />
+    </record>
+
+    <record
+        id="payroll_structure_data_02"
+        model="hr.payroll.structure"
+        context="{'allowed_company_ids': [ref('l10n_mx.demo_company_mx')]}"
+    >
+        <field
+            name="journal_id"
+            model="account.journal"
+            search="[('type', '=', 'general'), ('company_id', '=', ref('l10n_mx.demo_company_mx'))]"
+        />
+    </record>
+
+    <record
+        id="payroll_structure_data_01"
+        model="hr.payroll.structure"
+        context="{'allowed_company_ids': [ref('l10n_mx.demo_company_mx')]}"
+    >
+        <field
+            name="journal_id"
+            model="account.journal"
+            search="[('type', '=', 'general'), ('company_id', '=', ref('l10n_mx.demo_company_mx'))]"
+        />
+    </record>
+
+</odoo>

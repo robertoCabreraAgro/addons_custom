@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="hr_payslip_overtime_form" model="ir.ui.view">
+        <field name="name">view.l10n_mx.overtime.form</field>
+        <field name="model">hr.payslip.overtime</field>
+        <field name="arch" type="xml">
+            <form string="Overtimes">
+                <sheet string="Overtimes">
+                    <group>
+                        <group>
+                            <field name="name" />
+                            <field name="hours" />
+                            <field name="is_simple" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_payslip_overtime_tree" model="ir.ui.view">
+        <field name="name">view.l10n_mx.overtime.tree</field>
+        <field name="model">hr.payslip.overtime</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom" decoration-muted="payslip_id != False">
+                <field name="payslip_id" invisible="1" />
+                <field name="week" />
+                <field name="name" required="True" readonly="True" />
+                <field name="hours" sum="Total" readonly="payslip_id" />
+                <field name="is_simple" optional="show" readonly="payslip_id" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="hr_payslip_overtime_search" model="ir.ui.view">
+        <field name="name">view.l10n_mx.overtime.search</field>
+        <field name="model">hr.payslip.overtime</field>
+        <field name="arch" type="xml">
+            <search string="Overtimes">
+                <field name="employee_id" />
+                <separator />
+                <group expand="0" string="Group By">
+                    <filter
+                        string="Employee"
+                        name="group_by_employee"
+                        domain="[]"
+                        context="{'group_by': 'employee_id'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="hr_payslip_overtime_action" model="ir.actions.act_window">
+        <field name="name">Overtime</field>
+        <field name="res_model">hr.payslip.overtime</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_group_by_employee': 1}</field>
+    </record>
+
+    <menuitem
+        id="hr_payslip_overtime_menu"
+        name="Overtime"
+        parent="hr.menu_human_resources_configuration"
+        sequence="50"
+        action="hr_payslip_overtime_action"
+    />
+
+</odoo>

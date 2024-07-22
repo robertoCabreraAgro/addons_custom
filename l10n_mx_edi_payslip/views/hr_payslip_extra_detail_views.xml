@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="hr_payslip_extra_detail_tree" model="ir.ui.view">
+        <field name="name">view.payslip.extra.detail.tree</field>
+        <field name="model">hr.payslip.extra.detail</field>
+        <field name="arch" type="xml">
+            <tree multi_edit="1">
+                <field name="employee_id" />
+                <field name="name" />
+                <field name="amount" />
+            </tree>
+        </field>
+    </record>
+
+</odoo>

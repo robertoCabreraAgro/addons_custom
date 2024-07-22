@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="ir_actions_client_action_report_idse" model="ir.actions.client">
+        <field name="name">IDSE (Reingreso)</field>
+        <field name="tag">account_report</field>
+        <field name="context" eval="{'report_id': ref('l10n_mx_edi_payslip.idse_report')}" />
+    </record>
+
+    <record id="ir_actions_client_action_report_idse_baja" model="ir.actions.client">
+        <field name="name">IDSE (Baja)</field>
+        <field name="tag">account_report</field>
+        <field name="context" eval="{'report_id': ref('l10n_mx_edi_payslip.idse_baja_report')}" />
+    </record>
+
+    <record id="ir_actions_client_action_report_idse_wage" model="ir.actions.client">
+        <field name="name">IDSE (Wage Update)</field>
+        <field name="tag">account_report</field>
+        <field name="context" eval="{'report_id': ref('l10n_mx_edi_payslip.idse_wage_report')}" />
+    </record>
+
+    <record id="ir_actions_client_action_report_sua" model="ir.actions.client">
+        <field name="name">SUA (Aseg)</field>
+        <field name="tag">account_report</field>
+        <field name="context" eval="{'report_id': ref('l10n_mx_edi_payslip.sua_report')}" />
+    </record>
+
+    <record id="ir_actions_client_action_report_sua_affiliation" model="ir.actions.client">
+        <field name="name">SUA (Afil)</field>
+        <field name="tag">account_report</field>
+        <field name="context" eval="{'report_id': ref('l10n_mx_edi_payslip.sua_affiliation_report')}" />
+    </record>
+
+    <record id="ir_actions_client_action_report_sua_baja" model="ir.actions.client">
+        <field name="name">SUA (Mov)</field>
+        <field name="tag">account_report</field>
+        <field name="context" eval="{'report_id': ref('l10n_mx_edi_payslip.sua_move_report')}" />
+    </record>
+
+    <record id="ir_actions_client_action_report_alimony_week" model="ir.actions.client">
+        <field name="name">Alimony</field>
+        <field name="tag">account_report</field>
+        <field name="context" eval="{'report_id': ref('l10n_mx_edi_payslip.alimony_report')}" />
+    </record>
+
+    <menuitem id="idse_report_menu" name="IDSE" parent="hr_payroll.menu_hr_payroll_report" sequence="40" />
+
+    <menuitem
+        id="idse_reingreso_report_menu"
+        name="Reingreso"
+        parent="idse_report_menu"
+        sequence="40"
+        action="ir_actions_client_action_report_idse"
+    />
+
+    <menuitem
+        id="idse_baja_report_menu"
+        name="Baja"
+        parent="idse_report_menu"
+        sequence="40"
+        action="ir_actions_client_action_report_idse_baja"
+    />
+
+    <menuitem
+        id="idse_wage_report_menu"
+        name="Wage Update"
+        parent="idse_report_menu"
+        sequence="40"
+        action="ir_actions_client_action_report_idse_wage"
+    />
+
+    <menuitem id="sua_report_menu" name="SUA" parent="hr_payroll.menu_hr_payroll_report" sequence="40" />
+
+    <menuitem
+        id="sua_reingreso_report_menu"
+        name="Insured"
+        parent="sua_report_menu"
+        sequence="10"
+        action="ir_actions_client_action_report_sua"
+    />
+
+    <menuitem
+        id="sua_affiliation_report_menu"
+        name="Affiliation"
+        parent="sua_report_menu"
+        sequence="20"
+        action="ir_actions_client_action_report_sua_affiliation"
+    />
+
+    <menuitem
+        id="sua_baja_report_menu"
+        name="Movements"
+        parent="sua_report_menu"
+        sequence="30"
+        action="ir_actions_client_action_report_sua_baja"
+    />
+
+    <menuitem
+        id="alimony_report_menu"
+        name="Alimony"
+        parent="hr_payroll.menu_hr_payroll_report"
+        sequence="40"
+        action="ir_actions_client_action_report_alimony_week"
+    />
+
+</odoo>

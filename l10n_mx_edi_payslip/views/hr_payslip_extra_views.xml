@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="hr_payslip_extra_form" model="ir.ui.view">
+        <field name="name">view.payslip.extra.form</field>
+        <field name="model">hr.payslip.extra</field>
+        <field name="arch" type="xml">
+            <form string="Extra">
+                <header>
+                    <button
+                        name="%(hr_payslip_extra_employees_action)d"
+                        type="action"
+                        string="Get Employees"
+                        class="oe_highlight"
+                        invisible="state != 'draft'"
+                    />
+                    <button
+                        string="Approve"
+                        name="action_approve"
+                        type="object"
+                        invisible="state != 'draft'"
+                        class="oe_highlight"
+                    />
+                    <button
+                        string="Cancel"
+                        name="action_cancel"
+                        type="object"
+                        invisible="state != 'approved'"
+                        class="oe_highlight"
+                    />
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm" />
+                </header>
+                <sheet string="Extra">
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            name="action_open_lines"
+                            class="oe_stat_button"
+                            icon="fa-book"
+                            type="object"
+                            help="Lines"
+                            invisible="not lines_count"
+                        >
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value"><field name="lines_count" /></span>
+                                <span class="o_stat_text">Lines</span>
+                             </div>
+                        </button>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name" readonly="state != 'draft'" />
+                            <field name="date" readonly="state != 'draft'" />
+                        </group>
+                        <group>
+                            <field name="input_id" readonly="state != 'draft'" />
+                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company" />
+                        </group>
+                    </group>
+                    <field name="detail_ids" readonly="state != 'draft'">
+                        <tree editable="bottom">
+                            <field name="employee_id" options="{'no_create': True}" />
+                            <field name="name" />
+                            <field name="amount" sum="Total" />
+                        </tree>
+                    </field>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" />
+                    <field name="message_ids" widget="mail_thread" />
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_payslip_extra_tree" model="ir.ui.view">
+        <field name="name">view.payslip.extra.tree</field>
+        <field name="model">hr.payslip.extra</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+                <field name="date" />
+                <field name="input_id" />
+                <field name="state" />
+                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="hr_payslip_extra_search" model="ir.ui.view">
+        <field name="name">hr.payslip.extra.search</field>
+        <field name="model">hr.payslip.extra</field>
+        <field name="arch" type="xml">
+            <search string="Search Payslip Extras">
+                <field name="name" />
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]" help="Draft Payslip Extras" />
+                <filter
+                    string="Done"
+                    name="done_filter"
+                    domain="[('state', '=', 'approved')]"
+                    help="Done Payslip Extras"
+                />
+                <filter string="Date" name="date_filter" date="date" default_period="last_month" />
+                <group expand="0" string="Group By">
+                    <filter string="Status" name="state" context="{'group_by': 'state'}" />
+                    <filter
+                        string="Company"
+                        name="company_id"
+                        groups="base.group_multi_company"
+                        context="{'group_by': 'company_id'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="hr_payslip_extra_action" model="ir.actions.act_window">
+        <field name="name">Extra</field>
+        <field name="res_model">hr.payslip.extra</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+        id="hr_payslip_extra_menu"
+        name="Extra"
+        parent="hr_work_entry_contract_enterprise.menu_hr_payroll_configuration"
+        sequence="50"
+        action="hr_payslip_extra_action"
+    />
+
+</odoo>

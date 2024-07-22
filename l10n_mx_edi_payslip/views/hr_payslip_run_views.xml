@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="hr_payslip_run_form" model="ir.ui.view">
+        <field name="name">view.hr.payslip.run.form.inherit.l10n_mx</field>
+        <field name="model">hr.payslip.run</field>
+        <field name="inherit_id" ref="hr_payroll.hr_payslip_run_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//header//button[@name='action_validate']" position="attributes">
+                <attribute name="context">{}</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_draft']" position="after">
+                <button
+                    name="action_payslips_done"
+                    type="object"
+                    invisible="state != 'close'"
+                    string="Confirm payslips"
+                    class="oe_highlight"
+                />
+                <button
+                    name="action_payroll_sent"
+                    type="object"
+                    string="Send by Email"
+                    invisible="state != 'close'"
+                    class="oe_highlight"
+                />
+                <button name="action_set_overtimes" type="object" string="Set Overtimes" class="oe_highlight" />
+            </xpath>
+            <xpath expr="//field[@name='country_code']" position="before">
+                <field name="l10n_mx_edi_payment_date" />
+                <field name="l10n_mx_edi_productivity_bonus" />
+            </xpath>
+            <xpath expr='//group/group' position="inside">
+                <label for="l10n_mx_edi_date_start" string="CFDI Period" />
+                <div class="o_row">
+                    <field
+                        name="l10n_mx_edi_date_start"
+                        class="oe_inline o_hr_narrow_field"
+                        readonly="state != 'draft'"
+                    />
+ -                  <field
+                        name="l10n_mx_edi_date_end"
+                        class="oe_inline o_hr_narrow_field"
+                        readonly="state != 'draft'"
+                    />
+                </div>
+            </xpath>
+            <xpath expr="//h1" position="after">
+                <div class="alert alert-warning" role="alert" invisible="not l10n_mx_edi_payment_date_warning">
+                    <field name="l10n_mx_edi_payment_date_warning" />
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

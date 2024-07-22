@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cfdi:Comprobante
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:nomina12="http://www.sat.gob.mx/nomina12"
+    xmlns:cfdi="http://www.sat.gob.mx/cfd/4"
+    xsi:schemaLocation="http://www.sat.gob.mx/cfd/4 http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd http://www.sat.gob.mx/nomina12 http://www.sat.gob.mx/sitio_internet/cfd/nomina/nomina12.xsd"
+    Version="4.0"
+    Sello="lVV5wqWi7pnd0ZoBwrsCNIA4PTicjrRdVhCPboEZBsjmQmhyll+3iAi7Dgz3S8CXi0ec0MdxPCixHnY1b15gmIEQULw/K3dRx3eUa/g1twBi5LDhHXmNJ/dhaUUi/XBsrPJlve8GiYgD1PARpASwJx3DPoGxq8BSI+jr1pHGQLnyNCVZ45s0tLVQ3je3J/DP+8YRTJfbsPZrsP7H3M90DuFGGFTJXGMm0/763cdTZjUrOgg83PF6K5gVa/N6tTkjKr0uJlPLDegMRMsYK3iM5lr0zdV2gXAC9DmE+UKmNIEqh5+espMDooCHIxGQlcyjU+YmT6lUaxVfhaxfO0yJQg=="
+    Moneda="MXN"
+    TipoDeComprobante="N"
+    MetodoPago="PUE"
+    Serie="SLIP/"
+    Folio="42"
+    Fecha="2017-11-28T13:37:40"
+    NoCertificado="30001000000500003416"
+    Certificado="MIIFsDCCA5igAwIBAgIUMzAwMDEwMDAwMDA1MDAwMDM0MTYwDQYJKoZIhvcNAQELBQAwggErMQ8wDQYDVQQDDAZBQyBVQVQxLjAsBgNVBAoMJVNFUlZJQ0lPIERFIEFETUlOSVNUUkFDSU9OIFRSSUJVVEFSSUExGjAYBgNVBAsMEVNBVC1JRVMgQXV0aG9yaXR5MSgwJgYJKoZIhvcNAQkBFhlvc2Nhci5tYXJ0aW5lekBzYXQuZ29iLm14MR0wGwYDVQQJDBQzcmEgY2VycmFkYSBkZSBjYWxpejEOMAwGA1UEEQwFMDYzNzAxCzAJBgNVBAYTAk1YMRkwFwYDVQQIDBBDSVVEQUQgREUgTUVYSUNPMREwDwYDVQQHDAhDT1lPQUNBTjERMA8GA1UELRMIMi41LjQuNDUxJTAjBgkqhkiG9w0BCQITFnJlc3BvbnNhYmxlOiBBQ0RNQS1TQVQwHhcNMjMwNTE4MTE0MzUxWhcNMjcwNTE4MTE0MzUxWjCB1zEnMCUGA1UEAxMeRVNDVUVMQSBLRU1QRVIgVVJHQVRFIFNBIERFIENWMScwJQYDVQQpEx5FU0NVRUxBIEtFTVBFUiBVUkdBVEUgU0EgREUgQ1YxJzAlBgNVBAoTHkVTQ1VFTEEgS0VNUEVSIFVSR0FURSBTQSBERSBDVjElMCMGA1UELRMcRUtVOTAwMzE3M0M5IC8gVkFEQTgwMDkyN0RKMzEeMBwGA1UEBRMVIC8gVkFEQTgwMDkyN0hTUlNSTDA1MRMwEQYDVQQLEwpTdWN1cnNhbCAxMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtmecO6n2GS0zL025gbHGQVxznPDICoXzR2uUngz4DqxVUC/w9cE6FxSiXm2ap8Gcjg7wmcZfm85EBaxCx/0J2u5CqnhzIoGCdhBPuhWQnIh5TLgj/X6uNquwZkKChbNe9aeFirU/JbyN7Egia9oKH9KZUsodiM/pWAH00PCtoKJ9OBcSHMq8Rqa3KKoBcfkg1ZrgueffwRLws9yOcRWLb02sDOPzGIm/jEFicVYt2Hw1qdRE5xmTZ7AGG0UHs+unkGjpCVeJ+BEBn0JPLWVvDKHZAQMj6s5Bku35+d/MyATkpOPsGT/VTnsouxekDfikJD1f7A1ZpJbqDpkJnss3vQIDAQABox0wGzAMBgNVHRMBAf8EAjAAMAsGA1UdDwQEAwIGwDANBgkqhkiG9w0BAQsFAAOCAgEAFaUgj5PqgvJigNMgtrdXZnbPfVBbukAbW4OGnUhNrA7SRAAfv2BSGk16PI0nBOr7qF2mItmBnjgEwk+DTv8Zr7w5qp7vleC6dIsZFNJoa6ZndrE/f7KO1CYruLXr5gwEkIyGfJ9NwyIagvHHMszzyHiSZIA850fWtbqtythpAliJ2jF35M5pNS+YTkRB+T6L/c6m00ymN3q9lT1rB03YywxrLreRSFZOSrbwWfg34EJbHfbFXpCSVYdJRfiVdvHnewN0r5fUlPtR9stQHyuqewzdkyb5jTTw02D2cUfL57vlPStBj7SEi3uOWvLrsiDnnCIxRMYJ2UA2ktDKHk+zWnsDmaeleSzonv2CHW42yXYPCvWi88oE1DJNYLNkIjua7MxAnkNZbScNw01A6zbLsZ3y8G6eEYnxSTRfwjd8EP4kdiHNJftm7Z4iRU7HOVh79/lRWB+gd171s3d/mI9kte3MRy6V8MMEMCAnMboGpaooYwgAmwclI2XZCczNWXfhaWe0ZS5PmytD/GDpXzkX0oEgY9K/uYo5V77NdZbGAjmyi8cE2B2ogvyaN2XfIInrZPgEffJ4AB7kFA2mwesdLOCh0BLD9itmCve3A1FGR4+stO2ANUoiI3w3Tv2yQSg4bjeDlJ08lXaaFCLW2peEXMXjQUk7fmpb5MNuOUTW6BE="
+    SubTotal="11722.94"
+    Descuento="4409.10"
+    Exportacion="01"
+    Total="7313.84"
+    LugarExpedicion="20928"
+>
+    <cfdi:Emisor Nombre="ESCUELA KEMPER URGATE" Rfc="EKU9003173C9" RegimenFiscal="601" />
+    <cfdi:Receptor
+        UsoCFDI="CN01"
+        Rfc="MASO451221PM4"
+        DomicilioFiscalReceptor="80290"
+        RegimenFiscalReceptor="605"
+        Nombre="MARIA OLIVIA MARTINEZ SAGAZ"/>
+    <cfdi:Conceptos>
+        <cfdi:Concepto
+            ClaveProdServ="84111505"
+            Cantidad="1"
+            ClaveUnidad="ACT"
+            Descripcion="Pago de nómina"
+            ValorUnitario="11722.94"
+            Importe="11722.94"
+            ObjetoImp="01"
+            Descuento="4409.10"
+        >
+        </cfdi:Concepto>
+    </cfdi:Conceptos>
+    <cfdi:Complemento>
+        <nomina12:Nomina
+            Version="1.2"
+            TipoNomina="O"
+            FechaPago="2017-11-01"
+            FechaInicialPago="2017-11-01"
+            FechaFinalPago="2017-11-15"
+            NumDiasPagados="15"
+            TotalPercepciones="11422.94"
+            TotalDeducciones="4409.10"
+            TotalOtrosPagos="300.00">
+            <nomina12:Emisor
+                RegistroPatronal="1203256"
+                RfcPatronOrigen="EKU9003173C9">
+            </nomina12:Emisor>
+            <nomina12:Receptor
+                Curp="PUXB571021HNELXR00"
+                NumSeguridadSocial="123456789236958"
+                FechaInicioRelLaboral="2017-11-01"
+                Antigüedad="P0W"
+                TipoContrato="01"
+                Sindicalizado="No"
+                TipoJornada="01"
+                TipoRegimen="02"
+                NumEmpleado="22"
+                Departamento="Research &amp; Development"
+                Puesto="Experienced Developer"
+                RiesgoPuesto="1"
+                PeriodicidadPago="04"
+                Banco="012"
+                CuentaBancaria="1234567890"
+                SalarioBaseCotApor="769.49"
+                SalarioDiarioIntegrado="769.49"
+                ClaveEntFed="AGU">
+            </nomina12:Receptor>
+            <nomina12:Percepciones
+                TotalSueldos="11422.94"
+                TotalGravado="11091.67"
+                TotalExento="331.27">
+                <nomina12:Percepcion
+                    TipoPercepcion="001"
+                    Clave="PG001"
+                    Concepto="Sueldos, Salarios Rayas y Jornales"
+                    ImporteGravado="11000.00"
+                    ImporteExento="0.00">
+                </nomina12:Percepcion>
+                <nomina12:Percepcion
+                    TipoPercepcion="005"
+                    Clave="PE005"
+                    Concepto="Fondo de Ahorro"
+                    ImporteGravado="0.00"
+                    ImporteExento="200.00">
+                </nomina12:Percepcion>
+                <nomina12:Percepcion
+                    TipoPercepcion="019"
+                    Clave="PG019"
+                    Concepto="Horas extra dobles"
+                    ImporteGravado="130.06"
+                    ImporteExento="0.00">
+                    <nomina12:HorasExtra
+                        Dias="1"
+                        TipoHoras="01"
+                        HorasExtra="1"
+                        ImportePagado="90.46"/>
+                </nomina12:Percepcion>
+                <nomina12:Percepcion
+                    TipoPercepcion="047"
+                    Clave="PE047"
+                    Concepto="Alimentación (E)"
+                    ImporteGravado="0.00"
+                    ImporteExento="39.60">
+                </nomina12:Percepcion>
+            </nomina12:Percepciones>
+            <nomina12:Deducciones
+                TotalOtrasDeducciones="2862.98"
+                TotalImpuestosRetenidos="1546.12">
+                <nomina12:Deduccion
+                    TipoDeduccion="001"
+                    Clave="001"
+                    Concepto="Seguridad social"
+                    Importe="304.60"/>
+                <nomina12:Deduccion
+                    TipoDeduccion="004"
+                    Clave="DAT004"
+                    Concepto="Alimentación Trabajador"
+                    Importe="30.00"/>
+                <nomina12:Deduccion
+                    TipoDeduccion="004"
+                    Clave="DAP004"
+                    Concepto="Alimentación Patrón"
+                    Importe="39.6"/>
+                <nomina12:Deduccion
+                    TipoDeduccion="010"
+                    Clave="010"
+                    Concepto="Pago por crédito de vivienda"
+                    Importe="2000.00"/>
+                <nomina12:Deduccion
+                    TipoDeduccion="071"
+                    Clave="071"
+                    Concepto="Ajuste en Subsidio para el empleo - efectivamente entregado al trabajador"
+                    Importe="0.01"/>
+                <nomina12:Deduccion
+                    TipoDeduccion="002"
+                    Clave="ISR002"
+                    Concepto="ISR"
+                    Importe="1546.12"/>
+            </nomina12:Deducciones>
+            <nomina12:OtrosPagos>
+                <nomina12:OtroPago
+                    TipoOtroPago="003"
+                    Clave="OP003"
+                    Concepto="Viáticos - entregados al trabajador"
+                    Importe="300.00">
+                </nomina12:OtroPago>
+                <nomina12:OtroPago
+                    TipoOtroPago="002"
+                    Clave="002"
+                    Concepto="Subsidio para el empleo - efectivamente entregado al trabajador"
+                    Importe="0.00"
+                >
+                    <nomina12:SubsidioAlEmpleo SubsidioCausado="0.00" />
+                </nomina12:OtroPago>
+            </nomina12:OtrosPagos>
+        </nomina12:Nomina>
+        <tfd:TimbreFiscalDigital
+            xmlns:tfd="http://www.sat.gob.mx/TimbreFiscalDigital"
+            xsi:schemaLocation="http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/sitio_internet/cfd/TimbreFiscalDigital/TimbreFiscalDigitalv11.xsd"
+            Version="1.1"
+            SelloCFD="lVV5wqWi7pnd0ZoBwrsCNIA4PTicjrRdVhCPboEZBsjmQmhyll+3iAi7Dgz3S8CXi0ec0MdxPCixHnY1b15gmIEQULw/K3dRx3eUa/g1twBi5LDhHXmNJ/dhaUUi/XBsrPJlve8GiYgD1PARpASwJx3DPoGxq8BSI+jr1pHGQLnyNCVZ45s0tLVQ3je3J/DP+8YRTJfbsPZrsP7H3M90DuFGGFTJXGMm0/763cdTZjUrOgg83PF6K5gVa/N6tTkjKr0uJlPLDegMRMsYK3iM5lr0zdV2gXAC9DmE+UKmNIEqh5+espMDooCHIxGQlcyjU+YmT6lUaxVfhaxfO0yJQg=="
+            NoCertificadoSAT="20001000000300022323"
+            RfcProvCertif="FIN1203015JA"
+            UUID="975E43C6-404D-4F37-8540-97169C90879F"
+            FechaTimbrado="2017-11-28T13:37:42"
+            SelloSAT="OhHRoA4EDZV6J7WxsdXXOtJzaAEMSuTnS7sKGq+AwKjBm6IitdfNZDVw0Ro8gBwOgM6V7qa/SkXCdflof2v7CEdqThfcG4NxXMAAoICC12qm9T5Gv9nTC0MHjY3NzGTkv2NQkItmnVE52OHLjQ758/fPrmeUaGjkgMVzxe/VK3p31K4JiDm0SvZbfxfKWJyIm06KGUjlmmCRm2n86UHVQQTp2EZHIB0MAMeCTOUHUS6Ch8B9rx0SEwVFvgaHLW32Wveu5IsiVyztkqBQUwWxZlSptvFXaK88xm+4ca5yheLFSvsvc51YjxxX+4epFQkziwg7oivsqrVgcHPBDdtoKA=="/>
+    </cfdi:Complemento>
+</cfdi:Comprobante>

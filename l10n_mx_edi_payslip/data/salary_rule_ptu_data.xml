@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <!-- Perceptions -->
+    <record id="hr_rule_l10n_mx_payroll_perception_003_g_ptu" model="hr.salary.rule">
+        <field name="name">Participación de los Trabajadores en las Utilidades PTU (G)</field>
+        <field name="sequence" eval="3001" />
+        <field name="code">PG003</field>
+        <field name="l10n_mx_edi_code">003</field>
+        <field name="category_id" ref="hr_salary_rule_category_perception_mx_taxed" />
+        <field name="struct_id" ref="payroll_structure_data_05" />
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['PTU'].amount - PE003 if 'PTU' in inputs else 0.0
+        </field>
+        <field name="note">Sólo 15 UMAs quedan de exento, el excedente es gravado</field>
+    </record>
+
+    <record id="hr_rule_l10n_mx_payroll_perception_003_e_ptu" model="hr.salary.rule">
+        <field name="name">Participación de los Trabajadores en las Utilidades PTU (E)</field>
+        <field name="sequence" eval="3000" />
+        <field name="code">PE003</field>
+        <field name="l10n_mx_edi_code">003</field>
+        <field name="category_id" ref="hr_salary_rule_category_perception_mx_exempt" />
+        <field name="struct_id" ref="payroll_structure_data_05" />
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['PTU'].amount if 'PTU' in inputs else 0.0
+exempt = contract.company_id.l10n_mx_edi_uma * 15
+result = exempt if result &gt;= exempt else result
+        </field>
+        <field name="note">Sólo 15 días de SM queda exento, el excedente es gravado</field>
+    </record>
+
+    <record id="hr_rule_l10n_mx_payroll_other_payment_002_ptu" model="hr.salary.rule">
+        <field name="name">Subsidio para el empleo - efectivamente entregado al trabajador</field>
+        <field name="code">OPTU002</field>
+        <field name="l10n_mx_edi_code">002</field>
+        <field name="sequence">87000</field>
+        <field name="category_id" ref="hr_salary_rule_category_other_mx" />
+        <field name="struct_id" ref="payroll_structure_data_05" />
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = employee.l10n_mx_edi_contract_regime_type == '02'</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = 0.00
+        </field>
+        <field
+            name="note"
+        >Esta regla es necesaria para evitar que el timbrado de la nómina de error nom160, 'El valor del atributo Nomina.TotalOtrosPagos no está registrado...'</field>
+    </record>
+
+    <record id="hr_rule_l10n_mx_payroll_deduction_002_ptu" model="hr.salary.rule">
+        <field name="name">ISR</field>
+        <field name="sequence" eval="55000" />
+        <field name="code">ISR</field>
+        <field name="l10n_mx_edi_code">002</field>
+        <field name="category_id" ref="hr_payroll.DED" />
+        <field name="struct_id" ref="payroll_structure_data_05" />
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+# Basado en la ley 174 de ISR
+table = [(0.01, 746.04, 0.00, 0.0192), (746.05, 6332.05, 14.32, 0.0640),
+         (6332.06, 11128.01, 371.83, 0.1088), (11128.02, 12935.82, 893.63, 0.1600),
+         (12935.83, 15487.71, 1182.88, 0.1792), (15487.72, 31236.49, 1640.18, 0.2136),
+         (31236.50, 49233.00, 5004.12, 0.2352), (49233.01, 93993.90, 9236.89, 0.3000),
+         (93993.91, 125325.20, 22665.17, 0.3200), (125325.21, 375975.61, 32691.18, 0.3400),
+         (375975.62, 999999999, 117912.32, 0.3500)]
+income_period = categories['PERGRA']
+wage = contract.wage
+
+year = payslip.l10n_mx_edi_payment_date.year
+days_year = 365
+if year % 4 == 0 and year % 100 != 0 or year % 400 == 0:
+    days_year = 366
+
+art_174_lisr = income_period / days_year * 30.4
+base_gravable = art_174_lisr + wage
+
+result1 = result2 = 0
+
+for value in table:
+   if base_gravable >=value[0] and value[1] >= base_gravable:
+       result1 = (((base_gravable - value[0]) * value[3]) + value[2]) * -1
+
+for value in table:
+   if wage >=value[0] and value[1] >= wage:
+       result2 = (((wage - value[0]) * value[3]) + value[2]) * -1
+
+isr = result2 - result1
+efective_rate = isr / (art_174_lisr or 1)
+result = (income_period * efective_rate)
+
+result = inputs['ISR_PTU'].amount if 'ISR_PTU' in inputs else result
+        </field>
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_isr_ptu" model="hr.payslip.input.type">
+        <field name="code">ISR_PTU</field>
+        <field name="name">ISR PTU</field>
+        <field name="country_id" ref="base.mx" />
+        <field name="struct_ids" eval="[Command.set([ref('payroll_structure_data_05')])]" />
+    </record>
+
+    <record id="hr_rule_l10n_mx_payroll_deduction_071_ptu" model="hr.salary.rule">
+        <field name="name">Ajuste en Subsidio para el empleo - efectivamente entregado al trabajador</field>
+        <field name="sequence" eval="81700" />
+        <field name="code">ASEE</field>
+        <field name="l10n_mx_edi_code">071</field>
+        <field name="category_id" ref="hr_payroll.DED" />
+        <field name="struct_id" ref="payroll_structure_data_05" />
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = inputs['asee'].amount if 'asee' in inputs else 0.0</field>
+    </record>
+
+    <record id="hr_rule_l10n_mx_payroll_deduction_007_ptu" model="hr.salary.rule">
+        <field name="name">Pensión alimenticia</field>
+        <field name="sequence" eval="910001" />
+        <field name="code">A007</field>
+        <field name="l10n_mx_edi_code">007</field>
+        <field name="category_id" ref="hr_payroll.DED" />
+        <field name="struct_id" ref="payroll_structure_data_05" />
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = 0
+alimony = employee.l10n_mx_edi_alimony_ids.filtered(lambda a: a.date_from &lt;= payslip.date_from and (not a.date_to or a.date_to and a.date_to &gt;= payslip.date_to))
+if alimony:
+    alimony = alimony[0]
+    if alimony.discount_type == 'percentage_perceptions':
+        result += (categories['PERGRA'] + categories['PEREXE']) * alimony.discount_amount / 100
+    elif alimony.discount_type in ['percentage_perceptions_ISR', 'percentage_perceptions_ISR_mortgages', 'percentage_perceptions_ISR_mortgages_ss']:
+        result += (categories['PERGRA'] + categories['PEREXE'] - ISR) * alimony.discount_amount / 100
+    elif alimony.discount_type == 'amount_fixed':
+        result += alimony.discount_amount
+    elif alimony.discount_type == 'percentage_over_net':
+        result += (categories['PERGRA'] + categories['PEREXE'] + categories['OTHER'] - categories['DED']) * alimony.discount_amount / 100
+    net_salary = categories['PERGRA'] - categories['DED'] + categories['PEREXE'] + categories['OTHER']
+    result = result if net_salary &gt;= result else 0
+        </field>
+    </record>
+
+    <record id="hr_rule_l10n_mx_payroll_deduction_007_b_ptu" model="hr.salary.rule">
+        <field name="name">Pensión alimenticia 2</field>
+        <field name="sequence" eval="910001" />
+        <field name="code">B007</field>
+        <field name="l10n_mx_edi_code">007</field>
+        <field name="category_id" ref="hr_payroll.DED" />
+        <field name="struct_id" ref="payroll_structure_data_05" />
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = 0
+alimony = employee.l10n_mx_edi_alimony_ids.filtered(lambda a: a.date_from &lt;= payslip.date_from and (not a.date_to or a.date_to and a.date_to &gt;= payslip.date_to))
+if alimony and len(alimony) &gt; 1:
+    alimony = alimony[1]
+    if alimony.discount_type == 'percentage_perceptions':
+        result += (categories['PERGRA'] + categories['PEREXE']) * alimony.discount_amount / 100
+    elif alimony.discount_type in ['percentage_perceptions_ISR', 'percentage_perceptions_ISR_mortgages', 'percentage_perceptions_ISR_mortgages_ss']:
+        result += (categories['PERGRA'] + categories['PEREXE'] - ISR) * alimony.discount_amount / 100
+    elif alimony.discount_type == 'amount_fixed':
+        result += alimony.discount_amount
+    elif alimony.discount_type == 'percentage_over_net':
+        result += (categories['PERGRA'] + categories['PEREXE'] + categories['OTHER'] - categories['DED']) * alimony.discount_amount / 100
+    net_salary = categories['PERGRA'] - categories['DED'] + categories['PEREXE'] + categories['OTHER']
+    result = result if net_salary &gt;= result else 0
+        </field>
+    </record>
+
+    <record id="hr_rule_l10n_mx_payroll_deduction_007_c_ptu" model="hr.salary.rule">
+        <field name="name">Pensión alimenticia 3</field>
+        <field name="sequence" eval="910002" />
+        <field name="code">C007</field>
+        <field name="l10n_mx_edi_code">007</field>
+        <field name="category_id" ref="hr_payroll.DED" />
+        <field name="struct_id" ref="payroll_structure_data_05" />
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = 0
+alimony = employee.l10n_mx_edi_alimony_ids.filtered(lambda a: a.date_from &lt;= payslip.date_from and (not a.date_to or a.date_to and a.date_to &gt;= payslip.date_to))
+if alimony and len(alimony) &gt; 2:
+    alimony = alimony[2]
+    if alimony.discount_type == 'percentage_perceptions':
+        result += (categories['PERGRA'] + categories['PEREXE']) * alimony.discount_amount / 100
+    elif alimony.discount_type in ['percentage_perceptions_ISR', 'percentage_perceptions_ISR_mortgages', 'percentage_perceptions_ISR_mortgages_ss']:
+        result += (categories['PERGRA'] + categories['PEREXE'] - ISR) * alimony.discount_amount / 100
+    elif alimony.discount_type == 'amount_fixed':
+        result += alimony.discount_amount
+    elif alimony.discount_type == 'percentage_over_net':
+        result += (categories['PERGRA'] + categories['PEREXE'] + categories['OTHER'] - categories['DED']) * alimony.discount_amount / 100
+    net_salary = categories['PERGRA'] - categories['DED'] + categories['PEREXE'] + categories['OTHER']
+    result = result if net_salary &gt;= result else 0
+        </field>
+    </record>
+
+    <record id="hr_rule_l10n_mx_payroll_deduction_007_d_ptu" model="hr.salary.rule">
+        <field name="name">Pensión alimenticia 4</field>
+        <field name="sequence" eval="910003" />
+        <field name="code">D007</field>
+        <field name="l10n_mx_edi_code">007</field>
+        <field name="category_id" ref="hr_payroll.DED" />
+        <field name="struct_id" ref="payroll_structure_data_05" />
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = 0
+alimony = employee.l10n_mx_edi_alimony_ids.filtered(lambda a: a.date_from &lt;= payslip.date_from and (not a.date_to or a.date_to and a.date_to &gt;= payslip.date_to))
+if alimony and len(alimony) &gt; 3:
+    alimony = alimony[3]
+    if alimony.discount_type == 'percentage_perceptions':
+        result += (categories['PERGRA'] + categories['PEREXE']) * alimony.discount_amount / 100
+    elif alimony.discount_type in ['percentage_perceptions_ISR', 'percentage_perceptions_ISR_mortgages', 'percentage_perceptions_ISR_mortgages_ss']:
+        result += (categories['PERGRA'] + categories['PEREXE'] - ISR) * alimony.discount_amount / 100
+    elif alimony.discount_type == 'amount_fixed':
+        result += alimony.discount_amount
+    elif alimony.discount_type == 'percentage_over_net':
+        result += (categories['PERGRA'] + categories['PEREXE'] + categories['OTHER'] - categories['DED']) * alimony.discount_amount / 100
+    net_salary = categories['PERGRA'] - categories['DED'] + categories['PEREXE'] + categories['OTHER']
+    result = result if net_salary &gt;= result else 0
+        </field>
+    </record>
+
+    <record id="hr_rule_l10n_mx_payroll_deduction_007_e_ptu" model="hr.salary.rule">
+        <field name="name">Pensión alimenticia 5</field>
+        <field name="sequence" eval="910004" />
+        <field name="code">E007</field>
+        <field name="l10n_mx_edi_code">007</field>
+        <field name="category_id" ref="hr_payroll.DED" />
+        <field name="struct_id" ref="payroll_structure_data_05" />
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = 0
+alimony = employee.l10n_mx_edi_alimony_ids.filtered(lambda a: a.date_from &lt;= payslip.date_from and (not a.date_to or a.date_to and a.date_to &gt;= payslip.date_to))
+if alimony and len(alimony) &gt; 4:
+    alimony = alimony[4]
+    if alimony.discount_type == 'percentage_perceptions':
+        result += (categories['PERGRA'] + categories['PEREXE']) * alimony.discount_amount / 100
+    elif alimony.discount_type in ['percentage_perceptions_ISR', 'percentage_perceptions_ISR_mortgages', 'percentage_perceptions_ISR_mortgages_ss']:
+        result += (categories['PERGRA'] + categories['PEREXE'] - ISR) * alimony.discount_amount / 100
+    elif alimony.discount_type == 'amount_fixed':
+        result += alimony.discount_amount
+    elif alimony.discount_type == 'percentage_over_net':
+        result += (categories['PERGRA'] + categories['PEREXE'] + categories['OTHER'] - categories['DED']) * alimony.discount_amount / 100
+    net_salary = categories['PERGRA'] - categories['DED'] + categories['PEREXE'] + categories['OTHER']
+    result = result if net_salary &gt;= result else 0
+        </field>
+    </record>
+
+    <record id="hr_rule_l10n_mx_payroll_deduction_007_f_ptu" model="hr.salary.rule">
+        <field name="name">Pensión alimenticia 6</field>
+        <field name="sequence" eval="910005" />
+        <field name="code">F007</field>
+        <field name="l10n_mx_edi_code">007</field>
+        <field name="category_id" ref="hr_payroll.DED" />
+        <field name="struct_id" ref="payroll_structure_data_05" />
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = 0
+alimony = employee.l10n_mx_edi_alimony_ids.filtered(lambda a: a.date_from &lt;= payslip.date_from and (not a.date_to or a.date_to and a.date_to &gt;= payslip.date_to))
+if alimony and len(alimony) &gt; 5:
+    alimony = alimony[5]
+    if alimony.discount_type == 'percentage_perceptions':
+        result += (categories['PERGRA'] + categories['PEREXE']) * alimony.discount_amount / 100
+    elif alimony.discount_type in ['percentage_perceptions_ISR', 'percentage_perceptions_ISR_mortgages', 'percentage_perceptions_ISR_mortgages_ss']:
+        result += (categories['PERGRA'] + categories['PEREXE'] - ISR) * alimony.discount_amount / 100
+    elif alimony.discount_type == 'amount_fixed':
+        result += alimony.discount_amount
+    elif alimony.discount_type == 'percentage_over_net':
+        result += (categories['PERGRA'] + categories['PEREXE'] + categories['OTHER'] - categories['DED']) * alimony.discount_amount / 100
+    net_salary = categories['PERGRA'] - categories['DED'] + categories['PEREXE'] + categories['OTHER']
+    result = result if net_salary &gt;= result else 0
+        </field>
+    </record>
+
+    <record id="hr_rule_l10n_mx_payroll_deduction_007_g_ptu" model="hr.salary.rule">
+        <field name="name">Pensión alimenticia 7</field>
+        <field name="sequence" eval="910006" />
+        <field name="code">G007</field>
+        <field name="l10n_mx_edi_code">007</field>
+        <field name="category_id" ref="hr_payroll.DED" />
+        <field name="struct_id" ref="payroll_structure_data_05" />
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = 0
+alimony = employee.l10n_mx_edi_alimony_ids.filtered(lambda a: a.date_from &lt;= payslip.date_from and (not a.date_to or a.date_to and a.date_to &gt;= payslip.date_to))
+if alimony and len(alimony) &gt; 6:
+    alimony = alimony[6]
+    if alimony.discount_type == 'percentage_perceptions':
+        result += (categories['PERGRA'] + categories['PEREXE']) * alimony.discount_amount / 100
+    elif alimony.discount_type in ['percentage_perceptions_ISR', 'percentage_perceptions_ISR_mortgages', 'percentage_perceptions_ISR_mortgages_ss']:
+        result += (categories['PERGRA'] + categories['PEREXE'] - ISR) * alimony.discount_amount / 100
+    elif alimony.discount_type == 'amount_fixed':
+        result += alimony.discount_amount
+    elif alimony.discount_type == 'percentage_over_net':
+        result += (categories['PERGRA'] + categories['PEREXE'] + categories['OTHER'] - categories['DED']) * alimony.discount_amount / 100
+    net_salary = categories['PERGRA'] - categories['DED'] + categories['PEREXE'] + categories['OTHER']
+    result = result if net_salary &gt;= result else 0
+        </field>
+    </record>
+
+    <!-- Sueldo Neto -->
+    <record id="hr_rule_total_excempt_ptu" model="hr.salary.rule">
+        <field name="name">Total Exento</field>
+        <field name="sequence" eval="999996" />
+        <field name="code">Exento</field>
+        <field name="category_id" ref="hr_salary_rule_category_netsa_mx" />
+        <field name="struct_id" ref="payroll_structure_data_05" />
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = categories['PEREXE']</field>
+    </record>
+
+    <record id="hr_rule_total_taxed_ptu" model="hr.salary.rule">
+        <field name="name">Total Gravado</field>
+        <field name="sequence" eval="999997" />
+        <field name="code">Gravado</field>
+        <field name="category_id" ref="hr_salary_rule_category_netsa_mx" />
+        <field name="struct_id" ref="payroll_structure_data_05" />
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = categories['PERGRA']</field>
+    </record>
+
+    <record id="hr_rule_total_deductions_ptu" model="hr.salary.rule">
+        <field name="name">Total Deducciones</field>
+        <field name="sequence" eval="999998" />
+        <field name="code">Deducciones</field>
+        <field name="category_id" ref="hr_salary_rule_category_netsa_mx" />
+        <field name="struct_id" ref="payroll_structure_data_05" />
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = categories['DED']</field>
+    </record>
+
+    <record id="hr_rule_total_other_ptu" model="hr.salary.rule">
+        <field name="name">Total Otros Pagos</field>
+        <field name="sequence" eval="999999" />
+        <field name="code">OtrosPagos</field>
+        <field name="category_id" ref="hr_salary_rule_category_netsa_mx" />
+        <field name="struct_id" ref="payroll_structure_data_05" />
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = categories['OTHER']</field>
+    </record>
+
+    <record id="hr_rule_net_salary_0_ptu" model="hr.salary.rule">
+        <field name="name">Net Salary</field>
+        <field name="sequence" eval="1000000" />
+        <field name="code">NET</field>
+        <field name="category_id" ref="hr_payroll.NET" />
+        <field name="struct_id" ref="payroll_structure_data_05" />
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field
+            name="amount_python_compute"
+        >result = categories['PERGRA'] - categories['DED'] + categories['PEREXE'] + categories['OTHER']</field>
+    </record>
+
+</odoo>

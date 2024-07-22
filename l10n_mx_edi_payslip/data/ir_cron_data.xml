@@ -1,0 +1,129 @@
+<?xml version="1.0" ?>
+<odoo noupdate="1">
+
+    <record id="ir_cron_create_mx_allocation" model="ir.cron">
+        <field name="name">Mexico: Create legal allocations</field>
+        <field name="model_id" ref="hr_holidays.model_hr_leave_allocation" />
+        <field name="state">code</field>
+        <field name="code">
+employees = env['hr.employee'].search([("private_country_id.code","=","MX")])
+contracts = env['hr.contract'].search([
+  ('state', '=', 'open'),
+  ('employee_id', 'in', employees.ids)])
+contracts.l10n_mx_allocate_annual_holidays()
+        </field>
+        <field name="user_id" ref="base.user_root" />
+        <field name="interval_type">days</field>
+        <field name="active" eval="False" />
+    </record>
+
+    <record id="ir_cron_update_si_contract" model="ir.cron">
+        <field name="name">Mexico: Actualizar Salario Integrado</field>
+        <field name="model_id" ref="hr_contract.model_hr_contract" />
+        <field name="state">code</field>
+        <field name="code">
+mexico_tz = self.env["l10n_mx_edi.certificate"]._get_timezone()
+date_mx = datetime.now(mexico_tz)
+contracts = model.search([('state', '=', 'open')])
+to_update = env[model._name]
+for contract in contracts:
+    if contract.date_start.day == date_mx.day and contract.date_start.month == date_mx.month and contract.date_start.year != date_mx.year:
+        to_update |= contract
+to_update.action_update_current_holidays()
+to_update._compute_integrated_salary()
+        </field>
+        <field name="user_id" ref="base.user_root" />
+        <field name="interval_type">days</field>
+        <field name="active" eval="False" />
+    </record>
+
+    <record id="ir_cron_update_sdiv_contract" model="ir.cron">
+        <field name="name">Mexico: Actualizar Salario Diario Integrado Variable</field>
+        <field name="model_id" ref="hr_contract.model_hr_contract" />
+        <field name="state">code</field>
+        <field name="code">
+contracts = env['hr.contract'].search([
+    ('state', '=', 'open'),
+])
+contracts.compute_integrated_salary_variable()
+        </field>
+        <field name="user_id" ref="base.user_root" />
+        <field name="interval_number">2</field>
+        <field name="interval_type">months</field>
+        <field name="active" eval="False" />
+    </record>
+
+    <record id="ir_cron_update_alimony" model="ir.cron">
+        <field name="name">Mexico: Actualizar Pensiones Alimenticias</field>
+        <field name="model_id" ref="l10n_mx_edi_payslip.model_hr_employee_alimony" />
+        <field name="state">code</field>
+        <field name="code">
+model.update_alimony()
+        </field>
+        <field name="user_id" ref="base.user_root" />
+        <field name="interval_type">days</field>
+        <field name="active" eval="True" />
+    </record>
+
+    <record id="ir_cron_mx_edi_payslip_web_services" model="ir.cron">
+        <field name="name">EDI Payroll: Perform web services operations</field>
+        <field name="model_id" ref="model_hr_payslip" />
+        <field name="state">code</field>
+        <field name="code">model._l10n_mx_edi_process_payslip_web_services(job_count=50, cancel_job=10)</field>
+        <field name="interval_type">hours</field>
+    </record>
+
+    <record id="ir_cron_update_sat_status_payroll" forcecreate="True" model="ir.cron">
+        <field name="name">Automatic update of state on the SAT (for payroll)</field>
+        <field name="model_id" ref="hr_payroll.model_hr_payslip" />
+        <field name="state">code</field>
+        <field name="code">
+payslips = model.search([
+    ('l10n_mx_edi_sat_status', 'in', ('undefined', 'not_found', 'none')),
+    ('l10n_mx_edi_pac_status', 'in', ('signed', 'cancelled')),
+    ('state', '!=', 'draft'),
+], limit=100)
+payslips._l10n_mx_edi_sat_synchronously()
+        </field>
+        <field name="user_id" ref="base.user_admin" />
+        <field name="interval_type">days</field>
+        <field name="nextcall" eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d 22:00:00')" />
+    </record>
+
+    <record id="ir_cron_mx_edi_payslip_send_employees_mail" model="ir.cron">
+        <field name="name">MX EDI Payroll: Send payslips to employees</field>
+        <field name="model_id" ref="model_hr_payslip" />
+        <field name="state">code</field>
+        <field name="code">
+# Variables to configure
+# You can set how many payslips will be sent in each execution. Use zero or negative value to get all. Default: 50
+how_many_payslips_will_be_sent = 50
+
+
+if how_many_payslips_will_be_sent &lt;= 0:
+    how_many_payslips_will_be_sent = None
+
+payslips_to_send = model.search([
+    ('state', '=', 'done'),
+    ('l10n_mx_edi_pac_status', '=', 'signed'),
+    ('sent', '=', False),
+    '|',
+    ('employee_id.private_email', '!=', False),
+    ('employee_id.work_email', '!=', False),
+], order='l10n_mx_edi_expedition_date,id', limit=how_many_payslips_will_be_sent)
+
+template = env.ref('l10n_mx_edi_payslip.email_template_edi_payroll', False)
+composer_obj = env['mail.compose.message']
+for payslip in payslips_to_send:
+    composer = composer_obj.create({
+        'model': 'hr.payslip',
+        'res_ids': payslip.ids,
+        'template_id': template and template.id or False,
+        'composition_mode': 'comment'})
+    composer._action_send_mail(auto_commit=True)
+        </field>
+        <field name="interval_type">days</field>
+        <field name="active" eval="False" />
+    </record>
+
+</odoo>

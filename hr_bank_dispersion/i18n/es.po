@@ -1,0 +1,78 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_bank_dispersion
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-11-09 01:03+0000\n"
+"PO-Revision-Date: 2023-09-14 00:26+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: hr_bank_dispersion
+#: model:res.groups,name:hr_bank_dispersion.allow_print_payslip_dispersion
+msgid "Allow to Print Payslip Dispersion"
+msgstr "Permitir generar dispersión bancaria"
+
+#. module: hr_bank_dispersion
+#. odoo-python
+#: code:addons/hr_bank_dispersion/models/hr_payslip_run.py:0
+#, python-format
+msgid "Dispersions"
+msgstr "Dispersiones"
+
+#. module: hr_bank_dispersion
+#. odoo-python
+#: code:addons/hr_bank_dispersion/models/hr_payslip_run.py:0
+#, python-format
+msgid ""
+"Only Managers with the group 'Allow to Print Payslip Dispersion' can "
+"generate payslip dispersion files"
+msgstr ""
+"Solo los usuarios con el grupo 'Permitir generar dispersión bancaria' pueden"
+" generar archivos de dispersión bancaria"
+
+#. module: hr_bank_dispersion
+#: model_terms:ir.ui.view,arch_db:hr_bank_dispersion.hr_payslip_run_form
+msgid "Payroll Dispersion"
+msgstr "Dispersiones de nómina"
+
+#. module: hr_bank_dispersion
+#: model:ir.model,name:hr_bank_dispersion.model_hr_payslip_run
+msgid "Payslip Batches"
+msgstr "Lotes de recibos de nómina"
+
+#. module: hr_bank_dispersion
+#. odoo-python
+#: code:addons/hr_bank_dispersion/models/hr_payslip_run.py:0
+#, python-format
+msgid "The following of your banks are not available for payroll dispersion"
+msgstr "Los siguientes bancos no están disponibles para dispersión bancaria"
+
+#. module: hr_bank_dispersion
+#. odoo-python
+#: code:addons/hr_bank_dispersion/models/hr_payslip_run.py:0
+#, python-format
+msgid ""
+"To use this option, please configure the bank account on your employees, no "
+"employees are currently configured."
+msgstr ""
+"Para utilizar esta opción, por favor configure la cuenta bancaria en sus "
+"empleados, en este momento no se encuentra ningún empleado configurado."
+
+#. module: hr_bank_dispersion
+#. odoo-python
+#: code:addons/hr_bank_dispersion/models/hr_payslip_run.py:0
+#, python-format
+msgid ""
+"We currently do not support generating payroll dispersions for any of the "
+"employee banks in this payroll batch."
+msgstr ""
+"Actualmente no soportamos la generación de dispersiones de nómina para "
+"ninguno de los bancos de empleados en este lote de nómina."

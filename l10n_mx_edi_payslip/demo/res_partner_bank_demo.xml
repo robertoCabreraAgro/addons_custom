@@ -1,0 +1,32 @@
+<?xml version="1.0" ?>
+<odoo noupdate="1">
+
+    <record id="account_bank_employee_qdp" model="res.partner.bank">
+        <field name="acc_number" eval="1234567890" />
+        <field name="partner_id" ref="res_partner_address_mx_qdp" />
+        <field name="bank_id" ref="l10n_mx.acc_bank_012_BBVA_BANCOMER" />
+        <field name="company_id" ref="l10n_mx.demo_company_mx" />
+    </record>
+
+    <record id="account_bank_employee_felix" model="res.partner.bank">
+        <field name="acc_number">012730345678904797</field>
+        <field name="partner_id" ref="res_partner_address_mx_felix" />
+        <field name="bank_id" ref="l10n_mx.acc_bank_012_BBVA_BANCOMER" />
+        <field name="company_id" ref="l10n_mx.demo_company_mx" />
+    </record>
+
+    <record id="account_bank_employee_berenice" model="res.partner.bank">
+        <field name="acc_number">012180345646804712</field>
+        <field name="partner_id" ref="res_partner_address_mx_berenice" />
+        <field name="bank_id" ref="l10n_mx.acc_bank_012_BBVA_BANCOMER" />
+        <field name="company_id" ref="l10n_mx.demo_company_mx" />
+    </record>
+
+    <record id="account_bank_employee_cesar" model="res.partner.bank">
+        <field name="acc_number">012320435647805710</field>
+        <field name="partner_id" ref="res_partner_address_mx_cesar" />
+        <field name="bank_id" ref="l10n_mx.acc_bank_012_BBVA_BANCOMER" />
+        <field name="company_id" ref="l10n_mx.demo_company_mx" />
+    </record>
+
+</odoo>

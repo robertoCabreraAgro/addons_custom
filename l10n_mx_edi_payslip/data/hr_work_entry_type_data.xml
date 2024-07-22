@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+
+    <!-- Customazing attendance for mexican payroll-->
+    <record id="hr_work_entry.work_entry_type_attendance" model="hr.work.entry.type">
+        <field name="round_days">FULL</field>
+        <field name="round_days_type">HALF-UP</field>
+    </record>
+
+    <!-- Holiday -->
+    <record id="hr_work_entry_contract.work_entry_type_legal_leave" model="hr.work.entry.type">
+        <field name="name" eval="'Vacaciones'" />
+    </record>
+
+    <record id="hr_work_entry_contract.work_entry_type_sick_leave" model="hr.work.entry.type">
+        <field name="name" eval="'Incapacidad por enfermedad general'" />
+        <field name="round_days">FULL</field>
+       <field name="round_days_type">HALF-UP</field>
+    </record>
+
+    <record id="hr_payroll.hr_work_entry_type_out_of_contract" model="hr.work.entry.type">
+        <field
+            name="unpaid_structure_ids"
+            eval="[Command.set([ref('l10n_mx_edi_payslip.payroll_structure_data_01'),
+            ref('l10n_mx_edi_payslip.payroll_structure_data_02'),
+            ref('l10n_mx_edi_payslip.payroll_structure_data_03'),
+            ref('l10n_mx_edi_payslip.payroll_structure_data_04'),
+            ref('l10n_mx_edi_payslip.payroll_structure_data_05'),
+            ref('l10n_mx_edi_payslip.payroll_structure_data_06'),
+            ref('l10n_mx_edi_payslip.payroll_structure_data_07'),
+            ref('l10n_mx_edi_payslip.payroll_structure_data_08')])]"
+        />
+    </record>
+
+    <record id="hr_work_entry_contract.work_entry_type_unpaid_leave" model="hr.work.entry.type">
+        <field name="name" eval="'Ausentismo'" />
+        <field name="round_days">FULL</field>
+        <field name="round_days_type">HALF-UP</field>
+        <field
+            name="unpaid_structure_ids"
+            eval="[Command.set([ref('l10n_mx_edi_payslip.payroll_structure_data_01'),
+            ref('l10n_mx_edi_payslip.payroll_structure_data_02'),
+            ref('l10n_mx_edi_payslip.payroll_structure_data_03'),
+            ref('l10n_mx_edi_payslip.payroll_structure_data_04'),
+            ref('l10n_mx_edi_payslip.payroll_structure_data_05'),
+            ref('l10n_mx_edi_payslip.payroll_structure_data_06'),
+            ref('l10n_mx_edi_payslip.payroll_structure_data_07'),
+            ref('l10n_mx_edi_payslip.payroll_structure_data_08')])]"
+        />
+    </record>
+
+    <record id="hr_work_entry_contract.work_entry_type_leave" model="hr.work.entry.type">
+        <field name="name" eval="'Permiso'" />
+        <field name="round_days">FULL</field>
+        <field name="round_days_type">HALF-UP</field>
+    </record>
+
+    <record id="work_entry_type_sick_leave_paternity" model="hr.work.entry.type">
+        <field name="name">Permiso de paternidad</field>
+        <field name="code">LEAVE130</field>
+        <field name="is_leave">True</field>
+        <field name="color">5</field>
+        <field name="round_days">FULL</field>
+        <field name="round_days_type">HALF-UP</field>
+    </record>
+
+    <record id="work_entry_type_sick_leave_maternity" model="hr.work.entry.type">
+        <field name="name">Maternidad</field>
+        <field name="code">LEAVE111</field>
+        <field name="is_leave">True</field>
+        <field name="color">5</field>
+        <field name="round_days">FULL</field>
+        <field name="round_days_type">HALF-UP</field>
+    </record>
+
+    <record id="work_entry_type_sick_leave_riesgo_de_trabajo" model="hr.work.entry.type">
+        <field name="name">Incapacidad por riesgo de trabajo</field>
+        <field name="code">LEAVE112</field>
+        <field name="is_leave">True</field>
+        <field name="color">5</field>
+        <field name="round_days">FULL</field>
+        <field name="round_days_type">HALF-UP</field>
+    </record>
+
+    <record id="work_entry_type_sick_leave_padres_hijo_cancer" model="hr.work.entry.type">
+        <field name="name">Licencia para Padres con Hijos con Cancer</field>
+        <field name="code">LEAVE113</field>
+        <field name="is_leave">True</field>
+        <field name="color">5</field>
+        <field name="round_days">FULL</field>
+        <field name="round_days_type">HALF-UP</field>
+    </record>
+
+    <record id="work_entry_type_mexican_faltas_injustificadas" model="hr.work.entry.type">
+        <field name="name">Falta justificada sin goce de salario</field>
+        <field name="code">LEAVE114</field>
+        <field name="is_leave">True</field>
+        <field name="color">5</field>
+        <field name="round_days">FULL</field>
+        <field name="round_days_type">HALF-UP</field>
+        <field
+            name="unpaid_structure_ids"
+            eval="[Command.set([ref('l10n_mx_edi_payslip.payroll_structure_data_01'),
+            ref('l10n_mx_edi_payslip.payroll_structure_data_02'),
+            ref('l10n_mx_edi_payslip.payroll_structure_data_03'),
+            ref('l10n_mx_edi_payslip.payroll_structure_data_04'),
+            ref('l10n_mx_edi_payslip.payroll_structure_data_05'),
+            ref('l10n_mx_edi_payslip.payroll_structure_data_06'),
+            ref('l10n_mx_edi_payslip.payroll_structure_data_07'),
+            ref('l10n_mx_edi_payslip.payroll_structure_data_08')])]"
+        />
+    </record>
+
+    <record id="work_entry_type_mexican_licencia_sin_goce" model="hr.work.entry.type">
+        <field name="name">Licencia sin goce de salario</field>
+        <field name="code">LEAVE115</field>
+        <field name="is_leave">True</field>
+        <field name="color">5</field>
+        <field name="round_days">FULL</field>
+        <field name="round_days_type">HALF-UP</field>
+        <field
+            name="unpaid_structure_ids"
+            eval="[Command.set([ref('l10n_mx_edi_payslip.payroll_structure_data_01'),
+            ref('l10n_mx_edi_payslip.payroll_structure_data_02'),
+            ref('l10n_mx_edi_payslip.payroll_structure_data_03'),
+            ref('l10n_mx_edi_payslip.payroll_structure_data_04'),
+            ref('l10n_mx_edi_payslip.payroll_structure_data_05'),
+            ref('l10n_mx_edi_payslip.payroll_structure_data_06'),
+            ref('l10n_mx_edi_payslip.payroll_structure_data_07'),
+            ref('l10n_mx_edi_payslip.payroll_structure_data_08')])]"
+        />
+    </record>
+
+    <record id="work_entry_type_sick_licencia_adopcion" model="hr.work.entry.type">
+        <field name="name">Licencia de Adopción</field>
+        <field name="code">LEAVE116</field>
+        <field name="is_leave">True</field>
+        <field name="color">5</field>
+        <field name="round_days">FULL</field>
+        <field name="round_days_type">HALF-UP</field>
+    </record>
+
+    <record id="work_entry_type_public_holiday_l10n_mx_payroll" model="hr.work.entry.type">
+        <field name="name">Feriado</field>
+        <field name="code">LEAVE140</field>
+        <field name="is_leave">True</field>
+        <field name="color">5</field>
+        <field name="round_days">FULL</field>
+        <field name="round_days_type">HALF-UP</field>
+    </record>
+
+    <record id="work_entry_type_absence_l10n_mx_payroll" model="hr.work.entry.type">
+        <field name="name">Ausencia por no registrar asistencia</field>
+        <field name="code">LEAVE150</field>
+        <field name="is_leave">True</field>
+        <field name="color">5</field>
+        <field name="round_days">FULL</field>
+        <field name="round_days_type">HALF-UP</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="resource_calendar_std" model="resource.calendar">
+        <field name="name">Standard 40 hours/week</field>
+        <field name="company_id" ref="l10n_mx.demo_company_mx" />
+    </record>
+
+</odoo>

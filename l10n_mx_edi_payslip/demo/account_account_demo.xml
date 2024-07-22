@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="cuenta210_01" model="account.account">
+        <field name="code">211.01.01</field>
+        <field name="name">Pasivo de nómina</field>
+        <field name="account_type">asset_current</field>
+        <field name="company_id" ref="l10n_mx.demo_company_mx" />
+    </record>
+
+    <record id="cuenta210_02" model="account.account">
+        <field name="code">211.01.02</field>
+        <field name="name">Cuenta por pagar al empleado</field>
+        <field name="account_type">asset_current</field>
+        <field name="company_id" ref="l10n_mx.demo_company_mx" />
+    </record>
+
+    <record id="cuenta601_08" model="account.account">
+        <field name="code">602.08.01</field>
+        <field name="name">Gasto de nómina</field>
+        <field name="account_type">expense</field>
+        <field name="company_id" ref="l10n_mx.demo_company_mx" />
+    </record>
+
+</odoo>

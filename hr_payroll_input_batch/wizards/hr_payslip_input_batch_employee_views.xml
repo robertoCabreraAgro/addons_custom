@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="hr_payslip_input_batch_employee_form" model="ir.ui.view">
+        <field name="name">view.hr.payslip.extra.by.employees</field>
+        <field name="model">hr.payslip.input.batch.employee</field>
+        <field name="arch" type="xml">
+            <form string="Employees">
+                <separator string="Employees" />
+                <span colspan="4" nolabel="1">This wizard will assign all selected employee(s) on the extras.</span>
+                <field name="employee_ids" nolabel="1">
+                    <tree>
+                        <field name="name" />
+                        <field name="work_email" />
+                        <field name="department_id" />
+                    </tree>
+                </field>
+                <footer>
+                    <button string="Assign" name="load_employees" type="object" class="oe_highlight" data-hotkey="q" />
+                    <button string="Cancel" class="btn btn-secondary" special="cancel" data-hotkey="z" />
+                </footer>
+           </form>
+        </field>
+    </record>
+
+    <record id="hr_payslip_input_batch_employee_action" model="ir.actions.act_window">
+        <field name="name">Assign Employees</field>
+        <field name="res_model">hr.payslip.input.batch.employee</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="hr_payslip_input_batch_employee_form" />
+        <field name="target">new</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <template id="hr_payroll_loan_report_payslip" inherit_id="hr_payroll.report_payslip">
+        <xpath expr="//div[@id=hasclass('total')]" position="after">
+            <t t-if="o.company_id.loan_generate_breakdown">
+                <t t-set="loan_lines" t-value="o._get_loan_breakdown_lines()" />
+                <table class="table" name="loan_breakdown" t-if="loan_lines">
+                    <thead>
+                        <tr>
+                            <th>Loan Description</th>
+                            <th>Loan Balance</th>
+                            <th>Quota Number</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="loan_lines" t-as="line">
+                            <tr>
+                                <td>
+                                    <t t-out="line.payslip_line_id.name" />
+                                </td>
+                                <td>
+                                    <t t-out="line.remaining_amount" />
+                                </td>
+                                <td>
+                                    <t t-out="line.sequence" />
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </t>
+        </xpath>
+    </template>
+
+</odoo>

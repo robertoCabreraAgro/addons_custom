@@ -1,0 +1,60 @@
+<?xml version="1.0" ?>
+<odoo>
+
+    <record id="hr_schedule_payment_fortnightly" model="hr.schedule.payment">
+        <field name="name">Fortnightly</field>
+        <field name="code">fortnightly</field>
+        <field name="days_to_pay">15</field>
+        <field name="periods_per_year">26</field>
+    </record>
+
+    <record id="hr_schedule_payment_monthly" model="hr.schedule.payment">
+        <field name="name">Monthly</field>
+        <field name="code">monthly</field>
+        <field name="days_to_pay">30</field>
+        <field name="periods_per_year">12</field>
+    </record>
+
+    <record id="hr_schedule_payment_quarterly" model="hr.schedule.payment">
+        <field name="name">Quarterly</field>
+        <field name="code">quarterly</field>
+        <field name="days_to_pay">90</field>
+        <field name="periods_per_year">4</field>
+    </record>
+
+    <record id="hr_schedule_payment_semi_annually" model="hr.schedule.payment">
+        <field name="name">Semi Annually</field>
+        <field name="code">semi-annually</field>
+        <field name="days_to_pay">180</field>
+        <field name="periods_per_year">2</field>
+    </record>
+
+    <record id="hr_schedule_payment_annually" model="hr.schedule.payment">
+        <field name="name">Annually</field>
+        <field name="code">annually</field>
+        <field name="days_to_pay">365</field>
+        <field name="periods_per_year">1</field>
+    </record>
+
+    <record id="hr_schedule_payment_weekly" model="hr.schedule.payment">
+        <field name="name">Weekly</field>
+        <field name="code">weekly</field>
+        <field name="days_to_pay">7</field>
+        <field name="periods_per_year">52</field>
+    </record>
+
+    <record id="hr_schedule_payment_bi_weekly" model="hr.schedule.payment">
+        <field name="name">Bi Weekly</field>
+        <field name="code">bi-weekly</field>
+        <field name="days_to_pay">14</field>
+        <field name="periods_per_year">26</field>
+    </record>
+
+    <record id="hr_schedule_payment_bi_monthly" model="hr.schedule.payment">
+        <field name="name">Bi Monthly</field>
+        <field name="code">bi-monthly</field>
+        <field name="days_to_pay">60</field>
+        <field name="periods_per_year">6</field>
+    </record>
+
+</odoo>

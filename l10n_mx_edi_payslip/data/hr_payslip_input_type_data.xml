@@ -1,0 +1,1714 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="hr_payslip_input_not_attedance" model="hr.payslip.input.type">
+        <field name="code">LAT</field>
+        <field name="name">Días sin registro de asistencia</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_001_holidays" model="hr.payslip.input.type">
+        <field name="code">pgh_001</field>
+        <field name="name">Vacaciones</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_001_public_holiday" model="hr.payslip.input.type">
+        <field name="code">dit</field>
+        <field name="name">Días Inhábiles Trabajados</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_001_public_holiday_simple" model="hr.payslip.input.type">
+        <field name="code">ddt</field>
+        <field name="name">Días de Descanso Trabajados</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_001_retroactive" model="hr.payslip.input.type">
+        <field name="code">ret</field>
+        <field name="name">Retroactivo</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_003_g" model="hr.payslip.input.type">
+        <field name="code">PTU</field>
+        <field name="name">Participación de los Trabajadores en las Utilidades PTU</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06'), ref('payroll_structure_data_05')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_004_e" model="hr.payslip.input.type">
+        <field name="code">pe_04</field>
+        <field name="name">Reembolso de Gastos Médicos Dentales y Hospitalarios</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_005_e" model="hr.payslip.input.type">
+        <field name="code">pe_005</field>
+        <field name="name">Fondo de Ahorro</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06'), ref('payroll_structure_data_09')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_006_e" model="hr.payslip.input.type">
+        <field name="code">pe_006</field>
+        <field name="name">Caja de ahorro</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_009_e" model="hr.payslip.input.type">
+        <field name="code">pe_009</field>
+        <field name="name">Contribuciones a Cargo del Trabajador Pagadas por el Patrón</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_010_g" model="hr.payslip.input.type">
+        <field name="code">pg_010</field>
+        <field name="name">Premios por puntualidad</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_011_g" model="hr.payslip.input.type">
+        <field name="code">pg_011</field>
+        <field name="name">Prima de Seguro de vida</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_012_e" model="hr.payslip.input.type">
+        <field name="code">pe_012</field>
+        <field name="name">Seguro de Gastos Medicos Mayores</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_013_e" model="hr.payslip.input.type">
+        <field name="code">pe_013</field>
+        <field name="name">Cuotas Sindicales Pagadas por el Patrón</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_014_e" model="hr.payslip.input.type">
+        <field name="code">pe_014</field>
+        <field name="name">Subsidios por incapacidad</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_015_e" model="hr.payslip.input.type">
+        <field name="code">pe_015</field>
+        <field name="name">Becas para trabajadores o hijos</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_019_es" model="hr.payslip.input.type">
+        <field name="code">pes_019</field>
+        <field name="name">Horas extra simples (E)</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_019_gs" model="hr.payslip.input.type">
+        <field name="code">pgs_019</field>
+        <field name="name">Horas extra simples (G)</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_019_e" model="hr.payslip.input.type">
+        <field name="code">pe_019</field>
+        <field name="name">Horas extra dobles (E)</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_019_g" model="hr.payslip.input.type">
+        <field name="code">pg_019</field>
+        <field name="name">Horas extra dobles (G)</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_019_t" model="hr.payslip.input.type">
+        <field name="code">pgt_019</field>
+        <field name="name">Horas extra Triples</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_020" model="hr.payslip.input.type">
+        <field name="code">p_020</field>
+        <field name="name">Domingos trabajados</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_021" model="hr.payslip.input.type">
+        <field name="code">pg_021</field>
+        <field name="name">Prima vacacional</field>
+        <field name="country_id" ref="base.mx" />
+        <field name="struct_ids" eval="[Command.set([ref('payroll_structure_data_01')])]" />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_024_e" model="hr.payslip.input.type">
+        <field name="code">pe_024</field>
+        <field name="name">Seguro de retiro (E)</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_024_g" model="hr.payslip.input.type">
+        <field name="code">pg_024</field>
+        <field name="name">Seguro de retiro (G)</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_026_e" model="hr.payslip.input.type">
+        <field name="code">pe_026</field>
+        <field name="name">Reembolso por funeral</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_027_e" model="hr.payslip.input.type">
+        <field name="code">pe_027</field>
+        <field name="name">Cuotas de seguridad social pagadas por el patrón</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_028_g" model="hr.payslip.input.type">
+        <field name="code">pg_028</field>
+        <field name="name">Comisiones</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_029_g" model="hr.payslip.input.type">
+        <field name="code">p_029</field>
+        <field name="name">Vales de despensa</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_030_g" model="hr.payslip.input.type">
+        <field name="code">pg_030</field>
+        <field name="name">Vales de restaurante</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_031_e" model="hr.payslip.input.type">
+        <field name="code">pe_031</field>
+        <field name="name">Vales de gasolina (E)</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_031_g" model="hr.payslip.input.type">
+        <field name="code">pg_031</field>
+        <field name="name">Vales de gasolina (G)</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_032_g" model="hr.payslip.input.type">
+        <field name="code">pg_032</field>
+        <field name="name">Vales de ropa</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_033_g" model="hr.payslip.input.type">
+        <field name="code">pg_033</field>
+        <field name="name">Ayuda para renta</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_034_g" model="hr.payslip.input.type">
+        <field name="code">pg_034</field>
+        <field name="name">Ayuda para artículos escolares</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_035_g" model="hr.payslip.input.type">
+        <field name="code">pg_035</field>
+        <field name="name">Ayuda Anteojos</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_036_e" model="hr.payslip.input.type">
+        <field name="code">pe_036</field>
+        <field name="name">Ayuda para transporte</field>
+        <field name="country_id" ref="base.mx" />
+        <field name="struct_ids" eval="[Command.set([ref('payroll_structure_data_01')])]" />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_036_g" model="hr.payslip.input.type">
+        <field name="code">pg_036</field>
+        <field name="name">Ayuda para transporte</field>
+        <field name="country_id" ref="base.mx" />
+        <field name="struct_ids" eval="[Command.set([ref('payroll_structure_data_01')])]" />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_037_e" model="hr.payslip.input.type">
+        <field name="code">pe_037</field>
+        <field name="name">Ayuda para gastos de funeral</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_038_g" model="hr.payslip.input.type">
+        <field name="code">pg_038</field>
+        <field name="name">Otros ingresos por salarios</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_03'), ref('payroll_structure_data_04'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_rule_input_perception_productivity_038_g" model="hr.payslip.input.type">
+        <field name="code">pgpe_038</field>
+        <field name="name">Bono por Productividad</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_rule_input_perception_gratifications_038_g" model="hr.payslip.input.type">
+        <field name="code">grat_038</field>
+        <field name="name">Gratificaciones</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_rule_input_perception_compensation_038_g" model="hr.payslip.input.type">
+        <field name="code">comp_038</field>
+        <field name="name">Compensaciones</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_039_e" model="hr.payslip.input.type">
+        <field name="code">pe_039</field>
+        <field name="name">Jubilaciones, pensiones o haberes de retiro (E)</field>
+        <field name="country_id" ref="base.mx" />
+        <field name="struct_ids" eval="[Command.set([ref('payroll_structure_data_01')])]" />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_039_g" model="hr.payslip.input.type">
+        <field name="code">pg_039</field>
+        <field name="name">Jubilaciones, pensiones o haberes de retiro (G)</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_044_e" model="hr.payslip.input.type">
+        <field name="code">pe_044</field>
+        <field name="name">Jubilaciones, pensiones o haberes de retiro en parcialidades (E)</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_044_g" model="hr.payslip.input.type">
+        <field name="code">pg_044</field>
+        <field name="name">Jubilaciones, pensiones o haberes de retiro en parcialidades (G)</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_045_e" model="hr.payslip.input.type">
+        <field name="code">pe_045</field>
+        <field name="name">Ingresos en acciones o títulos valor que representan bienes (E)</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_045_g" model="hr.payslip.input.type">
+        <field name="code">pg_045</field>
+        <field name="name">Ingresos en acciones o títulos valor que representan bienes (G)</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_047_e" model="hr.payslip.input.type">
+        <field name="code">pe_047</field>
+        <field name="name">Días para Alimentación</field>
+        <field name="country_id" ref="base.mx" />
+        <field name="struct_ids" eval="[Command.set([ref('payroll_structure_data_01')])]" />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_048_e" model="hr.payslip.input.type">
+        <field name="code">pe_048</field>
+        <field name="name">Habitación (E)</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_048_g" model="hr.payslip.input.type">
+        <field name="code">pg_048</field>
+        <field name="name">Habitación (G)</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_049_g" model="hr.payslip.input.type">
+        <field name="code">pg_049</field>
+        <field name="name">Premios por asistencia</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_050_e" model="hr.payslip.input.type">
+        <field name="code">pe_050</field>
+        <field name="name">Viáticos (E)</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_perception_050_g" model="hr.payslip.input.type">
+        <field name="code">pg_050</field>
+        <field name="name">Viáticos (G)</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_rule_input_perception_051_g" model="hr.payslip.input.type">
+        <field name="code">pg_051</field>
+        <field
+            name="name"
+        >Pagos por gratificaciones, primas, compensaciones, recompensas u otros a extrabajadores derivados de jubilación en parcialidades</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_rule_input_perception_052_g" model="hr.payslip.input.type">
+        <field name="code">pg_052</field>
+        <field
+            name="name"
+        >Pagos que se realicen a extrabajadores que obtengan una jubilación en parcialidades derivados de la ejecución de resoluciones judicial o de un laudo</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_rule_input_perception_053_g" model="hr.payslip.input.type">
+        <field name="code">pg_053</field>
+        <field
+            name="name"
+        >Pagos que se realicen a extrabajadores que obtengan una jubilación en una sola exhibición derivados de la ejecución de resoluciones judicial o de un laudo</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_003" model="hr.payslip.input.type">
+        <field name="code">d_003</field>
+        <field name="name">Aportaciones a retiro, cesantía en edad avanzada y vejez</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_004_internal_discount" model="hr.payslip.input.type">
+        <field name="code">ddi_004</field>
+        <field name="name">Descuento Interno</field>
+        <field name="country_id" ref="base.mx" />
+        <field name="use_in_loan">True</field>
+        <field
+            name="struct_ids"
+            eval="[Command.link(ref('payroll_structure_data_01')), Command.link(ref('payroll_structure_data_03')), Command.link(ref('payroll_structure_data_04'))]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_004_loan_company" model="hr.payslip.input.type">
+        <field name="code">dpc_004</field>
+        <field name="name">Préstamo Compañía</field>
+        <field name="country_id" ref="base.mx" />
+        <field name="use_in_loan">True</field>
+        <field
+            name="struct_ids"
+            eval="[Command.link(ref('payroll_structure_data_01')), Command.link(ref('payroll_structure_data_06'))]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_004" model="hr.payslip.input.type">
+        <field name="code">d_004</field>
+        <field name="name">Otros</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_car_insurance" model="hr.payslip.input.type">
+        <field name="code">svp_004</field>
+        <field name="name">Seguro Vehículo Personal</field>
+        <field name="country_id" ref="base.mx" />
+        <field name="use_in_loan">True</field>
+        <field name="struct_ids" eval="[Command.set([ref('payroll_structure_data_01')])]" />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_caja_ahorro_004" model="hr.payslip.input.type">
+        <field name="code">cj_004</field>
+        <field name="name">Caja de ahorro</field>
+        <field name="country_id" ref="base.mx" />
+        <field name="struct_ids" eval="[Command.set([ref('payroll_structure_data_01')])]" />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_005" model="hr.payslip.input.type">
+        <field name="code">d_005</field>
+        <field name="name">Aportaciones a Fondo de vivienda</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_008" model="hr.payslip.input.type">
+        <field name="code">d_008</field>
+        <field name="name">Renta</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_009" model="hr.payslip.input.type">
+        <field name="code">inf_009</field>
+        <field name="name">Préstamos provenientes del Fondo Nacional de la Vivienda para los Trabajadores</field>
+        <field name="country_id" ref="base.mx" />
+        <field name="use_in_loan">True</field>
+        <field
+            name="struct_ids"
+            eval="[Command.link(ref('payroll_structure_data_01')), Command.link(ref('payroll_structure_data_03')), Command.link(ref('payroll_structure_data_06'))]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_CV010" model="hr.payslip.input.type">
+        <field name="code">cv_010</field>
+        <field name="name">Pago por crédito de vivienda</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_011" model="hr.payslip.input.type">
+        <field name="code">dpai_011</field>
+        <field name="name">Pago de abonos INFONACOT</field>
+        <field name="country_id" ref="base.mx" />
+        <field name="use_in_loan">True</field>
+        <field
+            name="struct_ids"
+            eval="[Command.link(ref('payroll_structure_data_01')), Command.link(ref('payroll_structure_data_06'))]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_012" model="hr.payslip.input.type">
+        <field name="code">d_012</field>
+        <field name="name">Anticipo de salarios</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_013" model="hr.payslip.input.type">
+        <field name="code">d_013</field>
+        <field name="name">Pagos hechos con exceso al trabajador</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_014" model="hr.payslip.input.type">
+        <field name="code">d_014</field>
+        <field name="name">Errores</field>
+        <field name="country_id" ref="base.mx" />
+        <field name="use_in_loan">True</field>
+        <field
+            name="struct_ids"
+            eval="[Command.link(ref('payroll_structure_data_01')), Command.link(ref('payroll_structure_data_06'))]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_015" model="hr.payslip.input.type">
+        <field name="code">d_015</field>
+        <field name="name">Pérdidas</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_016" model="hr.payslip.input.type">
+        <field name="code">d_016</field>
+        <field name="name">Averías</field>
+        <field name="country_id" ref="base.mx" />
+        <field name="use_in_loan">True</field>
+        <field
+            name="struct_ids"
+            eval="[Command.link(ref('payroll_structure_data_01')), Command.link(ref('payroll_structure_data_06'))]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_017" model="hr.payslip.input.type">
+        <field name="code">d_017</field>
+        <field name="name">Adquisición de artículos producidos por la empresa o establecimiento</field>
+        <field name="country_id" ref="base.mx" />
+        <field name="use_in_loan">True</field>
+        <field
+            name="struct_ids"
+            eval="[Command.link(ref('payroll_structure_data_01')), Command.link(ref('payroll_structure_data_06'))]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_018" model="hr.payslip.input.type">
+        <field name="code">d_018</field>
+        <field
+            name="name"
+        >Cuotas para la constitución y fomento de sociedades cooperativas y de cajas de ahorro</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_019" model="hr.payslip.input.type">
+        <field name="code">d_019</field>
+        <field name="name">Cuotas sindicales</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_021" model="hr.payslip.input.type">
+        <field name="code">d_021</field>
+        <field name="name">Cuotas obrero patronales</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_022" model="hr.payslip.input.type">
+        <field name="code">d_022</field>
+        <field name="name">Impuestos Locales</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_023" model="hr.payslip.input.type">
+        <field name="code">d_023</field>
+        <field name="name">Aportaciones voluntarias</field>
+        <field name="country_id" ref="base.mx" />
+        <field name="use_in_loan">True</field>
+        <field
+            name="struct_ids"
+            eval="[Command.link(ref('payroll_structure_data_01')), Command.link(ref('payroll_structure_data_06'))]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_024" model="hr.payslip.input.type">
+        <field name="code">d_024</field>
+        <field name="name">Ajuste en Gratificación Anual - Exento</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_025" model="hr.payslip.input.type">
+        <field name="code">d_025</field>
+        <field name="name">Ajuste en Gratificación Anual - Gravado</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_026" model="hr.payslip.input.type">
+        <field name="code">d_026</field>
+        <field name="name">Ajuste en Participación de los Trabajadores en las Utilidades PTU Exento</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_027" model="hr.payslip.input.type">
+        <field name="code">d_027</field>
+        <field name="name">Ajuste en Participación de los Trabajadores en las Utilidades PTU Gravado</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_028" model="hr.payslip.input.type">
+        <field name="code">d_028</field>
+        <field name="name">Ajuste en Reembolso de Gastos Médicos Dentales y Hospitalarios Exento</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_029" model="hr.payslip.input.type">
+        <field name="code">d_029</field>
+        <field name="name">Ajuste en Fondo de ahorro Exento</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_030" model="hr.payslip.input.type">
+        <field name="code">d_030</field>
+        <field name="name">Ajuste en Caja de ahorro Exento</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_031" model="hr.payslip.input.type">
+        <field name="code">d_031</field>
+        <field name="name">Ajuste en Contribuciones a Cargo del Trabajador Pagadas por el Patrón Exento</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_032" model="hr.payslip.input.type">
+        <field name="code">d_032</field>
+        <field name="name">Ajuste en Premios por puntualidad Gravado</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_033" model="hr.payslip.input.type">
+        <field name="code">d_033</field>
+        <field name="name">Ajuste en Prima de Seguro de vida Exento</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_034" model="hr.payslip.input.type">
+        <field name="code">d_034</field>
+        <field name="name">Ajuste en Seguro de Gastos Médicos Mayores Exento</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_035" model="hr.payslip.input.type">
+        <field name="code">d_035</field>
+        <field name="name">Ajuste en Cuotas Sindicales Pagadas por el Patrón Exento</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_036" model="hr.payslip.input.type">
+        <field name="code">d_036</field>
+        <field name="name">Ajuste en Subsidios por incapacidad Exento</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_037" model="hr.payslip.input.type">
+        <field name="code">d_037</field>
+        <field name="name">Ajuste en Becas para trabajadores o hijos Exento</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_038" model="hr.payslip.input.type">
+        <field name="code">d_038</field>
+        <field name="name">Ajuste en Horas extra Exento</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_039" model="hr.payslip.input.type">
+        <field name="code">d_039</field>
+        <field name="name">Ajuste en Horas extra Gravado</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_040" model="hr.payslip.input.type">
+        <field name="code">d_040</field>
+        <field name="name">Ajuste en Prima dominical Exento</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_041" model="hr.payslip.input.type">
+        <field name="code">d_041</field>
+        <field name="name">Ajuste en Prima dominical Gravado</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_042" model="hr.payslip.input.type">
+        <field name="code">d_042</field>
+        <field name="name">Ajuste en Prima vacacional Exento</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_043" model="hr.payslip.input.type">
+        <field name="code">d_043</field>
+        <field name="name">Ajuste en Prima vacacional Gravado</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_048" model="hr.payslip.input.type">
+        <field name="code">d_048</field>
+        <field name="name">Ajuste en Seguro de retiro Exento</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_049" model="hr.payslip.input.type">
+        <field name="code">d_049</field>
+        <field name="name">Ajuste en Indemnizaciones Exento</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_050" model="hr.payslip.input.type">
+        <field name="code">d_050</field>
+        <field name="name">Ajuste en Indemnizaciones Gravado</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_051" model="hr.payslip.input.type">
+        <field name="code">d_051</field>
+        <field name="name">Ajuste en Reembolso por funeral Exento</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_052" model="hr.payslip.input.type">
+        <field name="code">d_052</field>
+        <field name="name">Ajuste en Cuotas de seguridad social pagadas por el patrón Exento</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_053" model="hr.payslip.input.type">
+        <field name="code">d_053</field>
+        <field name="name">Ajuste en Comisiones Gravado</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_054" model="hr.payslip.input.type">
+        <field name="code">d_054</field>
+        <field name="name">Ajuste en Vales de despensa Exento</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_055" model="hr.payslip.input.type">
+        <field name="code">d_055</field>
+        <field name="name">Ajuste en Vales de restaurante Exento</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_056" model="hr.payslip.input.type">
+        <field name="code">d_056</field>
+        <field name="name">Ajuste en Vales de gasolina Exento</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_057" model="hr.payslip.input.type">
+        <field name="code">d_057</field>
+        <field name="name">Ajuste en Vales de ropa Exento</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_058" model="hr.payslip.input.type">
+        <field name="code">d_058</field>
+        <field name="name">Ajuste en Ayuda para renta Exento</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_059" model="hr.payslip.input.type">
+        <field name="code">d_059</field>
+        <field name="name">Ajuste en Ayuda para artículos escolares Exento</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_060" model="hr.payslip.input.type">
+        <field name="code">d_060</field>
+        <field name="name">Ajuste en Ayuda para anteojos Exento</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_061" model="hr.payslip.input.type">
+        <field name="code">d_061</field>
+        <field name="name">Ajuste en Ayuda para transporte Exento</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_062" model="hr.payslip.input.type">
+        <field name="code">d_062</field>
+        <field name="name">Ajuste en Ayuda para gastos de funeral Exento</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_063" model="hr.payslip.input.type">
+        <field name="code">d_063</field>
+        <field name="name">Ajuste en Otros ingresos por salarios Exento</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_064" model="hr.payslip.input.type">
+        <field name="code">d_064</field>
+        <field name="name">Ajuste en Otros ingresos por salarios Gravado</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_065" model="hr.payslip.input.type">
+        <field name="code">d_065</field>
+        <field name="name">Ajuste en Jubilaciones, pensiones o haberes de retiro Exento</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_066" model="hr.payslip.input.type">
+        <field name="code">d_066</field>
+        <field name="name">Ajuste en Jubilaciones, pensiones o haberes de retiro Gravado</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_069" model="hr.payslip.input.type">
+        <field name="code">d_069</field>
+        <field name="name">Ajuste en Jubilaciones, pensiones o haberes de retiro Acumulable</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_070" model="hr.payslip.input.type">
+        <field name="code">d_070</field>
+        <field name="name">Ajuste en Jubilaciones, pensiones o haberes de retiro No Acumulable</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_071" model="hr.payslip.input.type">
+        <field name="code">asee</field>
+        <field name="name">Ajuste en Subsidio para el empleo - efectivamente entregado al trabajador</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_02'), ref('payroll_structure_data_04'), ref('payroll_structure_data_05'), ref('payroll_structure_data_06'), ref('payroll_structure_data_07')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_072" model="hr.payslip.input.type">
+        <field name="code">d_072</field>
+        <field name="name">Ajuste en Ingresos en acciones o títulos valor que representan bienes Exento</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_073" model="hr.payslip.input.type">
+        <field name="code">d_073</field>
+        <field name="name">Ajuste en Ingresos en acciones o títulos valor que representan bienes Gravado</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_074" model="hr.payslip.input.type">
+        <field name="code">d_074</field>
+        <field name="name">Ajuste en Alimentación Exento</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_075" model="hr.payslip.input.type">
+        <field name="code">d_075</field>
+        <field name="name">Ajuste en Alimentación Gravado</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_076" model="hr.payslip.input.type">
+        <field name="code">d_076</field>
+        <field name="name">Ajuste en Habitación Exento</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_077" model="hr.payslip.input.type">
+        <field name="code">d_077</field>
+        <field name="name">Ajuste en Habitación Gravado</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_078" model="hr.payslip.input.type">
+        <field name="code">d_078</field>
+        <field name="name">Ajuste en Premios por asistencia</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_079" model="hr.payslip.input.type">
+        <field name="code">d_079</field>
+        <field
+            name="name"
+        >Ajuste en Pagos distintos a los listados y que no deben considerarse como ingreso por sueldos, salarios o ingresos asimilados</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_080" model="hr.payslip.input.type">
+        <field name="code">d_080</field>
+        <field name="name">Ajuste en Viáticos gravados</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_081" model="hr.payslip.input.type">
+        <field name="code">d_081</field>
+        <field name="name">Ajuste en Viáticos - entregados al trabajador</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_082" model="hr.payslip.input.type">
+        <field name="code">d_082</field>
+        <field name="name">Ajuste en Fondo de ahorro Gravado</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_083" model="hr.payslip.input.type">
+        <field name="code">d_083</field>
+        <field name="name">Ajuste en Caja de ahorro Gravado</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_084" model="hr.payslip.input.type">
+        <field name="code">d_084</field>
+        <field name="name">Ajuste en Prima de Seguro de vida Gravado</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_085" model="hr.payslip.input.type">
+        <field name="code">d_085</field>
+        <field name="name">Ajuste en Seguro de Gastos Médicos Mayores Gravado</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_086" model="hr.payslip.input.type">
+        <field name="code">d_086</field>
+        <field name="name">Ajuste en Subsidios por incapacidad Gravado</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_087" model="hr.payslip.input.type">
+        <field name="code">d_087</field>
+        <field name="name">Ajuste en Becas para trabajadores o hijos Gravado</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_088" model="hr.payslip.input.type">
+        <field name="code">d_088</field>
+        <field name="name">Ajuste en Seguro de retiro Gravado</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_089" model="hr.payslip.input.type">
+        <field name="code">d_089</field>
+        <field name="name">Ajuste en Vales de despensa Gravado</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_090" model="hr.payslip.input.type">
+        <field name="code">d_090</field>
+        <field name="name">Ajuste en Vales de restaurante Gravado</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_091" model="hr.payslip.input.type">
+        <field name="code">d_091</field>
+        <field name="name">Ajuste en Vales de gasolina Gravado</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_092" model="hr.payslip.input.type">
+        <field name="code">d_092</field>
+        <field name="name">Ajuste en Vales de ropa Gravado</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_093" model="hr.payslip.input.type">
+        <field name="code">d_093</field>
+        <field name="name">Ajuste en Ayuda para renta Gravado</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_094" model="hr.payslip.input.type">
+        <field name="code">d_094</field>
+        <field name="name">Ajuste en Ayuda para artículos escolares Gravado</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_095" model="hr.payslip.input.type">
+        <field name="code">d_095</field>
+        <field name="name">Ajuste en Ayuda para anteojos Gravado</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_096" model="hr.payslip.input.type">
+        <field name="code">d_096</field>
+        <field name="name">Ajuste en Ayuda para transporte Gravado</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_097" model="hr.payslip.input.type">
+        <field name="code">d_097</field>
+        <field name="name">Ajuste en Ayuda para gastos de funeral Gravado</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_098" model="hr.payslip.input.type">
+        <field name="code">d_098</field>
+        <field name="name">Ajuste a ingresos asimilados a salarios gravados</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_099" model="hr.payslip.input.type">
+        <field name="code">d_099</field>
+        <field name="name">Ajuste a ingresos por sueldos y salarios gravados</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_100" model="hr.payslip.input.type">
+        <field name="code">d_100</field>
+        <field name="name">Ajuste en Viáticos exentos</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_rule_input_deduction_101" model="hr.payslip.input.type">
+        <field name="code">d_101</field>
+        <field name="name">ISR Retenido de ejercicio anterior</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_rule_input_deduction_102" model="hr.payslip.input.type">
+        <field name="code">d_102</field>
+        <field
+            name="name"
+        >Ajuste a pagos por gratificaciones, primas, compensaciones, recompensas u otros a extrabajadores derivados de jubilación en parcialidades, gravados</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_rule_input_deduction_103" model="hr.payslip.input.type">
+        <field name="code">d_103</field>
+        <field
+            name="name"
+        >Ajuste a pagos que se realicen a extrabajadores que obtengan una jubilación en parcialidades derivados de la ejecución de una resolución judicial o de un laudo gravados</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_rule_input_deduction_104" model="hr.payslip.input.type">
+        <field name="code">d_104</field>
+        <field
+            name="name"
+        >Ajuste a pagos que se realicen a extrabajadores que obtengan una jubilación en parcialidades derivados de la ejecución de una resolución judicial o de un laudo exentos</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_rule_input_deduction_105" model="hr.payslip.input.type">
+        <field name="code">d_105</field>
+        <field
+            name="name"
+        >Ajuste a pagos que se realicen a extrabajadores que obtengan una jubilación en una sola exhibición derivados de la ejecución de una resolución judicial o de un laudo gravados</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_rule_input_deduction_106" model="hr.payslip.input.type">
+        <field name="code">d_106</field>
+        <field
+            name="name"
+        >Ajuste a pagos que se realicen a extrabajadores que obtengan una jubilación en una sola exhibición derivados de la ejecución de una resolución judicial o de un laudo exentos</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_rule_input_deduction_107" model="hr.payslip.input.type">
+        <field name="code">d_107</field>
+        <field name="name">Ajuste al Subsidio Causado</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_other_payment_001" model="hr.payslip.input.type">
+        <field name="code">op_001</field>
+        <field name="name">Reintegro de ISR pagado en exceso - siempre que no haya sido enterado al SAT</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_other_payment_003" model="hr.payslip.input.type">
+        <field name="code">op_003</field>
+        <field name="name">Viáticos - entregados al trabajador</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06'), ref('payroll_structure_data_07')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_other_payment_004" model="hr.payslip.input.type">
+        <field name="code">op_004</field>
+        <field name="name">Aplicación de saldo a favor por compensación anual</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_rule_input_other_payment_005" model="hr.payslip.input.type">
+        <field name="code">op_005</field>
+        <field
+            name="name"
+        >Reintegro de ISR retenido en exceso de ejercicio anterior (siempre que no haya sido enterado al SAT).</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_rule_input_other_payment_006" model="hr.payslip.input.type">
+        <field name="code">op_006</field>
+        <field name="name">Alimentos en bienes (Servicios de comedor y comida) Art 94 último párrafo LISR</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_rule_input_other_payment_007" model="hr.payslip.input.type">
+        <field name="code">op_007</field>
+        <field name="name">ISR ajustado por subsidio</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_rule_input_other_payment_008" model="hr.payslip.input.type">
+        <field name="code">op_008</field>
+        <field
+            name="name"
+        >Subsidio efectivamente entregado que no correspondía (Aplica sólo cuando haya ajuste al cierre de mes en relación con el Apéndice 7 de la guía de llenado de nómina)</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_rule_input_other_payment_009" model="hr.payslip.input.type">
+        <field name="code">op_009</field>
+        <field name="name">Reembolso descuento crédito de vivienda</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_other_payment_999" model="hr.payslip.input.type">
+        <field name="code">op_999</field>
+        <field
+            name="name"
+        >Pagos distintos a los listados y que no deben considerarse como ingreso por sueldos, salarios o ingresos asimilados</field>
+        <field name="country_id" ref="base.mx" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_01'), ref('payroll_structure_data_06')])]"
+        />
+    </record>
+
+    <record id="hr_payslip_input_type_other_payment_999_internet" model="hr.payslip.input.type">
+        <field name="code">opi_999</field>
+        <field name="name">Apoyo de internet por teletrabajo</field>
+        <field name="country_id" ref="base.mx" />
+        <field name="struct_ids" eval="[Command.set([ref('payroll_structure_data_01')])]" />
+    </record>
+
+    <record id="hr_payslip_input_type_other_payment_999_luz" model="hr.payslip.input.type">
+        <field name="code">opl_999</field>
+        <field name="name">Apoyo de luz por teletrabajo</field>
+        <field name="country_id" ref="base.mx" />
+        <field name="struct_ids" eval="[Command.set([ref('payroll_structure_data_01')])]" />
+    </record>
+
+    <record id="hr_payslip_input_type_deduction_004_loan_pca" model="hr.payslip.input.type">
+        <field name="code">dpca_004</field>
+        <field name="name">Préstamo Caja de Ahorro</field>
+        <field name="country_id" ref="base.mx" />
+        <field name="allows_interest_payment">True</field>
+        <field name="use_in_loan">True</field>
+        <field
+            name="struct_ids"
+            eval="[Command.link(ref('payroll_structure_data_01')), Command.link(ref('payroll_structure_data_06'))]"
+        />
+    </record>
+
+</odoo>

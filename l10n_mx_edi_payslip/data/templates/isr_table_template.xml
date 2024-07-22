@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="isr_table_template">
+        <table style='width:75%' class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th style='text-align: center; padding: 0px 10px; font-weight: bold;'>Limite Inferior</th>
+                    <th style='text-align: center; padding: 0px 10px; font-weight: bold;'>Limite Superior</th>
+                    <th style='text-align: center; padding: 0px 10px; font-weight: bold;'>Cuota Fija</th>
+                    <th style='text-align: center; padding: 0px 10px; font-weight: bold;'>Tasa</th>
+                </tr>
+            </thead>
+            <tr t-foreach="isr_lines" t-as="line">
+                <td style="text-align: center;" t-out="line[0]" />
+                <td style="text-align: center;" t-out="line[1]" />
+                <td style="text-align: center;" t-out="line[2]" />
+                <td style="text-align: center;" t-out="line[3]" />
+            </tr>
+        </table>
+    </template>
+</odoo>

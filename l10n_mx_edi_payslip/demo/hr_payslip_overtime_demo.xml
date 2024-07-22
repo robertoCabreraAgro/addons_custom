@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<odoo noupdate="1">
+
+    <record id="hr_payslip_mlc_cfdi0_overtime_line0" model="hr.payslip.overtime">
+        <field name="name" eval="DateTime.today().strftime('%Y-%m')+'-01'" />
+        <field name="hours" eval="1" />
+    </record>
+
+    <record id="hr_payslip_mlc_cfdi0_overtime_line1" model="hr.payslip.overtime">
+        <field name="name" eval="DateTime.today().strftime('%Y-%m')+'-02'" />
+        <field name="hours" eval="2" />
+    </record>
+
+</odoo>

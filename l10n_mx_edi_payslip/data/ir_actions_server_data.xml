@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="hr_payslip_download_uuid_xml_server_action" model="ir.actions.server">
+        <field name="name">Download Payslip UUID XML</field>
+        <field name="model_id" ref="hr_payroll.model_hr_payslip" />
+        <field name="state">code</field>
+        <field name="code">
+# Please install the module l10n_mx_edi_uuid_zip, in order to use this server action
+attachs = env['ir.attachment']
+cfdi_name_dict = {}
+for record in records:
+    cfdi_attach = record.l10n_mx_edi_retrieve_last_attachment()
+    if not cfdi_attach or not cfdi_attach.exists():
+        continue
+    attachs |= cfdi_attach
+
+    # Avoid the XML files have the same name, and save the name to set back after zip generation
+    cfdi_name_dict[cfdi_attach] = cfdi_attach.name
+    cfdi_attach.write({'name': '%s %s' % (record.employee_id.name, cfdi_attach.name)})
+
+    pdf_attach = env['ir.attachment'].search([
+        ('res_model', '=', record._name),
+        ('res_id', '=', record.id),
+        ('mimetype', '=', 'application/pdf')
+    ], limit=1)
+    if pdf_attach:
+      attachs |= pdf_attach
+      if record.employee_id.name not in pdf_attach.name:
+        pdf_attach.write({'name': '%s_%s' % (record.employee_id.name, pdf_attach.name)})
+
+attach_zip = env['ir.attachment.zip'].create({
+    'attachment_ids': [Command.set(attachs.ids)],
+    'zip_name': 'Nomina_mx_cfdi_uuid_xmls.zip',
+})
+attach_zip._set_zip_file()
+action = attach_zip._get_action_download()
+
+# Set back the CFDI XML file's names
+for cfdi_xml in cfdi_name_dict.keys():
+  cfdi_xml.write({'name': cfdi_name_dict[cfdi_xml]})
+        </field>
+    </record>
+
+    <record id="hr_contract_update_uuid_xml_server_action" model="ir.actions.server">
+        <field name="name">Update SDI and SBC</field>
+        <field name="model_id" ref="hr_contract.model_hr_contract" />
+        <field name="binding_model_id" ref="hr_contract.model_hr_contract" />
+        <field name="state">code</field>
+        <field name="code">
+for record in records:
+    record.action_update_current_holidays()
+    record._compute_integrated_salary()
+        </field>
+    </record>
+
+    <record id="hr_payslip_clear_other_inputs" model="ir.actions.server">
+        <field name="name">Clear Other Inputs</field>
+        <field name="model_id" ref="hr_payroll.model_hr_payslip" />
+        <field name="binding_model_id" ref="hr_payroll.model_hr_payslip" />
+        <field name="state">code</field>
+        <field name="code">
+if records.filtered(lambda p: p.state not in ('draft', 'verify')):
+    raise Warning('Esta acción solo se puede ejecutar para nóminas en borrador o en espera.')
+records.mapped('input_line_ids').unlink()
+        </field>
+    </record>
+
+    <record id="hr_payslip_set_payslips_not_sent" model="ir.actions.server">
+        <field name="name">Set payslip as not sent</field>
+        <field name="model_id" ref="hr_payroll.model_hr_payslip" />
+        <field name="binding_model_id" ref="hr_payroll.model_hr_payslip" />
+        <field name="state">code</field>
+        <field name="code">records.write({'sent': False})</field>
+    </record>
+
+    <record id="create_portal_user" model="ir.actions.server">
+        <field name="name">Create Portal User for Employees</field>
+        <field name="model_id" ref="hr.model_hr_employee" />
+        <field name="binding_model_id" ref="hr.model_hr_employee" />
+        <field name="state">code</field>
+        <field name="code">
+users = env['res.users']
+for employee in model.search([('user_id', '=', False)]):
+    if not (employee.work_email or employee.private_email):
+        continue
+    user = users.create({
+        'name': employee.name,
+        'login': employee.work_email or employee.private_email,
+        'company_id': employee.company_id.id,
+        'active': False,
+        'groups_id': [Command.set(env.ref('base.group_portal').ids)],
+    })
+    employee.write({'user_id': user.id})
+        </field>
+    </record>
+
+    <record id="l10n_mx_action_payroll_edi_cancel_payroll" model="ir.actions.server">
+        <field name="name">Request EDI Cancellation</field>
+        <field name="model_id" ref="hr_payroll.model_hr_payslip" />
+        <field name="binding_model_id" ref="hr_payroll.model_hr_payslip" />
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                records.l10n_mx_edi_action_request_edi_cancel()
+        </field>
+    </record>
+
+    <record id="action_hr_payroll_update_extras" model="ir.actions.server">
+        <field name="name">Update Extras</field>
+        <field name="model_id" ref="hr_payroll.model_hr_payslip" />
+        <field name="binding_model_id" ref="hr_payroll.model_hr_payslip" />
+        <field name="state">code</field>
+        <field name="code">
+for pay in records:
+    pay.l10n_mx_edi_update_extras()
+        </field>
+    </record>
+
+</odoo>

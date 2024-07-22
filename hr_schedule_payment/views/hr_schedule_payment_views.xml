@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<odoo>
+
+    <record id="hr_schedule_payment_list_view" model="ir.ui.view">
+        <field name="name">hr.schedule.payment.tree</field>
+        <field name="model">hr.schedule.payment</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+                <field name="days_to_pay" />
+                <field name="periods_per_year" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="hr_schedule_payment_form_view" model="ir.ui.view">
+        <field name="name">hr.schedule.payment.form</field>
+        <field name="model">hr.schedule.payment</field>
+        <field name="arch" type="xml">
+            <form string="Schedule Payments">
+                <sheet>
+                    <group name="schedule_payment" col="4">
+                        <field name="code" />
+                        <field name="name" />
+                        <field name="days_to_pay" />
+                        <field name="periods_per_year" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_view_hr_schedule_payment_list_form" model="ir.actions.act_window">
+        <field name="name">Schedule Payments</field>
+        <field name="res_model">hr.schedule.payment</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+        id="menu_hr_schedule_payment_view"
+        action="action_view_hr_schedule_payment_list_form"
+        name="Schedule Payments"
+        parent="hr_payroll.menu_hr_salary_configuration"
+        sequence="60"
+    />
+
+</odoo>

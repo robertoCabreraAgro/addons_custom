@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+
+    <!-- Decimal Precision -->
+    <record forcecreate="True" id="decimal_payroll_loan" model="decimal.precision">
+        <field name="name">Payroll Loan</field>
+        <field name="digits">2</field>
+    </record>
+
+</odoo>

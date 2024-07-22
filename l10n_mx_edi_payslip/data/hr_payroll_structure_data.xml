@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- oca-hooks:disable=xml-duplicate-record-id -->
+<odoo noupdate="1">
+
+    <record id="payroll_structure_type_finiquito" model="hr.payroll.structure.type">
+        <field name="name">Finiquito</field>
+        <field name="country_id" ref="base.mx" />
+        <field name="l10n_mx_edi_type">E</field>
+    </record>
+
+    <record id="payroll_structure_type_aguinaldo" model="hr.payroll.structure.type">
+        <field name="name">Aguinaldo</field>
+        <field name="country_id" ref="base.mx" />
+        <field name="l10n_mx_edi_type">E</field>
+    </record>
+
+    <record id="payroll_structure_type_payroll" model="hr.payroll.structure.type">
+        <field name="name">Nómina</field>
+        <field name="country_id" ref="base.mx" />
+        <field name="l10n_mx_edi_type">O</field>
+    </record>
+
+    <record id="payroll_structure_type_liquidacion" model="hr.payroll.structure.type">
+        <field name="name">Liquidación</field>
+        <field name="country_id" ref="base.mx" />
+        <field name="l10n_mx_edi_type">E</field>
+    </record>
+
+    <record id="payroll_structure_type_ptu" model="hr.payroll.structure.type">
+        <field name="name">PTU</field>
+        <field name="country_id" ref="base.mx" />
+        <field name="l10n_mx_edi_type">E</field>
+    </record>
+
+    <record id="payroll_structure_type_viaticos" model="hr.payroll.structure.type">
+        <field name="country_id" ref="base.mx" />
+        <field name="name">Viáticos</field>
+        <field name="l10n_mx_edi_type">E</field>
+    </record>
+
+    <record id="payroll_structure_type_base_finiquito" model="hr.payroll.structure.type">
+        <field name="name">Nómina + Finiquito</field>
+        <field name="country_id" ref="base.mx" />
+        <field name="l10n_mx_edi_type">O</field>
+    </record>
+
+    <record id="payroll_structure_type_bonus" model="hr.payroll.structure.type">
+        <field name="name">Bono Extra</field>
+        <field name="country_id" ref="base.mx" />
+        <field name="l10n_mx_edi_type">E</field>
+    </record>
+
+    <record id="payroll_structure_type_fondo_ahorro" model="hr.payroll.structure.type">
+        <field name="name">Fondo de Ahorro</field>
+        <field name="country_id" ref="base.mx" />
+        <field name="l10n_mx_edi_type">E</field>
+    </record>
+
+    <!-- Structures -->
+    <record id="payroll_structure_data_09" model="hr.payroll.structure">
+        <field name="name">Fondo de Ahorro</field>
+        <field name="type_id" ref="payroll_structure_type_fondo_ahorro" />
+        <field name="rule_ids" eval="[]" />
+        <field name="country_id" ref="base.mx" />
+    </record>
+
+    <record id="payroll_structure_data_08" model="hr.payroll.structure">
+        <field name="name">Bono Extra</field>
+        <field name="type_id" ref="payroll_structure_type_bonus" />
+        <field name="rule_ids" eval="[]" />
+        <field name="country_id" ref="base.mx" />
+    </record>
+
+    <record id="payroll_structure_data_07" model="hr.payroll.structure">
+        <field name="name">Viáticos</field>
+        <field name="type_id" ref="payroll_structure_type_viaticos" />
+        <field name="rule_ids" eval="[]" />
+        <field name="country_id" ref="base.mx" />
+    </record>
+
+    <record id="payroll_structure_data_06" model="hr.payroll.structure">
+        <field name="name">Nómina + Finiquito</field>
+        <field name="type_id" ref="payroll_structure_type_base_finiquito" />
+        <field name="rule_ids" eval="[]" />
+        <field name="country_id" ref="base.mx" />
+    </record>
+
+    <record id="payroll_structure_data_05" model="hr.payroll.structure">
+        <field name="name">PTU</field>
+        <field name="type_id" ref="payroll_structure_type_ptu" />
+        <field name="rule_ids" eval="[]" />
+        <field name="country_id" ref="base.mx" />
+    </record>
+
+    <record id="payroll_structure_data_04" model="hr.payroll.structure">
+        <field name="name">Liquidación</field>
+        <field name="type_id" ref="payroll_structure_type_liquidacion" />
+        <field name="rule_ids" eval="[]" />
+        <field name="country_id" ref="base.mx" />
+    </record>
+
+    <record id="payroll_structure_data_03" model="hr.payroll.structure">
+        <field name="name">Finiquito</field>
+        <field name="type_id" ref="payroll_structure_type_finiquito" />
+        <field name="rule_ids" eval="[]" />
+        <field name="country_id" ref="base.mx" />
+    </record>
+
+    <record id="payroll_structure_data_02" model="hr.payroll.structure">
+        <field name="name">Aguinaldo</field>
+        <field name="type_id" ref="payroll_structure_type_aguinaldo" />
+        <field name="rule_ids" eval="[]" />
+        <field name="country_id" ref="base.mx" />
+    </record>
+
+    <record id="payroll_structure_data_01" model="hr.payroll.structure">
+        <field name="name">Nómina</field>
+        <field name="type_id" ref="payroll_structure_type_payroll" />
+        <field name="rule_ids" eval="[]" />
+        <field name="country_id" ref="base.mx" />
+    </record>
+
+    <record id="payroll_structure_type_finiquito" model="hr.payroll.structure.type">
+        <field name="default_struct_id" ref="payroll_structure_data_03" />
+    </record>
+
+    <record id="payroll_structure_type_aguinaldo" model="hr.payroll.structure.type">
+        <field name="default_struct_id" ref="payroll_structure_data_02" />
+    </record>
+
+    <record id="payroll_structure_type_payroll" model="hr.payroll.structure.type">
+        <field name="default_struct_id" ref="payroll_structure_data_01" />
+    </record>
+
+    <record id="payroll_structure_type_liquidacion" model="hr.payroll.structure.type">
+        <field name="default_struct_id" ref="payroll_structure_data_04" />
+    </record>
+
+    <record id="payroll_structure_type_ptu" model="hr.payroll.structure.type">
+        <field name="default_struct_id" ref="payroll_structure_data_05" />
+    </record>
+
+    <record id="payroll_structure_type_base_finiquito" model="hr.payroll.structure.type">
+        <field name="default_struct_id" ref="payroll_structure_data_06" />
+    </record>
+
+    <record id="payroll_structure_type_viaticos" model="hr.payroll.structure.type">
+        <field name="default_struct_id" ref="payroll_structure_data_07" />
+    </record>
+
+    <record id="payroll_structure_type_bonus" model="hr.payroll.structure.type">
+        <field name="default_struct_id" ref="payroll_structure_data_08" />
+    </record>
+
+    <record id="payroll_structure_type_fondo_ahorro" model="hr.payroll.structure.type">
+        <field name="default_struct_id" ref="payroll_structure_data_09" />
+    </record>
+
+</odoo>

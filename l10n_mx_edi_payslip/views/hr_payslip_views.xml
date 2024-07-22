@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="hr_payslip_l10n_mx_edi_error_tree" model="ir.ui.view">
+        <field name="name">view.hr.payslip.tree.l10n_mx_edi_error</field>
+        <field name="model">hr.payslip</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="number" decoration-bf="1" />
+                <field name="employee_id" widget="many2one_avatar_employee" />
+                <field name="l10n_mx_edi_error" />
+                <field name="date_from" optional="hide" />
+                <field name="date_to" optional="hide" />
+                <field
+                    name="company_id"
+                    optional="hide"
+                    groups="base.group_multi_company"
+                    options="{'no_create': True}"
+                />
+                <field
+                    name="state"
+                    optional="hide"
+                    widget="badge"
+                    decoration-info="state == 'draft'"
+                    decoration-warning="state == 'verify'"
+                    decoration-success="state == 'done'"
+                />
+            </tree>
+        </field>
+    </record>
+
+    <record id="hr_payslip_open_errors_action" model="ir.actions.act_window">
+        <field name="name">Payslips Electronic Error(s)</field>
+        <field name="res_model">hr.payslip</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="hr_payslip_l10n_mx_edi_error_tree" />
+        <field name="domain">[('id', '=', active_id), ('l10n_mx_edi_error', 'not in', [False, ''])]</field>
+    </record>
+
+    <record id="view_hr_payslip_form" model="ir.ui.view">
+        <field name="name">view.hr.payslip.form.l10n_mx</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id" ref="hr_payroll.view_hr_payslip_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="after">
+                <field name="l10n_mx_edi_error" invisible="1" />
+                <field name="l10n_mx_edi_error_count" invisible="1" />
+                <div
+                    class="alert alert-info"
+                    role="alert"
+                    style="margin-bottom:0px;"
+                    invisible="not l10n_mx_edi_pac_status or  l10n_mx_edi_pac_status in ['signed', 'cancelled'] or l10n_mx_edi_error_count > 0"
+                >
+                    <div>The payslip will be sent asynchronously to: Payroll (1.2)</div>
+                    <button name="l10n_mx_edi_update_pac_status" type="object" class="oe_link" string="Send now" />
+                </div>
+                <!-- if cancelled or signed the count is set to zero -->
+                <div
+                    class="alert alert-danger"
+                    role="alert"
+                    style="margin-bottom:0px;"
+                    invisible="not l10n_mx_edi_error_count"
+                >
+                    <div class="o_row">
+                        <field name="l10n_mx_edi_error" />
+                        <button
+                            name="l10n_mx_edi_update_pac_status"
+                            type="object"
+                            class="oe_link oe_inline"
+                            string="Retry"
+                        />
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//header//button[@name='action_payslip_done']" position="attributes">
+                <attribute name="context">{}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='state']" position="before">
+                <button
+                    name="%(hr_payslip_audit_isr_action)d"
+                    class="oe_stat_button"
+                    type="action"
+                    invisible="state not in ['verify', 'done'] or struct_id not in [%(payroll_structure_data_01)d, %(payroll_structure_data_06)d]"
+                    string="ISR Calculation Audit"
+                />
+            </xpath>
+            <xpath expr="//field[@name='has_refund_slip']" position="after">
+                <label
+                    for="l10n_mx_edi_pac_status"
+                    invisible="not l10n_mx_edi_pac_status or state not in ['verify', 'done', 'cancel']"
+                />
+                <div class="col-12 col-lg-6">
+                    <field
+                        name="l10n_mx_edi_pac_status"
+                        class="oe_inline"
+                        invisible="not l10n_mx_edi_pac_status or state not in ['verify', 'done', 'cancel']"
+                    />
+                    <button
+                        name="l10n_mx_edi_update_pac_status"
+                        string="Retry"
+                        class="oe_inline oe_link"
+                        type="object"
+                        groups="hr_payroll.group_hr_payroll_user"
+                        invisible="l10n_mx_edi_pac_status in ['signed', False] or state not in ['verify', 'done', 'cancel']"
+                    />
+                </div>
+                <label
+                    for="l10n_mx_edi_sat_status"
+                    invisible="not l10n_mx_edi_pac_status or state not in ['verify', 'done', 'cancel']"
+                />
+                <div class="col-12 col-lg-6">
+                    <field
+                        name="l10n_mx_edi_sat_status"
+                        class="oe_inline"
+                        invisible="not l10n_mx_edi_pac_status or state not in ['verify', 'done', 'cancel']"
+                    />
+                    <button
+                        name="l10n_mx_edi_update_sat_status"
+                        string="Retry"
+                        class="oe_inline oe_link"
+                        type="object"
+                        groups="hr_payroll.group_hr_payroll_user"
+                        invisible="not l10n_mx_edi_pac_status or state not in ['verify', 'done', 'cancel']"
+                    />
+                </div>
+                <label
+                    for="l10n_mx_edi_cfdi_uuid"
+                    invisible="not l10n_mx_edi_pac_status or state not in ['verify', 'done', 'cancel']"
+                />
+                <div class="o_row">
+                    <field
+                        name="l10n_mx_edi_cfdi_uuid"
+                        invisible="not l10n_mx_edi_pac_status or state not in ['verify', 'done', 'cancel']"
+                    />
+                </div>
+                <field
+                    name="l10n_mx_edi_origin"
+                    invisible="not l10n_mx_edi_pac_status and (not l10n_mx_edi_origin or state != 'draft')"
+                />
+                <field
+                    name="l10n_mx_edi_cancellation"
+                    invisible="state not in ['done', 'cancel'] or not l10n_mx_edi_pac_status"
+                />
+                <field name="l10n_mx_edi_cancel_payslip_id" invisible="not l10n_mx_edi_cancel_payslip_id" />
+            </xpath>
+            <xpath expr="//field[@name='date_from']//.." position="attributes">
+                <attribute name="class">o_row</attribute>
+            </xpath>
+            <xpath expr="//field[@name='contract_id']" position="before">
+                <field name="l10n_mx_edi_payment_date" readonly="state not in ['draft', 'verify']" />
+                <label for="l10n_mx_edi_date_from" string="CFDI Period" />
+                <div class="o_row">
+                    <field
+                        name="l10n_mx_edi_date_from"
+                        class="oe_inline"
+                        readonly="state not in ['draft', 'verify']"
+                    />
+ -                    <field
+                        name="l10n_mx_edi_date_to"
+                        class="oe_inline"
+                        readonly="state not in ['draft', 'verify']"
+                    />
+                </div>
+            </xpath>
+            <xpath expr='//notebook' position="inside">
+                <page string="Technical CFDI Information" name="cfdi">
+                    <separator string="Retirement / Indemnity" />
+                    <field name="l10n_mx_edi_extra_node_ids" nolabel="1">
+                        <tree editable="bottom">
+                            <field name="node" />
+                            <field name="amount_total" />
+                            <field name="amount_daily" readonly="node != 'retirement'" />
+                            <field name="service_years" readonly="node != 'separation'" />
+                            <field name="last_salary" readonly="node != 'separation'" />
+                            <field name="accumulable_income" />
+                            <field name="non_accumulable_income" />
+                        </tree>
+                    </field>
+                    <separator string="Actions or Titles" />
+                    <field name="l10n_mx_edi_action_title_ids" nolabel="1">
+                        <tree editable="bottom">
+                            <field name="category_id" />
+                            <field name="market_value" />
+                            <field name="price_granted" />
+                        </tree>
+                    </field>
+                    <group string="Extra Other Payments">
+                        <group string="Compensation Balances in favor">
+                            <group>
+                                <field name="l10n_mx_edi_balance_favor" />
+                                <field name="l10n_mx_edi_comp_year" />
+                                <field name="l10n_mx_edi_remaining" />
+                            </group>
+                        </group>
+                    </group>
+                    <group string="SNCF Entity">
+                        <group>
+                            <field name="l10n_mx_edi_source_resource" />
+                            <field name="l10n_mx_edi_amount_sncf" />
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+            <xpath expr="//button[@name='action_payslip_cancel']" position="attributes">
+                <attribute name="states" />
+                <attribute name="invisible">
+                    state not in ['draft','confirm','verify','done'] or l10n_mx_edi_pac_status in ['signed', 'to_cancel']
+                </attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_payslip_cancel']" position="after">
+                <field name="sent" invisible="1" />
+                <button
+                    name="action_payroll_sent"
+                    type="object"
+                    string="Send by Email"
+                    invisible="sent or state != 'done'"
+                    class="oe_highlight"
+                    groups="base.group_user"
+                />
+                <button
+                    name="action_payroll_sent"
+                    type="object"
+                    string="Send by Email"
+                    invisible="not sent or state != 'done'"
+                    groups="base.group_user"
+                />
+                <button
+                    name="l10n_mx_edi_update_extras"
+                    type="object"
+                    string="Update Extras"
+                    invisible="state not in ['draft', 'verify']"
+                    groups="base.group_user"
+                />
+                <button
+                    name="l10n_mx_edi_action_request_edi_cancel"
+                    type="object"
+                    string="Request EDI Cancellation"
+                    invisible="l10n_mx_edi_pac_status != 'signed'"
+                    groups="base.group_user"
+                />
+            </xpath>
+            <xpath expr="//page[@name='salary_computation']//form//field[@name='salary_rule_id']" position="after">
+                <newline />
+                <field name="journal_item_ids" colspan='6' nolabel='1' />
+            </xpath>
+            <xpath expr="//page[@name='salary_computation']//field[@name='line_ids']//tree" position="attributes">
+                <attribute
+                    name="decoration-success"
+                >category_id in [%(hr_salary_rule_category_perception_mx_taxed)d, %(hr_salary_rule_category_perception_mx_exempt)d]</attribute>
+                <attribute
+                    name="decoration-warning"
+                >category_id in [%(hr_payroll.COMP)d, %(hr_salary_rule_category_provision_mx)d]</attribute>
+                <attribute name="decoration-danger">category_id == %(hr_payroll.DED)d</attribute>
+                <attribute name="decoration-bf">category_id == %(hr_payroll.NET)d</attribute>
+                <attribute name="decoration-it">category_id == %(hr_salary_rule_category_netsa_mx)d</attribute>
+                <attribute
+                    name="decoration-info"
+                >category_id in [%(hr_salary_rule_category_aux_mx)d, %(hr_payroll.BASIC)d]</attribute>
+            </xpath>
+            <xpath expr="//page[@name='worked_days_input']//tree//field[@name='amount']" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </xpath>
+            <xpath expr="//field[@name='warning_message']/.." position="attributes">
+                <attribute name="invisible">
+                    not warning_message
+                </attribute>
+            </xpath>
+            <div name="button_box" position="inside">
+                <button
+                    name="action_open_overtimes"
+                    class="oe_stat_button"
+                    icon="fa-money"
+                    type="object"
+                    string="Overtime"
+                    groups="hr_payroll.group_hr_payroll_user"
+                >
+                </button>
+            </div>
+        </field>
+    </record>
+
+    <record id="view_hr_payslip_tree" model="ir.ui.view">
+        <field name="name">view.hr.payslip.tree.inherit</field>
+        <field name="model">hr.payslip</field>
+        <field name="type">tree</field>
+        <field name="inherit_id" ref="hr_payroll.view_hr_payslip_tree" />
+        <field name="arch" type="xml">
+            <xpath expr="/tree/field[@name='state']" position="after">
+                <field name="l10n_mx_edi_pac_status" />
+                <field name="l10n_mx_edi_cfdi_uuid" invisible="1" />
+            </xpath>
+            <xpath expr="//field[@name='net_wage']" position="attributes">
+                <attribute name="sum">Total</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_hr_payslip_filter" model="ir.ui.view">
+        <field name="name">hr.payslip.search.view.inherit_l10n_mx</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id" ref="hr_payroll.view_hr_payslip_filter" />
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <filter
+                    string="Pending to PAC sign"
+                    name="l10n_mx_edi_pac_status"
+                    domain="[('l10n_mx_edi_pac_status', 'in', ('retry', 'to_sign'))]"
+                />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

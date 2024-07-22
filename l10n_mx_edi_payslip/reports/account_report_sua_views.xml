@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="sua_report" model="account.report">
+        <field name="name">SUA (Aseg)</field>
+        <field name="filter_show_draft" eval="False" />
+        <field name="filter_period_comparison" eval="False" />
+        <field name="custom_handler_model_id" ref="model_hr_sua_report_handler" />
+        <field name="load_more_limit" eval="80" />
+        <field name="filter_unfold_all" eval="False" />
+        <field name="default_opening_date_filter">this_month</field>
+        <field name="filter_date_range" eval="True" />
+        <field name="filter_partner" eval="True" />
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="sua_employer_register" model="account.report.column">
+                <field name="name">Employer Register</field>
+                <field name="expression_label">employer_register</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="sua_nss" model="account.report.column">
+                <field name="name">NSS</field>
+                <field name="expression_label">nss</field>
+            </record>
+            <record id="sua_vat" model="account.report.column">
+                <field name="name">VAT</field>
+                <field name="expression_label">vat</field>
+            </record>
+            <record id="sua_curp" model="account.report.column">
+                <field name="name">CURP</field>
+                <field name="expression_label">curp</field>
+            </record>
+            <record id="sua_worker_type" model="account.report.column">
+                <field name="name">Worker Type</field>
+                <field name="expression_label">worker_type</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="sua_working_type" model="account.report.column">
+                <field name="name">Working Type</field>
+                <field name="expression_label">working_type</field>
+            </record>
+            <record id="sua_date" model="account.report.column">
+                <field name="name">Date</field>
+                <field name="expression_label">date</field>
+            </record>
+            <record id="sua_sdi" model="account.report.column">
+                <field name="name">SDI</field>
+                <field name="expression_label">sdi</field>
+            </record>
+            <record id="sua_employee_key" model="account.report.column">
+                <field name="name">Employee Key</field>
+                <field name="expression_label">employee_key</field>
+            </record>
+            <record id="sua_infonavit_number" model="account.report.column">
+                <field name="name">Infonavit Number</field>
+                <field name="expression_label">infonavit_number</field>
+            </record>
+            <record id="sua_date_start" model="account.report.column">
+                <field name="name">Date Start of Credit</field>
+                <field name="expression_label">date_start</field>
+            </record>
+            <record id="sua_discount_type" model="account.report.column">
+                <field name="name">Discount Type</field>
+                <field name="expression_label">discount_type</field>
+            </record>
+            <record id="sua_discount_amount" model="account.report.column">
+                <field name="name">Discount Amount</field>
+                <field name="expression_label">discount_amount</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="sua_report_line" model="account.report.line">
+                <field name="name">sua</field>
+                <field name="expression_ids">
+                    <record id="sua_report_line_counter" model="account.report.expression">
+                        <field name="label">counter</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_sua_report</field>
+                        <field name="subformula">counter</field>
+                    </record>
+                    <record id="sua_report_line_employer_register" model="account.report.expression">
+                        <field name="label">employer_register</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_sua_report</field>
+                        <field name="subformula">employer_register</field>
+                    </record>
+                    <record id="sua_report_line_nss" model="account.report.expression">
+                        <field name="label">nss</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_sua_report</field>
+                        <field name="subformula">nss</field>
+                    </record>
+                    <record id="sua_report_line_vat" model="account.report.expression">
+                        <field name="label">vat</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_sua_report</field>
+                        <field name="subformula">vat</field>
+                    </record>
+                    <record id="sua_report_line_curp" model="account.report.expression">
+                        <field name="label">curp</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_sua_report</field>
+                        <field name="subformula">curp</field>
+                    </record>
+                    <record id="sua_report_line_worker_type" model="account.report.expression">
+                        <field name="label">worker_type</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_sua_report</field>
+                        <field name="subformula">worker_type</field>
+                    </record>
+                    <record id="sua_report_line_working_type" model="account.report.expression">
+                        <field name="label">working_type</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_sua_report</field>
+                        <field name="subformula">working_type</field>
+                    </record>
+                    <record id="sua_report_line_date" model="account.report.expression">
+                        <field name="label">date</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_sua_report</field>
+                        <field name="subformula">date</field>
+                    </record>
+                    <record id="sua_report_line_sdi" model="account.report.expression">
+                        <field name="label">sdi</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_sua_report</field>
+                        <field name="subformula">sdi</field>
+                    </record>
+                    <record id="sua_report_line_employee_key" model="account.report.expression">
+                        <field name="label">employee_key</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_sua_report</field>
+                        <field name="subformula">employee_key</field>
+                    </record>
+                    <record id="sua_report_line_infonavit_number" model="account.report.expression">
+                        <field name="label">infonavit_number</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_sua_report</field>
+                        <field name="subformula">infonavit_number</field>
+                    </record>
+                    <record id="sua_report_line_date_start" model="account.report.expression">
+                        <field name="label">date_start</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_sua_report</field>
+                        <field name="subformula">date_start</field>
+                    </record>
+                    <record id="sua_report_line_discount_type" model="account.report.expression">
+                        <field name="label">discount_type</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_sua_report</field>
+                        <field name="subformula">discount_type</field>
+                    </record>
+                    <record id="sua_report_line_discount_amount" model="account.report.expression">
+                        <field name="label">discount_amount</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_sua_report</field>
+                        <field name="subformula">discount_amount</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+
+    <record id="sua_affiliation_report" model="account.report">
+        <field name="name">SUA (Affil)</field>
+        <field name="filter_show_draft" eval="False" />
+        <field name="filter_period_comparison" eval="False" />
+        <field name="custom_handler_model_id" ref="model_hr_sua_affiliation_report_handler" />
+        <field name="load_more_limit" eval="80" />
+        <field name="filter_unfold_all" eval="False" />
+        <field name="default_opening_date_filter">this_month</field>
+        <field name="filter_date_range" eval="True" />
+        <field name="filter_partner" eval="True" />
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="sua_affiliation_employer_register" model="account.report.column">
+                <field name="name">Employer Register</field>
+                <field name="expression_label">employer_register</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="sua_affiliation_nss" model="account.report.column">
+                <field name="name">NSS</field>
+                <field name="expression_label">nss</field>
+            </record>
+            <record id="sua_affiliation_zip" model="account.report.column">
+                <field name="name">ZIP</field>
+                <field name="expression_label">zip</field>
+            </record>
+            <record id="sua_affiliation_birthday" model="account.report.column">
+                <field name="name">Birthday</field>
+                <field name="expression_label">birthday</field>
+                <field name="figure_type">date</field>
+            </record>
+            <record id="sua_affiliation_birthplace" model="account.report.column">
+                <field name="name">Birthplace</field>
+                <field name="expression_label">birthplace</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="sua_affiliation_birthplace_state" model="account.report.column">
+                <field name="name">State Birthplace</field>
+                <field name="expression_label">birthplace_state</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="sua_affiliation_family_medicine_unit" model="account.report.column">
+                <field name="name">Family Medicine Unit</field>
+                <field name="expression_label">family_medicine_unit</field>
+            </record>
+            <record id="sua_affiliation_occupation" model="account.report.column">
+                <field name="name">Occupation</field>
+                <field name="expression_label">occupation</field>
+            </record>
+            <record id="sua_affiliation_gender" model="account.report.column">
+                <field name="name">Gender</field>
+                <field name="expression_label">gender</field>
+            </record>
+            <record id="sua_affiliation_salary_type" model="account.report.column">
+                <field name="name">Salary Type</field>
+                <field name="expression_label">salary_type</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="sua_affiliation_report_line" model="account.report.line">
+                <field name="name">sua (Affil)</field>
+                <field name="expression_ids">
+                    <record id="sua_affiliation_report_line_counter" model="account.report.expression">
+                        <field name="label">counter</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_sua_report</field>
+                        <field name="subformula">counter</field>
+                    </record>
+                    <record id="sua_affiliation_report_line_employer_register" model="account.report.expression">
+                        <field name="label">employer_register</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_sua_report</field>
+                        <field name="subformula">employer_register</field>
+                    </record>
+                    <record id="sua_affiliation_report_line_nss" model="account.report.expression">
+                        <field name="label">nss</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_sua_report</field>
+                        <field name="subformula">nss</field>
+                    </record>
+                    <record id="sua_affiliation_report_line_zip" model="account.report.expression">
+                        <field name="label">zip</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_sua_report</field>
+                        <field name="subformula">zip</field>
+                    </record>
+                    <record id="sua_affiliation_report_line_birthday" model="account.report.expression">
+                        <field name="label">birthday</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_sua_report</field>
+                        <field name="subformula">birthday</field>
+                    </record>
+                    <record id="sua_affiliation_report_line_birthplace" model="account.report.expression">
+                        <field name="label">birthplace</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_sua_report</field>
+                        <field name="subformula">birthplace</field>
+                    </record>
+                    <record id="sua_affiliation_report_line_birthplace_state" model="account.report.expression">
+                        <field name="label">birthplace_state</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_sua_report</field>
+                        <field name="subformula">birthplace_state</field>
+                    </record>
+                    <record id="sua_affiliation_report_line_family_medicine_unit" model="account.report.expression">
+                        <field name="label">family_medicine_unit</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_sua_report</field>
+                        <field name="subformula">family_medicine_unit</field>
+                    </record>
+                    <record id="sua_affiliation_report_line_occupation" model="account.report.expression">
+                        <field name="label">occupation</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_sua_report</field>
+                        <field name="subformula">occupation</field>
+                    </record>
+                    <record id="sua_affiliation_report_line_gender" model="account.report.expression">
+                        <field name="label">gender</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_sua_report</field>
+                        <field name="subformula">gender</field>
+                    </record>
+                    <record id="sua_affiliation_report_line_salary_type" model="account.report.expression">
+                        <field name="label">salary_type</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_sua_report</field>
+                        <field name="subformula">salary_type</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+
+    <record id="sua_move_report" model="account.report">
+        <field name="name">SUA (Mov)</field>
+        <field name="filter_show_draft" eval="False" />
+        <field name="filter_period_comparison" eval="False" />
+        <field name="custom_handler_model_id" ref="model_hr_sua_mov_report_handler" />
+        <field name="load_more_limit" eval="80" />
+        <field name="filter_unfold_all" eval="False" />
+        <field name="default_opening_date_filter">this_month</field>
+        <field name="filter_date_range" eval="True" />
+        <field name="filter_partner" eval="True" />
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="sua_move_employer_register" model="account.report.column">
+                <field name="name">Employer Register</field>
+                <field name="expression_label">employer_register</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="sua_move_nss" model="account.report.column">
+                <field name="name">NSS</field>
+                <field name="expression_label">nss</field>
+            </record>
+            <record id="sua_move_movement_type" model="account.report.column">
+                <field name="name">Movement Type</field>
+                <field name="expression_label">movement_type</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="sua_move_date" model="account.report.column">
+                <field name="name">Date</field>
+                <field name="expression_label">date</field>
+            </record>
+            <record id="sua_move_inability_number" model="account.report.column">
+                <field name="name">Inability Number</field>
+                <field name="expression_label">inability_number</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="sua_move_days" model="account.report.column">
+                <field name="name">Days of incidence</field>
+                <field name="expression_label">days</field>
+            </record>
+            <record id="sua_move_sdi" model="account.report.column">
+                <field name="name">SDI</field>
+                <field name="expression_label">sdi</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="sua_mov_report_line" model="account.report.line">
+                <field name="name">SUA (Move)</field>
+                <field name="expression_ids">
+                    <record id="sua_move_report_line_counter" model="account.report.expression">
+                        <field name="label">counter</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_sua_report</field>
+                        <field name="subformula">counter</field>
+                    </record>
+                    <record id="sua_move_report_line_employer_register" model="account.report.expression">
+                        <field name="label">employer_register</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_sua_report</field>
+                        <field name="subformula">employer_register</field>
+                    </record>
+                    <record id="sua_move_report_line_nss" model="account.report.expression">
+                        <field name="label">nss</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_sua_report</field>
+                        <field name="subformula">nss</field>
+                    </record>
+                    <record id="sua_move_report_line_movement_type" model="account.report.expression">
+                        <field name="label">movement_type</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_sua_report</field>
+                        <field name="subformula">movement_type</field>
+                    </record>
+                    <record id="sua_move_report_line_date" model="account.report.expression">
+                        <field name="label">date</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_sua_report</field>
+                        <field name="subformula">date</field>
+                    </record>
+                    <record id="sua_move_report_inability_number" model="account.report.expression">
+                        <field name="label">inability_number</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_sua_report</field>
+                        <field name="subformula">inability_number</field>
+                    </record>
+                    <record id="sua_move_report_line_days" model="account.report.expression">
+                        <field name="label">days</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_sua_report</field>
+                        <field name="subformula">days</field>
+                    </record>
+                    <record id="sua_move_report_line_sdi" model="account.report.expression">
+                        <field name="label">sdi</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_sua_report</field>
+                        <field name="subformula">sdi</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+
+</odoo>

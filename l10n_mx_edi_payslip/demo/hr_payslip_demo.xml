@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+<odoo noupdate="1">
+
+    <record id="hr_payslip_mlc_cfdi0" model="hr.payslip">
+        <field name="name">Payroll Test CFDI</field>
+        <field name="employee_id" ref="mx_employee_qdp" />
+        <field name="contract_id" ref="hr_contract_maria" />
+        <field name="date_from" eval="time.strftime('%Y-%m')+'-1'" />
+        <field name="date_to" eval="time.strftime('%Y-%m')+'-15'" />
+        <field name="l10n_mx_edi_payment_date" eval="time.strftime('%Y-%m')+'-15'" />
+        <field name="struct_id" ref="payroll_structure_data_01" />
+        <field name="company_id" ref="l10n_mx.demo_company_mx" />
+    </record>
+
+</odoo>

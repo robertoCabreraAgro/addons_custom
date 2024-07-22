@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="hr_departure_reason_view_list" model="ir.ui.view">
+        <field name="name">hr.departure.reason.l10n_mx_edi_payslip</field>
+        <field name="model">hr.departure.reason</field>
+        <field name="inherit_id" ref="hr.hr_departure_reason_view_list" />
+        <field name="arch" type="xml">
+            <tree>
+                <field name="l10n_mx_code" />
+            </tree>
+        </field>
+    </record>
+
+</odoo>

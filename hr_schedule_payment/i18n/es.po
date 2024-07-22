@@ -1,0 +1,157 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_schedule_payment
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-11-10 00:07+0000\n"
+"PO-Revision-Date: 2023-11-10 00:07+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: hr_schedule_payment
+#: model:ir.model,name:hr_schedule_payment.model_hr_schedule_payment
+msgid ""
+"Allows to configure the paydays and periods of the year for the payroll."
+msgstr ""
+"Permite configurar los días de pago y períodos por año para la nómina."
+
+#. module: hr_schedule_payment
+#: model:hr.schedule.payment,name:hr_schedule_payment.hr_schedule_payment_annually
+msgid "Annually"
+msgstr "Anualmente"
+
+#. module: hr_schedule_payment
+#: model:hr.schedule.payment,name:hr_schedule_payment.hr_schedule_payment_bi_monthly
+msgid "Bi Monthly"
+msgstr "Bi Mensual"
+
+#. module: hr_schedule_payment
+#: model:hr.schedule.payment,name:hr_schedule_payment.hr_schedule_payment_bi_weekly
+msgid "Bi Weekly"
+msgstr "Bi Semanal"
+
+#. module: hr_schedule_payment
+#: model:ir.model.fields,field_description:hr_schedule_payment.field_hr_schedule_payment__code
+msgid "Code"
+msgstr "Código"
+
+#. module: hr_schedule_payment
+#: model:ir.model.fields,help:hr_schedule_payment.field_hr_schedule_payment__code
+msgid "Code of the schedule payment."
+msgstr "Código del pago programado."
+
+#. module: hr_schedule_payment
+#: model:ir.model.fields,field_description:hr_schedule_payment.field_hr_schedule_payment__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: hr_schedule_payment
+#: model:ir.model.fields,field_description:hr_schedule_payment.field_hr_schedule_payment__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: hr_schedule_payment
+#: model:ir.model.fields,field_description:hr_schedule_payment.field_hr_schedule_payment__days_to_pay
+msgid "Days To Pay"
+msgstr "Días a pagar"
+
+#. module: hr_schedule_payment
+#: model:ir.model.fields,field_description:hr_schedule_payment.field_hr_schedule_payment__display_name
+msgid "Display Name"
+msgstr "Nombre mostrado"
+
+#. module: hr_schedule_payment
+#: model:ir.model,name:hr_schedule_payment.model_hr_contract
+msgid "Employee Contract"
+msgstr "Contrato de empleado"
+
+#. module: hr_schedule_payment
+#: model:hr.schedule.payment,name:hr_schedule_payment.hr_schedule_payment_fortnightly
+msgid "Fortnightly"
+msgstr "Quincenalmente"
+
+#. module: hr_schedule_payment
+#: model:ir.model.fields,field_description:hr_schedule_payment.field_hr_schedule_payment__id
+msgid "ID"
+msgstr ""
+
+#. module: hr_schedule_payment
+#: model:ir.model.fields,help:hr_schedule_payment.field_hr_schedule_payment__days_to_pay
+msgid "Indicates the days to pay in the payroll."
+msgstr "Indica los días a pagar en la nómina."
+
+#. module: hr_schedule_payment
+#: model:ir.model.fields,field_description:hr_schedule_payment.field_hr_schedule_payment__write_uid
+msgid "Last Updated by"
+msgstr "Última modificación por"
+
+#. module: hr_schedule_payment
+#: model:ir.model.fields,field_description:hr_schedule_payment.field_hr_schedule_payment__write_date
+msgid "Last Updated on"
+msgstr "Última modificación el"
+
+#. module: hr_schedule_payment
+#: model:hr.schedule.payment,name:hr_schedule_payment.hr_schedule_payment_monthly
+msgid "Monthly"
+msgstr "Mensualmente"
+
+#. module: hr_schedule_payment
+#: model:ir.model.fields,field_description:hr_schedule_payment.field_hr_schedule_payment__name
+msgid "Name"
+msgstr "Nombre"
+
+#. module: hr_schedule_payment
+#: model:ir.model.fields,help:hr_schedule_payment.field_hr_schedule_payment__name
+msgid "Name of the schedule payment."
+msgstr "Nombre del pago programado"
+
+#. module: hr_schedule_payment
+#: model:ir.model.fields,help:hr_schedule_payment.field_hr_schedule_payment__periods_per_year
+msgid ""
+"Number of periods in the year according to the type of payment in the "
+"payroll."
+msgstr "Número de períodos en el año acorde al tipo de pago de la nómina."
+
+#. module: hr_schedule_payment
+#: model:ir.model.fields,field_description:hr_schedule_payment.field_hr_schedule_payment__periods_per_year
+msgid "Periods Per Year"
+msgstr "Períodos por año"
+
+#. module: hr_schedule_payment
+#: model:hr.schedule.payment,name:hr_schedule_payment.hr_schedule_payment_quarterly
+msgid "Quarterly"
+msgstr "Trimestralmente"
+
+#. module: hr_schedule_payment
+#: model:ir.model.fields,field_description:hr_schedule_payment.field_hr_contract__hr_schedule_payment_id
+msgid "Schedule Payment"
+msgstr "Frecuencia de Pago"
+
+#. module: hr_schedule_payment
+#: model:ir.actions.act_window,name:hr_schedule_payment.action_view_hr_schedule_payment_list_form
+#: model:ir.ui.menu,name:hr_schedule_payment.menu_hr_schedule_payment_view
+#: model_terms:ir.ui.view,arch_db:hr_schedule_payment.hr_schedule_payment_form_view
+msgid "Schedule Payments"
+msgstr "Pagos programados"
+
+#. module: hr_schedule_payment
+#: model:ir.model.fields,help:hr_schedule_payment.field_hr_contract__hr_schedule_payment_id
+msgid "Schedule payment, according to its schedule pay"
+msgstr "Pago programado, acorde a la frecuencia de pago"
+
+#. module: hr_schedule_payment
+#: model:hr.schedule.payment,name:hr_schedule_payment.hr_schedule_payment_semi_annually
+msgid "Semi Annually"
+msgstr "Semestralmente"
+
+#. module: hr_schedule_payment
+#: model:hr.schedule.payment,name:hr_schedule_payment.hr_schedule_payment_weekly
+msgid "Weekly"
+msgstr "Semanalmente"

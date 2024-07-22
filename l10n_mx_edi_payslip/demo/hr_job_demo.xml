@@ -1,0 +1,8 @@
+<?xml version="1.0" ?>
+<odoo noupdate="1">
+
+    <record id="hr.job_developer" model="hr.job">
+        <field name="company_id" eval="False" />
+    </record>
+
+</odoo>

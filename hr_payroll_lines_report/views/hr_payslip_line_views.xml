@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="hr_payslip_line_pivot" model="ir.ui.view">
+        <field name="name">hr.payslip.line.pivot</field>
+        <field name="model">hr.payslip.line</field>
+        <field name="arch" type="xml">
+            <pivot>
+                <field name="employee_id" type="row" />
+                <field name="category_id" type="col" />
+                <field name="salary_rule_id" type="col" />
+                <field name="amount" type="measure" />
+            </pivot>
+        </field>
+    </record>
+
+    <record id="hr_payslip_line_view_search_register" model="ir.ui.view">
+        <field name="name">hr.payslip.line.search.view.inherit.hr_payroll_lines_report</field>
+        <field name="model">hr.payslip.line</field>
+        <field name="inherit_id" ref="hr_payroll.hr_payslip_line_view_search_register" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='date_from']" position="after">
+                <field name="employee_id" />
+                <field name="registration_number" />
+            </xpath>
+            <xpath expr="//search//group" position="inside">
+                <filter string="Salary Structure" name="group_by_struct_id" context="{'group_by': 'struct_id'}" />
+                <filter string="Batch" name="group_by_payslip_run_id" context="{'group_by': 'payslip_run_id'}" />
+                <filter
+                    string="Work Location"
+                    name="group_by_work_location_id"
+                    context="{'group_by': 'work_location_id'}"
+                />
+                <filter string="Department" name="group_by_department_id" context="{'group_by': 'department_id'}" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_payslip_line_report_action" model="ir.actions.act_window">
+        <field name="name">Payslip Lines</field>
+        <field name="res_model">hr.payslip.line</field>
+        <field name="view_mode">pivot,tree,graph</field>
+        <field name="target">current</field>
+        <field name="domain">[("slip_id.state", "!=", "cancel")]</field>
+    </record>
+
+    <menuitem
+        id="menu_report_payslip_lines_pivot_menu"
+        name="Payslip Lines"
+        action="hr_payslip_line_report_action"
+        parent="hr_payroll.menu_hr_payroll_report"
+        sequence="10"
+    />
+
+</odoo>

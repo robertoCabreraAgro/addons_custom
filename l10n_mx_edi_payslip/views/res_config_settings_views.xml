@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n.mx.edi.payslip</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="hr_payroll.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='hr_payroll_accountant']" position="after">
+                <field name="country_code" invisible="1" />
+                <block title="Mexican Payroll" id="l10n_mx_payroll" invisible="country_code !=  'MX'">
+                    <setting string="Global Amounts" help="Configure global values.">
+                        <div class="mt16 content-group">
+                            <div class="row ms-2">
+                                <label for="l10n_mx_edi_minimum_wage" class="col-md-6 p-0 m-0" />
+                                <field name="l10n_mx_edi_minimum_wage" class="col-md-6 p-0" />
+                            </div>
+                            <div class="row ms-2">
+                                <label for="l10n_mx_edi_uma" class="col-md-6 p-0 m-0" />
+                                <field name="l10n_mx_edi_uma" class="col-md-6 p-0" />
+                            </div>
+                            <div class="row ms-2">
+                                <label for="l10n_mx_edi_umi" class="col-md-6 p-0 m-0" />
+                                <field name="l10n_mx_edi_umi" class="col-md-6 p-0" />
+                            </div>
+                        </div>
+                    </setting>
+                    <setting string="Global Rules" help="Configure data to rules.">
+                        <group class="mt16">
+                            <field name="l10n_mx_edi_vacation_bonus" />
+                            <field name="l10n_mx_edi_days_daily_wage" />
+                            <field name="l10n_mx_edi_tolerance_check_in" />
+                            <field name="l10n_mx_edi_percentage_saving_fund" widget="percentage" />
+                        </group>
+                    </setting>
+                    <setting
+                        string="Payslips Email Alias"
+                        help="Set a custom email alias for payslip. Your employees will receive their payslip from this alias."
+                    >
+                        <field name="l10n_mx_edi_payslip_email_alias" />
+                        <span>@</span>
+                        <field name="alias_domain_id" class="oe_inline" readonly="1" force_save="1" />
+                    </setting>
+                    <setting
+                        string="Ignore the limit for saving fund?"
+                        help="If this option is checked, not will be limited the amount to saving fund."
+                    >
+                        <field name="l10n_mx_edi_not_limit_saving_fund" />
+                    </setting>
+
+                    <setting string="Dynamic concepts?" help="Concepts in the CFDI.">
+                        <field name="l10n_mx_edi_dynamic_name" />
+                    </setting>
+                    <setting
+                        string="Use Automatic Settlement?"
+                        help="If it is checked, the salary structure Nómina will be replace to Nómina + finiquito When the contract expires on the same day as the end date of the period."
+                    >
+                        <field name="l10n_mx_edi_automatic_settlement" />
+                    </setting>
+                    <setting
+                        string="ISR Annual Adjustment?"
+                        help="If it is checked, the ISR calculation will not be adjusted in the last payroll of the month, it will be the same according to the corresponding table. You must make an annual ISR adjustment, since at the end of the year there may be differences between the effectively withheld ISR and the actual ISR."
+                    >
+                        <field name="l10n_mx_edi_isr_annual_adjustment" />
+                    </setting>
+                    <setting
+                        string="LISR 174 on bonus?"
+                        help="If this option is checked, will be used the LISR for bonus."
+                    >
+                        <field name="l10n_mx_edi_isr_174_bonus" />
+                    </setting>
+                    <setting
+                        string="Subsidy Social Security?"
+                        help="If this option is checked, the social security fee will be subsidy by the company to the employees who receive the minimum wage."
+                    >
+                        <field name="l10n_mx_edi_subsidy_imss" />
+                    </setting>
+                    <setting
+                        string="Prorate ISR on worked days?"
+                        help="If this option is checked, will to prorate the ISR and the subsidy based in the worked days."
+                    >
+                        <field name="l10n_mx_edi_prorate_isr" />
+                    </setting>
+                    <setting
+                        string="Company contribution for feeding?"
+                        help="If this option is checked, the feeding will to affect 50% employee and 50% the company."
+                    >
+                        <field name="l10n_mx_edi_company_feeding" />
+                    </setting>
+                    <setting
+                        string="Salary based on period days?"
+                        help="If this option is checked, the salary perception will to consider the days on the payslip period, else, the days on the schedule pay."
+                    >
+                        <field name="l10n_mx_edi_salary_worked_days" />
+                    </setting>
+                    <setting
+                        string="Uses Electronic Food Voucher?"
+                        help="If this option is enabled, the deduction for electronic food voucher will be added to the ordinary payslips."
+                    >
+                        <field name="l10n_mx_edi_electronic_food_voucher" />
+                    </setting>
+                    <setting
+                        string="Use unpaid leaves as deductions?"
+                        help="If this option is enabled, the salary rules for unpaid leaves will be created as deductions and will get its on concepts in the payslip and in the CFDI, if not, the leaves will be calculated as auxiliars and their amount will be reduced in Sueldos, Salarios Rayas y Jornales."
+                    >
+                        <field name="l10n_mx_edi_use_leave_deduction" />
+                    </setting>
+                    <setting
+                        string="Subsidy sick leaves?"
+                        help="If it is checked, the first three days of the sick inability will be subsidy by the company. The amount for those days will be no deducted."
+                    >
+                        <field name="l10n_mx_edi_subsidy_sick_leaves" />
+                    </setting>
+                    <setting
+                        string="Accumulate Holidays?"
+                        help="If it is checked, the holidays allocation feature will accrue days over the years for the benefit of the employees."
+                    >
+                        <field name="l10n_mx_edi_accumulate_holidays" />
+                    </setting>
+                </block>
+            </xpath>
+            <xpath expr="//setting[@name='module_hr_payroll_account_sepa']" position="after">
+                <setting string="Not global entry?" help="Entries for payslips.">
+                    <field name="l10n_mx_edi_not_global_entry" />
+                </setting>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

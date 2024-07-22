@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="hr_payslip_audit_isr_form" model="ir.ui.view">
+        <field name="name">view.wizard.hr.payslip.audit.isr</field>
+        <field name="model">hr.payslip.audit.isr</field>
+        <field name="arch" type="xml">
+            <form string="ISR Calculation Audit">
+                <div class="oe_title">
+                    <h1><field name="payslip_id" readonly='1' /></h1>
+                </div>
+
+                <group string="Income Values">
+                    <field name="period_taxable_income" readonly='1' />
+                    <field name="used_taxable_income" readonly='1' />
+                </group>
+                <group string="Detail">
+                    <field name="lower_limit" readonly='1' />
+                    <field name="higher_limit" readonly='1' />
+                    <field name="excess_lower_limit" readonly='1' />
+                    <label for="percentage" readonly='1' />
+                    <div class="o_row" name="percentage">
+                        <field name="percentage" nolabel="1" readonly='1' />%
+                    </div>
+                    <field name="marginal_tax" readonly='1' />
+                    <field name="fixed_tax_rate" readonly='1' />
+                    <field name="monthly_isr" invisible="not monthly_isr" readonly='1' />
+                    <field name="previous_isr" invisible="not previous_isr" readonly='1' />
+                    <field name="subsidy" readonly='1' />
+                    <field name="isr" readonly='1' />
+                </group>
+                <group string="ISR Table Used">
+                    <field name="isr_table_name" readonly='1' />
+                    <field name="isr_table" readonly='1' />
+                    <field name="subsidy_table" readonly='1' />
+                </group>
+                <footer>
+                    <button string="Close" class="btn btn-secondary" special="cancel" />
+                </footer>
+           </form>
+        </field>
+    </record>
+
+    <record id="hr_payslip_audit_isr_action" model="ir.actions.act_window">
+        <field name="name">ISR Calculation Audit</field>
+        <field name="res_model">hr.payslip.audit.isr</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="hr_payslip_audit_isr_form" />
+        <field name="target">new</field>
+    </record>
+
+</odoo>

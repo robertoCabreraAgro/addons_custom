@@ -1,0 +1,60 @@
+<?xml version="1.0" ?>
+<odoo noupdate="1">
+
+    <record id="res_partner_address_mx_qdp" model="res.partner">
+        <field name="name">MARIA OLIVIA MARTINEZ SAGAZ</field>
+        <field name="street_name">Lunik</field>
+        <field name="street2">Futurama Monterrey</field>
+        <field name="street_number">119</field>
+        <field name="zip">80290</field>
+        <field name="city">León</field>
+        <field name="state_id" ref="base.state_mx_gto" />
+        <field name="country_id" ref="base.mx" />
+        <field name="email">info@vauxoo.com</field>
+        <field name="phone">477-773-3346</field>
+        <field name="mobile">477-173-3346</field>
+    </record>
+
+    <record id="res_partner_address_mx_felix" model="res.partner">
+        <field name="name">FELIX MANUEL ANDRADE BALLADO</field>
+        <field name="street_name">Culiacán</field>
+        <field name="street2">Lázaro Cárdenas</field>
+        <field name="street_number">1711</field>
+        <field name="zip">86400</field>
+        <field name="city">Sinaloa</field>
+        <field name="state_id" ref="base.state_mx_mich" />
+        <field name="country_id" ref="base.mx" />
+        <field name="email">felix@vauxoo.com</field>
+        <field name="phone">667-712-2459</field>
+        <field name="mobile">667-112-2459</field>
+    </record>
+
+    <record id="res_partner_address_mx_berenice" model="res.partner">
+        <field name="name">BERENICE XIMO QUEZADA</field>
+        <field name="street_name">Del Carmen</field>
+        <field name="street2">Vicente Guerrero</field>
+        <field name="street_number">57424</field>
+        <field name="zip">57424</field>
+        <field name="city">Ciudad de México</field>
+        <field name="state_id" ref="base.state_mx_oax" />
+        <field name="country_id" ref="base.mx" />
+        <field name="email">berenice@vauxoo.com</field>
+        <field name="phone">951-517-5483</field>
+        <field name="mobile">951-117-5483</field>
+    </record>
+
+    <record id="res_partner_address_mx_cesar" model="res.partner">
+        <field name="name">CESAR OSBALDO CRUZ SOLORZANO</field>
+        <field name="street_name">San Pedro Tlaquepaque</field>
+        <field name="street2">Colonia Emiliano Zapata</field>
+        <field name="street_number">45638</field>
+        <field name="zip">45638</field>
+        <field name="city">Jalisco</field>
+        <field name="state_id" ref="base.state_mx_jal" />
+        <field name="country_id" ref="base.mx" />
+        <field name="email">cesar@vauxoo.com</field>
+        <field name="phone">951-517-5483</field>
+        <field name="mobile">951-517-5483</field>
+    </record>
+
+</odoo>

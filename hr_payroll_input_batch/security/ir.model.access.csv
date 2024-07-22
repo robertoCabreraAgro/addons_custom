@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hr_payslip_input_batch,access_hr_payslip_input_batch,model_hr_payslip_input_batch,base.group_user,1,1,1,1
+access_hr_payslip_input_batch_detail,access_hr_payslip_input_batch_detail,model_hr_payslip_input_batch_detail,base.group_user,1,1,1,1
+access_hr_payslip_input_batch_employee,access_hr_payslip_input_batch_employe,model_hr_payslip_input_batch_employee,base.group_user,1,1,1,1

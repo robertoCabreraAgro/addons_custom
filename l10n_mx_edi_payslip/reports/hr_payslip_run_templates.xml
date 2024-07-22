@@ -1,0 +1,511 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <template id="report_raya_document">
+        <t t-call="web.external_layout">
+            <t t-foreach="batches.items()" t-as="batch_data">
+                <div style="page-break-after: always;">
+                    <div>
+                        <br />
+                        <h5 style="text-align: center;">
+                            <strong>Raya List from <span
+                                    t-out="batch_data[0].date_start.strftime('%d/%m/%Y')"
+                                /> to <span t-out="batch_data[0].date_end.strftime('%d/%m/%Y')" /></strong>
+                        </h5>
+                        <br />
+                    </div>
+                    <t t-foreach="batch_data[1].items()" t-as="department">
+
+                        <t t-foreach="department[1].items()" t-as="employer_registration">
+                            <div style="page-break-after: always;">
+                                <t t-set="employer_registration_number" t-value="employer_registration[0]" />
+                                <div style="page-break-inside: avoid;">
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <strong>
+                                                        <span t-out="department[0]" />
+                                                    </strong>
+                                                </div>
+                                                <div class="col-6">
+                                                    <t t-if="employer_registration_number">
+                                                        <strong>Employer Registration: </strong><span
+                                                            t-out="employer_registration_number"
+                                                        />
+                                                    </t>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <t
+                                        t-foreach="employer_registration[1]['perceptions_deductions'].items()"
+                                        t-as="payslip"
+                                    >
+                                        <t
+                                            t-set="l10n_mx_edi_daily_wage"
+                                            t-value="payslip[0].employee_id.contract_id.l10n_mx_edi_daily_wage"
+                                        />
+                                        <t
+                                            t-set="days_to_pay"
+                                            t-value="payslip[0].employee_id.contract_id.l10n_mx_edi_schedule_pay_id.days_to_pay"
+                                        />
+                                        <t
+                                            t-set="hours_per_day"
+                                            t-value="payslip[0].employee_id.contract_id.resource_calendar_id.hours_per_day"
+                                        />
+                                        <t
+                                            t-set="display_currency"
+                                            t-value="payslip[0].employee_id.company_id.currency_id"
+                                        />
+                                        <t
+                                            t-set="l10n_mx_edi_salary_type"
+                                            t-value="payslip[0].employee_id.contract_id._fields['l10n_mx_edi_salary_type'].convert_to_export(payslip[0].employee_id.contract_id['l10n_mx_edi_salary_type'], payslip[0].employee_id.contract_id)"
+                                        />
+                                        <div style="page-break-inside: avoid; font-size:12px;">
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-2">
+                                                    <strong>
+                                                        <span t-out="payslip[0].employee_id.registration_number" />
+                                                    </strong>
+                                                </div>
+                                                <div class="col-10">
+                                                    <strong>
+                                                        <span t-out="payslip[0].employee_id.name" />
+                                                    </strong>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-3">
+                                                    <strong>
+                                                        <span t-out="payslip[0].employee_id.job_id.name" />
+                                                    </strong>
+                                                </div>
+                                                <div class="col-2">
+                                                    <strong>
+                                                        <span>VAT: </span>
+                                                    </strong>
+                                                    <span t-out="payslip[0].employee_id.l10n_mx_rfc" />
+                                                </div>
+                                                <div class="col-3">
+                                                    <strong>
+                                                        <span>SSNID: </span>
+                                                    </strong>
+                                                    <span t-out="payslip[0].employee_id.ssnid" />
+                                                </div>
+                                                <div class="col-4">
+                                                    <strong>
+                                                        <span>Salary type: </span>
+                                                    </strong>
+                                                    <span t-out="l10n_mx_edi_salary_type" />
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-3">
+                                                    <strong>
+                                                        <span>Registration date: </span>
+                                                    </strong>
+                                                    <span t-out="payslip[0].employee_id.contract_id.date_start" />
+                                                </div>
+                                                <div class="col-2">
+                                                    <strong>
+                                                        <span>Daily wage: </span>
+                                                    </strong>
+                                                    <span
+                                                        t-out="l10n_mx_edi_daily_wage"
+                                                        t-options="{'widget': 'monetary', 'display_currency': display_currency}"
+                                                    />
+                                                </div>
+                                                <div class="col-2">
+                                                    <strong>
+                                                        <span>SDI: </span>
+                                                    </strong>
+                                                    <span
+                                                        t-out="payslip[0].employee_id.contract_id.l10n_mx_edi_integrated_salary"
+                                                        t-options="{'widget': 'monetary', 'display_currency': display_currency}"
+                                                    />
+                                                </div>
+                                                <div class="col-2">
+                                                    <strong>
+                                                        <span>SBC: </span>
+                                                    </strong>
+                                                    <span
+                                                        t-out="payslip[0].employee_id.contract_id.l10n_mx_edi_sbc"
+                                                        t-options="{'widget': 'monetary', 'display_currency': display_currency}"
+                                                    />
+                                                </div>
+                                                <div class="col-3">
+                                                    <strong>
+                                                        <span>Variable SDI: </span>
+                                                    </strong>
+                                                    <span
+                                                        t-out="payslip[0].employee_id.contract_id.l10n_mx_edi_sdi_variable"
+                                                        t-options="{'widget': 'monetary', 'display_currency': display_currency}"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-3">
+                                                    <strong>
+                                                        <span>Paid days: </span>
+                                                    </strong>
+                                                    <span t-out="days_to_pay" />
+                                                </div>
+                                                <div class="col-2">
+                                                    <strong>
+                                                        <span>Worked hours: </span>
+                                                    </strong>
+                                                    <span t-out="days_to_pay * hours_per_day" />
+                                                </div>
+                                                <div class="col-2">
+                                                    <strong>
+                                                        <span>Hours per day: </span>
+                                                    </strong>
+                                                    <span t-out="hours_per_day" />
+                                                </div>
+                                                <div class="col-2">
+                                                    <strong>
+                                                        <span>Overtimes: </span>
+                                                    </strong>
+                                                    <span t-out="payslip[1]['overtimes']" />
+                                                </div>
+                                                <div class="col-3">
+                                                    <strong>
+                                                        <span>CURP: </span>
+                                                    </strong>
+                                                    <span t-out="payslip[0].employee_id.l10n_mx_curp" />
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr class="border-black">
+                                                                <th colspan="2">Perception</th>
+                                                                <th>Value</th>
+                                                                <th>Amount</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr t-foreach="payslip[1]['perceptions']" t-as="line">
+                                                                <td style="text-align: left;">
+                                                                    <span
+                                                                        t-out="line.salary_rule_id.l10n_mx_edi_code"
+                                                                    />
+                                                                </td>
+                                                                <td>
+                                                                    <span t-out="line.name" />
+                                                                </td>
+                                                                <td style="text-align: right;">
+                                                                    <span
+                                                                        t-out="line.amount"
+                                                                        t-options="{'widget': 'monetary', 'display_currency': display_currency}"
+                                                                    />
+                                                                </td>
+                                                                <td style="text-align: right;">
+                                                                    <span
+                                                                        t-out="line.total"
+                                                                        t-options="{'widget': 'monetary', 'display_currency': display_currency}"
+                                                                    />
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="col-6">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr class="border-black">
+                                                                <th colspan="2">Deduction</th>
+                                                                <th>Value</th>
+                                                                <th>Amount</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr t-foreach="payslip[1]['deductions']" t-as="line">
+                                                                <td style="text-align: left;">
+                                                                    <span
+                                                                        t-out="line.salary_rule_id.l10n_mx_edi_code"
+                                                                    />
+                                                                </td>
+                                                                <td>
+                                                                    <span t-out="line.name" />
+                                                                </td>
+                                                                <td style="text-align: right;">
+                                                                    <span
+                                                                        t-out="line.amount"
+                                                                        t-options="{'widget': 'monetary', 'display_currency': display_currency}"
+                                                                    />
+                                                                </td>
+                                                                <td style="text-align: right;">
+                                                                    <span
+                                                                        t-out="line.total"
+                                                                        t-options="{'widget': 'monetary', 'display_currency': display_currency}"
+                                                                    />
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <div class="row">
+                                                        <div class="col-8" style="text-align: right;">
+                                                            <span>Total Perceptions</span>
+                                                        </div>
+                                                        <div class="col-4" style="text-align: right;">
+                                                            <span
+                                                                t-out="payslip[1]['total_perceptions']"
+                                                                t-options="{'widget': 'monetary', 'display_currency': display_currency}"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-8" style="text-align: right;">
+                                                            <span>
+                                                                <strong>Net to pay</strong>
+                                                            </span>
+                                                        </div>
+                                                        <div class="col-4" style="text-align: right;">
+                                                            <strong>
+                                                                <span
+                                                                    t-out="payslip[1]['net_to_pay']"
+                                                                    t-options="{'widget': 'monetary', 'display_currency': display_currency}"
+                                                                />
+                                                            </strong>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="row">
+                                                        <div class="col-8" style="text-align: right;">
+                                                            <span>Total Deductions</span>
+                                                        </div>
+                                                        <div class="col-4" style="text-align: right;">
+                                                            <span
+                                                                t-out="payslip[1]['total_deductions']"
+                                                                t-options="{'widget': 'monetary', 'display_currency': display_currency}"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br />
+                                    </t>
+                                </div>
+                                <div style="page-break-inside: avoid;">
+                                    <br />
+                                    <br />
+                                    <table class="table table-condensed table-sm" style="margin-bottom:1px;">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th>
+                                                    <strong>
+                                                        Total of department: <span t-out="department[0]" />
+                                                        <t t-if="employer_registration_number">
+                                                            - <span t-out="employer_registration_number" />
+                                                        </t>
+                                                    </strong>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                    <div class="row" style="font-size:12px;">
+                                        <div class="col-6">
+                                            <table class="table table-condensed table-sm" style="margin-bottom:1px;">
+                                                <thead class="thead-light">
+                                                    <tr>
+                                                        <th>
+                                                            <strong>Perception</strong>
+                                                        </th>
+                                                        <th>
+                                                            <strong>Import</strong>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr
+                                                        t-foreach="employer_registration[1]['perceptions_summary'].items()"
+                                                        t-as="perception"
+                                                    >
+                                                        <td>
+                                                            <span t-esc="perception[0].name" />
+                                                        </td>
+                                                        <td style="text-align: right;">
+                                                            <span
+                                                                t-esc="perception[1]"
+                                                                t-options="{'widget': 'monetary', 'display_currency': display_currency}"
+                                                            />
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="col-6">
+                                            <table class="table table-condensed table-sm" style="margin-bottom:1px;">
+                                                <thead class="thead-light">
+                                                    <tr>
+                                                        <th>
+                                                            <strong>Deduction</strong>
+                                                        </th>
+                                                        <th>
+                                                            <strong>Import</strong>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr
+                                                        t-foreach="employer_registration[1]['deductions_summary'].items()"
+                                                        t-as="deduction"
+                                                    >
+                                                        <td>
+                                                            <span t-esc="deduction[0].name" />
+                                                        </td>
+                                                        <td style="text-align: right;">
+                                                            <span
+                                                                t-esc="deduction[1]"
+                                                                t-options="{'widget': 'monetary', 'display_currency': display_currency}"
+                                                            />
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row" style="font-size:12px;">
+                                        <div class="col-6">
+                                            <div class="row">
+                                                <div class="col-8" style="text-align: right;">
+                                                    <span>Total Perceptions</span>
+                                                </div>
+                                                <div class="col-4" style="text-align: right;">
+                                                    <span
+                                                        t-out="employer_registration[1]['total_perceptions']"
+                                                        t-options="{'widget': 'monetary', 'display_currency': display_currency}"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-8" style="text-align: right;">
+                                                    <span>
+                                                        <strong>Net of department</strong>
+                                                    </span>
+                                                </div>
+                                                <div class="col-4" style="text-align: right;">
+                                                    <strong>
+                                                        <span
+                                                            t-out="employer_registration[1]['net_to_pay']"
+                                                            t-options="{'widget': 'monetary', 'display_currency': display_currency}"
+                                                        />
+                                                    </strong>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-8" style="text-align: right;">
+                                                    <span>Total Employees</span>
+                                                </div>
+                                                <div class="col-4" style="text-align: right;">
+                                                    <span t-out="employer_registration[1]['total_employees']" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="row">
+                                                <div class="col-8" style="text-align: right;">
+                                                    <span>Total Deductions</span>
+                                                </div>
+                                                <div class="col-4" style="text-align: right;">
+                                                    <span
+                                                        t-out="employer_registration[1]['total_deductions']"
+                                                        t-options="{'widget': 'monetary', 'display_currency': display_currency}"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="font-size:12px;">
+                                        <br />
+                                        <br />
+                                        <div class="col-6">
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="row">
+                                                <table
+                                                    class="table table-condensed table-sm"
+                                                    style="margin-bottom:1px;"
+                                                >
+                                                    <thead class="thead-light">
+                                                        <tr>
+                                                            <th>
+                                                                <strong>Obligation</strong>
+                                                            </th>
+                                                            <th>
+                                                                <strong>Import</strong>
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr
+                                                            t-foreach="employer_registration[1]['obligations_summary'].items()"
+                                                            t-as="obligation"
+                                                        >
+                                                            <td>
+                                                                <span t-esc="obligation[0].name" />
+                                                            </td>
+                                                            <td style="text-align: right;">
+                                                                <span
+                                                                    t-esc="obligation[1]"
+                                                                    t-options="{'widget': 'monetary', 'display_currency': display_currency}"
+                                                                />
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-8" style="text-align: right;">
+                                                    <span>Total Obligations</span>
+                                                </div>
+                                                <div class="col-4" style="text-align: right;">
+                                                    <span
+                                                        t-out="employer_registration[1]['total_obligations']"
+                                                        t-options="{'widget': 'monetary', 'display_currency': display_currency}"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                            </div>
+                        </t>
+
+                    </t>
+
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <template id="raya_list_report">
+        <t t-call="web.html_container">
+            <t t-call="l10n_mx_edi_payslip.report_raya_document" t-lang="env.user.lang" />
+        </t>
+    </template>
+
+    <record id="action_report_raya" model="ir.actions.report">
+        <field name="name">Raya List Report</field>
+        <field name="model">hr.payslip.run</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_mx_edi_payslip.raya_list_report</field>
+        <field name="report_file">l10n_mx_edi_payslip.raya_list_report</field>
+        <field name="print_report_name">'Raya List report - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="hr_payroll.model_hr_payslip_run" />
+    </record>
+
+</odoo>

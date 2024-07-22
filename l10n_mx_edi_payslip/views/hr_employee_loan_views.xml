@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="view_hr_employee_loan_form" model="ir.ui.view">
+        <field name="name">view.l10n_mx.loan.form</field>
+        <field name="model">hr.employee.loan</field>
+        <field name="inherit_id" ref="hr_payroll_loan.view_hr_employee_loan_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='input_type']" position="after">
+                <group>
+                    <field
+                        name="infonavit_type"
+                        invisible="input_type_id not in [%(hr_payslip_input_type_deduction_009)d]"
+                        required="input_type_id in [%(hr_payslip_input_type_deduction_009)d]"
+                    />
+                    <field
+                        name="number_fonacot"
+                        invisible="input_type_id not in [%(hr_payslip_input_type_deduction_011)d]"
+                        required="input_type_id in [%(hr_payslip_input_type_deduction_011)d]"
+                    />
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

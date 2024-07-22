@@ -1,0 +1,211 @@
+<?xml version="1.0" ?>
+<odoo>
+
+    <record id="schedule_pay_daily" model="l10n_mx_edi.schedule.pay">
+        <field name="name">Daily</field>
+        <field name="code">01</field>
+        <field name="isr_table">
+[(0.01, 24.54, 0.00, 0.0192),
+ (24.55, 208.29, 0.47, 0.0640),
+ (208.30, 366.05, 12.23, 0.1088),
+ (366.06, 425.52, 29.40, 0.1600),
+ (425.53, 509.46, 38.91, 0.1792),
+ (509.47, 1027.52, 53.95, 0.2136),
+ (1027.53, 1619.51, 164.61, 0.2352),
+ (1619.52, 3091.90, 303.85, 0.3000),
+ (3091.91, 4122.54, 745.56, 0.3200),
+ (4122.55, 12367.62, 1075.37, 0.3400),
+ (12367.63, 99999999, 3878.69, 0.3500)]
+        </field>
+        <field name="subsidy_table">
+[(0.01, 58.19, 13.39),
+ (58.20, 87.28, 13.38),
+ (87.29, 114.24, 13.38),
+ (114.25, 116.38, 12.92),
+ (116.39, 146.25, 12.58),
+ (146.26, 155.17, 11.65),
+ (155.18, 175.51, 10.69),
+ (175.52, 204.76, 9.69),
+ (204.77, 234.01, 8.34),
+ (234.02, 242.84, 7.16),
+ (242.85, 99999999.00, 0)]
+        </field>
+        <field name="days_to_pay">1</field>
+    </record>
+
+    <record id="schedule_pay_weekly" model="l10n_mx_edi.schedule.pay">
+        <field name="name">Weekly</field>
+        <field name="code">02</field>
+        <field name="isr_table">
+[(0.01, 171.78, 0.00, 0.0192),
+ (171.79, 1458.03, 3.29, 0.0640),
+ (1458.04, 2562.35, 85.61, 0.1088),
+ (2562.36, 2978.64, 205.80, 0.1600),
+ (2978.65, 3566.22, 272.37, 0.1792),
+ (3566.23, 7192.64, 377.65, 0.2136),
+ (7192.65, 11336.57, 1152.27, 0.2352),
+ (11336.58, 21643.30, 2126.95, 0.3000),
+ (21643.31, 28857.78, 5218.92, 0.3200),
+ (28857.79, 86573.34, 7527.59, 0.3400),
+ (86573.35, 99999999, 27150.83, 0.3500)]
+        </field>
+        <field name="subsidy_table">
+[(0.01, 407.33, 93.73),
+ (407.34, 610.96, 93.66),
+ (610.97, 799.68, 93.66),
+ (799.69, 814.66, 90.44),
+ (814.67, 1023.75, 88.06),
+ (1023.76, 1086.19, 81.55),
+ (1086.20, 1228.57, 74.83),
+ (1228.58, 1433.32, 67.83),
+ (1433.33, 1638.07, 58.38),
+ (1638.08, 1699.88, 50.12),
+ (1699.89, 99999999.00, 0)]
+        </field>
+        <field name="days_to_pay">7</field>
+    </record>
+
+    <record id="schedule_pay_biweekly" model="l10n_mx_edi.schedule.pay">
+        <field name="name">Biweekly</field>
+        <field name="code">03</field>
+        <field name="isr_table" />
+        <field name="days_to_pay">14</field>
+    </record>
+
+    <record id="schedule_pay_fortnightly" model="l10n_mx_edi.schedule.pay">
+        <field name="name">Fortnightly</field>
+        <field name="code">04</field>
+        <field name="isr_table">
+[(0.01, 368.10, 0.00, 0.0192),
+ (368.11, 3124.35, 7.05, 0.0640),
+ (3124.36, 5490.75, 183.45,  0.1088),
+ (5490.76, 6382.80, 441.00,  0.1600),
+ (6382.81, 7641.90, 583.65,  0.1792),
+ (7641.91, 15412.80, 809.25, 0.2136),
+ (15412.81, 24292.65, 2469.15, 0.2352),
+ (24292.66, 46378.50, 4557.75, 0.3000),
+ (46378.51, 61838.10, 11183.40, 0.3200),
+ (61838.11, 185514.30, 16130.55, 0.3400),
+ (185514.31, 999999999, 58180.35, 0.3500)]
+        </field>
+        <field name="subsidy_table">
+[(0.01, 872.85, 200.85),
+ (872.86, 1309.20, 200.70),
+ (1309.21, 1713.60, 200.70),
+ (1713.61, 1745.70, 193.80),
+ (1745.71, 2193.75, 188.70),
+ (2193.76, 2327.55, 174.75),
+ (2327.56, 2632.65, 160.35),
+ (2632.66, 3071.40, 145.35),
+ (3071.41, 3510.15, 125.10),
+ (3510.16, 3642.60, 107.40),
+ (3642.61, 99999999.00, 0)]
+        </field>
+        <field name="days_to_pay">15</field>
+    </record>
+
+    <record id="schedule_pay_monthly" model="l10n_mx_edi.schedule.pay">
+        <field name="name">Monthly</field>
+        <field name="code">05</field>
+        <field name="isr_table">
+[(0.01, 746.04, 0.00, 0.0192),
+ (746.05, 6332.05, 14.32, 0.0640),
+ (6332.06, 11128.01, 371.83, 0.1088),
+ (11128.02, 12935.82, 893.63, 0.1600),
+ (12935.83, 15487.71, 1182.88, 0.1792),
+ (15487.72, 31236.49, 1640.18, 0.2136),
+ (31236.50, 49233.00, 5004.12, 0.2352),
+ (49233.01, 93993.90, 9236.89, 0.3000),
+ (93993.91, 125325.20, 22665.17, 0.3200),
+ (125325.21, 375975.61, 32691.18, 0.3400),
+ (375975.62, 999999999, 117912.32, 0.3500)]
+        </field>
+        <field name="subsidy_table">
+[(0.01, 1768.96, 407.02),
+ (1768.97, 2653.38, 406.83),
+ (2653.39, 3472.84, 406.62),
+ (3472.85, 3537.87, 392.77),
+ (3537.88, 4446.15, 382.46),
+ (4446.16, 4717.18, 354.23),
+ (4717.19, 5335.42, 324.87),
+ (5335.43, 6224.67, 294.63),
+ (6224.68, 7113.90, 253.54),
+ (7113.91, 7382.33, 217.61),
+ (7382.34, 99999999.00, 0)]
+        </field>
+        <field name="days_to_pay">30</field>
+    </record>
+
+    <record id="schedule_pay_bimonthly" model="l10n_mx_edi.schedule.pay">
+        <field name="name">Bimonthly</field>
+        <field name="code">06</field>
+        <field name="isr_table" />
+        <field name="subsidy_table" />
+        <field name="days_to_pay">60</field>
+    </record>
+
+    <record id="schedule_pay_unit_work" model="l10n_mx_edi.schedule.pay">
+        <field name="name">Unit work</field>
+        <field name="code">07</field>
+        <field name="isr_table" />
+        <field name="subsidy_table" />
+        <field name="days_to_pay">1</field>
+    </record>
+
+    <record id="schedule_pay_commission" model="l10n_mx_edi.schedule.pay">
+        <field name="name">Commission</field>
+        <field name="code">08</field>
+        <field name="isr_table" />
+        <field name="subsidy_table" />
+        <field name="days_to_pay">1</field>
+    </record>
+
+    <record id="schedule_pay_raised_price" model="l10n_mx_edi.schedule.pay">
+        <field name="name">Raised price</field>
+        <field name="code">09</field>
+        <field name="isr_table" />
+        <field name="subsidy_table" />
+        <field name="days_to_pay">1</field>
+    </record>
+
+    <record id="schedule_pay_decennial" model="l10n_mx_edi.schedule.pay">
+        <field name="name">Decennial</field>
+        <field name="code">10</field>
+        <field name="isr_table">
+[(0.01, 245.40, 0.00, 0.0192),
+ (245.41, 2082.90, 4.70, 0.0640),
+ (2082.91, 3660.50, 122.30, 0.1088),
+ (3660.51, 4255.20, 294.00, 0.1600),
+ (4255.21, 5094.60, 389.10, 0.1792),
+ (5094.61, 10275.20, 539.50, 0.2136),
+ (10275.21, 16195.10, 1646.10, 0.2352),
+ (16195.11, 30919.00, 3038.50, 0.3000),
+ (30,919.01, 41225.40, 7455.60, 0.3200),
+ (41225.41, 123676.20, 10753.70, 0.3400),
+ (123676.21, 99999999, 38786.90, 0.3500)]
+        </field>
+        <field name="subsidy_table">
+[(0.01, 581.90, 133.90),
+ (581.91, 872.80, 133.80),
+ (872.81, 1142.40, 133.80),
+ (1142.41, 1163.80, 129.20),
+ (1163.81, 1462.50, 125.80),
+ (1462.51, 1551.70, 116.50),
+ (1551.71, 1755.10, 106.90),
+ (1755.11, 2047.60, 96.90),
+ (2047.61, 2340.10, 83.40),
+ (2340.11, 2428.40, 71.60),
+ (2428.41, 99999999.00, 0)]
+        </field>
+        <field name="days_to_pay">10</field>
+    </record>
+
+    <record id="schedule_pay_other" model="l10n_mx_edi.schedule.pay">
+        <field name="name">Other</field>
+        <field name="code">99</field>
+        <field name="isr_table" />
+        <field name="subsidy_table" />
+        <field name="days_to_pay">0</field>
+    </record>
+
+</odoo>
