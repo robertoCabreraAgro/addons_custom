@@ -219,7 +219,7 @@
         />
     </record>
 
-    <record id="account.menu_account_supplier_accounts" model="ir.ui.menu">
+    <record id="account.menu_account_supplier" model="ir.ui.menu">
         <field name="active" eval="False" />
     </record>
 
@@ -476,16 +476,6 @@
     </record>
 
     <record id="account_disallowed_expenses.menu_action_account_report_de" model="ir.ui.menu">
-        <field
-            name="groups_id"
-            eval="[
-                Command.link(ref('account.group_account_readonly')),
-                Command.link(ref('account.group_account_manager')),
-            ]"
-        />
-    </record>
-
-    <record id="account_budget.menu_act_crossovered_budget_lines_view" model="ir.ui.menu">
         <field
             name="groups_id"
             eval="[

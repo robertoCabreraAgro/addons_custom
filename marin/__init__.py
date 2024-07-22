@@ -97,12 +97,12 @@ def _post_init_marin(env):
                     "noupdate": True,
                 }
             )
-    env.cr.execute("""SELECT setval('"public"."stock_picking_type_id_seq"', 5000, true);""")
-    env.cr.execute("""SELECT setval('"public"."stock_route_id_seq"', 5000, true);""")
-    env.cr.execute("""SELECT setval('"public"."stock_rule_id_seq"', 5000, true);""")
-    tools.convert.convert_file(env, "marin", "data/stock.picking.type.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin", "data/stock.route.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin", "data/stock.rule.csv", None, mode="init", kind="data")
+    # env.cr.execute("""SELECT setval('"public"."stock_picking_type_id_seq"', 5000, true);""")
+    # env.cr.execute("""SELECT setval('"public"."stock_route_id_seq"', 5000, true);""")
+    # env.cr.execute("""SELECT setval('"public"."stock_rule_id_seq"', 5000, true);""")
+    # tools.convert.convert_file(env, "marin", "data/stock.picking.type.csv", None, mode="init", kind="data")
+    # tools.convert.convert_file(env, "marin", "data/stock.route.csv", None, mode="init", kind="data")
+    # tools.convert.convert_file(env, "marin", "data/stock.rule.csv", None, mode="init", kind="data")
 
     env.cr.execute("""SELECT setval('"public"."account_account_id_seq"', 1000, true);""")
     env.cr.execute("""SELECT setval('"public"."account_analytic_plan_id_seq"', 200, true);""")
@@ -140,7 +140,7 @@ def _post_init_marin(env):
     tools.convert.convert_file(env, "marin", "data/account.asset.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/account.payment.term.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/account.tax.group.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin", "data/account.tax.csv", None, mode="init", kind="data")
+    # tools.convert.convert_file(env, "marin", "data/account.tax.csv", None, mode="init", kind="data")
 
     env.cr.execute("""SELECT setval('"public"."crm_team_id_seq"', 100, true);""")
     tools.convert.convert_file(env, "marin", "data/crm_team_data.xml", None, mode="init", kind="data")
@@ -189,10 +189,9 @@ def _post_init_marin(env):
         "UPDATE res_company SET quotation_validity_days=7",
         "UPDATE res_company SET portal_confirmation_sign='f'",
         "UPDATE res_company SET portal_confirmation_pay='f'",
-        "UPDATE res_company SET l10n_mx_edi_minimum_wage=248.93",
-        "UPDATE res_company SET l10n_mx_edi_uma=108.57",
+        # "UPDATE res_company SET l10n_mx_edi_minimum_wage=248.93",
+        # "UPDATE res_company SET l10n_mx_edi_uma=108.57",
         "UPDATE res_company SET predict_bill_product='t'",
-        "UPDATE res_company SET rule_type='sale_purchase'",
         "UPDATE res_company SET font='Roboto'",
         "UPDATE res_company SET layout_background='Geometric'",
 

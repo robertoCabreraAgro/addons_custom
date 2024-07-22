@@ -17,7 +17,6 @@
         <field name="lang">es_MX</field>
         <field name="tz">America/Mexico_City</field>
         <field name="l10n_mx_edi_fiscal_regime">612</field>
-        <field name="l10n_mx_type_of_operation">85</field>
         <field name="l10n_mx_edi_curp">MARL640819HMCRBS03</field>
     </record>
 
@@ -61,7 +60,6 @@
         <field name="lang">es_MX</field>
         <field name="tz">America/Mexico_City</field>
         <field name="l10n_mx_edi_fiscal_regime">612</field>
-        <field name="l10n_mx_type_of_operation">85</field>
         <field name="l10n_mx_edi_curp">GULT710616MMCDPR03</field>
     </record>
 
@@ -96,7 +94,6 @@
         <field name="lang">es_MX</field>
         <field name="tz">America/Mexico_City</field>
         <field name="l10n_mx_edi_fiscal_regime">612</field>
-        <field name="l10n_mx_type_of_operation">85</field>
         <field name="l10n_mx_edi_curp">MAGL910204HMCRDS05</field>
     </record>
 
@@ -138,7 +135,6 @@
         <field name="lang">es_MX</field>
         <field name="tz">America/Mexico_City</field>
         <field name="l10n_mx_edi_fiscal_regime">612</field>
-        <field name="l10n_mx_type_of_operation">85</field>
         <field name="l10n_mx_edi_curp">MAGA920702MMCRDN08</field>
     </record>
 
@@ -170,7 +166,6 @@
         <field name="lang">es_MX</field>
         <field name="tz">America/Mexico_City</field>
         <field name="l10n_mx_edi_fiscal_regime">612</field>
-        <field name="l10n_mx_type_of_operation">85</field>
         <field name="l10n_mx_edi_curp">MAGC961202HMCRDR04</field>
     </record>
 
@@ -203,7 +198,6 @@
         <field name="lang">es_MX</field>
         <field name="tz">America/Mexico_City</field>
         <field name="l10n_mx_edi_fiscal_regime">612</field>
-        <field name="l10n_mx_type_of_operation">85</field>
         <field name="l10n_mx_edi_curp">MAMG890621MCHNRL06</field>
     </record>
 
@@ -236,7 +230,6 @@
         <field name="lang">es_MX</field>
         <field name="tz">America/Mexico_City</field>
         <field name="l10n_mx_edi_fiscal_regime">612</field>
-        <field name="l10n_mx_type_of_operation">85</field>
     </record>
 
     <record id="company_society" model="res.company">

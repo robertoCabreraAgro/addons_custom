@@ -33,7 +33,6 @@
         <field name="employee" eval="True" />
         <field name="gender">male</field>
         <field name="l10n_mx_edi_fiscal_regime">612</field>
-        <field name="l10n_mx_type_of_operation">85</field>
         <field name="l10n_mx_edi_curp">MAGL910204HMCRDS05</field>
     </record>
 
