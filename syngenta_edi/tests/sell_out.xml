@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="sell_out">
+        <serviceFormatVO>
+            <clave_Distribuidor>10279843</clave_Distribuidor>
+            <nombre_distribuidor>JULIO ISRAEL MORALES CABALLERO</nombre_distribuidor>
+            <productLines>
+                <t t-foreach="conceptos_list" t-as="line_values">
+                    <codeProduct_Distribuidor>6192</codeProduct_Distribuidor>
+                    <fecha_Facturacion>4/12/2020</fecha_Facturacion>
+                    <folio>345-23</folio>
+                    <linea_Producto>CERILLOS</linea_Producto>
+                    <localidad>Bogota</localidad>
+                    <marca>SYNGENTA</marca>
+                    <nombre_Cliente>LUIS MARTINEZ</nombre_Cliente>
+                    <nombre_Vendedor_Distribuidor />
+                    <pais>COL</pais>
+                    <rFC />
+                    <sucursal>Bogota</sucursal>
+                    <volumen_Facturado>34.0</volumen_Facturado>
+                    <unidad_Medida>ML</unidad_Medida>
+                    <valorT_Facturado>34500.0</valorT_Facturado>
+                </t>
+            </productLines>
+        </serviceFormatVO>
+    </template>
+</odoo>

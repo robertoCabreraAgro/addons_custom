@@ -1,0 +1,22 @@
+{
+    "clave_Distribuidor": "10279843",
+    "nombre_distribuidor": "JULIO ISRAEL MORALES CABALLERO",
+    "productLines": [
+        {
+            "folio":"34523",
+            "fecha_Facturacion":"4/12/2020",
+            "volumen_Facturado":34.0,
+            "unidad_Medida":"ML",
+            "valorT_Facturado":34500.0,
+            "nombre_Cliente":"LUIS MARTINEZ",
+            "nombre_Vendedor_Distribuidor":"",
+            "codeProduct_Distribuidor":"6192",
+            "localidad":"Bogota",
+            "sucursal":"Bogota",
+            "linea_Producto":"CERILLOS",
+            "marca":"SYNGENTA",
+            "pais":"COL",
+            "rFC":""
+        }
+    ]
+}

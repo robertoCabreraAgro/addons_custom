@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="view_syngenta_stock_document_tree" model="ir.ui.view">
+        <field name="name">syngenta.stock.document.tree</field>
+        <field name="model">syngenta.stock.document</field>
+        <field name="arch" type="xml">
+            <tree string="Syngenta Stock Documents" sample="1" multi_edit="1">
+                <field name="name" readonly="True" />
+                <field name="date" widget="date" readonly="state != 'draft'" />
+                <field name="state" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_syngenta_stock_document_form" model="ir.ui.view">
+        <field name="name">syngenta.stock.document.form</field>
+        <field name="model">syngenta.stock.document</field>
+        <field name="arch" type="xml">
+            <form string="Syngenta Stock Document" class="o_syngenta_stock_document">
+            <header>
+                <button
+                        name="action_send"
+                        string="Send"
+                        type="object"
+                        class="btn-primary"
+                        invisible="state != 'draft'"
+                    />
+                <button
+                        name="action_send"
+                        string="Retry Send"
+                        type="object"
+                        class="btn-primary"
+                        invisible="state != 'error'"
+                    />
+                <button name="action_cancel" string="Cancel" type="object" invisible="state in ['done', 'cancel']" />
+                <field name="state" widget="statusbar" statusbar_visible="draft,sent,sale" />
+            </header>
+            <sheet>
+                <div class="oe_button_box" name="button_box">
+                </div>
+                <div class="oe_title">
+                    <h1>
+                        <field name="name" readonly="1" />
+                    </h1>
+                </div>
+                <group>
+                    <group name="details">
+                        <field name="date" readonly="state in ['done', 'cancel']" />
+                    </group>
+                </group>
+                <notebook groups="base.group_no_one">
+                    <page string="Sent Info" name="sent_info">
+                        <group>
+                            <group>
+                                <field name="sent_json" />
+                            </group>
+                        </group>
+                    </page>
+                    <page string="Response Info" name="response">
+                        <group>
+                            <group>
+                                <field name="response_message" />
+                                <field name="response_status" invisible="not response_status" />
+                                <field name="response_error" invisible="not response_error" />
+                                <field name="response_json" invisible="not response_json" />
+                            </group>
+                        </group>
+                    </page>
+                </notebook>
+            </sheet>
+            <div class="oe_chatter">
+                <field name="message_follower_ids" />
+                <field name="activity_ids" />
+                <field name="message_ids" />
+            </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_syngenta_stock_document_search" model="ir.ui.view">
+        <field name="name">syngenta.stock.document.search</field>
+        <field name="model">syngenta.stock.document</field>
+        <field name="arch" type="xml">
+            <search string="Sale Agreements Search">
+                <field name="name" string="Document" filter_domain="[('name', 'ilike', self)]" />
+                <group expand="0" string="Group By">
+                    <filter string="Date" name="order_month" domain="[]" context="{'group_by': 'date'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_syngenta_stock_document" model="ir.actions.act_window">
+        <field name="name">Stock Documents</field>
+        <field name="res_model">syngenta.stock.document</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Stock Document
+            </p>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="product_variant_easy_edit_view" model="ir.ui.view">
+        <field name="name">product.product.view.form.easy</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_variant_easy_edit_view" />
+        <field name="arch" type="xml">
+            <sheet position="inside">
+                <group name="manufacturer" string="Manufacturer">
+                    <group>
+                        <field name="manufacturer_id" context="{'res_partner_search_mode': 'supplier'}" />
+                        <field name="manufacturer_pname" />
+                    </group>
+                    <group>
+                        <field name="manufacturer_pref" />
+                        <field name="manufacturer_purl" widget="url" />
+                    </group>
+                </group>
+            </sheet>
+        </field>
+    </record>
+</odoo>

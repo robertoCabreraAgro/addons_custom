@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_syngenta_sale_agreement,access.syngenta.sale.agreement,model_syngenta_sale_agreement,syngenta_edi.group_syngenta_edi,1,1,1,1
+access_syngenta_sale_document,access.syngenta.sale.document,model_syngenta_sale_document,syngenta_edi.group_syngenta_edi,1,1,1,1
+access_syngenta_sale_line,access.syngenta.sale.line,model_syngenta_sale_line,syngenta_edi.group_syngenta_edi,1,1,1,1
+access_syngenta_stock_document,access.syngenta.stock.document,model_syngenta_stock_document,syngenta_edi.group_syngenta_edi,1,1,1,1
+access_syngenta_stock_quant,access.syngenta.stock.quant,model_syngenta_stock_quant,syngenta_edi.group_syngenta_edi,1,1,1,1

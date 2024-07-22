@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_syngenta_stock_quant_search" model="ir.ui.view">
+        <field name="name">syngenta.stock.quant.search</field>
+        <field name="model">syngenta.stock.quant</field>
+        <field name="arch" type="xml">
+            <search string="Syngenta Inventory Search">
+                <field name="product_id" />
+                <field name="product_category_id" />
+                <group expand="0" string="Group By...">
+                    <filter
+                        name="groupby_category_id"
+                        string="Category"
+                        domain="[]"
+                        context="{'group_by': 'product_category_id'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_syngenta_stock_quant_tree" model="ir.ui.view">
+        <field name="name">syngenta.stock.quant.tree</field>
+        <field name="model">syngenta.stock.quant</field>
+        <field name="arch" type="xml">
+            <tree string="Syngenta Inventory" editable="top" create="1" delete="1" multi_edit="1">
+                <field name="product_id" options="{'no_create': True}" />
+                <field name="product_category_id" />
+                <field name="quantity" />
+                <field name="transit_quantity" />
+                <field name="date_inventory" optional="hide" />
+                <field name="company_id" optional="hide" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_syngenta_stock_quant" model="ir.actions.act_window">
+        <field name="name">Syngenta Inventory</field>
+        <field name="res_model">syngenta.stock.quant</field>
+        <field name="view_mode">tree</field>
+        <field name="context">{}</field>
+    </record>
+</odoo>

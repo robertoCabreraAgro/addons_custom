@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <menuitem
+        name="Syngenta EDI"
+        id="menu_syngenta_root"
+        web_icon="syngenta_edi,static/description/icon.png"
+        sequence="135"
+        groups="group_syngenta_edi"
+    />
+
+    <menuitem
+        id="menu_syngenta_sale"
+        name="Sale"
+        parent="menu_syngenta_root"
+        action="action_syngenta_sale_agreement"
+        sequence="10"
+    />
+
+    <menuitem
+        id="menu_syngenta_sale_agreement"
+        name="Sale Agreements"
+        parent="menu_syngenta_sale"
+        action="action_syngenta_sale_agreement"
+        sequence="10"
+    />
+
+    <menuitem
+        id="menu_syngenta_sale_document"
+        name="Sale Documents"
+        parent="menu_syngenta_sale"
+        action="action_syngenta_sale_document"
+        sequence="20"
+    />
+
+    <menuitem
+        id="menu_syngenta_sale_line"
+        name="Sale Lines"
+        parent="menu_syngenta_sale"
+        action="action_syngenta_sale_line"
+        sequence="30"
+    />
+
+    <menuitem
+        id="menu_syngenta_stock"
+        name="Inventory"
+        parent="menu_syngenta_root"
+        action="action_syngenta_stock_quant"
+        sequence="20"
+    />
+
+    <menuitem
+        id="menu_syngenta_stock_document"
+        name="Stock Documents"
+        parent="menu_syngenta_stock"
+        action="action_syngenta_stock_document"
+        sequence="10"
+    />
+
+    <menuitem
+        id="menu_syngenta_stock_quant"
+        name="Stock Quants"
+        parent="menu_syngenta_stock"
+        action="action_syngenta_stock_quant"
+        sequence="20"
+    />
+</odoo>

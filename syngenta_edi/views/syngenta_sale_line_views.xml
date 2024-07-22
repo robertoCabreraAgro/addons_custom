@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_syngenta_sale_line_search" model="ir.ui.view">
+        <field name="name">syngenta.sale.line.search</field>
+        <field name="model">syngenta.sale.line</field>
+        <field name="arch" type="xml">
+            <search string="Sale Lines Search">
+                <field name="partner_id" />
+                <field name="product_id" />
+                <filter name="is_sent" string="Sent" domain="[('is_sent', '=', True)]" />
+                <group expand="0" string="Group By...">
+                    <filter name="agreement" string="Agreement" domain="[]" context="{'group_by': 'agreement_id'}" />
+                    <filter name="document" string="Document" domain="[]" context="{'group_by': 'document_id'}" />
+                    <filter name="partner" string="Customer" domain="[]" context="{'group_by': 'partner_id'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_syngenta_sale_line_tree" model="ir.ui.view">
+        <field name="name">syngenta.sale.line.tree</field>
+        <field name="model">syngenta.sale.line</field>
+        <field name="arch" type="xml">
+            <tree string="Sale Lines" delete="1" multi_edit="1">
+                <field name="agreement_id" />
+                <field name="document_id" />
+                <field name="product_id" />
+                <field name="product_qty" />
+                <field name="price_unit" />
+                <field name="price_subtotal" />
+                <field name="is_sent" widget="boolean_toggle" />
+                <field name="company_id" optional="hide" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_syngenta_sale_line" model="ir.actions.act_window">
+        <field name="name">Sale Lines</field>
+        <field name="res_model">syngenta.sale.line</field>
+        <field name="view_mode">tree</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Sale Lines
+            </p>
+        </field>
+    </record>
+</odoo>
