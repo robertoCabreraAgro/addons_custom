@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_res_company_search" model="ir.ui.view">
+        <field name="model">res.company</field>
+        <field name="arch" type="xml">
+            <search>
+                <field
+                    name="name"
+                    filter_domain="['|', '|', '|',
+                        ('code', 'ilike', self),
+                        ('name', 'ilike', self),
+                        ('vat', 'ilike', self),
+                        ('company_registry', 'ilike', self)
+                    ]"
+                />
+                <field name="parent_id" operator="child_of" />
+                <field name="email" filter_domain="[('email', 'ilike', self)]" />
+                <field name="phone" filter_domain="['|', ('phone', 'ilike', self), ('mobile', 'ilike', self)]" />
+                <separator />
+                <filter name="inactive" string="Archived" domain="[('active', '=', False)]" />
+                <separator />
+                <group name="group_by" expand="0" string="Group By">
+                    <filter name="group_country" string="Country" context="{'group_by': 'country_id'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_company_tree_marin" model="ir.ui.view">
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_tree" />
+        <field name="arch" type="xml">
+            <field name="name" position="before">
+                <field name="code" />
+            </field>
+        </field>
+    </record>
+
+    <record id="view_res_company_kanban_marin" model="ir.ui.view">
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_res_company_kanban" />
+        <field name="arch" type="xml">
+            <field name="name" position="before">
+                <field name="code" />
+            </field>
+            <xpath expr="//i[hasclass('fa', 'fa-building')]" position="after">
+                <strong><field name="code" /> - </strong>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_company_form_marin" model="ir.ui.view">
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']/.." position="after">
+                <label for="code" class="oe_edit_only" />
+                <h2>
+                    <field name="code" />
+                </h2>
+            </xpath>
+        </field>
+    </record>
+</odoo>

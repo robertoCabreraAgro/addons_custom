@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="document_view_search_marin" model="ir.ui.view">
+        <field name="name">Document search view</field>
+        <field name="model">documents.document</field>
+        <field name="inherit_id" ref="documents.document_view_search" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="attributes">
+                <attribute
+                    name="filter_domain"
+                >['|', ('name', 'ilike', self), ('legal_number', 'ilike', self)]</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="documents_view_list_marin" model="ir.ui.view">
+        <field name="name">documents list</field>
+        <field name="model">documents.document</field>
+        <field name="inherit_id" ref="documents.documents_view_list" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="legal_number" optional="hidden" />
+            </xpath>
+        </field>
+    </record>
+</odoo>

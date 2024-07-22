@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo noupdate="1">
+
+    <record id="hr_payroll_structure_finiquito_601_ff" model="hr.payroll.structure">
+        <field name="name">Finiquito 601 FF</field>
+        <field name="type_id" ref="l10n_mx_edi_payslip.payroll_structure_type_finiquito" />
+        <field name="schedule_pay">bi-weekly</field>
+        <field name="country_id" ref="base.mx" />
+    </record>
+
+    <record id="hr_payroll_structure_finiquito_602_ff" model="hr.payroll.structure">
+        <field name="name">Finiquito 602 FF</field>
+        <field name="type_id" ref="l10n_mx_edi_payslip.payroll_structure_type_finiquito" />
+        <field name="schedule_pay">bi-weekly</field>
+        <field name="country_id" ref="base.mx" />
+    </record>
+
+    <record id="hr_payroll_structure_finiquito_603_ff" model="hr.payroll.structure">
+        <field name="name">Finiquito 603 FF</field>
+        <field name="type_id" ref="l10n_mx_edi_payslip.payroll_structure_type_finiquito" />
+        <field name="schedule_pay">bi-weekly</field>
+        <field name="country_id" ref="base.mx" />
+    </record>
+
+    <record id="hr_payroll_structure_liquidacion_601_ff" model="hr.payroll.structure">
+        <field name="name">Liquidacion 601 FF</field>
+        <field name="type_id" ref="l10n_mx_edi_payslip.payroll_structure_type_liquidacion" />
+        <field name="schedule_pay">bi-weekly</field>
+        <field name="country_id" ref="base.mx" />
+    </record>
+
+    <record id="hr_payroll_structure_liquidacion_602_ff" model="hr.payroll.structure">
+        <field name="name">Liquidacion 602 FF</field>
+        <field name="type_id" ref="l10n_mx_edi_payslip.payroll_structure_type_liquidacion" />
+        <field name="schedule_pay">bi-weekly</field>
+        <field name="country_id" ref="base.mx" />
+    </record>
+
+    <record id="hr_payroll_structure_liquidacion_603_ff" model="hr.payroll.structure">
+        <field name="name">Liquidacion 603 FF</field>
+        <field name="type_id" ref="l10n_mx_edi_payslip.payroll_structure_type_liquidacion" />
+        <field name="schedule_pay">bi-weekly</field>
+        <field name="country_id" ref="base.mx" />
+    </record>
+
+    <record id="hr_payroll_structure_nomina_finiquito_liquidacion_601_nf" model="hr.payroll.structure">
+        <field name="name">Nomina + Finiquito + Liquidacion 601 NF</field>
+        <field name="type_id" ref="payroll_structure_type_base_finiquito_liquidacion" />
+        <field name="schedule_pay">annually</field>
+        <field name="country_id" ref="base.mx" />
+    </record>
+
+    <record id="hr_payroll_structure_nomina_finiquito_liquidacion_602_nf" model="hr.payroll.structure">
+        <field name="name">Nomina + Finiquito + Liquidacion 602 NF</field>
+        <field name="type_id" ref="payroll_structure_type_base_finiquito_liquidacion" />
+        <field name="schedule_pay">annually</field>
+        <field name="country_id" ref="base.mx" />
+    </record>
+
+    <record id="hr_payroll_structure_nomina_finiquito_liquidacion_603_nf" model="hr.payroll.structure">
+        <field name="name">Nomina + Finiquito + Liquidacion 603 NF</field>
+        <field name="type_id" ref="payroll_structure_type_base_finiquito_liquidacion" />
+        <field name="schedule_pay">annually</field>
+        <field name="country_id" ref="base.mx" />
+    </record>
+</odoo>

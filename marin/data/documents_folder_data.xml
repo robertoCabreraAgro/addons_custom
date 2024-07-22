@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Sub Folders -->
+    <record id="documents_control_folder" model="documents.folder" forcecreate="0">
+        <field name="name">Control</field>
+        <field name="sequence">1</field>
+        <field name="parent_folder_id" ref="documents.documents_internal_folder" />
+    </record>
+
+    <record id="documents_credentials_folder" model="documents.folder" forcecreate="0">
+        <field name="name">Credentials and passwords</field>
+        <field name="sequence">2</field>
+        <field name="parent_folder_id" ref="documents.documents_internal_folder" />
+        <field name="group_ids" eval="[Command.link(ref('group_documents_password_manager'))]" />
+        <field name="read_group_ids" eval="[Command.link(ref('group_documents_password_readonly'))]" />
+    </record>
+
+    <!-- Folders -->
+    <record id="documents_commercial_folder" model="documents.folder" forcecreate="0">
+        <field name="name">Commercial</field>
+        <field name="description" type="html">
+            <center>
+                <p>Categorize, share and keep track of all commercial documents.</p>
+                <p>Incoming letters sent to <span
+                        class="o_folder_description_alias"
+                    >inbox email alias</span> will be added to your inbox automatically.</p>
+            </center>
+        </field>
+        <field name="sequence">12</field>
+    </record>
+
+    <record id="documents.documents_marketing_folder" model="documents.folder">
+        <field name="sequence">16</field>
+    </record>
+
+    <record id="documents_product.documents_product_folder" model="documents.folder">
+        <field name="sequence">17</field>
+    </record>
+
+    <record id="documents_wh_folder" model="documents.folder" forcecreate="0">
+        <field name="name">Stock</field>
+        <field name="description" type="html">
+            <center>
+                <p>Categorize, share and keep track of all your Stock documents.</p>
+                <p>Incoming letters sent to <span
+                        class="o_folder_description_alias"
+                    >inbox email alias</span> will be added to your inbox automatically.</p>
+            </center>
+        </field>
+        <field name="sequence">18</field>
+    </record>
+
+    <record id="documents_fleet.documents_fleet_folder" model="documents.folder">
+        <field name="sequence">19</field>
+    </record>
+
+    <record id="documents_knowledge_folder" model="documents.folder" forcecreate="0">
+        <field name="name">Knowledge</field>
+        <field name="description" type="html">
+            <center>
+                <p>Categorize, share and keep track of all your knowledge documents.</p>
+                <p>Incoming letters sent to <span
+                        class="o_folder_description_alias"
+                    >inbox email alias</span> will be added to your inbox automatically.</p>
+            </center>
+        </field>
+        <field name="sequence">20</field>
+    </record>
+
+    <record id="documents_bank_statements_folder" model="documents.folder" forcecreate="0">
+        <field name="name">Bank Statements</field>
+        <field name="sequence">11</field>
+        <field name="parent_folder_id" ref="documents.documents_finance_folder" />
+        <field name="group_ids" eval="[
+            Command.link(ref('account.group_account_user')),
+        ]" />
+        <field
+            name="read_group_ids"
+            eval="[
+            Command.link(ref('account.group_account_invoice')),
+        ]"
+        />
+    </record>
+
+    <record id="documents_payment_receipts_folder" model="documents.folder" forcecreate="0">
+        <field name="name">Payment Receipts</field>
+        <field name="sequence">11</field>
+        <field name="parent_folder_id" ref="documents.documents_finance_folder" />
+        <field name="group_ids" eval="[
+            Command.link(ref('account.group_account_user')),
+        ]" />
+        <field
+            name="read_group_ids"
+            eval="[
+            Command.link(ref('account.group_account_invoice')),
+        ]"
+        />
+    </record>
+
+    <record id="documents_sat_folder" model="documents.folder" forcecreate="0">
+        <field name="name">SAT</field>
+        <field name="sequence">11</field>
+        <field name="parent_folder_id" ref="documents.documents_finance_folder" />
+        <field name="group_ids" eval="[
+            Command.link(ref('account.group_account_user')),
+        ]" />
+        <field
+            name="read_group_ids"
+            eval="[
+            Command.link(ref('account.group_account_invoice')),
+        ]"
+        />
+    </record>
+
+    <record id="documents_edomex_folder" model="documents.folder" forcecreate="0">
+        <field name="name">EdoMex</field>
+        <field name="sequence">11</field>
+        <field name="parent_folder_id" ref="documents.documents_finance_folder" />
+        <field name="group_ids" eval="[
+            Command.link(ref('account.group_account_user')),
+        ]" />
+        <field
+            name="read_group_ids"
+            eval="[
+            Command.link(ref('account.group_account_invoice')),
+        ]"
+        />
+    </record>
+
+    <record id="documents_partners_ledger_folder" model="documents.folder" forcecreate="0">
+        <field name="name">Partner Ledger</field>
+        <field name="sequence">11</field>
+        <field name="parent_folder_id" ref="documents.documents_finance_folder" />
+        <field name="group_ids" eval="[
+            Command.link(ref('account.group_account_user')),
+        ]" />
+        <field
+            name="read_group_ids"
+            eval="[
+            Command.link(ref('account.group_account_invoice')),
+        ]"
+        />
+    </record>
+
+    <record id="documents_assets_folder" model="documents.folder" forcecreate="0">
+        <field name="name">Assets</field>
+        <field name="sequence">11</field>
+        <field name="parent_folder_id" ref="documents.documents_finance_folder" />
+        <field name="group_ids" eval="[
+            Command.link(ref('account.group_account_user')),
+        ]" />
+        <field
+            name="read_group_ids"
+            eval="[
+            Command.link(ref('account.group_account_invoice')),
+        ]"
+        />
+    </record>
+</odoo>

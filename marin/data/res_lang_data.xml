@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+    <record id="base.lang_en" model="res.lang">
+        <field name="active">True</field>
+    </record>
+
+    <record id="base.lang_es_MX" model="res.lang">
+        <field name="active">True</field>
+    </record>
+</odoo>

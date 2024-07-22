@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo noupdate="1">
+    <record id="partner_age_range_01" model="res.partner.age.range">
+        <field name="name">Baby boomer from 1946-1964 (77-59 years)</field>
+        <field name="age_from">59</field>
+        <field name="age_to">77</field>
+    </record>
+
+    <record id="partner_age_range_02" model="res.partner.age.range">
+        <field name="name">Gen X from 1965-1980 (58-43 years)</field>
+        <field name="age_from">43</field>
+        <field name="age_to">58</field>
+    </record>
+
+    <record id="partner_age_range_03" model="res.partner.age.range">
+        <field name="name">Gen Y from 1981-1996  (42-27 years)</field>
+        <field name="age_from">27</field>
+        <field name="age_to">42</field>
+    </record>
+
+    <record id="partner_age_range_04" model="res.partner.age.range">
+        <field name="name">Gen Z from 1997 (15-26 years)</field>
+        <field name="age_from">15</field>
+        <field name="age_to">26</field>
+    </record>
+
+    <record id="partner_age_range_05" model="res.partner.age.range">
+        <field name="name">From 2010 (0-14 years)</field>
+        <field name="age_from">0</field>
+        <field name="age_to">14</field>
+    </record>
+</odoo>

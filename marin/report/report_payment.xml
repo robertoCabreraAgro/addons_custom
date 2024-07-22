@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <template id="report_payment_receipt_document_header">
+        <div t-attf-class="row">
+            <div class="o_background_header">
+            <div class="float-end">
+                <div
+                        class="mt0 text-end h3"
+                        t-if="company.report_header"
+                        t-field="company.report_header"
+                    >Company tagline</div>
+            </div>
+            <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" class="float-start" alt="Logo" />
+            <div class="float-start company_address">
+                <ul class="list-unstyled" name='company_address_list'>
+                    <li t-if="company.is_company_details_empty"><span
+                                t-field="company.partner_id"
+                                t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'
+                            >
+                        <div
+                                    class="bg-light border-1 rounded h-100 d-flex flex-column align-items-center justify-content-center p-4 w-100 opacity-75 text-muted text-center"
+                                >
+                            <strong>Company address block</strong>
+                            <div>Contains the company address.</div>
+                        </div>
+                    </span></li>
+                    <li t-else="">
+                        <span t-field="company.company_details">
+                            <div
+                                    class="bg-light border-1 rounded h-100 d-flex flex-column align-items-center justify-content-center p-4 w-100 opacity-75 text-muted text-center"
+                                >
+                                <strong>Company details block</strong>
+                                <div>Contains the company details.</div>
+                            </div>
+                        </span>
+                    </li>
+                    <li t-if="not forced_vat" />
+                    <li t-else="">
+                        <t t-esc="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
+                        <span t-esc="forced_vat">US12345671</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="clearfix mb8" />
+            </div>
+        </div>
+    </template>
+
+    <template id="report_payment_receipt_document_content">
+        <div>
+            <div class="row col-12">
+                <div class="col-10">
+                    <h3><strong id="payment_title">Payment Receipt: <span t-field="o.name" />INV0001</strong></h3>
+
+                    <div class="mb-4 mt-3">
+                        <div name="date" class="row">
+                            <div class="col-6" t-if="o.date">
+                                Payment Date: <span t-field="o.date">2023-01-01</span>
+                            </div>
+                        </div>
+                        <div class="oe_structure" />
+                        <div class="row">
+                            <div class="col-6" t-if="o.partner_type">
+                                <t t-if="o.partner_type == 'customer'">
+                                    Customer:
+                                </t>
+                                <t t-else="o.partner_type == 'supplier'">
+                                    Vendor:
+                                </t><span t-field="o.partner_id">Marc Demo</span>
+                            </div>
+                            <div
+                                name="payment_method"
+                                t-if="values['display_payment_method'] and o.payment_method_id"
+                                class="col-6"
+                            >
+                                Payment Method: <span t-field="o.payment_method_id.name">Credit card</span>
+                            </div>
+                        </div>
+                        <div class="oe_structure" />
+                        <div class="row">
+                            <div class="col-6" t-if="o.amount">
+                                Payment Amount: <span
+                                    t-field="o.amount"
+                                    t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"
+                                >50 USD</span>
+                            </div>
+                            <div class="col-6" t-if="o.ref">
+                                Memo: <span t-field="o.ref">Sample Memo</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="barcode col-2 mt-1" t-if="o.client_receipt_document_share_id" style="text-align:center">
+                    <p><small>Certificado de Autenticidad</small></p>
+                    <img alt="Barcode" t-att-src="o._get_client_receipt_qr()" />
+                </div>
+            </div>
+            <div class="oe_structure mb128" />
+            <div class="row">
+                <div class="col-6">
+                    Created by: _____________________________________
+                    </div>
+                <div class="col-6" t-if="o.partner_id">
+                    Receipt by: _____________________________________
+                    </div>
+            </div>
+        </div>
+        <div class="oe_structure" />
+    </template>
+
+    <template id="report_payment_receipt_document">
+        <t t-call="web.external_layout">
+            <t t-set="o" t-value="o.with_context(lang=lang)" />
+            <t t-if="not company">
+                <!-- Multicompany -->
+                <t t-if="company_id">
+                    <t t-set="company" t-value="company_id" />
+                </t>
+                <t t-elif="o and 'company_id' in o and o.company_id.sudo()">
+                    <t t-set="company" t-value="o.company_id.sudo()" />
+                </t>
+                <t t-else="else">
+                    <t t-set="company" t-value="res_company" />
+                </t>
+            </t>
+            <t t-set="values" t-value="o._get_payment_receipt_report_values()" />
+            <div class="page">
+                <t t-call="marin.report_payment_receipt_document_content" t-lang="lang" />
+                <div class="oe_structure mb128" />
+                <t t-call="marin.report_payment_receipt_document_header" t-lang="lang" />
+                <t t-call="marin.report_payment_receipt_document_content" t-lang="lang" />
+            </div>
+            <div class="oe_structure" />
+        </t>
+    </template>
+
+    <template id="report_payment_receipt">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="lang" t-value="o.partner_id.lang or o.company_id.partner_id.lang" />
+                <t t-call="marin.report_payment_receipt_document" t-lang="lang" />
+            </t>
+        </t>
+    </template>
+
+    <record id="action_report_payment_receipt" model="ir.actions.report">
+        <field name="name">Client Receipt</field>
+        <field name="model">account.payment</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">marin.report_payment_receipt</field>
+        <field name="report_file">marin.report_payment_receipt</field>
+        <field name="binding_model_id" ref="account.model_account_payment" />
+        <field name="binding_type">report</field>
+    </record>
+
+    <template
+        id="report_payment_receipt_document_inherit"
+        inherit_id="account.report_payment_receipt_document"
+        priority='99'
+    >
+        <xpath expr="//h3" position="before">
+            <div class="row col-12 mb-3">
+                <div class="col-10">
+                    <h3><strong id="payment_title">Payment Receipt: <span t-field="o.name">INV0001</span></strong></h3>
+                    <div class="mb-4 mt-3">
+                        <div name="date" class="row">
+                            <div class="col-6" t-if="o.date">
+                                Payment Date: <span t-field="o.date">2023-01-01</span>
+                            </div>
+                        </div>
+                        <div class="oe_structure" />
+                        <div class="row">
+                            <div class="col-6" t-if="o.partner_type">
+                                <t t-if="o.partner_type == 'customer'">
+                                    Customer:
+                                </t>
+                                <t t-else="o.partner_type == 'supplier'">
+                                    Vendor:
+                                </t><span t-field="o.partner_id">Marc Demo</span>
+                            </div>
+                            <div
+                                name="payment_method"
+                                t-if="values['display_payment_method'] and o.payment_method_id"
+                                class="col-6"
+                            >
+                                Payment Method: <span t-field="o.payment_method_id.name">Credit card</span>
+                            </div>
+                        </div>
+                        <div class="oe_structure" />
+                        <div class="row">
+                            <div class="col-6" t-if="o.amount">
+                                Payment Amount: <span
+                                    t-field="o.amount"
+                                    t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"
+                                >50 USD</span>
+                            </div>
+                            <div class="col-6" t-if="o.ref">
+                                Memo: <span t-field="o.ref">Sample Memo</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="barcode col-2 mt-1" t-if="o.payment_receipt_document_share_id" style="text-align:center">
+                    <p><small>Certificado de Autenticidad</small></p>
+                    <img alt="Barcode" t-att-src="o._get_payment_receipt_qr()" />
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('page')]/h3" position="replace" />
+        <xpath expr="//div[hasclass('page')]/div[hasclass('mb-4')]" position="replace" />
+    </template>
+
+</odoo>

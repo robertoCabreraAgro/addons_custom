@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="report_invoice_document_debt_management" inherit_id="account.report_invoice_document">
+        <!-- <xpath expr="//div[@name='comment']" position="after">
+            <p
+                t-if="o.invoice_payment_term_id['id'] != 1 and o.move_type == 'out_invoice'"
+                style="text-align:justify; font-size:x-small"
+            >
+                <strong>PAGARE</strong><br />
+                Metepec, México a  ______________  del mes _________________________________ del año ________________ .
+                Debo(emos) y pagaré(emos) incondicionalmente y sin protesta por este Pagaré a la orden de <span
+                    t-field="o.company_id.name"
+                />
+                en Metepec, México el día  ______________  del mes de  _________________________________  del año  ________________
+                a la vista, la cantidad de _______________________________________________________ M.N., valor recibido a mi(nuestra)
+                entera conformidad, obligándome a pagar en el caso de mora un interés equivalente al 5% mensual sobre el importe
+                de este pagaré durante el tiempo que permanezca insoluto.<br /><br /><br />
+                _________________________________________________________<br />
+                Acepto(amos)
+            </p>
+        </xpath> -->
+        <xpath expr="//div[hasclass('row')]" position="attributes">
+            <attribute name="class" separator=" " add="mt-3" />
+        </xpath>
+        <xpath
+            expr="//div[hasclass('row')]/t[@t-if='o.partner_shipping_id and (o.partner_shipping_id != o.partner_id)']/div"
+            position="attributes"
+        >
+            <attribute name="class">col-5</attribute>
+        </xpath>
+        <xpath
+            expr="//div[hasclass('row')]/t[@t-if='o.partner_shipping_id and (o.partner_shipping_id != o.partner_id)']/div/t"
+            position="attributes"
+        >
+            <attribute name="t-set" />
+        </xpath>
+        <xpath expr="//div[@name='address_not_same_as_shipping']" position="attributes">
+            <attribute name="class">col-5</attribute>
+        </xpath>
+        <xpath expr="//div[@name='address_not_same_as_shipping']/t" position="attributes">
+            <attribute name="t-set" />
+        </xpath>
+        <xpath expr="//div[@name='address_not_same_as_shipping']" position="after">
+            <div class="barcode offset-col-2 col-2" t-if="o.document_share_id" style="text-align:center">
+                <p><small>Certificado de Autenticidad</small></p>
+                <img alt="Barcode" t-att-src="o._get_invoice_qr()" />
+            </div>
+        </xpath>
+        <xpath expr="//div[@name='address_same_as_shipping']" position="attributes">
+            <attribute name="class">col-10</attribute>
+        </xpath>
+        <xpath expr="//div[@name='address_same_as_shipping']/t" position="attributes">
+            <attribute name="t-set" />
+        </xpath>
+        <xpath expr="//div[@name='address_same_as_shipping']" position="after">
+            <div class="barcode col-2" t-if="o.document_share_id" style="text-align:center">
+                <p><small>Certificado de Autenticidad</small></p>
+                <img alt="Barcode" t-att-src="o._get_invoice_qr()" />
+            </div>
+        </xpath>
+        <xpath expr="//div[@name='no_shipping']" position="attributes">
+            <attribute name="class">col-10</attribute>
+        </xpath>
+        <xpath expr="//div[@name='no_shipping']/t" position="attributes">
+            <attribute name="t-set" />
+        </xpath>
+        <xpath expr="//div[@name='no_shipping']" position="after">
+            <div class="barcode col-2" t-if="o.document_share_id" style="text-align:center">
+                <p><small>Certificado de Autenticidad</small></p>
+                <img alt="Barcode" t-att-src="o._get_invoice_qr()" />
+            </div>
+        </xpath>
+    </template>
+</odoo>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo noupdate="1">
+    <record id="base.user_admin" model="res.users">
+        <field name="company_id" ref="marin.company_lmmr" />
+        <field
+            name="company_ids"
+            eval="[
+                Command.link(ref('marin.company_lmmr')),
+                Command.link(ref('marin.company_tjgl')),
+                Command.link(ref('marin.company_lmmg')),
+                Command.link(ref('marin.company_ammg')),
+                Command.link(ref('marin.company_cfmg')),
+                Command.link(ref('marin.company_glmm')),
+                Command.link(ref('marin.company_society')),
+            ]"
+        />
+    </record>
+
+    <record id="partner_user_1" model="res.partner">
+        <field name="name">Luis Manuel Marin Guadarrama</field>
+        <field name="type">contact</field>
+        <field name="street">Privada Santiaguito 5</field>
+        <field name="street2">Barrio de Santiaguito</field>
+        <field name="city">Metepec</field>
+        <field name="zip">52140</field>
+        <field name="state_id" ref="base.state_mx_mex" />
+        <field name="country_id" ref="base.mx" />
+        <field name="lang">es_MX</field>
+        <field name="tz">America/Mexico_City</field>
+        <field name="vat">MAGL910204CY8</field>
+        <field name="phone">+52 722 232 0859</field>
+        <field name="email">luis.maring@agromarin.mx</field>
+        <field name="employee" eval="True" />
+        <field name="gender">male</field>
+        <field name="l10n_mx_edi_fiscal_regime">612</field>
+        <field name="l10n_mx_type_of_operation">85</field>
+        <field name="l10n_mx_edi_curp">MAGL910204HMCRDS05</field>
+    </record>
+
+    <record id="user_1" model="res.users">
+        <field name="login">luis.maring@agromarin.mx</field>
+        <field name="partner_id" ref="partner_user_1" />
+        <field name="notification_type">inbox</field>
+        <field name="company_id" ref="marin.company_lmmr" />
+        <field
+            name="company_ids"
+            eval="[
+            Command.link(ref('marin.company_lmmg')),
+            Command.link(ref('marin.company_lmmr')),
+            Command.link(ref('marin.company_tjgl')),
+            Command.link(ref('marin.company_ammg')),
+            Command.link(ref('marin.company_cfmg')),
+            Command.link(ref('marin.company_glmm')),
+            Command.link(ref('marin.company_society')),
+        ]"
+        />
+    </record>
+</odoo>

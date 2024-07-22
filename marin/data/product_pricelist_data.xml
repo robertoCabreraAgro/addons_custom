@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo noupdate="1">
+    <record id="product_pricelist_101" model="product.pricelist">
+        <field name="name">Public Pricelist</field>
+        <field name="currency_id" ref="base.MXN" />
+        <field name="selectable" eval="True" />
+        <field
+            name="item_ids"
+            eval="[
+                (5, 0, 0),
+                    (0, 0, {'applied_on': '3_global', 'base': 'list_price', 'compute_price': 'formula', 'price_discount': 0}),
+            ]"
+        />
+        <field name="sequence" eval="16" />
+    </record>
+
+    <record id="product_pricelist_102" model="product.pricelist">
+        <field name="name">Credit Pricelist</field>
+        <field name="currency_id" ref="base.MXN" />
+        <field name="selectable" eval="True" />
+        <field
+            name="item_ids"
+            eval="[
+                (5, 0, 0),
+                    (0, 0, {'applied_on': '3_global', 'base': 'list_price', 'compute_price': 'formula', 'price_discount': -12}),
+            ]"
+        />
+        <field name="sequence" eval="16" />
+    </record>
+
+    <record id="product_pricelist_103" model="product.pricelist">
+        <field name="name">Pricelist -2.5</field>
+        <field name="currency_id" ref="base.MXN" />
+        <field name="selectable" eval="True" />
+        <field
+            name="item_ids"
+            eval="[
+                (5, 0, 0),
+                    (0, 0, {'applied_on': '3_global', 'base': 'list_price', 'compute_price': 'formula', 'price_discount': 2.5}),
+            ]"
+        />
+        <field name="sequence" eval="16" />
+    </record>
+
+    <record id="product_pricelist_104" model="product.pricelist">
+        <field name="name">Pricelist -5.0</field>
+        <field name="currency_id" ref="base.MXN" />
+        <field name="selectable" eval="True" />
+        <field
+            name="item_ids"
+            eval="[
+                (5, 0, 0),
+                    (0, 0, {'applied_on': '3_global', 'base': 'list_price', 'compute_price': 'formula', 'price_discount': 5.0}),
+            ]"
+        />
+        <field name="sequence" eval="16" />
+    </record>
+
+    <record id="product_pricelist_105" model="product.pricelist">
+        <field name="name">Pricelist -7.5</field>
+        <field name="currency_id" ref="base.MXN" />
+        <field name="selectable" eval="True" />
+        <field
+            name="item_ids"
+            eval="[
+                (5, 0, 0),
+                    (0, 0, {'applied_on': '3_global', 'base': 'list_price', 'compute_price': 'formula', 'price_discount': 7.5}),
+            ]"
+        />
+        <field name="sequence" eval="16" />
+    </record>
+
+    <record id="product_pricelist_106" model="product.pricelist">
+        <field name="name">Pricelist -10.0</field>
+        <field name="currency_id" ref="base.MXN" />
+        <field name="selectable" eval="True" />
+        <field
+            name="item_ids"
+            eval="[
+                (5, 0, 0),
+                    (0, 0, {'applied_on': '3_global', 'base': 'list_price', 'compute_price': 'formula', 'price_discount': 10.0}),
+            ]"
+        />
+        <field name="sequence" eval="16" />
+    </record>
+</odoo>

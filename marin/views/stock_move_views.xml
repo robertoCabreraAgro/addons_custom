@@ -1,0 +1,9 @@
+<odoo>
+    <record id="stock.action_stock_move_pivot_all" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2" />
+    </record>
+
+    <record id="stock.action_stock_move_tree_all" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1" />
+    </record>
+</odoo>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_pos_order_filter_marin" model="ir.ui.view">
+        <field name="name">pos.order.list.select.marin</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_order_filter" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='date_order']" position="after">
+                <field name="lines" string="Product" filter_domain="[('lines.product_id', 'ilike', self)]" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_pos_pos_form" model="ir.ui.view">
+        <field name="name">pos.order.form</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='order_total']//field[@name='margin']/.." position="attributes">
+                <attribute name="groups">marin.group_product_cost_readonly</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

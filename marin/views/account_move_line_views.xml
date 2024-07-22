@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_account_move_line_filter_marin" model="ir.ui.view">
+        <field name="name">account.move.line.search.marin</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account.view_account_move_line_filter" />
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='non_trade_receivable']" position="after">
+                <filter
+                    name="income"
+                    string="Income"
+                    domain="[('account_id.account_type', '=', 'income')]"
+                    help="From Income accounts"
+                />
+                <filter
+                    name="expense"
+                    string="Expense"
+                    domain="[('account_id.account_type', '=', 'expense')]"
+                    help="From Expense accounts"
+                />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_move_line_tree_marin" model="ir.ui.view">
+        <field name="name">account.move.line.tree.marin</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account.view_move_line_tree" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='move_name']" position="before">
+                <field name="move_type" />
+            </xpath>
+            <xpath expr="//field[@name='account_id']" position="attributes">
+                <attribute name="groups">account.group_account_readonly,account.group_account_user</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_move_line_form_marin" model="ir.ui.view">
+        <field name="name">account.move.line.form</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account.view_move_line_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='information']/group//field[@name='date']" position="attributes">
+                <attribute name="groups">account.group_account_readonly,account.group_account_user</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

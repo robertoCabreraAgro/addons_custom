@@ -1,0 +1,8 @@
+"id","allow_new_product","max_weight","name"
+"stock_storage_category_1","Allow mixed products","10000.0","Plain ground rack slot size"
+"stock_storage_category_2","Allow mixed products","4000.0","1st Floor Rack Slot"
+"stock_storage_category_3","Allow mixed products","3000.0","2nd Floor Rack Slot"
+"stock_storage_category_4","Allow mixed products","2000.0","3th Floor Rack Slot"
+"stock_storage_category_5","Allow mixed products","3500.0","2nd Floor Rack Slot Reinforced"
+"stock_storage_category_6","Allow mixed products","2500.0","3th Floor Rack Slot Reinforced"
+"stock_storage_category_7","Allow mixed products","2000.0","4th Floor Rack Slot"

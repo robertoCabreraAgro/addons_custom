@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_sales_order_line_filter_marin" model="ir.ui.view">
+        <field name="name">sale.order.line.select</field>
+        <field name="model">sale.order.line</field>
+        <field name="arch" type="xml">
+            <search string="Search Sale order lines">
+                <field name="order_id" />
+                <field name="order_partner_id" operator="child_of" />
+                <field name="product_id" />
+                <field name="salesman_id" />
+                <filter
+                    name="to_invoice"
+                    string="To invoice"
+                    domain="[('qty_to_invoice', '!=', 0)]"
+                    help="Sale order lines ready to be invoiced"
+                />
+                <filter name="to_deliver" string="To deliver" domain="[('delivery_status', '=', 'to deliver')]" />
+                <separator />
+                <filter
+                    name="my_sales_order_lines"
+                    string="My Sale order lines"
+                    domain="[('salesman_id','=',uid)]"
+                    help="Sale order lines related to a Sale order of mine"
+                />
+                <separator />
+                <filter name="date_order" string="Order Date" date="date_order" />
+                <group expand="0" string="Group By">
+                    <filter name="group_by_order_id" string="Order" domain="[]" context="{'group_by':'order_id'}" />
+                    <filter
+                        name="group_by_product_id"
+                        string="Product"
+                        domain="[]"
+                        context="{'group_by':'product_id'}"
+                    />
+                    <filter name="group_by_state" string="State" domain="[]" context="{'group_by':'state'}" />
+                    <filter
+                        name="group_by_delivery_status"
+                        string="Delivery status"
+                        domain="[]"
+                        context="{'group_by':'delivery_status'}"
+                    />
+                    <filter
+                        name="group_by_invoice_status"
+                        string="Invoice status"
+                        domain="[]"
+                        context="{'group_by':'invoice_status'}"
+                    />
+                    <filter
+                        name="group_by_user_id"
+                        string="Salesperson"
+                        domain="[]"
+                        context="{'group_by':'salesman_id'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_order_line_tree_marin" model="ir.ui.view">
+        <field name="name">sale.order.line.tree</field>
+        <field name="model">sale.order.line</field>
+        <field name="arch" type="xml">
+            <tree
+                create="true"
+                editable="bottom"
+                decoration-warning="state=='draft'"
+                decoration-muted="state=='cancel'"
+                decoration-info="invoice_status=='to invoice'"
+                decoration-success="state=='done'"
+            >
+                <field name="company_id" column_invisible="1" />
+                <field name="currency_id" column_invisible="1" />
+                <field name="state" column_invisible="1" />
+                <field name="display_type" column_invisible="1" />
+                <field name="product_updatable" column_invisible="1" />
+                <field
+                    name="product_template_id"
+                    readonly="not product_updatable"
+                    context="{
+                        'partner_id': parent.partner_id,
+                        'pricelist': parent.pricelist_id,
+                        'company_id': company_id,
+                        'default_description_sale': name,
+                        'default_list_price': price_unit,
+                        'quantity': product_uom_qty,
+                        'uom': product_uom,
+                    }"
+                    column_invisible="1"
+                />
+                <field name="invoice_status" column_invisible="1" />
+                <field name="delivery_status" column_invisible="1" />
+                <field name="qty_delivered_method" column_invisible="1" />
+                <field name="price_tax" column_invisible="1" />
+                <field name="pricelist_id" column_invisible="1" />
+                <field name="product_uom_category_id" column_invisible="1" />
+                <field name="product_uom_readonly" column_invisible="1" />
+                <field name="product_uom" column_invisible="1" />
+                <field name="price_subtotal" column_invisible="1" />
+                <field
+                    name="order_id"
+                    string="Order"
+                    required="0"
+                    placeholder="New"
+                    domain="[('state', 'not in', ('done', 'cancel')), ('company_id', '=', company_id)]"
+                    readonly="order_id"
+                    force_save="1"
+                    options='{"no_open": True, "no_create": True}'
+                />
+                <field
+                    name="order_partner_id"
+                    readonly="order_partner_id and order_id"
+                    context="{'res_partner_search_mode': 'customer', 'default_is_company': True, 'default_customer_rank': 1}"
+                    options='{"always_reload": True}'
+                    required="1"
+                />
+                <field
+                    name="product_id"
+                    readonly="not product_updatable"
+                    context="{'partner_id': order_partner_id, 'quantity': product_uom_qty, 'pricelist': pricelist_id, 'uom': product_uom, 'company_id': company_id}"
+                    force_save="1"
+                />
+                <field name="name" />
+                <field
+                    name="product_uom_qty"
+                    string="Ordered Qty"
+                    sum="Ordered"
+                    readonly="state in ['done', 'cancel']"
+                    context="{'partner_id': order_partner_id, 'quantity': product_uom_qty, 'pricelist': pricelist_id, 'uom': product_uom, 'company_id': company_id}"
+                    decoration-info="(not display_type and invoice_status == 'to invoice')"
+                    decoration-bf="(not display_type and invoice_status == 'to invoice')"
+                    optional="show"
+                />
+                <field
+                    name="product_uom"
+                    string="UoM"
+                    readonly="state in ['sale','done', 'cancel']"
+                    context="{'company_id': company_id}"
+                    options='{"no_open": True}'
+                    optional="show"
+                    groups="uom.group_uom"
+                />
+                <field name="price_unit" readonly="qty_invoiced > 0" optional="show" />
+                <field name="purchase_price" optional="hide" />
+                <field name="margin" optional="hide" />
+                <field name="margin_percent" widget="percentage" invisible="not price_subtotal" optional="hide" />
+                <field
+                    name="tax_id"
+                    widget="many2many_tags"
+                    readonly="state in ['sale', 'done', 'cancel']"
+                    domain="[('type_tax_use','=','sale'),('company_id', '=', parent.company_id)]"
+                    invisible="context.get('tax_hide', False)"
+                    options="{'no_create': True}"
+                    optional="show"
+                />
+                <field
+                    name="discount"
+                    string="Disc.%"
+                    readonly="state in ['sale', 'done', 'cancel']"
+                    optional="show"
+                    groups="product.group_discount_per_so_line"
+                />
+                <field name="price_subtotal" widget="monetary" optional="show" />
+                <field name="price_total" widget="monetary" optional="show" />
+                <field
+                    name="qty_delivered"
+                    string="Delivered Qty"
+                    sum="Delivered"
+                    readonly="qty_delivered_method != 'manual'"
+                    decoration-info="(not display_type and invoice_status == 'to invoice')"
+                    decoration-bf="(not display_type and invoice_status == 'to invoice')"
+                    optional="show"
+                />
+                <field
+                    name="qty_invoiced"
+                    string="Invoiced Qty"
+                    sum="Invoiced"
+                    decoration-info="(not display_type and invoice_status == 'to invoice')"
+                    decoration-bf="(not display_type and invoice_status == 'to invoice')"
+                    optional="show"
+                />
+                <field name="qty_to_invoice" string="To invoice Qty" sum="To invoice" optional="hide" />
+                <field name="salesman_id" />
+                <field name="customer_lead" readonly="state not in ['draft', 'sent', 'sale']" optional="hide" />
+                <field name="force_company_id" readonly="order_id" options="{'no_create': True}" optional="hide" />
+                <button
+                    name="action_sale_order_form"
+                    type="object"
+                    icon="fa-external-link"
+                    class="oe_stat_button"
+                    title="Sale Order"
+                />
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_sale_order_line" model="ir.actions.act_window">
+        <field name="name">Sale Order Lines</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.order.line</field>
+        <field name="view_mode">tree,form,pivot,graph</field>
+        <field name="view_id" ref="view_order_line_tree_marin" />
+        <field name="search_view_id" ref="view_sales_order_line_filter_marin" />
+        <field name="context">{'search_default_group_by_order_id': 1}</field>
+    </record>
+</odoo>

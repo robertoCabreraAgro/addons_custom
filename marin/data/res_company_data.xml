@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo noupdate="1">
+    <record id="partner_lmmr" model="res.partner">
+        <field name="name">LUIS MANUEL MARIN REBOLLO</field>
+        <field name="type">contact</field>
+        <field name="is_company" eval="True" />
+        <field name="vat">MARL640819192</field>
+        <field name="phone">+52 722 232 0859</field>
+        <field name="website">https://marinagro.mx</field>
+        <field name="email">atencion@agromarin.mx</field>
+        <field name="street">Carretera Libre Toluca Temascaltepec Sin Numero</field>
+        <field name="street2">San Juan de las Huertas</field>
+        <field name="city">Zinacantepec</field>
+        <field name="zip">51370</field>
+        <field name="state_id" ref="base.state_mx_mex" />
+        <field name="country_id" ref="base.mx" />
+        <field name="lang">es_MX</field>
+        <field name="tz">America/Mexico_City</field>
+        <field name="l10n_mx_edi_fiscal_regime">612</field>
+        <field name="l10n_mx_type_of_operation">85</field>
+        <field name="l10n_mx_edi_curp">MARL640819HMCRBS03</field>
+    </record>
+
+    <record id="company_lmmr" model="res.company">
+        <field name="name">LUIS MANUEL MARIN REBOLLO</field>
+        <field name="code">LMMR</field>
+        <field name="partner_id" ref="partner_lmmr" />
+        <field name="external_report_layout_id" ref="web.external_layout_striped" />
+        <field name="paperformat_id" ref="base.paperformat_us" />
+        <field name="company_details" type="html">
+            <p>LUIS MANUEL MARIN REBOLLO<br />
+            MARL640819192<br />
+            Carretera libre Toluca Temascaltepec SN, San Juan de las huertas<br />
+            51370 Zinacantepec, Mexico<br />
+            Mexico</p>
+        </field>
+        <field name="report_footer" type="html">
+            <p>+52 722 232 0859 atencion@agromarin.mx https://marinagro.mx</p>
+        </field>
+        <field name="chart_template">mx</field>
+        <field name="anglo_saxon_accounting" eval="True" />
+        <field name="tax_exigibility" eval="True" />
+        <field name="account_use_credit_limit" eval="True" />
+        <field name="l10n_mx_edi_fiscal_regime">612</field>
+        <field name="sequence" eval="11" />
+    </record>
+
+    <record id="partner_tjgl" model="res.partner">
+        <field name="name">TERESITA DE JESUS GUADARRAMA LOPEZ</field>
+        <field name="type">contact</field>
+        <field name="is_company" eval="True" />
+        <field name="vat">GULT710616CP7</field>
+        <field name="phone">+52 722 232 0859</field>
+        <field name="email">atencion@agromarin.mx</field>
+        <field name="street">Isidro Fabela 101</field>
+        <field name="street2">Hipico</field>
+        <field name="city">Metepec</field>
+        <field name="zip">52156</field>
+        <field name="state_id" ref="base.state_mx_mex" />
+        <field name="country_id" ref="base.mx" />
+        <field name="lang">es_MX</field>
+        <field name="tz">America/Mexico_City</field>
+        <field name="l10n_mx_edi_fiscal_regime">612</field>
+        <field name="l10n_mx_type_of_operation">85</field>
+        <field name="l10n_mx_edi_curp">GULT710616MMCDPR03</field>
+    </record>
+
+    <record id="company_tjgl" model="res.company">
+        <field name="name">TERESITA DE JESUS GUADARRAMA LOPEZ</field>
+        <field name="code">TJGL</field>
+        <field name="partner_id" ref="partner_tjgl" />
+        <field name="external_report_layout_id" ref="web.external_layout_striped" />
+        <field name="paperformat_id" ref="base.paperformat_us" />
+        <field name="chart_template">mx</field>
+        <field name="anglo_saxon_accounting" eval="True" />
+        <field name="tax_exigibility" eval="True" />
+        <field name="account_use_credit_limit" eval="True" />
+        <field name="l10n_mx_edi_fiscal_regime">612</field>
+        <field name="sequence" eval="13" />
+    </record>
+
+    <record id="partner_lmmg" model="res.partner">
+        <field name="name">LUIS MANUEL MARIN GUADARRAMA</field>
+        <field name="type">contact</field>
+        <field name="is_company" eval="True" />
+        <field name="vat">MAGL910204CY8</field>
+        <field name="phone">+52 722 232 0859</field>
+        <field name="website">https://xiuman.mx</field>
+        <field name="email">atencion@xiuman.mx</field>
+        <field name="street">Avenida Codagem SN</field>
+        <field name="street2">San Lorenzo Coacalco</field>
+        <field name="city">Metepec</field>
+        <field name="zip">52140</field>
+        <field name="state_id" ref="base.state_mx_mex" />
+        <field name="country_id" ref="base.mx" />
+        <field name="lang">es_MX</field>
+        <field name="tz">America/Mexico_City</field>
+        <field name="l10n_mx_edi_fiscal_regime">612</field>
+        <field name="l10n_mx_type_of_operation">85</field>
+        <field name="l10n_mx_edi_curp">MAGL910204HMCRDS05</field>
+    </record>
+
+    <record id="company_lmmg" model="res.company">
+        <field name="name">LUIS MANUEL MARIN GUADARRAMA</field>
+        <field name="code">LMMG</field>
+        <field name="partner_id" ref="partner_lmmg" />
+        <field name="external_report_layout_id" ref="web.external_layout_striped" />
+        <field name="paperformat_id" ref="base.paperformat_us" />
+        <field name="company_details" type="html">
+            <p>LUIS MANUEL MARIN GUADARRAMA<br />
+            MAGL910204CY8<br />
+            Avenida Codagem SN, San Lorenzo Coacalco<br />
+            52140 Metepec, Mexico<br />
+            Mexico</p>
+        </field>
+        <field name="report_footer" type="html">
+            <p>+52 722 232 0859 atencion@xiuman.mx https://xiuman.mx</p>
+        </field>
+        <field name="chart_template">mx</field>
+        <field name="anglo_saxon_accounting" eval="True" />
+        <field name="tax_exigibility" eval="True" />
+        <field name="account_use_credit_limit" eval="True" />
+        <field name="l10n_mx_edi_fiscal_regime">612</field>
+        <field name="sequence" eval="10" />
+    </record>
+
+    <record id="partner_ammg" model="res.partner">
+        <field name="name">ANGELES MONSERRAT MARIN GUADARRAMA</field>
+        <field name="type">contact</field>
+        <field name="is_company" eval="True" />
+        <field name="vat">MAGA920702II5</field>
+        <field name="phone">+52 722 232 0859</field>
+        <field name="email">atencion@agromarin.mx</field>
+        <field name="city">Metepec</field>
+        <field name="zip">52140</field>
+        <field name="state_id" ref="base.state_mx_mex" />
+        <field name="country_id" ref="base.mx" />
+        <field name="lang">es_MX</field>
+        <field name="tz">America/Mexico_City</field>
+        <field name="l10n_mx_edi_fiscal_regime">612</field>
+        <field name="l10n_mx_type_of_operation">85</field>
+        <field name="l10n_mx_edi_curp">MAGA920702MMCRDN08</field>
+    </record>
+
+    <record id="company_ammg" model="res.company">
+        <field name="name">ANGELES MONSERRAT MARIN GUADARRAMA</field>
+        <field name="code">AMMG</field>
+        <field name="partner_id" ref="partner_ammg" />
+        <field name="external_report_layout_id" ref="web.external_layout_striped" />
+        <field name="paperformat_id" ref="base.paperformat_us" />
+        <field name="chart_template">mx</field>
+        <field name="anglo_saxon_accounting" eval="True" />
+        <field name="tax_exigibility" eval="True" />
+        <field name="account_use_credit_limit" eval="True" />
+        <field name="l10n_mx_edi_fiscal_regime">612</field>
+        <field name="sequence" eval="14" />
+    </record>
+
+    <record id="partner_cfmg" model="res.partner">
+        <field name="name">CARLOS FERNANDO MARIN GUADARRAMA</field>
+        <field name="type">contact</field>
+        <field name="is_company" eval="True" />
+        <field name="vat">MAGC9612027D8</field>
+        <field name="phone">+52 722 232 0859</field>
+        <field name="email">atencion@agromarin.mx</field>
+        <field name="city">Metepec</field>
+        <field name="zip">52140</field>
+        <field name="state_id" ref="base.state_mx_mex" />
+        <field name="country_id" ref="base.mx" />
+        <field name="lang">es_MX</field>
+        <field name="tz">America/Mexico_City</field>
+        <field name="l10n_mx_edi_fiscal_regime">612</field>
+        <field name="l10n_mx_type_of_operation">85</field>
+        <field name="l10n_mx_edi_curp">MAGC961202HMCRDR04</field>
+    </record>
+
+    <record id="company_cfmg" model="res.company">
+        <field name="name">CARLOS FERNANDO MARIN GUADARRAMA</field>
+        <field name="code">CFMG</field>
+        <field name="partner_id" ref="partner_cfmg" />
+        <field name="external_report_layout_id" ref="web.external_layout_striped" />
+        <field name="paperformat_id" ref="base.paperformat_us" />
+        <field name="chart_template">mx</field>
+        <field name="anglo_saxon_accounting" eval="True" />
+        <field name="tax_exigibility" eval="True" />
+        <field name="account_use_credit_limit" eval="True" />
+        <field name="l10n_mx_edi_fiscal_regime">612</field>
+        <field name="sequence" eval="15" />
+    </record>
+
+    <record id="partner_glmm" model="res.partner">
+        <field name="name">GLADIS LINETTE MANCINAS MIRANDA</field>
+        <field name="type">contact</field>
+        <field name="is_company" eval="True" />
+        <field name="vat">MAMG890621FT4</field>
+        <field name="phone">+52 722 232 0859</field>
+        <field name="street">Tenayuca</field>
+        <field name="street2">Benito Juarez</field>
+        <field name="city">Ciudad de Mexico</field>
+        <field name="zip">03310</field>
+        <field name="state_id" ref="base.state_mx_df" />
+        <field name="country_id" ref="base.mx" />
+        <field name="lang">es_MX</field>
+        <field name="tz">America/Mexico_City</field>
+        <field name="l10n_mx_edi_fiscal_regime">612</field>
+        <field name="l10n_mx_type_of_operation">85</field>
+        <field name="l10n_mx_edi_curp">MAMG890621MCHNRL06</field>
+    </record>
+
+    <record id="company_glmm" model="res.company">
+        <field name="name">GLADIS LINETTE MANCINAS MIRANDA</field>
+        <field name="code">GLMM</field>
+        <field name="partner_id" ref="partner_glmm" />
+        <field name="external_report_layout_id" ref="web.external_layout_striped" />
+        <field name="paperformat_id" ref="base.paperformat_us" />
+        <field name="chart_template">mx</field>
+        <field name="anglo_saxon_accounting" eval="True" />
+        <field name="tax_exigibility" eval="True" />
+        <field name="account_use_credit_limit" eval="True" />
+        <field name="l10n_mx_edi_fiscal_regime">612</field>
+        <field name="sequence" eval="12" />
+    </record>
+
+    <record id="partner_society" model="res.partner">
+        <field name="name">XIUMAN AGRO</field>
+        <field name="type">contact</field>
+        <field name="is_company" eval="True" />
+        <field name="phone">+52 722 232 0859</field>
+        <field name="email">atencion@agromarin.mx</field>
+        <field name="street">Insurgentes sur 1000</field>
+        <field name="street2">Benito Juarez</field>
+        <field name="city">Ciudad de Mexico</field>
+        <field name="zip">03920</field>
+        <field name="state_id" ref="base.state_mx_df" />
+        <field name="country_id" ref="base.mx" />
+        <field name="lang">es_MX</field>
+        <field name="tz">America/Mexico_City</field>
+        <field name="l10n_mx_edi_fiscal_regime">612</field>
+        <field name="l10n_mx_type_of_operation">85</field>
+    </record>
+
+    <record id="company_society" model="res.company">
+        <field name="name">XIUMAN AGRO</field>
+        <field name="code">XM</field>
+        <field name="partner_id" ref="partner_society" />
+        <field name="website">https://agromarin.mx</field>
+        <field name="external_report_layout_id" ref="web.external_layout_striped" />
+        <field name="paperformat_id" ref="base.paperformat_us" />
+        <field name="chart_template">mx</field>
+        <field name="anglo_saxon_accounting" eval="False" />
+        <field name="tax_exigibility" eval="False" />
+        <field name="account_use_credit_limit" eval="True" />
+        <field name="l10n_mx_edi_fiscal_regime">612</field>
+        <field name="sequence" eval="16" />
+    </record>
+</odoo>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="fleet_vehicle_view_form_marin" model="ir.ui.view">
+        <field name="name">fleet.vehicle.form</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_form" />
+        <field name="priority" eval="100" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_title')]" position="replace">
+                <div class="oe_title">
+                    <label for="name" />
+                    <h1>
+                        <field name="name" />
+                    </h1>
+                    <label for="model_id" />
+                    <h2>
+                        <field name="model_id" placeholder="e.g. Model S" />
+                    </h2>
+                    <label for="license_plate" />
+                    <h2>
+                        <field name="license_plate" class="oe_inline" placeholder="e.g. PAE 326" />
+                    </h2>
+                    <label for="tag_ids" />
+                    <field
+                        name="tag_ids"
+                        widget="many2many_tags"
+                        options="{'color_field': 'color', 'no_create_edit': True}"
+                    />
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='location']" position="after">
+                <field name="fuel_card_id" />
+                <field name="fuel_card_name" invisible="True" />
+                <field name="highway_pass_id" />
+                <field name="highway_pass_name" invisible="True" />
+            </xpath>
+            <xpath expr="//field[@name='fuel_type']" position="before">
+                <label for="fuel_tank_capacity" />
+                <div class="o_row">
+                    <field name="fuel_tank_capacity" /><span>L</span>
+                </div>
+                <field name="cilinders" />
+            </xpath>
+        </field>
+    </record>
+</odoo>

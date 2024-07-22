@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_account_analytic_distribution_model_search_marin" model="ir.ui.view">
+        <field name="name">account..analytic.distribution.model.search.marin</field>
+        <field name="model">account.analytic.distribution.model</field>
+        <field name="arch" type="xml">
+            <search string="Distribution Model">
+                <field name="partner_id" string="Partner" />
+                <field name="partner_category_id" string="Partner Category" />
+                <field name="product_id" string="Product" />
+                <field name="product_categ_id" string="Product Category" />
+                <field name="vehicle_id" string="Vehicle" />
+                <separator />
+                <filter name="groupby_partner" string="Partner" domain="[]" context="{'group_by': 'partner_id'}" />
+                <filter
+                    name="groupby_partner_category"
+                    string="Partner Category"
+                    domain="[]"
+                    context="{'group_by': 'partner_category_id'}"
+                />
+                <filter string="Product" name="groupby_product" domain="[]" context="{'group_by': 'product_id'}" />
+                <filter
+                    name="groupby_product_category"
+                    string="Product Category"
+                    domain="[]"
+                    context="{'group_by': 'product_categ_id'}"
+                />
+                <filter name="groupby_vehicle" string="Vehicle" domain="[]" context="{'group_by': 'vehicle_id'}" />
+            </search>
+        </field>
+    </record>
+
+    <record id="account_analytic_distribution_model_tree_view_marin" model="ir.ui.view">
+        <field name="name">account.analytic.distribution.model.inherit.tree</field>
+        <field name="model">account.analytic.distribution.model</field>
+        <field name="inherit_id" ref="analytic.account_analytic_distribution_model_tree_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='company_id']" position="before">
+                <field name="vehicle_id" optional="show" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="account_analytic_distribution_model_form_view_marin" model="ir.ui.view">
+        <field name="name">account.analytic.distribution.model.inherit.form</field>
+        <field name="model">account.analytic.distribution.model</field>
+        <field name="inherit_id" ref="analytic.account_analytic_distribution_model_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='company_id']" position="before">
+                <field name="vehicle_id" />
+            </xpath>
+        </field>
+    </record>
+</odoo>

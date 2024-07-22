@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_partner_form_marin" model="ir.ui.view">
+        <field name="name">res.partner.form.marin</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="priority" eval="100" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='company_type']" position="after">
+                <field name="user_account_user" invisible="1" />
+                <field name="user_account_manager" invisible="1" />
+                <field name="user_debt_manager" invisible="1" />
+                <field name="user_hr_user" invisible="1" />
+                <field name="user_hr_manager" invisible="1" />
+                <field name="user_purchase_user" invisible="1" />
+                <field name="user_purchase_manager" invisible="1" />
+                <field name="user_sale_user" invisible="1" />
+                <field name="user_sale_manager" invisible="1" />
+                <field name="user_stock_user" invisible="1" />
+                <field name="user_stock_manager" invisible="1" />
+            </xpath>
+            <xpath expr="//field[@name='company_type']" position="attributes">
+                <attribute name="readonly">id and not user_account_manager</attribute>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="attributes">
+                <attribute name="readonly">id and not user_account_manager</attribute>
+            </xpath>
+            <xpath expr="//field[@name='parent_id']" position="attributes">
+                <attribute name="readonly">id and not user_account_manager</attribute>
+            </xpath>
+            <xpath expr="//div[hasclass('oe_title')]" position="after">
+                <div name="options">
+                    <span class="d-inline-block">
+                        <field name="customer" readonly="not user_sale_user" />
+                        <label for="customer" />
+                    </span>
+                    <span class="d-inline-block">
+                        <field name="competitor" readonly="not user_sale_user" />
+                        <label for="competitor" />
+                    </span>
+                    <span class="d-inline-block">
+                        <field name="employee" readonly="not user_hr_user" />
+                        <label for="employee" />
+                    </span>
+                    <span class="d-inline-block">
+                        <field name="manufacturer" readonly="not user_purchase_user" />
+                        <label for="manufacturer" />
+                    </span>
+                    <span class="d-inline-block">
+                        <field name="supplier" readonly="not user_account_user" />
+                        <label for="supplier" />
+                    </span>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='vat']" position="attributes">
+                <attribute name="readonly">parent_id or id and not user_account_manager</attribute>
+            </xpath>
+            <xpath expr="//field[@name='category_id']" position="attributes">
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+            <xpath expr="//page[@name='sales_purchases']//group[@name='sale']" position="attributes">
+                <attribute name="groups">marin.group_sale_readonly</attribute>
+            </xpath>
+            <xpath expr="//page[@name='sales_purchases']//field[@name='user_id']" position="attributes">
+                <attribute name="options">{'no_create': True}</attribute>
+                <attribute name="readonly">not user_sale_manager</attribute>
+            </xpath>
+            <xpath expr="//page[@name='sales_purchases']//field[@name='user_id']" position="after">
+                <field name="social_style_color" />
+            </xpath>
+            <xpath expr="//page[@name='sales_purchases']//group[@name='purchase']" position="attributes">
+                <attribute name="groups">marin.group_purchase_readonly</attribute>
+            </xpath>
+            <!-- Fix this, add the correct security group -->
+            <!--<xpath expr="//page[@name='sales_purchases']//group[@name='misc']" position="attributes">
+                <attribute name="groups">marin.group_account_readonly</attribute>
+            </xpath>-->
+            <xpath expr="//page[@name='sales_purchases']//field[@name='industry_id']" position="after">
+                <field name="b2x" />
+            </xpath>
+            <xpath expr="//page[@name='internal_notes']" position="before">
+                <page
+                    name="personal_information_page"
+                    string="Private information"
+                    invisible="is_company"
+                    groups="hr.group_hr_user"
+                >
+                    <group>
+                        <group name="personal_information_group">
+                            <field name="gender" />
+                            <field name="birthdate" />
+                            <field name="age" invisible="not birthdate" />
+                        </group>
+                        <group>
+                            <field name="age_range_id" invisible="not birthdate" />
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_partner_property_form_marin" model="ir.ui.view">
+        <field name="name">res.partner.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.view_partner_property_form" />
+        <field name="priority" eval="100" />
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='credit_limits']" position="attributes">
+                <attribute name="groups">account.group_account_readonly,marin.group_account_debt_manager</attribute>
+            </xpath>
+            <xpath expr="//field[@name='use_partner_credit_limit']" position="attributes">
+                <attribute name="readonly">not user_debt_manager</attribute>
+            </xpath>
+            <xpath expr="//field[@name='credit_limit']" position="attributes">
+                <attribute name="invisible">not use_partner_credit_limit</attribute>
+                <attribute name="readonly">not user_debt_manager</attribute>
+                <attribute name="required">use_partner_credit_limit</attribute>
+            </xpath>
+            <xpath expr="//group[@name='credit_limits']/div" position="after">
+                <field name="credit_on_hold" />
+            </xpath>
+            <xpath expr="//group[@name='credit_limits']" position="after">
+                <group
+                    string="Debit Limits"
+                    name="debit_limits"
+                    invisible="not show_credit_limit"
+                    groups="account.group_account_readonly,marin.group_account_debt_manager"
+                >
+                    <field name="debit" />
+                    <label for="use_partner_debit_limit" />
+                    <div class="o_row">
+                        <field name="use_partner_debit_limit" readonly="not user_debt_manager" />
+                        <field
+                            name="debit_limit"
+                            invisible="not use_partner_debit_limit"
+                            readonly="not user_debt_manager"
+                            required="use_partner_debit_limit"
+                        />
+                    </div>
+                    <field name="debit_on_hold" />
+                </group>
+            </xpath>
+            <xpath expr="//group[@name='accounting_entries']" position="after">
+                <xpath expr="//group[@name='fiscal_information']" position="move" />
+            </xpath>
+        </field>
+    </record>
+</odoo>

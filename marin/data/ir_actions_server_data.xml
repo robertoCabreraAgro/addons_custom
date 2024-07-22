@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo noupdate="1">
+    <record id="action_server_predict_bank_statement_values" model="ir.actions.server">
+        <field name="name">Predict Partner</field>
+        <field name="model_id" ref="account.model_account_bank_statement_line" />
+        <field name="binding_model_id" ref="account.model_account_bank_statement_line" />
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+for rec in records.filtered(lambda r: not r.partner_id and not r.is_reconciled):
+    rec._predict_partner_from_payment_ref()
+        </field>
+    </record>
+
+    <record id="action_account_move_draft" model="ir.actions.server">
+        <field name="name">Reset to draft</field>
+        <field name="model_id" ref="account.model_account_move" />
+        <field name="binding_model_id" ref="account.model_account_move" />
+        <field name="binding_view_types">list</field>
+        <field name="groups_id" eval="[
+            Command.link(ref('group_account_move_draft')),
+        ]" />
+        <field name="state">code</field>
+        <field name="code">if records:
+    action = records.button_draft()</field>
+    </record>
+
+    <record id="action_account_move_authorize_debt" model="ir.actions.server">
+        <field name="name">Authorize debt</field>
+        <field name="model_id" ref="account.model_account_move" />
+        <field name="binding_model_id" ref="account.model_account_move" />
+        <field name="binding_view_types">list</field>
+        <field name="groups_id" eval="[
+            Command.link(ref('group_account_debt_manager')),
+        ]" />
+        <field name="state">code</field>
+        <field name="code">if records:
+    action = records.action_account_authorize_debt()</field>
+    </record>
+
+    <record id="action_account_move_cash_discount" model="ir.actions.server">
+        <field name="name">Register cash discount</field>
+        <field name="model_id" ref="account.model_account_move" />
+        <field name="binding_model_id" ref="account.model_account_move" />
+        <field name="binding_view_types">list</field>
+        <field name="groups_id" eval="[
+            Command.link(ref('group_account_move_cash_discount')),
+        ]" />
+        <field name="state">code</field>
+        <field name="code">if records:
+    action = records.action_cash_discount_wizard()</field>
+    </record>
+
+    <record id="action_account_purchase_orders" model="ir.actions.server">
+        <field name="name">Account Purchase</field>
+        <field name="model_id" ref="purchase.model_purchase_order" />
+        <field name="state">code</field>
+        <field name="code">category = env.ref("marin.partner_category_supplier_core")
+partners = env["res.partner"].search([("category_id", "in", category.ids)])
+action = env["ir.actions.act_window"]._for_xml_id("marin.purchase_form_action")
+action["domain"] = ["|", ("partner_id", "in", partners.ids), ("partner_id.commercial_partner_id", "in", partners.ids)]
+        </field>
+    </record>
+
+    <record id="action_print_deliveryslip" model="ir.actions.server">
+        <field name="name">Delivery Slip</field>
+        <field name="model_id" ref="stock.model_stock_picking" />
+        <field name="binding_model_id" ref="stock.model_stock_picking" />
+        <field name="binding_view_types">list,form</field>
+        <field name="binding_type">report</field>
+        <field name="groups_id" eval="[Command.link(ref('group_print_delivery_slip'))]" />
+        <field name="state">code</field>
+        <field name="code">action = records._print_deliveryslip()</field>
+    </record>
+
+    <record id="action_print_picking_operation" model="ir.actions.server">
+        <field name="name">Picking Operations</field>
+        <field name="model_id" ref="stock.model_stock_picking" />
+        <field name="binding_model_id" ref="stock.model_stock_picking" />
+        <field name="binding_view_types">list,form</field>
+        <field name="binding_type">report</field>
+        <field name="groups_id" eval="[Command.link(ref('group_print_picking_operation'))]" />
+        <field name="state">code</field>
+        <field name="code">action = records._print_picking_operation()</field>
+    </record>
+</odoo>

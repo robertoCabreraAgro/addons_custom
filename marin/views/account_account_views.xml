@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_account_list_marin" model="ir.ui.view">
+        <field name="name">account.account.list.marin</field>
+        <field name="model">account.account</field>
+        <field name="inherit_id" ref="account.view_account_list" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='company_id'][2]" position="before">
+                <field name="deprecated" widget="boolean_toggle" optional="show" />
+            </xpath>
+            <xpath expr="//field[@name='company_id'][2]" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

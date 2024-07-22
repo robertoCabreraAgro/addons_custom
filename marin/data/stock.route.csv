@@ -1,0 +1,6 @@
+"id","name","sequence","active","sale_selectable","company_id/id"
+"marin.stock_route_5001","Intercompany transfer in 2 steps","1000","True","",""
+"marin.stock_route_5002","Interwarehouse transfer in 2 steps (ship + deliver) thirth party","1000","True","","marin.company_lmmr"
+"marin.stock_route_5003","Interwarehouse transfer in 2 steps (ship + deliver) we ship","1000","True","","marin.company_lmmr"
+"marin.stock_route_5004","Deliver in 2 steps (ship + deliver) thirth party","200","True","True","marin.company_lmmr"
+"marin.stock_route_5005","Deliver in 2 steps (ship + deliver) we ship","200","True","True","marin.company_lmmr"

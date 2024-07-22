@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_hr_payslip_tree_marin" model="ir.ui.view">
+        <field name="name">hr.payslip.form.marin</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id" ref="hr_payroll.view_hr_payslip_tree" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='date_from']" position="attributes">
+                <attribute name="optional">show</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='date_to']" position="attributes">
+                <attribute name="optional">show</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_hr_payslip_form_marin" model="ir.ui.view">
+        <field name="name">hr.payslip.form.marin</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id" ref="hr_payroll.view_hr_payslip_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='employee_id']" position="attributes">
+                <attribute name="options">
+                    {"no_create": True}
+                </attribute>
+            </xpath>
+            <xpath expr="//field[@name='contract_id']" position="attributes">
+                <attribute name="options">
+                    {"no_create": True}
+                </attribute>
+            </xpath>
+            <xpath expr="//field[@name='struct_id']" position="attributes">
+                <attribute name="options">
+                    {"no_create": True}
+                </attribute>
+            </xpath>
+            <xpath expr="//field[@name='work_entry_type_id']" position="attributes">
+                <attribute name="options">
+                    {"no_create": True}
+                </attribute>
+            </xpath>
+            <xpath expr="//field[@name='input_type_id']" position="attributes">
+                <attribute name="options">
+                    {"no_create": True}
+                </attribute>
+            </xpath>
+            <xpath expr="//field[@name='payslip_run_id']" position="attributes">
+                <attribute name="options">
+                    {"no_create": True}
+                </attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_register_payment']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='refund_sheet']" position="before">
+                <field name="move_state" invisible="1" />
+                <button
+                    string="Post Move"
+                    name="action_payslip_move_post"
+                    type="object"
+                    invisible="move_state == 'posted' or not move_state"
+                    class="oe_highlight"
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>

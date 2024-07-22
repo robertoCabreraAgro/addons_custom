@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="removal_fifo_priority" model="product.removal">
+        <field name="name">First In First Out (FIFO) + Priority</field>
+        <field name="method">fifo + priority</field>
+    </record>
+
+    <record id="removal_lifo_priority" model="product.removal">
+        <field name="name">Last In First Out (LIFO) + Priority</field>
+        <field name="method">lifo + priority</field>
+    </record>
+
+    <record id="removal_closest_priority" model="product.removal">
+        <field name="name">Closest Location + Priority</field>
+        <field name="method">closest + priority</field>
+    </record>
+
+    <record id="removal_fefo_priority" model="product.removal">
+        <field name="name">First Expiry First Out(FEFO) + Priority</field>
+        <field name="method">fefo + priority</field>
+    </record>
+</odoo>

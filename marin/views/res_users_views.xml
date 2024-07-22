@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_users_form_simple_modif_marin" model="ir.ui.view">
+        <field name="name">res.users.preferences.form.inherit</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form_simple_modif" />
+        <field name="arch" type="xml">
+            <group name="signature" position="after">
+                <group name="Journals">
+                    <field
+                        name="property_sale_journal_id"
+                        options="{'no_create': True}"
+                        groups="account.group_account_invoice"
+                    />
+                </group>
+            </group>
+        </field>
+    </record>
+
+    <record id="view_users_simple_form_marin" model="ir.ui.view">
+        <field name="name">res.users.simple.form.inherit</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_simple_form" />
+        <field name="arch" type="xml">
+            <group name="phone_numbers" position="after">
+                <group name="Journals">
+                    <field
+                        name="property_sale_journal_id"
+                        options="{'no_create': True}"
+                        groups="account.group_account_invoice"
+                    />
+                </group>
+            </group>
+        </field>
+    </record>
+
+    <record id="view_users_form_marin" model="ir.ui.view">
+        <field name="name">res.users.form.inherit</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form" />
+        <field name="arch" type="xml">
+            <group name="messaging" position="after">
+                <group name="Journals" string="Journal" groups="account.group_account_invoice">
+                    <field
+                        name="property_sale_journal_id"
+                        options="{'no_create': True}"
+                        groups="account.group_account_invoice"
+                    />
+                </group>
+            </group>
+        </field>
+    </record>
+
+    <record id="res_users_view_form_preferences" model="ir.ui.view">
+        <field name="name">res.users.preferences.form.inherit</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="sale_stock.res_users_view_form_preferences" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='property_warehouse_id']" position="attributes">
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="res_users_view_simple_form" model="ir.ui.view">
+        <field name="name">res.users.simple.form.inherit</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="sale_stock.res_users_view_simple_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='property_warehouse_id']" position="attributes">
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="res_users_view_form" model="ir.ui.view">
+        <field name="name">res.users.form.inherit</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="sale_stock.res_users_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='property_warehouse_id']" position="attributes">
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

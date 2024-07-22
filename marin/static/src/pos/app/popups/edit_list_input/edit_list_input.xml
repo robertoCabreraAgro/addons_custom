@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+
+    <t t-inherit="point_of_sale.EditListInput" t-inherit-mode="extension" owl="1">
+        <xpath expr="//input" position="attributes">
+            <attribute name="t-model" />
+            <attribute name="class">oe_hidden</attribute>
+        </xpath>
+        <xpath expr="//input" position="after">
+            <t t-if="props.lots">
+                <select t-model="props.item.text">
+                    <option>Select a lot</option>
+                    <option t-foreach="props.lots" t-as="lot" t-key="lot_index" t-att-value="lot">
+                        <t t-esc="lot" />
+                    </option>
+                </select>
+            </t>
+        </xpath>
+    </t>
+
+</templates>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo noupdate="1">
+    <record id="account_move_operation_type_01" model="account.move.operation.type">
+        <field name="name">Cash exchange simple</field>
+        <field name="company_id" ref="marin.company_lmmg" />
+        <field name="sequence" eval="10" />
+    </record>
+
+    <record id="account_move_operation_type_02" model="account.move.operation.type">
+        <field name="name">Cash exchange simple + collection</field>
+        <field name="company_id" ref="marin.company_lmmr" />
+        <field name="sequence" eval="10" />
+    </record>
+
+    <record id="account_move_operation_type_03" model="account.move.operation.type">
+        <field name="name">Cash exchange from multi company</field>
+        <field name="company_id" ref="marin.company_lmmg" />
+        <field name="sequence" eval="10" />
+    </record>
+
+    <record id="account_move_operation_type_04" model="account.move.operation.type">
+        <field name="name">Cash exchange + collection from multi company</field>
+        <field name="company_id" ref="marin.company_lmmr" />
+        <field name="sequence" eval="10" />
+    </record>
+
+    <record id="account_move_operation_type_05" model="account.move.operation.type">
+        <field name="name">Customer discount due to collection in FX</field>
+        <field name="company_id" ref="marin.company_lmmg" />
+        <field name="sequence" eval="10" />
+    </record>
+
+    <record id="account_move_operation_type_06" model="account.move.operation.type">
+        <field name="name">Customer discount due to collection in FX multicompany</field>
+        <field name="company_id" ref="marin.company_lmmg" />
+        <field name="sequence" eval="10" />
+    </record>
+
+    <record id="account_move_operation_type_07" model="account.move.operation.type">
+        <field name="name">Collection in kind</field>
+        <field name="company_id" ref="marin.company_lmmg" />
+        <field name="sequence" eval="10" />
+    </record>
+
+    <record id="account_move_operation_type_08" model="account.move.operation.type">
+        <field name="name">Own cash to own bank</field>
+        <field name="company_id" ref="marin.company_lmmg" />
+        <field name="sequence" eval="10" />
+        <field name="from_bank_statement" eval="True" />
+    </record>
+
+    <record id="account_move_operation_type_09" model="account.move.operation.type">
+        <field name="name">Own cash to multi company bank</field>
+        <field name="company_id" ref="marin.company_lmmg" />
+        <field name="sequence" eval="10" />
+    </record>
+
+    <record id="account_move_operation_type_10" model="account.move.operation.type">
+        <field name="name">Do un-deductible expense bill</field>
+        <field name="company_id" ref="marin.company_lmmg" />
+        <field name="sequence" eval="10" />
+        <field name="from_bank_statement" eval="True" />
+    </record>
+
+    <record id="account_move_operation_type_11" model="account.move.operation.type">
+        <field name="name">Cash exchange simple</field>
+        <field name="company_id" ref="marin.company_lmmr" />
+        <field name="sequence" eval="10" />
+    </record>
+
+    <record id="account_move_operation_type_12" model="account.move.operation.type">
+        <field name="name">Cash exchange simple + collection</field>
+        <field name="company_id" ref="marin.company_lmmr" />
+        <field name="sequence" eval="10" />
+    </record>
+
+    <record id="account_move_operation_type_13" model="account.move.operation.type">
+        <field name="name">Cash exchange from multi company</field>
+        <field name="company_id" ref="marin.company_lmmr" />
+        <field name="sequence" eval="10" />
+    </record>
+
+    <record id="account_move_operation_type_14" model="account.move.operation.type">
+        <field name="name">Cash exchange + collection from multi company</field>
+        <field name="company_id" ref="marin.company_lmmr" />
+        <field name="sequence" eval="10" />
+    </record>
+
+    <record id="account_move_operation_type_15" model="account.move.operation.type">
+        <field name="name">Customer discount due to collection in FX</field>
+        <field name="company_id" ref="marin.company_lmmr" />
+        <field name="sequence" eval="10" />
+    </record>
+
+    <record id="account_move_operation_type_16" model="account.move.operation.type">
+        <field name="name">Customer discount due to collection in FX multicompany</field>
+        <field name="company_id" ref="marin.company_lmmr" />
+        <field name="sequence" eval="10" />
+    </record>
+
+    <record id="account_move_operation_type_17" model="account.move.operation.type">
+        <field name="name">Collection in kind</field>
+        <field name="company_id" ref="marin.company_lmmr" />
+        <field name="sequence" eval="10" />
+    </record>
+
+    <record id="account_move_operation_type_18" model="account.move.operation.type">
+        <field name="name">Own cash to own bank</field>
+        <field name="company_id" ref="marin.company_lmmr" />
+        <field name="sequence" eval="10" />
+    </record>
+
+    <record id="account_move_operation_type_19" model="account.move.operation.type">
+        <field name="name">Own cash to multi company bank</field>
+        <field name="company_id" ref="marin.company_lmmr" />
+        <field name="sequence" eval="10" />
+    </record>
+
+    <record id="account_move_operation_type_20" model="account.move.operation.type">
+        <field name="name">Do un-deductible expense bill</field>
+        <field name="company_id" ref="marin.company_lmmr" />
+        <field name="sequence" eval="10" />
+        <field name="from_bank_statement" eval="True" />
+    </record>
+</odoo>

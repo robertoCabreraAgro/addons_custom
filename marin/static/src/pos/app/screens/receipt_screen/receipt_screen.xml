@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="point_of_sale.ReceiptScreen" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('default-view')]" position="attributes">
+            <attributes name="class" add="main-content" separator=" " />
+        </xpath>
+        <xpath expr="//div[hasclass('default-view')]/div[hasclass('actions')]" position="attributes">
+            <attributes name="class" add="left-content" separator=" " />
+        </xpath>
+        <xpath expr="//div[hasclass('default-view')]/div[hasclass('pos-receipt-container')]" position="attributes">
+            <attributes name="class" add="right-content" separator=" " />
+        </xpath>
+        <xpath expr="//div[hasclass('default-view')]/div[hasclass('actions')]" position="after">
+            <div class="center-content lots-table-container">
+                <h1>Delivery information from this order:</h1>
+                <div t-if="state.delivery_info_array == null">
+                    <p>Loading delivery info...</p>
+                </div>
+                <div t-if="state.delivery_info_array != null" class="lots-table-receipt">
+                    <t t-if="!state.delivery_info_array.length">
+                        <p>No delivery info found for this order.</p>
+                    </t>
+                    <table t-if="state.delivery_info_array.length">
+                        <colgroup>
+                            <col width='45%' />
+                            <col width='30%' />
+                            <col width='15%' />
+                            <col width='10%' />
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>From</th>
+                                <th>Lot</th>
+                                <th>Done</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="state.delivery_info_array" t-as="delivery_info" t-key="delivery_info.id">
+                                <tr>
+                                    <td><t t-esc="delivery_info.product" /></td>
+                                    <td><t t-esc="delivery_info.from" /></td>
+                                    <td><t t-esc="delivery_info.lot" /></td>
+                                    <td><t t-esc="delivery_info.done" /></td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>

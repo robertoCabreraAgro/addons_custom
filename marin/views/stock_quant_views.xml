@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="quant_search_view_marin" model="ir.ui.view">
+        <field name="name">stock.quant.search.marin</field>
+        <field name="model">stock.quant</field>
+        <field name="inherit_id" ref="stock.quant_search_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field
+                    name="product_id"
+                    string="Manufacturer"
+                    filter_domain="[('product_id.product_tmpl_id.manufacturer_id','ilike',self)]"
+                />
+                <field
+                    name="product_id"
+                    string="Tags"
+                    filter_domain="[('product_id.product_tmpl_id.product_tag_ids','ilike',self)]"
+                />
+            </xpath>
+            <xpath expr="//filter[@name='productgroup']" position="before">
+                <filter name="warehousegroup" string='Warehouse' context="{'group_by': 'warehouse_id'}" />
+                <filter name="categorygroup" string='Category' context="{'group_by': 'product_categ_id'}" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_stock_quant_tree_inventory_editable_marin" model="ir.ui.view">
+        <field name="name">stock.quant.inventory.tree.editable</field>
+        <field name="model">stock.quant</field>
+        <field name="inherit_id" ref="stock.view_stock_quant_tree_inventory_editable" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='package_id']" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </xpath>
+            <xpath expr="//field[@name='owner_id']" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_apply_inventory']" position="attributes">
+                <attribute name="groups">marin.group_stock_inventory_adjustment</attribute>
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <button
+                    name="action_stock_quant_lot"
+                    string="Change Lot"
+                    type="object"
+                    groups="marin.group_stock_inventory_adjustment_lot"
+                />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_stock_quant_tree_marin" model="ir.ui.view">
+        <field name="name">stock.quant.inventory.tree.marin</field>
+        <field name="model">stock.quant</field>
+        <field name="inherit_id" ref="stock.view_stock_quant_tree" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='package_id']" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </xpath>
+            <xpath expr="//field[@name='owner_id']" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

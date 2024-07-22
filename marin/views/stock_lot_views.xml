@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="search_product_lot_filter_marin" model="ir.ui.view">
+        <field name="name">stock.lot.search</field>
+        <field name="model">stock.lot</field>
+        <field name="inherit_id" ref="stock.search_product_lot_filter" />
+        <field name="arch" type="xml">
+            <field name="product_id" position="after">
+                <filter name="archived" string="Archived" domain="[('active', '=', False)]" />
+            </field>
+        </field>
+    </record>
+
+    <record id="view_production_lot_tree_marin" model="ir.ui.view">
+        <field name="name">stock.lot.tree</field>
+        <field name="model">stock.lot</field>
+        <field name="inherit_id" ref="stock.view_production_lot_tree" />
+        <field name="arch" type="xml">
+            <field name="company_id" position="after">
+                <field name="active" invisible="1" />
+            </field>
+        </field>
+    </record>
+
+    <record id="view_production_lot_form_marin" model="ir.ui.view">
+        <field name="name">stock.lot.form</field>
+        <field name="model">stock.lot</field>
+        <field name="inherit_id" ref="stock.view_production_lot_form" />
+        <field name="arch" type="xml">
+            <field name="display_complete" position="before">
+                <widget name="web_ribbon" title="Archived" bg_color="bg-danger" invisible="active" />
+                <field name="active" invisible="1" />
+            </field>
+            <xpath expr="//notebook" position="attributes">
+                <attribute name="invisible">False</attribute>
+            </xpath>
+            <field name="expiration_date" position="attributes">
+                <attribute name="required">True</attribute>
+            </field>
+            <field name="removal_date" position="attributes">
+                <attribute name="required">True</attribute>
+            </field>
+        </field>
+    </record>
+</odoo>

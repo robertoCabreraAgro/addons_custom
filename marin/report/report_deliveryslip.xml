@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="stock.action_report_delivery" model="ir.actions.report">
+        <field name="binding_model_id" />
+    </record>
+    <record id="stock.action_report_picking" model="ir.actions.report">
+        <field name="binding_model_id" />
+    </record>
+    <record id="stock.action_report_picking_packages" model="ir.actions.report">
+        <field name="binding_model_id" />
+    </record>
+    <record id="stock.stock_reception_report_action" model="ir.actions.report">
+        <field name="binding_model_id" />
+    </record>
+    <record id="stock.return_label_report" model="ir.actions.report">
+        <field name="binding_model_id" />
+    </record>
+
+    <template id="report_picking" inherit_id="stock.report_picking">
+        <xpath expr="//table/tbody/tr[@t-as='ml']" position="attributes">
+            <attribute
+                name="t-foreach"
+            >o.move_line_ids_without_package.filtered(lambda ml: ml.quantity != 0.0).sorted(lambda ml: (ml.location_id.complete_name, ml.location_dest_id.complete_name))</attribute>
+        </xpath>
+    </template>
+</odoo>

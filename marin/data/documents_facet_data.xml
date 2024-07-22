@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="documents.documents_internal_status" model="documents.facet">
+        <field name="name">Workflow</field>
+    </record>
+
+    <record id="documents_commercial_status" model="documents.facet" forcecreate="0">
+        <field name="name">Workflow</field>
+        <field name="sequence">1</field>
+        <field name="folder_id" ref="documents_commercial_folder" />
+    </record>
+
+    <record id="documents_commercial_documents" model="documents.facet" forcecreate="0">
+        <field name="name">Documents</field>
+        <field name="sequence">5</field>
+        <field name="folder_id" ref="documents_commercial_folder" />
+    </record>
+
+    <record id="documents_wh_logistics_status" model="documents.facet" forcecreate="0">
+        <field name="name">Workflow</field>
+        <field name="sequence">1</field>
+        <field name="folder_id" ref="documents_wh_folder" />
+    </record>
+
+    <record id="documents_wh_logistics_documents" model="documents.facet" forcecreate="0">
+        <field name="name">Documents</field>
+        <field name="sequence">5</field>
+        <field name="folder_id" ref="documents_wh_folder" />
+    </record>
+
+    <record id="documents_knowledge_documents" model="documents.facet" forcecreate="0">
+        <field name="name">Documents</field>
+        <field name="sequence">5</field>
+        <field name="folder_id" ref="documents_knowledge_folder" />
+    </record>
+</odoo>

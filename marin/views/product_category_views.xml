@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="product_category_form_view" model="ir.ui.view">
+        <field name="name">product.category.form</field>
+        <field name="model">product.category</field>
+        <field name="inherit_id" ref="product.product_category_form_view" />
+        <field name="arch" type="xml">
+            <field name="property_account_income_categ_id" position="after">
+                <field name="property_account_income_refund_id" />
+            </field>
+            <field name="property_account_expense_categ_id" position="after">
+                <field name="property_account_expense_refund_id" />
+            </field>
+            <group name="first" position="after">
+                <group>
+                    <group string="Dates" name="expiry_and_lots" groups="stock.group_production_lot">
+                        <label for="expiration_time" />
+                        <div>
+                            <field name="expiration_time" class="oe_inline" />
+                            <span> days after receipt</span>
+                        </div>
+                        <label for="use_time" />
+                        <div>
+                            <field name="use_time" class="oe_inline" />
+                            <span> days before expiration date</span>
+                        </div>
+                        <label for="removal_time" />
+                        <div>
+                            <field name="removal_time" class="oe_inline" />
+                            <span> days before expiration date</span>
+                        </div>
+                        <label for="alert_time" />
+                        <div>
+                            <field name="alert_time" class="oe_inline" />
+                            <span> days before expiration date</span>
+                        </div>
+                    </group>
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>

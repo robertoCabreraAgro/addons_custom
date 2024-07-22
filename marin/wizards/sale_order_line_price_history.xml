@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="sale_order_line_price_history_view_form" model="ir.ui.view">
+        <field name="name">sale.order.line.price.history.view.form</field>
+        <field name="model">sale.order.line.price.history</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="product_id" options="{'no_create': True}" />
+                    </group>
+                    <group>
+                        <field name="partner_id" options="{'no_create': True}" />
+                        <field name="include_quotations" />
+                    </group>
+                </group>
+                <field name="line_ids" nolabel="1" readonly="1">
+                    <form>
+                        <div name="button_box" class="oe_button_box" invisible="not line_id">
+                            <button
+                                name="action_set_price"
+                                string="Set price"
+                                class="oe_stat_button"
+                                type="object"
+                                icon="fa-check"
+                            />
+                        </div>
+                        <group>
+                            <field name="line_id" invisible="1" />
+                            <field name="order_id" readonly="1" />
+                            <field name="partner_id" readonly="1" />
+                            <field name="date" readonly="1" />
+                            <field name="qty" readonly="1" />
+                            <field name="price_unit" readonly="1" />
+                            <label for="discount" groups="product.group_discount_per_so_line" />
+                            <div name="discount" groups="product.group_discount_per_so_line">
+                                <field name="discount" class="oe_inline" /> %%
+                            </div>
+                        </group>
+                    </form>
+                    <tree>
+                        <field name="date" />
+                        <field name="order_id" />
+                        <field name="partner_id" />
+                        <field name="qty" />
+                        <field name="price_unit" />
+                        <field name="discount" groups="product.group_discount_per_so_line" />
+                    </tree>
+                </field>
+                <field name="line_id" invisible="1" />
+                <footer>
+                    <button special="cancel" string="Close" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="sale_line_price_history_action" model="ir.actions.act_window">
+        <field name="name">Price history per customer</field>
+        <field name="res_model">sale.order.line.price.history</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

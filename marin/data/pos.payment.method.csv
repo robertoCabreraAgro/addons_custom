@@ -1,0 +1,4 @@
+"id","name","company_id/id","journal_id/id","receivable_account_id/id","outstanding_account_id/id","sequence","active"
+"marin.pos_payment_method_101","Cash Main","marin.company_lmmr","marin.journal_efc01_lmmr","","","0","True"
+"marin.pos_payment_method_102","Cash SJN","marin.company_lmmr","marin.journal_efc05_lmmr","","","0","True"
+"marin.pos_payment_method_103","Cash BAL","marin.company_lmmr","marin.journal_efc04_lmmr","","","0","True"

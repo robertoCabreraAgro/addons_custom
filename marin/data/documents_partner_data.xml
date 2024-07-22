@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+    <!-- Folders -->
+    <record id="documents_partner_folder" model="documents.folder" forcecreate="0">
+        <field name="name">Partners</field>
+        <field name="read_group_ids" eval="[(4, ref('base.group_user'))]" />
+        <field name="sequence">15</field>
+    </record>
+
+    <!-- Facets -->
+    <record id="documents_partner_status" model="documents.facet" forcecreate="0">
+        <field name="name">Workflow</field>
+        <field name="sequence">1</field>
+        <field name="folder_id" ref="documents_partner_folder" />
+    </record>
+    <record id="documents_partner_documents" model="documents.facet" forcecreate="0">
+        <field name="name">Personal documents</field>
+        <field name="sequence">6</field>
+        <field name="folder_id" ref="documents_partner_folder" />
+    </record>
+    <record id="documents_partner_expiration" model="documents.facet" forcecreate="0">
+        <field name="name">Expiration</field>
+        <field name="sequence">7</field>
+        <field name="folder_id" ref="documents_partner_folder" />
+    </record>
+    <record id="documents_partner_type" model="documents.facet" forcecreate="0">
+        <field name="name">Type</field>
+        <field name="sequence">7</field>
+        <field name="folder_id" ref="documents_partner_folder" />
+    </record>
+
+    <!-- Tags -->
+    <record id="documents_partner_status_inbox" model="documents.tag" forcecreate="0">
+        <field name="name">Inbox</field>
+        <field name="facet_id" ref="documents_partner_status" />
+        <field name="sequence">6</field>
+    </record>
+    <record id="documents_partner_status_tc" model="documents.tag" forcecreate="0">
+        <field name="name">To Validate</field>
+        <field name="facet_id" ref="documents_partner_status" />
+        <field name="sequence">6</field>
+    </record>
+    <record id="documents_partner_status_validated" model="documents.tag" forcecreate="0">
+        <field name="name">Validated</field>
+        <field name="facet_id" ref="documents_partner_status" />
+        <field name="sequence">6</field>
+    </record>
+    <record id="documents_partner_status_deprecated" model="documents.tag" forcecreate="0">
+        <field name="name">Deprecated</field>
+        <field name="facet_id" ref="documents_partner_status" />
+        <field name="sequence">6</field>
+    </record>
+    <record id="documents_partner_documents_national_identification" model="documents.tag" forcecreate="0">
+        <field name="name">National Identification</field>
+        <field name="facet_id" ref="documents_partner_documents" />
+        <field name="sequence">10</field>
+    </record>
+    <record id="documents_partner_documents_collateral" model="documents.tag" forcecreate="0">
+        <field name="name">Collateral</field>
+        <field name="facet_id" ref="documents_partner_documents" />
+        <field name="sequence">11</field>
+    </record>
+    <record id="documents_partner_documents_drivers_licence" model="documents.tag" forcecreate="0">
+        <field name="name">Driver Licence</field>
+        <field name="facet_id" ref="documents_partner_documents" />
+        <field name="sequence">12</field>
+    </record>
+    <record id="documents_partner_documents_social_security_identification" model="documents.tag" forcecreate="0">
+        <field name="name">Social Security Identification</field>
+        <field name="facet_id" ref="documents_partner_documents" />
+        <field name="sequence">13</field>
+    </record>
+    <record id="documents_partner_documents_passport" model="documents.tag" forcecreate="0">
+        <field name="name">Passport</field>
+        <field name="facet_id" ref="documents_partner_documents" />
+        <field name="sequence">14</field>
+    </record>
+    <record id="documents_partner_documents_visa" model="documents.tag" forcecreate="0">
+        <field name="name">Visa</field>
+        <field name="facet_id" ref="documents_partner_documents" />
+        <field name="sequence">15</field>
+    </record>
+    <record id="documents_partner_documents_cerification" model="documents.tag" forcecreate="0">
+        <field name="name">Certification</field>
+        <field name="facet_id" ref="documents_partner_documents" />
+        <field name="sequence">16</field>
+    </record>
+    <record id="documents_partner_documents_birth_registration" model="documents.tag" forcecreate="0">
+        <field name="name">Birth registration</field>
+        <field name="facet_id" ref="documents_partner_documents" />
+        <field name="sequence">17</field>
+    </record>
+    <record id="documents_partner_documents_fiscal" model="documents.tag" forcecreate="0">
+        <field name="name">Fiscal</field>
+        <field name="facet_id" ref="documents_partner_documents" />
+        <field name="sequence">17</field>
+    </record>
+    <record id="documents_partner_documents_financial" model="documents.tag" forcecreate="0">
+        <field name="name">Financial</field>
+        <field name="facet_id" ref="documents_partner_documents" />
+        <field name="sequence">17</field>
+    </record>
+    <record id="documents_partner_expiration_current" model="documents.tag" forcecreate="0">
+        <field name="name">Current</field>
+        <field name="facet_id" ref="documents_partner_expiration" />
+        <field name="sequence">1</field>
+    </record>
+    <record id="documents_partner_expiration_near_expire" model="documents.tag" forcecreate="0">
+        <field name="name">Near expire</field>
+        <field name="facet_id" ref="documents_partner_expiration" />
+        <field name="sequence">2</field>
+    </record>
+    <record id="documents_partner_expiration_expired" model="documents.tag" forcecreate="0">
+        <field name="name">Expired</field>
+        <field name="facet_id" ref="documents_partner_expiration" />
+        <field name="sequence">3</field>
+    </record>
+    <record id="documents_partner_type_customer" model="documents.tag" forcecreate="0">
+        <field name="name">Customer</field>
+        <field name="facet_id" ref="documents_partner_type" />
+        <field name="sequence">3</field>
+    </record>
+    <record id="documents_partner_type_supplier" model="documents.tag" forcecreate="0">
+        <field name="name">Supplier</field>
+        <field name="facet_id" ref="documents_partner_type" />
+        <field name="sequence">3</field>
+    </record>
+    <record id="documents_partner_type_employee" model="documents.tag" forcecreate="0">
+        <field name="name">Employee</field>
+        <field name="facet_id" ref="documents_partner_type" />
+        <field name="sequence">3</field>
+    </record>
+</odoo>

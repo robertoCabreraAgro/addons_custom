@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_sales_order_filter_marin" model="ir.ui.view">
+        <field name="name">sale.order.list.select.marin</field>
+        <field name="model">sale.order</field>
+        <field name="priority" eval="15" />
+        <field name="arch" type="xml">
+            <search string="Search Sale Orders">
+                <field
+                    name="name"
+                    string="Order"
+                    filter_domain="['|', '|', ('name', 'ilike', self), ('client_order_ref', 'ilike', self), ('partner_id', 'child_of', self)]"
+                />
+                <field name="partner_id" operator="child_of" />
+                <field name="order_line" string="Product" filter_domain="[('order_line.product_id', 'ilike', self)]" />
+                <field name="tag_ids" string="Tag" />
+                <field name="team_id" string="Sales Team" />
+                <field name="user_id" />
+                <field name="analytic_account_id" groups="analytic.group_analytic_accounting" />
+                <field name="campaign_id" />
+                <filter name="my_orders_filter" string="My Orders" domain="[('user_id', '=', uid)]" />
+                <separator />
+                <filter string="Quotations" name="draft" domain="[('state', 'in', ('draft', 'sent'))]" />
+                <filter string="Sale orders" name="sale" domain="[('state', 'in', ('sale', 'done'))]" />
+                <separator />
+                <filter name="to_invoice" string="To invoice" domain="[('invoice_status', '=', 'to invoice')]" />
+                <filter name="invoiced" string="Invoiced" domain="[('invoice_status', '=', 'invoiced')]" />
+                <filter name="upselling" string="To upsell" domain="[('invoice_status', '=', 'upselling')]" />
+                <separator />
+                <filter name="pending" string="To deliver" domain="[('delivery_status', '=', 'pending')]" />
+                <filter
+                    name="partially_delivered"
+                    string="Partially delivered"
+                    domain="[('delivery_status', '=', 'partial')]"
+                />
+                <filter name="full" string="Delivered" domain="[('delivery_status', '=', 'full')]" />
+                <filter name="over_full" string="Over Delivered" domain="[('delivery_status', '=', 'over full')]" />
+                <separator />
+                <filter
+                    name="activities_overdue"
+                    string="Late Activities"
+                    domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                    help="Show all records which has next action date is before today"
+                />
+                <filter
+                    name="activities_today"
+                    string="Today Activities"
+                    domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"
+                />
+                <filter
+                    name="activities_upcoming_all"
+                    string="Future Activities"
+                    domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"
+                />
+                <group string="Group By" expand="0">
+                    <filter name="customer" string="Customer" domain="[]" context="{'group_by': 'partner_id'}" />
+                    <filter name="salesteam" string="Team" domain="[]" context="{'group_by': 'team_id'}" />
+                    <filter name="salesperson" string="Salesperson" domain="[]" context="{'group_by': 'user_id'}" />
+                    <filter name="order_date" string="Order Date" domain="[]" context="{'group_by': 'date_order'}" />
+                    <filter
+                        name="invoice_status"
+                        string="Invoice status"
+                        domain="[]"
+                        context="{'group_by': 'invoice_status'}"
+                    />
+                    <filter
+                        name="delivery_status"
+                        string="Delivery Status"
+                        domain="[]"
+                        context="{'group_by': 'delivery_status'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_sale_order_tree_marin" model="ir.ui.view">
+        <field name="name">sale.order.tree.marin</field>
+        <field name="model">sale.order</field>
+        <field name="priority">4</field>
+        <field name="arch" type="xml">
+            <tree sample="1" decoration-info="invoice_status == 'to invoice'" decoration-muted="state == 'cancel'">
+                <field name="company_id" column_invisible="1" />
+                <field name="currency_id" column_invisible="1" />
+                <field name="state" column_invisible="1" />
+                <field name="message_needaction" column_invisible="1" />
+                <field name="name" string="Number" readonly="1" decoration-bf="1" />
+                <field name="create_date" string="Creation Date" widget="date" optional="show" />
+                <field name="date_order" string="Order Date" widget="date" optional="show" />
+                <field name="commitment_date" widget="date" optional="hide" />
+                <field name="expected_date" widget="date" optional="hide" />
+                <field name="partner_id" readonly="1" />
+                <field name="amount_untaxed" sum="Total tax excluded" widget="monetary" optional="hide" />
+                <field name="amount_tax" sum="Tax Total" widget="monetary" optional="hide" />
+                <field
+                    name="amount_total"
+                    sum="Total tax included"
+                    widget="monetary"
+                    decoration-bf="1"
+                    optional="show"
+                />
+                <field name="team_id" optional="hide" />
+                <field name="user_id" widget="many2one_avatar_user" optional="show" />
+                <field name="activity_ids" widget="list_activity" optional="hide" />
+                <field
+                    name="state"
+                    widget="badge"
+                    optional="show"
+                    decoration-info="state in ('draft', 'sent')"
+                    decoration-success="state in ('sale', 'done')"
+                />
+                <field
+                    name="delivery_status"
+                    widget="badge"
+                    optional="show"
+                    decoration-danger="delivery_status == 'over full'"
+                    decoration-warning="delivery_status == 'partial'"
+                    decoration-info="delivery_status == 'pending'"
+                    decoration-success="delivery_status == 'full'"
+                />
+                <field
+                    name="invoice_status"
+                    widget="badge"
+                    optional="show"
+                    decoration-danger="invoice_status == 'to invoice'"
+                    decoration-warning="invoice_status == 'upselling'"
+                    decoration-info="invoice_status == 'no'"
+                    decoration-success="invoice_status == 'invoiced'"
+                />
+                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide" />
+                <field name="warehouse_id" optional="show" />
+                <field name="company_id" readonly="1" optional="show" groups="base.group_multi_company" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_order_form_marin" model="ir.ui.view">
+        <field name="name">sale.order.form.marin</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="priority" eval="20" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="options">{'no_create': True, 'always_reload': True}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='partner_invoice_id']" position="attributes">
+                <attribute name="options">{'no_create': True, 'always_reload': True}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='partner_shipping_id']" position="attributes">
+                <attribute name="options">{'no_create': True, 'always_reload': True}</attribute>
+            </xpath>
+            <xpath expr="//page[@name='order_lines']//form//field[@name='product_id']" position="attributes">
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+            <xpath expr="//page[@name='order_lines']//form//field[@name='product_uom'][2]" position="attributes">
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+            <xpath expr="//page[@name='order_lines']//tree/field[@name='product_id']" position="attributes">
+                <attribute name="options">{'no_open': True, 'no_create': True}</attribute>
+            </xpath>
+            <xpath expr="//page[@name='order_lines']//tree/field[@name='product_template_id']" position="attributes">
+                <attribute name="options">{'no_open': True, 'no_create': True}</attribute>
+            </xpath>
+            <xpath expr="//page[@name='order_lines']//tree/field[@name='product_uom'][2]" position="attributes">
+                <attribute name="options">{'no_open': True, 'no_create': True}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='journal_id']" position="attributes">
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='user_id']" position="attributes">
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <button
+                    name="action_open_order_lines"
+                    string="Order Lines"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-list-ul"
+                    invisible="not id"
+                />
+            </xpath>
+            <xpath expr="//field[@name='partner_shipping_id']" position="after">
+                <field
+                    name="warehouse_id"
+                    options="{'no_create': True}"
+                    readonly="state in ['sale', 'cancel']"
+                    force_save="1"
+                    groups="stock.group_stock_multi_locations"
+                />
+            </xpath>
+            <xpath expr="//field[@name='pricelist_id']" position="attributes">
+                <attribute name="required">state == 'draft'</attribute>
+            </xpath>
+            <xpath expr="//field[@name='payment_term_id']" position="attributes">
+                <attribute name="required">state == 'draft'</attribute>
+                <!-- This is a fix keep until Odoo fix this -->
+                <attribute name="readonly">state in ['cancel', 'sale']</attribute>
+            </xpath>
+            <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field
+                    name="journal_id"
+                    options="{'no_create': True}"
+                    readonly="state in ['sale', 'cancel']"
+                    required="1"
+                />
+            </xpath>
+            <xpath expr="//page[@name='order_lines']//form//field[@name='price_unit']" position="replace">
+                <label for="price_unit" />
+                <div class="o_row" name="price_unit">
+                    <field name="price_unit" />
+                    <widget name="sale_line_price_history_widget" width="20px" />
+                </div>
+            </xpath>
+            <xpath
+                expr="//page/field[@name='order_line']/tree/field[@name='product_packaging_id']"
+                position="attributes"
+            >
+                <attribute name="optional">hide</attribute>
+            </xpath>
+            <xpath expr="//page/field[@name='order_line']/tree/field[@name='tax_id']" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </xpath>
+            <xpath expr="//page/field[@name='order_line']/tree/field[@name='discount']" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </xpath>
+            <xpath expr="//page/field[@name='order_line']/tree/field[@name='qty_delivered']" position="attributes">
+                <attribute name="decoration-danger">not display_type and delivery_status == 'over full'</attribute>
+                <attribute name="decoration-warning">not display_type and delivery_status == 'partial'</attribute>
+                <attribute name="decoration-info">not display_type and delivery_status == 'pending'</attribute>
+                <attribute name="decoration-success">not display_type and delivery_status == 'full'</attribute>
+            </xpath>
+            <xpath expr="//page/field[@name='order_line']/tree/field[@name='qty_invoiced']" position="attributes">
+                <attribute name="decoration-danger">not display_type and invoice_status == 'to invoice'</attribute>
+                <attribute name="decoration-info">not display_type and invoice_status == 'upselling'</attribute>
+                <attribute name="decoration-success">not display_type and invoice_status == 'invoiced'</attribute>
+            </xpath>
+            <xpath expr="//page/field[@name='order_line']/tree/field[@name='price_unit']" position="after">
+                <field name="order_partner_id" column_invisible="1" />
+                <field name="delivery_status" column_invisible="1" />
+            </xpath>
+            <xpath expr="//page[@name='other_information']/group" position="inside">
+                <group
+                    name="clean"
+                    string="Clean Up"
+                    groups="sales_team.group_sale_manager"
+                    invisible="state != 'sale'"
+                >
+                    <button name="action_clean_3_0" string="Clean 3-0" type="object" colspan="2" />
+                </group>
+            </xpath>
+            <xpath expr="//page[@name='other_information']//field[@name='invoice_status']" position="replace">
+                <label
+                    string="Invoice status"
+                    for="invoice_status"
+                    class="fw-bold text-900"
+                    invisible="state != 'sale'"
+                />
+                <div name="invoice_status_div" class="d-flex" invisible="state != 'sale'">
+                    <div colspan="1">
+                        <field name="invoice_status" />
+                    </div>
+                    <div colspan="2">
+                        <button
+                            name="action_recompute_invoice_status"
+                            string="Update"
+                            type="object"
+                            groups="account.group_account_user"
+                            class="oe_inline oe_button"
+                        />
+                        <button
+                            name="action_force_invoice_status"
+                            string="Force invoice status"
+                            type="object"
+                            invisible="invoice_status == 'invoiced' or state != 'sale'"
+                            groups="marin.group_sale_force_invoicing_status"
+                            class="oe_inline oe_button"
+                        />
+                        <button
+                            name="action_unforce_invoice_status"
+                            string="Restore invoice status"
+                            type="object"
+                            invisible="invoice_status != 'invoiced' or state != 'sale'"
+                            groups="marin.group_sale_force_invoicing_status"
+                            class="oe_inline oe_button"
+                        />
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_order_form_inherit_sale_stock_marin" model="ir.ui.view">
+        <field name="name">sale.order.form.sale.stock</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale_stock.view_order_form_inherit_sale_stock" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='delivery_status']" position="replace">
+                <label
+                    string="Delivery Status"
+                    for="delivery_status"
+                    class="fw-bold text-900"
+                    invisible="state != 'sale'"
+                />
+                <div name="delivery_status_div" class="d-flex" invisible="state != 'sale'">
+                    <div colspan="1">
+                        <field name="delivery_status" />
+                    </div>
+                    <div colspan="2">
+                        <button
+                            name="action_force_delivery_status"
+                            string="Force delivery done"
+                            type="object"
+                            invisible="delivery_status == 'full' or state != 'sale'"
+                            groups="marin.group_sale_force_delivery_status"
+                            class="oe_inline oe_button"
+                        />
+                        <button
+                            name="action_unforce_delivery_status"
+                            string="Unforce delivery done"
+                            type="object"
+                            invisible="delivery_status != 'full' or state != 'sale'"
+                            groups="marin.group_sale_force_delivery_status"
+                            class="oe_inline oe_button"
+                        />
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="sale_margin_sale_order_marin" model="ir.ui.view">
+        <field name="name">sale.order.line.margin.view.form.marin</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale_margin.sale_margin_sale_order" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('d-flex')]" position="attributes">
+                <attribute name="groups">marin.group_product_cost_readonly</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="sale_margin_sale_order_line_marin" model="ir.ui.view">
+        <field name="name">sale.order.line.margin.view.form.marin</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale_margin.sale_margin_sale_order_line" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='purchase_price']" position="attributes">
+                <attribute name="groups">marin.group_product_cost_readonly</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="sale_margin_sale_order_line_form_marin" model="ir.ui.view">
+        <field name="name">sale.order.line.tree.margin.view.form.marin</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale_margin.sale_margin_sale_order_line_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='purchase_price']" position="attributes">
+                <attribute name="groups">marin.group_product_cost_readonly</attribute>
+            </xpath>
+            <xpath expr="//field[@name='margin']" position="attributes">
+                <attribute name="groups">marin.group_product_cost_readonly</attribute>
+            </xpath>
+            <xpath expr="//field[@name='margin_percent']" position="attributes">
+                <attribute name="groups">marin.group_product_cost_readonly</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="l10n_mx_edi_sale.sale_order_form_inherit_l10n_mx_edi_website_sale" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.l10n_mx_edi_website_sale</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='journal_id']" position="after">
+                <field
+                    name="l10n_mx_edi_cfdi_to_public"
+                    invisible="country_code != 'MX'"
+                    readonly="state in ['sale', 'cancel']"
+                />
+                <field
+                    name="l10n_mx_edi_payment_method_id"
+                    invisible="country_code != 'MX'"
+                    readonly="state in ['sale', 'cancel']"
+                />
+                <field
+                    name="l10n_mx_edi_usage"
+                    invisible="country_code != 'MX'"
+                    readonly="state in ['sale', 'cancel']"
+                />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_orders_marin" model="ir.actions.act_window">
+        <field name="name">Sale orders</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
+        <field name="view_id" ref="view_sale_order_tree_marin" />
+        <field name="search_view_id" ref="view_sales_order_filter_marin" />
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new quotation, the first step of a new sale!
+            </p><p>
+                Once the quotation is confirmed, it becomes a sales order.<br
+                /> You will be able to create an invoice and collect the payment.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_sale_order_authorize_debt" model="ir.actions.server">
+        <field name="name">Authorize debt</field>
+        <field name="model_id" ref="sale.model_sale_order" />
+        <field name="binding_model_id" ref="sale.model_sale_order" />
+        <field name="binding_view_types">list</field>
+        <field name="groups_id" eval="[
+            Command.link(ref('group_account_debt_manager')),
+        ]" />
+        <field name="state">code</field>
+        <field name="code">if records:
+    action = records.action_sale_authorize_debt()</field>
+    </record>
+</odoo>

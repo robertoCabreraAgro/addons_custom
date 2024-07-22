@@ -1,0 +1,696 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Contacts -->
+    <record id="contacts.menu_config_bank_accounts" model="ir.ui.menu">
+        <field name="parent_id" ref="contacts.menu_contacts" />
+    </record>
+
+    <record id="contacts.res_partner_menu_config" model="ir.ui.menu">
+        <field name="sequence" eval="100" />
+        <field name="groups_id" eval="[
+                Command.link(ref('group_account_user'))
+            ]" />
+    </record>
+
+    <!-- Product -->
+    <menuitem
+        id="product_menu_root"
+        name="Products"
+        web_icon="marin,static/description/product_icon.png"
+        sequence="22"
+        groups="base.group_user"
+    >
+        <menuitem
+            id="menu_product_template"
+            name="Products"
+            action="product.product_template_action_all"
+            sequence="20"
+        />
+        <menuitem
+            id="menu_product_product"
+            name="Variants"
+            action="product.product_normal_action"
+            sequence="40"
+            groups="product.group_product_variant"
+        />
+        <menuitem id="menu_pricelists" name="Pricelists" sequence="50">
+            <menuitem
+                id="menu_product_pricelist"
+                name="Sale pricelists"
+                action="product.product_pricelist_action2"
+                sequence="10"
+                groups="product.group_product_pricelist"
+            />
+            <menuitem
+                id="menu_product_supplierinfo"
+                name="Vendor pricelists"
+                action="product.product_supplierinfo_type_action"
+                sequence="20"
+            />
+        </menuitem>
+        <menuitem id="menu_configuration" name="Configuration" sequence="80">
+            <menuitem
+                id="menu_configuration_settings"
+                name="Settings"
+                action="base_setup.action_general_configuration"
+                sequence="10"
+                groups="base.group_system"
+            />
+            <menuitem id="menu_configuration_product" name="Products" sequence="20">
+                <menuitem
+                    id="menu_product_category"
+                    name="Product Categories"
+                    action="product.product_category_action_form"
+                    sequence="20"
+                />
+                <menuitem
+                    id="menu_product_tag"
+                    name="Product Tags"
+                    action="product.product_tag_action"
+                    sequence="30"
+                />
+                <menuitem
+                    id="menu_product_attribute"
+                    name="Product Attributes"
+                    action="product.attribute_action"
+                    sequence="40"
+                    groups="product.group_product_variant"
+                />
+                <menuitem
+                    id="menu_product_lot"
+                    name="Product Lots"
+                    action="stock.action_production_lot_form"
+                    sequence="40"
+                    groups="stock.group_production_lot"
+                />
+            </menuitem>
+            <menuitem
+                id="menu_configuration_logistics"
+                name="Logistics"
+                sequence="30"
+                groups="uom.group_uom,product.group_stock_packaging"
+            >
+                <menuitem
+                    id="menu_product_packaging"
+                    name="Product Packagings"
+                    action="product.action_packaging_view"
+                    sequence="20"
+                    groups="product.group_stock_packaging"
+                />
+                <menuitem
+                    id="menu_uom_category"
+                    name="Units of measure categories"
+                    action="uom.product_uom_categ_form_action"
+                    sequence="50"
+                    groups="uom.group_uom"
+                />
+                <menuitem
+                    id="menu_uom_uom"
+                    name="Units of measure"
+                    action="uom.product_uom_form_action"
+                    sequence="60"
+                    groups="uom.group_uom"
+                />
+            </menuitem>
+        </menuitem>
+    </menuitem>
+
+    <!-- Accounting -->
+    <!-- Customers -->
+    <record id="account.menu_action_move_out_invoice_type" model="ir.ui.menu">
+        <field name="sequence" eval="10" />
+        <field
+            name="groups_id"
+            eval="[
+                Command.link(ref('account.group_account_readonly')),
+                Command.link(ref('account.group_account_manager')),
+                Command.link(ref('marin.group_account_customer_invoice'))
+            ]"
+        />
+    </record>
+
+    <record id="account.menu_action_move_out_refund_type" model="ir.ui.menu">
+        <field name="sequence" eval="20" />
+        <field
+            name="groups_id"
+            eval="[
+                Command.link(ref('account.group_account_readonly')),
+                Command.link(ref('account.group_account_manager')),
+                Command.link(ref('marin.group_account_customer_refund'))
+            ]"
+        />
+    </record>
+
+    <record id="account.menu_action_account_payments_receivable" model="ir.ui.menu">
+        <field name="sequence" eval="50" />
+        <field
+            name="groups_id"
+            eval="[
+                Command.link(ref('account.group_account_readonly')),
+                Command.link(ref('account.group_account_manager')),
+                Command.link(ref('marin.group_account_customer_payment'))
+            ]"
+        />
+    </record>
+
+    <record id="account_followup.customer_statements_menu" model="ir.ui.menu">
+        <field name="sequence" eval="60" />
+        <field
+            name="groups_id"
+            eval="[
+                Command.link(ref('account.group_account_manager')),
+                Command.link(ref('marin.group_account_customer_invoice'))
+            ]"
+        />
+    </record>
+
+    <record id="account.product_product_menu_sellable" model="ir.ui.menu">
+        <field name="active" eval="False" />
+    </record>
+
+    <record id="account.menu_account_customer" model="ir.ui.menu">
+        <field name="active" eval="False" />
+    </record>
+
+    <!-- Suppliers -->
+    <record id="account.menu_action_move_in_invoice_type" model="ir.ui.menu">
+        <field name="sequence" eval="10" />
+        <field
+            name="groups_id"
+            eval="[
+                Command.link(ref('account.group_account_readonly')),
+                Command.link(ref('account.group_account_manager')),
+                Command.link(ref('marin.group_account_vendor_bill'))
+            ]"
+        />
+    </record>
+
+    <record id="account.menu_action_move_in_refund_type" model="ir.ui.menu">
+        <field name="sequence" eval="20" />
+        <field
+            name="groups_id"
+            eval="[
+                Command.link(ref('account.group_account_readonly')),
+                Command.link(ref('account.group_account_manager')),
+                Command.link(ref('marin.group_account_vendor_refund'))
+            ]"
+        />
+    </record>
+
+    <record id="account.menu_action_account_payments_payable" model="ir.ui.menu">
+        <field name="sequence" eval="50" />
+        <field
+            name="groups_id"
+            eval="[
+                Command.link(ref('account.group_account_readonly')),
+                Command.link(ref('account.group_account_manager')),
+                Command.link(ref('marin.group_account_vendor_payment'))
+            ]"
+        />
+    </record>
+
+    <record id="hr_expense.menu_hr_expense_account_employee_expenses" model="ir.ui.menu">
+        <field name="sequence" eval="70" />
+        <field
+            name="groups_id"
+            eval="[
+                Command.link(ref('marin.group_hr_expense_menu'))
+            ]"
+        />
+    </record>
+
+    <record id="account.menu_account_supplier_accounts" model="ir.ui.menu">
+        <field name="active" eval="False" />
+    </record>
+
+    <record id="account.product_product_menu_purchasable" model="ir.ui.menu">
+        <field name="active" eval="False" />
+    </record>
+
+    <record id="account.menu_account_supplier" model="ir.ui.menu">
+        <field name="active" eval="False" />
+    </record>
+
+    <!-- Accounting2 -->
+    <record id="account.menu_finance_entries" model="ir.ui.menu">
+        <field name="sequence" eval="10" />
+        <field
+            name="groups_id"
+            eval="[
+                Command.link(ref('account.group_account_readonly')),
+                Command.link(ref('account.group_account_manager')),
+            ]"
+        />
+    </record>
+
+    <record id="account.menu_finance_entries_accounting_miscellaneous" model="ir.ui.menu">
+        <field name="sequence" eval="10" />
+    </record>
+
+    <record id="account.menu_action_account_moves_all" model="ir.ui.menu">
+        <field
+            name="groups_id"
+            eval="[
+                Command.link(ref('account.group_account_readonly')),
+                Command.link(ref('account.group_account_manager')),
+            ]"
+        />
+    </record>
+
+    <record id="account.menu_action_move_journal_line_form" model="ir.ui.menu">
+        <field
+            name="groups_id"
+            eval="[
+                Command.link(ref('account.group_account_readonly')),
+                Command.link(ref('account.group_account_manager')),
+            ]"
+        />
+    </record>
+
+    <menuitem
+        id="menu_finance_bank"
+        name="Banks"
+        parent="account.menu_finance_entries"
+        sequence="20"
+        groups="account.group_account_readonly,marin.group_account_bank_statement"
+    >
+        <menuitem
+            id="menu_finance_bank_statement"
+            name="Bank Statements"
+            action="account.action_bank_statement_tree"
+            sequence="10"
+        />
+    </menuitem>
+
+    <record id="account.menu_finance_entries_management" model="ir.ui.menu">
+        <field name="sequence" eval="40" />
+    </record>
+
+    <record id="account.menu_finance_entries_generate_entries" model="ir.ui.menu">
+        <field name="sequence" eval="50" />
+    </record>
+
+    <record id="account.menu_finance_entries_actions" model="ir.ui.menu">
+        <field name="sequence" eval="60" />
+    </record>
+
+    <menuitem
+        id="menu_action_account_payments_transfer"
+        name="Internal liquidity transfers"
+        parent="account.menu_finance_entries_actions"
+        action="account.action_account_payments_transfer"
+        sequence="1"
+    />
+
+    <record id="account_asset.menu_action_account_asset_form" model="ir.ui.menu">
+        <field
+            name="groups_id"
+            eval="[
+                Command.link(ref('account.group_account_readonly')),
+                Command.link(ref('account.group_account_manager')),
+            ]"
+        />
+    </record>
+
+    <!-- Reporting -->
+    <record id="account.account_reports_legal_statements_menu" model="ir.ui.menu">
+        <field
+            name="groups_id"
+            eval="[
+                Command.link(ref('account.group_account_readonly')),
+                Command.link(ref('account.group_account_manager')),
+            ]"
+        />
+    </record>
+
+    <record id="account_reports.menu_action_account_report_balance_sheet" model="ir.ui.menu">
+        <field
+            name="groups_id"
+            eval="[
+                Command.link(ref('account.group_account_readonly')),
+                Command.link(ref('account.group_account_manager')),
+            ]"
+        />
+    </record>
+
+    <record id="account_reports.menu_action_account_report_profit_and_loss" model="ir.ui.menu">
+        <field
+            name="groups_id"
+            eval="[
+                Command.link(ref('account.group_account_readonly')),
+                Command.link(ref('account.group_account_manager')),
+            ]"
+        />
+    </record>
+
+    <record id="account_reports.menu_action_account_report_cash_flow" model="ir.ui.menu">
+        <field
+            name="groups_id"
+            eval="[
+                Command.link(ref('account.group_account_readonly')),
+                Command.link(ref('account.group_account_manager')),
+            ]"
+        />
+    </record>
+
+    <record id="account_reports.menu_action_account_report_exec_summary" model="ir.ui.menu">
+        <field
+            name="groups_id"
+            eval="[
+                Command.link(ref('account.group_account_readonly')),
+                Command.link(ref('account.group_account_manager')),
+            ]"
+        />
+    </record>
+
+    <record id="account_reports.menu_action_account_report_gt" model="ir.ui.menu">
+        <field
+            name="groups_id"
+            eval="[
+                Command.link(ref('account.group_account_readonly')),
+                Command.link(ref('account.group_account_manager')),
+            ]"
+        />
+    </record>
+
+    <record id="account_reports.menu_action_account_report_general_ledger" model="ir.ui.menu">
+        <field
+            name="groups_id"
+            eval="[
+                Command.link(ref('account.group_account_readonly')),
+                Command.link(ref('account.group_account_manager')),
+            ]"
+        />
+    </record>
+
+    <record id="account_reports.menu_action_account_report_coa" model="ir.ui.menu">
+        <field
+            name="groups_id"
+            eval="[
+                Command.link(ref('account.group_account_readonly')),
+                Command.link(ref('account.group_account_manager')),
+            ]"
+        />
+    </record>
+
+    <record id="account_reports.menu_action_account_report_ja" model="ir.ui.menu">
+        <field
+            name="groups_id"
+            eval="[
+                Command.link(ref('account.group_account_readonly')),
+                Command.link(ref('account.group_account_manager')),
+            ]"
+        />
+    </record>
+
+    <record id="account_reports.menu_action_account_report_partner_ledger" model="ir.ui.menu">
+        <field
+            name="groups_id"
+            eval="[
+                Command.link(ref('account.group_account_readonly')),
+                Command.link(ref('account.group_account_manager')),
+            ]"
+        />
+    </record>
+
+    <record id="account_reports.menu_action_account_report_aged_payable" model="ir.ui.menu">
+        <field
+            name="groups_id"
+            eval="[
+                Command.link(ref('account.group_account_readonly')),
+                Command.link(ref('account.group_account_manager')),
+                Command.link(ref('marin.group_account_vendor_bill')),
+            ]"
+        />
+    </record>
+
+    <record id="account_reports.menu_action_account_report_aged_receivable" model="ir.ui.menu">
+        <field
+            name="groups_id"
+            eval="[
+                Command.link(ref('account.group_account_readonly')),
+                Command.link(ref('account.group_account_manager')),
+                Command.link(ref('marin.group_account_customer_invoice')),
+            ]"
+        />
+    </record>
+
+    <record id="account.menu_action_account_invoice_report_all" model="ir.ui.menu">
+        <field
+            name="groups_id"
+            eval="[
+                Command.link(ref('account.group_account_readonly')),
+                Command.link(ref('account.group_account_manager')),
+            ]"
+        />
+    </record>
+
+    <record id="account_reports.menu_action_account_report_deferred_expense" model="ir.ui.menu">
+        <field
+            name="groups_id"
+            eval="[
+                Command.link(ref('account.group_account_readonly')),
+                Command.link(ref('account.group_account_manager')),
+            ]"
+        />
+    </record>
+
+    <record id="account_reports.menu_action_account_report_deferred_revenue" model="ir.ui.menu">
+        <field
+            name="groups_id"
+            eval="[
+                Command.link(ref('account.group_account_readonly')),
+                Command.link(ref('account.group_account_manager')),
+            ]"
+        />
+    </record>
+
+    <record id="account_asset.menu_action_account_report_assets" model="ir.ui.menu">
+        <field
+            name="groups_id"
+            eval="[
+                Command.link(ref('account.group_account_readonly')),
+                Command.link(ref('account.group_account_manager')),
+            ]"
+        />
+    </record>
+
+    <record id="account_disallowed_expenses.menu_action_account_report_de" model="ir.ui.menu">
+        <field
+            name="groups_id"
+            eval="[
+                Command.link(ref('account.group_account_readonly')),
+                Command.link(ref('account.group_account_manager')),
+            ]"
+        />
+    </record>
+
+    <record id="account_budget.menu_act_crossovered_budget_lines_view" model="ir.ui.menu">
+        <field
+            name="groups_id"
+            eval="[
+                Command.link(ref('account.group_account_readonly')),
+                Command.link(ref('account.group_account_manager')),
+            ]"
+        />
+    </record>
+
+    <record id="product_margin.menu_action_product_margin" model="ir.ui.menu">
+        <field
+            name="groups_id"
+            eval="[
+                Command.link(ref('account.group_account_readonly')),
+                Command.link(ref('account.group_account_manager')),
+            ]"
+        />
+    </record>
+
+    <!-- Configuration -->
+    <record id="account.menu_finance_configuration" model="ir.ui.menu">
+        <field
+            name="groups_id"
+            eval="[
+                Command.link(ref('account.group_account_manager')),
+                Command.link(ref('marin.group_account_manager'))
+            ]"
+        />
+    </record>
+
+    <!-- menu configuration invoice -->
+    <record id="account.menu_action_incoterm_open" model="ir.ui.menu">
+        <field name="sequence" eval="10" />
+        <field
+            name="groups_id"
+            eval="[
+                Command.link(ref('account.group_account_manager')),
+                Command.link(ref('marin.group_account_manager'))
+            ]"
+        />
+    </record>
+
+    <!-- menu configuration accounting -->
+    <record id="account.menu_action_account_form" model="ir.ui.menu">
+        <field
+            name="groups_id"
+            eval="[
+                Command.link(ref('account.group_account_readonly')),
+                Command.link(ref('account.group_account_manager')),
+            ]"
+        />
+    </record>
+
+    <record id="account_asset.menu_action_account_asset_model_form" model="ir.ui.menu">
+        <field name="sequence" eval="9" />
+    </record>
+
+    <record id="account_accountant.menu_account_group" model="ir.ui.menu">
+        <field name="sequence" eval="11" />
+    </record>
+
+    <record id="account_accountant.account_tag_menu" model="ir.ui.menu">
+        <field name="sequence" eval="12" />
+    </record>
+
+    <record id="account.menu_action_currency_form" model="ir.ui.menu">
+        <field name="sequence" eval="20" />
+    </record>
+
+    <record id="account.menu_action_account_journal_form" model="ir.ui.menu">
+        <field name="sequence" eval="30" />
+    </record>
+
+    <record id="account.menu_action_account_journal_group_list" model="ir.ui.menu">
+        <field name="sequence" eval="31" />
+    </record>
+
+    <record id="account.menu_action_tax_form" model="ir.ui.menu">
+        <field name="sequence" eval="40" />
+    </record>
+
+    <record id="account.menu_action_tax_group" model="ir.ui.menu">
+        <field name="sequence" eval="41" />
+    </record>
+
+    <record id="account_reports.menu_view_tax_units" model="ir.ui.menu">
+        <field name="sequence" eval="42" />
+    </record>
+
+    <record id="account.account_report_folder" model="ir.ui.menu">
+        <field name="sequence" eval="50" />
+    </record>
+
+    <record id="account.menu_action_account_fiscal_position_form" model="ir.ui.menu">
+        <field name="sequence" eval="60" />
+    </record>
+
+    <record id="account_accountant.menu_account_fiscal_year" model="ir.ui.menu">
+        <field name="sequence" eval="61" />
+    </record>
+
+    <record id="account_reports.menu_action_account_report_horizontal_groups" model="ir.ui.menu">
+        <field name="sequence" eval="70" />
+        <field name="parent_id" ref="account.account_management_menu" />
+    </record>
+
+    <!-- Purchase -->
+    <record id="purchase.menu_purchase_rfq" model="ir.ui.menu">
+        <field name="active" eval="False" />
+    </record>
+
+    <record id="purchase.menu_purchase_form_action" model="ir.ui.menu">
+        <field name="active" eval="False" />
+    </record>
+
+    <menuitem
+        id="menu_purchase_form_action"
+        action="purchase_form_action"
+        parent="purchase.menu_procurement_management"
+        sequence="6"
+    />
+
+    <record id="purchase.menu_procurement_management_supplier_name" model="ir.ui.menu">
+        <field name="active" eval="False" />
+    </record>
+
+    <menuitem
+        id="menu_purchase_order_line_input"
+        name="Order Lines"
+        action="action_purchase_order_lines"
+        parent="purchase.menu_procurement_management"
+        sequence="30"
+    />
+
+    <record id="purchase.menu_product_pricelist_action2_purchase" model="ir.ui.menu">
+        <field name="parent_id" ref="purchase.menu_purchase_products" />
+    </record>
+
+    <!-- Sale -->
+    <record id="sale.menu_sale_quotations" model="ir.ui.menu">
+        <field name="active" eval="False" />
+    </record>
+
+    <record id="sale.menu_sale_order" model="ir.ui.menu">
+        <field name="active" eval="False" />
+    </record>
+
+    <menuitem
+        id="menu_sale_order_all"
+        name="All Orders"
+        action="action_orders_marin"
+        parent="sale.sale_order_menu"
+        sequence="10"
+        groups="sales_team.group_sale_salesman"
+    />
+
+    <menuitem
+        id="menu_sale_order_line"
+        name="Order Lines"
+        action="action_sale_order_line"
+        parent="sale.sale_order_menu"
+        sequence="20"
+        groups="sales_team.group_sale_salesman"
+    />
+
+    <record id="sale.res_partner_menu" model="ir.ui.menu">
+        <field name="active" eval="False" />
+    </record>
+
+    <record id="sale.menu_sale_invoicing" model="ir.ui.menu">
+        <field name="active" eval="False" />
+    </record>
+
+    <record id="sale.menu_sale_report" model="ir.ui.menu">
+        <field name="groups_id" eval="[
+            Command.link(ref('sales_team.group_sale_salesman'))]" />
+    </record>
+
+    <!-- Expenses -->
+    <record id="hr_expense.menu_hr_expense_root" model="ir.ui.menu">
+        <field
+            name="groups_id"
+            eval="[
+                Command.link(ref('hr_expense.group_hr_expense_team_approver')),
+                Command.link(ref('marin.group_hr_expense_menu'))
+            ]"
+        />
+    </record>
+
+    <menuitem
+        id="menu_account_purchase_orders"
+        name="Purchase Orders"
+        action="action_account_purchase_orders"
+        parent="account.menu_finance_payables"
+        sequence="80"
+        groups="marin.group_purchase_readonly"
+    />
+
+    <menuitem
+        id="menu_account_sale_orders"
+        name="Sale Orders"
+        action="action_orders_marin"
+        parent="account.menu_finance_receivables"
+        sequence="80"
+        groups="marin.group_sale_readonly"
+    />
+
+</odoo>

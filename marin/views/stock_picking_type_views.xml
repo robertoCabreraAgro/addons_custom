@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_pickingtype_filter_marin" model="ir.ui.view">
+        <field name="name">stock.picking.tye.filter.marin</field>
+        <field name="model">stock.picking.type</field>
+        <field name="inherit_id" ref="stock.view_pickingtype_filter" />
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='inactive']" position="before">
+                <filter string="Ready" name="ready" domain="[('count_picking_ready', '!=', False)]" />
+                <filter string="Waiting" name="waiting" domain="[('count_picking_waiting', '!=', False)]" />
+                <filter string="Internal" name="internal" domain="[('code', '=', 'internal')]" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_picking_type_form_marin" model="ir.ui.view">
+        <field name="name">Operation Types Security</field>
+        <field name="model">stock.picking.type</field>
+        <field name="inherit_id" ref="stock.view_picking_type_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//group[2]//group[3]" position="after">
+                <group string="Security">
+                    <field name="can_access_user_ids" widget="many2many_tags" options="{'no_create': True}" />
+                    <field name="can_todo_user_ids" widget="many2many_tags" options="{'no_create': True}" />
+                    <field name="can_validate_user_ids" widget="many2many_tags" options="{'no_create': True}" />
+                </group>
+            </xpath>
+            <xpath expr="//group[@name='locations']" position="after">
+                <group string="Routes" groups="stock.group_adv_location" name="routes">
+                    <field name="route_ids" options="{'no_create': True}" widget="many2many_tags" />
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="stock.stock_picking_type_action" model="ir.actions.act_window">
+        <field name="domain">[('can_access_user_ids', '=', uid)]</field>
+    </record>
+
+    <record id="stock.action_picking_tree_all" model="ir.actions.act_window">
+        <field name="domain">[('picking_type_id.can_access_user_ids', '=', uid)]</field>
+    </record>
+</odoo>

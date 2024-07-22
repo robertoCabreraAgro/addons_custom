@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_account_analytic_line_filter_marin" model="ir.ui.view">
+        <field name="name">account.analytic.line.select.inherit.account</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="analytic.view_account_analytic_line_filter" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='date']" position="after">
+                <field name="vehicle_id" />
+            </xpath>
+            <xpath expr="//group[@name='groupby']" position="after">
+                <filter string="Vehicle" name="vehicle" context="{'group_by':'vehicle_id'}" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_analytic_line_pivot_marin" model="ir.ui.view">
+        <field name="name">account.analytic.line.pivot</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="analytic.view_account_analytic_line_pivot" />
+        <field name="arch" type="xml">
+            <field name="account_id" position="after">
+                <field name="vehicle_id" type="row" />
+            </field>
+        </field>
+    </record>
+
+    <record id="view_account_analytic_line_tree_marin" model="ir.ui.view">
+        <field name="name">account.analytic.line.tree.inherit.account</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="analytic.view_account_analytic_line_tree" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='account_id']" position="after">
+                <field name="vehicle_id" optional="hide" />
+            </xpath>
+            <xpath expr="//field[@name='date']" position="after">
+                <field name="date_impacted" optional="show" />
+            </xpath>
+            <xpath expr="//field[@name='unit_amount']" position="after">
+                <field name="amount_taxinc" optional="hide" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_analytic_line_form_marin" model="ir.ui.view">
+        <field name="name">account.analytic.line.form.inherit.account</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="analytic.view_account_analytic_line_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_uom_id']" position="before">
+                <field name="vehicle_id" />
+            </xpath>
+            <xpath expr="//field[@name='product_uom_id']" position="attributes">
+                <attribute name="readonly">True</attribute>
+            </xpath>
+            <xpath expr="//field[@name='account_id']" position="attributes">
+                <attribute name="readonly">True</attribute>
+            </xpath>
+            <xpath expr="//field[@name='date']" position="attributes">
+                <attribute name="readonly">True</attribute>
+            </xpath>
+            <xpath expr="//field[@name='amount']" position="attributes">
+                <attribute name="readonly">True</attribute>
+            </xpath>
+            <xpath expr="//field[@name='unit_amount']" position="attributes">
+                <attribute name="readonly">True</attribute>
+            </xpath>
+            <xpath expr="//field[@name='date']" position="after">
+                <field name="date_impacted" />
+            </xpath>
+        </field>
+    </record>
+</odoo>

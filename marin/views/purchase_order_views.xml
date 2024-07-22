@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="purchase_order_view_search_marin" model="ir.ui.view">
+        <field name="name">purchase.order.select.inherit</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_view_search" />
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='starred']" position="after">
+                <separator />
+                <filter string="To receive" name="to_receive" domain="[('receipt_status', '=', 'pending')]" />
+                <filter
+                    string="Partially received"
+                    name="partially_received"
+                    domain="[('receipt_status', '=', 'partial')]"
+                />
+                <filter string="Received" name="received" domain="[('receipt_status', '=', 'full')]" />
+                <filter string="Over Received" name="over_received" domain="[('receipt_status', '=', 'over full')]" />
+                <separator />
+            </xpath>
+            <xpath expr="//group/filter[@name='order_date']" position="after">
+                <separator />
+                <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}" />
+                <filter
+                    string="Billing Status"
+                    name="invoice_status"
+                    domain="[]"
+                    context="{'group_by': 'invoice_status'}"
+                />
+                <filter
+                    string="Reception Status"
+                    name="reception_status"
+                    domain="[]"
+                    context="{'group_by': 'receipt_status'}"
+                />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="purchase_order_view_tree" model="ir.ui.view">
+        <field name="name">purchase.order.view.tree</field>
+        <field name="model">purchase.order</field>
+        <field name="arch" type="xml">
+            <tree
+                string="Purchase Order"
+                decoration-info="state in ['draft', 'sent']"
+                decoration-muted="state == 'cancel'"
+                class="o_purchase_order"
+                sample="1"
+            >
+                <header>
+                    <button name="action_create_invoice" type="object" string="Create Bills" />
+                </header>
+                <field
+                    name="company_id"
+                    column_invisible="True"
+                    readonly="state in ['cancel', 'done', 'purchase']"
+                    groups="!base.group_multi_company"
+                />
+                <field name="state" column_invisible="True" />
+                <field name="priority" widget="priority" nolabel="1" optional="show" />
+                <field
+                    name="name"
+                    string="Reference"
+                    readonly="1"
+                    decoration-bf="1"
+                    decoration-info="state in ('draft','sent')"
+                />
+                <field name="partner_id" readonly="state in ['cancel', 'done', 'purchase']" />
+                <field name="partner_ref" optional="hide" />
+                <field name="origin" optional="hide" />
+                <field
+                    name="date_order"
+                    column_invisible="not context.get('quotation_only', False)"
+                    readonly="state in ['cancel', 'done', 'purchase']"
+                    optional="show"
+                />
+                <field
+                    name="date_approve"
+                    widget="date"
+                    column_invisible="context.get('quotation_only', False)"
+                    optional="show"
+                />
+                <field name="date_planned" column_invisible="context.get('quotation_only', False)" optional="show" />
+                <field name="effective_date" column_invisible="True" />
+                <field
+                    name="amount_untaxed"
+                    sum="Total untaxed amount"
+                    string="Untaxed"
+                    widget="monetary"
+                    optional="hide"
+                />
+                <field name="amount_total" sum="Total amount" widget="monetary" optional="show" decoration-bf="1" />
+                <field name="currency_id" column_invisible="True" readonly="state in ['cancel', 'done', 'purchase']" />
+                <field name="user_id" widget="many2one_avatar_user" optional="show" />
+                <field name="activity_ids" widget="list_activity" optional="hide" />
+                <field name="activity_exception_decoration" widget="activity_exception" />
+                <field
+                    name="state"
+                    widget="badge"
+                    decoration-success="state == 'purchase' or state == 'done'"
+                    decoration-info="state == 'draft' or state == 'sent'"
+                    decoration-warning="state == 'to approve'"
+                    optional="show"
+                />
+                <field
+                    name="receipt_status"
+                    widget="badge"
+                    decoration-success="receipt_status=='full'"
+                    decoration-info="receipt_status!='pending'"
+                    decoration-warning="receipt_status!='partial'"
+                    decoration-danger="receipt_status!='over full'"
+                    optional="show"
+                />
+                <field
+                    name="invoice_status"
+                    widget="badge"
+                    decoration-success="invoice_status == 'invoiced'"
+                    decoration-info="invoice_status == 'to invoice'"
+                    optional="show"
+                />
+                <field name="payment_term_id" optional="hide" />
+                <field
+                    name="company_id"
+                    options="{'no_create': True}"
+                    readonly="state in ['cancel', 'done', 'purchase']"
+                    optional="show"
+                    groups="base.group_multi_company"
+                />
+            </tree>
+        </field>
+    </record>
+
+    <record id="purchase_order_form_marin" model="ir.ui.view">
+        <field name="name">purchase.order.form.marin</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form" />
+        <field name="priority" eval="100" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='user_id']" position="attributes">
+                <attribute name="options">{'no_create': True}</attribute>
+                <attribute name="readonly">not is_user_id_editable</attribute>
+                <attribute name="force_save">1</attribute>
+            </xpath>
+            <xpath expr="//page/field[@name='order_line']/tree/field[@name='product_id']" position="attributes">
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+            <xpath expr="//page/field[@name='order_line']/tree/field[@name='product_uom'][2]" position="attributes">
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+            <xpath
+                expr="//page/field[@name='order_line']/tree/button[@name='action_purchase_history']"
+                position="replace"
+            >
+                <field name="partner_id" column_invisible="1" />
+                <widget name="purchase_line_price_history_widget" width="20px" />
+            </xpath>
+            <xpath expr="//page/field[@name='order_line']/tree/field[@name='qty_invoiced']" position="after">
+                <field name="reception_status" column_invisible="1" />
+                <field name="invoice_status" column_invisible="1" />
+            </xpath>
+            <xpath expr="//page/field[@name='order_line']/tree/field[@name='qty_invoiced']" position="attributes">
+                <attribute name="decoration-danger">not display_type and invoice_status == 'over invoiced'</attribute>
+                <attribute name="decoration-warning">not display_type and invoice_status == 'to invoice'</attribute>
+                <attribute name="decoration-success">not display_type and invoice_status == 'invoiced'</attribute>
+            </xpath>
+            <xpath expr="//page/field[@name='order_line']/tree/field[@name='qty_received']" position="attributes">
+                <attribute name="decoration-danger">not display_type and reception_status == 'pending'</attribute>
+                <attribute name="decoration-warning">not display_type and reception_status == 'partial'</attribute>
+                <attribute name="decoration-info">not display_type and reception_status == 'over full'</attribute>
+                <attribute name="decoration-success">not display_type and reception_status == 'full'</attribute>
+            </xpath>
+            <!-- This is a fix, delete when Odoo fix it in core -->
+            <xpath expr="//field[@name='taxes_id']" position="attributes">
+                <attribute
+                    name="domain"
+                >[('type_tax_use', '=', 'purchase'), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id), ('active', '=', True)]</attribute>
+            </xpath>
+            <field name="user_id" position="before">
+                <field name="is_user_id_editable" invisible="1" />
+            </field>
+        </field>
+    </record>
+
+    <record id="purchase_order_view_form_inherit_marin" model="ir.ui.view">
+        <field name="name">purchase.order.form</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase_stock.purchase_order_view_form_inherit" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='receipt_status']" position="replace">
+                <label for="receipt_status" invisible="state not in ('purchase', 'done')" />
+                <div name="reception_status_div" class="d-flex" invisible="state not in ('purchase', 'done')">
+                    <field name="receipt_status" />
+                    <button
+                        name="action_force_reception_status"
+                        string="Force reception done"
+                        type="object"
+                        class="btn-link d-block"
+                        invisible="receipt_status == 'full' or state not in ('purchase', 'done')"
+                        groups="marin.group_purchase_force_reception_status"
+                    />
+                    <button
+                        name="action_unforce_reception_status"
+                        string="Unforce reception done"
+                        type="object"
+                        class="btn-link d-block"
+                        invisible="receipt_status != 'full'"
+                        groups="marin.group_purchase_force_reception_status"
+                    />
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="purchase_form_action" model="ir.actions.act_window">
+        <field name="name">Purchase Orders</field>
+        <field name="res_model">purchase.order</field>
+        <field name="view_mode">tree,kanban,form,pivot,graph,calendar,activity</field>
+        <field
+            name="view_ids"
+            eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('marin.purchase_order_view_tree')}),
+            (0, 0, {'view_mode': 'kanban', 'view_id': ref('purchase.purchase_order_view_kanban_without_dashboard')}),
+        ]"
+        />
+        <field name="search_view_id" ref="purchase.purchase_order_view_search" />
+        <field name="context">{}</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            No purchase order found. Let's create one!
+          </p><p>
+            Once you ordered your products to your supplier, confirm your request for quotation and it will turn into a purchase order.
+          </p>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_account_invoice_discount_form" model="ir.ui.view">
+        <field name="name">account.invoice.cash.discount.form</field>
+        <field name="model">account.invoice.cash.discount</field>
+        <field name="arch" type="xml">
+            <form string="Register Cash Discount">
+                <group>
+                    <group name="group1">
+                        <field name="move_ids" invisible="1" />
+                        <label for="amount" />
+                        <div name="amount_div" class="o_row">
+                            <field name="amount" class="oe_inline" />
+                            <span class="o_form_label oe_inline">%</span>
+                        </div>
+                    </group>
+                    <group name="group2">
+                    </group>
+                </group>
+                <footer>
+                    <button
+                        name="action_invoice_cash_discount"
+                        string="Apply Cash Discount"
+                        type="object"
+                        class="oe_highlight"
+                    />
+                    <button special="cancel" string="Cancel" class="btn btn-secondary" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

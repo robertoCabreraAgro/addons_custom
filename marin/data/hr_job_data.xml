@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo noupdate="1">
+    <record id="hr_job_1" model="hr.job">
+        <field name="name">Managing director</field>
+        <field name="company_id" ref="marin.company_lmmr" />
+        <field name="department_id" ref="hr_department_3" />
+    </record>
+
+    <record id="hr_job_2" model="hr.job">
+        <field name="name">Administration leader</field>
+        <field name="company_id" ref="marin.company_lmmr" />
+        <field name="department_id" ref="hr_department_8" />
+    </record>
+
+    <record id="hr_job_3" model="hr.job">
+        <field name="name">Commercial leader</field>
+        <field name="company_id" ref="marin.company_lmmr" />
+        <field name="department_id" ref="hr_department_4" />
+    </record>
+
+    <record id="hr_job_4" model="hr.job">
+        <field name="name">Business services manager</field>
+        <field name="company_id" ref="marin.company_lmmr" />
+        <field name="department_id" ref="hr_department_5" />
+    </record>
+
+    <record id="hr_job_5" model="hr.job">
+        <field name="name">Auditor</field>
+        <field name="company_id" ref="marin.company_lmmr" />
+        <field name="department_id" ref="hr_department_6" />
+    </record>
+
+    <record id="hr_job_6" model="hr.job">
+        <field name="name">Managment representative</field>
+        <field name="company_id" ref="marin.company_lmmr" />
+        <field name="department_id" ref="hr_department_8" />
+    </record>
+
+    <record id="hr_job_7" model="hr.job">
+        <field name="name">Commercial representative</field>
+        <field name="company_id" ref="marin.company_lmmr" />
+        <field name="department_id" ref="hr_department_4" />
+    </record>
+
+    <record id="hr_job_8" model="hr.job">
+        <field name="name">Operative</field>
+        <field name="company_id" ref="marin.company_lmmr" />
+        <field name="department_id" ref="hr_department_7" />
+    </record>
+
+    <record id="hr_job_9" model="hr.job">
+        <field name="name">General manager</field>
+        <field name="company_id" ref="marin.company_lmmr" />
+        <field name="department_id" ref="hr_department_3" />
+    </record>
+
+    <record id="hr_job_10" model="hr.job">
+        <field name="name">Operations leader</field>
+        <field name="company_id" ref="marin.company_lmmr" />
+        <field name="department_id" ref="hr_department_7" />
+    </record>
+
+    <record id="hr_job_11" model="hr.job">
+        <field name="name">Project manager</field>
+        <field name="company_id" ref="marin.company_lmmr" />
+        <field name="department_id" ref="hr_department_7" />
+    </record>
+
+    <record id="hr_job_12" model="hr.job">
+        <field name="name">Commercial representative</field>
+        <field name="company_id" ref="marin.company_glmm" />
+        <field name="department_id" ref="hr_department_9" />
+    </record>
+
+    <record id="hr_job_13" model="hr.job">
+        <field name="name">Operations manager</field>
+        <field name="company_id" ref="marin.company_lmmr" />
+        <field name="department_id" ref="hr_department_7" />
+    </record>
+
+    <record id="hr_job_14" model="hr.job">
+        <field name="name">Treasurer</field>
+        <field name="company_id" ref="marin.company_lmmr" />
+        <field name="department_id" ref="hr_department_8" />
+    </record>
+</odoo>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_account_payment_search_marin" model="ir.ui.view">
+        <field name="name">account.payment.search.marin</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_search" />
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='transfers_filter']" position="after">
+                <separator />
+                <filter name="bank_payment" string="Bank" domain="[('journal_id.type', '=', 'bank')]" />
+                <filter name="cash_payment" string="Cash" domain="[('journal_id.type', '=', 'cash')]" />
+            </xpath>
+            <xpath expr="//filter[@name='reconciled']" position="before">
+                <filter name="not_reconciled" string="Not Reconciled" domain="[('is_reconciled', '=', False)]" />
+            </xpath>
+            <xpath expr="//filter[@name='journal']" position="before">
+                <filter name="journal_type" string="Journal type" context="{'group_by': 'journal_type'}" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_payment_form_marin" model="ir.ui.view">
+        <field name="name">account.payment.form.marin</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="options">{"no_create": True}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='partner_id'][2]" position="after">
+                <field
+                    name="destination_account_id"
+                    readonly="state != 'draft' or is_internal_transfer"
+                    required="1"
+                    options="{'no_create': True}"
+                />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="account.action_account_payments" model="ir.actions.act_window">
+        <field name="domain">[('partner_type', '=', 'customer')]</field>
+    </record>
+
+    <record id="account.action_account_payments_payable" model="ir.actions.act_window">
+        <field name="domain">[('partner_type', '=', 'supplier')]</field>
+    </record>
+
+    <record id="account.action_account_payments_transfer" model="ir.actions.act_window">
+        <field name="domain">[('is_internal_transfer', '=', True)]</field>
+    </record>
+</odoo>

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="marin.MissingStockPopup">
+        <div class="popup missing-stock-popup">
+            <div class="modal-header">
+                <h4 class="modal-title title drag-handle">
+                    <div class="title" t-esc="props.title" />
+                </h4>
+            </div>
+            <main class="body modal-body">
+                <p>
+                    <b t-esc="props.caption" />
+                </p>
+                <div class="content">
+                    <section class="order">
+                        <ul class="orderlines">
+                            <div class="old-lines">
+                                <h4>Current lines</h4>
+                                <t t-foreach="lines_with_origin" t-as="line" t-key="line.id">
+                                    <Orderline
+                                        t-on-click="() => this._onClickOrderline(line)"
+                                        line="line.getDisplayData()"
+                                        class="{'selected': isLineSelected(line)}"
+                                    >
+                                        <ul t-if="line.pack_lot_lines">
+                                            <li t-foreach="line.get_lot_lines()" t-as="lot" t-key="lot.cid">
+                                                SN <t t-esc="lot.lot_name" />
+                                            </li>
+                                        </ul>
+                                    </Orderline>
+                                </t>
+                            </div>
+                            <div class="new-lines" t-if="new_lines_array.length > 0">
+                                <h4>New Lines</h4>
+                                <t t-foreach="new_lines_array" t-as="line" t-key="line.id">
+                                    <Orderline
+                                        t-on-click="() => this._onClickOrderline(line)"
+                                        line="line.getDisplayData()"
+                                        class="{'selected': isLineSelected(line)}"
+                                    >
+                                        <ul t-if="line.pack_lot_lines">
+                                            <li t-foreach="line.get_lot_lines()" t-as="lot" t-key="lot.cid">
+                                                SN <t t-esc="lot.lot_name" />
+                                            </li>
+                                        </ul>
+                                    </Orderline>
+                                </t>
+                            </div>
+                        </ul>
+                    </section>
+                    <section class="lots-table-receipt">
+                        <p t-if="state.selected_line == null">
+                            Select an order line to see the available lots for the product.
+                        </p>
+                        <t t-else="">
+                            <div class="controls">
+                                <p class="heper">Quanity to take from the selected line.</p>
+                                <input type="number" t-on-change="setCurrentQty" t-att-value="state.current_qty" />
+                                <button
+                                    class="button highlight btn btn-primary"
+                                    t-on-click="addNewLine"
+                                    t-att-class="addNewLineClass"
+                                >Add new line</button>
+                            </div>
+                            <table>
+                                <colgroup>
+                                    <col width='5%' />
+                                    <col width='15%' />
+                                    <col width='25%' />
+                                    <col width='13%' />
+                                    <col width='13%' />
+                                    <col width='30%' />
+                                </colgroup>
+                                <thead>
+                                    <tr>
+                                        <th>Use</th>
+                                        <th>Change</th>
+                                        <th>Lot/Serial</th>
+                                        <th>Available</th>
+                                        <th>On hand</th>
+                                        <th>Expiration Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="state.current_lots" t-as="lot" t-key="lot.id">
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    t-att-class="{'oe_invisible': isSameLot(lot)}"
+                                                    type="radio"
+                                                    name="selected_lot"
+                                                    t-on-change="selectLot"
+                                                    t-att-value="lot.id"
+                                                    t-att-data="state.selected_lot and state.selected_lot.id"
+                                                    t-att-checked="state.selected_lot and state.selected_lot.id == lot.id"
+                                                />
+                                            </td>
+                                            <td>
+                                                <button
+                                                    t-att-class="{'oe_invisible': isSameLot(lot)}"
+                                                    class="button highlight btn btn-primary btn-lg"
+                                                    t-on-click="() => this.switchLot(lot)"
+                                                ><i class="fa fa-refresh" /></button>
+                                            </td>
+                                            <td>
+                                                <span t-esc="lot.name" />
+                                            </td>
+                                            <td>
+                                                <span t-esc="lot.available_qty" />
+                                            </td>
+                                            <td>
+                                                <span t-esc="lot.on_hand_qty" />
+                                            </td>
+                                            <td>
+                                                <span
+                                                    t-if="lot.expiration_date"
+                                                    t-esc="lot.expiration_date.split(' ')[0]"
+                                                />
+                                                <span t-else="">———</span>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </t>
+                    </section>
+                </div>
+            </main>
+            <footer class="footer modal-footer">
+                <button
+                    class="button highlight btn btn-lg btn-primary confirm"
+                    t-on-click="confirm"
+                >Apply changes</button>
+                <button class="button btn btn-lg btn-secondary cancel" t-on-click="cancel">Abort</button>
+            </footer>
+        </div>
+    </t>
+
+</templates>

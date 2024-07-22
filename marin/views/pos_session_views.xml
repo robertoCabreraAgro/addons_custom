@@ -1,0 +1,27 @@
+<odoo>
+    <record id="pos_session_view_form" model="ir.ui.view">
+        <field name="name">pos.session.view.form</field>
+        <field name="model">pos.session</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_session_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button" type="object" name="get_cash_transfer_payments" icon="fa-dollar">
+                    <field string="Cash Transfers" name="cash_transfer_payment_count" widget="statinfo" />
+                </button>
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <button
+                    type="object"
+                    name="open_pos_cash_transfer_wizard"
+                    class="oe_highlight"
+                    string="Cash Transfer"
+                    invisible="state != 'closed'"
+                />
+            </xpath>
+            <xpath expr="//field[@name='cash_register_balance_end_real']" position="before">
+                <field name="cash_original_ending_balance" invisible="not cash_transfered" />
+                <field name="cash_transfered" invisible="not cash_transfered" />
+             </xpath>
+        </field>
+    </record>
+</odoo>

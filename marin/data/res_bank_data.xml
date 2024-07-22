@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="l10n_mx.acc_bank_002_BANAMEX" model="res.bank">
+        <field name="l10n_mx_edi_vat">BNM840515VB1</field>
+    </record>
+
+    <record id="l10n_mx.acc_bank_012_BBVA_BANCOMER" model="res.bank">
+        <field name="l10n_mx_edi_vat">BBA830831LJ2</field>
+    </record>
+</odoo>

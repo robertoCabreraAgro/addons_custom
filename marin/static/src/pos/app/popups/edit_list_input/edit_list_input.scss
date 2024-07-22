@@ -1,0 +1,117 @@
+.pos {
+    // Copy pasted from the default POS theme
+    .popup {
+        select{
+            text-align: left;
+            display: inline-block;
+            overflow: hidden;
+            background: white;
+            min-height: 44px;
+            font-family: "Lato";
+            font-size: 20px;
+            color: #444;
+            padding: 10px;
+            border-radius: 3px;
+            border: none;
+            box-shadow: 0px 0px 0px 1px gainsboro inset;
+            box-sizing: border-box;
+            width: 80%;
+        }
+    }
+    .lots-table-container {
+        min-width: 50vw;
+        .lots-table-receipt {
+            table{
+                font-size: 1rem;
+                width: 100%;
+                margin: 2rem auto;
+            }
+            tr {
+                line-height: 2rem;
+            }
+            th {
+                border-bottom: 2px solid;
+            }
+        }
+    }
+    .missing-stock-popup {
+        max-width: 75vw !important;
+        button {
+            line-height: 1rem !important;
+            width: auto !important;
+        }
+        .content {
+            min-height: 7rem;
+            align-items: center;
+            display: flex;
+            .order {
+                padding-right: .75rem;
+                li {
+                    &::before {
+                        content: none !important;
+                    }
+                    position: relative;
+                }
+                .child-items-button {
+                    position: absolute;
+                    right: 1rem;
+                    top: 50%;
+                    margin: 0;
+                    transform: translateY(-50%)
+                }
+                .old-lines .info-list {
+                    .missing {
+                        color: crimson
+                    }
+                }
+                .product-name {
+                    display: block;
+                    margin-bottom: 0.25rem;
+                }
+                .price {
+                    display: none;
+                }
+            }
+            .lots-table-receipt {
+                padding-left: .75rem;
+            }
+            >section {
+                flex-basis: 100%;
+                &:last-of-type {
+                    padding-right: 1.5rem
+                }
+                table {
+                    margin: 0;
+                    input[type=radio] {
+                        border: none !important;
+                        outline: none !important;
+                        box-shadow: none !important;
+                    }
+                    button {
+                        margin: 0;
+                        padding: 0;
+                        float: unset;
+                    }
+                }
+            }
+            .controls {
+                display: flex;
+                align-items: center;
+                justify-content: end;
+                margin-bottom: 2rem;
+                button{
+                    margin: 0 0 0 1rem;
+                    text-wrap: nowrap;
+                }
+                input {
+                    margin: 0 0 0 1rem;
+                    width: 4rem;
+                    text-align: center;
+                }
+                .helper {
+                    text-align: left;
+                }
+            }
+        }
+    }
+}

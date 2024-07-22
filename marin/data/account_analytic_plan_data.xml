@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo noupdate="1">
+    <record id="analytic_plan_201" model="account.analytic.plan">
+        <field name="name">Agroquimicos, Fertilizantes</field>
+        <field name="default_applicability">optional</field>
+        <field name="color">1</field>
+    </record>
+
+    <record id="analytic_plan_202" model="account.analytic.plan">
+        <field name="name">Planes de trabajo</field>
+        <field name="default_applicability">optional</field>
+        <field name="color">1</field>
+    </record>
+
+    <record id="analytic_plan_203" model="account.analytic.plan">
+        <field name="name">Arrendamiento</field>
+        <field name="default_applicability">optional</field>
+        <field name="color">1</field>
+    </record>
+
+    <record id="analytic_plan_204" model="account.analytic.plan">
+        <field name="name">Flotilla</field>
+        <field name="default_applicability">optional</field>
+        <field name="color">1</field>
+    </record>
+
+    <record id="analytic_plan_205" model="account.analytic.plan">
+        <field name="name">Terrenos, inmuebles, construcciones, edificios</field>
+        <field name="default_applicability">optional</field>
+        <field name="color">1</field>
+    </record>
+
+    <record id="analytic_plan_206" model="account.analytic.plan">
+        <field name="name">Individual</field>
+        <field name="default_applicability">optional</field>
+        <field name="color">1</field>
+    </record>
+</odoo>
