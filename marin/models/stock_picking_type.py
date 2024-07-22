@@ -47,7 +47,7 @@ class StockPickingTypeInherit(models.Model):
         "stock_picking_type_res_users_can_todo_rel",
         "picking_type_id",
         "user_id",
-        "Users can validate",
+        "Users can todo",
         help="Users that can mark as todo pickings of this type of operation.",
     )
     can_validate_user_ids = fields.Many2many(
