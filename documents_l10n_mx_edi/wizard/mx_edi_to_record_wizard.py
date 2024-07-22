@@ -38,7 +38,7 @@ class MxEdiToRecordWizard(models.TransientModel):
     #    for record in self:
     #        record.in_finance_folder = record.folder_id in folders
     #        record.show_customer_fields = (record.company_id or self.env.company).l10n_edi_import_customer_invoices
-    #        record.analytic_group = self.user_has_groups("analytic.group_analytic_accounting")
+    #        record.analytic_group = self.env.user.has_group("analytic.group_analytic_accounting")
 
     def create_records(self):
         move_ids = []
