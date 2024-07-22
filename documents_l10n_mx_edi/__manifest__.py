@@ -1,5 +1,5 @@
 {
-    "name": "CFDI file Management",
+    "name": "CFDI file management",
     "version": "1.0",
     "summary": """Download CFDI files from SAT
         portal for its further processing and management.""",
