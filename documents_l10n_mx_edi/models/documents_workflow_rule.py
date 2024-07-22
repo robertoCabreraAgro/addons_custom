@@ -19,7 +19,7 @@ class WorkflowActionRuleEdi(models.Model):
         return action
 
     def create_record_from_mx_edi(self, documents):
-        documents.check_already_linked()
+        documents.check_document_already_linked()
         action = self.prepare_record_from_mx_edi_action()
         action.update({"context": {"default_document_ids": documents.ids}})
         return action
