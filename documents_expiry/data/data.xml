@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="0">
+    <record id="documents_internal_expiration" model="documents.facet" forcecreate="0">
+        <field name="name">Expiration</field>
+        <field name="sequence">5</field>
+        <field name="folder_id" ref="documents.documents_internal_folder" />
+    </record>
+    <record id="documents_internal_expiration_current" model="documents.tag" forcecreate="0">
+        <field name="name">Current</field>
+        <field name="facet_id" ref="documents_internal_expiration" />
+        <field name="sequence">2</field>
+    </record>
+    <record id="documents_internal_expiration_near_expire" model="documents.tag" forcecreate="0">
+        <field name="name">Near expire</field>
+        <field name="facet_id" ref="documents_internal_expiration" />
+        <field name="sequence">2</field>
+    </record>
+    <record id="documents_internal_expiration_expired" model="documents.tag" forcecreate="0">
+        <field name="name">Expired</field>
+        <field name="facet_id" ref="documents_internal_expiration" />
+        <field name="sequence">2</field>
+    </record>
+</odoo>
