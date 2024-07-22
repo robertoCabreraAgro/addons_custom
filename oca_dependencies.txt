@@ -1,0 +1,26 @@
+enterprise git@github.com:vauxoo/enterprise.git
+design-themes git@github.com:Vauxoo/design-themes.git
+account-invoicing git@github.com:Vauxoo/account-invoicing.git
+stock-logistics-workflow git@github.com:Vauxoo/stock-logistics-workflow.git
+stock-logistics-warehouse git@github.com:Vauxoo-dev/stock-logistics-warehouse.git 17.0-mig-stock_move_location
+pos git@github.com:Vauxoo/pos.git
+stock-logistics-availability git@github.com:Vauxoo/stock-logistics-availability.git
+web git@github.com:Vauxoo/web.git
+sale-workflow git@github.com:Vauxoo/sale-workflow.git
+geospatial git@github.com:Vauxoo/geospatial.git 17.0-xiuman
+account-financial-tools git@github.com:Vauxoo/account-financial-tools.git
+multi-company git@github.com:Vauxoo/multi-company.git
+stock-tracking-fields git@git.vauxoo.com:vauxoo/stock-tracking-fields.git
+l10n-mx-avoid-reversal-entry git@git.vauxoo.com:mexico/l10n-mx-avoid-reversal-entry.git
+l10n-mx-edi-related-documents git@git.vauxoo.com:mexico/l10n-mx-edi-related-documents.git
+l10n-mx-partner-blocklist git@git.vauxoo.com:mexico/l10n-mx-partner-blocklist.git
+l10n-mx-payroll git@git.vauxoo.com:vauxoo/l10n-mx-payroll.git
+l10n-mx-edi-refund git@git.vauxoo.com:mexico/l10n-mx-edi-refund.git
+edi-document git@git.vauxoo.com:vauxoo/edi-document.git
+mexico-document git@git.vauxoo.com:vauxoo/mexico-document.git
+users-working-hours git@git.vauxoo.com:vauxoo/users-working-hours.git
+hr-advanced git@git.vauxoo.com:vauxoo/hr-advanced.git
+server-ux git@github.com:Vauxoo/server-ux.git
+impersonate git@git.vauxoo.com:vauxoo/impersonate.git
+margin-analysis git@github.com:Vauxoo/margin-analysis.git
+chatbot git@git.vauxoo.com:vauxoo/chatbot.git

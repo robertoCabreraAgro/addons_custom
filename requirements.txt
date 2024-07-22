@@ -1,0 +1,7 @@
+numpy==1.26.4
+geoip2
+topojson==1.9
+lxml
+pykml==0.2.0
+geopandas==0.14.4
+pandas==1.5.3

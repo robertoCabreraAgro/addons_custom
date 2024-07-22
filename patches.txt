@@ -1,0 +1,4 @@
+odoo https://github.com/odoo/odoo/pull/135838.patch
+odoo https://github.com/Vauxoo/odoo/pull/569.patch
+odoo https://github.com/Vauxoo/odoo/pull/594.patch
+extra_addons/enterprise https://api.github.com/repos/vauxoo/enterprise/pulls/770
