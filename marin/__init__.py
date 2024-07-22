@@ -140,7 +140,7 @@ def _post_init_marin(env):
     tools.convert.convert_file(env, "marin", "data/account.asset.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/account.payment.term.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/account.tax.group.csv", None, mode="init", kind="data")
-    # tools.convert.convert_file(env, "marin", "data/account.tax.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin", "data/account.tax.csv", None, mode="init", kind="data")
 
     env.cr.execute("""SELECT setval('"public"."crm_team_id_seq"', 100, true);""")
     tools.convert.convert_file(env, "marin", "data/crm_team_data.xml", None, mode="init", kind="data")
