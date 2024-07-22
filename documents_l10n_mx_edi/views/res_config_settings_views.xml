@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="res_config_settings_view_form_sync" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.sync</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='invoicing_settings']" position="after">
+                <block
+                    id="documents_l10n_mx_edi_settings"
+                    title="SAT Synchronization"
+                    invisible="country_code != 'MX'"
+                >
+                    <setting
+                        id="l10n_mx_edi_esignature"
+                        string="MX E-Signatures"
+                        class="w-100"
+                        help="Add your e signatures."
+                    >
+                        <field name="l10n_mx_edi_esignature_ids" class="w-100" string="E-signatures" />
+                    </setting>
+
+                    <setting id="l10n_mx_edi_sat_sync" help="Sync with SAT">
+                        <div class="mt8 row">
+                            <label string="Last sync" for="last_sat_fetch_date" class="col-lg-3 o_light_label" />
+                            <field name="last_sat_fetch_date" />
+                            <button name="sync_sat" type="object" class="btn-link w-auto">
+                                <i title="Sync now" role="img" aria-label="Sync now" class="fa fa-fw fa-refresh" />
+                            </button>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="res_config_settings_view_form_doc" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.doc</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form" />
+        <field name="priority" eval="70" />
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='documents']" position="inside">
+                <block>
+                    <setting company_dependent="1" help="Centralize your MX EDI documents">
+                        <field name="documents_l10n_mx_edi_folder_settings" />
+                        <div class="content-group" invisible="not documents_l10n_mx_edi_folder_settings">
+                            <div class="row mt16">
+                                <label class="o_form_label col-lg-3" for="l10n_mx_edi_folder" string="Workspace" />
+                                <field name="l10n_mx_edi_folder" required="documents_l10n_mx_edi_folder_settings" />
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

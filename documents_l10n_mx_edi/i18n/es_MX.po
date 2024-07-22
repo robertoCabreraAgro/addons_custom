@@ -1,0 +1,1686 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_mx_edi_documents
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-01-10 00:06+0000\n"
+"PO-Revision-Date: 2023-01-10 00:06+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: l10n_mx_edi_documents
+#. odoo-python
+#: code:addons/l10n_mx_edi_documents/wizards/sat_sync_wizard.py:0
+#, python-format
+msgid "\"Date to\" must be greater than \"Date from\""
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-javascript
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls.js:0
+#, python-format
+msgid ", </span> Move tax total: <span level=\"2\">"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-javascript
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls.js:0
+#, python-format
+msgid ", </span> Move total: <span level=\"2\">"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-javascript
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls.js:0
+#, python-format
+msgid ", </span> Partner document number: <span level=\"2\">"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-javascript
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls.js:0
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls.js:0
+#, python-format
+msgid ", </span> Your Company RFC: <span level=\"2\">"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:documents.tag,name:l10n_mx_edi_documents.l10n_mx_edi_fiscal_month_10
+msgid "10"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:documents.tag,name:l10n_mx_edi_documents.l10n_mx_edi_fiscal_month_11
+msgid "11"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:documents.tag,name:l10n_mx_edi_documents.l10n_mx_edi_fiscal_month_12
+msgid "12"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:documents.tag,name:l10n_mx_edi_documents.l10n_mx_edi_fiscal_year_minus_5
+msgid "2018"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:documents.tag,name:l10n_mx_edi_documents.l10n_mx_edi_fiscal_year_minus_4
+msgid "2019"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:documents.tag,name:l10n_mx_edi_documents.l10n_mx_edi_fiscal_year_minus_3
+msgid "2020"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:documents.tag,name:l10n_mx_edi_documents.l10n_mx_edi_fiscal_year_minus_2
+msgid "2021"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:documents.tag,name:l10n_mx_edi_documents.l10n_mx_edi_fiscal_year_now
+msgid "2022"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:documents.tag,name:l10n_mx_edi_documents.l10n_mx_edi_fiscal_year_minus_1
+msgid "2023"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-javascript
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls.js:0
+#, python-format
+msgid "</span> was not found or is disabled.</div>"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-javascript
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls.js:0
+#, python-format
+msgid "<button class=\"dnd-alert-button\" tag=\"partner\">Create Partner</button>"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-javascript
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls.js:0
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls.js:0
+#, python-format
+msgid "<button class=\"dnd-alert-button\" tag=\"remove\">Remove XML</button>"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-javascript
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls.js:0
+#, python-format
+msgid ""
+"<button id=\"remove_all_xml\" class=\"dnd-alert-remove-all-wrong-xml-"
+"button\" style=\"background-color: #31708f; border: 0px solid; margin: 0 5px"
+" 0 0; color: #ffffff;\" tag=\"remove\">Remove all wrong XML</button>"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-javascript
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls.js:0
+#, python-format
+msgid ""
+"<button id=\"remove_xml\" class=\"dnd-alert-button remove\" "
+"tag=\"remove\">Remove XML</button>"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-javascript
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls.js:0
+#, python-format
+msgid ""
+"<button id=\"tryagain\" class=\"dnd-alert-button\" tag=\"tryagain\">Try "
+"again</button>"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-javascript
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls.js:0
+#, python-format
+msgid "<div><span level=\"1\">Some taxes</span> do not exist: <span level=\"2\">"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-javascript
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls.js:0
+#, python-format
+msgid ""
+"<div><span level=\"1\">Some taxes</span> do not have account assigned: <span"
+" level=\"2\">"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-javascript
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls.js:0
+#, python-format
+msgid ""
+"<div><span level=\"1\">The DocumentType is \"E\" and The XML UUID</span> is "
+"not related to any invoice. <span level=\"1\">UUID: </span>"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-javascript
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls.js:0
+#, python-format
+msgid "<div><span level=\"1\">The XML Currency</span> <span level=\"2\">"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-javascript
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls.js:0
+#, python-format
+msgid ""
+"<div><span level=\"1\">The XML Folio</span> does not match with <span "
+"level=\"1\">Partner document number</span>: "
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-javascript
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls.js:0
+#, python-format
+msgid ""
+"<div><span level=\"1\">The XML Issuer RFC</span> does not match with <span "
+"level=\"1\">your Company RFC</span>: "
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-javascript
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls.js:0
+#, python-format
+msgid ""
+"<div><span level=\"1\">The XML Receptor RFC</span> does not match with <span"
+" level=\"1\">your Company RFC</span>: "
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-javascript
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls.js:0
+#, python-format
+msgid ""
+"<div><span level=\"1\">The XML UUID</span> belong to other move. <span "
+"level=\"1\">UUID: </span>"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-javascript
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls.js:0
+#, python-format
+msgid ""
+"<div><span level=\"1\">The XML amount total</span> does not match with <span"
+" level=\"1\">move total</span>: "
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-javascript
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls.js:0
+#, python-format
+msgid ""
+"<div><span level=\"1\">The XML partner</span> was not found: <span "
+"level=\"2\">"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-javascript
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls.js:0
+#, python-format
+msgid ""
+"<div><span level=\"1\">The XML reference</span> matches another move "
+"reference. <span level=\"1\">Partner: </span>"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-javascript
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls.js:0
+#, python-format
+msgid "<div><span level=\"1\">The XML state</span> is CANCELLED in SATs system. "
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-javascript
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls.js:0
+#, python-format
+msgid ""
+"<div><span level=\"1\">The XML tax total amount</span> does not match with "
+"<span level=\"1\">Move tax total amount</span>: "
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-javascript
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls.js:0
+#, python-format
+msgid "<div><span level=\"1\">UUID</span> not found in the XML.</div>"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-javascript
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls.js:0
+#, python-format
+msgid ""
+"<div><span level=\"1\">Unable to generate moves from an XML with version "
+"3.2.</span>You can create the move manually and then attach the xml.</div>"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-javascript
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls.js:0
+#, python-format
+msgid ""
+"<div><strong>Info!</strong> XML data could not be read correctly.</div>"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-javascript
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls.js:0
+#, python-format
+msgid ""
+"<div>The <span level=\"1\">TipoDeComprobante</span> is <span "
+"level=\"1\">\"E\"</span> and The XML UUIDs are not related to any move. "
+"<span level=\"1\">UUID: </span>"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-javascript
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls.js:0
+#, python-format
+msgid ""
+"<div>The <span level=\"1\">TipoDeComprobante</span> is <span "
+"level=\"1\">\"E\"</span> and The node CFDI related is not set</span> "
+"Manually reconcile with the appropiate move. <span level=\"1\">UUID: </span>"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_documents.res_config_settings_view_form_l10n_mx_edi_documents
+msgid ""
+"<i title=\"Sync now\" role=\"img\" aria-label=\"Sync now\" class=\"fa fa-fw "
+"fa-refresh\"/>"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_documents.res_config_settings_view_form_l10n_mx_edi_documents_docs
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" aria-label=\"Values set here are company-specific.\" "
+"groups=\"base.group_multi_company\" role=\"img\"/>"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_documents.res_config_settings_view_form_l10n_mx_edi_documents
+msgid "<span class=\"o_form_label\">MX E-Signatures</span>"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-javascript
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls.js:0
+#, python-format
+msgid "<span level=\"1\"> Reference: </span>"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-javascript
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls.js:0
+#, python-format
+msgid "<span>Wrong File: <span class=\"index-alert\"></span>"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-javascript
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls.js:0
+#, python-format
+msgid "<strong>Info!</strong> Some files are already loaded.<br>"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-javascript
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls.js:0
+#, python-format
+msgid "<strong>Info!</strong> You only can upload XML files.<br>"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model,name:l10n_mx_edi_documents.model_documents_workflow_rule
+msgid ""
+"A set of condition and actions which will be available to all attachments "
+"matching the conditions"
+msgstr ""
+"Un conjunto de condiciones y acciones que estarán disponibles para todos los"
+" archivos adjuntos que coincidan con las condiciones"
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_attach_xmls_wizard__account_id
+msgid "Account"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-python
+#: code:addons/l10n_mx_edi_documents/models/account_edi_format.py:0
+#: code:addons/l10n_mx_edi_documents/wizards/attach_xmls_wizard.py:0
+#, python-format
+msgid "Account to set in the lines not found.<br/>"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_documents.attach_xmls_wizard_form_view
+msgid "Allow creation of Products"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:res.groups,name:l10n_mx_edi_documents.allow_force_invoice_generation
+msgid "Allow to omit validations in the invoice generation"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_documents.attach_xmls_wizard_form_view
+msgid "Attach Supplier XML's"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.ui.menu,name:l10n_mx_edi_documents.menu_attach_issued_xmls_wizard
+msgid "Attach issued CFDI"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.actions.act_window,name:l10n_mx_edi_documents.attach_xmls_issued_wizard_action
+msgid "Attach issued files"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.ui.menu,name:l10n_mx_edi_documents.menu_attach_received_xmls_wizard
+msgid "Attach received CFDI"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.actions.act_window,name:l10n_mx_edi_documents.attach_xmls_received_wizard_action
+msgid "Attach received files"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model,name:l10n_mx_edi_documents.model_attach_xmls_wizard
+msgid "Attach xmls"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model,name:l10n_mx_edi_documents.model_ir_attachment
+msgid "Attachment"
+msgstr "Archivo adjunto"
+
+#. module: l10n_mx_edi_documents
+#. odoo-python
+#: code:addons/l10n_mx_edi_documents/models/ir_attachment.py:0
+#, python-format
+msgid "Attachment UUID duplicated:\n"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.actions.server,name:l10n_mx_edi_documents.ir_cron_automatic_fetch_cfdi_invoices_ir_actions_server
+#: model:ir.cron,cron_name:l10n_mx_edi_documents.ir_cron_automatic_fetch_cfdi_invoices
+msgid "Auto Import CFDI SAT"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_l10n_mx_edi_esignature__date_start
+msgid "Available date"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__documents_workflow_rule__create_model__cfdi
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__request_type__cfdi
+msgid "CFDI"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:documents.facet,name:l10n_mx_edi_documents.l10n_mx_edi_documents_facet_cfdi_type
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_sat_sync_wizard__cfdi_type
+msgid "CFDI Type"
+msgstr "Tipo CFDI"
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_documents_document__l10n_mx_edi_stamp_date
+msgid "CFDI stamp date"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-javascript
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls_template.xml:0
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_documents.view_sat_sync_form
+#, python-format
+msgid "Cancel"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_documents_document__l10n_mx_edi_sat_cancellable
+msgid "Cancellable"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__documents_document__l10n_mx_edi_sat_cancellable__cancellable_auth
+msgid "Cancellable with authorization"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__documents_document__l10n_mx_edi_sat_cancellable__cancellable_no_auth
+msgid "Cancellable without authorization"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__documents_document__l10n_mx_edi_sat_cancel_status__rejected
+msgid "Cancellation Rejected"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_documents_document__l10n_mx_edi_sat_cancel_status
+msgid "Cancellation Status"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__documents_document__l10n_mx_edi_sat_status__cancelled
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__cdfi_state__0
+msgid "Cancelled"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__documents_document__l10n_mx_edi_sat_cancel_status__cancelled_timeout
+msgid "Cancelled because timeout"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__documents_document__l10n_mx_edi_sat_cancel_status__cancelled_auth
+msgid "Cancelled with authorization"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__documents_document__l10n_mx_edi_sat_cancel_status__cancelled_no_auth
+msgid "Cancelled without authorization"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model_terms:documents.folder,description:l10n_mx_edi_documents.l10n_mx_edi_documents_folder_edi_doc
+#: model_terms:documents.folder,description:l10n_mx_edi_documents.l10n_mx_edi_documents_folder_edi_received
+msgid "Categorize, share and keep track of all your internal documents."
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_documents.res_config_settings_view_form_l10n_mx_edi_documents_docs
+msgid "Centralize your MX EDI documents"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model,name:l10n_mx_edi_documents.model_res_company
+msgid "Companies"
+msgstr "Empresas"
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_l10n_mx_edi_esignature__company_id
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_sat_sync_wizard__company_id
+msgid "Company"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_sat_sync_wizard__complement
+msgid "Complement"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model,name:l10n_mx_edi_documents.model_res_config_settings
+msgid "Config Settings"
+msgstr "Ajustes de configuración"
+
+#. module: l10n_mx_edi_documents
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_documents.res_config_settings_view_form_l10n_mx_edi_documents
+msgid "Configure your E-Signatures."
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_documents_workflow_rule__create_model
+msgid "Create"
+msgstr "Crear"
+
+#. module: l10n_mx_edi_documents
+#: model_terms:ir.actions.act_window,help:l10n_mx_edi_documents.esignature_list_action
+msgid "Create the first E-Signature"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_attach_xmls_wizard__create_uid
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_l10n_mx_edi_esignature__create_uid
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_sat_sync_wizard__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_attach_xmls_wizard__create_date
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_l10n_mx_edi_esignature__create_date
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_sat_sync_wizard__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_documents.view_sat_sync_form
+msgid "Date ranges"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,help:l10n_mx_edi_documents.field_sat_sync_wizard__date_from
+msgid "Day 1 of current month by default."
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_attach_xmls_wizard__display_name
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_l10n_mx_edi_esignature__display_name
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_sat_sync_wizard__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model,name:l10n_mx_edi_documents.model_documents_document
+msgid "Document"
+msgstr "Documento"
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_res_company__documents_l10n_mx_edi_folder_settings
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_res_config_settings__documents_l10n_mx_edi_folder_settings
+msgid "Documents L10N Mx Edi Folder Settings"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-javascript
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls_template.xml:0
+#, python-format
+msgid "Drag and Drop your files here"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_attach_xmls_wizard__dragndrop
+msgid "Dragndrop"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-python
+#: code:addons/l10n_mx_edi_documents/models/document.py:0
+#, python-format
+msgid "Duplicated CFDI, document creation skipped."
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:documents.folder,name:l10n_mx_edi_documents.l10n_mx_edi_documents_folder_edi_doc
+msgid "EDI Documents"
+msgstr "Documentos EDI "
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model,name:l10n_mx_edi_documents.model_account_edi_format
+msgid "EDI format"
+msgstr "Formato EDI"
+
+#. module: l10n_mx_edi_documents
+#: model:documents.tag,name:l10n_mx_edi_documents.l10n_mx_edi_documents_egreso
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__cfdi_type__e
+msgid "Egreso"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_sat_sync_wizard__emitter_vat
+msgid "Emitter VAT"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-python
+#. odoo-javascript
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls.js:0
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls.js:0
+#: code:addons/l10n_mx_edi_documents/wizards/attach_xmls_wizard.py:0
+#: code:addons/l10n_mx_edi_documents/wizards/attach_xmls_wizard.py:0
+#, python-format
+msgid "Error"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-javascript
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls.js:0
+#, python-format
+msgid "Error checking XML data."
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-javascript
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls.js:0
+#, python-format
+msgid "Error creating move."
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-javascript
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls.js:0
+#, python-format
+msgid "Error creating partner."
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_l10n_mx_edi_esignature__content
+msgid "Esignature"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_l10n_mx_edi_esignature__key
+msgid "Esignature Key"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,help:l10n_mx_edi_documents.field_l10n_mx_edi_esignature__key
+msgid "Esignature Key in der format"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_l10n_mx_edi_esignature__password
+msgid "Esignature Password"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,help:l10n_mx_edi_documents.field_l10n_mx_edi_esignature__content
+msgid "Esignature in der format"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_documents.res_config_settings_view_form_l10n_mx_edi_documents
+msgid "Esignatures"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_l10n_mx_edi_esignature__date_end
+msgid "Expiration date"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_documents.res_config_settings_view_form_l10n_mx_edi_documents
+msgid "Fields required to configure the MX E-Signature."
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_ir_attachment__l10n_mx_edi_cfdi_uuid
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_mrp_document__l10n_mx_edi_cfdi_uuid
+msgid "Fiscal Folio"
+msgstr "Folio Fiscal"
+
+#. module: l10n_mx_edi_documents
+#: model:documents.facet,name:l10n_mx_edi_documents.l10n_mx_edi_documents_facet_fiscal_month
+msgid "Fiscal month"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:documents.facet,name:l10n_mx_edi_documents.l10n_mx_edi_documents_facet_fiscal_year
+msgid "Fiscal year"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_sat_sync_wizard__date_from
+msgid "From"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-python
+#: code:addons/l10n_mx_edi_documents/models/account_edi_format.py:0
+#, python-format
+msgid "Fuel - IEPS"
+msgstr "IEPS - Combustible"
+
+#. module: l10n_mx_edi_documents
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_documents.view_sat_sync_form
+msgid "General Data"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_l10n_mx_edi_esignature__holder
+msgid "Holder"
+msgstr "Titular"
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,help:l10n_mx_edi_documents.field_l10n_mx_edi_esignature__holder
+msgid "Holder for the certificate"
+msgstr "Titular del certificado"
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_l10n_mx_edi_esignature__holder_vat
+msgid "Holder\"s VAT"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,help:l10n_mx_edi_documents.field_l10n_mx_edi_esignature__holder_vat
+msgid "Holder\"s Vat for the certificate"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_attach_xmls_wizard__id
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_l10n_mx_edi_esignature__id
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_sat_sync_wizard__id
+msgid "ID"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__documents_document__l10n_mx_edi_sat_cancel_status__in_process
+msgid "In Process"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,help:l10n_mx_edi_documents.field_documents_document__l10n_mx_edi_product_list
+msgid "In case this is a CFDI file, show invoice\"s product list"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,help:l10n_mx_edi_documents.field_documents_document__l10n_mx_edi_cfdi_total_amount
+msgid "In case this is a CFDI file, stores invoice\"s total amount."
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model_terms:documents.folder,description:l10n_mx_edi_documents.l10n_mx_edi_documents_folder_edi_doc
+#: model_terms:documents.folder,description:l10n_mx_edi_documents.l10n_mx_edi_documents_folder_edi_received
+msgid ""
+"Incoming letters sent to <span class=\"o_folder_description_alias\">inbox "
+"email alias</span> will be added to your inbox automatically."
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,help:l10n_mx_edi_documents.field_documents_document__l10n_mx_edi_sat_cancellable
+msgid "Indicate wheter the document can be cancelled or not."
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,help:l10n_mx_edi_documents.field_account_move_line__l10n_mx_edi_is_ecc
+msgid "Indicates that comes from a Fuel Account Statement complement"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-python
+#: code:addons/l10n_mx_edi_documents/wizards/attach_xmls_wizard.py:0
+#, python-format
+msgid "Info"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:documents.tag,name:l10n_mx_edi_documents.l10n_mx_edi_documents_ingreso
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__cfdi_type__i
+msgid "Ingreso"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_attach_xmls_wizard__journal_id
+msgid "Journal"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model,name:l10n_mx_edi_documents.model_account_move
+msgid "Journal Entry"
+msgstr "Asiento de diario"
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model,name:l10n_mx_edi_documents.model_account_move_line
+msgid "Journal Item"
+msgstr "Apunte contable"
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_res_company__l10n_mx_edi_folder
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_res_config_settings__l10n_mx_edi_folder
+msgid "L10N Mx Edi Folder"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_documents_document__l10n_mx_edi_is_cfdi
+msgid "L10N Mx Edi Is Cfdi"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_account_move_line__l10n_mx_edi_is_ecc
+msgid "L10N Mx Edi Is Ecc"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_account_bank_statement_line__l10n_mx_edi_journal_readonly
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_account_move__l10n_mx_edi_journal_readonly
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_account_payment__l10n_mx_edi_journal_readonly
+msgid "L10N Mx Edi Journal Readonly"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_res_company__last_sat_fetch_date
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_res_config_settings__last_sat_fetch_date
+msgid "Last CFDI fetch date"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_attach_xmls_wizard____last_update
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_l10n_mx_edi_esignature____last_update
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_sat_sync_wizard____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_documents.res_config_settings_view_form_l10n_mx_edi_documents
+msgid "Last Run"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_attach_xmls_wizard__write_uid
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_l10n_mx_edi_esignature__write_uid
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_sat_sync_wizard__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_attach_xmls_wizard__write_date
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_l10n_mx_edi_esignature__write_date
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_sat_sync_wizard__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model,name:l10n_mx_edi_documents.model_l10n_mx_edi_esignature
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_res_company__l10n_mx_edi_esignature_ids
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_res_config_settings__l10n_mx_edi_esignature_ids
+msgid "MX E-signature"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__request_type__metadata
+msgid "Metadata"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-python
+#: code:addons/l10n_mx_edi_documents/models/account_edi_format.py:0
+#, python-format
+msgid "Mexican %s CFDI generated for the %s document."
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-python
+#: code:addons/l10n_mx_edi_documents/models/workflow.py:0
+#, python-format
+msgid "Moves"
+msgstr "Asientos"
+
+#. module: l10n_mx_edi_documents
+#. odoo-python
+#: code:addons/l10n_mx_edi_documents/wizards/sat_sync_wizard.py:0
+#, python-format
+msgid "No records found for your selection."
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-python
+#: code:addons/l10n_mx_edi_documents/models/res_company.py:0
+#, python-format
+msgid "No valid E-Signature found."
+msgstr "No se encontró ninguna FIEL válida"
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__documents_document__l10n_mx_edi_sat_cancellable__not_cancellable
+msgid "Not Cancellable"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__documents_document__l10n_mx_edi_sat_status__not_found
+msgid "Not Found"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:documents.tag,name:l10n_mx_edi_documents.l10n_mx_edi_documents_nomina
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__cfdi_type__n
+msgid "Nómina"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_attach_xmls_wizard__omit_cfdi_related
+msgid "Omit Cfdi Related"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,help:l10n_mx_edi_documents.field_attach_xmls_wizard__account_id
+msgid ""
+"Optional field to define the account that will be used in all the move lines.\n"
+"If the field is not set, the wizard will take the account by default."
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:documents.tag,name:l10n_mx_edi_documents.l10n_mx_edi_documents_pago
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__cfdi_type__p
+msgid "Pago"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-javascript
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls.js:0
+#, python-format
+msgid "Partners documents"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,help:l10n_mx_edi_documents.field_l10n_mx_edi_esignature__password
+msgid "Password for the Esignature Key"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_account_bank_statement_line__l10n_mx_edi_payment_policy
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_account_move__l10n_mx_edi_payment_policy
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_account_payment__l10n_mx_edi_payment_policy
+msgid "Payment Policy"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:documents.workflow.rule,name:l10n_mx_edi_documents.l10n_mx_edi_documents_received_rule
+msgid "Process CFDI"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:documents.facet,name:l10n_mx_edi_documents.l10n_mx_edi_documents_facet_processed
+#: model:documents.tag,name:l10n_mx_edi_documents.l10n_mx_edi_processed
+msgid "Processed"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_attach_xmls_wizard__product_create
+msgid "Product Create"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_documents_document__l10n_mx_edi_product_list
+msgid "Products"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_documents.esignature_form_view
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_documents.esignature_search_view
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_documents.esignature_tree_view
+msgid "RFC"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:documents.folder,name:l10n_mx_edi_documents.l10n_mx_edi_documents_folder_edi_received
+msgid "Received"
+msgstr "Recibidos"
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_sat_sync_wizard__receiver_vat
+msgid "Receiver VAT"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,help:l10n_mx_edi_documents.field_documents_document__l10n_mx_edi_sat_cancel_status
+msgid "Refers to the status of the cancellation in the SAT system."
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,help:l10n_mx_edi_documents.field_documents_document__l10n_mx_edi_sat_status
+msgid "Refers to the status of the invoice inside the SAT system."
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_documents_document__l10n_mx_edi_related_cfdi
+msgid "Related CFDI"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,help:l10n_mx_edi_documents.field_documents_document__l10n_mx_edi_related_cfdi
+msgid "Related CFDI of the XML file"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-python
+#: code:addons/l10n_mx_edi_documents/wizards/sat_sync_wizard.py:0
+#, python-format
+msgid "Reprocess Account Moves"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_sat_sync_wizard__request_type
+msgid "Request Type"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_sat_sync_wizard__requester_vat
+msgid "Requester VAT"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:documents.tag,name:l10n_mx_edi_documents.l10n_mx_edi_documents_retencion
+msgid "Retención"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_documents_document__l10n_mx_edi_sat_status
+msgid "SAT Status"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_documents.res_config_settings_view_form_l10n_mx_edi_documents
+msgid "SAT Synchronization"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_documents.view_sat_sync_form
+msgid "SAT massive download"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model,name:l10n_mx_edi_documents.model_sat_sync_wizard
+msgid "SAT sync wizard"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-javascript
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls_template.xml:0
+#, python-format
+msgid "Save"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_l10n_mx_edi_esignature__serial_number
+msgid "Serial number"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-javascript
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls_template.xml:0
+#, python-format
+msgid "Show invoices"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-python
+#: code:addons/l10n_mx_edi_documents/models/account_edi_format.py:0
+#: code:addons/l10n_mx_edi_documents/wizards/attach_xmls_wizard.py:0
+#, python-format
+msgid ""
+"Some products are not found in the database, and the account that is used as"
+" default is not configured in the journal, please set default account in the"
+" journal %s to create the move."
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-python
+#: code:addons/l10n_mx_edi_documents/wizards/attach_xmls_wizard.py:0
+#, python-format
+msgid ""
+"Something went wrong. The parameter for XML files must be a dictionary."
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-python
+#: code:addons/l10n_mx_edi_documents/models/account_edi_format.py:0
+#, python-format
+msgid "Something went wrong. The parameter for XML: %serrors"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,help:l10n_mx_edi_documents.field_documents_document__l10n_mx_edi_is_cfdi
+msgid "Specify if this is a CFDI document."
+msgstr "Especifica si este es un documento CFDI."
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_sat_sync_wizard__cdfi_state
+msgid "State"
+msgstr "Estado"
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__documents_document__l10n_mx_edi_sat_cancel_status__none
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__documents_document__l10n_mx_edi_sat_cancellable__none
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__documents_document__l10n_mx_edi_sat_status__none
+msgid "State not defined"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-python
+#: code:addons/l10n_mx_edi_documents/models/account_edi_format.py:0
+#, python-format
+msgid "Station: %s - Operation: %s"
+msgstr "Estación: %s - Operación: %s"
+
+#. module: l10n_mx_edi_documents
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_documents.view_sat_sync_form
+msgid "Sync"
+msgstr "Sincronizar"
+
+#. module: l10n_mx_edi_documents
+#: model:ir.actions.act_window,name:l10n_mx_edi_documents.action_sat_sync
+#: model:ir.ui.menu,name:l10n_mx_edi_documents.menu_sat_sync
+msgid "Sync with SAT"
+msgstr "Sincronizar con SAT"
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,help:l10n_mx_edi_documents.field_sat_sync_wizard__requester_vat
+msgid ""
+"The Tax Identification Number. Complete it if the contact is subjected to "
+"government taxes. Used in some legal statements."
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-python
+#: code:addons/l10n_mx_edi_documents/models/l10n_mx_edi_esignature.py:0
+#, python-format
+msgid "The certificate is expired since %s"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-python
+#: code:addons/l10n_mx_edi_documents/models/l10n_mx_edi_esignature.py:0
+#, python-format
+msgid "The certificate key and/or password is/are invalid."
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,help:l10n_mx_edi_documents.field_l10n_mx_edi_esignature__date_end
+msgid "The date on which the certificate expires"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,help:l10n_mx_edi_documents.field_l10n_mx_edi_esignature__date_start
+msgid "The date on which the certificate starts to be valid"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-python
+#: code:addons/l10n_mx_edi_documents/models/l10n_mx_edi_esignature.py:0
+#, python-format
+msgid "The esignature content is invalid."
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-python
+#: code:addons/l10n_mx_edi_documents/models/account_edi_format.py:0
+#, python-format
+msgid "The file is not a CFDI"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,help:l10n_mx_edi_documents.field_l10n_mx_edi_esignature__serial_number
+msgid "The serial number to add to electronic documents"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-javascript
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls.js:0
+#, python-format
+msgid "There are files uploading"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-python
+#: code:addons/l10n_mx_edi_documents/wizards/attach_xmls_wizard.py:0
+#, python-format
+msgid "There are no files selected"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_sat_sync_wizard__thirth_party_vat
+msgid "Thirth Party VAT"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,help:l10n_mx_edi_documents.field_attach_xmls_wizard__journal_id
+msgid "This journal will be used in the moves generated with this wizard."
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-python
+#: code:addons/l10n_mx_edi_documents/models/account_edi_format.py:0
+#: code:addons/l10n_mx_edi_documents/models/account_edi_format.py:0
+#, python-format
+msgid ""
+"This partner was created when importing a CFDI file. Please verify that "
+"Partner datas are correct."
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-python
+#: code:addons/l10n_mx_edi_documents/wizards/attach_xmls_wizard.py:0
+#, python-format
+msgid ""
+"This partner was created when move %s was created from a XML file. Please "
+"verify that the datas of partner are correct."
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_documents.view_sat_sync_form
+msgid "This wizard will download CFDI from SAT"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_documents.esignature_form_view
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_documents.esignature_search_view
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_documents.esignature_tree_view
+msgid "Titular"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_sat_sync_wizard__date_to
+msgid "To"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:documents.tag,name:l10n_mx_edi_documents.l10n_mx_edi_to_process
+msgid "To Process"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,help:l10n_mx_edi_documents.field_sat_sync_wizard__date_to
+msgid "Today."
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_res_company__l10n_mx_edi_token
+msgid "Token"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_res_company__l10n_mx_edi_token_expiration
+msgid "Token Expiration"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_documents_document__l10n_mx_edi_cfdi_total_amount
+msgid "Total Amount"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:documents.tag,name:l10n_mx_edi_documents.l10n_mx_edi_documents_traslado
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__cfdi_type__t
+msgid "Traslado"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,field_description:l10n_mx_edi_documents.field_sat_sync_wizard__uuid
+msgid "UUID"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-python
+#: code:addons/l10n_mx_edi_documents/models/account_move.py:0
+#, python-format
+msgid "UUID duplicated %s for following invoices:\n"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,help:l10n_mx_edi_documents.field_attach_xmls_wizard__product_create
+msgid ""
+"Use this option to allow the importer to also create new products when they "
+"are not found in database."
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields,help:l10n_mx_edi_documents.field_attach_xmls_wizard__omit_cfdi_related
+msgid ""
+"Use this option when the CFDI attached do not have a CFDI related and is a "
+"Refund (Only as exception)"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__documents_document__l10n_mx_edi_sat_status__valid
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__cdfi_state__1
+msgid "Valid"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_documents.esignature_form_view
+msgid "Validity"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_documents.res_config_settings_view_form_l10n_mx_edi_documents_docs
+msgid "Workspace"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-javascript
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls.js:0
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls.js:0
+#, python-format
+msgid "XML Folio: <span level=\"2\">"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-javascript
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls.js:0
+#, python-format
+msgid "XML Issuer RFC: <span level=\"2\">"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-javascript
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls.js:0
+#, python-format
+msgid "XML Receptor RFC: <span level=\"2\">"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-javascript
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls.js:0
+#, python-format
+msgid "XML amount total: <span level=\"2\">"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-javascript
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls.js:0
+#, python-format
+msgid "XML removed, the TipoDeComprobante is not I nor E."
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-javascript
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls.js:0
+#, python-format
+msgid "XML tax total: <span level=\"2\">"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-python
+#: code:addons/l10n_mx_edi_documents/wizards/attach_xmls_wizard.py:0
+#, python-format
+msgid "You cannot attach more than one xml file to a move"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-javascript
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls.js:0
+#, python-format
+msgid "Your moves were created correctly"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__acreditamientoieps10
+msgid "acreditamientoieps10"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__aerolíneas
+msgid "aerolíneas"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__arrendamientoenfideicomiso
+msgid "arrendamientoenfideicomiso"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__cartaporte10
+msgid "cartaporte10"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__cartaporte20
+msgid "cartaporte20"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__certificadodedestruccion
+msgid "certificadodedestruccion"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__cfdiregistrofiscal
+msgid "cfdiregistrofiscal"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__comercioexterior10
+msgid "comercioexterior10"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__comercioexterior11
+msgid "comercioexterior11"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__comprobante
+msgid "comprobante"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__consumodecombustibles
+msgid "consumodecombustibles"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__consumodecombustibles11
+msgid "consumodecombustibles11"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__detallista
+msgid "detallista"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__dividendos
+msgid "dividendos"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__divisas
+msgid "divisas"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__donat11
+msgid "donat11"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__ecc11
+msgid "ecc11"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__ecc12
+msgid "ecc12"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__enajenaciondeacciones
+msgid "enajenaciondeacciones"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_documents.esignature_form_view
+msgid "esignature Form"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_documents.esignature_tree_view
+msgid "esignature Tree"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.actions.act_window,name:l10n_mx_edi_documents.esignature_list_action
+msgid "esignatures"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__fideicomisonoempresarial
+msgid "fideicomisonoempresarial"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-python
+#: code:addons/l10n_mx_edi_documents/models/account_edi_format.py:0
+#: code:addons/l10n_mx_edi_documents/wizards/attach_xmls_wizard.py:0
+#, python-format
+msgid "fuel - IEPS"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__gastoshidrocarburos10
+msgid "gastoshidrocarburos10"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__iedu
+msgid "iedu"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__implocal
+msgid "implocal"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__ine11
+msgid "ine11"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__ingresoshidrocarburos
+msgid "ingresoshidrocarburos"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__intereses
+msgid "intereses"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__intereseshipotecarios
+msgid "intereseshipotecarios"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__leyendasfisc
+msgid "leyendasfisc"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__nomina11
+msgid "nomina11"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__nomina12
+msgid "nomina12"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__notariospublicos
+msgid "notariospublicos"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__obrasarteantiguedades
+msgid "obrasarteantiguedades"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__operacionesconderivados
+msgid "operacionesconderivados"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#. odoo-javascript
+#: code:addons/l10n_mx_edi_documents/static/src/js/attach_xmls_template.xml:0
+#, python-format
+msgid "or Click to upload the files"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__pagoenespecie
+msgid "pagoenespecie"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__pagos10
+msgid "pagos10"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__pagos20
+msgid "pagos20"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__pagosaextranjeros
+msgid "pagosaextranjeros"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__pfic
+msgid "pfic"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__planesderetiro
+msgid "planesderetiro"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__planesderetiro11
+msgid "planesderetiro11"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__premios
+msgid "premios"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__renovacionysustitucionvehiculos
+msgid "renovacionysustitucionvehiculos"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__retencionpago1
+msgid "retencionpago1"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__sectorfinanciero
+msgid "sectorfinanciero"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__servicioparcialconstruccion
+msgid "servicioparcialconstruccion"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__serviciosplataformastecnologicas10
+msgid "serviciosplataformastecnologicas10"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__spei
+msgid "spei"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__terceros11
+msgid "terceros11"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__turistapasajeroextranjero
+msgid "turistapasajeroextranjero"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__valesdedespensa
+msgid "valesdedespensa"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__vehiculousado
+msgid "vehiculousado"
+msgstr ""
+
+#. module: l10n_mx_edi_documents
+#: model:ir.model.fields.selection,name:l10n_mx_edi_documents.selection__sat_sync_wizard__complement__ventavehiculos11
+msgid "ventavehiculos11"
+msgstr ""

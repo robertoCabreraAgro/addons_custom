@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_account_invoice_filter_edi_docs" model="ir.ui.view">
+        <field name="name">account.move.search.view.inherit.uuid</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter" />
+        <field name="arch" type="xml">
+            <!-- New behaviour -->
+            <xpath expr="//field[@name='name']" position="attributes">
+                <attribute name="filter_domain">[
+                    '|', '|' , '|', '|', '|',
+                        ('name', 'ilike', self),
+                        ('invoice_origin', 'ilike', self),
+                        ('ref', 'ilike', self),
+                        ('payment_reference', 'ilike', self),
+                        ('partner_id', 'child_of', self),
+                        ('l10n_mx_edi_cfdi_uuid', 'ilike', self),
+                    ]
+                </attribute>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="l10n_mx_edi_cfdi_uuid" />
+            </xpath>
+        </field>
+    </record>
+</odoo>
