@@ -99,12 +99,11 @@ payslips._l10n_mx_edi_sat_synchronously()
 # You can set how many payslips will be sent in each execution. Use zero or negative value to get all. Default: 50
 how_many_payslips_will_be_sent = 50
 
-
 if how_many_payslips_will_be_sent &lt;= 0:
     how_many_payslips_will_be_sent = None
 
 payslips_to_send = model.search([
-    ('state', '=', 'done'),
+    ('state', 'in', ('done', 'paid')),
     ('l10n_mx_edi_pac_status', '=', 'signed'),
     ('sent', '=', False),
     '|',
