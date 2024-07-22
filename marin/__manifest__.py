@@ -3,7 +3,7 @@
     "summary": """
     Instance creator for Marin. This is the app.
     """,
-    "author": "Marin Agro",
+    "author": "Agro Marin",
     "website": "https://www.agromarin.mx",
     "license": "OPL-1",
     "category": "Installer",
@@ -44,8 +44,8 @@
         "documents_l10n_mx_edi",
         "l10n_mx_edi_extended",
         # "l10n_mx_avoid_reversal_entry",
-        # "l10n_mx_partner_blocklist",
-        # "l10n_mx_edi_payslip",
+        "l10n_mx_partner_blocklist",
+        "l10n_mx_edi_payslip",
         # "l10n_mx_edi_partner_defaults",
         # "l10n_mx_edi_supplier_defaults",
         # "l10n_mx_edi_refund",
