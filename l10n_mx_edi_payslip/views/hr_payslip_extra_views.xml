@@ -99,7 +99,7 @@
                     domain="[('state', '=', 'approved')]"
                     help="Done Payslip Extras"
                 />
-                <filter string="Date" name="date_filter" date="date" default_period="last_month" />
+                <filter string="Date" name="date_filter" date="date" />
                 <group expand="0" string="Group By">
                     <filter string="Status" name="state" context="{'group_by': 'state'}" />
                     <filter
