@@ -188,7 +188,7 @@ class L10nMxEdiDocument(models.Model):
             tax_exist = self.env["account.tax"].with_context(
                 lang="es_MX").search(tax_domain, limit=1, order="id asc")
             if tax_exist:
-                tax_ids.append(Command.set(tax_exist.id))
+                tax_ids.append(tax_exist.id)
         return tax_ids
 
     def prepare_search_local_tax_name(self, values):
@@ -379,7 +379,7 @@ class L10nMxEdiDocument(models.Model):
             partner_exist.message_post(body=msg)
         return partner_exist
 
-    def search_partner(self, cfdi_etree):
+    def partner_search_create(self, cfdi_etree):
         partner_obj = self.env["res.partner"]
         import_type, move_type = self.get_et_import_type(cfdi_etree)
         domain_partner = []
@@ -393,7 +393,12 @@ class L10nMxEdiDocument(models.Model):
             domain_partner.append(("vat", "=", vat))
         partner = partner_obj.search(domain_partner, limit=1, order="id asc")
         if not partner:
-            vals = {"company_type": "company", "country_id": self.env.ref("base.mx").id, "name": name, "vat": vat}
+            vals = {
+                "company_type": "company",
+                "name": name,
+                "vat": vat,
+                "country_id": self.env.ref("base.mx").id,
+            }
             partner = partner_obj.sudo().create(vals)
             msg = _(
                 "This partner was created when importing a CFDI file. Please verify that Partner datas are correct."
@@ -536,17 +541,16 @@ class L10nMxEdiDocument(models.Model):
                 }
             )
 
-        invoice_lines.extend(
+        invoice_lines.append(
             Command.create(
                 {
                     "product_id": product_exist.id or False,
                     "name": line_name,
-                    # "analytic_distribution": analytic_distribution else False,
                     "quantity": line_quantity,
                     "product_uom_id": product_exist.uom_id.id if product_exist else uom_exist.id,
                     "price_unit": line_price,
                     "discount": line_discount,
-                    "tax_ids": self.prepare_line_taxes(line),
+                    "tax_ids": [Command.set(self.prepare_line_taxes(line))],
                 },
             )
         )
@@ -555,14 +559,14 @@ class L10nMxEdiDocument(models.Model):
         if line_product_sat_code in self.l10n_mx_edi_get_fuel_codes():
             tax = self.collect_taxes(line.Impuestos.Traslados.Traslado)
             fuel_line_price = tax[0].get("amount") / (tax[0].get("rate") / 100)
-            invoice_lines.extend(
-            Command.create(
-                    {
-                        "name": _("Fuel - IEPS"),
-                        "quantity": 1,
-                        "price_unit": float(line.get("Importe")) - fuel_line_price,
-                    },
-                )
+            invoice_lines.append(
+                Command.create(
+                        {
+                            "name": _("Fuel - IEPS"),
+                            "quantity": 1,
+                            "price_unit": float(line.get("Importe")) - fuel_line_price,
+                        },
+                    )
             )
         return invoice_lines
 
@@ -598,7 +602,7 @@ class L10nMxEdiDocument(models.Model):
             # related_moves.write({
             #    "refund_invoice_ids": [(4, invoice_id.id, 0)]
             # })
-        partner = self.search_partner(cfdi_etree)
+        partner = self.partner_search_create(cfdi_etree)
         global_discount = cfdi_etree.get("Descuento", False)
         global_line_discount = 0
         if global_discount:
@@ -656,42 +660,42 @@ class L10nMxEdiDocument(models.Model):
     def prepare_cfdi_dupli_domain(self, cfdi_etree):
         import_type, move_type = self.get_et_import_type(cfdi_etree)
         domain = [
+            ("move_type", "=", move_type),
             ("invoice_date", "=", self.get_et_datetime(cfdi_etree)),
             # TODO l10n_mx_edi does wrong this part
             # ("l10n_mx_edi_post_time", "=", cfdi_dict["datetime"])
-            ("move_type", "=", move_type),
         ]
         if import_type == "received":
-            domain += [("payment_reference", "=", self.get_et_serie_folio(cfdi_etree))]
+            domain.append(("payment_reference", "=", self.get_et_serie_folio(cfdi_etree)))
         elif import_type == "issued":
-            domain += [("name", "=", self.get_et_serie_folio(cfdi_etree))]
-        partner = self.search_partner(cfdi_etree)
+            domain.append(("name", "=", self.get_et_serie_folio(cfdi_etree)))
+        partner = self.partner_search_create(cfdi_etree)
         domain.append(("commercial_partner_id", "=", partner.id))
         domain.append(("l10n_mx_edi_cfdi_uuid", "=", self.get_et_complemento(cfdi_etree).get("UUID").upper()))
         return domain
 
     def check_cfdi_dupli(self, cfdi_etree):
-        errors = []
         domain = self.prepare_cfdi_dupli_domain(cfdi_etree)
         fuzzy_domain = domain[:-1]
-        fuzzy_move_exist = self.env["account.move"].search(fuzzy_domain)
         exact_move_exist = self.env["account.move"].search(domain)
+        fuzzy_move_exist = self.env["account.move"].search(fuzzy_domain)
+        if (
+            exact_move_exist and len(fuzzy_move_exist) >= 1
+            or not exact_move_exist and len(fuzzy_move_exist) > 1
+        ):
+            raise ValidationError(_("Duplicated: "))
         if not exact_move_exist and len(fuzzy_move_exist) == 1 and not fuzzy_move_exist.l10n_mx_edi_cfdi_uuid:
             exact_move_exist = fuzzy_move_exist
-        elif not exact_move_exist and len(fuzzy_move_exist) > 1 or exact_move_exist:
-            errors.append("Duplicated reference")
-        return {"errors": errors, "move_exist": exact_move_exist}
+        return exact_move_exist
 
     def xml2record(self, cfdi_etree):
         validation = self.check_cfdi_dupli(cfdi_etree)
-        if validation["errors"]:
-            raise ValidationError(_("Something went wrong: %s", validation["errors"]))
-        if not validation["move_exist"]:
+        if not validation:
             vals = self.prepare_move(cfdi_etree)
-            validation["move_exist"] = (
+            validation = (
                 self.env["account.move"].with_context(default_move_type=vals["move_type"]).create(vals)
             )
-        return validation["move_exist"]
+        return validation
 
     def get_headers(self, soap_action, token=False, condition=True):
         headers = {
