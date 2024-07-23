@@ -112,7 +112,7 @@ def _post_init_marin(env):
     env.cr.execute("""SELECT setval('"public"."account_payment_term_line_id_seq"', 100, true);""")
     env.cr.execute("""SELECT setval('"public"."account_tax_group_id_seq"', 1000, true);""")
     env.cr.execute("""SELECT setval('"public"."account_tax_id_seq"', 1000, true);""")
-    env.cr.execute("""SELECT setval('"public"."account_tax_repartition_line_id_seq"', 1000, true);""")
+    env.cr.execute("""SELECT setval('"public"."account_tax_repartition_line_id_seq"', 5000, true);""")
 
     model = "account.account.tag"
     aat = (
@@ -141,6 +141,35 @@ def _post_init_marin(env):
     tools.convert.convert_file(env, "marin", "data/account.payment.term.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/account.tax.group.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/account.tax.csv", None, mode="init", kind="data")
+
+    env.cr.execute("""UPDATE account_tax_repartition_line SET id=id+1000000 WHERE id>=5000 AND id<=5280""")
+    env.cr.execute("""SELECT id FROM account_tax_repartition_line WHERE id>=1000000 ORDER BY tax_id, document_type, repartition_type""")
+    records = env.cr.fetchall()
+    start = 5001
+    for r in records:
+      env.cr.execute("""UPDATE account_tax_repartition_line SET id=%s WHERE id=%s""" % (start, r[0]))
+      start += 1
+
+    model = "account.tax.repartition.line"
+    records = (
+        env[model]
+        .sudo()
+        .search([("id", ">=", "5000")], order="id ASC")
+    )
+    for r in records:
+        exist = env["ir.model.data"].sudo().search([("model", "=", model), ("res_id", "=", r.id)])
+        if not exist:
+            name = "tax_repartition_line_%s" % r.id
+            env["ir.model.data"].create(
+                {
+                    "module": "marin",
+                    "model": model,
+                    "name": name,
+                    "res_id": r.id,
+                    "noupdate": True,
+                }
+            )
+    tools.convert.convert_file(env, "marin", "data/account.tax.repartition.line.csv", None, mode="init", kind="data")
 
     env.cr.execute("""SELECT setval('"public"."crm_team_id_seq"', 100, true);""")
     tools.convert.convert_file(env, "marin", "data/crm_team_data.xml", None, mode="init", kind="data")
