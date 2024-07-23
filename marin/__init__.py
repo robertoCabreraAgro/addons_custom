@@ -30,6 +30,8 @@ def _post_init_marin(env):
     env.cr.execute("""SELECT setval('"public"."res_partner_id_seq"', 999, true);""")
     env.cr.execute("""SELECT setval('"public"."res_users_id_seq"', 999, true);""")
     tools.convert.convert_file(env, "marin", "data/res_users_data.xml", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin", "data/res.partner.csv", None, mode="init", kind="data")
+    # tools.convert.convert_file(env, "marin", "data/res.partner2.csv", None, mode="init", kind="data")
 
     tools.convert.convert_file(env, "marin", "data/product.template.csv", None, mode="init", kind="data")
 

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-    <record id="view_syngenta_sale_line_search" model="ir.ui.view">
-        <field name="name">syngenta.sale.line.search</field>
-        <field name="model">syngenta.sale.line</field>
+    <record id="view_syngenta_sale_report_line_search" model="ir.ui.view">
+        <field name="name">syngenta.sale.report.line.search</field>
+        <field name="model">syngenta.sale.report.line</field>
         <field name="arch" type="xml">
             <search string="Sale Lines Search">
                 <field name="partner_id" />
@@ -17,9 +17,9 @@
         </field>
     </record>
 
-    <record id="view_syngenta_sale_line_tree" model="ir.ui.view">
-        <field name="name">syngenta.sale.line.tree</field>
-        <field name="model">syngenta.sale.line</field>
+    <record id="view_syngenta_sale_report_line_tree" model="ir.ui.view">
+        <field name="name">syngenta.sale.report.line.tree</field>
+        <field name="model">syngenta.sale.report.line</field>
         <field name="arch" type="xml">
             <tree string="Sale Lines" delete="1" multi_edit="1">
                 <field name="agreement_id" />
@@ -34,9 +34,9 @@
         </field>
     </record>
 
-    <record id="action_syngenta_sale_line" model="ir.actions.act_window">
+    <record id="action_syngenta_sale_report_line" model="ir.actions.act_window">
         <field name="name">Sale Lines</field>
-        <field name="res_model">syngenta.sale.line</field>
+        <field name="res_model">syngenta.sale.report.line</field>
         <field name="view_mode">tree</field>
         <field name="context">{}</field>
         <field name="help" type="html">

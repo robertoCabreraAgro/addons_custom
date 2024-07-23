@@ -1,8 +1,8 @@
 from odoo import api, fields, models
 
 
-class SyngentaSaleAgreement(models.Model):
-    _name = "syngenta.sale.agreement"
+class SyngentaCommercialAgreement(models.Model):
+    _name = "syngenta.commercial.agreement"
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _description = "Customer purchase agreements with the distributor to earn benefits"
 
@@ -36,11 +36,11 @@ class SyngentaSaleAgreement(models.Model):
         readonly=True,
     )
     predecesor_id = fields.Many2one(
-        "syngenta.sale.agreement",
+        "syngenta.commercial.agreement",
         "Predecesor agreement",
     )
     sale_line_ids = fields.One2many(
-        "syngenta.sale.line",
+        "syngenta.sale.report.line",
         "agreement_id",
         "Sale Lines",
         auto_join=True,
@@ -70,7 +70,7 @@ class SyngentaSaleAgreement(models.Model):
         "Terms and Conditions", help="The reach levels with their respective discount must be noted here."
     )
     document_ids = fields.One2many(
-        "syngenta.sale.document",
+        "syngenta.sale.report",
         "agreement_id",
         "Documents",
     )
@@ -88,11 +88,11 @@ class SyngentaSaleAgreement(models.Model):
     def action_view_documents(self, documents=False):
         if not documents:
             documents = self.mapped("document_ids")
-        action = self.env["ir.actions.actions"]._for_xml_id("syngenta_edi.action_syngenta_sale_document")
+        action = self.env["ir.actions.actions"]._for_xml_id("syngenta_edi.action_syngenta_sale_report")
         if len(documents) > 1:
             action["domain"] = [("id", "in", documents.ids)]
         elif len(documents) == 1:
-            form_view = [(self.env.ref("syngenta_edi.view_syngenta_sale_document_form").id, "form")]
+            form_view = [(self.env.ref("syngenta_edi.view_syngenta_sale_report_form").id, "form")]
             if "views" in action:
                 action["views"] = form_view + [(state, view) for state, view in action["views"] if view != "form"]
             else:
@@ -105,7 +105,7 @@ class SyngentaSaleAgreement(models.Model):
     def action_view_lines(self, lines=False):
         if not lines:
             lines = self.mapped("sale_line_ids")
-        action = self.env["ir.actions.actions"]._for_xml_id("syngenta_edi.action_syngenta_sale_line")
+        action = self.env["ir.actions.actions"]._for_xml_id("syngenta_edi.action_syngenta_sale_report_line")
         if len(lines) >= 1:
             action["domain"] = [("id", "in", lines.ids)]
         else:
@@ -127,8 +127,8 @@ class SyngentaSaleAgreement(models.Model):
 
     def action_new_document(self):
         self.ensure_one()
-        action = self.env["ir.actions.actions"]._for_xml_id("syngenta_edi.action_syngenta_sale_document")
-        action["views"] = [(self.env.ref("syngenta_edi.view_syngenta_sale_document_form").id, "form")]
+        action = self.env["ir.actions.actions"]._for_xml_id("syngenta_edi.action_syngenta_sale_report")
+        action["views"] = [(self.env.ref("syngenta_edi.view_syngenta_sale_report_form").id, "form")]
         action["context"] = {
             "default_agreement_id": self.id,
         }

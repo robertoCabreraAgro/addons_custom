@@ -12,31 +12,31 @@
         id="menu_syngenta_sale"
         name="Sale"
         parent="menu_syngenta_root"
-        action="action_syngenta_sale_agreement"
+        action="action_syngenta_commercial_agreement"
         sequence="10"
     />
 
     <menuitem
-        id="menu_syngenta_sale_agreement"
-        name="Sale Agreements"
+        id="menu_syngenta_commercial_agreement"
+        name="Commercial agreements"
         parent="menu_syngenta_sale"
-        action="action_syngenta_sale_agreement"
+        action="action_syngenta_commercial_agreement"
         sequence="10"
     />
 
     <menuitem
-        id="menu_syngenta_sale_document"
-        name="Sale Documents"
+        id="menu_syngenta_sale_report"
+        name="Sale reports"
         parent="menu_syngenta_sale"
-        action="action_syngenta_sale_document"
+        action="action_syngenta_sale_report"
         sequence="20"
     />
 
     <menuitem
-        id="menu_syngenta_sale_line"
-        name="Sale Lines"
+        id="menu_syngenta_sale_report_line"
+        name="Sale report lines"
         parent="menu_syngenta_sale"
-        action="action_syngenta_sale_line"
+        action="action_syngenta_sale_report_line"
         sequence="30"
     />
 
@@ -44,23 +44,23 @@
         id="menu_syngenta_stock"
         name="Inventory"
         parent="menu_syngenta_root"
-        action="action_syngenta_stock_quant"
+        action="action_syngenta_stock_report_line"
         sequence="20"
     />
 
     <menuitem
-        id="menu_syngenta_stock_document"
-        name="Stock Documents"
+        id="menu_syngenta_stock_report"
+        name="Inventory reports"
         parent="menu_syngenta_stock"
-        action="action_syngenta_stock_document"
+        action="action_syngenta_stock_report"
         sequence="10"
     />
 
     <menuitem
-        id="menu_syngenta_stock_quant"
-        name="Stock Quants"
+        id="menu_syngenta_stock_report_line"
+        name="Inventory report lines"
         parent="menu_syngenta_stock"
-        action="action_syngenta_stock_quant"
+        action="action_syngenta_stock_report_line"
         sequence="20"
     />
 </odoo>

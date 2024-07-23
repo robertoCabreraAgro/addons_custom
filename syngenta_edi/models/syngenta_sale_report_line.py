@@ -1,8 +1,8 @@
 from odoo import api, fields, models
 
 
-class SyngentaSaleLine(models.Model):
-    _name = "syngenta.sale.line"
+class SyngentaSaleReportLine(models.Model):
+    _name = "syngenta.sale.report.line"
     _order = "agreement_id, document_id, sequence, id"
     _description = "Report line send to Syngenta with customer's consumptions"
 
@@ -15,7 +15,7 @@ class SyngentaSaleLine(models.Model):
         readonly=True,
     )
     document_id = fields.Many2one(
-        "syngenta.sale.document",
+        "syngenta.sale.report",
         "Document",
     )
     agreement_id = fields.Many2one(related="document_id.agreement_id")
@@ -24,7 +24,7 @@ class SyngentaSaleLine(models.Model):
         "product.product",
         "Product",
         required=True,
-        domain=lambda self: [("manufacturer_id", "=", self.env.ref("syngenta_edi.partner_syngenta", False).id)],
+        # domain=lambda self: [("manufacturer_id", "=", self.env.ref("syngenta_edi.partner_syngenta", False).id)],
     )
     product_qty = fields.Float(
         string="Quantity",

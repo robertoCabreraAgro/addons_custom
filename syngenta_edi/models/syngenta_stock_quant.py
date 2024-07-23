@@ -1,8 +1,8 @@
 from odoo import fields, models
 
 
-class SyngentaStockQuant(models.Model):
-    _name = "syngenta.stock.quant"
+class SyngentaStockReportLine(models.Model):
+    _name = "syngenta.stock.report.line"
     _order = "sequence, id"
     _description = "Inventory report line send to Syngenta"
 
@@ -11,7 +11,7 @@ class SyngentaStockQuant(models.Model):
         "product.product",
         "Product",
         required=True,
-        domain=lambda self: [("manufacturer_id", "=", self.env.ref("syngenta_edi.partner_syngenta", False).id)],
+        # domain=lambda self: [("manufacturer_id", "=", self.env.ref("syngenta_edi.partner_syngenta", False).id)],
     )
     product_category_id = fields.Many2one(related="product_id.categ_id", store=True)
     quantity = fields.Float(digits="Product Unit of Measure")
