@@ -27,7 +27,6 @@
         "views/syngenta_stock_report_line_views.xml",
         "views/menuitem_views.xml",
     ],
-    "pre_init_hook": "_pre_init_hook",
     "installable": True,
     "auto_install": False,
     "application": False,
