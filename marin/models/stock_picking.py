@@ -22,8 +22,8 @@ class Picking(models.Model):
             and self.env.user in self.picking_type_id.can_todo_user_ids
         )
         validate = (
-            self.env.user in self.picking_type_id.can_validate_user_ids
-            and self.state in ("confirmed", "assigned")
+            self.state in ("confirmed", "assigned")
+            and self.env.user in self.picking_type_id.can_validate_user_ids
         )
         return {
             "show_mark_as_todo": mark_as_todo,
