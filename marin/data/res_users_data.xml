@@ -54,4 +54,13 @@
         ]"
         />
     </record>
+
+    <record id="partner_general_public" model="res.partner">
+        <field name="name">"Publico en general"</field>
+        <field name="type">contact</field>
+        <field name="country_id" ref="base.mx" />
+        <field name="lang">es_MX</field>
+        <field name="tz">America/Mexico_City</field>
+        <field name="vat">XAXX010101000</field>
+    </record>
 </odoo>
