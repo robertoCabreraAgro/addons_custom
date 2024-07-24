@@ -12,6 +12,10 @@ class SyngentaCommercialAgreement(models.Model):
         "Customer",
         required=True,
     )
+    predecesor_id = fields.Many2one(
+        "syngenta.commercial.agreement",
+        "Predecesor agreement",
+    )
     name = fields.Char(related="partner_id.name", readonly=True)
     number = fields.Char()
     active = fields.Boolean(default=True)
@@ -34,17 +38,6 @@ class SyngentaCommercialAgreement(models.Model):
         "state",
         default="in_progress",
         readonly=True,
-    )
-    predecesor_id = fields.Many2one(
-        "syngenta.commercial.agreement",
-        "Predecesor agreement",
-    )
-    sale_line_ids = fields.One2many(
-        "syngenta.sale.report.line",
-        "agreement_id",
-        "Sale Lines",
-        auto_join=True,
-        copy=True,
     )
     amount = fields.Float(
         "Amount",
@@ -74,8 +67,15 @@ class SyngentaCommercialAgreement(models.Model):
         "agreement_id",
         "Documents",
     )
-    line_count = fields.Integer(compute="_compute_line_count")
     document_count = fields.Integer(compute="_compute_document_count")
+    sale_line_ids = fields.One2many(
+        "syngenta.sale.report.line",
+        "agreement_id",
+        "Sale Lines",
+        auto_join=True,
+        copy=True,
+    )
+    line_count = fields.Integer(compute="_compute_line_count")
 
     @api.depends("name", "date_from", "date_to")
     def _compute_display_name(self):
