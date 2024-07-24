@@ -18,7 +18,7 @@ class Picking(models.Model):
 
     def _prepare_compute_custom_permissions(self):
         mark_as_todo = (
-            self.state != "draft"
+            self.state == "draft"
             and self.env.user in self.picking_type_id.can_todo_user_ids
         )
         validate = (
