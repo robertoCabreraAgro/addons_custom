@@ -1,6 +1,7 @@
 from . import models
 from . import report
 from . import wizards
+
 from odoo import tools
 
 def _pre_init_marin(env):

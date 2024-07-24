@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_power_user_sql_user,access.power.user.sql.user,power_user.model_power_user_sql,power_user.group_power_user,1,0,0,0
+access_power_user_sql_manager,access.power.user.sql.manager,power_user.model_power_user_sql,power_user.group_power_manager,1,1,1,1
+access_power_user_query_tip_user,access.power.user.query.tip.user,power_user.model_power_user_tip,power_user.group_power_user,1,1,1,1
+access_power_user_pdforientation,pdforientation access,power_user.model_pdforientation,power_user.group_power_manager,1,1,1,1
+access_power_user_python_user,access.power.user.python.user,power_user.model_power_user_python,power_user.group_power_user,1,0,0,0
+access_power_user_python_manager,access.power.user.python.manager,power_user.model_power_user_python,power_user.group_power_manager,1,1,1,1

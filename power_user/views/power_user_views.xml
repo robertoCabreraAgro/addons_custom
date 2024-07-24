@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<record id="power_user_python_view_search" model="ir.ui.view">
+        <field name="name">power.user.python.search</field>
+        <field name="model">power.user.python</field>
+        <field name="arch" type="xml">
+            <search string="Search">
+                <field name="name"/>
+			</search>
+		</field>
+	</record>
+
+	<record id="power_user_python_view_tree" model="ir.ui.view">
+		<field name="name">power.user.python.tree</field>
+		<field name="model">power.user.python</field>
+		<field name="arch" type="xml">
+			<tree string="Tests">
+				<field name="sequence" optional="show" widget="handle"/>
+				<field name="name"/>
+			</tree>
+		</field>
+	</record>
+
+	<record id="power_user_python_view_form" model="ir.ui.view">
+		<field name="name">power.user.python.form</field>
+		<field name="model">power.user.python</field>
+		<field name="arch" type="xml">
+			<form string="Execute Python Code">
+				<header>
+					<button name="execute_code" type="object" string="Execute" data-hotkey="x"/>
+				</header>
+				<sheet>
+					<label for="name" class="oe_edit_only"/>
+					<h1>
+						<field name="name" class="oe_inline"/>
+					</h1>
+					<notebook>
+						<page string="Python Code" name="code" autofocus="autofocus">
+							<field name="query_text" widget="ace" options="{'mode': 'python'}"/>
+							<field name="result_text"/>
+						</page>
+					</notebook>
+				</sheet>
+			</form>
+		</field>
+	</record>
+
+	<record id="power_user_sql_view_search" model="ir.ui.view">
+        <field name="name">Search a query</field>
+        <field name="model">power.user.sql</field>
+        <field name="arch" type="xml">
+            <search string="Search">
+                <field name="name"/>
+			</search>
+		</field>
+	</record>
+
+	<record id="power_user_sql_view_tree" model="ir.ui.view">
+		<field name="name">Type a query tree</field>
+		<field name="model">power.user.sql</field>
+		<field name="arch" type="xml">
+			<tree>
+				<field name="name" string="Query"/>
+			</tree>
+		</field>
+	</record>
+
+	<record id="power_user_sql_view_form" model="ir.ui.view">
+		<field name="name">Type a query form</field>
+		<field name="model">power.user.sql</field>
+		<field name="arch" type="xml">
+			<form>
+				<header>
+					<button name="print_result" string="Print PDF" type="object" class="oe_highlight" invisible="raw_output in ['', [], False]"/>
+				</header>
+				<sheet>
+					<group string="Examples">
+						<label string="Examples :" for="tips"/>
+						<div class="o_row">
+							<field name="tips" widget="selection"/>
+							<button name="copy_query" type="object" class="btn-danger" string="Copy" invisible="not tips"/>
+						</div>
+						<field name="tips_description" invisible="not tips"/>
+					</group>
+					<group string="Type a query">
+						<label string="Query :" for="name"/>
+						<div class="o_row">
+							<field name="name" placeholder="SELECT * FROM res_partner" style="border-bottom: 1px solid blue"/>
+						</div>
+					</group>
+					<group>
+						<button name="execute" type="object" string="Execute" class="oe_highlight"/>
+					</group>
+					<group>
+						<label string=" " for="rowcount"/>
+						<div class="o_row">
+							<field name="rowcount" readonly="1" nolabel="1"/>
+						</div>
+					</group>
+					<group>
+						<field name="html" readonly="1" nolabel="1"/>
+					</group>
+					<group>
+						<field name="show_raw_output"/>
+						<field name="raw_output" invisible="not show_raw_output"/>
+					</group>
+				</sheet>
+			</form>
+		</field>
+	</record>
+
+	<record id="power_user_tip_view_search" model="ir.ui.view">
+        <field name="name">Search a query</field>
+        <field name="model">power.user.tip</field>
+        <field name="arch" type="xml">
+            <search string="Search">
+                <field name="name"/>
+				<field name="description"/>
+			</search>
+		</field>
+	</record>
+
+	<record id="power_user_tip_view_tree" model="ir.ui.view">
+		<field name="name">Memorize a query tree</field>
+		<field name="model">power.user.tip</field>
+		<field name="arch" type="xml">
+			<tree editable="bottom">
+				<field name="name" string="Query"/>
+				<field name="description" string="Description"/>
+			</tree>
+		</field>
+	</record>
+
+	<record id="power_user_python_action" model="ir.actions.act_window">
+		<field name="name">Execute Python Script</field>
+		<field name="res_model">power.user.python</field>
+        <field name="type">ir.actions.act_window</field>
+		<field name="view_mode">tree,form</field>
+	</record>
+
+	<record id='power_user_sql_action' model='ir.actions.act_window'>
+        <field name="name">Execute SQL query</field>
+        <field name="res_model">power.user.sql</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+	<record id="power_user_tip_action" model='ir.actions.act_window'>
+        <field name="name">Examples</field>
+        <field name="res_model">power.user.tip</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+	<menuitem id="menu_root_power_user"
+		name="Power User"
+		sequence="100"
+		web_icon="power_user,static/description/icon.png"
+		groups="power_user.group_power_user"
+	/>
+
+	<menuitem id="power_user_python"
+		name="Python"
+		parent="power_user.menu_root_power_user"
+		action="power_user.power_user_python_action"
+		sequence="10"
+	/>
+
+	<menuitem id="power_user_sql"
+		name="SQL"
+		parent="power_user.menu_root_power_user"
+		action="power_user.power_user_sql_action"
+		sequence="20"
+	/>
+
+	<menuitem id="power_user_tip"
+		name="SQL tips"
+		parent="power_user.menu_root_power_user"
+		action="power_user.power_user_tip_action"
+		sequence="30"
+	/>
+</odoo>
