@@ -330,9 +330,8 @@ class HrContract(models.Model):
         return holidays + 8 + 2 * floor(seniority / 5)
 
     def l10n_mx_allocate_annual_holidays(self, filter_by_anniversary=True):
-        """In mexico each year, when the employee celebrates years on the company, the employee earn holidays,
+        """In Mexico each year, when the employee celebrates years on the company, the employee earn holidays,
         this method creates the leave allocation."""
-        holiday = self.env.ref("l10n_mx_edi_payslip.mexican_holiday")
         mexico_tz = self.env["l10n_mx_edi.certificate"]._get_timezone()
         date_mx = datetime.now(mexico_tz)
         contracts = (
@@ -348,23 +347,29 @@ class HrContract(models.Model):
 
         for contract in contracts:
             # Create and confirm the new allocation
-            allocation = self.env["hr.leave.allocation"].create(
-                {
-                    "name": f"{holiday.name} MX {date_mx.year}",
-                    "holiday_status_id": holiday.id,
-                    "number_of_days": contract._l10n_mx_get_holidays(contract.get_seniority()["years"] - 1),
-                    "holiday_type": "employee",
-                    "allocation_type": "regular",
-                    "employee_id": contract.employee_id.id,
-                    "state": "confirm",
-                    "date_from": date_mx,
-                    "date_to": False
-                    if (contract.company_id.l10n_mx_edi_accumulate_holidays)
-                    else (date_mx + relativedelta(years=1) - timedelta(days=1)),
-                }
-            )
+            allocation = self.env["hr.leave.allocation"].create(contract._l10n_mx_prepare_allocation_holidays())
             allocation.sudo().action_validate()
             contract.action_update_current_holidays()
+
+    def _l10n_mx_prepare_allocation_holidays(self):
+        """Prepare data to use in allocation for Mexican allocation"""
+        self.ensure_one()
+        holiday = self.env.ref("l10n_mx_edi_payslip.mexican_holiday")
+        mexico_tz = self.env["l10n_mx_edi.certificate"]._get_timezone()
+        date_mx = datetime.now(mexico_tz)
+        return {
+            "name": f"{holiday.name} MX {date_mx.year}",
+            "holiday_status_id": holiday.id,
+            "number_of_days": self._l10n_mx_get_holidays(self.get_seniority()["years"] - 1),
+            "holiday_type": "employee",
+            "allocation_type": "regular",
+            "employee_id": self.employee_id.id,
+            "state": "confirm",
+            "date_from": date_mx,
+            "date_to": False
+            if (self.company_id.l10n_mx_edi_accumulate_holidays)
+            else (date_mx + relativedelta(years=1) - timedelta(days=1)),
+        }
 
     def get_seniority(self, date_from=False, date_to=False, method="r"):
         """Return seniority between contract's date_start and date_to or today
