@@ -117,25 +117,6 @@ def _post_init_marin(env):
     env.cr.execute("""SELECT setval('"public"."account_tax_id_seq"', 1000, true);""")
     env.cr.execute("""SELECT setval('"public"."account_tax_repartition_line_id_seq"', 5000, true);""")
 
-    model = "account.account.tag"
-    aat = (
-        env[model]
-        .sudo()
-        .search([("name", "ilike", "DIOT:")], order="id ASC")
-    )
-    for at in aat:
-        exist = env["ir.model.data"].sudo().search([("model", "=", model), ("res_id", "=", at.id)])
-        if not exist:
-            env["ir.model.data"].create(
-                {
-                    "module": "l10n_mx",
-                    "model": model,
-                    "name": "l10n_mx_%s" % (at.name.replace(" ","_").replace("%","").replace(":","").replace("-","in_").replace("+","out_").lower()),
-                    "res_id": at.id,
-                    "noupdate": True,
-                }
-            )
-
     tools.convert.convert_file(env, "marin", "data/account_analytic_plan_data.xml", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/account.account.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/account_journal_group_data.xml", None, mode="init", kind="data")
@@ -169,6 +150,24 @@ def _post_init_marin(env):
                     "model": model,
                     "name": name,
                     "res_id": r.id,
+                    "noupdate": True,
+                }
+            )
+    model = "account.account.tag"
+    aat = (
+        env[model]
+        .sudo()
+        .search([("name", "ilike", "DIOT:")], order="id ASC")
+    )
+    for at in aat:
+        exist = env["ir.model.data"].sudo().search([("model", "=", model), ("res_id", "=", at.id)])
+        if not exist:
+            env["ir.model.data"].create(
+                {
+                    "module": "l10n_mx",
+                    "model": model,
+                    "name": "l10n_mx_%s" % (at.name.replace(" ","_").replace("%","").replace(":","").replace("-","in_").replace("+","out_").lower()),
+                    "res_id": at.id,
                     "noupdate": True,
                 }
             )
