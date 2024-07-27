@@ -19,16 +19,6 @@ class AccountMove(models.Model):
 
     # New fields
     journal_type = fields.Selection(related="journal_id.type", string="Journal type", store=True, readonly=True)
-    x_check_tax = fields.Monetary(
-        "Verification tax",
-        copy=False,
-    )
-    x_check_total = fields.Monetary(
-        "Verification total",
-        copy=False,
-    )
-    x_tax_difference = fields.Monetary("Tax difference", compute="_compute_x_difference")
-    x_total_difference = fields.Monetary("Total difference", compute="_compute_x_difference")
     force_payment_policy_pue = fields.Boolean("Force PUE")
     relate_purchase_order = fields.Boolean()
     related_purchase_order_id = fields.Many2one("purchase.order", readonly=True)
@@ -72,20 +62,6 @@ class AccountMove(models.Model):
             "target": "new",
             "context": {"active_model": "account.move", "active_ids": self.ids},
         }
-
-    @api.depends("amount_tax", "amount_total", "x_check_tax", "x_check_total")
-    def _compute_x_difference(self):
-        for move in self:
-            move.x_tax_difference = 0.0
-            move.x_total_difference = 0.0
-            if move.x_check_tax:
-                move.x_tax_difference = float_round(
-                    move.x_check_tax - move.amount_tax, precision_rounding=move.currency_id.rounding
-                )
-            if move.x_check_total:
-                move.x_total_difference = float_round(
-                    move.x_check_total - move.amount_total, precision_rounding=move.currency_id.rounding
-                )
 
     # Override original method
     @api.depends("company_id", "currency_id", "partner_id", "amount_total")

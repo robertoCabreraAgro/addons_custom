@@ -204,7 +204,7 @@
             <xpath expr="//group[@id='header_left_group']/label[@for='partner_id']" position="after">
                 <label for="partner_id" string="Partner" style="font-weight:bold;" invisible="move_type != 'entry'" />
             </xpath>
-            <xpath expr="//group[@id='header_left_group']/field[@name='partner_id']" position="attributes">
+            <xpath expr="//group[@id='header_left_group']//field[@name='partner_id']" position="attributes">
                 <attribute name="invisible" />
             </xpath>
             <xpath expr="//group[@id='header_right_group']/field[@name='date']" position="attributes">
@@ -262,12 +262,6 @@
             <xpath expr="//page[@id='aml_tab']//tree//field[@name='account_id']" position="attributes">
                 <attribute name="options">{"no_create": True}</attribute>
             </xpath>
-            <xpath expr="//field[@name='tax_totals']" position="after">
-                <field name="x_tax_difference" invisible="not x_tax_difference" />
-            </xpath>
-            <xpath expr="//field[@name='amount_residual']" position="after">
-                <field name="x_total_difference" invisible="not x_tax_difference" />
-            </xpath>
             <xpath expr="//page[@id='other_tab']//group[@name='sale_info_group']" position="attributes">
                 <attribute name="invisible">False</attribute>
             </xpath>
@@ -276,12 +270,6 @@
             </xpath>
             <xpath expr="//page[@id='other_tab']//field[@name='to_check']" position="after">
                 <field name="x_stored" />
-            </xpath>
-            <xpath expr="//page[@id='other_tab']/group" position="after">
-                <group string="Consistency">
-                    <field name="x_check_tax" readonly="state != 'draft'" />
-                    <field name="x_check_total" readonly="state != 'draft'" />
-                </group>
             </xpath>
             <xpath
                 expr="//field[@name='invoice_line_ids']/tree/field[@name='l10n_mx_edi_qty_umt']"
