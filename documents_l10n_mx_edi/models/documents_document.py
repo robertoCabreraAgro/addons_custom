@@ -102,7 +102,7 @@ class Document(models.Model):
         vals = {}
         edi_obj = self.env["l10n_mx_edi.document"]
         _is_cfdi, _is_cfdi_signed, cfdi_etree = edi_obj.check_objectify_xml(document.datas)
-        partner = edi_obj.search_partner(cfdi_etree)
+        partner = edi_obj.partner_search_create(cfdi_etree)
         tfd_node = edi_obj.get_et_complemento(cfdi_etree)
         product_list = []
         for line in cfdi_etree.Conceptos.Concepto:
