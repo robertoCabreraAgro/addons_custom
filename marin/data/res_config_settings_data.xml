@@ -44,6 +44,7 @@
 
     <record id="marin_config" model="res.config.settings">
         <field name="external_email_server_default" eval="True" />
+        <field name="auth_signup_reset_password" eval="False" />
         <field name="documents_hr_settings" eval="True" />
         <field name="documents_product_settings" eval="True" />
         <field name="documents_recruitment_settings" eval="True" />

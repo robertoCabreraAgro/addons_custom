@@ -1,4 +1,5 @@
 from odoo import api, fields, models
+from odoo.osv import expression
 
 
 class ResCompany(models.Model):
@@ -16,7 +17,7 @@ class ResCompany(models.Model):
         help="Accounting journal used to create pos cash withdraw.",
     )
 
-    _sql_constraints = [("code_uniq", "unique (code)", "The company code must be unique !")]
+    _sql_constraints = [("code_uniq", "unique (code)", "The company's code must be unique")]
 
     @api.depends("code", "name")
     def _compute_complete_name(self):
@@ -26,11 +27,10 @@ class ResCompany(models.Model):
             else:
                 company.complete_name = "{} - {}".format(company.code, company.name)
 
-    @api.model
-    def name_search(self, name, args=None, operator="ilike", limit=100):
-        args = args or []
-        domain = []
-        if name:
-            domain = ["|", ("code", operator, name), ("name", operator, name)]
-        company = self.search(domain + args, limit=limit)
-        return company.name_get()
+    # @api.model
+    # def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
+    #     domain = domain or []
+    #     if name:
+    #         name_domain = ["|", ("code", operator, name), ("name", operator, name)]
+    #         return self._search(expression.AND([name_domain, domain]), limit=limit, order=order)
+    #     return super()._name_search(name, domain, operator, limit, order)

@@ -1,6 +1,6 @@
 id,company_id/id,warehouse_id/id,default_location_src_id/id,default_location_dest_id/id,name,code,sequence_code,barcode,reservation_method,active,create_backorder,use_existing_lots,use_create_lots,show_operations,sequence,color
-marin.stock_picking_type_1001,marin.company_lmmr,marin.stock_warehouse_101,,marin.stock_location_1002,Receipts,Receipt,IN,SNT-RECEIPTS,At Confirmation,True,Always,True,True,,300,11
-marin.stock_picking_type_1002,marin.company_lmmr,marin.stock_warehouse_101,marin.stock_location_1002,,Delivery Orders,Delivery,OUT,SNT-DELIVERY,Manually,True,Always,True,,,100,10
+marin.stock_picking_type_1001,marin.company_lmmr,marin.stock_warehouse_101,stock.stock_location_suppliers,marin.stock_location_1002,Receipts,Receipt,IN,SNT-RECEIPTS,At Confirmation,True,Always,True,True,,300,11
+marin.stock_picking_type_1002,marin.company_lmmr,marin.stock_warehouse_101,marin.stock_location_1002,stock.stock_location_customers,Delivery Orders,Delivery,OUT,SNT-DELIVERY,Manually,True,Always,True,,,100,10
 marin.stock_picking_type_1003,marin.company_lmmr,marin.stock_warehouse_101,marin.stock_location_1002,marin.stock_location_1006,Pick,Internal Transfer,PICK,SNT-PICK,At Confirmation,,Ask,True,,,700,11
 marin.stock_picking_type_1004,marin.company_lmmr,marin.stock_warehouse_101,marin.stock_location_1006,marin.stock_location_1002,Pack,Internal Transfer,PACK,SNT-PACK,At Confirmation,,Ask,True,,,900,11
 marin.stock_picking_type_1005,marin.company_lmmr,marin.stock_warehouse_101,marin.stock_location_1002,marin.stock_location_1002,Internal Transfers,Internal Transfer,INT,SNT-INTERNAL,At Confirmation,True,Never,True,,,350,1
@@ -10,8 +10,8 @@ marin.stock_picking_type_1008,marin.company_lmmr,marin.stock_warehouse_101,marin
 marin.stock_picking_type_1009,marin.company_lmmr,marin.stock_warehouse_101,marin.stock_location_24,marin.stock_location_22,Subcontracting,Manufacturing,SBC,,At Confirmation,,Ask,True,True,,1100,11
 marin.stock_picking_type_1010,marin.company_lmmr,marin.stock_warehouse_101,marin.stock_location_1002,marin.stock_location_24,Resupply Subcontractor,Delivery,RES,SNT-RESUPPLY,At Confirmation,True,Ask,True,,,1200,11
 marin.stock_picking_type_1011,marin.company_lmmr,marin.stock_warehouse_101,marin.stock_location_1002,stock.stock_location_customers,PoS Orders,Delivery,POS,,At Confirmation,True,Always,True,,,200,11
-marin.stock_picking_type_1012,marin.company_lmmr,marin.stock_warehouse_102,,marin.stock_location_1010,Receipts,Receipt,IN,BAL-RECEIPTS,At Confirmation,True,Always,True,True,,300,11
-marin.stock_picking_type_1013,marin.company_lmmr,marin.stock_warehouse_102,marin.stock_location_1010,,Delivery Orders,Delivery,OUT,BAL-DELIVERY,Manually,True,Always,True,,,100,10
+marin.stock_picking_type_1012,marin.company_lmmr,marin.stock_warehouse_102,stock.stock_location_suppliers,marin.stock_location_1010,Receipts,Receipt,IN,BAL-RECEIPTS,At Confirmation,True,Always,True,True,,300,11
+marin.stock_picking_type_1013,marin.company_lmmr,marin.stock_warehouse_102,marin.stock_location_1010,stock.stock_location_customers,Delivery Orders,Delivery,OUT,BAL-DELIVERY,Manually,True,Always,True,,,100,10
 marin.stock_picking_type_1014,marin.company_lmmr,marin.stock_warehouse_102,marin.stock_location_1010,marin.stock_location_1014,Pick,Internal Transfer,PICK,BAL-PICK,At Confirmation,,Ask,True,,,700,0
 marin.stock_picking_type_1015,marin.company_lmmr,marin.stock_warehouse_102,marin.stock_location_1014,marin.stock_location_1010,Pack,Internal Transfer,PACK,BAL-PACK,At Confirmation,,Ask,True,,,900,0
 marin.stock_picking_type_1016,marin.company_lmmr,marin.stock_warehouse_102,marin.stock_location_1010,marin.stock_location_1010,Internal Transfers,Internal Transfer,INT,BAL-INTERNAL,At Confirmation,True,Never,True,,,350,1
@@ -21,8 +21,8 @@ marin.stock_picking_type_1019,marin.company_lmmr,marin.stock_warehouse_102,marin
 marin.stock_picking_type_1020,marin.company_lmmr,marin.stock_warehouse_102,marin.stock_location_24,marin.stock_location_22,Subcontracting,Manufacturing,SBC,,At Confirmation,,Ask,True,True,,1100,0
 marin.stock_picking_type_1021,marin.company_lmmr,marin.stock_warehouse_102,marin.stock_location_1010,marin.stock_location_24,Resupply Subcontractor,Delivery,RES,BAL-RESUPPLY,At Confirmation,True,Ask,True,,,1200,0
 marin.stock_picking_type_1022,marin.company_lmmr,marin.stock_warehouse_102,marin.stock_location_1010,stock.stock_location_customers,PoS Orders,Delivery,POS,,At Confirmation,True,Always,True,,,200,0
-marin.stock_picking_type_1023,marin.company_lmmr,marin.stock_warehouse_103,,marin.stock_location_1018,Receipts,Receipt,IN,SJN-RECEIPTS,At Confirmation,True,Always,True,True,,300,11
-marin.stock_picking_type_1024,marin.company_lmmr,marin.stock_warehouse_103,marin.stock_location_1018,,Delivery Orders,Delivery,OUT,SJN-DELIVERY,Manually,True,Always,True,,,100,10
+marin.stock_picking_type_1023,marin.company_lmmr,marin.stock_warehouse_103,stock.stock_location_suppliers,marin.stock_location_1018,Receipts,Receipt,IN,SJN-RECEIPTS,At Confirmation,True,Always,True,True,,300,11
+marin.stock_picking_type_1024,marin.company_lmmr,marin.stock_warehouse_103,marin.stock_location_1018,stock.stock_location_customers,Delivery Orders,Delivery,OUT,SJN-DELIVERY,Manually,True,Always,True,,,100,10
 marin.stock_picking_type_1025,marin.company_lmmr,marin.stock_warehouse_103,marin.stock_location_1018,marin.stock_location_1022,Pick,Internal Transfer,PICK,SJN-PICK,At Confirmation,,Ask,True,,,700,0
 marin.stock_picking_type_1026,marin.company_lmmr,marin.stock_warehouse_103,marin.stock_location_1022,marin.stock_location_1018,Pack,Internal Transfer,PACK,SJN-PACK,At Confirmation,,Ask,True,,,900,0
 marin.stock_picking_type_1027,marin.company_lmmr,marin.stock_warehouse_103,marin.stock_location_1018,marin.stock_location_1018,Internal Transfers,Internal Transfer,INT,SJN-INTERNAL,At Confirmation,True,Never,True,,,350,1
@@ -32,8 +32,8 @@ marin.stock_picking_type_1030,marin.company_lmmr,marin.stock_warehouse_103,marin
 marin.stock_picking_type_1031,marin.company_lmmr,marin.stock_warehouse_103,marin.stock_location_24,marin.stock_location_22,Subcontracting,Manufacturing,SBC,,At Confirmation,,Ask,True,True,,1100,0
 marin.stock_picking_type_1032,marin.company_lmmr,marin.stock_warehouse_103,marin.stock_location_1018,marin.stock_location_24,Resupply Subcontractor,Delivery,RES,SJN-RESUPPLY,At Confirmation,True,Ask,True,,,1200,0
 marin.stock_picking_type_1033,marin.company_lmmr,marin.stock_warehouse_103,marin.stock_location_1018,stock.stock_location_customers,PoS Orders,Delivery,POS,,At Confirmation,True,Always,True,,,200,0
-marin.stock_picking_type_1034,marin.company_lmmr,marin.stock_warehouse_104,,marin.stock_location_1026,Receipts,Receipt,IN,CDG-RECEIPTS,At Confirmation,True,Always,True,True,,300,11
-marin.stock_picking_type_1035,marin.company_lmmr,marin.stock_warehouse_104,marin.stock_location_1026,,Delivery Orders,Delivery,OUT,CDG-DELIVERY,Manually,True,Always,True,,,100,10
+marin.stock_picking_type_1034,marin.company_lmmr,marin.stock_warehouse_104,stock.stock_location_suppliers,marin.stock_location_1026,Receipts,Receipt,IN,CDG-RECEIPTS,At Confirmation,True,Always,True,True,,300,11
+marin.stock_picking_type_1035,marin.company_lmmr,marin.stock_warehouse_104,marin.stock_location_1026,stock.stock_location_customers,Delivery Orders,Delivery,OUT,CDG-DELIVERY,Manually,True,Always,True,,,100,10
 marin.stock_picking_type_1036,marin.company_lmmr,marin.stock_warehouse_104,marin.stock_location_1026,marin.stock_location_1030,Pick,Internal Transfer,PICK,CDG-PICK,At Confirmation,,Ask,True,,,700,0
 marin.stock_picking_type_1037,marin.company_lmmr,marin.stock_warehouse_104,marin.stock_location_1030,marin.stock_location_1026,Pack,Internal Transfer,PACK,CDG-PACK,At Confirmation,,Ask,True,,,900,0
 marin.stock_picking_type_1038,marin.company_lmmr,marin.stock_warehouse_104,marin.stock_location_1026,marin.stock_location_1026,Internal Transfers,Internal Transfer,INT,CDG-INTERNAL,At Confirmation,True,Never,True,,,350,1
@@ -43,8 +43,8 @@ marin.stock_picking_type_1041,marin.company_lmmr,marin.stock_warehouse_104,marin
 marin.stock_picking_type_1042,marin.company_lmmr,marin.stock_warehouse_104,marin.stock_location_24,marin.stock_location_22,Subcontracting,Manufacturing,SBC,,At Confirmation,,Ask,True,True,,1100,0
 marin.stock_picking_type_1043,marin.company_lmmr,marin.stock_warehouse_104,marin.stock_location_1026,marin.stock_location_24,Resupply Subcontractor,Delivery,RES,CDG-RESUPPLY,At Confirmation,True,Ask,True,,,1200,0
 marin.stock_picking_type_1044,marin.company_lmmr,marin.stock_warehouse_104,marin.stock_location_1026,stock.stock_location_customers,PoS Orders,Delivery,POS,,At Confirmation,True,Always,True,,,200,0
-marin.stock_picking_type_1045,marin.company_lmmr,marin.stock_warehouse_105,,marin.stock_location_1034,Receipts,Receipt,IN,PROVI-RECEIPTS,At Confirmation,True,Always,True,True,,300,0
-marin.stock_picking_type_1046,marin.company_lmmr,marin.stock_warehouse_105,marin.stock_location_1034,,Delivery Orders,Delivery,OUT,PROVI-DELIVERY,Manually,True,Always,True,,,100,0
+marin.stock_picking_type_1045,marin.company_lmmr,marin.stock_warehouse_105,stock.stock_location_suppliers,marin.stock_location_1034,Receipts,Receipt,IN,PROVI-RECEIPTS,At Confirmation,True,Always,True,True,,300,0
+marin.stock_picking_type_1046,marin.company_lmmr,marin.stock_warehouse_105,marin.stock_location_1034,stock.stock_location_customers,Delivery Orders,Delivery,OUT,PROVI-DELIVERY,Manually,True,Always,True,,,100,0
 marin.stock_picking_type_1047,marin.company_lmmr,marin.stock_warehouse_105,marin.stock_location_1034,marin.stock_location_1038,Pick,Internal Transfer,PICK,PROVI-PICK,At Confirmation,,Ask,True,,,700,0
 marin.stock_picking_type_1048,marin.company_lmmr,marin.stock_warehouse_105,marin.stock_location_1038,marin.stock_location_1034,Pack,Internal Transfer,PACK,PROVI-PACK,At Confirmation,,Ask,True,,,900,0
 marin.stock_picking_type_1049,marin.company_lmmr,marin.stock_warehouse_105,marin.stock_location_1034,marin.stock_location_1034,Internal Transfers,Internal Transfer,INT,PROVI-INTERNAL,At Confirmation,True,Never,True,,,350,0
@@ -54,8 +54,8 @@ marin.stock_picking_type_1052,marin.company_lmmr,marin.stock_warehouse_105,marin
 marin.stock_picking_type_1053,marin.company_lmmr,marin.stock_warehouse_105,marin.stock_location_24,marin.stock_location_22,Subcontracting,Manufacturing,SBC,,At Confirmation,,Ask,True,True,,1100,0
 marin.stock_picking_type_1054,marin.company_lmmr,marin.stock_warehouse_105,marin.stock_location_1034,marin.stock_location_24,Resupply Subcontractor,Delivery,RES,PROVI-RESUPPLY,At Confirmation,,Ask,True,,,1200,0
 marin.stock_picking_type_1055,marin.company_lmmr,marin.stock_warehouse_105,marin.stock_location_1034,stock.stock_location_customers,PoS Orders,Delivery,POS,,At Confirmation,True,Always,True,,,200,0
-marin.stock_picking_type_1056,marin.company_lmmr,marin.stock_warehouse_106,,marin.stock_location_1042,Receipts,Receipt,IN,SLJ-RECEIPTS,At Confirmation,True,Always,True,True,,300,0
-marin.stock_picking_type_1057,marin.company_lmmr,marin.stock_warehouse_106,marin.stock_location_1042,,Delivery Orders,Delivery,OUT,SLJ-DELIVERY,Manually,True,Always,True,,,100,0
+marin.stock_picking_type_1056,marin.company_lmmr,marin.stock_warehouse_106,stock.stock_location_suppliers,marin.stock_location_1042,Receipts,Receipt,IN,SLJ-RECEIPTS,At Confirmation,True,Always,True,True,,300,0
+marin.stock_picking_type_1057,marin.company_lmmr,marin.stock_warehouse_106,marin.stock_location_1042,stock.stock_location_customers,Delivery Orders,Delivery,OUT,SLJ-DELIVERY,Manually,True,Always,True,,,100,0
 marin.stock_picking_type_1058,marin.company_lmmr,marin.stock_warehouse_106,marin.stock_location_1042,marin.stock_location_1046,Pick,Internal Transfer,PICK,SLJ-PICK,At Confirmation,,Ask,True,,,700,0
 marin.stock_picking_type_1059,marin.company_lmmr,marin.stock_warehouse_106,marin.stock_location_1046,marin.stock_location_1042,Pack,Internal Transfer,PACK,SLJ-PACK,At Confirmation,,Ask,True,,,900,0
 marin.stock_picking_type_1060,marin.company_lmmr,marin.stock_warehouse_106,marin.stock_location_1042,marin.stock_location_1042,Internal Transfers,Internal Transfer,INT,SLJ-INTERNAL,At Confirmation,True,Never,True,,,350,0
@@ -65,8 +65,8 @@ marin.stock_picking_type_1063,marin.company_lmmr,marin.stock_warehouse_106,marin
 marin.stock_picking_type_1064,marin.company_lmmr,marin.stock_warehouse_106,marin.stock_location_24,marin.stock_location_22,Subcontracting,Manufacturing,SBC,,At Confirmation,,Ask,True,True,,1100,0
 marin.stock_picking_type_1065,marin.company_lmmr,marin.stock_warehouse_106,marin.stock_location_1042,marin.stock_location_24,Resupply Subcontractor,Delivery,RES,SLJ-RESUPPLY,At Confirmation,,Ask,True,,,1200,0
 marin.stock_picking_type_1066,marin.company_lmmr,marin.stock_warehouse_106,marin.stock_location_1042,stock.stock_location_customers,PoS Orders,Delivery,POS,,At Confirmation,True,Always,True,,,200,0
-marin.stock_picking_type_1067,marin.company_lmmr,marin.stock_warehouse_107,,marin.stock_location_1050,Receipts,Receipt,IN,TONA-RECEIPTS,At Confirmation,True,Always,True,True,,300,0
-marin.stock_picking_type_1068,marin.company_lmmr,marin.stock_warehouse_107,marin.stock_location_1050,,Delivery Orders,Delivery,OUT,TONA-DELIVERY,Manually,True,Always,True,,,100,0
+marin.stock_picking_type_1067,marin.company_lmmr,marin.stock_warehouse_107,stock.stock_location_suppliers,marin.stock_location_1050,Receipts,Receipt,IN,TONA-RECEIPTS,At Confirmation,True,Always,True,True,,300,0
+marin.stock_picking_type_1068,marin.company_lmmr,marin.stock_warehouse_107,marin.stock_location_1050,stock.stock_location_customers,Delivery Orders,Delivery,OUT,TONA-DELIVERY,Manually,True,Always,True,,,100,0
 marin.stock_picking_type_1069,marin.company_lmmr,marin.stock_warehouse_107,marin.stock_location_1050,marin.stock_location_1054,Pick,Internal Transfer,PICK,TONA-PICK,At Confirmation,,Ask,True,,,700,0
 marin.stock_picking_type_1070,marin.company_lmmr,marin.stock_warehouse_107,marin.stock_location_1054,marin.stock_location_1050,Pack,Internal Transfer,PACK,TONA-PACK,At Confirmation,,Ask,True,,,900,0
 marin.stock_picking_type_1071,marin.company_lmmr,marin.stock_warehouse_107,marin.stock_location_1050,marin.stock_location_1050,Internal Transfers,Internal Transfer,INT,TONA-INTERNAL,At Confirmation,True,Never,True,,,350,0
@@ -76,8 +76,8 @@ marin.stock_picking_type_1074,marin.company_lmmr,marin.stock_warehouse_107,marin
 marin.stock_picking_type_1075,marin.company_lmmr,marin.stock_warehouse_107,marin.stock_location_24,marin.stock_location_22,Subcontracting,Manufacturing,SBC,,At Confirmation,,Ask,True,True,,1100,0
 marin.stock_picking_type_1076,marin.company_lmmr,marin.stock_warehouse_107,marin.stock_location_1050,marin.stock_location_24,Resupply Subcontractor,Delivery,RES,TONA-RESUPPLY,At Confirmation,,Ask,True,,,1200,0
 marin.stock_picking_type_1077,marin.company_lmmr,marin.stock_warehouse_107,marin.stock_location_1050,stock.stock_location_customers,PoS Orders,Delivery,POS,,At Confirmation,True,Always,True,,,200,0
-marin.stock_picking_type_1078,marin.company_lmmr,marin.stock_warehouse_108,,marin.stock_location_1058,Receipts,Receipt,IN,OBR-RECEIPTS,At Confirmation,True,Always,True,True,,300,11
-marin.stock_picking_type_1079,marin.company_lmmr,marin.stock_warehouse_108,marin.stock_location_1058,,Delivery Orders,Delivery,OUT,OBR-DELIVERY,Manually,True,Always,True,,,100,10
+marin.stock_picking_type_1078,marin.company_lmmr,marin.stock_warehouse_108,stock.stock_location_suppliers,marin.stock_location_1058,Receipts,Receipt,IN,OBR-RECEIPTS,At Confirmation,True,Always,True,True,,300,11
+marin.stock_picking_type_1079,marin.company_lmmr,marin.stock_warehouse_108,marin.stock_location_1058,stock.stock_location_customers,Delivery Orders,Delivery,OUT,OBR-DELIVERY,Manually,True,Always,True,,,100,10
 marin.stock_picking_type_1080,marin.company_lmmr,marin.stock_warehouse_108,marin.stock_location_1058,marin.stock_location_1062,Pick,Internal Transfer,PICK,OBR-PICK,At Confirmation,,Ask,True,,,700,0
 marin.stock_picking_type_1081,marin.company_lmmr,marin.stock_warehouse_108,marin.stock_location_1062,marin.stock_location_1058,Pack,Internal Transfer,PACK,OBR-PACK,At Confirmation,,Ask,True,,,900,0
 marin.stock_picking_type_1082,marin.company_lmmr,marin.stock_warehouse_108,marin.stock_location_1058,marin.stock_location_1058,Internal Transfers,Internal Transfer,INT,OBR-INTERNAL,At Confirmation,True,Never,True,,,350,1
@@ -87,8 +87,8 @@ marin.stock_picking_type_1085,marin.company_lmmr,marin.stock_warehouse_108,marin
 marin.stock_picking_type_1086,marin.company_lmmr,marin.stock_warehouse_108,marin.stock_location_24,marin.stock_location_22,Subcontracting,Manufacturing,SBC,,At Confirmation,,Ask,True,True,,1100,0
 marin.stock_picking_type_1087,marin.company_lmmr,marin.stock_warehouse_108,marin.stock_location_1058,marin.stock_location_24,Resupply Subcontractor,Delivery,RES,OBR-RESUPPLY,At Confirmation,True,Ask,True,,,1200,0
 marin.stock_picking_type_1088,marin.company_lmmr,marin.stock_warehouse_108,marin.stock_location_1058,stock.stock_location_customers,PoS Orders,Delivery,POS,,At Confirmation,True,Always,True,,,200,0
-marin.stock_picking_type_1089,marin.company_lmmr,marin.stock_warehouse_109,,marin.stock_location_1066,Receipts,Receipt,IN,LOM-RECEIPTS,At Confirmation,True,Always,True,True,,300,11
-marin.stock_picking_type_1090,marin.company_lmmr,marin.stock_warehouse_109,marin.stock_location_1066,,Delivery Orders,Delivery,OUT,LOM-DELIVERY,Manually,True,Always,True,,,100,10
+marin.stock_picking_type_1089,marin.company_lmmr,marin.stock_warehouse_109,stock.stock_location_suppliers,marin.stock_location_1066,Receipts,Receipt,IN,LOM-RECEIPTS,At Confirmation,True,Always,True,True,,300,11
+marin.stock_picking_type_1090,marin.company_lmmr,marin.stock_warehouse_109,marin.stock_location_1066,stock.stock_location_customers,Delivery Orders,Delivery,OUT,LOM-DELIVERY,Manually,True,Always,True,,,100,10
 marin.stock_picking_type_1091,marin.company_lmmr,marin.stock_warehouse_109,marin.stock_location_1066,marin.stock_location_1070,Pick,Internal Transfer,PICK,LOM-PICK,At Confirmation,,Ask,True,,,700,0
 marin.stock_picking_type_1092,marin.company_lmmr,marin.stock_warehouse_109,marin.stock_location_1070,marin.stock_location_1066,Pack,Internal Transfer,PACK,LOM-PACK,At Confirmation,,Ask,True,,,900,0
 marin.stock_picking_type_1093,marin.company_lmmr,marin.stock_warehouse_109,marin.stock_location_1066,marin.stock_location_1066,Internal Transfers,Internal Transfer,INT,LOM-INTERNAL,At Confirmation,True,Never,True,,,350,1
@@ -98,8 +98,8 @@ marin.stock_picking_type_1096,marin.company_lmmr,marin.stock_warehouse_109,marin
 marin.stock_picking_type_1097,marin.company_lmmr,marin.stock_warehouse_109,marin.stock_location_24,marin.stock_location_22,Subcontracting,Manufacturing,SBC,,At Confirmation,,Ask,True,True,,1100,0
 marin.stock_picking_type_1098,marin.company_lmmr,marin.stock_warehouse_109,marin.stock_location_1066,marin.stock_location_24,Resupply Subcontractor,Delivery,RES,LOM-RESUPPLY,At Confirmation,True,Ask,True,,,1200,0
 marin.stock_picking_type_1099,marin.company_lmmr,marin.stock_warehouse_109,marin.stock_location_1066,stock.stock_location_customers,PoS Orders,Delivery,POS,,At Confirmation,True,Always,True,,,200,0
-marin.stock_picking_type_1100,marin.company_lmmr,marin.stock_warehouse_110,,marin.stock_location_1074,Receipts,Receipt,IN,MICH-RECEIPTS,At Confirmation,True,Always,True,True,,300,11
-marin.stock_picking_type_1101,marin.company_lmmr,marin.stock_warehouse_110,marin.stock_location_1074,,Delivery Orders,Delivery,OUT,MICH-DELIVERY,Manually,True,Always,True,,,100,10
+marin.stock_picking_type_1100,marin.company_lmmr,marin.stock_warehouse_110,stock.stock_location_suppliers,marin.stock_location_1074,Receipts,Receipt,IN,MICH-RECEIPTS,At Confirmation,True,Always,True,True,,300,11
+marin.stock_picking_type_1101,marin.company_lmmr,marin.stock_warehouse_110,marin.stock_location_1074,stock.stock_location_customers,Delivery Orders,Delivery,OUT,MICH-DELIVERY,Manually,True,Always,True,,,100,10
 marin.stock_picking_type_1102,marin.company_lmmr,marin.stock_warehouse_110,marin.stock_location_1074,marin.stock_location_1078,Pick,Internal Transfer,PICK,MICH-PICK,At Confirmation,,Ask,True,,,700,0
 marin.stock_picking_type_1103,marin.company_lmmr,marin.stock_warehouse_110,marin.stock_location_1078,marin.stock_location_1074,Pack,Internal Transfer,PACK,MICH-PACK,At Confirmation,,Ask,True,,,900,0
 marin.stock_picking_type_1104,marin.company_lmmr,marin.stock_warehouse_110,marin.stock_location_1074,marin.stock_location_1074,Internal Transfers,Internal Transfer,INT,MICH-INTERNAL,At Confirmation,True,Never,True,,,350,1
@@ -109,8 +109,8 @@ marin.stock_picking_type_1107,marin.company_lmmr,marin.stock_warehouse_110,marin
 marin.stock_picking_type_1108,marin.company_lmmr,marin.stock_warehouse_110,marin.stock_location_24,marin.stock_location_22,Subcontracting,Manufacturing,SBC,,At Confirmation,,Ask,True,True,,1100,0
 marin.stock_picking_type_1109,marin.company_lmmr,marin.stock_warehouse_110,marin.stock_location_1074,marin.stock_location_24,Resupply Subcontractor,Delivery,RES,MICH-RESUPPLY,At Confirmation,True,Ask,True,,,1200,0
 marin.stock_picking_type_1110,marin.company_lmmr,marin.stock_warehouse_110,marin.stock_location_1074,stock.stock_location_customers,PoS Orders,Delivery,POS,,At Confirmation,True,Always,True,,,200,0
-marin.stock_picking_type_1111,marin.company_lmmr,marin.stock_warehouse_111,,marin.stock_location_1082,Receipts,Receipt,IN,SALT-RECEIPTS,At Confirmation,True,Always,True,True,,300,11
-marin.stock_picking_type_1112,marin.company_lmmr,marin.stock_warehouse_111,marin.stock_location_1082,,Delivery Orders,Delivery,OUT,SALT-DELIVERY,Manually,True,Always,True,,,100,10
+marin.stock_picking_type_1111,marin.company_lmmr,marin.stock_warehouse_111,stock.stock_location_suppliers,marin.stock_location_1082,Receipts,Receipt,IN,SALT-RECEIPTS,At Confirmation,True,Always,True,True,,300,11
+marin.stock_picking_type_1112,marin.company_lmmr,marin.stock_warehouse_111,marin.stock_location_1082,stock.stock_location_customers,Delivery Orders,Delivery,OUT,SALT-DELIVERY,Manually,True,Always,True,,,100,10
 marin.stock_picking_type_1113,marin.company_lmmr,marin.stock_warehouse_111,marin.stock_location_1082,marin.stock_location_1086,Pick,Internal Transfer,PICK,SALT-PICK,At Confirmation,,Ask,True,,,700,0
 marin.stock_picking_type_1114,marin.company_lmmr,marin.stock_warehouse_111,marin.stock_location_1086,marin.stock_location_1082,Pack,Internal Transfer,PACK,SALT-PACK,At Confirmation,,Ask,True,,,900,0
 marin.stock_picking_type_1115,marin.company_lmmr,marin.stock_warehouse_111,marin.stock_location_1082,marin.stock_location_1082,Internal Transfers,Internal Transfer,INT,SALT-INTERNAL,At Confirmation,True,Never,True,,,350,1
@@ -120,8 +120,8 @@ marin.stock_picking_type_1118,marin.company_lmmr,marin.stock_warehouse_111,marin
 marin.stock_picking_type_1119,marin.company_lmmr,marin.stock_warehouse_111,marin.stock_location_24,marin.stock_location_22,Subcontracting,Manufacturing,SBC,,At Confirmation,,Ask,True,True,,1100,0
 marin.stock_picking_type_1120,marin.company_lmmr,marin.stock_warehouse_111,marin.stock_location_1082,marin.stock_location_24,Resupply Subcontractor,Delivery,RES,SALT-RESUPPLY,At Confirmation,True,Ask,True,,,1200,0
 marin.stock_picking_type_1121,marin.company_lmmr,marin.stock_warehouse_111,marin.stock_location_1082,stock.stock_location_customers,PoS Orders,Delivery,POS,,At Confirmation,True,Always,True,,,200,0
-marin.stock_picking_type_1122,marin.company_lmmr,marin.stock_warehouse_112,,marin.stock_location_1090,Receipts,Receipt,IN,MOCH-RECEIPTS,At Confirmation,True,Always,True,True,,300,11
-marin.stock_picking_type_1123,marin.company_lmmr,marin.stock_warehouse_112,marin.stock_location_1090,,Delivery Orders,Delivery,OUT,MOCH-DELIVERY,Manually,True,Always,True,,,100,10
+marin.stock_picking_type_1122,marin.company_lmmr,marin.stock_warehouse_112,stock.stock_location_suppliers,marin.stock_location_1090,Receipts,Receipt,IN,MOCH-RECEIPTS,At Confirmation,True,Always,True,True,,300,11
+marin.stock_picking_type_1123,marin.company_lmmr,marin.stock_warehouse_112,marin.stock_location_1090,stock.stock_location_customers,Delivery Orders,Delivery,OUT,MOCH-DELIVERY,Manually,True,Always,True,,,100,10
 marin.stock_picking_type_1124,marin.company_lmmr,marin.stock_warehouse_112,marin.stock_location_1090,marin.stock_location_1094,Pick,Internal Transfer,PICK,MOCH-PICK,At Confirmation,,Ask,True,,,700,0
 marin.stock_picking_type_1125,marin.company_lmmr,marin.stock_warehouse_112,marin.stock_location_1094,marin.stock_location_1090,Pack,Internal Transfer,PACK,MOCH-PACK,At Confirmation,,Ask,True,,,900,0
 marin.stock_picking_type_1126,marin.company_lmmr,marin.stock_warehouse_112,marin.stock_location_1090,marin.stock_location_1090,Internal Transfers,Internal Transfer,INT,MOCH-INTERNAL,At Confirmation,True,Never,True,,,350,1
@@ -131,8 +131,8 @@ marin.stock_picking_type_1129,marin.company_lmmr,marin.stock_warehouse_112,marin
 marin.stock_picking_type_1130,marin.company_lmmr,marin.stock_warehouse_112,marin.stock_location_24,marin.stock_location_22,Subcontracting,Manufacturing,SBC,,At Confirmation,,Ask,True,True,,1100,0
 marin.stock_picking_type_1131,marin.company_lmmr,marin.stock_warehouse_112,marin.stock_location_1090,marin.stock_location_24,Resupply Subcontractor,Delivery,RES,MOCH-RESUPPLY,At Confirmation,True,Ask,True,,,1200,0
 marin.stock_picking_type_1132,marin.company_lmmr,marin.stock_warehouse_112,marin.stock_location_1090,stock.stock_location_customers,PoS Orders,Delivery,POS,,At Confirmation,True,Always,True,,,200,0
-marin.stock_picking_type_1133,marin.company_lmmr,marin.stock_warehouse_113,,marin.stock_location_1098,Receipts,Receipt,IN,HMT-RECEIPTS,At Confirmation,True,Always,True,True,,300,11
-marin.stock_picking_type_1134,marin.company_lmmr,marin.stock_warehouse_113,marin.stock_location_1098,,Delivery Orders,Delivery,OUT,HMT-DELIVERY,Manually,True,Always,True,,,100,10
+marin.stock_picking_type_1133,marin.company_lmmr,marin.stock_warehouse_113,stock.stock_location_suppliers,marin.stock_location_1098,Receipts,Receipt,IN,HMT-RECEIPTS,At Confirmation,True,Always,True,True,,300,11
+marin.stock_picking_type_1134,marin.company_lmmr,marin.stock_warehouse_113,marin.stock_location_1098,stock.stock_location_customers,Delivery Orders,Delivery,OUT,HMT-DELIVERY,Manually,True,Always,True,,,100,10
 marin.stock_picking_type_1135,marin.company_lmmr,marin.stock_warehouse_113,marin.stock_location_1098,marin.stock_location_1102,Pick,Internal Transfer,PICK,HMT-PICK,At Confirmation,,Ask,True,,,700,0
 marin.stock_picking_type_1136,marin.company_lmmr,marin.stock_warehouse_113,marin.stock_location_1102,marin.stock_location_1098,Pack,Internal Transfer,PACK,HMT-PACK,At Confirmation,,Ask,True,,,900,0
 marin.stock_picking_type_1137,marin.company_lmmr,marin.stock_warehouse_113,marin.stock_location_1098,marin.stock_location_1098,Internal Transfers,Internal Transfer,INT,HMT-INTERNAL,At Confirmation,True,Never,True,,,350,1

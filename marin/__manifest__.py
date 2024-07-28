@@ -74,6 +74,7 @@
         "sale_renting",
         "point_of_sale",
         "pos_sale_margin",
+        "pos_hr",
         "website",
         "website_sale_stock",
         "website_sale_picking",

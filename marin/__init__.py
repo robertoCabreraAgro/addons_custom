@@ -116,7 +116,7 @@ def _post_init_marin(env):
     env.cr.execute("""SELECT setval('"public"."stock_rule_id_seq"', 5000, true);""")
     tools.convert.convert_file(env, "marin", "data/stock.picking.type.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/stock.route.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin", "data/stock.rule.csv", None, mode="init", kind="data")
+    # tools.convert.convert_file(env, "marin", "data/stock.rule.csv", None, mode="init", kind="data")
 
     env.cr.execute(
         """
@@ -239,7 +239,6 @@ def _post_init_marin(env):
         UPDATE res_company SET l10n_mx_edi_minimum_wage=248.93;
         UPDATE res_company SET l10n_mx_edi_uma=108.57;
         UPDATE res_company SET predict_bill_product='t';
-        UPDATE res_company SET rule_type='sale_purchase';
         UPDATE res_company SET font='Roboto';
         UPDATE res_company SET layout_background='Geometric';
         """

@@ -243,10 +243,6 @@
         />
     </record>
 
-    <record id="account.menu_finance_entries_accounting_miscellaneous" model="ir.ui.menu">
-        <field name="sequence" eval="10" />
-    </record>
-
     <record id="account.menu_action_account_moves_all" model="ir.ui.menu">
         <field
             name="groups_id"
@@ -282,22 +278,10 @@
         />
     </menuitem>
 
-    <record id="account.menu_finance_entries_management" model="ir.ui.menu">
-        <field name="sequence" eval="40" />
-    </record>
-
-    <record id="account.menu_finance_entries_generate_entries" model="ir.ui.menu">
-        <field name="sequence" eval="50" />
-    </record>
-
-    <record id="account.menu_finance_entries_actions" model="ir.ui.menu">
-        <field name="sequence" eval="60" />
-    </record>
-
     <menuitem
         id="menu_action_account_payments_transfer"
         name="Internal liquidity transfers"
-        parent="account.menu_finance_entries_actions"
+        parent="account.menu_finance_entries"
         action="account.action_account_payments_transfer"
         sequence="1"
     />
