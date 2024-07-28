@@ -87,6 +87,3 @@
 "uom.product_uom_ton","uom.product_uom_categ_kgm","product_unspsc.unspsc_code_TNE","True","0.001","0.01","Bigger than the reference Unit of measure","t"
 "uom.product_uom_unit","uom.product_uom_categ_unit","product_unspsc.unspsc_code_H87","True","1.0","0.01","Reference Unit of measure for this category","Units"
 "uom.product_uom_yard","uom.uom_categ_length","product_unspsc.unspsc_code_YRD","True","1.09361","0.01","Smaller than the reference Unit of measure","yd"
-"l10n_mx.product_uom_activity","l10n_mx.product_uom_categ_service","product_unspsc.unspsc_code_ACT","","1.0","0.01","Smaller than the reference Unit of measure","Activity"
-"l10n_mx.product_uom_job","l10n_mx.product_uom_categ_service","product_unspsc.unspsc_code_E51","True","1.0","0.01","Smaller than the reference Unit of measure","Job"
-"l10n_mx.product_uom_service_unit","l10n_mx.product_uom_categ_service","product_unspsc.unspsc_code_E48","","1.0","0.01","Reference Unit of measure for this category","Service Unit"
