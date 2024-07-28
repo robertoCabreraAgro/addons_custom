@@ -2,6 +2,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import fields, models
+from odoo.tools import SQL
 
 
 class AccountInvoiceReport(models.Model):
@@ -10,5 +11,4 @@ class AccountInvoiceReport(models.Model):
     margin = fields.Float(readonly=True)
 
     def _select(self):
-        select_str = super()._select()
-        return "%s, line.margin_signed AS margin" % select_str
+        return SQL("%s, line.margin_signed AS margin", super()._select())

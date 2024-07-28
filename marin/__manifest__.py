@@ -41,7 +41,7 @@
         "account_debit_note",
         "account_budget",
         "product_margin",
-        "account_move_name_sequence",
+        # "account_move_name_sequence",
         "account_reports_cash_basis",
         "account_consolidation",
         "documents_account",
