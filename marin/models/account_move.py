@@ -2,7 +2,7 @@ from werkzeug.urls import url_quote_plus
 
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools.float_utils import float_compare, float_round
+from odoo.tools.float_utils import float_compare
 from odoo.tools.misc import formatLang
 
 
