@@ -246,4 +246,20 @@
         <field name="l10n_mx_edi_fiscal_regime">612</field>
         <field name="sequence" eval="16" />
     </record>
+
+    <record id="base.user_admin" model="res.users">
+        <field name="company_id" ref="marin.company_lmmr" />
+        <field
+            name="company_ids"
+            eval="[
+                Command.link(ref('marin.company_lmmr')),
+                Command.link(ref('marin.company_tjgl')),
+                Command.link(ref('marin.company_lmmg')),
+                Command.link(ref('marin.company_ammg')),
+                Command.link(ref('marin.company_cfmg')),
+                Command.link(ref('marin.company_glmm')),
+                Command.link(ref('marin.company_society')),
+            ]"
+        />
+    </record>
 </odoo>

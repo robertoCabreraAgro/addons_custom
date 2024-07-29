@@ -10,8 +10,6 @@ def _pre_init_marin(env):
         SELECT setval('"public"."fleet_vehicle_model_brand_id_seq"', 100, true);
         SELECT setval('"public"."fleet_vehicle_model_id_seq"', 100, true);
         SELECT setval('"public"."product_category_id_seq"', 100, true);
-        SELECT setval('"public"."product_product_id_seq"', 1000, true);
-        SELECT setval('"public"."product_template_id_seq"', 1000, true);
         SELECT setval('"public"."res_partner_category_id_seq"', 100, true);
         SELECT setval('"public"."uom_category_id_seq"', 100, true);
         SELECT setval('"public"."uom_uom_id_seq"', 100, true);
@@ -30,17 +28,20 @@ def _post_init_marin(env):
     env.cr.execute("""SELECT setval('"public"."res_users_id_seq"', 200, true);""")
     tools.convert.convert_file(env, "marin", "data/website_data.xml", None, mode="init", kind="data")
 
-    env.cr.execute("""SELECT setval('"public"."res_partner_id_seq"', 999, true);""")
-    env.cr.execute("""SELECT setval('"public"."res_users_id_seq"', 999, true);""")
-    tools.convert.convert_file(env, "marin", "data/res_users_data.xml", None, mode="init", kind="data")
+    env.cr.execute("""SELECT setval('"public"."res_partner_id_seq"', 1000, true);""")
     tools.convert.convert_file(env, "marin", "data/res.partner.csv", None, mode="init", kind="data")
-    env.cr.execute("""SELECT setval('"public"."res_partner_id_seq"', 5000, true);""")
+    env.cr.execute("""SELECT setval('"public"."res_partner_id_seq"', 4999, true);""")
+    env.cr.execute("""SELECT setval('"public"."res_users_id_seq"', 999, true);""")
     tools.convert.convert_file(env, "marin", "data/res.partner-2.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin", "data/mrp.workcenter.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin", "data/res.users.csv", None, mode="init", kind="data")
 
     env.cr.execute(
         """
         SELECT setval('"public"."product_pricelist_id_seq"', 100, true);
         SELECT setval('"public"."product_pricelist_item_id_seq"', 1000, true);
+        SELECT setval('"public"."product_product_id_seq"', 1000, true);
+        SELECT setval('"public"."product_template_id_seq"', 1000, true);
         SELECT setval('"public"."stock_location_id_seq"', 1000, true);
         SELECT setval('"public"."stock_picking_type_id_seq"', 1000, true);
         SELECT setval('"public"."stock_route_id_seq"', 1000, true);
@@ -187,30 +188,37 @@ def _post_init_marin(env):
             )
     tools.convert.convert_file(env, "marin", "data/account.tax.repartition.line.csv", None, mode="init", kind="data")
 
-    env.cr.execute("""SELECT setval('"public"."crm_team_id_seq"', 100, true);""")
+    env.cr.execute(
+        """
+        SELECT setval('"public"."crm_team_id_seq"', 100, true);
+
+        SELECT setval('"public"."hr_payroll_structure_type_id_seq"', 100, true);
+        SELECT setval('"public"."hr_payroll_structure_id_seq"', 100, true);
+        SELECT setval('"public"."hr_salary_rule_id_seq"', 1000, true);
+
+        SELECT setval('"public"."pos_config_id_seq"', 100, true);
+        SELECT setval('"public"."pos_payment_method_id_seq"', 100, true);
+
+        DELETE FROM ir_property WHERE name IN ('property_account_payable_id', 'property_account_receivable_id', 'property_account_expense_categ_id', 'property_account_income_categ_id');
+        """
+    )
+
     tools.convert.convert_file(env, "marin", "data/crm_team_data.xml", None, mode="init", kind="data")
 
     tools.convert.convert_file(env, "marin", "data/hr_department_data.xml", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/hr_job_data.xml", None, mode="init", kind="data")
-    env.cr.execute("""SELECT setval('"public"."hr_payroll_structure_type_id_seq"', 100, true);""")
-    env.cr.execute("""SELECT setval('"public"."hr_payroll_structure_id_seq"', 100, true);""")
-    env.cr.execute("""SELECT setval('"public"."hr_salary_rule_id_seq"', 1000, true);""")
+    tools.convert.convert_file(env, "marin", "data/l10n_mx_edi_employer_registration_data.xml", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin", "data/hr.employee.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/hr_payroll_structure_type_data.xml", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/hr_payroll_structure_nomina_data.xml", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/hr_payroll_structure_nomina_christmas_bonus_data.xml", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/hr_payroll_structure_nomina_finiquito_data.xml", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/hr_payroll_structure_misc_data.xml", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin", "data/l10n_mx_edi_employer_registration_data.xml", None, mode="init", kind="data")
 
-    env.cr.execute("""SELECT setval('"public"."pos_config_id_seq"', 100, true);""")
-    env.cr.execute("""SELECT setval('"public"."pos_payment_method_id_seq"', 100, true);""")
     tools.convert.convert_file(env, "marin", "data/pos.payment.method.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/pos.category.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/pos_config_data.xml", None, mode="init", kind="data")
 
-    env.cr.execute(
-        """DELETE FROM ir_property WHERE name IN ('property_account_payable_id', 'property_account_receivable_id', 'property_account_expense_categ_id', 'property_account_income_categ_id');"""
-    )
     tools.convert.convert_file(env, "marin", "data/ir_property_data.xml", None, mode="init", kind="data")
 
     tools.convert.convert_file(env, "marin", "data/res.company.csv", None, mode="init", kind="data")

@@ -1,0 +1,2 @@
+"id","name","company_id/id","resource_calendar_id/id","time_efficiency","default_capacity","oee_target"
+"marin.workcenter_1","WC1","marin.company_lmmg","marin.resource_calendar_std_45_lmmg","100.0","1.0","90.0"

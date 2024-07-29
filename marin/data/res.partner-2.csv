@@ -1,4 +1,5 @@
 id,parent_id/id,name,active,type,b2x,birthdate,city,city_id/id,l10n_mx_edi_colony,company_type,competitor,country_id/id,l10n_mx_edi_curp,customer,employee,gender,partner_latitude,partner_longitude,is_company,lang,l10n_mx_edi_locality,mobile,phone,state_id/id,supplier,vat,tz,zip
+marin.partner_5000,,"""Publico en general""",True,Contact,,,,,,Company,,base.mx,,,,Other,,,,es_MX,,,,,,XAXX010101000,America/Mexico_City,
 marin.partner_5001,marin.partner_lmmr,Almacen Balderas,True,Delivery Address,,,Tenango del Valle,,,Individual,,base.mx,,,,Other,19.10911,-99.649134,,es_MX,,,'+52 722 171 6718,base.state_mx_mex,,MARL640819192,America/Mexico_City,52345
 marin.partner_5002,marin.partner_lmmr,Almacen Codagem,True,Delivery Address,,,Metepec,,,Individual,,base.mx,,,,Other,19.2360898,-99.5972362,,es_MX,,,'+52 722 232 0859,base.state_mx_mex,,MARL640819192,America/Mexico_City,52140
 marin.partner_5003,marin.partner_lmmr,Almacen Huamantla,True,Delivery Address,Business to consumer,,,,,Individual,,base.mx,,,,,19.304039,-97.914909,,es_MX,,,,base.state_mx_mex,,MARL640819192,America/Mexico_City,51370
