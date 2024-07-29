@@ -111,6 +111,7 @@
         "data/fleet.vehicle.model.brand.csv",
         "data/fleet.vehicle.model.category.csv",
         "data/fleet.vehicle.model.csv",
+        "data/fleet.vehicle.csv",
         "data/product_removal_data.xml",
         "data/stock.package.type.csv",
         "data/stock.storage.category.csv",

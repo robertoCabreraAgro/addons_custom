@@ -1,12 +1,12 @@
 id,company_id/id,partner_id/id,login,notification_type,company_ids/id
 marin.user_1000,marin.company_lmmr,marin.partner_7163,luis.maring@agromarin.mx,Handle in Odoo,"marin.company_lmmg,marin.company_lmmr,marin.company_glmm,marin.company_tjgl,marin.company_ammg,marin.company_cfmg,marin.company_society"
-marin.user_1001,marin.company_lmmr,marin.partner_7045,karla_joesito@hotmail.com,Handle in Odoo,
-marin.user_1002,marin.company_lmmr,marin.partner_5846,elizais-uaemex09@hotmail.com,Handle in Odoo,
-marin.user_1003,marin.company_lmmr,marin.partner_6905,farfanepoani@hotmail.com,Handle in Odoo,
-marin.user_1004,marin.company_lmmr,marin.partner_5972,gardunodani55@gmail.com,Handle in Odoo,
-marin.user_1005,marin.company_lmmr,marin.partner_6880,jose.guillen@xiuman.mx,Handle in Odoo,
-marin.user_1006,marin.company_lmmr,marin.partner_6691,itzel.cruz@xiuman.mx,Handle in Odoo,
-marin.user_1007,marin.company_lmmr,marin.partner_8189,zulli.mejia@agromarin.mx,Handle in Odoo,
+marin.user_1001,marin.company_lmmr,marin.partner_7045,karla_joesito@hotmail.com,Handle in Odoo,marin.company_lmmr
+marin.user_1002,marin.company_lmmr,marin.partner_5846,elizais-uaemex09@hotmail.com,Handle in Odoo,marin.company_lmmr
+marin.user_1003,marin.company_lmmr,marin.partner_6905,farfanepoani@hotmail.com,Handle in Odoo,marin.company_lmmr
+marin.user_1004,marin.company_lmmr,marin.partner_5972,gardunodani55@gmail.com,Handle in Odoo,marin.company_lmmr
+marin.user_1005,marin.company_lmmr,marin.partner_6880,jose.guillen@xiuman.mx,Handle in Odoo,marin.company_lmmr
+marin.user_1006,marin.company_lmmr,marin.partner_6691,itzel.cruz@xiuman.mx,Handle in Odoo,marin.company_lmmr
+marin.user_1007,marin.company_lmmr,marin.partner_8189,zulli.mejia@agromarin.mx,Handle in Odoo,marin.company_lmmr
 marin.user_1008,marin.company_lmmr,marin.partner_6856,brandon.salgado@agromarin.mx,Handle in Odoo,marin.company_lmmr
 marin.user_1009,marin.company_lmmr,marin.partner_7435,nahum.santos@agromarin.mx,Handle in Odoo,marin.company_lmmr
 marin.user_1010,marin.company_lmmr,marin.partner_6131,valeria.corona@agromarin.mx,Handle in Odoo,marin.company_lmmr
@@ -20,9 +20,9 @@ marin.user_1017,marin.company_lmmr,marin.partner_7327,mauricio.nieto@agromarin.m
 marin.user_1018,marin.company_lmmr,marin.partner_5266,adelina.marin@agromarin.mx,Handle in Odoo,"marin.company_lmmg,marin.company_lmmr"
 marin.user_1019,marin.company_lmmr,marin.partner_6014,diana.evangelista@agromarin.mx,Handle in Odoo,marin.company_lmmr
 marin.user_1020,marin.company_lmmr,marin.partner_7619,patricia.nicolas@xiuman.mx,Handle in Odoo,"marin.company_lmmg,marin.company_lmmr"
-marin.user_1021,marin.company_lmmr,marin.partner_5567,antonio.lona@agromarin.mx,Handle in Odoo,
+marin.user_1021,marin.company_lmmr,marin.partner_5567,antonio.lona@agromarin.mx,Handle in Odoo,marin.company_lmmr
 marin.user_1022,marin.company_lmmr,marin.partner_6980,juan.lino@agromarin.mx,Handle in Odoo,"marin.company_lmmg,marin.company_lmmr"
-marin.user_1023,marin.company_lmmr,marin.partner_7228,marco.reyes@agromarin.mx,Handle in Odoo,
+marin.user_1023,marin.company_lmmr,marin.partner_7228,marco.reyes@agromarin.mx,Handle in Odoo,marin.company_lmmr
 marin.user_1024,marin.company_lmmr,marin.partner_8184,yesica.bernal@agromarin.mx,Handle in Odoo,"marin.company_lmmg,marin.company_lmmr"
 marin.user_1025,marin.company_lmmr,marin.partner_6551,horacio.delacruz@agromarin.mx,Handle in Odoo,marin.company_lmmr
 marin.user_1026,marin.company_lmmr,marin.partner_6489,gustavo.garcia@agromarin.mx,Handle in Odoo,marin.company_lmmr
@@ -35,7 +35,7 @@ marin.user_1033,marin.company_lmmr,marin.partner_5760,carlos.barraza@agromarin.m
 marin.user_1034,marin.company_lmmr,marin.partner_6140,alejandro.ornelas@agromarin.mx,Handle in Odoo,marin.company_lmmr
 marin.user_1035,marin.company_lmmr,marin.partner_6758,jesus.martinez@agromarin.mx,Handle in Odoo,marin.company_lmmr
 marin.user_1036,marin.company_lmmr,marin.partner_6823,jorge.ibarra@agromarin.mx,Handle in Odoo,marin.company_lmmr
-marin.user_1038,marin.company_lmmr,marin.partner_6871,franco.delgado@agromarin.mx,Handle in Odoo,
+marin.user_1038,marin.company_lmmr,marin.partner_6871,franco.delgado@agromarin.mx,Handle in Odoo,marin.company_lmmr
 marin.user_1040,marin.company_lmmr,marin.partner_7830,rod.jimenez@agromarin.mx,Handle in Odoo,marin.company_lmmr
 marin.user_1041,marin.company_lmmr,marin.partner_7860,daniel.pina@agromarin.mx,Handle in Odoo,marin.company_lmmr
 marin.user_1042,marin.company_lmmr,marin.partner_6571,hugo.hernandez@agromarin.mx,Handle in Odoo,marin.company_lmmr

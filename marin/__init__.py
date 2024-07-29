@@ -220,7 +220,6 @@ def _post_init_marin(env):
     tools.convert.convert_file(env, "marin", "data/pos_config_data.xml", None, mode="init", kind="data")
 
     tools.convert.convert_file(env, "marin", "data/ir_property_data.xml", None, mode="init", kind="data")
-
     tools.convert.convert_file(env, "marin", "data/res.company.csv", None, mode="init", kind="data")
 
     env.cr.execute(
