@@ -249,8 +249,8 @@ def _post_init_marin(env):
 
     tools.convert.convert_file(env, "marin", "data/crm_team_data.xml", None, mode="init", kind="data")
 
-    tools.convert.convert_file(env, "marin", "data/hr_department_data.xml", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin", "data/hr_job_data.xml", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin", "data/hr.department.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin", "data/hr.job.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/l10n_mx_edi_employer_registration_data.xml", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/hr.employee.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/hr_payroll_structure_type_data.xml", None, mode="init", kind="data")
