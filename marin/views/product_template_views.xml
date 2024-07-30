@@ -66,12 +66,14 @@
                 <attribute name="groups">marin.group_sale_readonly</attribute>
             </xpath>
             <xpath expr="//field[@name='sale_ok']" position="attributes">
+                <attribute name="groups">marin.group_sale_readonly</attribute>
                 <attribute name="readonly">not user_sale_manager</attribute>
             </xpath>
             <xpath expr="//label[@for='purchase_ok']" position="attributes">
                 <attribute name="groups">marin.user_purchase_readonly</attribute>
             </xpath>
             <xpath expr="//field[@name='purchase_ok']" position="attributes">
+                <attribute name="groups">marin.user_purchase_readonly</attribute>
                 <attribute name="readonly">not user_purchase_manager</attribute>
             </xpath>
             <xpath expr="//field[@name='type']" position="attributes">
@@ -105,7 +107,7 @@
                 <attribute name="groups">marin.group_sale_readonly</attribute>
             </xpath>
             <xpath expr="//page[@name='purchase']" position="attributes">
-                <attribute name="groups">marin.group_purchase_readonlys</attribute>
+                <attribute name="groups">marin.group_purchase_readonly</attribute>
             </xpath>
             <xpath expr="//page[@name='inventory']" position="attributes">
                 <attribute name="groups">marin.group_stock_readonly</attribute>

@@ -6,40 +6,35 @@ from odoo import tools
 
 
 def _post_init_marin(env):
-    env.cr.execute("""SELECT setval('"public"."res_partner_id_seq"', 100, true);""")
+    env.cr.execute(
+        """
+        SELECT setval('"public"."res_partner_category_id_seq"', 100, true);
+        SELECT setval('"public"."res_partner_id_seq"', 100, true);
+        SELECT setval('"public"."resource_calendar_id_seq"', 100, true);
+        SELECT setval('"public"."resource_calendar_attendance_id_seq"', 1000, true);
+        """
+    )
+    tools.convert.convert_file(env, "marin", "data/res.partner.category.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/res_company_data.xml", None, mode="init", kind="data")
-
-    env.cr.execute("""SELECT setval('"public"."resource_calendar_id_seq"', 100, true);""")
-    env.cr.execute("""SELECT setval('"public"."resource_calendar_attendance_id_seq"', 1000, true);""")
     tools.convert.convert_file(env, "marin", "data/resource_calendar_data.xml", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin", "data/date.range.type.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin", "data/date.range.csv", None, mode="init", kind="data")
 
     env.cr.execute("""SELECT setval('"public"."res_partner_id_seq"', 200, true);""")
     env.cr.execute("""SELECT setval('"public"."res_users_id_seq"', 200, true);""")
     tools.convert.convert_file(env, "marin", "data/website_data.xml", None, mode="init", kind="data")
 
     env.cr.execute("""SELECT setval('"public"."res_partner_id_seq"', 1000, true);""")
+    env.cr.execute("""SELECT setval('"public"."res_users_id_seq"', 999, true);""")
     tools.convert.convert_file(env, "marin", "data/res.partner.csv", None, mode="init", kind="data")
-    env.cr.execute(
-        """
-        SELECT setval('"public"."uom_category_id_seq"', 100, true);
-        SELECT setval('"public"."uom_uom_id_seq"', 100, true);
-        SELECT setval('"public"."res_partner_category_id_seq"', 100, true);
-        SELECT setval('"public"."res_partner_id_seq"', 4999, true);
-        SELECT setval('"public"."res_users_id_seq"', 999, true);
-        """
-    )
-    tools.convert.convert_file(env, "marin", "data/date.range.type.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin", "data/date.range.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin", "data/uom.category.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin", "data/uom.uom.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin", "data/res.partner.category.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin", "data/res.partner-2.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin", "data/res.partner.bank.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin", "data/mrp.workcenter.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin", "data/res.users.csv", None, mode="init", kind="data")
 
     env.cr.execute(
         """
+        SELECT setval('"public"."res_partner_bank_id_seq"', 1000, true);
+        SELECT setval('"public"."res_partner_id_seq"', 5000, true);
+
+        SELECT setval('"public"."uom_category_id_seq"', 100, true);
+        SELECT setval('"public"."uom_uom_id_seq"', 100, true);
         SELECT setval('"public"."product_pricelist_id_seq"', 100, true);
         SELECT setval('"public"."product_pricelist_item_id_seq"', 1000, true);
         SELECT setval('"public"."product_category_id_seq"', 100, true);
@@ -53,7 +48,13 @@ def _post_init_marin(env):
         SELECT setval('"public"."stock_warehouse_id_seq"', 100, true);
         """
     )
+    tools.convert.convert_file(env, "marin", "data/res.partner-2.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin", "data/res.partner.bank.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin", "data/mrp.workcenter.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin", "data/res.users.csv", None, mode="init", kind="data")
 
+    tools.convert.convert_file(env, "marin", "data/uom.category.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin", "data/uom.uom.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/stock.package.type.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/stock.storage.category.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/product_pricelist_data.xml", None, mode="init", kind="data")
@@ -157,8 +158,6 @@ def _post_init_marin(env):
 
     env.cr.execute(
         """
-        SELECT setval('"public"."res_partner_bank_id_seq"', 1000, true);
-
         SELECT setval('"public"."account_account_id_seq"', 1000, true);
         SELECT setval('"public"."account_analytic_plan_id_seq"', 200, true);
         SELECT setval('"public"."account_journal_id_seq"', 1000, true);

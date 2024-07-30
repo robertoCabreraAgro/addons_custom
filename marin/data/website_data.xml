@@ -2,7 +2,7 @@
 <odoo noupdate="1">
     <record id="website_agromarin" model="website">
         <field name="name">Agro Marin</field>
-        <field name="domain">agromarin.mx</field>
+        <field name="domain"></field>
         <field name="company_id" ref="marin.company_lmmr" />
         <field name="prevent_zero_price_sale" eval="True" />
         <field name="show_line_subtotals_tax_selection">tax_included</field>
@@ -18,7 +18,7 @@
 
     <record id="website_xiuman" model="website">
         <field name="name">Xiuman Agro</field>
-        <field name="domain">xiuman.mx</field>
+        <field name="domain"></field>
         <field name="company_id" ref="marin.company_lmmg" />
         <field name="prevent_zero_price_sale" eval="True" />
         <field name="show_line_subtotals_tax_selection">tax_included</field>
