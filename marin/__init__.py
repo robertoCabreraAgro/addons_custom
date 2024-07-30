@@ -20,6 +20,25 @@ def _post_init_marin(env):
     tools.convert.convert_file(env, "marin", "data/date.range.type.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/date.range.csv", None, mode="init", kind="data")
 
+    model = "resource.calendar"
+    calendars = (
+        env[model]
+        .sudo()
+        .search([("active", "in", [True, False]), ("id", ">", 100)], order="id ASC")
+    )
+    for cc in calendars:
+        exist = env["ir.model.data"].sudo().search([("model", "=", model), ("res_id", "=", cc.id)])
+        if not exist:
+            env["ir.model.data"].create(
+                {
+                    "module": "marin",
+                    "model": model,
+                    "name": "resource_calendar_%s" % cc.id,
+                    "res_id": cc.id,
+                    "noupdate": True,
+                }
+            )
+
     env.cr.execute("""SELECT setval('"public"."res_partner_id_seq"', 200, true);""")
     env.cr.execute("""SELECT setval('"public"."res_users_id_seq"', 200, true);""")
     tools.convert.convert_file(env, "marin", "data/website_data.xml", None, mode="init", kind="data")
@@ -233,6 +252,7 @@ def _post_init_marin(env):
         """
         SELECT setval('"public"."crm_team_id_seq"', 100, true);
 
+        SELECT setval('"public"."hr_contract_id_seq"', 1000, true);
         SELECT setval('"public"."hr_payroll_structure_type_id_seq"', 100, true);
         SELECT setval('"public"."hr_payroll_structure_id_seq"', 100, true);
         SELECT setval('"public"."hr_salary_rule_id_seq"', 1000, true);
@@ -243,7 +263,10 @@ def _post_init_marin(env):
         SELECT setval('"public"."fleet_vehicle_model_brand_id_seq"', 100, true);
         SELECT setval('"public"."fleet_vehicle_model_id_seq"', 100, true);
 
-        DELETE FROM ir_property WHERE name IN ('property_account_payable_id', 'property_account_receivable_id', 'property_account_expense_categ_id', 'property_account_income_categ_id');
+        DELETE FROM
+            ir_property 
+        WHERE
+            name IN ('property_account_payable_id', 'property_account_receivable_id', 'property_account_expense_categ_id', 'property_account_income_categ_id');
         """
     )
 

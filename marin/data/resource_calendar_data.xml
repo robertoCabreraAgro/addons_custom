@@ -123,5 +123,4 @@
     <record id="marin.company_society" model="res.company">
         <field name="resource_calendar_id" ref="resource_calendar_std_45_xm" />
     </record>
-
 </odoo>
