@@ -258,6 +258,7 @@ def _post_init_marin(env):
     tools.convert.convert_file(env, "marin", "data/hr_payroll_structure_nomina_christmas_bonus_data.xml", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/hr_payroll_structure_nomina_finiquito_data.xml", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/hr_payroll_structure_misc_data.xml", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin", "data/hr.contract.csv", None, mode="init", kind="data")
 
     tools.convert.convert_file(env, "marin", "data/pos.payment.method.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/pos.category.csv", None, mode="init", kind="data")
