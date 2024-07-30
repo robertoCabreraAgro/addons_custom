@@ -1,0 +1,4 @@
+"id","name","company_id/id","allow_overlap"
+"marin.date_range_type_mx_tax","MX annual tax declaration period","",""
+"marin.date_range_type_marketing","Marketing","",""
+"marin.date_range_type_ag","AG","","True"

@@ -28,10 +28,13 @@ def _post_init_marin(env):
         SELECT setval('"public"."res_users_id_seq"', 999, true);
         """
     )
+    tools.convert.convert_file(env, "marin", "data/date.range.type.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin", "data/date.range.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/uom.category.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/uom.uom.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/res.partner.category.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/res.partner-2.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin", "data/res.partner.bank.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/mrp.workcenter.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/res.users.csv", None, mode="init", kind="data")
 
@@ -154,6 +157,8 @@ def _post_init_marin(env):
 
     env.cr.execute(
         """
+        SELECT setval('"public"."res_partner_bank_id_seq"', 1000, true);
+
         SELECT setval('"public"."account_account_id_seq"', 1000, true);
         SELECT setval('"public"."account_analytic_plan_id_seq"', 200, true);
         SELECT setval('"public"."account_journal_id_seq"', 1000, true);
@@ -220,6 +225,10 @@ def _post_init_marin(env):
                 }
             )
     tools.convert.convert_file(env, "marin", "data/account.tax.repartition.line.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin", "data/consolidation.chart.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin", "data/consolidation.group.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin", "data/consolidation.account.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin", "data/consolidation.period.csv", None, mode="init", kind="data")
 
     env.cr.execute(
         """
