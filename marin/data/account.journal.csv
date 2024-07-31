@@ -42,6 +42,7 @@
 "marin.journal_msc2_lmmr",marin.company_lmmr,"Miscellaneous operations NF","Miscellaneous","MSC2","93","0","True","","","Not Fiscal real","","","","","","","",""
 "marin.journal_nom1_lmmr",marin.company_lmmr,"Employees FF","Miscellaneous","NOM1","71","1","True","","","Fiscal real","","marin.account_210_01_001_lmmr","","","","","",""
 "marin.journal_nom2_lmmr",marin.company_lmmr,"Employees NF","Miscellaneous","NOM2","73","1","True","","","Not Fiscal real","","marin.account_101_01_001_lmmr","","","","","",""
+"marin.journal_tpv0_lmmr",marin.company_lmmr,"POS CDG","Miscellaneous","TPV0","83","0","True","","","Not Fiscal real","","","","","","","",""
 "marin.journal_tpv1_lmmr",marin.company_lmmr,"POS BAL","Miscellaneous","TPV1","83","0","True","","","Not Fiscal real","","","","","","","",""
 "marin.journal_tpv2_lmmr",marin.company_lmmr,"POS SJN","Miscellaneous","TPV2","84","0","True","","","Not Fiscal real","","","","","","","",""
 "marin.journal_trr1_lmmr",marin.company_lmmr,"Lands FF","Miscellaneous","TRR1","102","0","True","","","Fiscal real","","","","","","","",""

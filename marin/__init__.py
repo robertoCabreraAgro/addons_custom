@@ -57,9 +57,6 @@ def _post_init_marin(env):
         SELECT setval('"public"."product_pricelist_id_seq"', 100, true);
         SELECT setval('"public"."product_pricelist_item_id_seq"', 1000, true);
         SELECT setval('"public"."product_category_id_seq"', 100, true);
-        SELECT setval('"public"."product_packaging_id_seq"', 1000, true);
-        SELECT setval('"public"."product_product_id_seq"', 1000, true);
-        SELECT setval('"public"."product_template_id_seq"', 1000, true);
         SELECT setval('"public"."stock_location_id_seq"', 1000, true);
         SELECT setval('"public"."stock_picking_type_id_seq"', 1000, true);
         SELECT setval('"public"."stock_route_id_seq"', 1000, true);
@@ -79,27 +76,6 @@ def _post_init_marin(env):
     tools.convert.convert_file(env, "marin", "data/product_pricelist_data.xml", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/product.category.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/product.tag.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin", "data/product.template.csv", None, mode="init", kind="data")
-
-    model = "product.product"
-    products = (
-        env[model]
-        .sudo()
-        .search([("active", "in", [True, False]), ("id", ">", 1000)], order="id ASC")
-    )
-    for pp in products:
-        exist = env["ir.model.data"].sudo().search([("model", "=", model), ("res_id", "=", pp.id)])
-        if not exist:
-            env["ir.model.data"].create(
-                {
-                    "module": "marin",
-                    "model": model,
-                    "name": "product_product_%s" % pp.id,
-                    "res_id": pp.id,
-                    "noupdate": True,
-                }
-            )
-    tools.convert.convert_file(env, "marin", "data/product.packaging.csv", None, mode="init", kind="data")
 
     model = "stock.warehouse"
     warehouses = (
@@ -165,15 +141,11 @@ def _post_init_marin(env):
         SELECT setval('"public"."stock_picking_type_id_seq"', 5000, true);
         SELECT setval('"public"."stock_route_id_seq"', 5000, true);
         SELECT setval('"public"."stock_rule_id_seq"', 5000, true);
-        SELECT setval('"public"."mrp_bom_id_seq"', 1000, true);
-        SELECT setval('"public"."mrp_bom_line_id_seq"', 1000, true);
         """
     )
     tools.convert.convert_file(env, "marin", "data/stock.picking.type.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/stock.route.csv", None, mode="init", kind="data")
     # tools.convert.convert_file(env, "marin", "data/stock.rule.csv", None, mode="init", kind="data")
-
-    tools.convert.convert_file(env, "marin", "data/mrp.bom.csv", None, mode="init", kind="data")
 
     env.cr.execute(
         """
@@ -250,6 +222,13 @@ def _post_init_marin(env):
 
     env.cr.execute(
         """
+        SELECT setval('"public"."product_packaging_id_seq"', 1000, true);
+        SELECT setval('"public"."product_product_id_seq"', 1000, true);
+        SELECT setval('"public"."product_template_id_seq"', 1000, true);
+
+        SELECT setval('"public"."mrp_bom_id_seq"', 1000, true);
+        SELECT setval('"public"."mrp_bom_line_id_seq"', 1000, true);
+
         SELECT setval('"public"."crm_team_id_seq"', 100, true);
 
         SELECT setval('"public"."hr_contract_id_seq"', 1000, true);
@@ -269,6 +248,29 @@ def _post_init_marin(env):
             name IN ('property_account_payable_id', 'property_account_receivable_id', 'property_account_expense_categ_id', 'property_account_income_categ_id');
         """
     )
+    tools.convert.convert_file(env, "marin", "data/product.template.csv", None, mode="init", kind="data")
+
+    model = "product.product"
+    products = (
+        env[model]
+        .sudo()
+        .search([("active", "in", [True, False]), ("id", ">", 1000)], order="id ASC")
+    )
+    for pp in products:
+        exist = env["ir.model.data"].sudo().search([("model", "=", model), ("res_id", "=", pp.id)])
+        if not exist:
+            env["ir.model.data"].create(
+                {
+                    "module": "marin",
+                    "model": model,
+                    "name": "product_product_%s" % pp.id,
+                    "res_id": pp.id,
+                    "noupdate": True,
+                }
+            )
+    tools.convert.convert_file(env, "marin", "data/product.packaging.csv", None, mode="init", kind="data")
+
+    tools.convert.convert_file(env, "marin", "data/mrp.bom.csv", None, mode="init", kind="data")
 
     tools.convert.convert_file(env, "marin", "data/crm_team_data.xml", None, mode="init", kind="data")
 
@@ -285,7 +287,7 @@ def _post_init_marin(env):
 
     tools.convert.convert_file(env, "marin", "data/pos.payment.method.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/pos.category.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin", "data/pos_config_data.xml", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin", "data/pos.config.csv", None, mode="init", kind="data")
 
     tools.convert.convert_file(env, "marin", "data/fleet.vehicle.model.brand.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/fleet.vehicle.model.category.csv", None, mode="init", kind="data")
