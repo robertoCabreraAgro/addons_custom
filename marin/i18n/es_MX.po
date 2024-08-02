@@ -3272,8 +3272,8 @@ msgstr "Clientes NF"
 #. module: marin
 #: model:account.journal,name:marin.journal_cnx_lmmg
 #: model:account.journal,name:marin.journal_cnx_lmmr
-msgid "Customers NFX"
-msgstr "Clientes NFX"
+msgid "Customers NX"
+msgstr "Clientes NX"
 
 #. module: marin
 #: model:product.tag,name:marin.product_tag_33
@@ -9006,8 +9006,8 @@ msgstr "Ventas 0% NF"
 #. module: marin
 #: model:account.account,name:marin.account_401_04_016_lmmg
 #: model:account.account,name:marin.account_401_04_016_lmmr
-msgid "Sales 0% NFX"
-msgstr "Ventas 0% NFX"
+msgid "Sales 0% NX"
+msgstr "Ventas 0% NX"
 
 #. module: marin
 #: model:account.account,name:marin.account_401_01_001_glmm
@@ -9578,8 +9578,8 @@ msgstr "Proveedores NF"
 #: model:account.journal,name:marin.journal_pnx_lmmg
 #: model:account.journal,name:marin.journal_pnx_lmmr
 #: model:account.journal,name:marin.journal_pnx_tjgl
-msgid "Suppliers NFX"
-msgstr "Proveedores NFX"
+msgid "Suppliers NX"
+msgstr "Proveedores NX"
 
 #. module: marin
 #: model:account.account,name:marin.account_120_01_001_lmmg

@@ -246,7 +246,7 @@ marin.consolidation_account_1243,marin.consolidation_chart_12,marin.consolidatio
 marin.consolidation_account_1244,marin.consolidation_chart_12,marin.consolidation_group_17,Ventas 0% FX - Descuentos sobre ventas NF por cobro en FX,401.04.003,Closing Rate,,"marin.account_401_04_004_lmmg,marin.account_401_04_004_lmmr"
 marin.consolidation_account_1245,marin.consolidation_chart_12,marin.consolidation_group_17,Ventas 0% FX - sin factura sin descuento sobre ventas NF,401.04.011,Closing Rate,,"marin.account_401_04_014_lmmg,marin.account_401_04_014_lmmr"
 marin.consolidation_account_1246,marin.consolidation_chart_12,marin.consolidation_group_17,Ventas 0% FX - sin factura con descuento sobre ventas NF,401.04.012,Closing Rate,,"marin.account_401_04_015_lmmg,marin.account_401_04_015_lmmr"
-marin.consolidation_account_1247,marin.consolidation_chart_12,marin.consolidation_group_17,Ventas 0% NFX,401.04.014,Closing Rate,,"marin.account_401_04_017_lmmg,marin.account_401_04_017_lmmr"
+marin.consolidation_account_1247,marin.consolidation_chart_12,marin.consolidation_group_17,Ventas 0% NX,401.04.014,Closing Rate,,"marin.account_401_04_017_lmmg,marin.account_401_04_017_lmmr"
 marin.consolidation_account_1248,marin.consolidation_chart_14,marin.consolidation_group_18,Funcionarios y empleados FF,107.01.001,Closing Rate,,marin.account_107_01_001_lmmr
 marin.consolidation_account_1249,marin.consolidation_chart_14,marin.consolidation_group_18,Funcionarios y empleados NF,107.01.002,Closing Rate,,marin.account_107_01_002_lmmr
 marin.consolidation_account_1250,marin.consolidation_chart_14,marin.consolidation_group_18,Proveedores nacionales FF,201.01.001,Closing Rate,,"marin.account_201_01_001_lmmg,marin.account_201_01_001_lmmr,marin.account_201_01_001_glmm,account.5_cuenta216_11"
@@ -269,7 +269,7 @@ marin.consolidation_account_1266,marin.consolidation_chart_15,marin.consolidatio
 marin.consolidation_account_1267,marin.consolidation_chart_15,marin.consolidation_group_24,Ventas 0% FX - sin factura sin descuento sobre ventas NF,401.04.011,Closing Rate,,"marin.account_401_04_014_lmmg,marin.account_401_04_014_lmmr"
 marin.consolidation_account_1268,marin.consolidation_chart_15,marin.consolidation_group_24,Ventas 0% FX - sin factura con descuento sobre ventas NF,401.04.012,Closing Rate,,"marin.account_401_04_015_lmmg,marin.account_401_04_015_lmmr"
 marin.consolidation_account_1269,marin.consolidation_chart_15,marin.consolidation_group_24,Ventas 0% FX - con factura sin descuento sobre ventas NF,401.04.013,Closing Rate,,"marin.account_401_04_016_lmmg,marin.account_401_04_016_lmmr"
-marin.consolidation_account_1270,marin.consolidation_chart_15,marin.consolidation_group_24,Ventas 0% NFX,401.04.014,Closing Rate,,"marin.account_401_04_017_lmmg,marin.account_401_04_017_lmmr"
+marin.consolidation_account_1270,marin.consolidation_chart_15,marin.consolidation_group_24,Ventas 0% NX,401.04.014,Closing Rate,,"marin.account_401_04_017_lmmg,marin.account_401_04_017_lmmr"
 marin.consolidation_account_1271,marin.consolidation_chart_15,marin.consolidation_group_25,Descuentos sobre compras,503.01.004,Closing Rate,,
 marin.consolidation_account_1272,marin.consolidation_chart_15,marin.consolidation_group_25,Descuentos sobre compras por pago en especie NF,503.01.005,Closing Rate,,marin.account_503_01_005_lmmr
 marin.consolidation_account_1273,marin.consolidation_chart_15,marin.consolidation_group_25,Descuentos sobre compra por pago en multi compañia,503.01.007,Closing Rate,,marin.account_503_01_007_lmmr
