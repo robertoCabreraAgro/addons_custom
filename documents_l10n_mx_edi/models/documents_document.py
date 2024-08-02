@@ -1,6 +1,7 @@
 import json
+from os.path import splitext
 
-from odoo import _, api, fields, models
+from odoo import _, api, fields, models, Command
 
 STATUS = {
     "No Encontrado": "not_found",
@@ -199,65 +200,44 @@ class Document(models.Model):
         )
         return folder
 
-    def _l10n_mx_edi_validate_create_vals(self, vals_list):
+    def _l10n_edi_document_assign_tags_and_folder(self):
         edi_obj = self.env["l10n_mx_edi.document"]
-        container = []
-        duplicated_docs = []
-        for vals in vals_list:
-            if "datas" not in vals:
-                container.append(vals)
-                continue
-
-            cfdi_etree = edi_obj.check_objectify_xml(vals["datas"])
-            tags = [
+        etree = edi_obj.check_objectify_xml(self.datas)
+        tags = [
             "{http://www.sat.gob.mx/cfd/3}Comprobante",
             "{http://www.sat.gob.mx/cfd/4}Comprobante",
-            ]
-            is_cfdi = cfdi_etree.tag in tags
-            if not is_cfdi:
-                container.append(vals)
-                continue
-
-            uuid = edi_obj.collect_complemento(cfdi_etree).get("UUID", "").upper()
+        ]
+        is_cfdi = etree.tag in tags
+        if is_cfdi:
+            uuid = edi_obj.collect_complemento(etree).get("UUID", "").upper()
             exist_docs = self.search(
                 [
-                    ("name", "=", uuid + ".xml"),
+                    ("name", "ilike", uuid + ".xml"),
                     ("company_id", "=", self.env.company.id),
                 ]
             )
+            if exist_docs:
+                # Add duplicated tag
+                message = _("Duplicated CFDI")
+                self.env["bus.bus"]._sendone(
+                    self.env.user.partner_id,
+                    "simple_notification",
+                    {"title": "Duplicated CFDI", "message": message, "sticky": False, "warning": True},
+                )
             if not exist_docs:
-                tag_ids = self._prepare_l10n_mx_edi_tags(cfdi_etree)
-                folder = self._documents_l10n_mx_edi_get_folder(cfdi_etree)
-                if "tags_ids" in vals:
-                    vals["tag_ids"].append(tag_ids)
-                else:
-                    vals.update({"tag_ids": tag_ids})
-                if "l10n_mx_edi_is_cfdi" not in vals:
-                    vals.update({"l10n_mx_edi_is_cfdi": True})
-                vals.update(
+                tag_ids = self._prepare_l10n_mx_edi_tags(etree)
+                self.update(
                     {
                         "name": uuid + ".xml",
-                        "folder_id": folder.id,
+                        "folder_id": self._documents_l10n_mx_edi_get_folder(etree).id,
+                        "l10n_mx_edi_is_cfdi": True,
+                        "tag_ids": [Command.link(tag_ids)],
                     }
                 )
-                container.append(vals)
-                continue
-
-            message = _("Duplicated CFDI, document creation skipped.")
-            self.env["bus.bus"]._sendone(
-                self.env.user.partner_id,
-                "simple_notification",
-                {"title": "Duplicated CFDI", "message": message, "sticky": False, "warning": True},
-            )
-            duplicated_docs.append(vals)
-            continue
-
-        if duplicated_docs and not container:
-            return []
-
-        return container
 
     @api.model_create_multi
     def create(self, vals_list):
-        new_vals_list = self._l10n_mx_edi_validate_create_vals(vals_list)
-        return super().create(new_vals_list)
+        documents = super().create(vals_list)
+        for doc in documents.filtered(lambda r: splitext(r.name)[1].upper() == ".XML"):
+            doc._l10n_edi_document_assign_tags_and_folder()
+        return documents
