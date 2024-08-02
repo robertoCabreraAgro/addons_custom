@@ -101,9 +101,9 @@ class Document(models.Model):
     def prepare_l10n_mx_edi_common_fields(self, document):
         vals = {}
         edi_obj = self.env["l10n_mx_edi.document"]
-        _is_cfdi, _is_cfdi_signed, cfdi_etree = edi_obj.check_objectify_xml(document.datas)
+        cfdi_etree = edi_obj.check_objectify_xml(document.datas)
         partner = edi_obj.partner_search_create(cfdi_etree)
-        tfd_node = edi_obj.get_et_complemento(cfdi_etree)
+        tfd_node = edi_obj.collect_complemento(cfdi_etree)
         product_list = []
         for line in cfdi_etree.Conceptos.Concepto:
             product_list += [line.get("Descripcion", "")]
@@ -111,7 +111,7 @@ class Document(models.Model):
             {
                 "partner_id": partner.id,
                 "l10n_mx_edi_cfdi_total_amount": float(cfdi_etree.get("Total", 0)),
-                "l10n_mx_edi_stamp_date": edi_obj.get_et_datetime(tfd_node),
+                "l10n_mx_edi_stamp_date": edi_obj.get_datetime(tfd_node),
                 "l10n_mx_edi_product_list": json.dumps(product_list),
             }
         )
@@ -137,8 +137,8 @@ class Document(models.Model):
                 rec.l10n_mx_edi_sat_cancel_state = "none"
                 continue
 
-            _is_cfdi, _is_cfdi_signed, cfdi_etree = self.env["l10n_mx_edi.document"].check_objectify_xml(rec.datas)
-            uuid = self.env["l10n_mx_edi.document"].get_et_complemento(cfdi_etree).get("UUID", "").upper()
+            cfdi_etree = self.env["l10n_mx_edi.document"].check_objectify_xml(rec.datas)
+            uuid = self.env["l10n_mx_edi.document"].collect_complemento(cfdi_etree).get("UUID", "").upper()
             sat_status = self.env["l10n_mx_edi.document"].l10n_mx_ws_get_cfdi_status(
                 cfdi_etree.Emisor.get("Rfc", ""),
                 cfdi_etree.Receptor.get("Rfc", ""),
@@ -173,7 +173,7 @@ class Document(models.Model):
         tag = tag_obj.search(
             [
                 ("facet_id", "=", self.env.ref("documents_l10n_mx_edi.documents_l10n_mx_edi_facet_fiscal_year").id),
-                ("name", "=", str(self.env["l10n_mx_edi.document"].get_et_datetime(cfdi_etree).year)),
+                ("name", "=", str(self.env["l10n_mx_edi.document"].get_datetime(cfdi_etree).year)),
             ],
             limit=1,
         )
@@ -182,7 +182,7 @@ class Document(models.Model):
         tag = tag_obj.search(
             [
                 ("facet_id", "=", self.env.ref("documents_l10n_mx_edi.documents_l10n_mx_edi_facet_fiscal_month").id),
-                ("name", "=", str(self.env["l10n_mx_edi.document"].get_et_datetime(cfdi_etree).month)),
+                ("name", "=", str(self.env["l10n_mx_edi.document"].get_datetime(cfdi_etree).month)),
             ],
             limit=1,
         )
@@ -208,12 +208,17 @@ class Document(models.Model):
                 container.append(vals)
                 continue
 
-            is_cfdi, _is_cfdi_signed, cfdi_etree = edi_obj.check_objectify_xml(vals["datas"])
+            cfdi_etree = edi_obj.check_objectify_xml(vals["datas"])
+            tags = [
+            "{http://www.sat.gob.mx/cfd/3}Comprobante",
+            "{http://www.sat.gob.mx/cfd/4}Comprobante",
+            ]
+            is_cfdi = cfdi_etree.tag in tags
             if not is_cfdi:
                 container.append(vals)
                 continue
 
-            uuid = edi_obj.get_et_complemento(cfdi_etree).get("UUID", "").upper()
+            uuid = edi_obj.collect_complemento(cfdi_etree).get("UUID", "").upper()
             exist_docs = self.search(
                 [
                     ("name", "=", uuid + ".xml"),

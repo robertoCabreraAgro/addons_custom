@@ -125,9 +125,14 @@ class ResCompany(models.Model):
                     continue
                 with container.open(fname) as file:
                     file_content = base64.b64encode(file.read())
-                    is_cfdi, _is_cfdi_signed, _cfdi_etree = self.env["l10n_mx_edi.document"].check_objectify_xml(
+                    cfdi_etree = self.env["l10n_mx_edi.document"].check_objectify_xml(
                         file_content
                     )
+                    tags = [
+                    "{http://www.sat.gob.mx/cfd/3}Comprobante",
+                    "{http://www.sat.gob.mx/cfd/4}Comprobante",
+                    ]
+                    is_cfdi = cfdi_etree.tag in tags
                     if is_cfdi:
                         att_exist = att_obj.with_context(force_l10n_mx_edi_cfdi_uuid=True).create(
                             {

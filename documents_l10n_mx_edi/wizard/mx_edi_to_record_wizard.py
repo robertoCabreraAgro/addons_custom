@@ -43,7 +43,7 @@ class MxEdiToRecordWizard(models.TransientModel):
     def create_records(self):
         move_ids = []
         for document in self.document_ids:
-            _is_cfdi, _is_cfdi_signed, cfdi_etree = self.env["l10n_mx_edi.document"].check_objectify_xml(document.datas)
+            cfdi_etree = self.env["l10n_mx_edi.document"].check_objectify_xml(document.datas)
             obj_exist = self.env["l10n_mx_edi.document"].xml2record(cfdi_etree)
             document.attachment_id.with_context(no_document=True).write(
                 {
