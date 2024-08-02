@@ -294,6 +294,8 @@ def _post_init_marin(env):
     tools.convert.convert_file(env, "marin", "data/fleet.vehicle.model.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/fleet.vehicle.csv", None, mode="init", kind="data")
 
+    tools.convert.convert_file(env, "marin", "data/documents_document_data.xml", None, mode="init", kind="data")
+
     # tools.convert.convert_file(env, "marin", "data/project.task.type.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/project.project.csv", None, mode="init", kind="data")
     
