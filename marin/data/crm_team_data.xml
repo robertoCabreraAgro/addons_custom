@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo noupdate="1">
     <record id="team_lmmr" model="crm.team">
-        <field name="name">Venta directa LMMR</field>
+        <field name="name">Direct sale LMMR</field>
         <field name="company_id" ref="marin.company_lmmr" />
     </record>
 
@@ -11,12 +11,12 @@
     </record>
 
     <record id="team_lmmr_sub" model="crm.team">
-        <field name="name">Subdistribucion LMMR</field>
+        <field name="name">Subdistribution LMMR</field>
         <field name="company_id" ref="marin.company_lmmr" />
     </record>
 
     <record id="team_tjgl" model="crm.team">
-        <field name="name">Venta directa TJGL</field>
+        <field name="name">Direct sale TJGL</field>
         <field name="company_id" ref="marin.company_tjgl" />
     </record>
 
@@ -26,7 +26,7 @@
     </record>
 
     <record id="team_lmmg" model="crm.team">
-        <field name="name">Venta directa LMMG</field>
+        <field name="name">Direct sale LMMG</field>
         <field name="company_id" ref="marin.company_lmmg" />
     </record>
 
@@ -36,17 +36,17 @@
     </record>
 
     <record id="team_lmmg_sub" model="crm.team">
-        <field name="name">Subdistribucion LMMG</field>
+        <field name="name">Subdistribution LMMG</field>
         <field name="company_id" ref="marin.company_lmmg" />
     </record>
 
     <record id="team_glmm" model="crm.team">
-        <field name="name">Venta directa GLMM</field>
+        <field name="name">Direct sale GLMM</field>
         <field name="company_id" ref="marin.company_glmm" />
     </record>
 
     <record id="team_society" model="crm.team">
-        <field name="name">Venta directa XM</field>
+        <field name="name">Direct sale XM</field>
         <field name="company_id" ref="marin.company_society" />
     </record>
 
@@ -56,12 +56,12 @@
     </record>
 
     <record id="team_society_sub" model="crm.team">
-        <field name="name">Subdistribucion XM</field>
+        <field name="name">Subdistribution XM</field>
         <field name="company_id" ref="marin.company_society" />
     </record>
 
     <record id="team_lmmr_0" model="crm.team">
-        <field name="name">Automatico</field>
+        <field name="name">Automatic</field>
         <field name="company_id" ref="marin.company_lmmr" />
     </record>
 
@@ -71,17 +71,17 @@
     </record>
 
     <record id="team_lmmr_2" model="crm.team">
-        <field name="name">TPV SJN</field>
+        <field name="name">POS SJN</field>
         <field name="company_id" ref="marin.company_lmmr" />
     </record>
 
     <record id="team_lmmr_3" model="crm.team">
-        <field name="name">TPV BAL</field>
+        <field name="name">POS BAL</field>
         <field name="company_id" ref="marin.company_lmmr" />
     </record>
 
     <record id="team_lmmr_4" model="crm.team">
-        <field name="name">TPV PROVI</field>
+        <field name="name">POS PROVI</field>
         <field name="company_id" ref="marin.company_lmmr" />
     </record>
 
