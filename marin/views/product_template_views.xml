@@ -71,10 +71,10 @@
             </xpath>
             <xpath expr="//div[@name='options']//field[@name='purchase_ok']" position="attributes">
                 <attribute name="readonly">not user_purchase_manager</attribute>
-                <attribute name="groups">marin.user_purchase_readonly</attribute>
+                <attribute name="groups">marin.group_purchase_readonly</attribute>
             </xpath>
             <xpath expr="//div[@name='options']//label[@for='purchase_ok']" position="attributes">
-                <attribute name="groups">marin.user_purchase_readonly</attribute>
+                <attribute name="groups">marin.group_purchase_readonly</attribute>
             </xpath>
             <xpath expr="//field[@name='type']" position="attributes">
                 <attribute name="readonly">not user_stock_manager</attribute>

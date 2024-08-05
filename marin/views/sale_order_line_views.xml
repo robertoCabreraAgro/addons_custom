@@ -158,7 +158,7 @@
                     string="Disc.%"
                     readonly="state in ['sale', 'done', 'cancel']"
                     optional="show"
-                    groups="product.group_discount_per_so_line"
+                    groups="sale.group_discount_per_so_line"
                 />
                 <field name="price_subtotal" widget="monetary" optional="show" />
                 <field name="price_total" widget="monetary" optional="show" />

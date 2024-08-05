@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="product.decimal_price" model="decimal.precision">
+        <field name="digits">6</field>
+    </record>
+
+    <record id="product.decimal_discount" model="decimal.precision">
+        <field name="digits">6</field>
+    </record>
+
+    <record id="product.decimal_stock_weight" model="decimal.precision">
+        <field name="digits">6</field>
+    </record>
+
+    <record id="product.decimal_volume" model="decimal.precision">
+        <field name="digits">6</field>
+    </record>
+
+    <record id="product.decimal_product_uom" model="decimal.precision">
+        <field name="digits" eval="6"/>
+    </record>
+
+    <record id="analytic.decimal_percentage_analytic" model="decimal.precision">
+        <field name="digits" eval="6"/>
+    </record>
+
+    <record id="quality.decimal_quality" model="decimal.precision">
+        <field name="digits" eval="6"/>
+    </record>
+
+    <record id="hr_payroll.decimal_payroll" model="decimal.precision">
+        <field name="digits" eval="6"/>
+    </record>
+</odoo>

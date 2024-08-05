@@ -248,6 +248,8 @@ def _post_init_marin(env):
             name IN ('property_account_payable_id', 'property_account_receivable_id', 'property_account_expense_categ_id', 'property_account_income_categ_id');
         """
     )
+
+    tools.convert.convert_file(env, "marin", "data/pos.category.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/product.template.csv", None, mode="init", kind="data")
 
     model = "product.product"
@@ -286,7 +288,6 @@ def _post_init_marin(env):
     tools.convert.convert_file(env, "marin", "data/hr.contract.csv", None, mode="init", kind="data")
 
     tools.convert.convert_file(env, "marin", "data/pos.payment.method.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin", "data/pos.category.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/pos.config.csv", None, mode="init", kind="data")
 
     tools.convert.convert_file(env, "marin", "data/fleet.vehicle.model.brand.csv", None, mode="init", kind="data")
@@ -298,6 +299,9 @@ def _post_init_marin(env):
 
     # tools.convert.convert_file(env, "marin", "data/project.task.type.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/project.project.csv", None, mode="init", kind="data")
+
+    tools.convert.convert_file(env, "marin", "data/room.office.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin", "data/room.room.csv", None, mode="init", kind="data")
     
     tools.convert.convert_file(env, "marin", "data/ir_property_data.xml", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/res.company.csv", None, mode="init", kind="data")

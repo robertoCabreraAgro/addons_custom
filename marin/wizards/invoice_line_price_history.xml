@@ -32,7 +32,7 @@
                             <field name="date" readonly="1" />
                             <field name="qty" readonly="1" />
                             <field name="price_unit" />
-                            <field name="discount" groups="product.group_discount_per_so_line" />
+                            <field name="discount" groups="sale.group_discount_per_so_line" />
                         </group>
                     </form>
                     <tree>
@@ -41,7 +41,7 @@
                         <field name="partner_id" />
                         <field name="qty" />
                         <field name="price_unit" />
-                        <field name="discount" groups="product.group_discount_per_so_line" />
+                        <field name="discount" groups="sale.group_discount_per_so_line" />
                         <field name="tax_ids" widget="many2many_tags" />
                     </tree>
                 </field>
