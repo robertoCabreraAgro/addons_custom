@@ -241,6 +241,7 @@ def _post_init_marin(env):
 
         SELECT setval('"public"."fleet_vehicle_model_brand_id_seq"', 100, true);
         SELECT setval('"public"."fleet_vehicle_model_id_seq"', 100, true);
+        SELECT setval('"public"."account_analytic_distribution_model_id_seq"', 1000, true);
 
         DELETE FROM
             ir_property 
@@ -294,6 +295,9 @@ def _post_init_marin(env):
     tools.convert.convert_file(env, "marin", "data/fleet.vehicle.model.category.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/fleet.vehicle.model.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/fleet.vehicle.csv", None, mode="init", kind="data")
+
+    tools.convert.convert_file(env, "marin", "data/account.analytic.account.csv", None, mode="init", kind="data")
+    # tools.convert.convert_file(env, "marin", "data/account.analytic.distribution.model.csv", None, mode="init", kind="data")
 
     tools.convert.convert_file(env, "marin", "data/documents_document_data.xml", None, mode="init", kind="data")
 
