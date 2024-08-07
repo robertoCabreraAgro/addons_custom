@@ -170,8 +170,16 @@ def _post_init_marin(env):
     tools.convert.convert_file(env, "marin", "data/account.tax.group.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/account.tax.csv", None, mode="init", kind="data")
 
-    env.cr.execute("""UPDATE account_tax_repartition_line SET id=id+1000000 WHERE id>=5000 AND id<=5280""")
-    env.cr.execute("""SELECT id FROM account_tax_repartition_line WHERE id>=1000000 ORDER BY tax_id, document_type, repartition_type""")
+    env.cr.execute("""UPDATE account_payment_method_line SET id=id+10000 WHERE id>=1000""")
+    env.cr.execute("""SELECT id FROM account_payment_method_line WHERE id>=10000 ORDER BY journal_id, payment_method_id""")
+    records = env.cr.fetchall()
+    start = 1001
+    for r in records:
+      env.cr.execute("""UPDATE account_payment_method_line SET id=%s WHERE id=%s""" % (start, r[0]))
+      start += 1
+
+    env.cr.execute("""UPDATE account_tax_repartition_line SET id=id+10000 WHERE id>=5000""")
+    env.cr.execute("""SELECT id FROM account_tax_repartition_line WHERE id>=10000 ORDER BY tax_id, document_type, repartition_type""")
     records = env.cr.fetchall()
     start = 5001
     for r in records:
@@ -196,6 +204,7 @@ def _post_init_marin(env):
                     "noupdate": True,
                 }
             )
+
     model = "account.account.tag"
     aat = (
         env[model]
@@ -214,6 +223,7 @@ def _post_init_marin(env):
                     "noupdate": True,
                 }
             )
+
     tools.convert.convert_file(env, "marin", "data/account.tax.repartition.line.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/consolidation.chart.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/consolidation.group.csv", None, mode="init", kind="data")
@@ -241,6 +251,7 @@ def _post_init_marin(env):
 
         SELECT setval('"public"."fleet_vehicle_model_brand_id_seq"', 100, true);
         SELECT setval('"public"."fleet_vehicle_model_id_seq"', 100, true);
+        SELECT setval('"public"."account_analytic_account_id_seq"', 999, true);
         SELECT setval('"public"."account_analytic_distribution_model_id_seq"', 1000, true);
 
         DELETE FROM
@@ -297,7 +308,7 @@ def _post_init_marin(env):
     tools.convert.convert_file(env, "marin", "data/fleet.vehicle.csv", None, mode="init", kind="data")
 
     tools.convert.convert_file(env, "marin", "data/account.analytic.account.csv", None, mode="init", kind="data")
-    # tools.convert.convert_file(env, "marin", "data/account.analytic.distribution.model.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin", "data/account.analytic.distribution.model.csv", None, mode="init", kind="data")
 
     tools.convert.convert_file(env, "marin", "data/documents_document_data.xml", None, mode="init", kind="data")
 

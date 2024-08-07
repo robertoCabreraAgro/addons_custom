@@ -29,10 +29,4 @@
         <field name="default_applicability">optional</field>
         <field name="color">1</field>
     </record>
-
-    <record id="analytic_plan_206" model="account.analytic.plan">
-        <field name="name">Individual</field>
-        <field name="default_applicability">optional</field>
-        <field name="color">1</field>
-    </record>
 </odoo>
