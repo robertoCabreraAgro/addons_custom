@@ -32,7 +32,7 @@ from . import purchase_order_line
 from . import res_company
 from . import res_config_settings
 from . import res_partner_age_range
-from . import res#_partner
+from . import res_partner
 from . import res_users
 from . import sale_order
 from . import sale_order_line
