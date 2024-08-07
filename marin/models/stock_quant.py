@@ -2,68 +2,25 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools.float_utils import float_compare
 
-from odoo.addons.stock.models.stock_quant import StockQuant
 
-
-class StockQuantInherit(models.Model):
+class StockQuant(models.Model):
     _inherit = "stock.quant"
 
     # Extend core fields
     product_categ_id = fields.Many2one(store=True, readonly=True)
     warehouse_id = fields.Many2one(store=True, readonly=True)
+
     # New fields
     removal_priority = fields.Integer(related="location_id.removal_priority", store=True)
 
     def _apply_inventory_group_validate(self):
         if not self.env.user.has_group("marin.group_stock_inventory_adjustment"):
-            raise UserError(_("Only a Inventory manager can validate an inventory adjustment."))
-
-    def _apply_inventory2(self):
-        move_vals = []
-        self._apply_inventory_group_validate()
-        for quant in self:
-            # Create and validate a move so that the quant matches its `inventory_quantity`.
-            if float_compare(quant.inventory_diff_quantity, 0, precision_rounding=quant.product_uom_id.rounding) > 0:
-                move_vals.append(
-                    quant._get_inventory_move_values(
-                        quant.inventory_diff_quantity,
-                        quant.product_id.with_company(quant.company_id).property_stock_inventory,
-                        quant.location_id,
-                    )
-                )
-            else:
-                move_vals.append(
-                    quant._get_inventory_move_values(
-                        -quant.inventory_diff_quantity,
-                        quant.location_id,
-                        quant.product_id.with_company(quant.company_id).property_stock_inventory,
-                        package_id=quant.package_id,
-                    )
-                )
-        moves = self.env["stock.move"].with_context(inventory_mode=False).create(move_vals)
-        moves._action_done()
-        self.location_id.write({"last_inventory_date": fields.Date.today()})
-        date_by_location = {loc: loc._get_next_inventory_date() for loc in self.mapped("location_id")}
-        for quant in self:
-            quant.inventory_date = date_by_location[quant.location_id]
-        self.write({"inventory_quantity": 0, "user_id": False})
-        self.write({"inventory_diff_quantity": 0})
-
-    StockQuant._apply_inventory = _apply_inventory2
-
-    def action_view_inventory_group_validate(self, action):
-        if self.env.user.has_group(
-            """stock.group_stock_user,!stock.group_stock_manager,
-        !marin.group_stock_inventory_adjustment"""
-        ):
-            action["search_default_my_count"] = True
-        return action
+            raise UserError(_("Only a inventory manager can validate an inventory adjustment."))
 
     # Extend original method
-    @api.model
-    def action_view_inventory(self):
-        action = super().action_view_inventory()
-        return self.action_view_inventory_group_validate(action)
+    def _apply_inventory(self):
+        self._apply_inventory_group_validate()
+        super()._apply_inventory()
 
     # Extend original method
     @api.model
@@ -74,30 +31,14 @@ class StockQuantInherit(models.Model):
 
     # Extend original method
     @api.model
-    def _get_removal_strategy_domain_order(self, domain, removal_strategy, qty):
+    def _get_removal_strategy_order(self, removal_strategy):
         if removal_strategy == "fifo + priority":
-            return domain, "in_date ASC, removal_priority ASC, id"
+            return "in_date ASC, removal_priority ASC, id"
         if removal_strategy == "lifo + priority":
-            return domain, "in_date DESC, removal_priority ASC, id DESC"
-        if removal_strategy == "closest + priority":
-            return domain, "removal_priority ASC, location_id ASC, id DESC"
+            return "in_date DESC, removal_priority ASC, id DESC"
         if removal_strategy == "fefo + priority":
-            return domain, "removal_date, removal_priority ASC, id"
-        return super()._get_removal_strategy_domain_order(domain, removal_strategy, qty)
-
-    # Extend original method
-    def _get_removal_strategy_sort_key(self, removal_strategy):
-        reverse = False
-        if removal_strategy == "fifo + priority":
-            return lambda q: (q.in_date, q.removal_priority, q.id), reverse
-        if removal_strategy == "lifo + priority":
-            reverse = True
-            return lambda q: (-q.in_date, q.removal_priority, -q.id), reverse
-        if removal_strategy == "closest + priority":
-            return lambda q: (q.location_id.complete_name, q.removal_priority - q.id), reverse
-        if removal_strategy == "fefo + priority":
-            return lambda q: (q.removal_date, q.in_date, q.removal_priority, q.id), reverse
-        return super()._get_removal_strategy_sort_key(removal_strategy)
+            return "removal_date, removal_priority ASC, id"
+        return super()._get_removal_strategy_order(removal_strategy)
 
     def action_stock_quant_lot(self):
         if len(self.company_id) > 1 or any(not q.company_id.id for q in self):

@@ -33,6 +33,7 @@ class StockLot(models.Model):
 
         removal_strategy = quant._get_removal_strategy(product, product.location_id)
         domain = quant._get_gather_domain(product, product.location_id)
+        # TODO thi is no longer correct
         domain, removal_strategy_order = quant._get_removal_strategy_domain_order(domain, removal_strategy, 0)
 
         quants = lots.quant_ids
