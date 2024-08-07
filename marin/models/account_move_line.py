@@ -28,11 +28,10 @@ class AccountMoveLine(models.Model):
         for line in self.filtered(lambda x: x.display_type not in ("line_section", "line_note")):
             account = line.account_id
             journal = line.move_id.journal_id
-            # Changes here
-            parent_state = line.parent_state
+            parent_state = line.move_id.state # Changes here
 
             if account.deprecated and not self.env.context.get("skip_account_deprecation_check"):
-                raise UserError(_("The account %s (%s) is deprecated.", account.name, account.code))
+                raise UserError(_('The account %(name)s (%(code)s) is deprecated.', name=account.name, code=account.code))
 
             account_currency = account.currency_id
             if (
@@ -46,7 +45,7 @@ class AccountMoveLine(models.Model):
                         "You should remove the secondary currency on the account."
                     )
                 )
-            # Changes made between
+            # Change made in the line below
             if account.allowed_journal_ids and journal not in account.allowed_journal_ids and parent_state == "posted":
                 raise UserError(
                     _(
@@ -61,7 +60,7 @@ class AccountMoveLine(models.Model):
             if account in (journal.default_account_id, journal.suspense_account_id):
                 continue
 
-            # Changes made between
+            # Changes made below
             if journal.account_control_ids and account not in journal.account_control_ids and parent_state == "posted":
                 raise UserError(
                     _(
@@ -71,7 +70,6 @@ class AccountMoveLine(models.Model):
                         journal.name,
                     )
                 )
-            #
 
     # Override original method
     def _compute_account_id(self):
@@ -102,7 +100,7 @@ class AccountMoveLine(models.Model):
                         END AS account_type,
                         SPLIT_PART(p.value_reference, ',', 2)::integer AS account_id
                     FROM ir_property p
-                    --JOIN res_company c ON p.company_id = c.id
+                    JOIN res_company c ON p.company_id = c.id
                     WHERE p.name IN ('property_account_receivable_id', 'property_account_payable_id')
                         AND p.company_id = ANY(%(company_ids)s)
                         AND p.res_id = ANY(%(partners)s)
@@ -214,12 +212,13 @@ class AccountMoveLine(models.Model):
                             accounts["expense_refund"] or journal.default_refund_account_id or line.account_id
                         )
                 elif line.partner_id:
-                    line.account_id = self.env["account.account"]._get_most_frequent_account_for_partner(
+                    account_id = self.env["account.account"]._get_most_frequent_account_for_partner(
                         company_id=line.company_id.id,
                         partner_id=line.partner_id.id,
                         move_type=line.move_id.move_type,
                     )
-
+                    if account_id:
+                        line.account_id = account_id
         for line in self.filtered(
             lambda ln: not ln.account_id and ln.display_type not in ("line_section", "line_note")
         ):
@@ -230,6 +229,34 @@ class AccountMoveLine(models.Model):
                 line.account_id = previous_two_accounts
             else:
                 line.account_id = line.move_id.journal_id.default_account_id
+
+    def _prepare_compute_analytic_distribution(self):
+        return {
+            "account_prefix": self.account_id.code,
+            "company_id": self.company_id.id,
+            "partner_category_id": self.partner_id.category_id.ids,
+            "partner_id": self.partner_id.id,
+            "product_categ_id": self.product_id.categ_id.id,
+            "product_id": self.product_id.id,
+            "vehicle_id": self.vehicle_id.id,
+        }
+
+    # Extend original method
+    @api.depends("account_id", "partner_id", "product_id", "vehicle_id")
+    def _compute_analytic_distribution(self):
+        vehicle_lines = self.filtered(
+            lambda aml: aml.vehicle_id and (
+            line.display_type == "product"
+            or not line.move_id.is_invoice(include_receipts=True)
+            )
+        )
+        super(AccountMoveLine, self - vehicle_lines)._compute_analytic_distribution()
+        cache = {}
+        for line in vehicle_lines:
+            arguments = line._prepare_compute_analytic_distribution()
+            if arguments not in cache:
+                cache[arguments] = self.env['account.analytic.distribution.model']._get_distribution(arguments)
+            line.analytic_distribution = cache[arguments] or line.analytic_distribution
 
     # Extend original method
     def _prepare_analytic_distribution_line(self, distribution, account_id, distribution_on_each_plan):
@@ -243,28 +270,6 @@ class AccountMoveLine(models.Model):
             }
         )
         return res
-
-    def _prepare_compute_analytic_distribution(self):
-        return {
-            "product_id": self.product_id.id,
-            "product_categ_id": self.product_id.categ_id.id,
-            "partner_id": self.partner_id.id,
-            "partner_category_id": self.partner_id.category_id.ids,
-            "account_prefix": self.account_id.code,
-            "company_id": self.company_id.id,
-            "vehicle_id": self.vehicle_id.id,
-        }
-
-    # Extend original method
-    @api.depends("account_id", "partner_id", "product_id", "vehicle_id")
-    def _compute_analytic_distribution(self):
-        if self.vehicle_id:
-            for line in self:
-                if line.display_type == "product" or not line.move_id.is_invoice(include_receipts=True):
-                    vals = line._prepare_compute_analytic_distribution()
-                    distribution = self.env["account.analytic.distribution.model"]._get_distribution(vals)
-                    line.analytic_distribution = distribution or line.analytic_distribution
-        return super()._compute_analytic_distribution()
 
     # Extend original method
     def _prepare_fleet_log_service(self):

@@ -17,9 +17,9 @@ from . import fleet_vehicle_log_services
 from . import hr_contract
 from . import hr_payslip
 from . import hr_payslip_run
-from . import ir_actions_report
+# from . import ir_actions_report
 from . import crm_lead
-from . import mrp_production
+# from . import mrp_production
 from . import pos_config
 from . import pos_order
 from . import pos_session
@@ -32,7 +32,7 @@ from . import purchase_order_line
 from . import res_company
 from . import res_config_settings
 from . import res_partner_age_range
-from . import res_partner
+from . import res#_partner
 from . import res_users
 from . import sale_order
 from . import sale_order_line

@@ -15,7 +15,6 @@ class AccountMove(models.Model):
     invoice_origin = fields.Char(readonly=False)
     l10n_mx_edi_payment_policy = fields.Selection(store=True, readonly=False)
     l10n_mx_edi_usage = fields.Selection(selection_add=[("CP01", "Payments")])
-    document_share_id = fields.Many2one("documents.share", readonly=True)
 
     # New fields
     journal_type = fields.Selection(related="journal_id.type", string="Journal type", store=True, readonly=True)
@@ -28,6 +27,7 @@ class AccountMove(models.Model):
         help="If this checkbox is ticked, it means that a management representative has "
         "received and stored a printed invoice on credit signed by the customer. ",
     )
+    # document_share_id = fields.Many2one("documents.share", readonly=True)
 
     def action_open_move_lines(self):
         return {
@@ -148,20 +148,20 @@ class AccountMove(models.Model):
 
     # Extend original method
     def action_post(self):
-        folder = self.env.ref("documents.documents_finance_folder")
+        #folder = self.env.ref("documents.documents_finance_folder")
         self._pre_post_invoice_edi_amounts_match_validation()
         res = self._pre_post_invoice_credit_limit_validation()
         if res is not True:
             return res
-        for rec in self:
-            if rec.move_type in ["out_invoice", "out_refund"] and not rec.document_share_id:
-                self.document_share_id = self.env["documents.share"].create(
-                    {
-                        "type": "ids",
-                        "name": "share_link_ids",
-                        "folder_id": folder.id,
-                    }
-                )
+        #for rec in self:
+        #    if rec.move_type in ["out_invoice", "out_refund"] and not rec.document_share_id:
+        #        self.document_share_id = self.env["documents.share"].create(
+        #            {
+        #                "type": "ids",
+        #                "name": "share_link_ids",
+        #                "folder_id": folder.id,
+        #            }
+        #        )
         return super().action_post()
 
     def button_draft(self):
@@ -273,9 +273,6 @@ class AccountMove(models.Model):
                     move.l10n_mx_edi_payment_policy = "PPD"
             if move.l10n_mx_edi_payment_policy and move.force_payment_policy_pue:
                 move.l10n_mx_edi_payment_policy = "PUE"
-
-    def _compute_name(self):
-        self._compute_name_by_sequence()
 
     @api.onchange("purchase_vendor_bill_id", "purchase_id")
     def _onchange_purchase_auto_complete(self):
