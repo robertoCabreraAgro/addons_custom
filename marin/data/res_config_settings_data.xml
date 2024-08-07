@@ -58,6 +58,7 @@
         <field name="use_invoice_terms" eval="True" />
         <field name="account_use_credit_limit" eval="True" />
         <field name="account_default_credit_limit" eval="0.0" />
+        <field name="extract_in_invoice_digitalization_mode">manual_send</field>
         <field name="use_anglo_saxon" eval="True" />
         <field name="predict_bill_product" eval="True" />
         <field name="totals_below_sections" eval="True" />
