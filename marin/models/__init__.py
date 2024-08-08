@@ -25,7 +25,6 @@ from . import pos_order
 from . import pos_session
 from . import product_category
 from . import product_template
-# from . import project_task
 from . import purchase_bill_union
 from . import purchase_order
 from . import purchase_order_line
