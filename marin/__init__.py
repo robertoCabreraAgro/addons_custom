@@ -90,7 +90,7 @@ def _post_init_marin(env):
                 {
                     "module": "marin",
                     "model": model,
-                    "name": "stock_warehouse_%s" % wh.id,
+                    "name": "warehouse_%s" % wh.id,
                     "res_id": wh.id,
                     "noupdate": True,
                 }
@@ -131,7 +131,7 @@ def _post_init_marin(env):
                 {
                     "module": "marin",
                     "model": model,
-                    "name": "stock_picking_type_%s" % spt.id,
+                    "name": "picking_type_%s" % spt.id,
                     "res_id": spt.id,
                     "noupdate": True,
                 }

@@ -5368,17 +5368,17 @@ msgid "Crop - Wheat"
 msgstr ""
 
 #. module: marin
-#: model:stock.picking.type,name:marin.stock_picking_type_106
-#: model:stock.picking.type,name:marin.stock_picking_type_1148
-#: model:stock.picking.type,name:marin.stock_picking_type_1162
-#: model:stock.picking.type,name:marin.stock_picking_type_1176
-#: model:stock.picking.type,name:marin.stock_picking_type_122
-#: model:stock.picking.type,name:marin.stock_picking_type_26
-#: model:stock.picking.type,name:marin.stock_picking_type_42
-#: model:stock.picking.type,name:marin.stock_picking_type_58
-#: model:stock.picking.type,name:marin.stock_picking_type_74
-#: model:stock.picking.type,name:marin.stock_picking_type_8
-#: model:stock.picking.type,name:marin.stock_picking_type_90
+#: model:stock.picking.type,name:marin.picking_type_106
+#: model:stock.picking.type,name:marin.picking_type_1148
+#: model:stock.picking.type,name:marin.picking_type_1162
+#: model:stock.picking.type,name:marin.picking_type_1176
+#: model:stock.picking.type,name:marin.picking_type_122
+#: model:stock.picking.type,name:marin.picking_type_26
+#: model:stock.picking.type,name:marin.picking_type_42
+#: model:stock.picking.type,name:marin.picking_type_58
+#: model:stock.picking.type,name:marin.picking_type_74
+#: model:stock.picking.type,name:marin.picking_type_8
+#: model:stock.picking.type,name:marin.picking_type_90
 msgid "Cross Dock"
 msgstr ""
 
@@ -5945,28 +5945,28 @@ msgid "Delivered Qty"
 msgstr ""
 
 #. module: marin
-#: model:stock.picking.type,name:marin.stock_picking_type_100
-#: model:stock.picking.type,name:marin.stock_picking_type_1002
-#: model:stock.picking.type,name:marin.stock_picking_type_1013
-#: model:stock.picking.type,name:marin.stock_picking_type_1024
-#: model:stock.picking.type,name:marin.stock_picking_type_1035
-#: model:stock.picking.type,name:marin.stock_picking_type_1046
-#: model:stock.picking.type,name:marin.stock_picking_type_1057
-#: model:stock.picking.type,name:marin.stock_picking_type_1068
-#: model:stock.picking.type,name:marin.stock_picking_type_1079
-#: model:stock.picking.type,name:marin.stock_picking_type_1090
-#: model:stock.picking.type,name:marin.stock_picking_type_1101
-#: model:stock.picking.type,name:marin.stock_picking_type_1112
-#: model:stock.picking.type,name:marin.stock_picking_type_1123
-#: model:stock.picking.type,name:marin.stock_picking_type_1134
-#: model:stock.picking.type,name:marin.stock_picking_type_1156
-#: model:stock.picking.type,name:marin.stock_picking_type_116
-#: model:stock.picking.type,name:marin.stock_picking_type_1170
-#: model:stock.picking.type,name:marin.stock_picking_type_20
-#: model:stock.picking.type,name:marin.stock_picking_type_36
-#: model:stock.picking.type,name:marin.stock_picking_type_52
-#: model:stock.picking.type,name:marin.stock_picking_type_68
-#: model:stock.picking.type,name:marin.stock_picking_type_84
+#: model:stock.picking.type,name:marin.picking_type_100
+#: model:stock.picking.type,name:marin.picking_type_1002
+#: model:stock.picking.type,name:marin.picking_type_1013
+#: model:stock.picking.type,name:marin.picking_type_1024
+#: model:stock.picking.type,name:marin.picking_type_1035
+#: model:stock.picking.type,name:marin.picking_type_1046
+#: model:stock.picking.type,name:marin.picking_type_1057
+#: model:stock.picking.type,name:marin.picking_type_1068
+#: model:stock.picking.type,name:marin.picking_type_1079
+#: model:stock.picking.type,name:marin.picking_type_1090
+#: model:stock.picking.type,name:marin.picking_type_1101
+#: model:stock.picking.type,name:marin.picking_type_1112
+#: model:stock.picking.type,name:marin.picking_type_1123
+#: model:stock.picking.type,name:marin.picking_type_1134
+#: model:stock.picking.type,name:marin.picking_type_1156
+#: model:stock.picking.type,name:marin.picking_type_116
+#: model:stock.picking.type,name:marin.picking_type_1170
+#: model:stock.picking.type,name:marin.picking_type_20
+#: model:stock.picking.type,name:marin.picking_type_36
+#: model:stock.picking.type,name:marin.picking_type_52
+#: model:stock.picking.type,name:marin.picking_type_68
+#: model:stock.picking.type,name:marin.picking_type_84
 msgid "Delivery Orders"
 msgstr ""
 
@@ -6401,26 +6401,26 @@ msgid "Driver Licence"
 msgstr ""
 
 #. module: marin
-#: model:stock.picking.type,name:marin.stock_picking_type_113
-#: model:stock.picking.type,name:marin.stock_picking_type_14
-#: model:stock.picking.type,name:marin.stock_picking_type_17
-#: model:stock.picking.type,name:marin.stock_picking_type_33
-#: model:stock.picking.type,name:marin.stock_picking_type_49
-#: model:stock.picking.type,name:marin.stock_picking_type_65
-#: model:stock.picking.type,name:marin.stock_picking_type_81
-#: model:stock.picking.type,name:marin.stock_picking_type_97
+#: model:stock.picking.type,name:marin.picking_type_113
+#: model:stock.picking.type,name:marin.picking_type_14
+#: model:stock.picking.type,name:marin.picking_type_17
+#: model:stock.picking.type,name:marin.picking_type_33
+#: model:stock.picking.type,name:marin.picking_type_49
+#: model:stock.picking.type,name:marin.picking_type_65
+#: model:stock.picking.type,name:marin.picking_type_81
+#: model:stock.picking.type,name:marin.picking_type_97
 msgid "Dropship"
 msgstr ""
 
 #. module: marin
-#: model:stock.picking.type,name:marin.stock_picking_type_114
-#: model:stock.picking.type,name:marin.stock_picking_type_15
-#: model:stock.picking.type,name:marin.stock_picking_type_18
-#: model:stock.picking.type,name:marin.stock_picking_type_34
-#: model:stock.picking.type,name:marin.stock_picking_type_50
-#: model:stock.picking.type,name:marin.stock_picking_type_66
-#: model:stock.picking.type,name:marin.stock_picking_type_82
-#: model:stock.picking.type,name:marin.stock_picking_type_98
+#: model:stock.picking.type,name:marin.picking_type_114
+#: model:stock.picking.type,name:marin.picking_type_15
+#: model:stock.picking.type,name:marin.picking_type_18
+#: model:stock.picking.type,name:marin.picking_type_34
+#: model:stock.picking.type,name:marin.picking_type_50
+#: model:stock.picking.type,name:marin.picking_type_66
+#: model:stock.picking.type,name:marin.picking_type_82
+#: model:stock.picking.type,name:marin.picking_type_98
 msgid "Dropship Subcontractor"
 msgstr ""
 
@@ -9110,32 +9110,32 @@ msgid "Intercompany transfer in 2 steps"
 msgstr "Transferencias intercompañia en 2 pasos"
 
 #. module: marin
-#: model:stock.picking.type,name:marin.stock_picking_type_5001
+#: model:stock.picking.type,name:marin.picking_type_5001
 msgid "Intercompany transfers LMMG-LMMR"
 msgstr "Transferencias intercompañia LMMG-LMMR"
 
 #. module: marin
-#: model:stock.picking.type,name:marin.stock_picking_type_5002
+#: model:stock.picking.type,name:marin.picking_type_5002
 msgid "Intercompany transfers LMMG-XM"
 msgstr "Transferencias intercompañia LMMG-XM"
 
 #. module: marin
-#: model:stock.picking.type,name:marin.stock_picking_type_5003
+#: model:stock.picking.type,name:marin.picking_type_5003
 msgid "Intercompany transfers LMMR-LMMG"
 msgstr "Transferencias intercompañia LMMR-LMMG"
 
 #. module: marin
-#: model:stock.picking.type,name:marin.stock_picking_type_5004
+#: model:stock.picking.type,name:marin.picking_type_5004
 msgid "Intercompany transfers LMMR-XM"
 msgstr "Transferencias intercompañia LMMR-XM"
 
 #. module: marin
-#: model:stock.picking.type,name:marin.stock_picking_type_5005
+#: model:stock.picking.type,name:marin.picking_type_5005
 msgid "Intercompany transfers XM-LMMG"
 msgstr "Transferencias intercompañia XM-LMMG"
 
 #. module: marin
-#: model:stock.picking.type,name:marin.stock_picking_type_5006
+#: model:stock.picking.type,name:marin.picking_type_5006
 msgid "Intercompany transfers XM-LMMR"
 msgstr "Transferencias intercompañia XM-LMMR"
 
@@ -9163,29 +9163,29 @@ msgid "Internal"
 msgstr "Interno"
 
 #. module: marin
-#: model:stock.picking.type,name:marin.stock_picking_type_1005
-#: model:stock.picking.type,name:marin.stock_picking_type_1016
-#: model:stock.picking.type,name:marin.stock_picking_type_1027
-#: model:stock.picking.type,name:marin.stock_picking_type_1038
-#: model:stock.picking.type,name:marin.stock_picking_type_1049
-#: model:stock.picking.type,name:marin.stock_picking_type_105
-#: model:stock.picking.type,name:marin.stock_picking_type_1060
-#: model:stock.picking.type,name:marin.stock_picking_type_1071
-#: model:stock.picking.type,name:marin.stock_picking_type_1082
-#: model:stock.picking.type,name:marin.stock_picking_type_1093
-#: model:stock.picking.type,name:marin.stock_picking_type_1104
-#: model:stock.picking.type,name:marin.stock_picking_type_1115
-#: model:stock.picking.type,name:marin.stock_picking_type_1126
-#: model:stock.picking.type,name:marin.stock_picking_type_1137
-#: model:stock.picking.type,name:marin.stock_picking_type_1147
-#: model:stock.picking.type,name:marin.stock_picking_type_1161
-#: model:stock.picking.type,name:marin.stock_picking_type_1175
-#: model:stock.picking.type,name:marin.stock_picking_type_121
-#: model:stock.picking.type,name:marin.stock_picking_type_25
-#: model:stock.picking.type,name:marin.stock_picking_type_41
-#: model:stock.picking.type,name:marin.stock_picking_type_57
-#: model:stock.picking.type,name:marin.stock_picking_type_73
-#: model:stock.picking.type,name:marin.stock_picking_type_89
+#: model:stock.picking.type,name:marin.picking_type_1005
+#: model:stock.picking.type,name:marin.picking_type_1016
+#: model:stock.picking.type,name:marin.picking_type_1027
+#: model:stock.picking.type,name:marin.picking_type_1038
+#: model:stock.picking.type,name:marin.picking_type_1049
+#: model:stock.picking.type,name:marin.picking_type_105
+#: model:stock.picking.type,name:marin.picking_type_1060
+#: model:stock.picking.type,name:marin.picking_type_1071
+#: model:stock.picking.type,name:marin.picking_type_1082
+#: model:stock.picking.type,name:marin.picking_type_1093
+#: model:stock.picking.type,name:marin.picking_type_1104
+#: model:stock.picking.type,name:marin.picking_type_1115
+#: model:stock.picking.type,name:marin.picking_type_1126
+#: model:stock.picking.type,name:marin.picking_type_1137
+#: model:stock.picking.type,name:marin.picking_type_1147
+#: model:stock.picking.type,name:marin.picking_type_1161
+#: model:stock.picking.type,name:marin.picking_type_1175
+#: model:stock.picking.type,name:marin.picking_type_121
+#: model:stock.picking.type,name:marin.picking_type_25
+#: model:stock.picking.type,name:marin.picking_type_41
+#: model:stock.picking.type,name:marin.picking_type_57
+#: model:stock.picking.type,name:marin.picking_type_73
+#: model:stock.picking.type,name:marin.picking_type_89
 msgid "Internal Transfers"
 msgstr "Transferencias internas"
 
@@ -9195,127 +9195,127 @@ msgid "Internal liquidity transfers"
 msgstr "Transferencia de liquidez interna"
 
 #. module: marin
-#: model:stock.picking.type,name:marin.stock_picking_type_5026
+#: model:stock.picking.type,name:marin.picking_type_5026
 msgid "Interwarehouse BAL-CDG"
 msgstr "Interalmacen BAL-CDG"
 
 #. module: marin
-#: model:stock.picking.type,name:marin.stock_picking_type_5025
+#: model:stock.picking.type,name:marin.picking_type_5025
 msgid "Interwarehouse BAL-SJN"
 msgstr "Interalmacen BAL-SJN"
 
 #. module: marin
-#: model:stock.picking.type,name:marin.stock_picking_type_5031
+#: model:stock.picking.type,name:marin.picking_type_5031
 msgid "Interwarehouse CDG-BAL"
 msgstr "Interalmacen CDG-BAL"
 
 #. module: marin
-#: model:stock.picking.type,name:marin.stock_picking_type_5030
+#: model:stock.picking.type,name:marin.picking_type_5030
 msgid "Interwarehouse CDG-HMT"
 msgstr "Interalmacen CDG-HMT"
 
 #. module: marin
-#: model:stock.picking.type,name:marin.stock_picking_type_5032
+#: model:stock.picking.type,name:marin.picking_type_5032
 msgid "Interwarehouse CDG-LOM"
 msgstr "Interalmacen CDG-LOM"
 
 #. module: marin
-#: model:stock.picking.type,name:marin.stock_picking_type_5033
+#: model:stock.picking.type,name:marin.picking_type_5033
 msgid "Interwarehouse CDG-MICH"
 msgstr "Interalmacen CDG-MICH"
 
 #. module: marin
-#: model:stock.picking.type,name:marin.stock_picking_type_5034
+#: model:stock.picking.type,name:marin.picking_type_5034
 msgid "Interwarehouse CDG-MOCH"
 msgstr "Interalmacen CDG-MOCH"
 
 #. module: marin
-#: model:stock.picking.type,name:marin.stock_picking_type_5035
+#: model:stock.picking.type,name:marin.picking_type_5035
 msgid "Interwarehouse CDG-OBR"
 msgstr "Interalmacen CDG-OBR"
 
 #. module: marin
-#: model:stock.picking.type,name:marin.stock_picking_type_5036
+#: model:stock.picking.type,name:marin.picking_type_5036
 msgid "Interwarehouse CDG-SALT"
 msgstr "Interalmacen CDG-SALT"
 
 #. module: marin
-#: model:stock.picking.type,name:marin.stock_picking_type_5037
+#: model:stock.picking.type,name:marin.picking_type_5037
 msgid "Interwarehouse CDG-SJN"
 msgstr "Interalmacen CDG-SJN"
 
 #. module: marin
-#: model:stock.picking.type,name:marin.stock_picking_type_5038
+#: model:stock.picking.type,name:marin.picking_type_5038
 msgid "Interwarehouse CDG-SNT"
 msgstr "Interalmacen CDG-SNT"
 
 #. module: marin
-#: model:stock.picking.type,name:marin.stock_picking_type_5048
+#: model:stock.picking.type,name:marin.picking_type_5048
 msgid "Interwarehouse HMT-CDG"
 msgstr "Interalmacen HMT-CDG"
 
 #. module: marin
-#: model:stock.picking.type,name:marin.stock_picking_type_5042
+#: model:stock.picking.type,name:marin.picking_type_5042
 msgid "Interwarehouse LOM-CDG"
 msgstr "Interalmacen LOM-CDG"
 
 #. module: marin
-#: model:stock.picking.type,name:marin.stock_picking_type_5043
+#: model:stock.picking.type,name:marin.picking_type_5043
 msgid "Interwarehouse LOM-SJN"
 msgstr "Interalmacen LOM-SJN"
 
 #. module: marin
-#: model:stock.picking.type,name:marin.stock_picking_type_5044
+#: model:stock.picking.type,name:marin.picking_type_5044
 msgid "Interwarehouse MICH-CDG"
 msgstr "Interalmacen MICH-CDG"
 
 #. module: marin
-#: model:stock.picking.type,name:marin.stock_picking_type_5047
+#: model:stock.picking.type,name:marin.picking_type_5047
 msgid "Interwarehouse MOCH-CDG"
 msgstr "Interalmacen MOCH-CDG"
 
 #. module: marin
-#: model:stock.picking.type,name:marin.stock_picking_type_5046
+#: model:stock.picking.type,name:marin.picking_type_5046
 msgid "Interwarehouse MOCH-OBR"
 msgstr "Interalmacen MOCH-OBR"
 
 #. module: marin
-#: model:stock.picking.type,name:marin.stock_picking_type_5041
+#: model:stock.picking.type,name:marin.picking_type_5041
 msgid "Interwarehouse OBR-CDG"
 msgstr "Interalmacen OBR-CDG"
 
 #. module: marin
-#: model:stock.picking.type,name:marin.stock_picking_type_5040
+#: model:stock.picking.type,name:marin.picking_type_5040
 msgid "Interwarehouse OBR-MOCH"
 msgstr "Interalmacen OBR-MOCH"
 
 #. module: marin
-#: model:stock.picking.type,name:marin.stock_picking_type_5039
+#: model:stock.picking.type,name:marin.picking_type_5039
 msgid "Interwarehouse OBR-SALT"
 msgstr "Interalmacen OBR-SALT"
 
 #. module: marin
-#: model:stock.picking.type,name:marin.stock_picking_type_5045
+#: model:stock.picking.type,name:marin.picking_type_5045
 msgid "Interwarehouse SALT-CDG"
 msgstr "Interalmacen SALT-CDG"
 
 #. module: marin
-#: model:stock.picking.type,name:marin.stock_picking_type_5027
+#: model:stock.picking.type,name:marin.picking_type_5027
 msgid "Interwarehouse SJN-BAL"
 msgstr "Interalmacen SJN-BAL"
 
 #. module: marin
-#: model:stock.picking.type,name:marin.stock_picking_type_5028
+#: model:stock.picking.type,name:marin.picking_type_5028
 msgid "Interwarehouse SJN-CDG"
 msgstr "Interalmacen SJN-CDG"
 
 #. module: marin
-#: model:stock.picking.type,name:marin.stock_picking_type_5029
+#: model:stock.picking.type,name:marin.picking_type_5029
 msgid "Interwarehouse SJN-LOM"
 msgstr "Interalmacen SJN-LOM"
 
 #. module: marin
-#: model:stock.picking.type,name:marin.stock_picking_type_5024
+#: model:stock.picking.type,name:marin.picking_type_5024
 msgid "Interwarehouse SNT-CDG"
 msgstr "Interalmacen SNT-CDG"
 
@@ -10483,30 +10483,30 @@ msgid "Manufacturer"
 msgstr "Fabricante"
 
 #. module: marin
-#: model:stock.picking.type,name:marin.stock_picking_type_1008
-#: model:stock.picking.type,name:marin.stock_picking_type_1019
-#: model:stock.picking.type,name:marin.stock_picking_type_1030
-#: model:stock.picking.type,name:marin.stock_picking_type_1041
-#: model:stock.picking.type,name:marin.stock_picking_type_1052
-#: model:stock.picking.type,name:marin.stock_picking_type_1063
-#: model:stock.picking.type,name:marin.stock_picking_type_1074
-#: model:stock.picking.type,name:marin.stock_picking_type_1085
-#: model:stock.picking.type,name:marin.stock_picking_type_109
-#: model:stock.picking.type,name:marin.stock_picking_type_1096
-#: model:stock.picking.type,name:marin.stock_picking_type_11
-#: model:stock.picking.type,name:marin.stock_picking_type_1107
-#: model:stock.picking.type,name:marin.stock_picking_type_1118
-#: model:stock.picking.type,name:marin.stock_picking_type_1129
-#: model:stock.picking.type,name:marin.stock_picking_type_1140
-#: model:stock.picking.type,name:marin.stock_picking_type_1151
-#: model:stock.picking.type,name:marin.stock_picking_type_1165
-#: model:stock.picking.type,name:marin.stock_picking_type_1179
-#: model:stock.picking.type,name:marin.stock_picking_type_125
-#: model:stock.picking.type,name:marin.stock_picking_type_29
-#: model:stock.picking.type,name:marin.stock_picking_type_45
-#: model:stock.picking.type,name:marin.stock_picking_type_61
-#: model:stock.picking.type,name:marin.stock_picking_type_77
-#: model:stock.picking.type,name:marin.stock_picking_type_93
+#: model:stock.picking.type,name:marin.picking_type_1008
+#: model:stock.picking.type,name:marin.picking_type_1019
+#: model:stock.picking.type,name:marin.picking_type_1030
+#: model:stock.picking.type,name:marin.picking_type_1041
+#: model:stock.picking.type,name:marin.picking_type_1052
+#: model:stock.picking.type,name:marin.picking_type_1063
+#: model:stock.picking.type,name:marin.picking_type_1074
+#: model:stock.picking.type,name:marin.picking_type_1085
+#: model:stock.picking.type,name:marin.picking_type_109
+#: model:stock.picking.type,name:marin.picking_type_1096
+#: model:stock.picking.type,name:marin.picking_type_11
+#: model:stock.picking.type,name:marin.picking_type_1107
+#: model:stock.picking.type,name:marin.picking_type_1118
+#: model:stock.picking.type,name:marin.picking_type_1129
+#: model:stock.picking.type,name:marin.picking_type_1140
+#: model:stock.picking.type,name:marin.picking_type_1151
+#: model:stock.picking.type,name:marin.picking_type_1165
+#: model:stock.picking.type,name:marin.picking_type_1179
+#: model:stock.picking.type,name:marin.picking_type_125
+#: model:stock.picking.type,name:marin.picking_type_29
+#: model:stock.picking.type,name:marin.picking_type_45
+#: model:stock.picking.type,name:marin.picking_type_61
+#: model:stock.picking.type,name:marin.picking_type_77
+#: model:stock.picking.type,name:marin.picking_type_93
 msgid "Manufacturing"
 msgstr "Fabricación"
 
@@ -12274,30 +12274,30 @@ msgid "POS XM"
 msgstr "TPV XM"
 
 #. module: marin
-#: model:stock.picking.type,name:marin.stock_picking_type_1004
-#: model:stock.picking.type,name:marin.stock_picking_type_1015
-#: model:stock.picking.type,name:marin.stock_picking_type_102
-#: model:stock.picking.type,name:marin.stock_picking_type_1026
-#: model:stock.picking.type,name:marin.stock_picking_type_1037
-#: model:stock.picking.type,name:marin.stock_picking_type_1048
-#: model:stock.picking.type,name:marin.stock_picking_type_1059
-#: model:stock.picking.type,name:marin.stock_picking_type_1070
-#: model:stock.picking.type,name:marin.stock_picking_type_1081
-#: model:stock.picking.type,name:marin.stock_picking_type_1092
-#: model:stock.picking.type,name:marin.stock_picking_type_1103
-#: model:stock.picking.type,name:marin.stock_picking_type_1114
-#: model:stock.picking.type,name:marin.stock_picking_type_1125
-#: model:stock.picking.type,name:marin.stock_picking_type_1136
-#: model:stock.picking.type,name:marin.stock_picking_type_1144
-#: model:stock.picking.type,name:marin.stock_picking_type_1158
-#: model:stock.picking.type,name:marin.stock_picking_type_1172
-#: model:stock.picking.type,name:marin.stock_picking_type_118
-#: model:stock.picking.type,name:marin.stock_picking_type_22
-#: model:stock.picking.type,name:marin.stock_picking_type_38
-#: model:stock.picking.type,name:marin.stock_picking_type_4
-#: model:stock.picking.type,name:marin.stock_picking_type_54
-#: model:stock.picking.type,name:marin.stock_picking_type_70
-#: model:stock.picking.type,name:marin.stock_picking_type_86
+#: model:stock.picking.type,name:marin.picking_type_1004
+#: model:stock.picking.type,name:marin.picking_type_1015
+#: model:stock.picking.type,name:marin.picking_type_102
+#: model:stock.picking.type,name:marin.picking_type_1026
+#: model:stock.picking.type,name:marin.picking_type_1037
+#: model:stock.picking.type,name:marin.picking_type_1048
+#: model:stock.picking.type,name:marin.picking_type_1059
+#: model:stock.picking.type,name:marin.picking_type_1070
+#: model:stock.picking.type,name:marin.picking_type_1081
+#: model:stock.picking.type,name:marin.picking_type_1092
+#: model:stock.picking.type,name:marin.picking_type_1103
+#: model:stock.picking.type,name:marin.picking_type_1114
+#: model:stock.picking.type,name:marin.picking_type_1125
+#: model:stock.picking.type,name:marin.picking_type_1136
+#: model:stock.picking.type,name:marin.picking_type_1144
+#: model:stock.picking.type,name:marin.picking_type_1158
+#: model:stock.picking.type,name:marin.picking_type_1172
+#: model:stock.picking.type,name:marin.picking_type_118
+#: model:stock.picking.type,name:marin.picking_type_22
+#: model:stock.picking.type,name:marin.picking_type_38
+#: model:stock.picking.type,name:marin.picking_type_4
+#: model:stock.picking.type,name:marin.picking_type_54
+#: model:stock.picking.type,name:marin.picking_type_70
+#: model:stock.picking.type,name:marin.picking_type_86
 msgid "Pack"
 msgstr "Empacar"
 
@@ -12924,57 +12924,57 @@ msgid "Picasso 50 0.500kg"
 msgstr ""
 
 #. module: marin
-#: model:stock.picking.type,name:marin.stock_picking_type_1003
-#: model:stock.picking.type,name:marin.stock_picking_type_101
-#: model:stock.picking.type,name:marin.stock_picking_type_1014
-#: model:stock.picking.type,name:marin.stock_picking_type_1025
-#: model:stock.picking.type,name:marin.stock_picking_type_1036
-#: model:stock.picking.type,name:marin.stock_picking_type_1047
-#: model:stock.picking.type,name:marin.stock_picking_type_1058
-#: model:stock.picking.type,name:marin.stock_picking_type_1069
-#: model:stock.picking.type,name:marin.stock_picking_type_1080
-#: model:stock.picking.type,name:marin.stock_picking_type_1091
-#: model:stock.picking.type,name:marin.stock_picking_type_1102
-#: model:stock.picking.type,name:marin.stock_picking_type_1113
-#: model:stock.picking.type,name:marin.stock_picking_type_1124
-#: model:stock.picking.type,name:marin.stock_picking_type_1135
-#: model:stock.picking.type,name:marin.stock_picking_type_1157
-#: model:stock.picking.type,name:marin.stock_picking_type_117
-#: model:stock.picking.type,name:marin.stock_picking_type_1171
-#: model:stock.picking.type,name:marin.stock_picking_type_21
-#: model:stock.picking.type,name:marin.stock_picking_type_3
-#: model:stock.picking.type,name:marin.stock_picking_type_37
-#: model:stock.picking.type,name:marin.stock_picking_type_53
-#: model:stock.picking.type,name:marin.stock_picking_type_69
-#: model:stock.picking.type,name:marin.stock_picking_type_85
+#: model:stock.picking.type,name:marin.picking_type_1003
+#: model:stock.picking.type,name:marin.picking_type_101
+#: model:stock.picking.type,name:marin.picking_type_1014
+#: model:stock.picking.type,name:marin.picking_type_1025
+#: model:stock.picking.type,name:marin.picking_type_1036
+#: model:stock.picking.type,name:marin.picking_type_1047
+#: model:stock.picking.type,name:marin.picking_type_1058
+#: model:stock.picking.type,name:marin.picking_type_1069
+#: model:stock.picking.type,name:marin.picking_type_1080
+#: model:stock.picking.type,name:marin.picking_type_1091
+#: model:stock.picking.type,name:marin.picking_type_1102
+#: model:stock.picking.type,name:marin.picking_type_1113
+#: model:stock.picking.type,name:marin.picking_type_1124
+#: model:stock.picking.type,name:marin.picking_type_1135
+#: model:stock.picking.type,name:marin.picking_type_1157
+#: model:stock.picking.type,name:marin.picking_type_117
+#: model:stock.picking.type,name:marin.picking_type_1171
+#: model:stock.picking.type,name:marin.picking_type_21
+#: model:stock.picking.type,name:marin.picking_type_3
+#: model:stock.picking.type,name:marin.picking_type_37
+#: model:stock.picking.type,name:marin.picking_type_53
+#: model:stock.picking.type,name:marin.picking_type_69
+#: model:stock.picking.type,name:marin.picking_type_85
 msgid "Pick"
 msgstr "Recolectar"
 
 #. module: marin
-#: model:stock.picking.type,name:marin.stock_picking_type_1006
-#: model:stock.picking.type,name:marin.stock_picking_type_1017
-#: model:stock.picking.type,name:marin.stock_picking_type_1028
-#: model:stock.picking.type,name:marin.stock_picking_type_1039
-#: model:stock.picking.type,name:marin.stock_picking_type_1050
-#: model:stock.picking.type,name:marin.stock_picking_type_1061
-#: model:stock.picking.type,name:marin.stock_picking_type_107
-#: model:stock.picking.type,name:marin.stock_picking_type_1072
-#: model:stock.picking.type,name:marin.stock_picking_type_1083
-#: model:stock.picking.type,name:marin.stock_picking_type_1094
-#: model:stock.picking.type,name:marin.stock_picking_type_1105
-#: model:stock.picking.type,name:marin.stock_picking_type_1116
-#: model:stock.picking.type,name:marin.stock_picking_type_1127
-#: model:stock.picking.type,name:marin.stock_picking_type_1138
-#: model:stock.picking.type,name:marin.stock_picking_type_1149
-#: model:stock.picking.type,name:marin.stock_picking_type_1163
-#: model:stock.picking.type,name:marin.stock_picking_type_1177
-#: model:stock.picking.type,name:marin.stock_picking_type_123
-#: model:stock.picking.type,name:marin.stock_picking_type_27
-#: model:stock.picking.type,name:marin.stock_picking_type_43
-#: model:stock.picking.type,name:marin.stock_picking_type_59
-#: model:stock.picking.type,name:marin.stock_picking_type_75
-#: model:stock.picking.type,name:marin.stock_picking_type_9
-#: model:stock.picking.type,name:marin.stock_picking_type_91
+#: model:stock.picking.type,name:marin.picking_type_1006
+#: model:stock.picking.type,name:marin.picking_type_1017
+#: model:stock.picking.type,name:marin.picking_type_1028
+#: model:stock.picking.type,name:marin.picking_type_1039
+#: model:stock.picking.type,name:marin.picking_type_1050
+#: model:stock.picking.type,name:marin.picking_type_1061
+#: model:stock.picking.type,name:marin.picking_type_107
+#: model:stock.picking.type,name:marin.picking_type_1072
+#: model:stock.picking.type,name:marin.picking_type_1083
+#: model:stock.picking.type,name:marin.picking_type_1094
+#: model:stock.picking.type,name:marin.picking_type_1105
+#: model:stock.picking.type,name:marin.picking_type_1116
+#: model:stock.picking.type,name:marin.picking_type_1127
+#: model:stock.picking.type,name:marin.picking_type_1138
+#: model:stock.picking.type,name:marin.picking_type_1149
+#: model:stock.picking.type,name:marin.picking_type_1163
+#: model:stock.picking.type,name:marin.picking_type_1177
+#: model:stock.picking.type,name:marin.picking_type_123
+#: model:stock.picking.type,name:marin.picking_type_27
+#: model:stock.picking.type,name:marin.picking_type_43
+#: model:stock.picking.type,name:marin.picking_type_59
+#: model:stock.picking.type,name:marin.picking_type_75
+#: model:stock.picking.type,name:marin.picking_type_9
+#: model:stock.picking.type,name:marin.picking_type_91
 msgid "Pick Components"
 msgstr "Recolectar componentes"
 
@@ -13165,30 +13165,30 @@ msgid "PoS Cash Transfer Wizard"
 msgstr "Asistente de transferencia de efectivo de TPV"
 
 #. module: marin
-#: model:stock.picking.type,name:marin.stock_picking_type_1011
-#: model:stock.picking.type,name:marin.stock_picking_type_1022
-#: model:stock.picking.type,name:marin.stock_picking_type_1033
-#: model:stock.picking.type,name:marin.stock_picking_type_1044
-#: model:stock.picking.type,name:marin.stock_picking_type_1055
-#: model:stock.picking.type,name:marin.stock_picking_type_1066
-#: model:stock.picking.type,name:marin.stock_picking_type_1077
-#: model:stock.picking.type,name:marin.stock_picking_type_1088
-#: model:stock.picking.type,name:marin.stock_picking_type_1099
-#: model:stock.picking.type,name:marin.stock_picking_type_1110
-#: model:stock.picking.type,name:marin.stock_picking_type_112
-#: model:stock.picking.type,name:marin.stock_picking_type_1121
-#: model:stock.picking.type,name:marin.stock_picking_type_1132
-#: model:stock.picking.type,name:marin.stock_picking_type_1143
-#: model:stock.picking.type,name:marin.stock_picking_type_1154
-#: model:stock.picking.type,name:marin.stock_picking_type_1168
-#: model:stock.picking.type,name:marin.stock_picking_type_1182
-#: model:stock.picking.type,name:marin.stock_picking_type_128
-#: model:stock.picking.type,name:marin.stock_picking_type_16
-#: model:stock.picking.type,name:marin.stock_picking_type_32
-#: model:stock.picking.type,name:marin.stock_picking_type_48
-#: model:stock.picking.type,name:marin.stock_picking_type_64
-#: model:stock.picking.type,name:marin.stock_picking_type_80
-#: model:stock.picking.type,name:marin.stock_picking_type_96
+#: model:stock.picking.type,name:marin.picking_type_1011
+#: model:stock.picking.type,name:marin.picking_type_1022
+#: model:stock.picking.type,name:marin.picking_type_1033
+#: model:stock.picking.type,name:marin.picking_type_1044
+#: model:stock.picking.type,name:marin.picking_type_1055
+#: model:stock.picking.type,name:marin.picking_type_1066
+#: model:stock.picking.type,name:marin.picking_type_1077
+#: model:stock.picking.type,name:marin.picking_type_1088
+#: model:stock.picking.type,name:marin.picking_type_1099
+#: model:stock.picking.type,name:marin.picking_type_1110
+#: model:stock.picking.type,name:marin.picking_type_112
+#: model:stock.picking.type,name:marin.picking_type_1121
+#: model:stock.picking.type,name:marin.picking_type_1132
+#: model:stock.picking.type,name:marin.picking_type_1143
+#: model:stock.picking.type,name:marin.picking_type_1154
+#: model:stock.picking.type,name:marin.picking_type_1168
+#: model:stock.picking.type,name:marin.picking_type_1182
+#: model:stock.picking.type,name:marin.picking_type_128
+#: model:stock.picking.type,name:marin.picking_type_16
+#: model:stock.picking.type,name:marin.picking_type_32
+#: model:stock.picking.type,name:marin.picking_type_48
+#: model:stock.picking.type,name:marin.picking_type_64
+#: model:stock.picking.type,name:marin.picking_type_80
+#: model:stock.picking.type,name:marin.picking_type_96
 msgid "PoS Orders"
 msgstr "Entregas de TPV"
 
@@ -14051,17 +14051,17 @@ msgid "Qualify the customer needs"
 msgstr "Calificar las necesidades del cliente"
 
 #. module: marin
-#: model:stock.picking.type,name:marin.stock_picking_type_103
-#: model:stock.picking.type,name:marin.stock_picking_type_1145
-#: model:stock.picking.type,name:marin.stock_picking_type_1159
-#: model:stock.picking.type,name:marin.stock_picking_type_1173
-#: model:stock.picking.type,name:marin.stock_picking_type_119
-#: model:stock.picking.type,name:marin.stock_picking_type_23
-#: model:stock.picking.type,name:marin.stock_picking_type_39
-#: model:stock.picking.type,name:marin.stock_picking_type_5
-#: model:stock.picking.type,name:marin.stock_picking_type_55
-#: model:stock.picking.type,name:marin.stock_picking_type_71
-#: model:stock.picking.type,name:marin.stock_picking_type_87
+#: model:stock.picking.type,name:marin.picking_type_103
+#: model:stock.picking.type,name:marin.picking_type_1145
+#: model:stock.picking.type,name:marin.picking_type_1159
+#: model:stock.picking.type,name:marin.picking_type_1173
+#: model:stock.picking.type,name:marin.picking_type_119
+#: model:stock.picking.type,name:marin.picking_type_23
+#: model:stock.picking.type,name:marin.picking_type_39
+#: model:stock.picking.type,name:marin.picking_type_5
+#: model:stock.picking.type,name:marin.picking_type_55
+#: model:stock.picking.type,name:marin.picking_type_71
+#: model:stock.picking.type,name:marin.picking_type_87
 msgid "Quality Control"
 msgstr "Control de calidad"
 
@@ -14264,28 +14264,28 @@ msgid "Receipt by: _____________________________________"
 msgstr "Recibido por: _____________________________________"
 
 #. module: marin
-#: model:stock.picking.type,name:marin.stock_picking_type_1001
-#: model:stock.picking.type,name:marin.stock_picking_type_1012
-#: model:stock.picking.type,name:marin.stock_picking_type_1023
-#: model:stock.picking.type,name:marin.stock_picking_type_1034
-#: model:stock.picking.type,name:marin.stock_picking_type_1045
-#: model:stock.picking.type,name:marin.stock_picking_type_1056
-#: model:stock.picking.type,name:marin.stock_picking_type_1067
-#: model:stock.picking.type,name:marin.stock_picking_type_1078
-#: model:stock.picking.type,name:marin.stock_picking_type_1089
-#: model:stock.picking.type,name:marin.stock_picking_type_1100
-#: model:stock.picking.type,name:marin.stock_picking_type_1111
-#: model:stock.picking.type,name:marin.stock_picking_type_1122
-#: model:stock.picking.type,name:marin.stock_picking_type_1133
-#: model:stock.picking.type,name:marin.stock_picking_type_115
-#: model:stock.picking.type,name:marin.stock_picking_type_1155
-#: model:stock.picking.type,name:marin.stock_picking_type_1169
-#: model:stock.picking.type,name:marin.stock_picking_type_19
-#: model:stock.picking.type,name:marin.stock_picking_type_35
-#: model:stock.picking.type,name:marin.stock_picking_type_51
-#: model:stock.picking.type,name:marin.stock_picking_type_67
-#: model:stock.picking.type,name:marin.stock_picking_type_83
-#: model:stock.picking.type,name:marin.stock_picking_type_99
+#: model:stock.picking.type,name:marin.picking_type_1001
+#: model:stock.picking.type,name:marin.picking_type_1012
+#: model:stock.picking.type,name:marin.picking_type_1023
+#: model:stock.picking.type,name:marin.picking_type_1034
+#: model:stock.picking.type,name:marin.picking_type_1045
+#: model:stock.picking.type,name:marin.picking_type_1056
+#: model:stock.picking.type,name:marin.picking_type_1067
+#: model:stock.picking.type,name:marin.picking_type_1078
+#: model:stock.picking.type,name:marin.picking_type_1089
+#: model:stock.picking.type,name:marin.picking_type_1100
+#: model:stock.picking.type,name:marin.picking_type_1111
+#: model:stock.picking.type,name:marin.picking_type_1122
+#: model:stock.picking.type,name:marin.picking_type_1133
+#: model:stock.picking.type,name:marin.picking_type_115
+#: model:stock.picking.type,name:marin.picking_type_1155
+#: model:stock.picking.type,name:marin.picking_type_1169
+#: model:stock.picking.type,name:marin.picking_type_19
+#: model:stock.picking.type,name:marin.picking_type_35
+#: model:stock.picking.type,name:marin.picking_type_51
+#: model:stock.picking.type,name:marin.picking_type_67
+#: model:stock.picking.type,name:marin.picking_type_83
+#: model:stock.picking.type,name:marin.picking_type_99
 msgid "Receipts"
 msgstr "Recepciones"
 
@@ -14453,30 +14453,30 @@ msgid "Restore invoice status"
 msgstr "Restaurar estado de facturación"
 
 #. module: marin
-#: model:stock.picking.type,name:marin.stock_picking_type_1010
-#: model:stock.picking.type,name:marin.stock_picking_type_1021
-#: model:stock.picking.type,name:marin.stock_picking_type_1032
-#: model:stock.picking.type,name:marin.stock_picking_type_1043
-#: model:stock.picking.type,name:marin.stock_picking_type_1054
-#: model:stock.picking.type,name:marin.stock_picking_type_1065
-#: model:stock.picking.type,name:marin.stock_picking_type_1076
-#: model:stock.picking.type,name:marin.stock_picking_type_1087
-#: model:stock.picking.type,name:marin.stock_picking_type_1098
-#: model:stock.picking.type,name:marin.stock_picking_type_1109
-#: model:stock.picking.type,name:marin.stock_picking_type_111
-#: model:stock.picking.type,name:marin.stock_picking_type_1120
-#: model:stock.picking.type,name:marin.stock_picking_type_1131
-#: model:stock.picking.type,name:marin.stock_picking_type_1142
-#: model:stock.picking.type,name:marin.stock_picking_type_1153
-#: model:stock.picking.type,name:marin.stock_picking_type_1167
-#: model:stock.picking.type,name:marin.stock_picking_type_1181
-#: model:stock.picking.type,name:marin.stock_picking_type_127
-#: model:stock.picking.type,name:marin.stock_picking_type_13
-#: model:stock.picking.type,name:marin.stock_picking_type_31
-#: model:stock.picking.type,name:marin.stock_picking_type_47
-#: model:stock.picking.type,name:marin.stock_picking_type_63
-#: model:stock.picking.type,name:marin.stock_picking_type_79
-#: model:stock.picking.type,name:marin.stock_picking_type_95
+#: model:stock.picking.type,name:marin.picking_type_1010
+#: model:stock.picking.type,name:marin.picking_type_1021
+#: model:stock.picking.type,name:marin.picking_type_1032
+#: model:stock.picking.type,name:marin.picking_type_1043
+#: model:stock.picking.type,name:marin.picking_type_1054
+#: model:stock.picking.type,name:marin.picking_type_1065
+#: model:stock.picking.type,name:marin.picking_type_1076
+#: model:stock.picking.type,name:marin.picking_type_1087
+#: model:stock.picking.type,name:marin.picking_type_1098
+#: model:stock.picking.type,name:marin.picking_type_1109
+#: model:stock.picking.type,name:marin.picking_type_111
+#: model:stock.picking.type,name:marin.picking_type_1120
+#: model:stock.picking.type,name:marin.picking_type_1131
+#: model:stock.picking.type,name:marin.picking_type_1142
+#: model:stock.picking.type,name:marin.picking_type_1153
+#: model:stock.picking.type,name:marin.picking_type_1167
+#: model:stock.picking.type,name:marin.picking_type_1181
+#: model:stock.picking.type,name:marin.picking_type_127
+#: model:stock.picking.type,name:marin.picking_type_13
+#: model:stock.picking.type,name:marin.picking_type_31
+#: model:stock.picking.type,name:marin.picking_type_47
+#: model:stock.picking.type,name:marin.picking_type_63
+#: model:stock.picking.type,name:marin.picking_type_79
+#: model:stock.picking.type,name:marin.picking_type_95
 msgid "Resupply Subcontractor"
 msgstr "Reabastecer subcontratista"
 
@@ -14489,23 +14489,23 @@ msgid "Returned bank transactions"
 msgstr "Rebotes bancarios"
 
 #. module: marin
-#: model:stock.picking.type,name:marin.stock_picking_type_5007
-#: model:stock.picking.type,name:marin.stock_picking_type_5008
-#: model:stock.picking.type,name:marin.stock_picking_type_5009
-#: model:stock.picking.type,name:marin.stock_picking_type_5010
-#: model:stock.picking.type,name:marin.stock_picking_type_5011
-#: model:stock.picking.type,name:marin.stock_picking_type_5012
-#: model:stock.picking.type,name:marin.stock_picking_type_5013
-#: model:stock.picking.type,name:marin.stock_picking_type_5014
-#: model:stock.picking.type,name:marin.stock_picking_type_5015
-#: model:stock.picking.type,name:marin.stock_picking_type_5016
-#: model:stock.picking.type,name:marin.stock_picking_type_5017
-#: model:stock.picking.type,name:marin.stock_picking_type_5018
-#: model:stock.picking.type,name:marin.stock_picking_type_5019
-#: model:stock.picking.type,name:marin.stock_picking_type_5020
-#: model:stock.picking.type,name:marin.stock_picking_type_5021
-#: model:stock.picking.type,name:marin.stock_picking_type_5022
-#: model:stock.picking.type,name:marin.stock_picking_type_5023
+#: model:stock.picking.type,name:marin.picking_type_5007
+#: model:stock.picking.type,name:marin.picking_type_5008
+#: model:stock.picking.type,name:marin.picking_type_5009
+#: model:stock.picking.type,name:marin.picking_type_5010
+#: model:stock.picking.type,name:marin.picking_type_5011
+#: model:stock.picking.type,name:marin.picking_type_5012
+#: model:stock.picking.type,name:marin.picking_type_5013
+#: model:stock.picking.type,name:marin.picking_type_5014
+#: model:stock.picking.type,name:marin.picking_type_5015
+#: model:stock.picking.type,name:marin.picking_type_5016
+#: model:stock.picking.type,name:marin.picking_type_5017
+#: model:stock.picking.type,name:marin.picking_type_5018
+#: model:stock.picking.type,name:marin.picking_type_5019
+#: model:stock.picking.type,name:marin.picking_type_5020
+#: model:stock.picking.type,name:marin.picking_type_5021
+#: model:stock.picking.type,name:marin.picking_type_5022
+#: model:stock.picking.type,name:marin.picking_type_5023
 msgid "Returns"
 msgstr "Devoluciones"
 
@@ -15510,20 +15510,20 @@ msgid "Settings"
 msgstr ""
 
 #. module: marin
-#: model:stock.picking.type,name:marin.stock_picking_type_5049
-#: model:stock.picking.type,name:marin.stock_picking_type_5050
-#: model:stock.picking.type,name:marin.stock_picking_type_5051
-#: model:stock.picking.type,name:marin.stock_picking_type_5052
-#: model:stock.picking.type,name:marin.stock_picking_type_5053
-#: model:stock.picking.type,name:marin.stock_picking_type_5054
-#: model:stock.picking.type,name:marin.stock_picking_type_5055
-#: model:stock.picking.type,name:marin.stock_picking_type_5056
-#: model:stock.picking.type,name:marin.stock_picking_type_5057
+#: model:stock.picking.type,name:marin.picking_type_5049
+#: model:stock.picking.type,name:marin.picking_type_5050
+#: model:stock.picking.type,name:marin.picking_type_5051
+#: model:stock.picking.type,name:marin.picking_type_5052
+#: model:stock.picking.type,name:marin.picking_type_5053
+#: model:stock.picking.type,name:marin.picking_type_5054
+#: model:stock.picking.type,name:marin.picking_type_5055
+#: model:stock.picking.type,name:marin.picking_type_5056
+#: model:stock.picking.type,name:marin.picking_type_5057
 msgid "Ship orders"
 msgstr "Ordenes de embarque"
 
 #. module: marin
-#: model:stock.picking.type,name:marin.stock_picking_type_5058
+#: model:stock.picking.type,name:marin.picking_type_5058
 msgid "Ship orders 3P"
 msgstr "Ordenes de embarque 3P"
 
@@ -15824,45 +15824,45 @@ msgid "Stock user"
 msgstr "Usuario de inventario"
 
 #. module: marin
-#: model:stock.picking.type,name:marin.stock_picking_type_104
-#: model:stock.picking.type,name:marin.stock_picking_type_1146
-#: model:stock.picking.type,name:marin.stock_picking_type_1160
-#: model:stock.picking.type,name:marin.stock_picking_type_1174
-#: model:stock.picking.type,name:marin.stock_picking_type_120
-#: model:stock.picking.type,name:marin.stock_picking_type_24
-#: model:stock.picking.type,name:marin.stock_picking_type_40
-#: model:stock.picking.type,name:marin.stock_picking_type_56
-#: model:stock.picking.type,name:marin.stock_picking_type_6
-#: model:stock.picking.type,name:marin.stock_picking_type_72
-#: model:stock.picking.type,name:marin.stock_picking_type_88
+#: model:stock.picking.type,name:marin.picking_type_104
+#: model:stock.picking.type,name:marin.picking_type_1146
+#: model:stock.picking.type,name:marin.picking_type_1160
+#: model:stock.picking.type,name:marin.picking_type_1174
+#: model:stock.picking.type,name:marin.picking_type_120
+#: model:stock.picking.type,name:marin.picking_type_24
+#: model:stock.picking.type,name:marin.picking_type_40
+#: model:stock.picking.type,name:marin.picking_type_56
+#: model:stock.picking.type,name:marin.picking_type_6
+#: model:stock.picking.type,name:marin.picking_type_72
+#: model:stock.picking.type,name:marin.picking_type_88
 msgid "Storage"
 msgstr "Almacenar"
 
 #. module: marin
-#: model:stock.picking.type,name:marin.stock_picking_type_10
-#: model:stock.picking.type,name:marin.stock_picking_type_1007
-#: model:stock.picking.type,name:marin.stock_picking_type_1018
-#: model:stock.picking.type,name:marin.stock_picking_type_1029
-#: model:stock.picking.type,name:marin.stock_picking_type_1040
-#: model:stock.picking.type,name:marin.stock_picking_type_1051
-#: model:stock.picking.type,name:marin.stock_picking_type_1062
-#: model:stock.picking.type,name:marin.stock_picking_type_1073
-#: model:stock.picking.type,name:marin.stock_picking_type_108
-#: model:stock.picking.type,name:marin.stock_picking_type_1084
-#: model:stock.picking.type,name:marin.stock_picking_type_1095
-#: model:stock.picking.type,name:marin.stock_picking_type_1106
-#: model:stock.picking.type,name:marin.stock_picking_type_1117
-#: model:stock.picking.type,name:marin.stock_picking_type_1128
-#: model:stock.picking.type,name:marin.stock_picking_type_1139
-#: model:stock.picking.type,name:marin.stock_picking_type_1150
-#: model:stock.picking.type,name:marin.stock_picking_type_1164
-#: model:stock.picking.type,name:marin.stock_picking_type_1178
-#: model:stock.picking.type,name:marin.stock_picking_type_124
-#: model:stock.picking.type,name:marin.stock_picking_type_28
-#: model:stock.picking.type,name:marin.stock_picking_type_44
-#: model:stock.picking.type,name:marin.stock_picking_type_60
-#: model:stock.picking.type,name:marin.stock_picking_type_76
-#: model:stock.picking.type,name:marin.stock_picking_type_92
+#: model:stock.picking.type,name:marin.picking_type_10
+#: model:stock.picking.type,name:marin.picking_type_1007
+#: model:stock.picking.type,name:marin.picking_type_1018
+#: model:stock.picking.type,name:marin.picking_type_1029
+#: model:stock.picking.type,name:marin.picking_type_1040
+#: model:stock.picking.type,name:marin.picking_type_1051
+#: model:stock.picking.type,name:marin.picking_type_1062
+#: model:stock.picking.type,name:marin.picking_type_1073
+#: model:stock.picking.type,name:marin.picking_type_108
+#: model:stock.picking.type,name:marin.picking_type_1084
+#: model:stock.picking.type,name:marin.picking_type_1095
+#: model:stock.picking.type,name:marin.picking_type_1106
+#: model:stock.picking.type,name:marin.picking_type_1117
+#: model:stock.picking.type,name:marin.picking_type_1128
+#: model:stock.picking.type,name:marin.picking_type_1139
+#: model:stock.picking.type,name:marin.picking_type_1150
+#: model:stock.picking.type,name:marin.picking_type_1164
+#: model:stock.picking.type,name:marin.picking_type_1178
+#: model:stock.picking.type,name:marin.picking_type_124
+#: model:stock.picking.type,name:marin.picking_type_28
+#: model:stock.picking.type,name:marin.picking_type_44
+#: model:stock.picking.type,name:marin.picking_type_60
+#: model:stock.picking.type,name:marin.picking_type_76
+#: model:stock.picking.type,name:marin.picking_type_92
 msgid "Store Finished Product"
 msgstr "Almacenar producto terminado"
 
@@ -15949,30 +15949,30 @@ msgid "Styron 1L"
 msgstr ""
 
 #. module: marin
-#: model:stock.picking.type,name:marin.stock_picking_type_1009
-#: model:stock.picking.type,name:marin.stock_picking_type_1020
-#: model:stock.picking.type,name:marin.stock_picking_type_1031
-#: model:stock.picking.type,name:marin.stock_picking_type_1042
-#: model:stock.picking.type,name:marin.stock_picking_type_1053
-#: model:stock.picking.type,name:marin.stock_picking_type_1064
-#: model:stock.picking.type,name:marin.stock_picking_type_1075
-#: model:stock.picking.type,name:marin.stock_picking_type_1086
-#: model:stock.picking.type,name:marin.stock_picking_type_1097
-#: model:stock.picking.type,name:marin.stock_picking_type_110
-#: model:stock.picking.type,name:marin.stock_picking_type_1108
-#: model:stock.picking.type,name:marin.stock_picking_type_1119
-#: model:stock.picking.type,name:marin.stock_picking_type_1130
-#: model:stock.picking.type,name:marin.stock_picking_type_1141
-#: model:stock.picking.type,name:marin.stock_picking_type_1152
-#: model:stock.picking.type,name:marin.stock_picking_type_1166
-#: model:stock.picking.type,name:marin.stock_picking_type_1180
-#: model:stock.picking.type,name:marin.stock_picking_type_12
-#: model:stock.picking.type,name:marin.stock_picking_type_126
-#: model:stock.picking.type,name:marin.stock_picking_type_30
-#: model:stock.picking.type,name:marin.stock_picking_type_46
-#: model:stock.picking.type,name:marin.stock_picking_type_62
-#: model:stock.picking.type,name:marin.stock_picking_type_78
-#: model:stock.picking.type,name:marin.stock_picking_type_94
+#: model:stock.picking.type,name:marin.picking_type_1009
+#: model:stock.picking.type,name:marin.picking_type_1020
+#: model:stock.picking.type,name:marin.picking_type_1031
+#: model:stock.picking.type,name:marin.picking_type_1042
+#: model:stock.picking.type,name:marin.picking_type_1053
+#: model:stock.picking.type,name:marin.picking_type_1064
+#: model:stock.picking.type,name:marin.picking_type_1075
+#: model:stock.picking.type,name:marin.picking_type_1086
+#: model:stock.picking.type,name:marin.picking_type_1097
+#: model:stock.picking.type,name:marin.picking_type_110
+#: model:stock.picking.type,name:marin.picking_type_1108
+#: model:stock.picking.type,name:marin.picking_type_1119
+#: model:stock.picking.type,name:marin.picking_type_1130
+#: model:stock.picking.type,name:marin.picking_type_1141
+#: model:stock.picking.type,name:marin.picking_type_1152
+#: model:stock.picking.type,name:marin.picking_type_1166
+#: model:stock.picking.type,name:marin.picking_type_1180
+#: model:stock.picking.type,name:marin.picking_type_12
+#: model:stock.picking.type,name:marin.picking_type_126
+#: model:stock.picking.type,name:marin.picking_type_30
+#: model:stock.picking.type,name:marin.picking_type_46
+#: model:stock.picking.type,name:marin.picking_type_62
+#: model:stock.picking.type,name:marin.picking_type_78
+#: model:stock.picking.type,name:marin.picking_type_94
 msgid "Subcontracting"
 msgstr "Subcontratación"
 
