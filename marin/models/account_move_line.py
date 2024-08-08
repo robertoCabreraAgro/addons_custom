@@ -55,7 +55,6 @@ class AccountMoveLine(models.Model):
                         journal.name,
                     )
                 )
-            #
 
             if account in (journal.default_account_id, journal.suspense_account_id):
                 continue
