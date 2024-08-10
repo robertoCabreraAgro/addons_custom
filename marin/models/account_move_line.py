@@ -1,5 +1,6 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.tools import frozendict
 
 
 class AccountMoveLine(models.Model):
@@ -7,6 +8,7 @@ class AccountMoveLine(models.Model):
 
     # Extended fields
     move_type = fields.Selection(store=True)
+
     # New fields
     fleet_vehicle_log_services_ids = fields.One2many(
         "fleet.vehicle.log.services", "move_line_id", "Fleet services logs"
@@ -230,24 +232,23 @@ class AccountMoveLine(models.Model):
                 line.account_id = line.move_id.journal_id.default_account_id
 
     def _prepare_compute_analytic_distribution(self):
-        return {
-            "account_prefix": self.account_id.code,
-            "company_id": self.company_id.id,
-            "partner_category_id": self.partner_id.category_id.ids,
-            "partner_id": self.partner_id.id,
-            "product_categ_id": self.product_id.categ_id.id,
-            "product_id": self.product_id.id,
-            "vehicle_id": self.vehicle_id.id,
-        }
+        return frozendict(
+            {
+                "account_prefix": self.account_id.code,
+                "company_id": self.company_id.id,
+                "partner_category_id": self.partner_id.category_id.ids,
+                "partner_id": self.partner_id.id,
+                "product_categ_id": self.product_id.categ_id.id,
+                "product_id": self.product_id.id,
+                "vehicle_id": self.vehicle_id.id,
+            }
+        )
 
     # Extend original method
     @api.depends("account_id", "partner_id", "product_id", "vehicle_id")
     def _compute_analytic_distribution(self):
-        vehicle_lines = self.filtered(
-            lambda aml: aml.vehicle_id and (
-            line.display_type == "product"
-            or not line.move_id.is_invoice(include_receipts=True)
-            )
+        vehicle_lines = self.filtered(lambda line: line.vehicle_id
+            and line.display_type == "product"
         )
         super(AccountMoveLine, self - vehicle_lines)._compute_analytic_distribution()
         cache = {}
