@@ -28,30 +28,30 @@
             <xpath expr="//field[@name='parent_id']" position="attributes">
                 <attribute name="readonly">id and not user_account_manager</attribute>
             </xpath>
-            <xpath expr="//div[hasclass('oe_title')]" position="after">
-                <div name="options">
-                    <span class="d-inline-block">
-                        <field name="customer" readonly="not user_sale_user" />
-                        <label for="customer" />
-                    </span>
-                    <span class="d-inline-block">
-                        <field name="competitor" readonly="not user_sale_user" />
-                        <label for="competitor" />
-                    </span>
-                    <span class="d-inline-block">
-                        <field name="employee" readonly="not user_hr_user" />
-                        <label for="employee" />
-                    </span>
-                    <span class="d-inline-block">
-                        <field name="manufacturer" readonly="not user_purchase_user" />
-                        <label for="manufacturer" />
-                    </span>
-                    <span class="d-inline-block">
-                        <field name="supplier" readonly="not user_account_user" />
-                        <label for="supplier" />
-                    </span>
-                </div>
+
+            <xpath expr="//div[@name='options']" position="inside">
+                <span class="d-inline-block">
+                    <field name="customer" readonly="not user_sale_user" />
+                    <label for="customer" />
+                </span>
+                <span class="d-inline-block">
+                    <field name="competitor" readonly="not user_sale_user" />
+                    <label for="competitor" />
+                </span>
+                <span class="d-inline-block">
+                    <field name="employee" readonly="not user_hr_user" />
+                    <label for="employee" />
+                </span>
+                <span id="manufacturer_span" class="d-inline-block">
+                    <field name="manufacturer" readonly="not user_stock_user" />
+                    <label for="manufacturer" />
+                </span>
+                <span class="d-inline-block">
+                    <field name="supplier" readonly="not user_account_user" />
+                    <label for="supplier" />
+                </span>
             </xpath>
+
             <xpath expr="//field[@name='vat']" position="attributes">
                 <attribute name="readonly">parent_id or id and not user_account_manager</attribute>
             </xpath>

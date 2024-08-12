@@ -202,7 +202,13 @@
                     name="journal_id"
                     options="{'no_create': True}"
                     readonly="state in ['sale', 'cancel']"
-                    required="1"
+                    required="state == 'draft'"
+                />
+                <field
+                    name="season_id"
+                    options="{'no_create': True}"
+                    readonly="state in ['sale', 'cancel']"
+                    required="state == 'draft'"
                 />
             </xpath>
             <xpath expr="//page[@name='order_lines']//form//field[@name='price_unit']" position="replace">
@@ -329,7 +335,7 @@
         </field>
     </record>
 
-    <record id="sale_margin_sale_order_marin" model="ir.ui.view">
+   <record id="sale_margin_sale_order_marin" model="ir.ui.view">
         <field name="name">sale.order.line.margin.view.form.marin</field>
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale_margin.sale_margin_sale_order" />

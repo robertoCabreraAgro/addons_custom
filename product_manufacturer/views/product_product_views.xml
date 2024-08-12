@@ -8,7 +8,11 @@
             <sheet position="inside">
                 <group name="manufacturer" string="Manufacturer">
                     <group>
-                        <field name="manufacturer_id" context="{'res_partner_search_mode': 'supplier'}" />
+                        <field
+                            name="manufacturer_id"
+                            context="{'res_partner_search_mode': 'supplier'}"
+                            domain="[('manufacturer', '=', True)]"
+                        />
                         <field name="manufacturer_pname" />
                     </group>
                     <group>

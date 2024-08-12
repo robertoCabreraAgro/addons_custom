@@ -323,7 +323,11 @@ def _post_init_marin(env):
 
     env.cr.execute(
         """
-        UPDATE ir_model_data SET noupdate='t' WHERE module='marin';
+        UPDATE ir_model_data SET noupdate='t' WHERE module='marin' AND model NOT IN(
+             'ir.actions.act_window', 'ir.actions.server', 'ir.cron', 'ir.model', 'ir.model.access', 'ir.model.constraint',
+            'ir.model.fields', 'ir.model.fields.selection', 'ir.property', 'ir.rule', 'ir.ui.menu', 'ir.ui.view', 'mail.activity.type',
+            'res.config.settings', 'res.groups',
+        );
         UPDATE account_account SET deprecated='t' WHERE id<1000;
         UPDATE account_journal SET active='f' WHERE id<1000;
         UPDATE account_tax SET active='f' WHERE id<1000;

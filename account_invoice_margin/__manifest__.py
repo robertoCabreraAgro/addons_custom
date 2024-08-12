@@ -1,10 +1,8 @@
-# Copyright 2017 Sergio Teruel <sergio.teruel@tecnativa.com>
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 {
     "name": "Account Invoice Margin",
     "summary": "Show margin in invoices",
-    "version": "saas~17.4.1.0.0",
+    "version": "17.5.1.0.0",
     "category": "Account",
     "website": "https://github.com/OCA/margin-analysis",
     "author": "Tecnativa, GRAP, Odoo Community Association (OCA)",

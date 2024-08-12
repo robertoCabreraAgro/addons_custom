@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-    <record id="view_partner_form_marin" model="ir.ui.view">
-        <field name="name">res.partner.form.marin</field>
+    <record id="view_partner_form" model="ir.ui.view">
+        <field name="name">res.partner.form</field>
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form" />
         <field name="priority" eval="100" />
         <field name="arch" type="xml">
-            <xpath expr="//div[hasclass('oe_title')]" position="after">
-                <div name="options">
-                    <span class="d-inline-block">
-                        <field name="manufacturer" />
-                        <label for="manufacturer" />
-                    </span>
-                </div>
+            <xpath expr="//group[@name='misc']" position="inside">
+                <field name="manufacturer" />
             </xpath>
         </field>
     </record>

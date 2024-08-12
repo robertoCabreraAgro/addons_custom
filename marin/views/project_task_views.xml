@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="project_task_view_tree_main_base" model="ir.ui.view">
+        <field name="name">project.task.tree</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.project_task_view_tree_main_base" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='stage_id']" position="after">
+                <field name="expected_area" sum="Expected Area" optional="show" />
+                <field name="expected_revenue" sum="Expected Revenue" optional="show" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_task_form2" model="ir.ui.view">
+        <field name="name">project.task.form</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_title')]//h1[1]" position="after">
+                <h2 class="row g-0 pb-3 pb-sm-4">
+                    <div class="col-auto pb-2 pb-md-0">
+                        <label for="expected_area" class="oe_edit_only" />
+                        <div class="d-flex align-items-baseline">
+                            <field name="is_ag_initial" invisible="1" />
+                            <field name="expected_area" class="o_input_13ch" widget="float"  />
+                            <span class="oe_grey p-2"> Ha</span>
+                        </div>
+                    </div>
+                    <div class="col-auto pb-2 pb-md-0">
+                        <label for="expected_revenue" class="oe_edit_only"/>
+                        <div class="d-flex align-items-baseline">
+                            <field name="company_currency" invisible="1"/>
+                            <field name="expected_revenue" class="o_input_13ch" widget='monetary' options="{'currency_field': 'company_currency'}" />
+                        </div>
+                    </div>
+                </h2>
+            </xpath>
+            <xpath expr="//field[@name='tag_ids']" position="before">
+                <field name="season_id" />
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='user_ids']" position="attributes">
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='tag_ids']" position="attributes">
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

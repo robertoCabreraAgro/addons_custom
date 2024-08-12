@@ -32,7 +32,7 @@ def pre_init_hook(env):
         FROM am
         WHERE am.id = account_move_line.move_id
         AND price_subtotal > 0.0;
-    """
+        """
     )
     cr.execute(
         """
@@ -53,5 +53,5 @@ def pre_init_hook(env):
         FROM aml
         WHERE account_move.id = aml.move_id
         AND account_move.amount_untaxed > 0.0
-    """
+        """
     )

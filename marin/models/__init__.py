@@ -18,7 +18,6 @@ from . import hr_contract
 from . import hr_payslip
 from . import hr_payslip_run
 # from . import ir_actions_report
-from . import crm_lead
 # from . import mrp_production
 from . import pos_config
 from . import pos_order
@@ -28,6 +27,8 @@ from . import product_template
 from . import purchase_bill_union
 from . import purchase_order
 from . import purchase_order_line
+from . import project_task_lost_reason
+from . import project_task
 from . import res_company
 from . import res_config_settings
 from . import res_partner_age_range
