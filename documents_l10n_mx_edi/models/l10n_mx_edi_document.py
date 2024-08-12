@@ -531,19 +531,19 @@ class L10nMxEdiDocument(models.Model):
                 [("name", "=ilike", cfdi_etree.get("CondicionesDePago"))], limit=1
             )
         l10n_mx_edi_origin = False
-        related_uuids = {}
-        if hasattr(cfdi_etree, "CfdiRelacionados"):
-            related_uuids = self.get_related_uuids_dict(cfdi_etree)
-        if cfdi_etree.get("TipoDeComprobante", False) == "E" and related_uuids:
-            l10n_mx_edi_origin = move_obj._l10n_mx_edi_write_cfdi_origin(related_uuids["type"], related_uuids["uuids"])
-            # related_moves = move_obj.search([
-            #    ("commercial_partner_id", "=", partner.id), ("move_type", "=", "in_invoice")])
-            # related_moves = related_moves.filtered(
-            #    lambda inv: inv.l10n_mx_edi_cfdi_uuid in related_uuids["uuids"])
-            # TODO update core fields: reversed_entry_id, reversal_move_id
-            # related_moves.write({
-            #    "refund_invoice_ids": [(4, invoice_id.id, 0)]
-            # })
+        # related_uuids = {}
+        # if hasattr(cfdi_etree, "CfdiRelacionados"):
+        #     related_uuids = self.get_related_uuids_dict(cfdi_etree)
+        # if cfdi_etree.get("TipoDeComprobante", False) == "E" and related_uuids:
+        #     l10n_mx_edi_origin = move_obj._l10n_mx_edi_write_cfdi_origin(related_uuids["type"], related_uuids["uuids"])
+        #     related_moves = move_obj.search([
+        #        ("commercial_partner_id", "=", partner.id), ("move_type", "=", "in_invoice")])
+        #     related_moves = related_moves.filtered(
+        #        lambda inv: inv.l10n_mx_edi_cfdi_uuid in related_uuids["uuids"])
+        #     TODO update core fields: reversed_entry_id, reversal_move_id
+        #     related_moves.write({
+        #        "refund_invoice_ids": [(4, invoice_id.id, 0)]
+        #     })
         partner = self.partner_search_create(cfdi_etree)
         account_id = journal_exist.default_account_id.id
         invoice_lines = []

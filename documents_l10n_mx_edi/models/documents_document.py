@@ -116,12 +116,12 @@ class Document(models.Model):
                 "l10n_mx_edi_product_list": json.dumps(product_list),
             }
         )
-        related_uuids = edi_obj.get_related_uuids_dict(cfdi_etree)
-        if related_uuids:
-            l10n_mx_edi_origin = self.env["account.move"]._l10n_mx_edi_write_cfdi_origin(
-                related_uuids["type"], related_uuids["uuids"]
-            )
-            vals.update({"l10n_mx_edi_related_cfdi": json.dumps(l10n_mx_edi_origin)})
+        # if hasattr(cfdi_etree, "CfdiRelacionados"):
+        #     related_uuids = edi_obj.get_related_uuids_dict(cfdi_etree)
+        #     l10n_mx_edi_origin = self.env["account.move"]._l10n_mx_edi_write_cfdi_origin(
+        #         related_uuids["type"], related_uuids["uuids"]
+        #     )
+        #     vals.update({"l10n_mx_edi_related_cfdi": json.dumps(l10n_mx_edi_origin)})
         return vals
 
     @api.depends("datas")
@@ -201,37 +201,37 @@ class Document(models.Model):
         return folder
 
     def _l10n_edi_document_assign_tags_and_folder(self):
-        edi_obj = self.env["l10n_mx_edi.document"]
-        etree = edi_obj.check_objectify_xml(self.datas)
+        etree = self.env["l10n_mx_edi.document"].check_objectify_xml(self.datas)
         tags = [
             "{http://www.sat.gob.mx/cfd/3}Comprobante",
             "{http://www.sat.gob.mx/cfd/4}Comprobante",
         ]
         is_cfdi = etree.tag in tags
         if is_cfdi:
-            uuid = edi_obj.collect_complemento(etree).get("UUID", "").upper()
-            exist_docs = self.search(
+            uuid = self.env["l10n_mx_edi.document"].collect_complemento(etree).get("UUID", "").upper()
+            exist_docs = self.env["documents.document"].search(
                 [
+                    ("id", "!=", self.id),
                     ("name", "ilike", uuid + ".xml"),
-                    ("company_id", "=", self.env.company.id),
+                    ("res_model", "=", "documents.document"),
                 ]
             )
             if exist_docs:
                 # Add duplicated tag
-                message = _("Duplicated CFDI")
+                message = _("Duplicated CFDI: %s" % uuid)
                 self.env["bus.bus"]._sendone(
                     self.env.user.partner_id,
                     "simple_notification",
                     {"title": "Duplicated CFDI", "message": message, "sticky": False, "warning": True},
                 )
-            if not exist_docs:
+            else:
                 tag_ids = self._prepare_l10n_mx_edi_tags(etree)
                 self.update(
                     {
                         "name": uuid + ".xml",
                         "folder_id": self._documents_l10n_mx_edi_get_folder(etree).id,
                         "l10n_mx_edi_is_cfdi": True,
-                        "tag_ids": [Command.link(tag_ids)],
+                        "tag_ids": [Command.set(tag_ids)],
                     }
                 )
 
