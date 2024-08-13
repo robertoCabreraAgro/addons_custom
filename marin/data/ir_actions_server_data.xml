@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<odoo noupdate="1">
+<odoo>
     <record id="action_server_predict_bank_statement_values" model="ir.actions.server">
         <field name="name">Predict Partner</field>
         <field name="model_id" ref="account.model_account_bank_statement_line" />

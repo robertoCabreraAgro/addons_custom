@@ -1,0 +1,7 @@
+"id","name","default_applicability","color","sequence"
+"analytic.analytic_plan_projects","Projects","Unavailable","7","15"
+"marin.analytic_plan_201","Agroquimicos, Fertilizantes","Optional","10","10"
+"marin.analytic_plan_202","Planes de trabajo","Optional","11","12"
+"marin.analytic_plan_203","Arrendamiento","Optional","4","13"
+"marin.analytic_plan_204","Flotilla","Optional","1","11"
+"marin.analytic_plan_205","Terrenos, inmuebles, construcciones, edificios","Optional","8","14"

@@ -51,12 +51,11 @@ def _post_init_marin(env):
         """
         SELECT setval('"public"."res_partner_bank_id_seq"', 1000, true);
         SELECT setval('"public"."res_partner_id_seq"', 5000, true);
-
         SELECT setval('"public"."uom_category_id_seq"', 100, true);
         SELECT setval('"public"."uom_uom_id_seq"', 100, true);
+        SELECT setval('"public"."product_category_id_seq"', 100, true);
         SELECT setval('"public"."product_pricelist_id_seq"', 100, true);
         SELECT setval('"public"."product_pricelist_item_id_seq"', 1000, true);
-        SELECT setval('"public"."product_category_id_seq"', 100, true);
         SELECT setval('"public"."stock_location_id_seq"', 1000, true);
         SELECT setval('"public"."stock_picking_type_id_seq"', 1000, true);
         SELECT setval('"public"."stock_route_id_seq"', 1000, true);
@@ -68,13 +67,12 @@ def _post_init_marin(env):
     tools.convert.convert_file(env, "marin", "data/res.partner.bank.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/mrp.workcenter.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/res.users.csv", None, mode="init", kind="data")
-
     tools.convert.convert_file(env, "marin", "data/uom.category.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/uom.uom.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/stock.package.type.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/stock.storage.category.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin", "data/product_pricelist_data.xml", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/product.category.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin", "data/product_pricelist_data.xml", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/product.tag.csv", None, mode="init", kind="data")
 
     model = "stock.warehouse"
@@ -160,9 +158,8 @@ def _post_init_marin(env):
         SELECT setval('"public"."account_tax_repartition_line_id_seq"', 5000, true);
         """
     )
-
-    tools.convert.convert_file(env, "marin", "data/account_analytic_plan_data.xml", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/account.account.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin", "data/account.analytic.plan.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/account_journal_group_data.xml", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/account.journal.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/account.asset.csv", None, mode="init", kind="data")
@@ -324,9 +321,9 @@ def _post_init_marin(env):
     env.cr.execute(
         """
         UPDATE ir_model_data SET noupdate='t' WHERE module='marin' AND model NOT IN(
-             'ir.actions.act_window', 'ir.actions.server', 'ir.cron', 'ir.model', 'ir.model.access', 'ir.model.constraint',
-            'ir.model.fields', 'ir.model.fields.selection', 'ir.property', 'ir.rule', 'ir.ui.menu', 'ir.ui.view', 'mail.activity.type',
-            'res.config.settings', 'res.groups',
+            'ir.actions.act_window', 'ir.actions.server', 'ir.cron', 'ir.model', 'ir.model.access', 'ir.model.constraint',
+            'ir.model.fields', 'ir.model.fields.selection', 'ir.property', 'ir.rule', 'ir.ui.menu', 'ir.ui.view',
+            'res.config.settings', 'res.groups'
         );
         UPDATE account_account SET deprecated='t' WHERE id<1000;
         UPDATE account_journal SET active='f' WHERE id<1000;
