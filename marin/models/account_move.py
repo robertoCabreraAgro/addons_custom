@@ -171,7 +171,7 @@ class AccountMove(models.Model):
 
     def button_set_stored(self):
         for move in self:
-            move.stored = True
+            move.x_stored = True
 
     def _prepare_purchase_order_vals(self):
         self.ensure_one()
