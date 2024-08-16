@@ -11,6 +11,13 @@ class SaleOrder(models.Model):
 
     # New fields
     force_fully_invoiced = fields.Boolean()
+    route_id = fields.Many2one(
+        "stock.route",
+        "Route",
+        domain=[("sale_selectable", "=", True)],
+        help="When you change this field all the lines will be changed."
+        " After use it you will be able to change each line.",
+    )
     season_id = fields.Many2one(
         "date.range",
         "AG season",
@@ -87,6 +94,13 @@ class SaleOrder(models.Model):
         forced.invoice_status = "invoiced"
         return super(SaleOrder, self - forced)._compute_invoice_status()
 
+    @api.onchange("route_id")
+    def _onchange_route_id(self):
+        """We could do sale order line route_id field compute store writable.
+        But this field is created by Odoo so I prefer not modify it.
+        """
+        self.order_line.route_id = self.route_id
+
     def action_sale_authorize_debt(self):
         view = self.env.ref("marin.view_authorize_debt_wizard_form")
         return {
@@ -157,3 +171,12 @@ class SaleOrder(models.Model):
             moves = line.move_ids.filtered(lambda sm: sm.state not in ["done", "cancel"])
             moves._action_cancel()
             line.with_context(avoid_check_unlink=True).unlink()
+
+    def write(self, vals):
+        res = super().write(vals)
+        if "route_id" in vals:
+            lines = self.mapped("order_line").filtered(
+                lambda line: line.route_id.id != vals["route_id"]
+            )
+            lines.write({"route_id": vals["route_id"]})
+        return res

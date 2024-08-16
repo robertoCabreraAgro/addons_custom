@@ -188,6 +188,7 @@
                     force_save="1"
                     groups="stock.group_stock_multi_locations"
                 />
+                <field name="route_id" groups="stock.group_adv_location" />
             </xpath>
             <xpath expr="//field[@name='pricelist_id']" position="attributes">
                 <attribute name="required">state == 'draft'</attribute>

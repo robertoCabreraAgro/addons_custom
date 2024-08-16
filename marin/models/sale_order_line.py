@@ -93,6 +93,11 @@ class SaleOrderLineInherit(models.Model):
         order_vals = new_so._convert_to_write(new_so._cache)
         self.order_id = sale_order.create(order_vals)
 
+    @api.onchange("product_id")
+    def global_stock_route_product_id_change(self):
+        if self.order_id.route_id:
+            self.route_id = self.order_id.route_id
+
     def action_sale_order_form(self):
         self.ensure_one()
         action = self.env.ref("sale.action_orders")
@@ -106,3 +111,12 @@ class SaleOrderLineInherit(models.Model):
         if self._context.get("avoid_check_unlink"):
             return False
         return super()._check_line_unlink()
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if not vals.get("route_id", False):
+                order = self.env["sale.order"].browse(vals["order_id"])
+                if order.route_id:
+                    vals["route_id"] = order.route_id.id
+        return super().create(vals_list)
