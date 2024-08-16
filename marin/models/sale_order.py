@@ -10,6 +10,11 @@ class SaleOrder(models.Model):
     delivery_status = fields.Selection(selection_add=[("no", "Nothing to deliver"), ("over full", "Over delivered")])
 
     # New fields
+    commercial_partner_id = fields.Many2one(
+        related="partner_id.commercial_partner_id",
+        store=True,
+        index=True,
+    )
     force_fully_invoiced = fields.Boolean()
     route_id = fields.Many2one(
         "stock.route",
