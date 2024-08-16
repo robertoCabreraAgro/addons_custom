@@ -5,10 +5,10 @@
         <field name="model">account.account</field>
         <field name="inherit_id" ref="account.view_account_list" />
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='company_id'][2]" position="before">
+            <xpath expr="//field[@name='company_ids']" position="before">
                 <field name="deprecated" widget="boolean_toggle" optional="show" />
             </xpath>
-            <xpath expr="//field[@name='company_id'][2]" position="attributes">
+            <xpath expr="//field[@name='company_ids']" position="attributes">
                 <attribute name="optional">hide</attribute>
             </xpath>
         </field>
