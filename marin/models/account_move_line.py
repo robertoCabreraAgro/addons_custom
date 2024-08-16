@@ -74,7 +74,7 @@ class AccountMoveLine(models.Model):
 
     # Override original method
     def _compute_account_id(self):
-        term_lines = self.filtered(lambda line: line.display_type == "payment_term")
+        term_lines = self.filtered(lambda l: l.display_type == "payment_term")
         if term_lines:
             journals = term_lines.journal_id
             moves = term_lines.move_id
@@ -142,13 +142,15 @@ class AccountMoveLine(models.Model):
                     ORDER BY p.company_id, p.name, account_id
                 ),
                 fallback AS (
-                    SELECT DISTINCT ON (a.company_id, a.account_type)
+                    SELECT DISTINCT ON (ac.res_company_id, a.account_type)
                         'res.company' AS model,
-                        a.company_id AS id,
+                        ac.res_company_id AS id,
                         a.account_type AS account_type,
                         a.id AS account_id
                     FROM account_account a
-                    WHERE a.company_id = ANY(%(company_ids)s)
+                    JOIN account_account_res_company_rel ac
+                        ON ac.account_account_id = a.id
+                    WHERE ac.res_company_id = ANY(%(company_ids)s)
                         AND a.account_type IN ('asset_receivable', 'liability_payable')
                         AND a.deprecated = 'f'
                 )
@@ -161,7 +163,7 @@ class AccountMoveLine(models.Model):
                 SELECT * FROM default_properties
                 UNION ALL
                 SELECT * FROM fallback
-            """,
+                """,
                 {
                     "company_ids": moves.company_id.ids,
                     "journal_ids": journals.ids,
@@ -187,12 +189,12 @@ class AccountMoveLine(models.Model):
                     or accounts.get(("res.company", move.company_id.id, account_type))
                 )
                 if line.move_id.fiscal_position_id:
-                    account_id = self.move_id.fiscal_position_id.map_account(
+                    account_id = move.fiscal_position_id.map_account(
                         self.env["account.account"].browse(account_id)
                     )
                 line.account_id = account_id
 
-        product_lines = self.filtered(lambda line: line.display_type == "product" and line.move_id.is_invoice(True))
+        product_lines = self.filtered(lambda l: l.display_type == "product" and l.move_id.is_invoice(True))
         if product_lines:
             for line in product_lines:
                 if line.product_id:
@@ -220,8 +222,9 @@ class AccountMoveLine(models.Model):
                     )
                     if account_id:
                         line.account_id = account_id
+
         for line in self.filtered(
-            lambda ln: not ln.account_id and ln.display_type not in ("line_section", "line_note")
+            lambda l: not l.account_id and l.display_type not in ("line_section", "line_note")
         ):
             previous_two_accounts = line.move_id.line_ids.filtered(
                 lambda x: x.account_id and x.display_type == line.display_type
