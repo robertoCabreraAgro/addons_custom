@@ -6,10 +6,10 @@ from odoo.tools import float_compare, float_is_zero
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    # Override original field
+    # Extended fields
     delivery_status = fields.Selection(selection_add=[("no", "Nothing to deliver"), ("over full", "Over delivered")])
 
-    # Custom fields
+    # New fields
     force_fully_invoiced = fields.Boolean()
     season_id = fields.Many2one(
         "date.range",
@@ -17,6 +17,7 @@ class SaleOrder(models.Model):
         help="Since every farmer can have several growing seasons the specific one can be selected.",
     )
 
+    # Extend original method
     @api.depends("company_id", "user_id", "sale_order_template_id")
     def _compute_journal_id(self):
         res = super()._compute_journal_id()
@@ -51,7 +52,7 @@ class SaleOrder(models.Model):
                     future_credit, order.company_id.currency_id
                 )
 
-    # Override original function
+    # Override original method
     @api.depends("state", "order_line.qty_to_deliver", "order_line.product_uom_qty")
     def _compute_delivery_status(self):
         precision = self.env["decimal.precision"].precision_get("Product Unit of measure")
@@ -79,7 +80,7 @@ class SaleOrder(models.Model):
             else:
                 order.delivery_status = "no"
 
-    # Extend original function
+    # Extend original method
     @api.depends("state", "order_line.invoice_status")
     def _compute_invoice_status(self):
         forced = self.filtered("force_fully_invoiced")
@@ -135,6 +136,7 @@ class SaleOrder(models.Model):
                 )
             return self.action_sale_authorize_debt()
         return True
+
     # Extend original method
     def action_confirm(self):
         res = self.validate_credit_limit()

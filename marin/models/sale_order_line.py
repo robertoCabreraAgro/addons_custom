@@ -5,17 +5,20 @@ from odoo.tools import float_compare, float_is_zero
 class SaleOrderLineInherit(models.Model):
     _inherit = "sale.order.line"
 
-    # Custom fields
+
+    # Extended fields
+    # In core this a related field. We need to trigger its value on view, so we can
+    # have it even when we're in a NewId
+    order_partner_id = fields.Many2one(depends=["product_id"])
+
+    # New fields
     date_order = fields.Datetime(
         related="order_id.date_order",
         store=True,
         readonly=True,
         index=True,
     )
-    # In core this a related field. We need to trigger its value on view, so we can
-    # have it even when we're in a NewId
-    order_partner_id = fields.Many2one(depends=["product_id"])
-    # Extend original field
+    pricelist_id = fields.Many2one(related="order_id.pricelist_id", readonly=True)
     delivery_status = fields.Selection(
         [
             ("no", "Nothing to deliver"),
@@ -28,7 +31,6 @@ class SaleOrderLineInherit(models.Model):
         compute="_compute_delivery_status",
         store=True,
     )
-    pricelist_id = fields.Many2one(related="order_id.pricelist_id", readonly=True)
     force_company_id = fields.Many2one(
         "res.company",
         "Forced company",
