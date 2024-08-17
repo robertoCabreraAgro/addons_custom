@@ -56,7 +56,6 @@
         "delivery",
         "stock_dropshipping",
         # "stock_move_location",
-        "sale_commercial_partner",
         "sale_renting",
         "pos_sale_margin",
         "pos_hr",

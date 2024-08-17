@@ -53,6 +53,7 @@
                     domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"
                 />
                 <group string="Group By" expand="0">
+                    <filter name="commercial_partner_groupby" string="Customer Entity" domain="[]" context="{'group_by': 'commercial_partner_id'}" />
                     <filter name="customer" string="Customer" domain="[]" context="{'group_by': 'partner_id'}" />
                     <filter name="salesteam" string="Team" domain="[]" context="{'group_by': 'team_id'}" />
                     <filter name="salesperson" string="Salesperson" domain="[]" context="{'group_by': 'user_id'}" />
