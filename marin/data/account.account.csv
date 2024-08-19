@@ -1,4 +1,4 @@
-id,company_ids/id,currency_id/id,tag_ids/id,name,code,account_type,reconcile,create_asset,deprecated,opening_credit,opening_debit,opening_balance
+id,company_id/id,currency_id/id,tag_ids/id,name,code,account_type,reconcile,create_asset,deprecated,opening_credit,opening_debit,opening_balance
 marin.account_101_01_001_lmmr,marin.company_lmmr,,l10n_mx.tag_debit_balance_account,Cash main,101.01.001,Bank and Cash,,No,,,,
 marin.account_101_01_003_lmmr,marin.company_lmmr,base.USD,l10n_mx.tag_debit_balance_account,Cash USD,101.01.003,Bank and Cash,,No,,,,
 marin.account_101_01_005_lmmr,marin.company_lmmr,,l10n_mx.tag_debit_balance_account,Cash BAL,101.01.005,Bank and Cash,,No,,,,

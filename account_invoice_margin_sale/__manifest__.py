@@ -2,7 +2,7 @@
 {
     "name": "Account Invoice Margin Sale",
     "summary": "Set margin in invoices from sale orders",
-    "version": "17.5.1.0.0",
+    "version": "saas~17.4.1.0.0",
     "category": "Account",
     "author": "Tecnativa, " "Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/margin-analysis",

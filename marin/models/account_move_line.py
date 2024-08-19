@@ -142,15 +142,13 @@ class AccountMoveLine(models.Model):
                     ORDER BY p.company_id, p.name, account_id
                 ),
                 fallback AS (
-                    SELECT DISTINCT ON (ac.res_company_id, a.account_type)
+                    SELECT DISTINCT ON (a.company_id, a.account_type)
                         'res.company' AS model,
-                        ac.res_company_id AS id,
+                        a.company_id AS id,
                         a.account_type AS account_type,
                         a.id AS account_id
                     FROM account_account a
-                    JOIN account_account_res_company_rel ac
-                        ON ac.account_account_id = a.id
-                    WHERE ac.res_company_id = ANY(%(company_ids)s)
+                    WHERE a.company_id = ANY(%(company_ids)s)
                         AND a.account_type IN ('asset_receivable', 'liability_payable')
                         AND a.deprecated = 'f'
                 )
