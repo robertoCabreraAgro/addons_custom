@@ -658,13 +658,4 @@
         groups="marin.group_purchase_readonly"
     />
 
-    <menuitem
-        id="menu_account_sale_orders"
-        name="Sale Orders"
-        action="action_orders_marin"
-        parent="account.menu_finance_receivables"
-        sequence="80"
-        groups="marin.group_sale_readonly"
-    />
-
 </odoo>
