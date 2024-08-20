@@ -2,7 +2,7 @@ from odoo import api, fields, models
 from odoo.tools import float_compare, float_is_zero
 
 
-class SaleOrderLineInherit(models.Model):
+class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
 
@@ -10,6 +10,7 @@ class SaleOrderLineInherit(models.Model):
     # In core this a related field. We need to trigger its value on view, so we can
     # have it even when we're in a NewId
     order_partner_id = fields.Many2one(depends=["product_id"])
+    margin_percent = fields.Float(digits="Product Price")
 
     # New fields
     date_order = fields.Datetime(
@@ -18,7 +19,6 @@ class SaleOrderLineInherit(models.Model):
         readonly=True,
         index=True,
     )
-    pricelist_id = fields.Many2one(related="order_id.pricelist_id", readonly=True)
     delivery_status = fields.Selection(
         [
             ("no", "Nothing to deliver"),

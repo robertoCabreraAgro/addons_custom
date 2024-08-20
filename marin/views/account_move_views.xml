@@ -283,9 +283,6 @@
             <xpath expr="//field[@name='invoice_vendor_bill_id']" position="attributes">
                 <attribute name="invisible">True</attribute>
             </xpath>
-            <xpath expr="//t[@groups='purchase.group_purchase_user']" position="attributes">
-                <attribute name="groups" separator="," add="account.group_account_user" />
-            </xpath>
             <xpath expr="//field[@name='purchase_vendor_bill_id']" position="after">
                 <field
                     name="relate_purchase_order"

@@ -8,6 +8,8 @@ class SaleOrder(models.Model):
 
     # Extended fields
     delivery_status = fields.Selection(selection_add=[("no", "Nothing to deliver"), ("over full", "Over delivered")])
+    margin = fields.Float(digits="Product Price")
+    margin_percent = fields.Float(digits="Product Price")
 
     # New fields
     commercial_partner_id = fields.Many2one(
@@ -16,6 +18,7 @@ class SaleOrder(models.Model):
         index=True,
     )
     force_fully_invoiced = fields.Boolean()
+    force_fully_delivered = fields.Boolean()
     route_id = fields.Many2one(
         "stock.route",
         "Route",

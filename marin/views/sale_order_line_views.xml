@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-    <record id="view_sales_order_line_filter_marin" model="ir.ui.view">
+    <record id="view_sales_order_line_filter" model="ir.ui.view">
         <field name="name">sale.order.line.select</field>
         <field name="model">sale.order.line</field>
         <field name="arch" type="xml">
-            <search string="Search Sale order lines">
+            <search string="Search order lines">
                 <field name="order_id" />
                 <field name="order_partner_id" operator="child_of" />
                 <field name="product_id" />
@@ -13,9 +13,14 @@
                     name="to_invoice"
                     string="To invoice"
                     domain="[('qty_to_invoice', '!=', 0)]"
-                    help="Sale order lines ready to be invoiced"
+                    help="Order lines ready to be invoiced"
                 />
-                <filter name="to_deliver" string="To deliver" domain="[('delivery_status', '=', 'to deliver')]" />
+                <filter
+                    name="to_deliver"
+                    string="To deliver"
+                    domain="[('delivery_status', '=', 'to deliver')]"
+                    help="Order lines ready to be delivered"
+                />
                 <separator />
                 <filter
                     name="my_sales_order_lines"
@@ -26,14 +31,24 @@
                 <separator />
                 <filter name="date_order" string="Order Date" date="date_order" />
                 <group expand="0" string="Group By">
-                    <filter name="group_by_order_id" string="Order" domain="[]" context="{'group_by':'order_id'}" />
+                    <filter
+                        name="group_by_order_id"
+                        string="Order"
+                        domain="[]"
+                        context="{'group_by':'order_id'}"
+                    />
                     <filter
                         name="group_by_product_id"
                         string="Product"
                         domain="[]"
                         context="{'group_by':'product_id'}"
                     />
-                    <filter name="group_by_state" string="State" domain="[]" context="{'group_by':'state'}" />
+                    <filter
+                        name="group_by_state"
+                        string="State"
+                        domain="[]"
+                        context="{'group_by':'state'}"
+                    />
                     <filter
                         name="group_by_delivery_status"
                         string="Delivery status"
@@ -57,7 +72,7 @@
         </field>
     </record>
 
-    <record id="view_order_line_tree_marin" model="ir.ui.view">
+    <record id="view_sale_order_line_tree" model="ir.ui.view">
         <field name="name">sale.order.line.tree</field>
         <field name="model">sale.order.line</field>
         <field name="arch" type="xml">
@@ -71,8 +86,14 @@
             >
                 <field name="company_id" column_invisible="1" />
                 <field name="currency_id" column_invisible="1" />
-                <field name="state" column_invisible="1" />
                 <field name="display_type" column_invisible="1" />
+                <field name="state" column_invisible="1" />
+                <field name="invoice_status" column_invisible="1" />
+                <field name="delivery_status" column_invisible="1" />
+                <field name="qty_delivered_method" column_invisible="1" />
+                <field name="product_uom_category_id" column_invisible="1" />
+                <field name="product_uom_readonly" column_invisible="1" />
+                <field name="product_uom" column_invisible="1" />
                 <field name="product_updatable" column_invisible="1" />
                 <field
                     name="product_template_id"
@@ -88,15 +109,8 @@
                     }"
                     column_invisible="1"
                 />
-                <field name="invoice_status" column_invisible="1" />
-                <field name="delivery_status" column_invisible="1" />
-                <field name="qty_delivered_method" column_invisible="1" />
-                <field name="price_tax" column_invisible="1" />
-                <field name="pricelist_id" column_invisible="1" />
-                <field name="product_uom_category_id" column_invisible="1" />
-                <field name="product_uom_readonly" column_invisible="1" />
-                <field name="product_uom" column_invisible="1" />
                 <field name="price_subtotal" column_invisible="1" />
+                <field name="price_tax" column_invisible="1" />
                 <field
                     name="order_id"
                     string="Order"
@@ -117,16 +131,16 @@
                 <field
                     name="product_id"
                     readonly="not product_updatable"
-                    context="{'partner_id': order_partner_id, 'quantity': product_uom_qty, 'pricelist': pricelist_id, 'uom': product_uom, 'company_id': company_id}"
+                    context="{'partner_id': order_partner_id, 'quantity': product_uom_qty, 'uom': product_uom, 'company_id': company_id}"
                     force_save="1"
                 />
-                <field name="name" />
+                <field name="name" optional="show"/>
                 <field
                     name="product_uom_qty"
                     string="Ordered Qty"
                     sum="Ordered"
                     readonly="state in ['done', 'cancel']"
-                    context="{'partner_id': order_partner_id, 'quantity': product_uom_qty, 'pricelist': pricelist_id, 'uom': product_uom, 'company_id': company_id}"
+                    context="{'partner_id': order_partner_id, 'quantity': product_uom_qty, 'uom': product_uom, 'company_id': company_id}"
                     decoration-info="(not display_type and invoice_status == 'to invoice')"
                     decoration-bf="(not display_type and invoice_status == 'to invoice')"
                     optional="show"
@@ -180,7 +194,7 @@
                     optional="show"
                 />
                 <field name="qty_to_invoice" string="To invoice Qty" sum="To invoice" optional="hide" />
-                <field name="salesman_id" />
+                <field name="salesman_id" optional="show"/>
                 <field name="customer_lead" readonly="state not in ['draft', 'sent', 'sale']" optional="hide" />
                 <field name="force_company_id" readonly="order_id" options="{'no_create': True}" optional="hide" />
                 <button
@@ -199,8 +213,8 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">sale.order.line</field>
         <field name="view_mode">tree,form,pivot,graph</field>
-        <field name="view_id" ref="view_order_line_tree_marin" />
-        <field name="search_view_id" ref="view_sales_order_line_filter_marin" />
+        <field name="view_id" ref="view_sale_order_line_tree" />
+        <field name="search_view_id" ref="view_sales_order_line_filter" />
         <field name="context">{'search_default_group_by_order_id': 1}</field>
     </record>
 </odoo>
