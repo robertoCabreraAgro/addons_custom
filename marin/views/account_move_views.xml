@@ -319,13 +319,13 @@
                 <field name="allowed_sale_line_ids" column_invisible="True" />
                 <field
                     name="sale_line_ids"
-                    groups="account.group_account_user"
-                    column_invisible="parent.move_type != 'out_invoice'"
                     domain="[['id', 'in', allowed_sale_line_ids]]"
                     options="{'no_create': True, 'no_open': True', no_edit':True}"
-                    optional="show"
                     readonly="parent.state != 'draft'"
                     widget="many2many_tags"
+                    column_invisible="parent.move_type != 'out_invoice'"
+                    optional="show"
+                    groups="account.group_account_user"
                 />
             </xpath>
         </field>
