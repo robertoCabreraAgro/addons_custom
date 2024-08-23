@@ -9,13 +9,13 @@ class ResPartner(models.Model):
 
     def _prepare_partner_category_domain(self):
         parents = []
-        if self.env.user.has_group("marin.group_account_user"):
+        if self.env.user.has_group("account.group_account_basic"):
             parents.append(self.env.ref("marin.partner_category_management").id)
-        if self.env.user.has_group("marin.group_sale_user"):
+        if self.env.user.has_group("sales_team.group_sale_manager"):
             parents.append(self.env.ref("marin.partner_category_commercial").id)
         if self.env.user.has_group("marin.group_security_compliance"):
             parents.append(self.env.ref("marin.partner_category_security").id)
-        if self.env.user.has_group("marin.group_purchase_user"):
+        if self.env.user.has_group("purchase.group_purchase_manager"):
             parents.append(self.env.ref("marin.partner_category_purchase").id)
         if not parents:
             return [("id", "=", False)]
@@ -36,13 +36,10 @@ class ResPartner(models.Model):
     # New fields
     # Security
     user_account_user = fields.Boolean(compute="_compute_group")
-    user_account_manager = fields.Boolean(compute="_compute_group")
     user_debt_manager = fields.Boolean(compute="_compute_group")
     user_hr_user = fields.Boolean(compute="_compute_group")
     user_hr_manager = fields.Boolean(compute="_compute_group")
-    user_purchase_user = fields.Boolean(compute="_compute_group")
     user_purchase_manager = fields.Boolean(compute="_compute_group")
-    user_sale_user = fields.Boolean(compute="_compute_group")
     user_sale_manager = fields.Boolean(compute="_compute_group")
     user_stock_user = fields.Boolean(compute="_compute_group")
     user_stock_manager = fields.Boolean(compute="_compute_group")
@@ -90,15 +87,12 @@ class ResPartner(models.Model):
 
     def _prepare_compute_group(self):
         return {
-            "user_account_user": self.env.user.has_group("marin.group_account_user"),
-            "user_account_manager": self.env.user.has_group("marin.group_account_manager"),
+            "user_account_user": self.env.user.has_group("account.group_account_user"),
             "user_debt_manager": self.env.user.has_group("marin.group_account_debt_manager"),
             "user_hr_user": self.env.user.has_group("marin.group_hr_user"),
             "user_hr_manager": self.env.user.has_group("marin.group_hr_manager"),
-            "user_purchase_user": self.env.user.has_group("marin.group_purchase_user"),
-            "user_purchase_manager": self.env.user.has_group("marin.group_purchase_manager"),
-            "user_sale_user": self.env.user.has_group("marin.group_sale_user"),
-            "user_sale_manager": self.env.user.has_group("marin.group_sale_manager"),
+            "user_purchase_manager": self.env.user.has_group("purchase.group_purchase_manager"),
+            "user_sale_manager": self.env.user.has_group("sales_team.group_sale_manager"),
             "user_stock_user": self.env.user.has_group("marin.group_stock_user"),
             "user_stock_manager": self.env.user.has_group("marin.group_stock_manager"),
         }

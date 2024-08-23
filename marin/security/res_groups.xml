@@ -1,14 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-    <!-- Basic configuration -->
-    <record id="base.group_multi_company" model="res.groups">
-        <field name="users" eval="[Command.link(ref('base.user_admin'))]" />
-    </record>
-
-    <record id="base.group_multi_currency" model="res.groups">
-        <field name="users" eval="[Command.link(ref('base.user_admin'))]" />
-    </record>
-
     <!-- Documents -->
     <record id="group_documents_password_readonly" model="res.groups">
         <field name="name">Documents passwords readonly</field>
@@ -22,27 +13,6 @@
     </record>
 
     <!-- Accounting -->
-    <record id="group_account_readonly" model="res.groups">
-        <field name="name">Accounting readonly</field>
-        <field name="category_id" ref="base.module_category_usability" />
-    </record>
-
-    <record id="account.group_account_user" model="res.groups">
-        <field name="implied_ids" eval="[Command.set([ref('account.group_account_invoice')])]" />
-    </record>
-
-    <record id="group_account_user" model="res.groups">
-        <field name="name">Accounting user</field>
-        <field name="category_id" ref="base.module_category_usability" />
-        <field name="implied_ids" eval="[Command.link(ref('group_account_readonly'))]" />
-    </record>
-
-    <record id="group_account_manager" model="res.groups">
-        <field name="name">Accounting manager</field>
-        <field name="category_id" ref="base.module_category_usability" />
-        <field name="implied_ids" eval="[Command.link(ref('group_account_user'))]" />
-    </record>
-
     <record id="group_account_customer_invoice" model="res.groups">
         <field name="name">Customer invoices</field>
         <field name="category_id" ref="base.module_category_usability" />
@@ -58,17 +28,17 @@
         <field name="category_id" ref="base.module_category_usability" />
     </record>
 
-    <record id="group_account_vendor_bill" model="res.groups">
+    <record id="group_account_supplier_bill" model="res.groups">
         <field name="name">Vendor bills</field>
         <field name="category_id" ref="base.module_category_usability" />
     </record>
 
-    <record id="group_account_vendor_refund" model="res.groups">
+    <record id="group_account_supplier_refund" model="res.groups">
         <field name="name">Vendor refunds</field>
         <field name="category_id" ref="base.module_category_usability" />
     </record>
 
-    <record id="group_account_vendor_payment" model="res.groups">
+    <record id="group_account_supplier_payment" model="res.groups">
         <field name="name">Vendor payments</field>
         <field name="category_id" ref="base.module_category_usability" />
     </record>
@@ -103,7 +73,7 @@
     </record>
 
     <record id="group_account_move_cash_discount" model="res.groups">
-        <field name="name">Cash discounts Marin</field>
+        <field name="name">Cash discounts</field>
         <field name="category_id" ref="base.module_category_usability" />
     </record>
 
@@ -127,22 +97,6 @@
         <field name="category_id" ref="base.module_category_usability" />
     </record>
 
-    <record id="group_purchase_user" model="res.groups">
-        <field name="name">Purchase user</field>
-        <field name="category_id" ref="base.module_category_usability" />
-        <field name="implied_ids" eval="[
-        Command.link(ref('group_purchase_readonly'))
-        ]" />
-    </record>
-
-    <record id="group_purchase_manager" model="res.groups">
-        <field name="name">Purchase manager</field>
-        <field name="category_id" ref="base.module_category_usability" />
-        <field name="implied_ids" eval="[
-        Command.link(ref('group_purchase_user')),
-        ]" />
-    </record>
-
     <record id="group_purchase_force_reception_status" model="res.groups">
         <field name="name">Force reception status on Purchase Orders</field>
         <field name="category_id" ref="base.module_category_usability" />
@@ -158,36 +112,20 @@
         <field name="category_id" ref="base.module_category_usability" />
     </record>
 
-    <record id="group_purchase_special_projects" model="res.groups">
-        <field name="name">Purchase special projects</field>
-        <field name="category_id" ref="base.module_category_usability" />
-    </record>
-
     <record id="group_purchase_general" model="res.groups">
         <field name="name">Purchase general</field>
         <field name="category_id" ref="base.module_category_usability" />
     </record>
 
+    <record id="group_purchase_special_projects" model="res.groups">
+        <field name="name">Purchase special projects</field>
+        <field name="category_id" ref="base.module_category_usability" />
+    </record>
+
     <!-- Sale -->
     <record id="group_sale_readonly" model="res.groups">
-        <field name="name">Commercial readonly</field>
+        <field name="name">Sale readonly</field>
         <field name="category_id" ref="base.module_category_usability" />
-    </record>
-
-    <record id="group_sale_user" model="res.groups">
-        <field name="name">Commercial user</field>
-        <field name="category_id" ref="base.module_category_usability" />
-        <field name="implied_ids" eval="[
-        Command.link(ref('group_sale_readonly'))
-        ]" />
-    </record>
-
-    <record id="group_sale_manager" model="res.groups">
-        <field name="name">Commercial manager</field>
-        <field name="category_id" ref="base.module_category_usability" />
-        <field name="implied_ids" eval="[
-        Command.link(ref('group_sale_user')),
-        ]" />
     </record>
 
     <record id="group_sale_force_delivery_status" model="res.groups">

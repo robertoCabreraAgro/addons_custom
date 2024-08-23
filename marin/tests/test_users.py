@@ -52,21 +52,13 @@ class TestUsers(TransactionCase):
             [
                 {
                     "user_account_user": False,
-                    "user_account_manager": False,
-                    "user_purchase_user": False,
-                    "user_purchase_manager": False,
-                    "user_sale_user": False,
                     "user_sale_manager": False,
-                    "user_stock_user": False,
                     "user_stock_manager": False,
                     "user_debt_manager": False,
                 }
             ],
         )
         self.user.groups_id |= (
-            self.env.ref("marin.group_account_manager")
-            | self.env.ref("marin.group_purchase_user")
-            | self.env.ref("marin.group_sale_manager")
             | self.env.ref("marin.group_account_debt_manager")
         )
         partner._compute_group()
@@ -75,12 +67,7 @@ class TestUsers(TransactionCase):
             [
                 {
                     "user_account_user": True,
-                    "user_account_manager": True,
-                    "user_purchase_user": True,
-                    "user_purchase_manager": False,
-                    "user_sale_user": True,
                     "user_sale_manager": True,
-                    "user_stock_user": False,
                     "user_stock_manager": False,
                     "user_debt_manager": True,
                 }

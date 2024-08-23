@@ -6,7 +6,6 @@ class ProductTemplate(models.Model):
 
     user_product_cost_readonly = fields.Boolean(compute="_compute_group")
     user_product_cost_manager = fields.Boolean(compute="_compute_group")
-    user_purchase_readonly = fields.Boolean(compute="_compute_group")
     user_purchase_manager = fields.Boolean(compute="_compute_group")
     user_sale_readonly = fields.Boolean(compute="_compute_group")
     user_sale_manager = fields.Boolean(compute="_compute_group")
@@ -40,10 +39,9 @@ class ProductTemplate(models.Model):
         return {
             "user_product_cost_readonly": self.env.user.has_group("marin.group_product_cost_readonly"),
             "user_product_cost_manager": self.env.user.has_group("marin.group_product_cost_manager"),
-            "user_purchase_readonly": self.env.user.has_group("marin.group_purchase_readonly"),
-            "user_purchase_manager": self.env.user.has_group("marin.group_purchase_manager"),
+            "user_purchase_manager": self.env.user.has_group("purchase.group_purchase_manager"),
             "user_sale_readonly": self.env.user.has_group("marin.group_sale_readonly"),
-            "user_sale_manager": self.env.user.has_group("marin.group_sale_manager"),
+            "user_sale_manager": self.env.user.has_group("sales_team.group_sale_manager"),
             "user_stock_readonly": self.env.user.has_group("marin.group_stock_readonly"),
             "user_stock_manager": self.env.user.has_group("marin.group_stock_manager"),
         }

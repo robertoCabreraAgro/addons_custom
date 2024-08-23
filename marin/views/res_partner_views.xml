@@ -8,34 +8,31 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='company_type']" position="after">
                 <field name="user_account_user" invisible="1" />
-                <field name="user_account_manager" invisible="1" />
                 <field name="user_debt_manager" invisible="1" />
                 <field name="user_hr_user" invisible="1" />
                 <field name="user_hr_manager" invisible="1" />
-                <field name="user_purchase_user" invisible="1" />
                 <field name="user_purchase_manager" invisible="1" />
-                <field name="user_sale_user" invisible="1" />
                 <field name="user_sale_manager" invisible="1" />
                 <field name="user_stock_user" invisible="1" />
                 <field name="user_stock_manager" invisible="1" />
             </xpath>
             <xpath expr="//field[@name='company_type']" position="attributes">
-                <attribute name="readonly">id and not user_account_manager</attribute>
+                <attribute name="readonly">id and not user_account_user</attribute>
             </xpath>
             <xpath expr="//field[@name='name']" position="attributes">
-                <attribute name="readonly">id and not user_account_manager</attribute>
+                <attribute name="readonly">id and not user_account_user</attribute>
             </xpath>
             <xpath expr="//field[@name='parent_id']" position="attributes">
-                <attribute name="readonly">id and not user_account_manager</attribute>
+                <attribute name="readonly">id and not user_account_user</attribute>
             </xpath>
             <xpath expr="//div[hasclass('oe_title')]" position="after">
                 <div name="options">
                     <span id="customer_span" class="d-inline-block">
-                        <field name="customer" readonly="not user_sale_user" />
+                        <field name="customer" readonly="not user_sale_manager" />
                         <label for="customer" />
                     </span>
                     <span id="competitor_span" class="d-inline-block">
-                        <field name="competitor" readonly="not user_sale_user" />
+                        <field name="competitor" readonly="not user_sale_manager" />
                         <label for="competitor" />
                     </span>
                     <span id="employee_span" class="d-inline-block">
@@ -47,13 +44,13 @@
                         <label for="manufacturer" />
                     </span>
                     <span id="supplier_span" class="d-inline-block">
-                        <field name="supplier" readonly="not user_purchase_user" />
+                        <field name="supplier" readonly="not user_purchase_manager" />
                         <label for="supplier" />
                     </span>
                 </div>
             </xpath>
             <xpath expr="//field[@name='vat']" position="attributes">
-                <attribute name="readonly">parent_id or id and not user_account_manager</attribute>
+                <attribute name="readonly">parent_id or id and not user_account_user</attribute>
             </xpath>
             <xpath expr="//field[@name='category_id']" position="attributes">
                 <attribute name="options">{'no_create': True}</attribute>
