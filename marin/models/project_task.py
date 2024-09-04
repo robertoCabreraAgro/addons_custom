@@ -70,3 +70,28 @@ class Task(models.Model):
     #        team = self.env['crm.team']._get_default_team_id(user_id=user.id, domain=team_domain)
     #        if task.team_id != team:
     #            task.team_id = team.id
+
+    def _prepare_task_quotation_context(self):
+        """ Prepares the context for a new quotation (sale.order) by sharing the values of common fields """
+        self.ensure_one()
+        quotation_context = {
+            # 'default_opportunity_id': self.id,
+            'default_partner_id': self.partner_id.id,
+            # 'default_campaign_id': self.campaign_id.id,
+            # 'default_medium_id': self.medium_id.id,
+            # 'default_source_id': self.source_id.id,
+            'default_origin': self.name,
+            'default_company_id': self.company_id.id or self.env.company.id,
+            # 'default_tag_ids': [(6, 0, self.tag_ids.ids)]
+        }
+        # if self.team_id:
+        #     quotation_context['default_team_id'] = self.team_id.id
+        # if self.user_id:
+        #     quotation_context['default_user_id'] = self.user_id.id
+        return quotation_context
+
+    def action_new_quotation(self):
+        action = self.env["ir.actions.actions"]._for_xml_id("marin.action_quotation_new")
+        action['context'] = self._prepare_task_quotation_context()
+        # action['context']['search_default_opportunity_id'] = self.id
+        return action

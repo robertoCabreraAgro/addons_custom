@@ -17,6 +17,16 @@
         <field name="model">project.task</field>
         <field name="inherit_id" ref="project.view_task_form2" />
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='stage_id']" position="before">
+                <button 
+                    name="action_new_quotation"
+                    type="object"
+                    class="oe_highlight"
+                    string="New Quotation"
+                    title="Create new quotation"
+                    data-hotkey="q"
+                />
+            </xpath>            
             <xpath expr="//div[hasclass('oe_title')]//h1[1]" position="after">
                 <h2 class="row g-0 pb-3 pb-sm-4">
                     <div class="col-auto pb-2 pb-md-0">

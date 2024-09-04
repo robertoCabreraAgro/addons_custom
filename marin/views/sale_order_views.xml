@@ -419,6 +419,14 @@
         </field>
     </record>
 
+    <record id="action_quotation_new" model="ir.actions.act_window">
+        <field name="name">Quotation</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">form,tree,graph</field>
+        <field name="domain">[('opportunity_id', '=', active_id)]</field>
+        <field name="context">{'search_default_opportunity_id': active_id, 'default_opportunity_id': active_id}</field>
+    </record>
+
     <record id="action_sale_order_authorize_debt" model="ir.actions.server">
         <field name="name">Authorize debt</field>
         <field name="model_id" ref="sale.model_sale_order" />
