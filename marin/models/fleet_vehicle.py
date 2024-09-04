@@ -9,6 +9,7 @@ class FleetVehicleInherit(models.Model):
         help="Fuel tank capacity in liters",
     )
     cilinders = fields.Float("Cilinders Number")
+    fuel_efficiency = fields.Float(help="Fuel efficiency in kilometers per liter (km/L)")
     fuel_card_id = fields.Many2one(
         "documents.document",
         domain=lambda self: [
