@@ -288,7 +288,7 @@
         <field name="arch" type="xml">
             <xpath expr="/tree/field[@name='state']" position="after">
                 <field name="l10n_mx_edi_pac_status" />
-                <field name="l10n_mx_edi_cfdi_uuid" invisible="1" />
+                <field name="l10n_mx_edi_cfdi_uuid" column_invisible="1" />
             </xpath>
             <xpath expr="//field[@name='net_wage']" position="attributes">
                 <attribute name="sum">Total</attribute>

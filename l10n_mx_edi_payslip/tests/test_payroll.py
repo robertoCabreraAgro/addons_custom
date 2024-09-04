@@ -5,7 +5,7 @@ from datetime import date, datetime, time as dt_time, timedelta
 
 from lxml import etree, objectify
 
-from odoo import Command
+from odoo import Command, fields
 from odoo.exceptions import UserError
 from odoo.tests.common import Form, tagged
 from odoo.tools import float_is_zero, float_round
@@ -263,7 +263,7 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         """Verify payroll information and confirm payslips from batches
         Verify fiscal position on account move generation"""
         self.employee += self.prepare_second_employee(True)
-        payment_date = (datetime.today() + timedelta(days=5)).strftime("%Y-%m-%d")
+        payment_date = fields.Date.context_today(self.env.company).strftime("%Y-%m-%d")
         self.contract.state = "open"
         payslip_run = self.payslip_run_obj.create(
             {

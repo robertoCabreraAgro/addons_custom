@@ -67,6 +67,9 @@
             <xpath expr="//field[@name='country_of_birth']" position="before">
                 <field name="l10n_mx_birth_state_id" />
             </xpath>
+            <xpath expr="//field[@name='l10n_mx_nss']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
         </field>
     </record>
 

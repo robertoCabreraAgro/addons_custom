@@ -13,7 +13,11 @@ from zeep.transports import Transport
 
 from odoo import Command, _, api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import DEFAULT_SERVER_TIME_FORMAT, groupby
+from odoo.tools import (
+    DEFAULT_SERVER_DATETIME_FORMAT,
+    DEFAULT_SERVER_TIME_FORMAT,
+    groupby,
+)
 from odoo.tools.xml_utils import _check_with_xsd
 
 _logger = logging.getLogger(__name__)
@@ -333,6 +337,28 @@ class HrPayslip(models.Model):
             payslip.line_ids.filtered(lambda line: line.category_id.code != "NETSA" and (not line.amount)).unlink()
         return res
 
+    def _l10n_mx_edi_finkok_verify_is_stamped(self, cfdi_values):
+        """Returns the signed CFDI if it exists in FINKOK.
+
+        This method uses the FINKOK service to verify if the CFDI has been
+        previously signed.
+        """
+        finkok_info = self._l10n_mx_edi_finkok_info(self.company_id, "sign")
+        try:
+            transport = Transport(timeout=20)
+            client = Client(finkok_info["url"], transport=transport)
+            response = client.service.stamped(cfdi_values["cfdi"], finkok_info["username"], finkok_info["password"])
+        except BaseException as e:
+            self.l10n_mx_edi_log_error(str(e))
+            return False
+        if not response.UUID:
+            return False
+        xml_signed_bytes = response.xml.encode("utf-8")
+        xml_signed = base64.b64encode(xml_signed_bytes)
+        self._l10n_mx_edi_post_sign_process(xml_signed, 0, None)
+        cfdi_values["cfdi"] = xml_signed_bytes
+        return True
+
     def action_open_overtimes(self):
         self.ensure_one()
         self.auto_generate_overtimes()
@@ -432,14 +458,7 @@ class HrPayslip(models.Model):
                     ("name", "<=", record.date_to),
                 ]
             ).write({"payslip_id": record.id})
-            company = record.company_id or record.contract_id.company_id
-            partner = company.partner_id.commercial_partner_id
-            tz = partner._l10n_mx_edi_get_cfdi_timezone()
-            date_mx = fields.datetime.now(tz)
-            if not record.l10n_mx_edi_expedition_date:
-                record.l10n_mx_edi_expedition_date = date_mx.date()
-            if not record.l10n_mx_edi_time_payslip:
-                record.l10n_mx_edi_time_payslip = date_mx.strftime(DEFAULT_SERVER_TIME_FORMAT)
+            record._l10n_mx_edi_update_expedition_date()
             record.l10n_mx_edi_cfdi_name = "%s-MX-Payroll-%s.xml" % ((record.number).replace("/", ""), version)
             # Prepare to send sign
             record.l10n_mx_edi_pac_status = "to_sign"
@@ -1059,20 +1078,20 @@ class HrPayslip(models.Model):
         return fiscal_position.map_account(actual_account_id).id
 
     def _l10n_mx_edi_retry(self):
-        """Try to generate the cfdi attachment and then, sign it."""
+        """Try to generate the CFDI attachment that will be signed by FINKOK."""
         for record in self:
             record.l10n_mx_edi_error = False
             cfdi_values = record._l10n_mx_edi_create_cfdi()
             error = cfdi_values.pop("error", None)
-            cfdi = cfdi_values.pop("cfdi", None)
             if error:
-                # cfdi failed to be generated
                 record.l10n_mx_edi_pac_status = "retry"
                 record.l10n_mx_edi_log_error(error)
                 continue
             # cfdi has been successfully generated
             record.l10n_mx_edi_pac_status = "to_sign"
 
+            is_xml_signed = self._l10n_mx_edi_verify_or_update_cfdi(cfdi_values)
+            cfdi = cfdi_values.pop("cfdi", None)
             ctx = self.env.context.copy()
             ctx.pop("default_type", False)
 
@@ -1097,7 +1116,8 @@ class HrPayslip(models.Model):
                 )
             else:
                 attach_id.write({"datas": base64.encodebytes(cfdi), "mimetype": "application/xml"})
-            record._l10n_mx_edi_sign()
+            if not is_xml_signed:
+                record._l10n_mx_edi_sign()
 
     @api.model
     def l10n_mx_edi_retrieve_attachments(self):
@@ -1829,3 +1849,85 @@ class HrPayslip(models.Model):
     def l10n_mx_edi_get_pac_version(self):
         """Returns the cfdi version to generate the CFDI."""
         return self.env["ir.config_parameter"].sudo().get_param("l10n_mx_edi_payroll_version", "4.0")
+
+    def _l10n_mx_edi_verify_or_update_cfdi(self, cfdi_values):
+        """Checks the expedition date of the CFDI and verifies if the CFDI has been previously signed.
+
+        :param cfdi_values: XML with current with the data of the payslip
+        :type cfdi_values: dict
+        :return: boolean that indicates if the expedition date has been updated
+
+        This method takes into account the following:
+        - Verify if the expedition date has been updated.
+        - Verify if the CFDI created has not been previously signed to avoid
+          trying to sign it again.
+        """
+        if not self._l10n_mx_edi_update_expedition_date():
+            return False
+
+        is_xml_signed = self._l10n_mx_edi_finkok_verify_is_stamped(cfdi_values)
+        if not is_xml_signed:
+            cfdi_values["cfdi"] = self._l10n_mx_edi_create_cfdi()["cfdi"]
+            return False
+        return True
+
+    def _l10n_mx_edi_update_expedition_date(self):
+        """Updates the date and time of the CFDI expedition if current
+        expedition date is out of stamping period.
+
+        Consider the payment date as the expedition date only if it is within
+        the stamping period allowed by Finkok (72 hours).
+
+        This method takes into account the following:
+        - Get the current date and time to verify the stamping period and use them by default
+          if it is necessary.
+        - Use the payment date and current time if it is within the stamping period allowed.
+        - Use the payment date and the last time of day to extend the stamp period.
+        - If the expedition date has been computed, verify if the date is still in the stamping
+          period and keep the computed values if they are valid.
+        """
+        company = self.company_id or self.contract_id.company_id
+        time_zone = company.partner_id.commercial_partner_id._l10n_mx_edi_get_cfdi_timezone()
+        date_time_mx = fields.datetime.now(time_zone)
+        date_in_range = self.l10n_mx_edi_payment_date + timedelta(days=3)
+        time_mx = date_time_mx.time()
+        l10n_mx_edi_expedition_date = date_time_mx.date()
+        l10n_mx_edi_time_payslip = time_mx.strftime(DEFAULT_SERVER_TIME_FORMAT)
+        date_time_mx = fields.datetime.strftime(date_time_mx, DEFAULT_SERVER_DATETIME_FORMAT)
+
+        if not self.l10n_mx_edi_expedition_date:
+            if l10n_mx_edi_expedition_date.month > self.l10n_mx_edi_payment_date.month:
+                l10n_mx_edi_expedition_date = fields.Date.from_string(
+                    "%s-%s-01" % (l10n_mx_edi_expedition_date.year, l10n_mx_edi_expedition_date.month)
+                ) - timedelta(days=1)
+                l10n_mx_edi_time_payslip = "23:59:00"
+            elif date_time_mx < fields.datetime.strftime(
+                fields.datetime.combine(date_in_range, time_mx, time_zone), DEFAULT_SERVER_DATETIME_FORMAT
+            ):
+                l10n_mx_edi_expedition_date = self.l10n_mx_edi_payment_date
+            elif date_time_mx <= fields.datetime.strftime(
+                fields.datetime.combine(
+                    date_in_range, fields.datetime.strptime("23:59:00", DEFAULT_SERVER_TIME_FORMAT).time(), time_zone
+                ),
+                DEFAULT_SERVER_DATETIME_FORMAT,
+            ):
+                l10n_mx_edi_expedition_date = self.l10n_mx_edi_payment_date
+                l10n_mx_edi_time_payslip = "23:59:00"
+            self.l10n_mx_edi_expedition_date = l10n_mx_edi_expedition_date
+            self.l10n_mx_edi_time_payslip = l10n_mx_edi_time_payslip
+            return False
+
+        date_in_range = self.l10n_mx_edi_expedition_date + timedelta(days=3)
+        date_in_range = fields.datetime.strftime(
+            fields.datetime.combine(
+                date_in_range,
+                fields.datetime.strptime(self.l10n_mx_edi_time_payslip, DEFAULT_SERVER_TIME_FORMAT).time(),
+                time_zone,
+            ),
+            DEFAULT_SERVER_DATETIME_FORMAT,
+        )
+        if date_time_mx > date_in_range:
+            self.l10n_mx_edi_expedition_date = l10n_mx_edi_expedition_date
+            self.l10n_mx_edi_time_payslip = l10n_mx_edi_time_payslip
+            return True
+        return False

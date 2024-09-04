@@ -82,6 +82,12 @@
                         <field name="l10n_mx_edi_prorate_isr" />
                     </setting>
                     <setting
+                        string="Get ISR with monthly table?"
+                        help="If this option is checked, the ISR must be calculated based on the monthly table regardless of payment frequency."
+                    >
+                        <field name="l10n_mx_edi_isr_monthly" />
+                    </setting>
+                    <setting
                         string="Company contribution for feeding?"
                         help="If this option is checked, the feeding will to affect 50% employee and 50% the company."
                     >

@@ -1,13 +1,13 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* l10n_mx_edi_payslip
+#     * l10n_mx_edi_payslip
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-17 05:42+0000\n"
-"PO-Revision-Date: 2024-07-17 05:42+0000\n"
+"POT-Creation-Date: 2024-08-27 20:45+0000\n"
+"PO-Revision-Date: 2024-08-27 20:45+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -1798,7 +1798,7 @@ msgstr "Comisión"
 #. module: l10n_mx_edi_payslip
 #: model:ir.model,name:l10n_mx_edi_payslip.model_res_company
 msgid "Companies"
-msgstr "Empresas"
+msgstr "Compañías"
 
 #. module: l10n_mx_edi_payslip
 #: model:ir.model.fields,field_description:l10n_mx_edi_payslip.field_create_company_global_time_off__company_id
@@ -1858,7 +1858,7 @@ msgstr "Concubina"
 #. module: l10n_mx_edi_payslip
 #: model:ir.model,name:l10n_mx_edi_payslip.model_res_config_settings
 msgid "Config Settings"
-msgstr "Opciones de configuración"
+msgstr "Ajustes de configuración"
 
 #. module: l10n_mx_edi_payslip
 #: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.res_config_settings_view_form
@@ -1930,7 +1930,7 @@ msgstr ""
 #. module: l10n_mx_edi_payslip
 #: model:ir.model,name:l10n_mx_edi_payslip.model_res_country_state
 msgid "Country state"
-msgstr "Estado"
+msgstr "Provincia del país"
 
 #. module: l10n_mx_edi_payslip
 #: model:ir.model.fields,field_description:l10n_mx_edi_payslip.field_hr_employee_alimony__court
@@ -2261,7 +2261,7 @@ msgstr "Departamento"
 #. module: l10n_mx_edi_payslip
 #: model:ir.model,name:l10n_mx_edi_payslip.model_hr_departure_reason
 msgid "Departure Reason"
-msgstr "Razón de salida"
+msgstr "Motivo de salida"
 
 #. module: l10n_mx_edi_payslip
 #: model:hr.salary.rule,name:l10n_mx_edi_payslip.hr_payslip_input_type_deduction_004_housing
@@ -2435,6 +2435,16 @@ msgstr "Nómina EDI: Ejecutar operaciones del servicio web"
 #: model_terms:hr.salary.rule,note:l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_perception_019_t
 #: model_terms:hr.salary.rule,note:l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_perception_019_t_bf
 msgid "El excedente de 3 horas por día y de 9 horas por semana, es gravado"
+msgstr ""
+
+#. module: l10n_mx_edi_payslip
+#: model_terms:hr.salary.rule,note:l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_perception_001_holidays_f
+#: model_terms:hr.salary.rule,note:l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_perception_001_p_holidays_bf
+msgid ""
+"El monto de Vacaciones (Pendientes) se calculará basado en los días restantes de vacaciones.\n"
+"Si requiere definir una cantidad distinta de días pendientes puede agregar la entrada \"Vacaciones (Pendientes)\"\n"
+"en la sección de \"Otras Entradas\". Si requiere que ésta regla salarial no se calcule puede agregar la entrada\n"
+"mencionada con monto cero para evitar que se calcule basada en los días restantes de vacaciones."
 msgstr ""
 
 #. module: l10n_mx_edi_payslip
@@ -2923,6 +2933,13 @@ msgid "Get Gross Salary based on Net Salary"
 msgstr "Obtener Salario Bruto basado en el Salario Neto"
 
 #. module: l10n_mx_edi_payslip
+#: model:ir.model.fields,field_description:l10n_mx_edi_payslip.field_res_company__l10n_mx_edi_isr_monthly
+#: model:ir.model.fields,field_description:l10n_mx_edi_payslip.field_res_config_settings__l10n_mx_edi_isr_monthly
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.res_config_settings_view_form
+msgid "Get ISR with monthly table?"
+msgstr "¿Obtener ISR con tabla mensual?"
+
+#. module: l10n_mx_edi_payslip
 #: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.hr_contract_view_form
 msgid "Get Net Salary"
 msgstr "Obtener Salario Neto"
@@ -3322,6 +3339,18 @@ msgstr ""
 "generada una entrada por cada nómina."
 
 #. module: l10n_mx_edi_payslip
+#: model:ir.model.fields,help:l10n_mx_edi_payslip.field_res_company__l10n_mx_edi_isr_monthly
+#: model:ir.model.fields,help:l10n_mx_edi_payslip.field_res_config_settings__l10n_mx_edi_isr_monthly
+msgid ""
+"If True, the ISR must be calculated based on the monthly table regardless of"
+" payment frequency. If False, the table for the payment frequency will be "
+"used."
+msgstr ""
+"Si es verdadero, el ISR será calculado basado en la tabla mensual sin "
+"importar la peridiocidad de pago. Si no, será utilizada la tabla de acuerdo "
+"a su peridiocidad de pago."
+
+#. module: l10n_mx_edi_payslip
 #: model:ir.model.fields,help:l10n_mx_edi_payslip.field_hr_leave_type__l10n_mx_edi_payslip_use_calendar_days
 msgid "If True, the holiday's related will to consider the calendar days"
 msgstr ""
@@ -3697,6 +3726,15 @@ msgstr ""
 msgid ""
 "If this option is checked, not will be limited the amount to saving fund."
 msgstr "Si se marca esta opción, no se limitará el monto de fondo de ahorro."
+
+#. module: l10n_mx_edi_payslip
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.res_config_settings_view_form
+msgid ""
+"If this option is checked, the ISR must be calculated based on the monthly "
+"table regardless of payment frequency."
+msgstr ""
+"Si se marca esta opción, el ISR será calculado basado en la tabla mensual "
+"sin importar la peridiocidad de pago"
 
 #. module: l10n_mx_edi_payslip
 #: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.res_config_settings_view_form
@@ -4354,7 +4392,7 @@ msgstr ""
 #: model_terms:hr.salary.rule,note:l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_seguridad_social_company
 #: model_terms:hr.salary.rule,note:l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_seguridad_social_company_bf
 msgid ""
-"Las incapacidades no se consideran para este cálculo.\n"
+"Las incapacidades no se consideran para este calculo.\n"
 "\n"
 "Especie - Cuota fija: Considera los días del periodo - incapacidades\n"
 "Especie - Excedente: Considera los días del periodo - incapacidades\n"
@@ -5948,7 +5986,7 @@ msgstr "Regla salarial"
 #. module: l10n_mx_edi_payslip
 #: model:ir.model,name:l10n_mx_edi_payslip.model_hr_payroll_structure_type
 msgid "Salary Structure Type"
-msgstr "Tipo de Estructura Salarial"
+msgstr "Tipo de estructura salarial"
 
 #. module: l10n_mx_edi_payslip
 #: model:account.report.column,name:l10n_mx_edi_payslip.sua_affiliation_salary_type
@@ -6018,7 +6056,11 @@ msgid ""
 "\n"
 "Si la gestión es por Odoo, considera las vacaciones pendientes del empleado, pero hasta un máximo de las\n"
 "vacaciones que le corresponden del último año, tratando de evitar que si tiene acumuladas de años anteriores\n"
-"se sumen al pago de la liquidación."
+"se sumen al pago de la liquidación.\n"
+"\n"
+"Si requiere definir una cantidad distinta de días pendientes puede agregar la entrada \"Vacaciones (Pendientes)\"\n"
+"en la sección de \"Otras Entradas\". Si requiere que ésta regla salarial no se calcule puede agregar la entrada\n"
+"mencionada con monto cero para evitar que se calcule basada en los días restantes de vacaciones."
 msgstr ""
 
 #. module: l10n_mx_edi_payslip
@@ -6357,7 +6399,7 @@ msgstr ""
 msgid ""
 "Sumatoria de primas para cuotas obrero.\n"
 "\n"
-"Las incapacidades no se consideran para este cálculo.\n"
+"Las incapacidades no se consideran para este calculo.\n"
 "\n"
 "Nota: El IMSS cobra en el segundo mes del bimestre el monto por Retiro, Cesantía en Edad Avanzada y Vejez,\n"
 "lo manejamos nosotros en todas las nóminas para que se prorratee y no se descuente todo en la misma quincena.\n"
@@ -6442,7 +6484,7 @@ msgstr ""
 #: model_terms:hr.salary.rule,note:l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_perception_021_e_bf
 #: model_terms:hr.salary.rule,note:l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_perception_021_g
 #: model_terms:hr.salary.rule,note:l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_perception_021_g_bf
-msgid "Sólo 15 dias de SM son exentos, el excedente es gravado"
+msgid "Sólo 15 UMAs son exentos al año, el excedente es gravado"
 msgstr ""
 
 #. module: l10n_mx_edi_payslip
@@ -6759,12 +6801,12 @@ msgstr "¿Retardo?"
 #. module: l10n_mx_edi_payslip
 #: model:ir.model,name:l10n_mx_edi_payslip.model_hr_leave
 msgid "Time Off"
-msgstr "Tiempo personal"
+msgstr "Ausencias"
 
 #. module: l10n_mx_edi_payslip
 #: model:ir.model,name:l10n_mx_edi_payslip.model_hr_leave_type
 msgid "Time Off Type"
-msgstr "Tipo de tiempo personal"
+msgstr "Tipo de ausencia"
 
 #. module: l10n_mx_edi_payslip
 #: model:ir.model.fields,field_description:l10n_mx_edi_payslip.field_hr_payslip__l10n_mx_edi_time_payslip
@@ -7142,6 +7184,7 @@ msgstr ""
 #. module: l10n_mx_edi_payslip
 #: model:hr.salary.rule,name:l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_perception_001_holidays_f
 #: model:hr.salary.rule,name:l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_perception_001_holidays_l
+#: model:hr.salary.rule,name:l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_perception_001_p_holidays_bf
 msgid "Vacaciones (Pendientes)"
 msgstr ""
 

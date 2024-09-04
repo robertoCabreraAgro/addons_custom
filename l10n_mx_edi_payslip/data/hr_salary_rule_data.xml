@@ -3401,7 +3401,14 @@ if contract.l10n_mx_edi_schedule_pay_id.code == '05':
 
 elif contract.l10n_mx_edi_special_isr:
     result = income_period * contract.l10n_mx_edi_special_isr
-
+elif contract.company_id.l10n_mx_edi_isr_monthly:
+    income_period = contract.wage
+    for value in month_table:
+        if income_period >=value[0] and value[1] >= income_period:
+            extra = income_period - value[0]
+            result = (extra * value[3]) + value[2]
+            break
+    result = result / 2
 elif not contract.company_id.l10n_mx_edi_prorate_isr:
     table_isr = table.get(contract.l10n_mx_edi_schedule_pay_id.code, [])
     if table_isr:
@@ -3910,6 +3917,7 @@ if not employee.l10n_mx_edi_is_assimilated and NET > 0:
     days_work += worked_days['LEAVE111'].number_of_days if 'LEAVE111' in worked_days else 0.0
     days_work += worked_days['LEAVE112'].number_of_days if 'LEAVE112' in worked_days else 0.0
     days_work += worked_days['LEAVE113'].number_of_days if 'LEAVE113' in worked_days else 0.0
+    days_work += worked_days['LEAVE120'].number_of_days if 'LEAVE120' in worked_days else 0.0
     days_work += worked_days['LEAVE140'].number_of_days if 'LEAVE140' in worked_days else 0.0
     aux = sbc * days_work
     retirement = 0.02 * aux
@@ -3933,6 +3941,7 @@ if not employee.l10n_mx_edi_is_assimilated and NET > 0:
     minimum_wage = contract.company_id.l10n_mx_edi_minimum_wage
     uma = contract.company_id.l10n_mx_edi_uma
     days_work = worked_days['WORK100'].number_of_days if 'WORK100' in worked_days else 0.0
+    days_work += worked_days['LEAVE120'].number_of_days if 'LEAVE120' in worked_days else 0.0
     days_work += worked_days['LEAVE140'].number_of_days if 'LEAVE140' in worked_days else 0.0
     aux = sbc * days_work
     percentage = 0.0315

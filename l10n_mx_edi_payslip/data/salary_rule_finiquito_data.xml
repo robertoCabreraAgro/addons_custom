@@ -86,14 +86,29 @@ result += daily_wage * (inputs['pg1_023'].amount if 'pg1_023' in inputs else 0.0
 
     <record id="hr_rule_l10n_mx_payroll_perception_001_holidays_f" model="hr.salary.rule">
         <field name="name">Vacaciones (Pendientes)</field>
-        <field name="sequence" eval="24000" />
+        <field name="sequence" eval="22000" />
         <field name="code">PGV001</field>
         <field name="l10n_mx_edi_code">001</field>
         <field name="category_id" ref="hr_salary_rule_category_perception_mx_taxed" />
         <field name="struct_id" ref="payroll_structure_data_03" />
+                <field name="condition_select">python</field>
+        <field name="condition_python">
+payslips = employee.slip_ids.filtered(lambda sl: sl.state != 'cancel' and sl.id != payslip.id and sl.date_from.month == payslip.date_from.month and sl.date_from.year == payslip.date_from.year)
+perceptions = employee.env.ref('l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_perception_001_p_holidays_bf') | employee.env.ref('l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_perception_001_holidays_f') | employee.env.ref('l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_perception_001_holidays_l')
+result = 0 if payslips.mapped('line_ids').filtered(lambda l: l.amount and l.salary_rule_id in perceptions) else 1
+        </field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
-result = contract.l10n_mx_edi_daily_wage * (inputs['pgv_001'].amount if 'pgv_001' in inputs else 0.0)
+days = inputs['pgv_001'].amount if 'pgv_001' in inputs else -1
+if days &lt; 0:
+    days = min(contract.l10n_mx_edi_holidays, employee.remaining_leaves) if employee.allocation_count else 0
+result = contract.l10n_mx_edi_daily_wage * days
+        </field>
+        <field name="note">
+El monto de Vacaciones (Pendientes) se calculará basado en los días restantes de vacaciones.
+Si requiere definir una cantidad distinta de días pendientes puede agregar la entrada "Vacaciones (Pendientes)"
+en la sección de "Otras Entradas". Si requiere que ésta regla salarial no se calcule puede agregar la entrada
+mencionada con monto cero para evitar que se calcule basada en los días restantes de vacaciones.
         </field>
     </record>
 
@@ -101,7 +116,10 @@ result = contract.l10n_mx_edi_daily_wage * (inputs['pgv_001'].amount if 'pgv_001
         <field name="code">pgv_001</field>
         <field name="name">Vacaciones (Pendientes)</field>
         <field name="country_id" ref="base.mx" />
-        <field name="struct_ids" eval="[Command.set([ref('payroll_structure_data_03')])]" />
+        <field
+            name="struct_ids"
+            eval="[Command.set([ref('payroll_structure_data_03'), ref('payroll_structure_data_06')])]"
+        />
     </record>
 
     <record id="hr_rule_l10n_mx_payroll_perception_023_e_2" model="hr.salary.rule">
@@ -115,7 +133,7 @@ result = contract.l10n_mx_edi_daily_wage * (inputs['pgv_001'].amount if 'pgv_001
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 holidays_exempt = 15 * contract.company_id.l10n_mx_edi_uma
-holidays_bonus = VPPG001 * (contract.l10n_mx_edi_vacation_bonus or 25) / 100
+holidays_bonus = (PGV001 + VPPG001) * (contract.l10n_mx_edi_vacation_bonus or 25) / 100
 # Get already paid not in odoo
 accumulated = inputs['pva_021'].amount if 'pva_021' in inputs else 0.0
 # Get previus finiquitos amounts
@@ -156,7 +174,7 @@ result = 0 if accumulated >= holidays_exempt else holidays_exempt - accumulated 
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 holidays_exempt = 15 * contract.company_id.l10n_mx_edi_uma
-holidays_bonus = VPPG001 * (contract.l10n_mx_edi_vacation_bonus or 25) / 100
+holidays_bonus = (PGV001 + VPPG001) * (contract.l10n_mx_edi_vacation_bonus or 25) / 100
 # Get already paid not in odoo
 accumulated = inputs['pva_021'].amount if 'pva_021' in inputs else 0.0
 # Get previous finiquitos amounts
