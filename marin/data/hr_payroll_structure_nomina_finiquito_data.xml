@@ -267,7 +267,7 @@ result = (daily_wage * 15) * (days / 365)
         <field name="name">Salario neto</field>
         <field name="code">NET</field>
         <field name="struct_id" ref="hr_payroll_structure_nomina_finiquito_601_nf" />
-        <field name="category_id" ref="l10n_mx_edi_payslip.hr_salary_rule_category_netsa_mx" />
+        <field name="category_id" ref="hr_payroll.NET" />
         <field name="condition_select">none</field>
         <field name="amount_select">code</field>
         <field
@@ -543,7 +543,7 @@ result = (daily_wage * 15) * (days / 365)
         <field name="name">Salario neto</field>
         <field name="code">NET</field>
         <field name="struct_id" ref="hr_payroll_structure_nomina_finiquito_602_nf" />
-        <field name="category_id" ref="l10n_mx_edi_payslip.hr_salary_rule_category_netsa_mx" />
+        <field name="category_id" ref="hr_payroll.NET" />
         <field name="condition_select">none</field>
         <field name="amount_select">code</field>
         <field
@@ -819,7 +819,7 @@ result = (daily_wage * 15) * (days / 365)
         <field name="name">Salario neto</field>
         <field name="code">NET</field>
         <field name="struct_id" ref="hr_payroll_structure_nomina_finiquito_603_nf" />
-        <field name="category_id" ref="l10n_mx_edi_payslip.hr_salary_rule_category_netsa_mx" />
+        <field name="category_id" ref="hr_payroll.NET" />
         <field name="condition_select">none</field>
         <field name="amount_select">code</field>
         <field

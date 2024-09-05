@@ -1488,7 +1488,7 @@ result = daily_wage * holidays * 0.25
         <field name="name">Salario neto</field>
         <field name="code">NET</field>
         <field name="struct_id" ref="hr_payroll_structure_nomina_aguinaldo_601_nf" />
-        <field name="category_id" ref="l10n_mx_edi_payslip.hr_salary_rule_category_netsa_mx" />
+        <field name="category_id" ref="hr_payroll.NET" />
         <field name="condition_select">none</field>
         <field name="amount_select">code</field>
         <field
@@ -1783,7 +1783,7 @@ result = daily_wage * holidays * 0.25
         <field name="name">Salario neto</field>
         <field name="code">NET</field>
         <field name="struct_id" ref="hr_payroll_structure_nomina_aguinaldo_602_nf" />
-        <field name="category_id" ref="l10n_mx_edi_payslip.hr_salary_rule_category_netsa_mx" />
+        <field name="category_id" ref="hr_payroll.NET" />
         <field name="condition_select">none</field>
         <field name="amount_select">code</field>
         <field
@@ -2078,7 +2078,7 @@ result = daily_wage * holidays * 0.25
         <field name="name">Salario neto</field>
         <field name="code">NET</field>
         <field name="struct_id" ref="hr_payroll_structure_nomina_aguinaldo_603_nf" />
-        <field name="category_id" ref="l10n_mx_edi_payslip.hr_salary_rule_category_netsa_mx" />
+        <field name="category_id" ref="hr_payroll.NET" />
         <field name="condition_select">none</field>
         <field name="amount_select">code</field>
         <field
