@@ -1055,8 +1055,8 @@ class HrPayslip(models.Model):
             return False
         account_id = self._get_department_account(line, account_id)
         existing_lines = super()._get_existing_lines(line_ids, line, account_id, debit, credit)
-        if existing_lines:
-            existing_lines["l10n_mx_edi_payslip_line_ids"][0][2].append(line.id)
+        # if existing_lines:
+        #     existing_lines["l10n_mx_edi_payslip_line_ids"][0][2].append(line.id)
         return existing_lines
 
     @api.model
