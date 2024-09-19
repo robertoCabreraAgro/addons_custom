@@ -70,20 +70,36 @@ class ResPartner(models.Model):
     competitor = fields.Boolean()
     gender = fields.Selection([("male", "Male"), ("female", "Female"), ("other", "Other")])
     birthdate = fields.Date()
-    age = fields.Integer(readonly=True, compute="_compute_age")
+    age = fields.Integer(compute="_compute_age", readonly=True)
     age_range_id = fields.Many2one(
         "res.partner.age.range",
         "Age Range",
-        compute="_compute_age_range_id",
-        store=True,
+        compute="_compute_age_range_id", store=True,
     )
     b2x = fields.Selection(
-        [("b2b", "Business to business"), ("b2c", "Business to consumer"), ("both", "Business business and consumer")],
+        [
+            ("b2b", "Business to business"),
+            ("b2c", "Business to consumer"),
+            ("both", "Business business and consumer"),
+        ],
         default="b2c",
     )
     social_style_color = fields.Selection(
-        [("yellow", "yellow"), ("green", "green"), ("blue", "blue"), ("red", "red")], string="Social style color"
+        [
+            ("yellow", "yellow"),
+            ("green", "green"),
+            ("blue", "blue"),
+            ("red", "red"),
+        ],
+        "Social style color"
     )
+    # team_id = fields.Many2one(
+    #     'crm.team',
+    #     'Sales Team',
+    #     compute='_compute_team_id', store=True, precompute=True,  # avoid queries post-create
+    #     readonly=False,
+    #     ondelete='set null',
+    # )
 
     def _prepare_compute_group(self):
         return {
@@ -101,6 +117,11 @@ class ResPartner(models.Model):
         for partner in self:
             vals = self._prepare_compute_group()
             partner.update(vals)
+
+    # @api.depends('parent_id')
+    # def _compute_team_id(self):
+    #     for partner in self.filtered(lambda partner: not partner.team_id and partner.company_type == 'person' and partner.parent_id.team_id):
+    #         partner.team_id = partner.parent_id.team_id
 
     @api.depends("birthdate")
     def _compute_age(self):
@@ -159,11 +180,6 @@ class ResPartner(models.Model):
         )
         msg += _("Credit available: %s", formatLang(self.env, self.credit_limit_available, currency_obj=currency))
         return msg
-
-    # Override method cause is annoying
-    @api.ondelete(at_uninstall=False)
-    def _unlink_except_active_pos_session(self):
-        return True
 
     # Override method to be like it was on v16 showing the partner ledger report
     # instead of showing the partner account move lines like it's done on v17.
