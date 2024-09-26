@@ -19,7 +19,7 @@
     </record>
 
     <record id="hr_salary_rule_list" model="ir.ui.view">
-        <field name="name">hr.salary.rule.tree.inh.l10n_mx</field>
+        <field name="name">hr.salary.rule.list.inh.l10n_mx</field>
         <field name="model">hr.salary.rule</field>
         <field name="inherit_id" ref="hr_payroll.hr_salary_rule_list" />
         <field name="arch" type="xml">

@@ -11,8 +11,8 @@
             </field>
         </record>
 
-        <record id="esignature_tree_view" model="ir.ui.view">
-            <field name="name">esignature.tree</field>
+        <record id="esignature_list_view" model="ir.ui.view">
+            <field name="name">esignature.list</field>
             <field name="model">l10n_mx_edi.esignature</field>
             <field name="arch" type="xml">
                 <tree>

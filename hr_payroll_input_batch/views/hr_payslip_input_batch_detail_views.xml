@@ -5,7 +5,7 @@
         <field name="name">view.payslip.input.batch.detail.list</field>
         <field name="model">hr.payslip.input.batch.detail</field>
         <field name="arch" type="xml">
-            <tree multi_edit="1">
+            <list  multi_edit="1">
                 <field name="employee_id" />
                 <field name="name" />
                 <field name="amount" />

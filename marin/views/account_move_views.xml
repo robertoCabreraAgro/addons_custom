@@ -94,10 +94,10 @@
         </field>
     </record>
 
-    <record id="view_invoice_tree" model="ir.ui.view">
-        <field name="name">account.invoice.tree</field>
+    <record id="view_invoice_list" model="ir.ui.view">
+        <field name="name">account.invoice.list</field>
         <field name="model">account.move</field>
-        <field name="inherit_id" ref="account.view_invoice_tree" />
+        <field name="inherit_id" ref="account.view_invoice_list" />
         <field name="priority" eval="100" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='name']" position="before">
@@ -346,9 +346,9 @@
         </field>
     </record>
 
-    <record id="invoice_margin_form_tree" model="ir.ui.view">
+    <record id="invoice_margin_form_list" model="ir.ui.view">
         <field name="model">account.move</field>
-        <field name="inherit_id" ref="account_invoice_margin.invoice_margin_form_tree" />
+        <field name="inherit_id" ref="account_invoice_margin.invoice_margin_form_list" />
         <field name="arch" type="xml">
             <xpath
                 expr="//field[@name='purchase_price']"

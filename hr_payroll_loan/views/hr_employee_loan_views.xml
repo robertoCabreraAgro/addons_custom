@@ -129,7 +129,7 @@
                         <page string="Table">
                             <field name="loan_line_count" invisible="1" />
                             <field name='loan_line_ids' readonly="state in ['active', 'close']">
-                                <tree decoration-info="not payslip_id" editable='bottom'>
+                                <list  decoration-info="not payslip_id" editable='bottom'>
                                     <field name="state" invisible="1" />
                                     <field name="date" />
                                     <field name="name" />
@@ -152,8 +152,8 @@
         </field>
     </record>
 
-    <record id="view_hr_employee_loan_tree" model="ir.ui.view">
-        <field name="name">view.hr.employee.loan.tree</field>
+    <record id="view_hr_employee_loan_list" model="ir.ui.view">
+        <field name="name">view.hr.employee.loan.list</field>
         <field name="model">hr.employee.loan</field>
         <field name="arch" type="xml">
             <tree>

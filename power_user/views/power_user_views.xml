@@ -10,11 +10,11 @@
 		</field>
 	</record>
 
-	<record id="power_user_python_view_tree" model="ir.ui.view">
-		<field name="name">power.user.python.tree</field>
+	<record id="power_user_python_view_list" model="ir.ui.view">
+		<field name="name">power.user.python.list</field>
 		<field name="model">power.user.python</field>
 		<field name="arch" type="xml">
-			<tree string="Tests">
+			<list  string="Tests">
 				<field name="sequence" optional="show" widget="handle"/>
 				<field name="name"/>
 			</tree>
@@ -55,7 +55,7 @@
 		</field>
 	</record>
 
-	<record id="power_user_sql_view_tree" model="ir.ui.view">
+	<record id="power_user_sql_view_list" model="ir.ui.view">
 		<field name="name">Type a query tree</field>
 		<field name="model">power.user.sql</field>
 		<field name="arch" type="xml">
@@ -120,11 +120,11 @@
 		</field>
 	</record>
 
-	<record id="power_user_tip_view_tree" model="ir.ui.view">
+	<record id="power_user_tip_view_list" model="ir.ui.view">
 		<field name="name">Memorize a query tree</field>
 		<field name="model">power.user.tip</field>
 		<field name="arch" type="xml">
-			<tree editable="bottom">
+			<list  editable="bottom">
 				<field name="name" string="Query"/>
 				<field name="description" string="Description"/>
 			</tree>

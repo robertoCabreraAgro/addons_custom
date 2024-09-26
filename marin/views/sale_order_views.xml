@@ -76,11 +76,11 @@
     </record>
 
     <record id="view_sale_order_tree_marin" model="ir.ui.view">
-        <field name="name">sale.order.tree.marin</field>
+        <field name="name">sale.order.list.marin</field>
         <field name="model">sale.order</field>
         <field name="priority">4</field>
         <field name="arch" type="xml">
-            <tree sample="1" decoration-info="invoice_status == 'to invoice'" decoration-muted="state == 'cancel'">
+            <list  sample="1" decoration-info="invoice_status == 'to invoice'" decoration-muted="state == 'cancel'">
                 <field name="company_id" column_invisible="1" />
                 <field name="currency_id" column_invisible="1" />
                 <field name="state" column_invisible="1" />
@@ -360,7 +360,7 @@
     </record>
 
     <record id="sale_margin_sale_order_line_form_marin" model="ir.ui.view">
-        <field name="name">sale.order.line.tree.margin.view.form.marin</field>
+        <field name="name">sale.order.line.list.margin.view.form.marin</field>
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale_margin.sale_margin_sale_order_line_form" />
         <field name="arch" type="xml">

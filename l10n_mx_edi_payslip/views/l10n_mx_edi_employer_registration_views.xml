@@ -32,8 +32,8 @@
         </field>
     </record>
 
-    <record id="l10n_mx_edi_employer_registration_tree" model="ir.ui.view">
-        <field name="name">view.employer.registration.tree</field>
+    <record id="l10n_mx_edi_employer_registration_list" model="ir.ui.view">
+        <field name="name">view.employer.registration.list</field>
         <field name="model">l10n_mx_edi.employer.registration</field>
         <field name="arch" type="xml">
             <tree>

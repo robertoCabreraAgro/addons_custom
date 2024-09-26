@@ -273,7 +273,7 @@
         <menuitem
             id="menu_finance_bank_statement"
             name="Bank Statements"
-            action="account.action_bank_statement_tree"
+            action="account.action_bank_statement_list"
             sequence="10"
         />
     </menuitem>

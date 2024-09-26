@@ -26,8 +26,8 @@
         </field>
     </record>
 
-    <record id="view_purchase_order_line_tree" model="ir.ui.view">
-        <field name="name">purchase.order.line.tree</field>
+    <record id="view_purchase_order_line_list" model="ir.ui.view">
+        <field name="name">purchase.order.line.list</field>
         <field name="model">purchase.order.line</field>
         <field name="priority">20</field>
         <field name="arch" type="xml">
@@ -157,7 +157,7 @@
         <field name="name">Purchase Order Lines</field>
         <field name="res_model">purchase.order.line</field>
         <field name="view_mode">tree,form,pivot,graph</field>
-        <field name="view_id" ref="view_purchase_order_line_tree" />
+        <field name="view_id" ref="view_purchase_order_line_list" />
         <field name="context">{"search_default_order_reference": 1}</field>
     </record>
 </odoo>

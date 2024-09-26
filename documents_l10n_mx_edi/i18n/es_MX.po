@@ -999,7 +999,7 @@ msgstr ""
 #. module: l10n_mx_edi_documents
 #: model_terms:ir.ui.view,arch_db:l10n_mx_edi_documents.esignature_form_view
 #: model_terms:ir.ui.view,arch_db:l10n_mx_edi_documents.esignature_search_view
-#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_documents.esignature_tree_view
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_documents.esignature_list_view
 msgid "RFC"
 msgstr ""
 
@@ -1256,7 +1256,7 @@ msgstr ""
 #. module: l10n_mx_edi_documents
 #: model_terms:ir.ui.view,arch_db:l10n_mx_edi_documents.esignature_form_view
 #: model_terms:ir.ui.view,arch_db:l10n_mx_edi_documents.esignature_search_view
-#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_documents.esignature_tree_view
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_documents.esignature_list_view
 msgid "Titular"
 msgstr ""
 
@@ -1496,7 +1496,7 @@ msgid "esignature Form"
 msgstr ""
 
 #. module: l10n_mx_edi_documents
-#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_documents.esignature_tree_view
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_documents.esignature_list_view
 msgid "esignature Tree"
 msgstr ""
 

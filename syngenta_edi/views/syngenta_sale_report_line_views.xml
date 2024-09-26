@@ -17,11 +17,11 @@
         </field>
     </record>
 
-    <record id="view_syngenta_sale_report_line_tree" model="ir.ui.view">
-        <field name="name">syngenta.sale.report.line.tree</field>
+    <record id="view_syngenta_sale_report_line_list" model="ir.ui.view">
+        <field name="name">syngenta.sale.report.line.list</field>
         <field name="model">syngenta.sale.report.line</field>
         <field name="arch" type="xml">
-            <tree string="Sale Lines" delete="1" multi_edit="1">
+            <list  string="Sale Lines" delete="1" multi_edit="1">
                 <field name="agreement_id" />
                 <field name="document_id" />
                 <field name="product_id" />

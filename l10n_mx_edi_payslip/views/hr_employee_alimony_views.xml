@@ -47,8 +47,8 @@
         </field>
     </record>
 
-    <record id="hr_employee_alimony_tree" model="ir.ui.view">
-        <field name="name">view.l10n_mx.alimony.tree</field>
+    <record id="hr_employee_alimony_list" model="ir.ui.view">
+        <field name="name">view.l10n_mx.alimony.list</field>
         <field name="model">hr.employee.alimony</field>
         <field name="arch" type="xml">
             <tree>

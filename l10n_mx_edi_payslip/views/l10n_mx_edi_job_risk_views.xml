@@ -22,8 +22,8 @@
         </field>
     </record>
 
-    <record id="l10n_mx_edi_job_risk_tree" model="ir.ui.view">
-        <field name="name">l10n_mx_edi.job.risk.tree</field>
+    <record id="l10n_mx_edi_job_risk_list" model="ir.ui.view">
+        <field name="name">l10n_mx_edi.job.risk.list</field>
         <field name="model">l10n_mx_edi.job.risk</field>
         <field name="arch" type="xml">
             <tree>

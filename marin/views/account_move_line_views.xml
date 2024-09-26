@@ -23,9 +23,9 @@
     </record>
 
     <record id="view_move_line_tree_marin" model="ir.ui.view">
-        <field name="name">account.move.line.tree.marin</field>
+        <field name="name">account.move.line.list.marin</field>
         <field name="model">account.move.line</field>
-        <field name="inherit_id" ref="account.view_move_line_tree" />
+        <field name="inherit_id" ref="account.view_move_line_list" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='move_name']" position="before">
                 <field name="move_type" />

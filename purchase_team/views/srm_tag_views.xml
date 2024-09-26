@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-    <record id="view_srm_tag_tree" model="ir.ui.view">
-        <field name="name">srm.tag.tree</field>
+    <record id="view_srm_tag_list" model="ir.ui.view">
+        <field name="name">srm.tag.list</field>
         <field name="model">srm.tag</field>
         <field name="arch" type="xml">
-            <tree string="Tags" editable="bottom" sample="1">
+            <list  string="Tags" editable="bottom" sample="1">
                 <field name="name" />
                 <field name="color" widget="color_picker" />
             </tree>
@@ -36,7 +36,7 @@
     <record id="action_srm_tag" model="ir.actions.act_window">
         <field name="name">Tags</field>
         <field name="res_model">srm.tag</field>
-        <field name="view_id" ref="view_srm_tag_tree" />
+        <field name="view_id" ref="view_srm_tag_list" />
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
             Create SRM Tags

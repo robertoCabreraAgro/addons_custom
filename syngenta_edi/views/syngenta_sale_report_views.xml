@@ -44,11 +44,11 @@
         </field>
     </record>
 
-    <record id="view_syngenta_sale_report_tree" model="ir.ui.view">
-        <field name="name">syngenta.sale.report.tree</field>
+    <record id="view_syngenta_sale_report_list" model="ir.ui.view">
+        <field name="name">syngenta.sale.report.list</field>
         <field name="model">syngenta.sale.report</field>
         <field name="arch" type="xml">
-            <tree string="Syngenta Documents" sample="1" multi_edit="1">
+            <list  string="Syngenta Documents" sample="1" multi_edit="1">
                 <field name="name" readonly="True" />
                 <field name="partner_id" readonly="state != 'draft'" />
                 <field name="date" widget="date" readonly="state != 'draft'" />
@@ -101,7 +101,7 @@
                 <notebook>
                     <page string="Lines" name="document_lines">
                         <field name="sale_line_ids" mode="tree" readonly="state in ['done', 'cancel']">
-                            <tree string="Sale Lines" editable="bottom" limit="200">
+                            <list  string="Sale Lines" editable="bottom" limit="200">
                                 <field name="sequence" widget="handle" />
                                 <field name="agreement_id" column_invisible="True" />
                                 <field name="product_id" options="{'no_create': True}" />

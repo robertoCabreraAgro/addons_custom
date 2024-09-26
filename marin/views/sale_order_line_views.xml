@@ -72,8 +72,8 @@
         </field>
     </record>
 
-    <record id="view_sale_order_line_tree" model="ir.ui.view">
-        <field name="name">sale.order.line.tree</field>
+    <record id="view_sale_order_line_list" model="ir.ui.view">
+        <field name="name">sale.order.line.list</field>
         <field name="model">sale.order.line</field>
         <field name="arch" type="xml">
             <tree
@@ -213,7 +213,7 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">sale.order.line</field>
         <field name="view_mode">tree,form,pivot,graph</field>
-        <field name="view_id" ref="view_sale_order_line_tree" />
+        <field name="view_id" ref="view_sale_order_line_list" />
         <field name="search_view_id" ref="view_sales_order_line_filter" />
         <field name="context">{'search_default_group_by_order_id': 1}</field>
     </record>

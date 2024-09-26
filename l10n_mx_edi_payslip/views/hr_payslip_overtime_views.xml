@@ -19,11 +19,11 @@
         </field>
     </record>
 
-    <record id="hr_payslip_overtime_tree" model="ir.ui.view">
-        <field name="name">view.l10n_mx.overtime.tree</field>
+    <record id="hr_payslip_overtime_list" model="ir.ui.view">
+        <field name="name">view.l10n_mx.overtime.list</field>
         <field name="model">hr.payslip.overtime</field>
         <field name="arch" type="xml">
-            <tree editable="bottom" decoration-muted="payslip_id != False">
+            <list  editable="bottom" decoration-muted="payslip_id != False">
                 <field name="payslip_id" invisible="1" />
                 <field name="week" />
                 <field name="name" required="True" readonly="True" />

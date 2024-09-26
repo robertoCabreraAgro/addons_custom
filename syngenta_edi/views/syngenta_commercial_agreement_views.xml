@@ -14,11 +14,11 @@
         </field>
     </record>
 
-    <record id="view_syngenta_commercial_agreement_tree" model="ir.ui.view">
-        <field name="name">syngenta.commercial.agreement.tree</field>
+    <record id="view_syngenta_commercial_agreement_list" model="ir.ui.view">
+        <field name="name">syngenta.commercial.agreement.list</field>
         <field name="model">syngenta.commercial.agreement</field>
         <field name="arch" type="xml">
-            <tree string="Sale Agreements" sample="1" multi_edit="1">
+            <list  string="Sale Agreements" sample="1" multi_edit="1">
                 <field name="name" />
                 <field name="partner_id" />
                 <field name="agreement_type" />

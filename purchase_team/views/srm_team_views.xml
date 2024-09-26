@@ -23,11 +23,11 @@
         </field>
     </record>
 
-    <record id="view_srm_team_tree" model="ir.ui.view">
-        <field name="name">srm.team.tree</field>
+    <record id="view_srm_team_list" model="ir.ui.view">
+        <field name="name">srm.team.list</field>
         <field name="model">srm.team</field>
         <field name="arch" type="xml">
-            <tree string="Purchases Team" sample="1" multi_edit="1">
+            <list  string="Purchases Team" sample="1" multi_edit="1">
                 <field name="sequence" widget="handle" />
                 <field name="name" readonly="1" />
                 <field name="active" column_invisible="True" />
@@ -304,7 +304,7 @@
     </record>
 
     <menuitem
-        id="menu_purchase_team_tree"
+        id="menu_purchase_team_list"
         name="Purchase Teams"
         parent="purchase.menu_purchase_config"
         action="action_srm_team_config"
