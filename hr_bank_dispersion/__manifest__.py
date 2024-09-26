@@ -5,7 +5,7 @@
     "website": "https://www.vauxoo.com",
     "license": "AGPL-3",
     "category": "",
-    "version": "saas~17.4.1.0.0",
+    "version": "18.0.1.0.0",
     "depends": [
         "hr_payroll",
     ],

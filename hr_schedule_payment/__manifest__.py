@@ -7,7 +7,7 @@
     "website": "https://www.vauxoo.com",
     "license": "OPL-1",
     "category": "Human Resources/Payroll",
-    "version": "saas~17.4.1.0.0",
+    "version": "18.0.1.0.0",
     "depends": [
         "hr_payroll_account",
     ],

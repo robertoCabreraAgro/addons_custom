@@ -2,7 +2,7 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 {
     "name": "Product manufacturer",
-    "version": "saas~17.4.1.0.1",
+    "version": "18.0.1.0.1",
     "summary": "Adds manufacturers and attributes on the product view.",
     "website": "https://github.com/OCA/product-attribute",
     "author": "Odoo Community Association (OCA)",
