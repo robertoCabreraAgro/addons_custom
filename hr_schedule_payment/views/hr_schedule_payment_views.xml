@@ -5,7 +5,7 @@
         <field name="name">hr.schedule.payment.list</field>
         <field name="model">hr.schedule.payment</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name" />
                 <field name="days_to_pay" />
                 <field name="periods_per_year" />

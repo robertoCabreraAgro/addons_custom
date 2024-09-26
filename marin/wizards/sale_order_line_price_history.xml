@@ -38,7 +38,7 @@
                             </div>
                         </group>
                     </form>
-                    <tree>
+                    <list>
                         <field name="date" />
                         <field name="order_id" />
                         <field name="partner_id" />

@@ -26,7 +26,7 @@
         <field name="name">l10n_mx_edi.job.risk.list</field>
         <field name="model">l10n_mx_edi.job.risk</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name" />
                 <field name="code" />
                 <field name="percentage" />

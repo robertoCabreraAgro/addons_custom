@@ -35,7 +35,7 @@
                             <field name="discount" groups="sale.group_discount_per_so_line" />
                         </group>
                     </form>
-                    <tree>
+                    <list>
                         <field name="date" />
                         <field name="move_id" />
                         <field name="partner_id" />

@@ -156,7 +156,7 @@
         <field name="name">view.hr.employee.loan.list</field>
         <field name="model">hr.employee.loan</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name" />
                 <field name="date_from" />
                 <field name="date_to" />

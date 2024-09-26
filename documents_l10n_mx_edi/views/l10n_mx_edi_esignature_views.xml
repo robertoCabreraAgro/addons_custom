@@ -15,7 +15,7 @@
             <field name="name">esignature.list</field>
             <field name="model">l10n_mx_edi.esignature</field>
             <field name="arch" type="xml">
-                <tree>
+                <list>
                     <field name="holder" string="Titular" />
                     <field name="holder_vat" string="RFC" />
                     <field name="serial_number" />

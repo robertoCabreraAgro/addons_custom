@@ -5,7 +5,7 @@
         <field name="name">res.partner.blacklist.list</field>
         <field name="model">res.partner.blacklist</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="vat" />
                 <field name="taxpayer_name" />
                 <field name="taxpayer_status" />

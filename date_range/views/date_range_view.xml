@@ -89,7 +89,7 @@
         <field name="name">date.range.type.list</field>
         <field name="model">date.range.type</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name" />
                 <field name="allow_overlap" />
                 <field

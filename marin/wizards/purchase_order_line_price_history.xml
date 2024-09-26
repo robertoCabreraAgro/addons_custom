@@ -34,7 +34,7 @@
                             <field name="price_unit" readonly="1" />
                         </group>
                     </form>
-                    <tree>
+                    <list>
                         <field name="date" />
                         <field name="order_id" />
                         <field name="partner_id" />

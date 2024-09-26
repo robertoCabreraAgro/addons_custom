@@ -9,7 +9,7 @@
                 <separator string="Employees" />
                 <span colspan="4" nolabel="1">This wizard will assign all selected employee(s) on the extras.</span>
                 <field name="employee_ids" nolabel="1">
-                    <tree>
+                    <list>
                         <field name="name" />
                         <field name="work_email" />
                         <field name="department_id" />

@@ -51,7 +51,7 @@
         <field name="name">view.l10n_mx.alimony.list</field>
         <field name="model">hr.employee.alimony</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name" />
                 <field name="court" />
                 <field name="number" />

@@ -36,7 +36,7 @@
         <field name="name">view.employer.registration.list</field>
         <field name="model">l10n_mx_edi.employer.registration</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name" />
                 <field name="job_risk_id" />
                 <field name="branch_id" />

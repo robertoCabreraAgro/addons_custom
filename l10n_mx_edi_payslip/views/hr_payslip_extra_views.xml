@@ -76,7 +76,7 @@
         <field name="name">view.payslip.extra.list</field>
         <field name="model">hr.payslip.extra</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name" />
                 <field name="date" />
                 <field name="input_id" />

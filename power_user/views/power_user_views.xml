@@ -59,7 +59,7 @@
 		<field name="name">Type a query tree</field>
 		<field name="model">power.user.sql</field>
 		<field name="arch" type="xml">
-			<tree>
+			<list>
 				<field name="name" string="Query"/>
 			</list>
 		</field>
