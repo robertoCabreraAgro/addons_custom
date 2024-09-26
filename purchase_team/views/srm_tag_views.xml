@@ -4,7 +4,7 @@
         <field name="name">srm.tag.list</field>
         <field name="model">srm.tag</field>
         <field name="arch" type="xml">
-            <list  string="Tags" editable="bottom" sample="1">
+            <list string="Tags" editable="bottom" sample="1">
                 <field name="name" />
                 <field name="color" widget="color_picker" />
             </tree>

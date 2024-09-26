@@ -14,7 +14,7 @@
 		<field name="name">power.user.python.list</field>
 		<field name="model">power.user.python</field>
 		<field name="arch" type="xml">
-			<list  string="Tests">
+			<list string="Tests">
 				<field name="sequence" optional="show" widget="handle"/>
 				<field name="name"/>
 			</tree>
@@ -124,7 +124,7 @@
 		<field name="name">Memorize a query tree</field>
 		<field name="model">power.user.tip</field>
 		<field name="arch" type="xml">
-			<list  editable="bottom">
+			<list editable="bottom">
 				<field name="name" string="Query"/>
 				<field name="description" string="Description"/>
 			</tree>

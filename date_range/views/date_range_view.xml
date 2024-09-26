@@ -4,12 +4,11 @@
         <field name="name">date.range.list</field>
         <field name="model">date.range</field>
         <field name="arch" type="xml">
-            <list  editable="bottom">
+            <list editable="bottom">
                 <field name="name" />
                 <field name="type_id" />
                 <field name="date_start" />
                 <field name="date_end" />
-                <!-- pylint : oca-disable=duplicate-xml-fields -->
                 <field name="company_id" column_invisible="1" />
                 <field
                     name="company_id"

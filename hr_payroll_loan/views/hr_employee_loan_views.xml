@@ -129,7 +129,7 @@
                         <page string="Table">
                             <field name="loan_line_count" invisible="1" />
                             <field name='loan_line_ids' readonly="state in ['active', 'close']">
-                                <list  decoration-info="not payslip_id" editable='bottom'>
+                                <list decoration-info="not payslip_id" editable='bottom'>
                                     <field name="state" invisible="1" />
                                     <field name="date" />
                                     <field name="name" />

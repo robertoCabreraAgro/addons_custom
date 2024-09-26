@@ -9,7 +9,7 @@
             <xpath expr="//notebook" position="inside">
                 <page string="Payslip Lines" name="payslip_lines" groups="hr_payroll.group_hr_payroll_manager">
                     <field name="l10n_mx_edi_payslip_line_ids" colspan="4" nolabel="1">
-                        <list  decoration-info="total == 0" create="0" delete="0">
+                        <list decoration-info="total == 0" create="0" delete="0">
                             <field name="name" readonly="1" />
                             <field name="code" readonly="1" />
                             <field name="category_id" readonly="1" />

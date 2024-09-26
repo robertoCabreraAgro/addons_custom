@@ -49,7 +49,7 @@
         <field name="name">view.l10n_mx.disciplinary.list</field>
         <field name="model">hr.employee.disciplinary.warning</field>
         <field name="arch" type="xml">
-            <list  default_order='date'>
+            <list default_order='date'>
                 <field name="name" />
                 <field name="employee_id" />
                 <field name="date" />

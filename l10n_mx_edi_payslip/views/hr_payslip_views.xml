@@ -167,7 +167,7 @@
                 <page string="Technical CFDI Information" name="cfdi">
                     <separator string="Retirement / Indemnity" />
                     <field name="l10n_mx_edi_extra_node_ids" nolabel="1">
-                        <list  editable="bottom">
+                        <list editable="bottom">
                             <field name="node" />
                             <field name="amount_total" />
                             <field name="amount_daily" readonly="node != 'retirement'" />
@@ -179,7 +179,7 @@
                     </field>
                     <separator string="Actions or Titles" />
                     <field name="l10n_mx_edi_action_title_ids" nolabel="1">
-                        <list  editable="bottom">
+                        <list editable="bottom">
                             <field name="category_id" />
                             <field name="market_value" />
                             <field name="price_granted" />

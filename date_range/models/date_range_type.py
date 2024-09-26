@@ -1,5 +1,6 @@
 # Copyright 2016 ACSONE SA/NV (<http://acsone.eu>)
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
+
 import logging
 
 from dateutil.relativedelta import relativedelta

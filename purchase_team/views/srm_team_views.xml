@@ -27,7 +27,7 @@
         <field name="name">srm.team.list</field>
         <field name="model">srm.team</field>
         <field name="arch" type="xml">
-            <list  string="Purchases Team" sample="1" multi_edit="1">
+            <list string="Purchases Team" sample="1" multi_edit="1">
                 <field name="sequence" widget="handle" />
                 <field name="name" readonly="1" />
                 <field name="active" column_invisible="True" />

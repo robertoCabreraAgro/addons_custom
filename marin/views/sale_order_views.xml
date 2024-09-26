@@ -80,7 +80,7 @@
         <field name="model">sale.order</field>
         <field name="priority">4</field>
         <field name="arch" type="xml">
-            <list  sample="1" decoration-info="invoice_status == 'to invoice'" decoration-muted="state == 'cancel'">
+            <list sample="1" decoration-info="invoice_status == 'to invoice'" decoration-muted="state == 'cancel'">
                 <field name="company_id" column_invisible="1" />
                 <field name="currency_id" column_invisible="1" />
                 <field name="state" column_invisible="1" />

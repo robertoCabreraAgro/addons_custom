@@ -21,7 +21,7 @@
         <field name="name">syngenta.sale.report.line.list</field>
         <field name="model">syngenta.sale.report.line</field>
         <field name="arch" type="xml">
-            <list  string="Sale Lines" delete="1" multi_edit="1">
+            <list string="Sale Lines" delete="1" multi_edit="1">
                 <field name="agreement_id" />
                 <field name="document_id" />
                 <field name="product_id" />

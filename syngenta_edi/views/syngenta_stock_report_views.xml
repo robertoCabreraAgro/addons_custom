@@ -5,7 +5,7 @@
         <field name="name">syngenta.stock.report.list</field>
         <field name="model">syngenta.stock.report</field>
         <field name="arch" type="xml">
-            <list  string="Syngenta Stock Documents" sample="1" multi_edit="1">
+            <list string="Syngenta Stock Documents" sample="1" multi_edit="1">
                 <field name="name" readonly="True" />
                 <field name="date" widget="date" readonly="state != 'draft'" />
                 <field name="state" />
