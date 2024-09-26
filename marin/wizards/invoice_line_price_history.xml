@@ -43,7 +43,7 @@
                         <field name="price_unit" />
                         <field name="discount" groups="sale.group_discount_per_so_line" />
                         <field name="tax_ids" widget="many2many_tags" />
-                    </tree>
+                    </list>
                 </field>
                 <field name="line_id" invisible="1" />
                 <footer>

@@ -9,7 +9,7 @@
                 <field name="employee_id" />
                 <field name="name" />
                 <field name="amount" />
-            </tree>
+            </list>
         </field>
     </record>
 

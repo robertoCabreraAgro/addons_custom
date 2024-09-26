@@ -204,7 +204,7 @@
                     class="oe_stat_button"
                     title="Sale Order"
                 />
-            </tree>
+            </list>
         </field>
     </record>
 

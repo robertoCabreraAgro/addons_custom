@@ -29,7 +29,7 @@
                 <field name="name" required="True" readonly="True" />
                 <field name="hours" sum="Total" readonly="payslip_id" />
                 <field name="is_simple" optional="show" readonly="payslip_id" />
-            </tree>
+            </list>
         </field>
     </record>
 

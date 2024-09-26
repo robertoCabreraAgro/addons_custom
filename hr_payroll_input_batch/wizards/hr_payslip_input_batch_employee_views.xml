@@ -13,7 +13,7 @@
                         <field name="name" />
                         <field name="work_email" />
                         <field name="department_id" />
-                    </tree>
+                    </list>
                 </field>
                 <footer>
                     <button string="Assign" name="load_employees" type="object" class="oe_highlight" data-hotkey="q" />

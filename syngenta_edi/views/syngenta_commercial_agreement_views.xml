@@ -28,7 +28,7 @@
                 <field name="amount_reached" />
                 <field name="percentage" />
                 <field name="percentage_reached" />
-            </tree>
+            </list>
         </field>
     </record>
 

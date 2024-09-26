@@ -30,7 +30,7 @@
                 <field name="transit_quantity" />
                 <field name="date_inventory" optional="hide" />
                 <field name="company_id" optional="hide" />
-            </tree>
+            </list>
         </field>
     </record>
 

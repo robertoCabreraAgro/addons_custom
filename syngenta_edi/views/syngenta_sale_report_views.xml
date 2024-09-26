@@ -55,7 +55,7 @@
                 <field name="agreement_id" readonly="state != 'draft'" />
                 <field name="folio" />
                 <field name="state" />
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -110,7 +110,7 @@
                                 <field name="price_subtotal" />
                                 <field name="is_sent" widget="boolean_toggle" />
                                 <field name="company_id" optional="hide" />
-                            </tree>
+                            </list>
                         </field>
                     </page>
                     <page string="Other Info" name="other_information">

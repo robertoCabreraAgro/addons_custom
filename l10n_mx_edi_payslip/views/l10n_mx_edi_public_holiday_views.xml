@@ -9,7 +9,7 @@
                 <field name="name" />
                 <field name="date" />
                 <field name="state" />
-            </tree>
+            </list>
         </field>
     </record>
 

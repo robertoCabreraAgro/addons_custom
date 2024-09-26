@@ -17,7 +17,7 @@
 			<list string="Tests">
 				<field name="sequence" optional="show" widget="handle"/>
 				<field name="name"/>
-			</tree>
+			</list>
 		</field>
 	</record>
 
@@ -61,7 +61,7 @@
 		<field name="arch" type="xml">
 			<tree>
 				<field name="name" string="Query"/>
-			</tree>
+			</list>
 		</field>
 	</record>
 
@@ -127,7 +127,7 @@
 			<list editable="bottom">
 				<field name="name" string="Query"/>
 				<field name="description" string="Description"/>
-			</tree>
+			</list>
 		</field>
 	</record>
 

@@ -61,7 +61,7 @@
                             <field name="employee_id" options="{'no_create': True}" />
                             <field name="name" />
                             <field name="amount" sum="Total" />
-                        </tree>
+                        </list>
                     </field>
                 </sheet>
                 <div class="oe_chatter">
@@ -82,7 +82,7 @@
                 <field name="input_id" />
                 <field name="state" />
                 <field name="company_id" groups="base.group_multi_company" />
-            </tree>
+            </list>
         </field>
     </record>
 

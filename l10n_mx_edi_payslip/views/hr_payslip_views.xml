@@ -26,7 +26,7 @@
                     decoration-warning="state == 'verify'"
                     decoration-success="state == 'done'"
                 />
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -175,7 +175,7 @@
                             <field name="last_salary" readonly="node != 'separation'" />
                             <field name="accumulable_income" />
                             <field name="non_accumulable_income" />
-                        </tree>
+                        </list>
                     </field>
                     <separator string="Actions or Titles" />
                     <field name="l10n_mx_edi_action_title_ids" nolabel="1">
@@ -183,7 +183,7 @@
                             <field name="category_id" />
                             <field name="market_value" />
                             <field name="price_granted" />
-                        </tree>
+                        </list>
                     </field>
                     <group string="Extra Other Payments">
                         <group string="Compensation Balances in favor">

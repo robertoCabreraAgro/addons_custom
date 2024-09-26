@@ -57,7 +57,7 @@
                 <field name="number" />
                 <field name="employee_id" />
                 <field name="partner_id" />
-            </tree>
+            </list>
         </field>
     </record>
 

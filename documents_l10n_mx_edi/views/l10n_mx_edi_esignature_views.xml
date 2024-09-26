@@ -21,7 +21,7 @@
                     <field name="serial_number" />
                     <field name="date_start" />
                     <field name="date_end" />
-                </tree>
+                </list>
             </field>
         </record>
 

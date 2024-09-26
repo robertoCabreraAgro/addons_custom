@@ -9,7 +9,7 @@
                 <field name="name" />
                 <field name="days_to_pay" />
                 <field name="periods_per_year" />
-            </tree>
+            </list>
         </field>
     </record>
 

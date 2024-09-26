@@ -30,7 +30,7 @@
                 <field name="price_subtotal" />
                 <field name="is_sent" widget="boolean_toggle" />
                 <field name="company_id" optional="hide" />
-            </tree>
+            </list>
         </field>
     </record>
 

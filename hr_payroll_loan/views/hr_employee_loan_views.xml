@@ -138,7 +138,7 @@
                                     <field name="amount" readonly="payslip_line_id" />
                                     <field name="cumulative_amount" readonly="1" />
                                     <field name="remaining_amount" readonly="1" />
-                                </tree>
+                                </list>
                             </field>
                         </page>
                     </notebook>
@@ -166,7 +166,7 @@
                 <field name="payslips_count" />
                 <field name="input_type_id" />
                 <field name="company_id" groups="base.group_multi_company" />
-            </tree>
+            </list>
         </field>
     </record>
 

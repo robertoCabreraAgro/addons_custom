@@ -9,7 +9,7 @@
                 <field name="name" readonly="True" />
                 <field name="date" widget="date" readonly="state != 'draft'" />
                 <field name="state" />
-            </tree>
+            </list>
         </field>
     </record>
 

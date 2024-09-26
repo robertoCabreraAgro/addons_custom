@@ -126,7 +126,7 @@
                     optional="show"
                     groups="base.group_multi_company"
                 />
-            </tree>
+            </list>
         </field>
     </record>
 

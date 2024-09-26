@@ -55,7 +55,7 @@
                 <field name="date" />
                 <field name="disciplinary_action_id" />
                 <field name="company_id" groups="base.group_multi_company" />
-            </tree>
+            </list>
         </field>
     </record>
 

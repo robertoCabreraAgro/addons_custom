@@ -40,7 +40,7 @@
                 <field name="name" />
                 <field name="job_risk_id" />
                 <field name="branch_id" />
-            </tree>
+            </list>
         </field>
     </record>
 

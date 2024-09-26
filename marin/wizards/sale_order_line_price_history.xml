@@ -45,7 +45,7 @@
                         <field name="qty" />
                         <field name="price_unit" />
                         <field name="discount" groups="sale.group_discount_per_so_line" />
-                    </tree>
+                    </list>
                 </field>
                 <field name="line_id" invisible="1" />
                 <footer>

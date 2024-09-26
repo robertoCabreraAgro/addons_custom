@@ -16,7 +16,7 @@
                     options="{'no_create': True}"
                 />
                 <field name="active" widget="boolean_toggle" />
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -98,7 +98,7 @@
                     options="{'no_create': True}"
                 />
                 <field name="active" widget="boolean_toggle" />
-            </tree>
+            </list>
         </field>
     </record>
 

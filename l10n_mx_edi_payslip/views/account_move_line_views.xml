@@ -15,7 +15,7 @@
                             <field name="category_id" readonly="1" />
                             <field name="salary_rule_id" groups="base.group_no_one" readonly="1" />
                             <field name="total" readonly="1" sum="Total" />
-                        </tree>
+                        </list>
                         <form string="Payslip Line">
                             <group col="4">
                                 <field name="name" />

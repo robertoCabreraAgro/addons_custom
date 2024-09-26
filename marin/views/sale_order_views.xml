@@ -131,7 +131,7 @@
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide" />
                 <field name="warehouse_id" optional="show" />
                 <field name="company_id" readonly="1" optional="show" groups="base.group_multi_company" />
-            </tree>
+            </list>
         </field>
     </record>
 

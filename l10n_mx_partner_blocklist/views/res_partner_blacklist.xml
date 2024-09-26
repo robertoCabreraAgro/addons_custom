@@ -11,7 +11,7 @@
                 <field name="taxpayer_status" />
                 <field name="sat_definitive_release" />
                 <field name="dof_definitive_release" />
-            </tree>
+            </list>
         </field>
     </record>
 
