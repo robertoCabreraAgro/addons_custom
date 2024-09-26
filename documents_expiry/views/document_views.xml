@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-    <record id="document_view_search_expiration" model="ir.ui.view">
-        <field name="name">Document search view</field>
+    <record id="document_view_search" model="ir.ui.view">
+        <field name="name">documents.document.search</field>
         <field name="model">documents.document</field>
         <field name="inherit_id" ref="documents.document_view_search" />
         <field name="arch" type="xml">
-            <xpath expr="//filter[@name='locked_filter']" position="after">
+            <xpath expr="//filter[@name='requested_filter']" position="after">
                 <filter string="Expired" name="expired_filter" domain="[('expired', '=', True)]" />
                 <filter string="Current" name="current_filter" domain="[('expired', '=', False)]" />
             </xpath>
         </field>
     </record>
 
-    <record id="documents_view_list_expiration" model="ir.ui.view">
-        <field name="name">documents list</field>
+    <record id="documents_view_list" model="ir.ui.view">
+        <field name="name">documents.document.list</field>
         <field name="model">documents.document</field>
         <field name="inherit_id" ref="documents.documents_view_list" />
         <field name="arch" type="xml">
