@@ -23,7 +23,7 @@
         <field name="model">hr.salary.rule</field>
         <field name="inherit_id" ref="hr_payroll.hr_salary_rule_list" />
         <field name="arch" type="xml">
-            <xpath expr="//tree" position="attributes">
+            <xpath expr="//list" position="attributes">
                 <attribute
                     name="decoration-success"
                 >category_id in [%(hr_salary_rule_category_perception_mx_taxed)d, %(hr_salary_rule_category_perception_mx_exempt)d]</attribute>

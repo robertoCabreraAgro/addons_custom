@@ -125,7 +125,7 @@
                     </setting>
                 </block>
             </xpath>
-            <xpath expr="//setting[@name='module_hr_payroll_account_sepa']" position="after">
+            <xpath expr="//setting[@name='module_hr_payroll_account_iso20022']" position="after">
                 <setting string="Not global entry?" help="Entries for payslips.">
                     <field name="l10n_mx_edi_not_global_entry" />
                 </setting>

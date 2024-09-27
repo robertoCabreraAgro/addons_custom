@@ -4,7 +4,7 @@
     <record id="hr_payslip_l10n_mx_edi_error_list" model="ir.ui.view">
         <field name="name">view.hr.payslip.list.l10n_mx_edi_error</field>
         <field name="model">hr.payslip</field>
-        <field name="type">tree</field>
+        <field name="type">list</field>
         <field name="arch" type="xml">
             <list>
                 <field name="number" decoration-bf="1" />
@@ -33,7 +33,7 @@
     <record id="hr_payslip_open_errors_action" model="ir.actions.act_window">
         <field name="name">Payslips Electronic Error(s)</field>
         <field name="res_model">hr.payslip</field>
-        <field name="view_mode">tree</field>
+        <field name="view_mode">list</field>
         <field name="view_id" ref="hr_payslip_l10n_mx_edi_error_list" />
         <field name="domain">[('id', '=', active_id), ('l10n_mx_edi_error', 'not in', [False, ''])]</field>
     </record>
@@ -244,7 +244,7 @@
                 <newline />
                 <field name="journal_item_ids" colspan='6' nolabel='1' />
             </xpath>
-            <xpath expr="//page[@name='salary_computation']//field[@name='line_ids']//tree" position="attributes">
+            <xpath expr="//page[@name='salary_computation']//field[@name='line_ids']//list" position="attributes">
                 <attribute
                     name="decoration-success"
                 >category_id in [%(hr_salary_rule_category_perception_mx_taxed)d, %(hr_salary_rule_category_perception_mx_exempt)d]</attribute>
@@ -258,7 +258,7 @@
                     name="decoration-info"
                 >category_id in [%(hr_salary_rule_category_aux_mx)d, %(hr_payroll.BASIC)d]</attribute>
             </xpath>
-            <xpath expr="//page[@name='worked_days_input']//tree//field[@name='amount']" position="attributes">
+            <xpath expr="//page[@name='worked_days_input']//list//field[@name='amount']" position="attributes">
                 <attribute name="optional">hide</attribute>
             </xpath>
             <xpath expr="//field[@name='warning_message']/.." position="attributes">
@@ -280,13 +280,13 @@
         </field>
     </record>
 
-    <record id="view_hr_payslip_list" model="ir.ui.view">
+    <record id="view_hr_payslip_tree" model="ir.ui.view">
         <field name="name">view.hr.payslip.list.inherit</field>
         <field name="model">hr.payslip</field>
-        <field name="type">tree</field>
-        <field name="inherit_id" ref="hr_payroll.view_hr_payslip_list" />
+        <field name="type">list</field>
+        <field name="inherit_id" ref="hr_payroll.view_hr_payslip_tree" />
         <field name="arch" type="xml">
-            <xpath expr="/tree/field[@name='state']" position="after">
+            <xpath expr="/list/field[@name='state']" position="after">
                 <field name="l10n_mx_edi_pac_status" />
                 <field name="l10n_mx_edi_cfdi_uuid" column_invisible="1" />
             </xpath>
