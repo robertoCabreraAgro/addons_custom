@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<templates xml:space="preserve">
+    <t t-name="base_geoengine.GeoengineRecord">
+        <script type="text/javascript" src="/base_geoengine/static/lib/ol-7.2.2/ol.js"></script>
+        <script type="text/javascript" src="/base_geoengine/static/lib/chromajs-2.4.2/chroma.js"></script>
+        <script type="text/javascript" src="/base_geoengine/static/lib/geostats-2.0.0/geostats.js"></script>
+        <div
+        t-att-data-id="props.record.id"
+        t-att-tabindex="props.record.model.useSampleModel ? -1 : 0"
+        >
+<t t-call="templates[this.constructor.INFO_BOX_ATTRIBUTE]" t-call-context="this.renderingContext"/>        </div>
+    </t>
+</templates>
