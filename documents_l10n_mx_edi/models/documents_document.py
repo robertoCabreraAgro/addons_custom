@@ -75,12 +75,13 @@ class Document(models.Model):
     )
     l10n_mx_edi_cfdi_total_amount = fields.Float(
         "Total Amount",
-        compute="_compute_l10n_mx_edi_common_fields",
-        store=True,
+        compute="_compute_l10n_mx_edi_common_fields", store=True,
         help='In case this is a CFDI file, stores invoice"s total amount.',
     )
     l10n_mx_edi_related_cfdi = fields.Text(
-        "Related CFDI", compute="_compute_l10n_mx_edi_common_fields", store=True, help="Related CFDI of the XML file"
+        "Related CFDI",
+        compute="_compute_l10n_mx_edi_common_fields", store=True,
+        help="Related CFDI of the XML file"
     )
     l10n_mx_edi_product_list = fields.Text(
         "Products",

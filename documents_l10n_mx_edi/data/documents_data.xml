@@ -1,196 +1,154 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo noupdate="1">
     <!-- Folders -->
-    <record id="documents_l10n_mx_edi_folder" model="documents.folder" forcecreate="0">
+    <record id="documents_l10n_mx_edi_folder" model="documents.document" forcecreate="0">
         <field name="name">EDI Documents</field>
+        <field name="type">folder</field>
         <field name="sequence">12</field>
     </record>
 
-    <record id="documents_l10n_mx_edi_folder_received" model="documents.folder" forcecreate="0">
+    <record id="documents_l10n_mx_edi_folder_received" model="documents.document" forcecreate="0">
         <field name="name">Received</field>
+        <field name="type">folder</field>
         <field name="parent_folder_id" ref="documents_l10n_mx_edi_folder" />
         <field name="sequence">13</field>
     </record>
 
-    <record id="documents_l10n_mx_edi_folder_issued" model="documents.folder" forcecreate="0">
+    <record id="documents_l10n_mx_edi_folder_issued" model="documents.document" forcecreate="0">
         <field name="name">Issued</field>
+        <field name="type">folder</field>
         <field name="parent_folder_id" ref="documents_l10n_mx_edi_folder" />
         <field name="sequence">14</field>
-    </record>
-
-    <!-- Facet -->
-    <record id="documents_l10n_mx_edi_facet_type" model="documents.facet">
-        <field name="name">CFDI type</field>
-        <field name="folder_id" ref="documents_l10n_mx_edi_folder" />
-        <field name="sequence">11</field>
-    </record>
-
-    <record id="documents_l10n_mx_edi_facet_fiscal_year" model="documents.facet">
-        <field name="name">Fiscal year</field>
-        <field name="folder_id" ref="documents_l10n_mx_edi_folder" />
-        <field name="sequence">12</field>
-    </record>
-
-    <record id="documents_l10n_mx_edi_facet_fiscal_month" model="documents.facet">
-        <field name="name">Fiscal month</field>
-        <field name="folder_id" ref="documents_l10n_mx_edi_folder" />
-        <field name="sequence">13</field>
     </record>
 
     <!-- Tags -->
     <record id="documents_l10n_mx_edi_tag_ingreso" model="documents.tag">
         <field name="name">Income</field>
-        <field name="facet_id" ref="documents_l10n_mx_edi_facet_type" />
         <field name="sequence">1</field>
     </record>
 
     <record id="documents_l10n_mx_edi_tag_egreso" model="documents.tag">
         <field name="name">Egress</field>
-        <field name="facet_id" ref="documents_l10n_mx_edi_facet_type" />
         <field name="sequence">2</field>
     </record>
 
     <record id="documents_l10n_mx_edi_tag_traslado" model="documents.tag">
         <field name="name">Transfer</field>
-        <field name="facet_id" ref="documents_l10n_mx_edi_facet_type" />
         <field name="sequence">3</field>
     </record>
 
     <record id="documents_l10n_mx_edi_tag_reception" model="documents.tag">
         <field name="name">Reception</field>
-        <field name="facet_id" ref="documents_l10n_mx_edi_facet_type" />
         <field name="sequence">3</field>
     </record>
 
     <record id="documents_l10n_mx_edi_tag_nomina" model="documents.tag">
         <field name="name">Payslip</field>
-        <field name="facet_id" ref="documents_l10n_mx_edi_facet_type" />
         <field name="sequence">4</field>
     </record>
 
     <record id="documents_l10n_mx_edi_tag_pago" model="documents.tag">
         <field name="name">Payment</field>
-        <field name="facet_id" ref="documents_l10n_mx_edi_facet_type" />
         <field name="sequence">5</field>
     </record>
 
     <record id="documents_l10n_mx_edi_tag_retencion" model="documents.tag">
         <field name="name">Retention</field>
-        <field name="facet_id" ref="documents_l10n_mx_edi_facet_type" />
         <field name="sequence">6</field>
     </record>
 
     <record id="documents_l10n_mx_edi_tag_fiscal_year_now" model="documents.tag" forcecreate="0">
         <field name="name" eval="str(datetime.now().year)" />
-        <field name="facet_id" ref="documents_l10n_mx_edi_facet_fiscal_year" />
         <field name="sequence">10</field>
     </record>
 
     <record id="documents_l10n_mx_edi_tag_fiscal_year_minus_1" model="documents.tag" forcecreate="0">
         <field name="name" eval="str(datetime.now().year-1)" />
-        <field name="facet_id" ref="documents_l10n_mx_edi_facet_fiscal_year" />
         <field name="sequence">11</field>
     </record>
 
     <record id="documents_l10n_mx_edi_tag_fiscal_year_minus_2" model="documents.tag" forcecreate="0">
         <field name="name" eval="str(datetime.now().year-2)" />
-        <field name="facet_id" ref="documents_l10n_mx_edi_facet_fiscal_year" />
         <field name="sequence">12</field>
     </record>
 
     <record id="documents_l10n_mx_edi_tag_fiscal_year_minus_3" model="documents.tag" forcecreate="0">
         <field name="name" eval="str(datetime.now().year-3)" />
-        <field name="facet_id" ref="documents_l10n_mx_edi_facet_fiscal_year" />
         <field name="sequence">13</field>
     </record>
 
     <record id="documents_l10n_mx_edi_tag_fiscal_year_minus_4" model="documents.tag" forcecreate="0">
         <field name="name" eval="str(datetime.now().year-4)" />
-        <field name="facet_id" ref="documents_l10n_mx_edi_facet_fiscal_year" />
         <field name="sequence">14</field>
     </record>
 
     <record id="documents_l10n_mx_edi_tag_fiscal_year_minus_5" model="documents.tag" forcecreate="0">
         <field name="name" eval="str(datetime.now().year-5)" />
-        <field name="facet_id" ref="documents_l10n_mx_edi_facet_fiscal_year" />
         <field name="sequence">15</field>
     </record>
 
     <record id="documents_l10n_mx_edi_tag_fiscal_year_minus_6" model="documents.tag" forcecreate="0">
         <field name="name" eval="str(datetime.now().year-6)" />
-        <field name="facet_id" ref="documents_l10n_mx_edi_facet_fiscal_year" />
         <field name="sequence">16</field>
     </record>
 
     <record id="documents_l10n_mx_edi_tag_fiscal_month_01" model="documents.tag" forcecreate="0">
         <field name="name" eval="str(datetime(datetime.now().year,1,1).month)" />
-        <field name="facet_id" ref="documents_l10n_mx_edi_facet_fiscal_month" />
         <field name="sequence">1</field>
     </record>
 
     <record id="documents_l10n_mx_edi_tag_fiscal_month_02" model="documents.tag" forcecreate="0">
         <field name="name" eval="str(datetime(datetime.now().year,2,1).month)" />
-        <field name="facet_id" ref="documents_l10n_mx_edi_facet_fiscal_month" />
         <field name="sequence">2</field>
     </record>
 
     <record id="documents_l10n_mx_edi_tag_fiscal_month_03" model="documents.tag" forcecreate="0">
         <field name="name" eval="str(datetime(datetime.now().year,3,1).month)" />
-        <field name="facet_id" ref="documents_l10n_mx_edi_facet_fiscal_month" />
         <field name="sequence">3</field>
     </record>
 
     <record id="documents_l10n_mx_edi_tag_fiscal_month_04" model="documents.tag" forcecreate="0">
         <field name="name" eval="str(datetime(datetime.now().year,4,1).month)" />
-        <field name="facet_id" ref="documents_l10n_mx_edi_facet_fiscal_month" />
         <field name="sequence">4</field>
     </record>
 
     <record id="documents_l10n_mx_edi_tag_fiscal_month_05" model="documents.tag" forcecreate="0">
         <field name="name" eval="str(datetime(datetime.now().year,5,1).month)" />
-        <field name="facet_id" ref="documents_l10n_mx_edi_facet_fiscal_month" />
         <field name="sequence">5</field>
     </record>
 
     <record id="documents_l10n_mx_edi_tag_fiscal_month_06" model="documents.tag" forcecreate="0">
         <field name="name" eval="str(datetime(datetime.now().year,6,1).month)" />
-        <field name="facet_id" ref="documents_l10n_mx_edi_facet_fiscal_month" />
         <field name="sequence">6</field>
     </record>
 
     <record id="documents_l10n_mx_edi_tag_fiscal_month_07" model="documents.tag" forcecreate="0">
         <field name="name" eval="str(datetime(datetime.now().year,7,1).month)" />
-        <field name="facet_id" ref="documents_l10n_mx_edi_facet_fiscal_month" />
         <field name="sequence">7</field>
     </record>
 
     <record id="documents_l10n_mx_edi_tag_fiscal_month_08" model="documents.tag" forcecreate="0">
         <field name="name" eval="str(datetime(datetime.now().year,8,1).month)" />
-        <field name="facet_id" ref="documents_l10n_mx_edi_facet_fiscal_month" />
         <field name="sequence">8</field>
     </record>
 
     <record id="documents_l10n_mx_edi_tag_fiscal_month_09" model="documents.tag" forcecreate="0">
         <field name="name" eval="str(datetime(datetime.now().year,9,1).month)" />
-        <field name="facet_id" ref="documents_l10n_mx_edi_facet_fiscal_month" />
         <field name="sequence">9</field>
     </record>
 
     <record id="documents_l10n_mx_edi_tag_fiscal_month_10" model="documents.tag" forcecreate="0">
         <field name="name" eval="str(datetime(datetime.now().year,10,1).month)" />
-        <field name="facet_id" ref="documents_l10n_mx_edi_facet_fiscal_month" />
         <field name="sequence">10</field>
     </record>
 
     <record id="documents_l10n_mx_edi_tag_fiscal_month_11" model="documents.tag" forcecreate="0">
         <field name="name" eval="str(datetime(datetime.now().year,11,1).month)" />
-        <field name="facet_id" ref="documents_l10n_mx_edi_facet_fiscal_month" />
         <field name="sequence">11</field>
     </record>
 
     <record id="documents_l10n_mx_edi_tag_fiscal_month_12" model="documents.tag" forcecreate="0">
         <field name="name" eval="str(datetime(datetime.now().year,12,1).month)" />
-        <field name="facet_id" ref="documents_l10n_mx_edi_facet_fiscal_month" />
         <field name="sequence">12</field>
     </record>
 </odoo>
