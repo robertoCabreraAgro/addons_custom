@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <!-- To display new fields in invoice lines tab  -->
             <xpath
-                expr="//field[@name='invoice_line_ids']/tree/field[@name='price_unit']"
+                expr="//field[@name='invoice_line_ids']/list/field[@name='price_unit']"
                 position="after"
             >
                 <field

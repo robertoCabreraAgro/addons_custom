@@ -156,13 +156,13 @@
             <xpath expr="//page[@name='order_lines']//form//field[@name='product_uom'][2]" position="attributes">
                 <attribute name="options">{'no_create': True}</attribute>
             </xpath>
-            <xpath expr="//page[@name='order_lines']//tree/field[@name='product_id']" position="attributes">
+            <xpath expr="//page[@name='order_lines']//list/field[@name='product_id']" position="attributes">
                 <attribute name="options">{'no_open': True, 'no_create': True}</attribute>
             </xpath>
-            <xpath expr="//page[@name='order_lines']//tree/field[@name='product_template_id']" position="attributes">
+            <xpath expr="//page[@name='order_lines']//list/field[@name='product_template_id']" position="attributes">
                 <attribute name="options">{'no_open': True, 'no_create': True}</attribute>
             </xpath>
-            <xpath expr="//page[@name='order_lines']//tree/field[@name='product_uom'][2]" position="attributes">
+            <xpath expr="//page[@name='order_lines']//list/field[@name='product_uom'][2]" position="attributes">
                 <attribute name="options">{'no_open': True, 'no_create': True}</attribute>
             </xpath>
             <xpath expr="//field[@name='journal_id']" position="attributes">
@@ -221,29 +221,29 @@
                 </div>
             </xpath>
             <xpath
-                expr="//page/field[@name='order_line']/tree/field[@name='product_packaging_id']"
+                expr="//page/field[@name='order_line']/list/field[@name='product_packaging_id']"
                 position="attributes"
             >
                 <attribute name="optional">hide</attribute>
             </xpath>
-            <xpath expr="//page/field[@name='order_line']/tree/field[@name='tax_id']" position="attributes">
+            <xpath expr="//page/field[@name='order_line']/list/field[@name='tax_id']" position="attributes">
                 <attribute name="optional">hide</attribute>
             </xpath>
-            <xpath expr="//page/field[@name='order_line']/tree/field[@name='discount']" position="attributes">
+            <xpath expr="//page/field[@name='order_line']/list/field[@name='discount']" position="attributes">
                 <attribute name="optional">hide</attribute>
             </xpath>
-            <xpath expr="//page/field[@name='order_line']/tree/field[@name='qty_delivered']" position="attributes">
+            <xpath expr="//page/field[@name='order_line']/list/field[@name='qty_delivered']" position="attributes">
                 <attribute name="decoration-danger">not display_type and delivery_status == 'over full'</attribute>
                 <attribute name="decoration-warning">not display_type and delivery_status == 'partial'</attribute>
                 <attribute name="decoration-info">not display_type and delivery_status == 'pending'</attribute>
                 <attribute name="decoration-success">not display_type and delivery_status == 'full'</attribute>
             </xpath>
-            <xpath expr="//page/field[@name='order_line']/tree/field[@name='qty_invoiced']" position="attributes">
+            <xpath expr="//page/field[@name='order_line']/list/field[@name='qty_invoiced']" position="attributes">
                 <attribute name="decoration-danger">not display_type and invoice_status == 'to invoice'</attribute>
                 <attribute name="decoration-info">not display_type and invoice_status == 'upselling'</attribute>
                 <attribute name="decoration-success">not display_type and invoice_status == 'invoiced'</attribute>
             </xpath>
-            <xpath expr="//page/field[@name='order_line']/tree/field[@name='price_unit']" position="after">
+            <xpath expr="//page/field[@name='order_line']/list/field[@name='price_unit']" position="after">
                 <field name="order_partner_id" column_invisible="1" />
                 <field name="delivery_status" column_invisible="1" />
             </xpath>

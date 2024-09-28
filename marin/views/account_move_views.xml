@@ -226,19 +226,19 @@
                 <attribute name="options">{"no_create": True}</attribute>
             </xpath>
             <xpath
-                expr="//page[@id='invoice_tab']/field[@name='invoice_line_ids']/tree/field[@name='product_id']"
+                expr="//page[@id='invoice_tab']/field[@name='invoice_line_ids']/list/field[@name='product_id']"
                 position="attributes"
             >
                 <attribute name="options">{"no_create": True}</attribute>
             </xpath>
             <xpath
-                expr="//page[@id='invoice_tab']/field[@name='invoice_line_ids']/tree/field[@name='product_uom_id'][1]"
+                expr="//page[@id='invoice_tab']/field[@name='invoice_line_ids']/list/field[@name='product_uom_id'][1]"
                 position="attributes"
             >
                 <attribute name="options">{"no_create": True}</attribute>
             </xpath>
             <xpath
-                expr="//page[@id='invoice_tab']/field[@name='invoice_line_ids']/tree/field[@name='price_unit']"
+                expr="//page[@id='invoice_tab']/field[@name='invoice_line_ids']/list/field[@name='price_unit']"
                 position="after"
             >
                 <widget name="invoice_line_price_history_widget" width="20px" />
@@ -247,7 +247,7 @@
                 <attribute name="invisible">move_type not in ['out_invoice', 'out_refund', 'out_receipt']</attribute>
                 <attribute name="groups">marin.group_product_cost_readonly</attribute>
             </xpath>
-            <xpath expr="//page[@id='aml_tab']//tree//field[@name='account_id']" position="attributes">
+            <xpath expr="//page[@id='aml_tab']//list//field[@name='account_id']" position="attributes">
                 <attribute name="options">{"no_create": True}</attribute>
             </xpath>
             <xpath expr="//page[@id='other_tab']//group[@name='sale_info_group']" position="attributes">
@@ -260,19 +260,19 @@
                 <field name="x_stored" />
             </xpath>
             <xpath
-                expr="//field[@name='invoice_line_ids']/tree/field[@name='l10n_mx_edi_qty_umt']"
+                expr="//field[@name='invoice_line_ids']/list/field[@name='l10n_mx_edi_qty_umt']"
                 position="attributes"
             >
                 <attribute name="optional">hide</attribute>
             </xpath>
             <xpath
-                expr="//field[@name='invoice_line_ids']/tree/field[@name='l10n_mx_edi_umt_aduana_id']"
+                expr="//field[@name='invoice_line_ids']/list/field[@name='l10n_mx_edi_umt_aduana_id']"
                 position="attributes"
             >
                 <attribute name="optional">hide</attribute>
             </xpath>
             <xpath
-                expr="//field[@name='invoice_line_ids']/tree/field[@name='l10n_mx_edi_customs_number']"
+                expr="//field[@name='invoice_line_ids']/list/field[@name='l10n_mx_edi_customs_number']"
                 position="attributes"
             >
                 <attribute name="optional">hide</attribute>
@@ -295,10 +295,10 @@
                     force_save="1"
                 />
             </xpath>
-            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='purchase_line_id']" position="before">
+            <xpath expr="//field[@name='invoice_line_ids']/list/field[@name='purchase_line_id']" position="before">
                 <field name="allowed_purchase_line_ids" column_invisible="True" />
             </xpath>
-            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='purchase_line_id']" position="attributes">
+            <xpath expr="//field[@name='invoice_line_ids']/list/field[@name='purchase_line_id']" position="attributes">
                 <attribute name="groups" separator="," add="account.group_account_user" />
                 <attribute name="column_invisible">parent.move_type != 'in_invoice'</attribute>
                 <attribute name="domain">[['id', 'in', allowed_purchase_line_ids]]</attribute>
@@ -307,7 +307,7 @@
                 <attribute name="readonly">parent.state != 'draft'</attribute>
             </xpath>
             <xpath
-                expr="//field[@name='invoice_line_ids']/tree/field[@name='purchase_order_id']"
+                expr="//field[@name='invoice_line_ids']/list/field[@name='purchase_order_id']"
                 position="attributes"
             >
                 <attribute name="groups" separator="," add="account.group_account_user" />
@@ -315,7 +315,7 @@
             <xpath expr="//button[@name='action_view_source_purchase_orders']" position="attributes">
                 <attribute name="groups" separator="," add="account.group_account_user" />
             </xpath>
-            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='tax_ids']" position="after">
+            <xpath expr="//field[@name='invoice_line_ids']/list/field[@name='tax_ids']" position="after">
                 <field name="allowed_sale_line_ids" column_invisible="True" />
                 <field
                     name="sale_line_ids"
