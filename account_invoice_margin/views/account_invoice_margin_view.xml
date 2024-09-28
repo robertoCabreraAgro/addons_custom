@@ -2,7 +2,7 @@
 <!-- © 2017 Sergio Teruel <sergio.teruel@tecnativa.com>
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl-3). -->
 <odoo>
-    <record id="invoice_margin_form_list" model="ir.ui.view">
+    <record id="view_move_form" model="ir.ui.view">
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form" />
         <field name="arch" type="xml">
@@ -57,11 +57,11 @@
             </field>
         </field>
     </record>
-    <record id="view_account_invoice_list" model="ir.ui.view">
+    <record id="view_invoice_tree" model="ir.ui.view">
         <field name="model">account.move</field>
-        <field name="inherit_id" ref="account.view_invoice_list" />
+        <field name="inherit_id" ref="account.view_invoice_tree" />
         <field name="arch" type="xml">
-            <field name="amount_untaxed_signed" position="before">
+            <field name="amount_untaxed_in_currency_signed" position="before">
                 <field
                     name="margin_signed"
                     sum="Total"
