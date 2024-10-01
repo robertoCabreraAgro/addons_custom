@@ -153,17 +153,6 @@
         />
     </record>
 
-    <record id="account_followup.customer_statements_menu" model="ir.ui.menu">
-        <field name="sequence" eval="60" />
-        <field
-            name="groups_id"
-            eval="[
-                Command.link(ref('account.group_account_user')),
-                Command.link(ref('marin.group_account_customer_invoice'))
-            ]"
-        />
-    </record>
-
     <record id="account.product_product_menu_sellable" model="ir.ui.menu">
         <field name="active" eval="False" />
     </record>
@@ -273,7 +262,7 @@
         <menuitem
             id="menu_finance_bank_statement"
             name="Bank Statements"
-            action="account.action_bank_statement_list"
+            action="account.action_bank_statement_tree"
             sequence="10"
         />
     </menuitem>

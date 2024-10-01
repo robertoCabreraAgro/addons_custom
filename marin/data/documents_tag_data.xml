@@ -2,133 +2,111 @@
 <odoo>
     <record id="documents_commercial_status_inbox" model="documents.tag" forcecreate="0">
         <field name="name">Inbox</field>
-        <field name="facet_id" ref="documents_commercial_status" />
         <field name="sequence">2</field>
     </record>
 
     <record id="documents_commercial_status_tc" model="documents.tag" forcecreate="0">
         <field name="name">To validate</field>
-        <field name="facet_id" ref="documents_commercial_status" />
         <field name="sequence">3</field>
     </record>
 
     <record id="documents_commercial_status_validated" model="documents.tag" forcecreate="0">
         <field name="name">Validated</field>
-        <field name="facet_id" ref="documents_commercial_status" />
         <field name="sequence">5</field>
     </record>
 
     <record id="documents_commercial_status_deprecated" model="documents.tag" forcecreate="0">
         <field name="name">Deprecated</field>
-        <field name="facet_id" ref="documents_commercial_status" />
         <field name="sequence">6</field>
     </record>
 
     <record id="documents_commercial_documents_pricelist" model="documents.tag" forcecreate="0">
         <field name="name">Pricelist</field>
-        <field name="facet_id" ref="documents_commercial_documents" />
         <field name="sequence">5</field>
     </record>
 
     <record id="documents_commercial_documents_bi" model="documents.tag" forcecreate="0">
         <field name="name">BI</field>
-        <field name="facet_id" ref="documents_commercial_documents" />
         <field name="sequence">6</field>
     </record>
 
     <record id="documents_commercial_documents_crm" model="documents.tag" forcecreate="0">
         <field name="name">CRM</field>
-        <field name="facet_id" ref="documents_commercial_documents" />
         <field name="sequence">7</field>
     </record>
 
     <record id="documents_knowledge_documents_excel" model="documents.tag" forcecreate="0">
         <field name="name">Excel and Power BI</field>
-        <field name="facet_id" ref="documents_knowledge_documents" />
         <field name="sequence">10</field>
     </record>
 
     <record id="documents_knowledge_documents_mgm_acc" model="documents.tag" forcecreate="0">
         <field name="name">Management and accounting</field>
-        <field name="facet_id" ref="documents_knowledge_documents" />
         <field name="sequence">10</field>
     </record>
 
     <record id="documents_knowledge_documents_sat" model="documents.tag" forcecreate="0">
         <field name="name">SAT</field>
-        <field name="facet_id" ref="documents_knowledge_documents" />
         <field name="sequence">10</field>
     </record>
 
     <record id="documents_knowledge_documents_cs" model="documents.tag" forcecreate="0">
         <field name="name">CS</field>
-        <field name="facet_id" ref="documents_knowledge_documents" />
         <field name="sequence">10</field>
     </record>
 
     <record id="documents_knowledge_documents_odoo" model="documents.tag" forcecreate="0">
         <field name="name">Odoo</field>
-        <field name="facet_id" ref="documents_knowledge_documents" />
         <field name="sequence">10</field>
     </record>
 
     <record id="documents_knowledge_documents_sales" model="documents.tag" forcecreate="0">
         <field name="name">Sales</field>
-        <field name="facet_id" ref="documents_knowledge_documents" />
         <field name="sequence">10</field>
     </record>
 
     <record id="documents_knowledge_documents_others" model="documents.tag" forcecreate="0">
         <field name="name">Others</field>
-        <field name="facet_id" ref="documents_knowledge_documents" />
         <field name="sequence">10</field>
     </record>
 
     <record id="documents_fleet_l10n_mx_transit_permit" model="documents.tag" forcecreate="0">
         <field name="name">Transit permit</field>
-        <field name="facet_id" ref="documents_fleet.documents_fleet" />
         <field name="sequence">10</field>
     </record>
 
     <record id="documents_fleet_l10n_mx_plate" model="documents.tag" forcecreate="0">
         <field name="name">Plate</field>
-        <field name="facet_id" ref="documents_fleet.documents_fleet" />
         <field name="sequence">11</field>
     </record>
 
     <record id="documents_fleet_l10n_mx_ownership_tax" model="documents.tag" forcecreate="0">
         <field name="name">Ownership Tax</field>
-        <field name="facet_id" ref="documents_fleet.documents_fleet" />
         <field name="sequence">12</field>
     </record>
 
     <record id="documents_fleet_environmental_verification" model="documents.tag" forcecreate="0">
         <field name="name">Environmental verification</field>
-        <field name="facet_id" ref="documents_fleet.documents_fleet" />
         <field name="sequence">13</field>
     </record>
 
     <record id="documents_fleet_insurance_policy" model="documents.tag" forcecreate="0">
         <field name="name">Insurance policy</field>
-        <field name="facet_id" ref="documents_fleet.documents_fleet" />
         <field name="sequence">14</field>
     </record>
 
     <record id="documents_fleet_fuel_card" model="documents.tag" forcecreate="0">
         <field name="name">Fuel Card</field>
-        <field name="facet_id" ref="documents_fleet.documents_fleet" />
         <field name="sequence">15</field>
     </record>
 
     <record id="documents_fleet_highway_pass" model="documents.tag" forcecreate="0">
         <field name="name">Highway Pass</field>
-        <field name="facet_id" ref="documents_fleet.documents_fleet" />
         <field name="sequence">16</field>
     </record>
 
     <record id="documents_fleet_gps" model="documents.tag" forcecreate="0">
         <field name="name">GPS</field>
-        <field name="facet_id" ref="documents_fleet.documents_fleet" />
         <field name="sequence">17</field>
     </record>
 </odoo>

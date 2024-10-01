@@ -7,11 +7,8 @@ from . import account_move
 from . import account_move_line
 from . import account_payment
 from . import account_payment_term
-from . import consolidation_period
 from . import documents_document
-from . import documents_folder
 from . import documents_tag
-from . import documents_workflow_rule
 from . import fleet_vehicle
 from . import fleet_vehicle_log_services
 from . import hr_contract

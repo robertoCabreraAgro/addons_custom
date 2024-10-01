@@ -25,10 +25,10 @@
         </field>
     </record>
 
-    <record id="view_account_analytic_line_tree_marin" model="ir.ui.view">
+    <record id="view_account_analytic_line_tree" model="ir.ui.view">
         <field name="name">account.analytic.line.list.inherit.account</field>
         <field name="model">account.analytic.line</field>
-        <field name="inherit_id" ref="analytic.view_account_analytic_line_list" />
+        <field name="inherit_id" ref="analytic.view_account_analytic_line_tree" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='account_id']" position="after">
                 <field name="vehicle_id" optional="hide" />

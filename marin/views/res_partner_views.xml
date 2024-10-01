@@ -117,27 +117,6 @@
             <xpath expr="//group[@name='credit_limits']/div" position="after">
                 <field name="credit_on_hold" />
             </xpath>
-            <xpath expr="//group[@name='credit_limits']" position="after">
-                <group
-                    string="Debit Limits"
-                    name="debit_limits"
-                    invisible="not show_credit_limit"
-                    groups="account.group_account_readonly,marin.group_account_debt_manager"
-                >
-                    <field name="debit" />
-                    <label for="use_partner_debit_limit" />
-                    <div class="o_row">
-                        <field name="use_partner_debit_limit" readonly="not user_debt_manager" />
-                        <field
-                            name="debit_limit"
-                            invisible="not use_partner_debit_limit"
-                            readonly="not user_debt_manager"
-                            required="use_partner_debit_limit"
-                        />
-                    </div>
-                    <field name="debit_on_hold" />
-                </group>
-            </xpath>
             <xpath expr="//group[@name='accounting_entries']" position="after">
                 <xpath expr="//group[@name='fiscal_information']" position="move" />
             </xpath>

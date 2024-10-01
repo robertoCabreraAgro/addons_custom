@@ -106,33 +106,6 @@ class TestInvoicing(AccountTestInvoicingCommon):
         ):
             self.env["authorize.debt.wizard"].with_context(**ctx).create([{}])
 
-    # def test_04_vendor_bill_authorize_debt(self):
-    #     vendor_bill = self.vendor_bill
-    #     vendor_bill.invoice_payment_term_id = self.pay_term_net_30_days
-    #     partner = vendor_bill.commercial_partner_id
-    #     vendor_bill.company_id.account_use_credit_limit = True
-    #     partner.debit_limit = 1
-    #     vendor_bill.invoice_line_ids.price_unit = 10.0
-    #     vendor_bill._compute_partner_credit_warning()
-    #     partner.debit_on_hold = True
-    #     with self.assertRaises(UserError):
-    #         vendor_bill.action_post()
-    #     partner.debit_on_hold = False
-    #     with self.assertRaises(UserError):
-    #         vendor_bill.action_post()
-    #     self.env.user.groups_id = [(4, self.env.ref("marin.group_account_debt_manager").id)]
-    #     res = vendor_bill.action_post()
-    #     self.assertEqual(vendor_bill.state, "draft")
-    #     self.assertEqual(res.get("res_model"), "authorize.debt.wizard")
-    #     wizard = self.env["authorize.debt.wizard"].with_context(**res.get("context")).create([{}])
-    #     wizard._compute_from_record_ids()
-    #     self.assertEqual(wizard.flag, "debit")
-    #     self.assertEqual(wizard.count_so, 0)
-    #     self.assertEqual(wizard.count_move, 1)
-    #     wizard.action_move_increase_debt_limit_and_post()
-    #     self.assertEqual(vendor_bill.state, "posted")
-    #     self.assertEqual(partner.debit_limit, 11.5)
-
     def test_05_invoice_price_history(self):
         invoice = self.invoice
         invoice2 = invoice.copy()

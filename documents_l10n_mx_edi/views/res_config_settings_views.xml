@@ -34,7 +34,7 @@
         </field>
     </record>
 
-    <record id="res_config_settings_view_form_doc" model="ir.ui.view">
+<!--     <record id="res_config_settings_view_form_doc" model="ir.ui.view">
         <field name="name">res.config.settings.view.form.inherit.doc</field>
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="base.res_config_settings_view_form" />
@@ -54,5 +54,5 @@
                 </block>
             </xpath>
         </field>
-    </record>
+    </record> -->
 </odoo>

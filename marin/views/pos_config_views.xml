@@ -4,7 +4,7 @@
         <field name="model">pos.config</field>
         <field name="inherit_id" ref="point_of_sale.view_pos_config_kanban" />
         <field name="arch" type="xml">
-            <xpath expr="//t[@t-name='kanban-menu']/div/div" position="after">
+            <xpath expr="//t[@t-name='menu']/div/div" position="after">
                 <div class="o_kanban_card_manage_settings row">
                     <div role="menuitem" class="col-12">
                         <a name="open_pos_cash_transfer_wizard" type="object">Cash Transfer</a>

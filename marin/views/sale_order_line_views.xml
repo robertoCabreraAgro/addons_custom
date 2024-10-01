@@ -76,7 +76,7 @@
         <field name="name">sale.order.line.list</field>
         <field name="model">sale.order.line</field>
         <field name="arch" type="xml">
-            <tree
+            <list
                 create="true"
                 editable="bottom"
                 decoration-warning="state=='draft'"

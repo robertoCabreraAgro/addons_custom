@@ -6,6 +6,7 @@ from odoo import _, fields, models
 class AccountPayment(models.Model):
     _inherit = "account.payment"
 
+    journal_type = fields.Selection(related="journal_id.type", string="Journal type", store=True, readonly=True)
     cash_transfer_pos_id = fields.Many2one("pos.session")
     #client_receipt_document_share_id = fields.Many2one("documents.share", readonly=True)
     #payment_receipt_document_share_id = fields.Many2one("documents.share", readonly=True)

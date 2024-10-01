@@ -7,31 +7,23 @@ from odoo.tools.misc import formatLang
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
-    def _prepare_partner_category_domain(self):
-        parents = []
-        if self.env.user.has_group("account.group_account_basic"):
-            parents.append(self.env.ref("marin.partner_category_management").id)
-        if self.env.user.has_group("sales_team.group_sale_manager"):
-            parents.append(self.env.ref("marin.partner_category_commercial").id)
-        if self.env.user.has_group("marin.group_security_compliance"):
-            parents.append(self.env.ref("marin.partner_category_security").id)
-        if self.env.user.has_group("purchase.group_purchase_manager"):
-            parents.append(self.env.ref("marin.partner_category_purchase").id)
-        if not parents:
-            return [("id", "=", False)]
-        return [("parent_id", "!=", False), ("parent_id", "in", parents)]
+    # def _prepare_partner_category_domain(self):
+    #     parents = []
+    #     if self.env.user.has_group("account.group_account_basic"):
+    #         parents.append(self.env.ref("marin.partner_category_management").id)
+    #     if self.env.user.has_group("sales_team.group_sale_manager"):
+    #         parents.append(self.env.ref("marin.partner_category_commercial").id)
+    #     if self.env.user.has_group("marin.group_security_compliance"):
+    #         parents.append(self.env.ref("marin.partner_category_security").id)
+    #     if self.env.user.has_group("purchase.group_purchase_manager"):
+    #         parents.append(self.env.ref("marin.partner_category_purchase").id)
+    #     if not parents:
+    #         return [("id", "=", False)]
+    #     return [("parent_id", "!=", False), ("parent_id", "in", parents)]
 
     # Extend core fields
-    category_id = fields.Many2many(domain=_prepare_partner_category_domain)
+    # category_id = fields.Many2many(domain=_prepare_partner_category_domain)
     credit_limit = fields.Float(tracking=True, help="Receivable limit specific to this partner.")
-    debit_limit = fields.Float(
-        "Payable limit",
-        company_dependent=True,
-        copy=False,
-        tracking=True,
-        readonly=False,
-        help="Payable limit specific to this partner.",
-    )
 
     # New fields
     # Security
@@ -51,19 +43,8 @@ class ResPartner(models.Model):
         readonly=True,
         help="Available receivable limit",
     )
-    use_partner_debit_limit = fields.Boolean(
-        "Partner Debit Limit",
-        compute="_compute_use_partner_debit_limit",
-        inverse="_inverse_use_partner_debit_limit",
-        groups="account.group_account_invoice,account.group_account_readonly",
-    )
     debit_on_hold = fields.Boolean("Debit on hold", company_dependent=True)
-    debit_limit_available = fields.Monetary(
-        "Available Payable Limit",
-        compute="_compute_available_debt_limits",
-        readonly=True,
-        help="Available payable limit",
-    )
+
     # Misc
     customer = fields.Boolean()
     supplier = fields.Boolean()
@@ -150,22 +131,6 @@ class ResPartner(models.Model):
         """
         partners = self.search([("birthdate", "!=", False)])
         partners._compute_age_range_id()
-
-    @api.depends_context("company")
-    def _compute_use_partner_debit_limit(self):
-        for partner in self:
-            company_limit = self.env["ir.property"]._get("debit_limit", "res.partner")
-            partner.use_partner_debit_limit = partner.debit_limit != company_limit
-
-    def _inverse_use_partner_debit_limit(self):
-        for partner in self:
-            if not partner.use_partner_debit_limit:
-                partner.debit_limit = self.env["ir.property"]._get("debit_limit", "res.partner")
-
-    def _compute_available_debt_limits(self):
-        for partner in self:
-            partner.credit_limit_available = partner.credit_limit - partner.credit
-            partner.debit_limit_available = partner.debit_limit - partner.debit
 
     # New method inspired by the one in account.move
     def _build_credit_warning_message(self, future_credit, currency):

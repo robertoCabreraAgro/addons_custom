@@ -26,9 +26,9 @@
         </field>
     </record>
 
-    <record id="view_company_tree_marin" model="ir.ui.view">
+    <record id="view_company_tree" model="ir.ui.view">
         <field name="model">res.company</field>
-        <field name="inherit_id" ref="base.view_company_list" />
+        <field name="inherit_id" ref="base.view_company_tree" />
         <field name="arch" type="xml">
             <field name="name" position="before">
                 <field name="code" />

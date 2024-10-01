@@ -236,9 +236,8 @@ class AccountMove(models.Model):
         return True
 
     # Extend original method
-    @api.depends("company_currency_id", "journal_id", "move_type", "payment_id", "statement_line_id")
+    @api.depends("company_currency_id", "move_type", "origin_payment_id", "statement_line_id")
     def _compute_l10n_mx_edi_is_cfdi_needed(self):
-        """Check whatever or not the CFDI is needed on this invoice."""
         for move in self:
             move.l10n_mx_edi_is_cfdi_needed = (
                 move.country_code == "MX"

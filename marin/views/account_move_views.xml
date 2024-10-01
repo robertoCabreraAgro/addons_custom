@@ -94,22 +94,16 @@
         </field>
     </record>
 
-    <record id="view_invoice_list" model="ir.ui.view">
+    <record id="view_invoice_tree" model="ir.ui.view">
         <field name="name">account.invoice.list</field>
         <field name="model">account.move</field>
-        <field name="inherit_id" ref="account.view_invoice_list" />
+        <field name="inherit_id" ref="account.view_invoice_tree" />
         <field name="priority" eval="100" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='name']" position="before">
                 <field name="journal_id" optional="hide" />
             </xpath>
-            <xpath expr="//field[@name='payment_state']" position="replace">
-            </xpath>
-            <xpath expr="//field[@name='state']" position="attributes">
-                <attribute name="decoration-danger">state == 'cancel'
-                </attribute>
-            </xpath>
-            <xpath expr="//field[@name='state']" position="after">
+<!--             <xpath expr="//field[@name='state']" position="after">
                 <field
                     name="payment_state"
                     invisible="payment_state == 'invoicing_legacy'"
@@ -120,13 +114,13 @@
                     optional="show"
                 />
                 <field name="invoice_payment_term_id" optional="hide" />
-            </xpath>
+            </xpath> -->
             <xpath expr="//field[@name='company_id']" position="replace">
             </xpath>
             <xpath expr="//field[@name='move_type']" position="after">
                 <field name="company_id" optional="hide" />
             </xpath>
-            <xpath expr="//field[@name='amount_untaxed_signed']" position="attributes">
+            <xpath expr="//field[@name='amount_untaxed_in_currency_signed']" position="attributes">
                 <attribute name="optional">hide</attribute>
             </xpath>
             <xpath expr="//field[@name='amount_total_in_currency_signed']" position="attributes">
@@ -256,7 +250,7 @@
             <xpath expr="//page[@id='other_tab']//field[@name='invoice_origin']" position="attributes">
                 <attribute name="invisible">False</attribute>
             </xpath>
-            <xpath expr="//page[@id='other_tab']//field[@name='to_check']" position="after">
+            <xpath expr="//page[@id='other_tab']//field[@name='checked']" position="after">
                 <field name="x_stored" />
             </xpath>
             <xpath
@@ -346,9 +340,9 @@
         </field>
     </record>
 
-    <record id="invoice_margin_form_list" model="ir.ui.view">
+    <record id="view_move_form_2" model="ir.ui.view">
         <field name="model">account.move</field>
-        <field name="inherit_id" ref="account_invoice_margin.invoice_margin_form_list" />
+        <field name="inherit_id" ref="account_invoice_margin.view_move_form" />
         <field name="arch" type="xml">
             <xpath
                 expr="//field[@name='purchase_price']"

@@ -31,7 +31,7 @@
         <field name="model">purchase.order.line</field>
         <field name="priority">20</field>
         <field name="arch" type="xml">
-            <tree
+            <list
                 create="true"
                 editable="bottom"
                 decoration-warning="state == 'draft'"

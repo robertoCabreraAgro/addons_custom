@@ -7,9 +7,6 @@ class ResCompany(models.Model):
 
     code = fields.Char(string="Short Code", size=6)
     complete_name = fields.Char(compute="_compute_complete_name", store=True)
-    account_use_debit_limit = fields.Boolean(
-        string="Purchase Debit Limit", help="Enable the use of debit limit on partners."
-    )
     pos_cash_transfer_journal_id = fields.Many2one(
         "account.journal",
         string="PoS Cash Transfer Journal",

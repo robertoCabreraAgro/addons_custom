@@ -154,8 +154,6 @@ def _post_init_marin(env):
         SELECT setval('"public"."account_tax_group_id_seq"', 1000, true);
         SELECT setval('"public"."account_tax_id_seq"', 1000, true);
         SELECT setval('"public"."account_tax_repartition_line_id_seq"', 5000, true);
-
-        SELECT setval('"public"."consolidation_account_id_seq"', 999, true);
         """
     )
 
@@ -227,10 +225,6 @@ def _post_init_marin(env):
             )
 
     tools.convert.convert_file(env, "marin", "data/account.tax.repartition.line.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin", "data/consolidation.chart.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin", "data/consolidation.group.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin", "data/consolidation.account.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin", "data/consolidation.period.csv", None, mode="init", kind="data")
 
     env.cr.execute(
         """

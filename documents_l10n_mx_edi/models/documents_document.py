@@ -174,7 +174,6 @@ class Document(models.Model):
             tags.append(tag.id)
         tag = tag_obj.search(
             [
-                ("facet_id", "=", self.env.ref("documents_l10n_mx_edi.documents_l10n_mx_edi_facet_fiscal_year").id),
                 ("name", "=", str(self.env["l10n_mx_edi.document"].get_datetime(cfdi_etree).year)),
             ],
             limit=1,
@@ -183,7 +182,6 @@ class Document(models.Model):
             tags.append(tag.id)
         tag = tag_obj.search(
             [
-                ("facet_id", "=", self.env.ref("documents_l10n_mx_edi.documents_l10n_mx_edi_facet_fiscal_month").id),
                 ("name", "=", str(self.env["l10n_mx_edi.document"].get_datetime(cfdi_etree).month)),
             ],
             limit=1,

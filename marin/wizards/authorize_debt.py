@@ -202,8 +202,6 @@ class AuthorizeDebt(models.TransientModel):
         self._compute_from_record_ids()
         if self.partner_id and self.flag == "credit":
             self.partner_id.credit_limit += self.amount_authorize
-        elif self.partner_id and self.flag == "debit":
-            self.partner_id.debit_limit += self.amount_authorize
 
     def action_move_increase_debt_limit_and_post(self):
         self.action_increase_debt_limit()

@@ -5,7 +5,7 @@
         <field name="model">account.payment</field>
         <field name="inherit_id" ref="account.view_account_payment_search" />
         <field name="arch" type="xml">
-            <xpath expr="//filter[@name='transfers_filter']" position="after">
+            <xpath expr="//filter[@name='unmatched']" position="after">
                 <separator />
                 <filter name="bank_payment" string="Bank" domain="[('journal_id.type', '=', 'bank')]" />
                 <filter name="cash_payment" string="Cash" domain="[('journal_id.type', '=', 'cash')]" />
@@ -27,13 +27,8 @@
             <xpath expr="//field[@name='partner_id']" position="attributes">
                 <attribute name="options">{"no_create": True}</attribute>
             </xpath>
-            <xpath expr="//field[@name='partner_id'][2]" position="after">
-                <field
-                    name="destination_account_id"
-                    readonly="state != 'draft' or is_internal_transfer"
-                    required="1"
-                    options="{'no_create': True}"
-                />
+            <xpath expr="//field[@name='partner_id'][2]" position="attributes">
+                <attribute name="options">{"no_create": True}</attribute>
             </xpath>
         </field>
     </record>

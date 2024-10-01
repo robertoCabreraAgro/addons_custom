@@ -16,7 +16,6 @@
                 <field name="tag_ids" string="Tag" />
                 <field name="team_id" string="Sales Team" />
                 <field name="user_id" />
-                <field name="analytic_account_id" groups="analytic.group_analytic_accounting" />
                 <field name="campaign_id" />
                 <filter name="my_orders_filter" string="My Orders" domain="[('user_id', '=', uid)]" />
                 <separator />

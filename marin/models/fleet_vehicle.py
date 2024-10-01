@@ -12,27 +12,27 @@ class FleetVehicleInherit(models.Model):
     fuel_efficiency = fields.Float(help="Fuel efficiency in kilometers per liter (km/L)")
     fuel_card_id = fields.Many2one(
         "documents.document",
-        domain=lambda self: [
-            ("tag_ids", "in", self.env.ref("marin.documents_fleet_fuel_card", False).ids),
-            "|",
-            ("vehicle_id", "=", self.id),
-            ("vehicle_id", "=", False),
-        ],
-        inverse="_inverse_fuel_card",
-        store=True,
+        # domain=lambda self: [
+        #     ("tag_ids", "in", self.env.ref("marin.documents_fleet_fuel_card", False).ids),
+        #     "|",
+        #     ("vehicle_id", "=", self.id),
+        #     ("vehicle_id", "=", False),
+        # ],
+        # inverse="_inverse_fuel_card",
+        # store=True,
         readonly=False,
     )
     fuel_card_name = fields.Char(compute="_compute_fuel_card_name", store=True)
     highway_pass_id = fields.Many2one(
         "documents.document",
-        domain=lambda self: [
-            ("tag_ids", "in", self.env.ref("marin.documents_fleet_highway_pass", False).ids),
-            "|",
-            ("vehicle_id", "=", self.id),
-            ("vehicle_id", "=", False),
-        ],
-        inverse="_inverse_highway_pass",
-        store=True,
+        # domain=lambda self: [
+        #     ("tag_ids", "in", self.env.ref("marin.documents_fleet_highway_pass", False).ids),
+        #     "|",
+        #     ("vehicle_id", "=", self.id),
+        #     ("vehicle_id", "=", False),
+        # ],
+        # inverse="_inverse_highway_pass",
+        # store=True,
         readonly=False,
     )
     highway_pass_name = fields.Char(compute="_compute_highway_pass_name", store=True)

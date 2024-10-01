@@ -30,9 +30,10 @@ class ResCompany(models.Model):
 
     documents_l10n_mx_edi_folder_settings = fields.Boolean()
     l10n_mx_edi_folder = fields.Many2one(
-        "documents.folder",
+        "documents.document",
         default=lambda self: self.env.ref(
-            "documents_l10n_mx_edi.documents_l10n_mx_edi_folder", raise_if_not_found=False
+            "documents_l10n_mx_edi.documents_l10n_mx_edi_folder",
+            raise_if_not_found=False
         ),
     )
 

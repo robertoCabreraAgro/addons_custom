@@ -47,8 +47,8 @@
         <field name="documents_hr_settings" eval="True" />
         <field name="documents_product_settings" eval="True" />
         <field name="documents_recruitment_settings" eval="True" />
-        <field name="documents_l10n_mx_edi_folder_settings" eval="True" />
-        <field name="documents_account_settings" eval="True" />
+<!--         <field name="documents_l10n_mx_edi_folder_settings" eval="True" />
+ -->        <field name="documents_account_settings" eval="True" />
         <field name="recruitment_extract_show_ocr_option_selection">manual_send</field>
         <field name="expense_extract_show_ocr_option_selection">manual_send</field>
         <field name="default_picking_policy">one</field>

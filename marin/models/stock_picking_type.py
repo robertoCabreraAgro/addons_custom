@@ -23,7 +23,7 @@ class StockPickingTypeInherit(models.Model):
     count_picking_ready = fields.Integer(search="_search_count_picking_ready")
     count_picking_waiting = fields.Integer(search="_search_count_picking_waiting")
 
-    pos_avoid_locations = fields.Many2many("stock.location")
+    # pos_avoid_locations = fields.Many2many("stock.location")
     route_ids = fields.Many2many(
         "stock.route",
         "stock_route_picking_type",
