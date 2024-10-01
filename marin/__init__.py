@@ -157,7 +157,7 @@ def _post_init_marin(env):
         """
     )
 
-    tools.convert.convert_file(env, "marin", "data/stock.picking.type.csv", None, mode="init", kind="data")
+    # tools.convert.convert_file(env, "marin", "data/stock.picking.type.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/stock.route.csv", None, mode="init", kind="data")
     # tools.convert.convert_file(env, "marin", "data/stock.rule.csv", None, mode="init", kind="data")
 

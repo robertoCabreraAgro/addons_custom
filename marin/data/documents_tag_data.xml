@@ -1,30 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-    <record id="documents_commercial_status_inbox" model="documents.tag" forcecreate="0">
-        <field name="name">Inbox</field>
-        <field name="sequence">2</field>
-    </record>
-
-    <record id="documents_commercial_status_tc" model="documents.tag" forcecreate="0">
-        <field name="name">To validate</field>
-        <field name="sequence">3</field>
-    </record>
-
-    <record id="documents_commercial_status_validated" model="documents.tag" forcecreate="0">
-        <field name="name">Validated</field>
-        <field name="sequence">5</field>
-    </record>
-
-    <record id="documents_commercial_status_deprecated" model="documents.tag" forcecreate="0">
-        <field name="name">Deprecated</field>
-        <field name="sequence">6</field>
-    </record>
-
-    <record id="documents_commercial_documents_pricelist" model="documents.tag" forcecreate="0">
-        <field name="name">Pricelist</field>
-        <field name="sequence">5</field>
-    </record>
-
     <record id="documents_commercial_documents_bi" model="documents.tag" forcecreate="0">
         <field name="name">BI</field>
         <field name="sequence">6</field>
@@ -57,16 +32,6 @@
 
     <record id="documents_knowledge_documents_odoo" model="documents.tag" forcecreate="0">
         <field name="name">Odoo</field>
-        <field name="sequence">10</field>
-    </record>
-
-    <record id="documents_knowledge_documents_sales" model="documents.tag" forcecreate="0">
-        <field name="name">Sales</field>
-        <field name="sequence">10</field>
-    </record>
-
-    <record id="documents_knowledge_documents_others" model="documents.tag" forcecreate="0">
-        <field name="name">Others</field>
         <field name="sequence">10</field>
     </record>
 
