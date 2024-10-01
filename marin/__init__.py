@@ -224,7 +224,7 @@ def _post_init_marin(env):
                 }
             )
 
-    tools.convert.convert_file(env, "marin", "data/account.tax.repartition.line.csv", None, mode="init", kind="data")
+    # tools.convert.convert_file(env, "marin", "data/account.tax.repartition.line.csv", None, mode="init", kind="data")
 
     env.cr.execute(
         """
@@ -247,11 +247,6 @@ def _post_init_marin(env):
         SELECT setval('"public"."fleet_vehicle_model_id_seq"', 100, true);
         SELECT setval('"public"."account_analytic_account_id_seq"', 999, true);
         SELECT setval('"public"."account_analytic_distribution_model_id_seq"', 1000, true);
-
-        DELETE FROM
-            ir_property 
-        WHERE
-            name IN ('property_account_payable_id', 'property_account_receivable_id', 'property_account_expense_categ_id', 'property_account_income_categ_id');
         """
     )
 
@@ -305,7 +300,6 @@ def _post_init_marin(env):
     tools.convert.convert_file(env, "marin", "data/project.project.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/project.task.type.csv", None, mode="init", kind="data")
     
-    tools.convert.convert_file(env, "marin", "data/ir_property_data.xml", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/res.company.csv", None, mode="init", kind="data")
 
     env.cr.execute(

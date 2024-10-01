@@ -11,13 +11,13 @@ marin.tax_group_1009_ish_lmmr,ISH,marin.company_lmmr,base.mx,,,,11
 marin.tax_group_1010_isr_10_0_retention_lmmr,ISR 10.0% retention,marin.company_lmmr,base.mx,,,,11
 marin.tax_group_1011_isr_63_67_retention_lmmr,ISR 63.67% retention,marin.company_lmmr,base.mx,,,,11
 marin.tax_group_1012_vat_0_0_lmmr,VAT 0.0%,marin.company_lmmr,base.mx,,marin.account_213_01_001_lmmr,marin.account_113_01_001_lmmr,11
-marin.tax_group_1013_vat_16_0_lmmr,VAT 16.0%,marin.company_lmmr,base.mx,,marin.account_213_01_001_lmmr,marin.account_113_01_001_lmmr,11
-marin.tax_group_1014_vat_8_0_lmmr,VAT 8.0%,marin.company_lmmr,base.mx,,marin.account_213_01_001_lmmr,marin.account_113_01_001_lmmr,11
-marin.tax_group_1015_vat_exempt_lmmr,VAT exempt,marin.company_lmmr,base.mx,,marin.account_213_01_001_lmmr,marin.account_113_01_001_lmmr,11
-marin.tax_group_1016_vat_1_25_retention_lmmr,VAT 1.25% retention,marin.company_lmmr,base.mx,,,,11
-marin.tax_group_1017_vat_10_0_retention_lmmr,VAT 10.0% retention,marin.company_lmmr,base.mx,,,,11
-marin.tax_group_1018_vat_10_67_retention_lmmr,VAT 10.67% retention,marin.company_lmmr,base.mx,,,,11
-marin.tax_group_1019_vat_4_0_retention_lmmr,VAT 4.0% retention,marin.company_lmmr,base.mx,,,,11
+marin.tax_group_1013_vat_1_25_retention_lmmr,VAT 1.25% retention,marin.company_lmmr,base.mx,,,,11
+marin.tax_group_1014_vat_10_0_retention_lmmr,VAT 10.0% retention,marin.company_lmmr,base.mx,,,,11
+marin.tax_group_1015_vat_10_67_retention_lmmr,VAT 10.67% retention,marin.company_lmmr,base.mx,,,,11
+marin.tax_group_1016_vat_16_0_lmmr,VAT 16.0%,marin.company_lmmr,base.mx,,marin.account_213_01_001_lmmr,marin.account_113_01_001_lmmr,11
+marin.tax_group_1017_vat_4_0_retention_lmmr,VAT 4.0% retention,marin.company_lmmr,base.mx,,,,11
+marin.tax_group_1018_vat_8_0_lmmr,VAT 8.0%,marin.company_lmmr,base.mx,,marin.account_213_01_001_lmmr,marin.account_113_01_001_lmmr,11
+marin.tax_group_1019_vat_exempt_lmmr,VAT exempt,marin.company_lmmr,base.mx,,marin.account_213_01_001_lmmr,marin.account_113_01_001_lmmr,11
 marin.tax_group_1020_dsa_tjgl,DSA,marin.company_tjgl,base.mx,,,,10
 marin.tax_group_1021_ieps_25_0_tjgl,IEPS 25.0%,marin.company_tjgl,base.mx,,,,11
 marin.tax_group_1022_ieps_26_5_tjgl,IEPS 26.5%,marin.company_tjgl,base.mx,,,,11
@@ -30,13 +30,13 @@ marin.tax_group_1028_ish_tjgl,ISH,marin.company_tjgl,base.mx,,,,11
 marin.tax_group_1029_isr_10_0_retention_tjgl,ISR 10.0% retention,marin.company_tjgl,base.mx,,,,11
 marin.tax_group_1030_isr_63_67_retention_tjgl,ISR 63.67% retention,marin.company_tjgl,base.mx,,,,11
 marin.tax_group_1031_vat_0_0_tjgl,VAT 0.0%,marin.company_tjgl,base.mx,,,,11
-marin.tax_group_1032_vat_16_0_tjgl,VAT 16.0%,marin.company_tjgl,base.mx,,,,11
-marin.tax_group_1033_vat_8_0_tjgl,VAT 8.0%,marin.company_tjgl,base.mx,,,,11
-marin.tax_group_1034_vat_exempt_tjgl,VAT exempt,marin.company_tjgl,base.mx,,,,11
-marin.tax_group_1035_vat_1_25_retention_tjgl,VAT 1.25% retention,marin.company_tjgl,base.mx,,,,11
-marin.tax_group_1036_vat_10_0_retention_tjgl,VAT 10.0% retention,marin.company_tjgl,base.mx,,,,11
-marin.tax_group_1037_vat_10_67_retention_tjgl,VAT 10.67% retention,marin.company_tjgl,base.mx,,,,11
-marin.tax_group_1038_vat_4_0_retention_tjgl,VAT 4.0% retention,marin.company_tjgl,base.mx,,,,11
+marin.tax_group_1032_vat_1_25_retention_tjgl,VAT 1.25% retention,marin.company_tjgl,base.mx,,,,11
+marin.tax_group_1033_vat_10_0_retention_tjgl,VAT 10.0% retention,marin.company_tjgl,base.mx,,,,11
+marin.tax_group_1034_vat_10_67_retention_tjgl,VAT 10.67% retention,marin.company_tjgl,base.mx,,,,11
+marin.tax_group_1035_vat_16_0_tjgl,VAT 16.0%,marin.company_tjgl,base.mx,,,,11
+marin.tax_group_1036_vat_4_0_retention_tjgl,VAT 4.0% retention,marin.company_tjgl,base.mx,,,,11
+marin.tax_group_1037_vat_8_0_tjgl,VAT 8.0%,marin.company_tjgl,base.mx,,,,11
+marin.tax_group_1038_vat_exempt_tjgl,VAT exempt,marin.company_tjgl,base.mx,,,,11
 marin.tax_group_1039_dsa_lmmg,DSA,marin.company_lmmg,base.mx,,,,10
 marin.tax_group_1040_ieps_25_0_lmmg,IEPS 25.0%,marin.company_lmmg,base.mx,,,,11
 marin.tax_group_1041_ieps_26_5_lmmg,IEPS 26.5%,marin.company_lmmg,base.mx,,,,11
@@ -49,13 +49,13 @@ marin.tax_group_1047_ish_lmmg,ISH,marin.company_lmmg,base.mx,,,,11
 marin.tax_group_1048_isr_10_0_retention_lmmg,ISR 10.0% retention,marin.company_lmmg,base.mx,,,,11
 marin.tax_group_1049_isr_63_67_retention_lmmg,ISR 63.67% retention,marin.company_lmmg,base.mx,,,,11
 marin.tax_group_1050_vat_0_0_lmmg,VAT 0.0%,marin.company_lmmg,base.mx,,marin.account_213_01_001_lmmg,marin.account_113_01_001_lmmg,11
-marin.tax_group_1051_vat_16_0_lmmg,VAT 16.0%,marin.company_lmmg,base.mx,,marin.account_213_01_001_lmmg,marin.account_113_01_001_lmmg,11
-marin.tax_group_1052_vat_8_0_lmmg,VAT 8.0%,marin.company_lmmg,base.mx,,marin.account_213_01_001_lmmg,marin.account_113_01_001_lmmg,11
-marin.tax_group_1053_vat_exempt_lmmg,VAT exempt,marin.company_lmmg,base.mx,,marin.account_213_01_001_lmmg,marin.account_113_01_001_lmmg,11
-marin.tax_group_1054_vat_1_25_retention_lmmg,VAT 1.25% retention,marin.company_lmmg,base.mx,,,,11
-marin.tax_group_1055_vat_10_0_retention_lmmg,VAT 10.0% retention,marin.company_lmmg,base.mx,,,,11
-marin.tax_group_1056_vat_10_67_retention_lmmg,VAT 10.67% retention,marin.company_lmmg,base.mx,,,,11
-marin.tax_group_1057_vat_4_0_retention_lmmg,VAT 4.0% retention,marin.company_lmmg,base.mx,,,,11
+marin.tax_group_1051_vat_1_25_retention_lmmg,VAT 1.25% retention,marin.company_lmmg,base.mx,,,,11
+marin.tax_group_1052_vat_10_0_retention_lmmg,VAT 10.0% retention,marin.company_lmmg,base.mx,,,,11
+marin.tax_group_1053_vat_10_67_retention_lmmg,VAT 10.67% retention,marin.company_lmmg,base.mx,,,,11
+marin.tax_group_1054_vat_16_0_lmmg,VAT 16.0%,marin.company_lmmg,base.mx,,marin.account_213_01_001_lmmg,marin.account_113_01_001_lmmg,11
+marin.tax_group_1055_vat_4_0_retention_lmmg,VAT 4.0% retention,marin.company_lmmg,base.mx,,,,11
+marin.tax_group_1056_vat_8_0_lmmg,VAT 8.0%,marin.company_lmmg,base.mx,,marin.account_213_01_001_lmmg,marin.account_113_01_001_lmmg,11
+marin.tax_group_1057_vat_exempt_lmmg,VAT exempt,marin.company_lmmg,base.mx,,,,11
 marin.tax_group_1058_dsa_ammg,DSA,marin.company_ammg,base.mx,,,,10
 marin.tax_group_1059_ieps_25_0_ammg,IEPS 25.0%,marin.company_ammg,base.mx,,,,11
 marin.tax_group_1060_ieps_26_5_ammg,IEPS 26.5%,marin.company_ammg,base.mx,,,,11
@@ -68,13 +68,13 @@ marin.tax_group_1066_ish_ammg,ISH,marin.company_ammg,base.mx,,,,11
 marin.tax_group_1067_isr_10_0_retention_ammg,ISR 10.0% retention,marin.company_ammg,base.mx,,,,11
 marin.tax_group_1068_isr_63_67_retention_ammg,ISR 63.67% retention,marin.company_ammg,base.mx,,,,11
 marin.tax_group_1069_vat_0_0_ammg,VAT 0.0%,marin.company_ammg,base.mx,,,,11
-marin.tax_group_1070_vat_16_0_ammg,VAT 16.0%,marin.company_ammg,base.mx,,,,11
-marin.tax_group_1071_vat_8_0_ammg,VAT 8.0%,marin.company_ammg,base.mx,,,,11
-marin.tax_group_1072_vat_exempt_ammg,VAT exempt,marin.company_ammg,base.mx,,,,11
-marin.tax_group_1073_vat_1_25_retention_ammg,VAT 1.25% retention,marin.company_ammg,base.mx,,,,11
-marin.tax_group_1074_vat_10_0_retention_ammg,VAT 10.0% retention,marin.company_ammg,base.mx,,,,11
-marin.tax_group_1075_vat_10_67_retention_ammg,VAT 10.67% retention,marin.company_ammg,base.mx,,,,11
-marin.tax_group_1076_vat_4_0_retention_ammg,VAT 4.0% retention,marin.company_ammg,base.mx,,,,11
+marin.tax_group_1070_vat_1_25_retention_ammg,VAT 1.25% retention,marin.company_ammg,base.mx,,,,11
+marin.tax_group_1071_vat_10_0_retention_ammg,VAT 10.0% retention,marin.company_ammg,base.mx,,,,11
+marin.tax_group_1072_vat_10_67_retention_ammg,VAT 10.67% retention,marin.company_ammg,base.mx,,,,11
+marin.tax_group_1073_vat_16_0_ammg,VAT 16.0%,marin.company_ammg,base.mx,,,,11
+marin.tax_group_1074_vat_4_0_retention_ammg,VAT 4.0% retention,marin.company_ammg,base.mx,,,,11
+marin.tax_group_1075_vat_8_0_ammg,VAT 8.0%,marin.company_ammg,base.mx,,,,11
+marin.tax_group_1076_vat_exempt_ammg,VAT exempt,marin.company_ammg,base.mx,,,,11
 marin.tax_group_1077_dsa_cfmg,DSA,marin.company_cfmg,base.mx,,,,10
 marin.tax_group_1078_ieps_25_0_cfmg,IEPS 25.0%,marin.company_cfmg,base.mx,,,,11
 marin.tax_group_1079_ieps_26_5_cfmg,IEPS 26.5%,marin.company_cfmg,base.mx,,,,11
@@ -87,13 +87,13 @@ marin.tax_group_1085_ish_cfmg,ISH,marin.company_cfmg,base.mx,,,,11
 marin.tax_group_1086_isr_10_0_retention_cfmg,ISR 10.0% retention,marin.company_cfmg,base.mx,,,,11
 marin.tax_group_1087_isr_63_67_retention_cfmg,ISR 63.67% retention,marin.company_cfmg,base.mx,,,,11
 marin.tax_group_1088_vat_0_0_cfmg,VAT 0.0%,marin.company_cfmg,base.mx,,,,11
-marin.tax_group_1089_vat_16_0_cfmg,VAT 16.0%,marin.company_cfmg,base.mx,,,,11
-marin.tax_group_1090_vat_8_0_cfmg,VAT 8.0%,marin.company_cfmg,base.mx,,,,11
-marin.tax_group_1091_vat_exempt_cfmg,VAT exempt,marin.company_cfmg,base.mx,,,,11
-marin.tax_group_1092_vat_1_25_retention_cfmg,VAT 1.25% retention,marin.company_cfmg,base.mx,,,,11
-marin.tax_group_1093_vat_10_0_retention_cfmg,VAT 10.0% retention,marin.company_cfmg,base.mx,,,,11
-marin.tax_group_1094_vat_10_67_retention_cfmg,VAT 10.67% retention,marin.company_cfmg,base.mx,,,,11
-marin.tax_group_1095_vat_4_0_retention_cfmg,VAT 4.0% retention,marin.company_cfmg,base.mx,,,,11
+marin.tax_group_1089_vat_1_25_retention_cfmg,VAT 1.25% retention,marin.company_cfmg,base.mx,,,,11
+marin.tax_group_1090_vat_10_0_retention_cfmg,VAT 10.0% retention,marin.company_cfmg,base.mx,,,,11
+marin.tax_group_1091_vat_10_67_retention_cfmg,VAT 10.67% retention,marin.company_cfmg,base.mx,,,,11
+marin.tax_group_1092_vat_16_0_cfmg,VAT 16.0%,marin.company_cfmg,base.mx,,,,11
+marin.tax_group_1093_vat_4_0_retention_cfmg,VAT 4.0% retention,marin.company_cfmg,base.mx,,,,11
+marin.tax_group_1094_vat_8_0_cfmg,VAT 8.0%,marin.company_cfmg,base.mx,,,,11
+marin.tax_group_1095_vat_exempt_cfmg,VAT exempt,marin.company_cfmg,base.mx,,,,11
 marin.tax_group_1096_dsa_glmm,DSA,marin.company_glmm,base.mx,,,,10
 marin.tax_group_1097_ieps_25_0_glmm,IEPS 25.0%,marin.company_glmm,base.mx,,,,11
 marin.tax_group_1098_ieps_26_5_glmm,IEPS 26.5%,marin.company_glmm,base.mx,,,,11
@@ -106,13 +106,13 @@ marin.tax_group_1104_ish_glmm,ISH,marin.company_glmm,base.mx,,,,11
 marin.tax_group_1105_isr_10_0_retention_glmm,ISR 10.0% retention,marin.company_glmm,base.mx,,,,11
 marin.tax_group_1106_isr_63_67_retention_glmm,ISR 63.67% retention,marin.company_glmm,base.mx,,,,11
 marin.tax_group_1107_vat_0_0_glmm,VAT 0.0%,marin.company_glmm,base.mx,,,,11
-marin.tax_group_1108_vat_16_0_glmm,VAT 16.0%,marin.company_glmm,base.mx,,,,11
-marin.tax_group_1109_vat_8_0_glmm,VAT 8.0%,marin.company_glmm,base.mx,,,,11
-marin.tax_group_1110_vat_exempt_glmm,VAT exempt,marin.company_glmm,base.mx,,,,11
-marin.tax_group_1111_vat_1_25_retention_glmm,VAT 1.25% retention,marin.company_glmm,base.mx,,,,11
-marin.tax_group_1112_vat_10_0_retention_glmm,VAT 10.0% retention,marin.company_glmm,base.mx,,,,11
-marin.tax_group_1113_vat_10_67_retention_glmm,VAT 10.67% retention,marin.company_glmm,base.mx,,,,11
-marin.tax_group_1114_vat_4_0_retention_glmm,VAT 4.0% retention,marin.company_glmm,base.mx,,,,11
+marin.tax_group_1108_vat_1_25_retention_glmm,VAT 1.25% retention,marin.company_glmm,base.mx,,,,11
+marin.tax_group_1109_vat_10_0_retention_glmm,VAT 10.0% retention,marin.company_glmm,base.mx,,,,11
+marin.tax_group_1110_vat_10_67_retention_glmm,VAT 10.67% retention,marin.company_glmm,base.mx,,,,11
+marin.tax_group_1111_vat_16_0_glmm,VAT 16.0%,marin.company_glmm,base.mx,,,,11
+marin.tax_group_1112_vat_4_0_retention_glmm,VAT 4.0% retention,marin.company_glmm,base.mx,,,,11
+marin.tax_group_1113_vat_8_0_glmm,VAT 8.0%,marin.company_glmm,base.mx,,,,11
+marin.tax_group_1114_vat_exempt_glmm,VAT exempt,marin.company_glmm,base.mx,,,,11
 marin.tax_group_1115_dsa_xm,DSA,marin.company_society,base.mx,,,,10
 marin.tax_group_1116_ieps_25_0_xm,IEPS 25.0%,marin.company_society,base.mx,,,,11
 marin.tax_group_1117_ieps_26_5_xm,IEPS 26.5%,marin.company_society,base.mx,,,,11
@@ -125,10 +125,10 @@ marin.tax_group_1123_ish_xm,ISH,marin.company_society,base.mx,,,,11
 marin.tax_group_1124_isr_10_0_retention_xm,ISR 10.0% retention,marin.company_society,base.mx,,,,11
 marin.tax_group_1125_isr_63_67_retention_xm,ISR 63.67% retention,marin.company_society,base.mx,,,,11
 marin.tax_group_1126_vat_0_0_xm,VAT 0.0%,marin.company_society,base.mx,,,,11
-marin.tax_group_1127_vat_16_0_xm,VAT 16.0%,marin.company_society,base.mx,,,,11
-marin.tax_group_1128_vat_8_0_xm,VAT 8.0%,marin.company_society,base.mx,,,,11
-marin.tax_group_1129_vat_exempt_xm,VAT exempt,marin.company_society,base.mx,,,,11
-marin.tax_group_1130_vat_1_25_retention_xm,VAT 1.25% retention,marin.company_society,base.mx,,,,11
-marin.tax_group_1131_vat_10_0_retention_xm,VAT 10.0% retention,marin.company_society,base.mx,,,,11
-marin.tax_group_1132_vat_10_67_retention_xm,VAT 10.67% retention,marin.company_society,base.mx,,,,11
-marin.tax_group_1133_vat_4_0_retention_xm,VAT 4.0% retention,marin.company_society,base.mx,,,,11
+marin.tax_group_1127_vat_1_25_retention_xm,VAT 1.25% retention,marin.company_society,base.mx,,,,11
+marin.tax_group_1128_vat_10_0_retention_xm,VAT 10.0% retention,marin.company_society,base.mx,,,,11
+marin.tax_group_1129_vat_10_67_retention_xm,VAT 10.67% retention,marin.company_society,base.mx,,,,11
+marin.tax_group_1130_vat_16_0_xm,VAT 16.0%,marin.company_society,base.mx,,,,11
+marin.tax_group_1131_vat_4_0_retention_xm,VAT 4.0% retention,marin.company_society,base.mx,,,,11
+marin.tax_group_1132_vat_8_0_xm,VAT 8.0%,marin.company_society,base.mx,,,,11
+marin.tax_group_1133_vat_exempt_xm,VAT exempt,marin.company_society,base.mx,,,,11
