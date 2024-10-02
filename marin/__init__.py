@@ -175,16 +175,16 @@ def _post_init_marin(env):
     records = env.cr.fetchall()
     start = 1001
     for r in records:
-      env.cr.execute("""UPDATE account_payment_method_line SET id=%s WHERE id=%s""" % (start, r[0]))
-      start += 1
+        env.cr.execute("""UPDATE account_payment_method_line SET id=%s WHERE id=%s""" % (start, r[0]))
+        start += 1
 
     env.cr.execute("""UPDATE account_tax_repartition_line SET id=id+10000 WHERE id>=5000""")
     env.cr.execute("""SELECT id FROM account_tax_repartition_line WHERE id>=10000 ORDER BY tax_id, document_type, repartition_type""")
     records = env.cr.fetchall()
     start = 5001
     for r in records:
-      env.cr.execute("""UPDATE account_tax_repartition_line SET id=%s WHERE id=%s""" % (start, r[0]))
-      start += 1
+        env.cr.execute("""UPDATE account_tax_repartition_line SET id=%s WHERE id=%s""" % (start, r[0]))
+        start += 1
     model = "account.tax.repartition.line"
     records = (
         env[model]
@@ -299,7 +299,7 @@ def _post_init_marin(env):
 
     tools.convert.convert_file(env, "marin", "data/project.project.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/project.task.type.csv", None, mode="init", kind="data")
-    
+
     tools.convert.convert_file(env, "marin", "data/res.company.csv", None, mode="init", kind="data")
 
     env.cr.execute(
