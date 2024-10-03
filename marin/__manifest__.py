@@ -42,7 +42,7 @@
         "hr_payroll_expense",
         "hr_expense_extract",
         "documents_hr_payroll",
-        # "l10n_mx_edi_payslip",
+        "l10n_mx_edi_payslip",
         "account_3way_match",
         "account_budget",
         "purchase_requisition_stock",

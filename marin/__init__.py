@@ -157,9 +157,9 @@ def _post_init_marin(env):
         """
     )
 
-    # tools.convert.convert_file(env, "marin", "data/stock.picking.type.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin", "data/stock.picking.type.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/stock.route.csv", None, mode="init", kind="data")
-    # tools.convert.convert_file(env, "marin", "data/stock.rule.csv", None, mode="init", kind="data")
+#    # tools.convert.convert_file(env, "marin", "data/stock.rule.csv", None, mode="init", kind="data")
 
     tools.convert.convert_file(env, "marin", "data/account.account.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/account.analytic.plan.csv", None, mode="init", kind="data")
@@ -297,40 +297,40 @@ def _post_init_marin(env):
     tools.convert.convert_file(env, "marin", "data/account.analytic.account.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/account.analytic.distribution.model.csv", None, mode="init", kind="data")
 
-    tools.convert.convert_file(env, "marin", "data/project.project.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin", "data/project.task.type.csv", None, mode="init", kind="data")
-
-    tools.convert.convert_file(env, "marin", "data/res.company.csv", None, mode="init", kind="data")
-
-    env.cr.execute(
-        """
-        UPDATE ir_model_data SET noupdate='t' WHERE module='marin' AND model NOT IN(
-            'ir.actions.act_window', 'ir.actions.server', 'ir.cron', 'ir.model', 'ir.model.access', 'ir.model.constraint',
-            'ir.model.fields', 'ir.model.fields.selection', 'ir.property', 'ir.rule', 'ir.ui.menu', 'ir.ui.view',
-            'res.config.settings', 'res.groups'
-        );
-        UPDATE account_account SET deprecated='t' WHERE id<1000;
-        UPDATE account_journal SET active='f' WHERE id<1000;
-        UPDATE account_tax SET active='f' WHERE id<1000;
-
-        UPDATE res_company SET account_purchase_tax_id=NULL;
-        UPDATE res_company SET account_sale_tax_id=NULL;
-        UPDATE res_company SET extract_in_invoice_digitalization_mode='manual_send';
-        UPDATE res_company SET extract_out_invoice_digitalization_mode='manual_send';
-        UPDATE res_company SET recruitment_extract_show_ocr_option_selection='manual_send';
-        UPDATE res_company SET expense_extract_show_ocr_option_selection='manual_send';
-        UPDATE res_company SET product_folder=7;
-        UPDATE res_company SET stock_move_sms_validation='f';
-        UPDATE res_company SET l10n_mx_edi_pac='finkok';
-        UPDATE res_company SET l10n_mx_edi_pac_username='marin.guadarrama@gmail.com';
-        UPDATE res_company SET point_of_sale_update_stock_quantities='real';
-        UPDATE res_company SET quotation_validity_days=7;
-        UPDATE res_company SET portal_confirmation_sign='f';
-        UPDATE res_company SET portal_confirmation_pay='f';
-        UPDATE res_company SET l10n_mx_edi_minimum_wage=248.93;
-        UPDATE res_company SET l10n_mx_edi_uma=108.57;
-        UPDATE res_company SET predict_bill_product='t';
-        UPDATE res_company SET font='Roboto';
-        UPDATE res_company SET layout_background='Geometric';
-        """
-    )
+#    tools.convert.convert_file(env, "marin", "data/project.project.csv", None, mode="init", kind="data")
+#    tools.convert.convert_file(env, "marin", "data/project.task.type.csv", None, mode="init", kind="data")
+#
+#    tools.convert.convert_file(env, "marin", "data/res.company.csv", None, mode="init", kind="data")
+#
+#    env.cr.execute(
+#        """
+#        UPDATE ir_model_data SET noupdate='t' WHERE module='marin' AND model NOT IN(
+#            'ir.actions.act_window', 'ir.actions.server', 'ir.cron', 'ir.model', 'ir.model.access', 'ir.model.constraint',
+#            'ir.model.fields', 'ir.model.fields.selection', 'ir.property', 'ir.rule', 'ir.ui.menu', 'ir.ui.view',
+#            'res.config.settings', 'res.groups'
+#        );
+#        UPDATE account_account SET deprecated='t' WHERE id<1000;
+#        UPDATE account_journal SET active='f' WHERE id<1000;
+#        UPDATE account_tax SET active='f' WHERE id<1000;
+#
+#        UPDATE res_company SET account_purchase_tax_id=NULL;
+#        UPDATE res_company SET account_sale_tax_id=NULL;
+#        UPDATE res_company SET extract_in_invoice_digitalization_mode='manual_send';
+#        UPDATE res_company SET extract_out_invoice_digitalization_mode='manual_send';
+#        UPDATE res_company SET recruitment_extract_show_ocr_option_selection='manual_send';
+#        UPDATE res_company SET expense_extract_show_ocr_option_selection='manual_send';
+#        UPDATE res_company SET product_folder=7;
+#        UPDATE res_company SET stock_move_sms_validation='f';
+#        UPDATE res_company SET l10n_mx_edi_pac='finkok';
+#        UPDATE res_company SET l10n_mx_edi_pac_username='marin.guadarrama@gmail.com';
+#        UPDATE res_company SET point_of_sale_update_stock_quantities='real';
+#        UPDATE res_company SET quotation_validity_days=7;
+#        UPDATE res_company SET portal_confirmation_sign='f';
+#        UPDATE res_company SET portal_confirmation_pay='f';
+#        UPDATE res_company SET l10n_mx_edi_minimum_wage=248.93;
+#        UPDATE res_company SET l10n_mx_edi_uma=108.57;
+#        UPDATE res_company SET predict_bill_product='t';
+#        UPDATE res_company SET font='Roboto';
+#        UPDATE res_company SET layout_background='Geometric';
+#        """
+#    )
