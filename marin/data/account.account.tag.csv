@@ -1,0 +1,3 @@
+"id","name","active","applicability","color","tax_negate","country_id/id"
+"marin.account_account_tag_25","'-DIOT: 0% NO ACREDITABLE","True","Taxes","0","","base.mx"
+"marin.account_account_tag_26","'+DIOT: 0% NO ACREDITABLE","True","Taxes","0","","base.mx"

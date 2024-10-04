@@ -224,7 +224,8 @@ def _post_init_marin(env):
                 }
             )
 
-    # tools.convert.convert_file(env, "marin", "data/account.tax.repartition.line.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin", "data/account.account.tag.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin", "data/account.tax.repartition.line.csv", None, mode="init", kind="data")
 
     env.cr.execute(
         """
