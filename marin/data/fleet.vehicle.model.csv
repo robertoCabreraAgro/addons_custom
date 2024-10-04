@@ -1,53 +1,53 @@
-"id","name","vehicle_type","transmission","default_fuel_type","doors","electric_assistance","active","horsepower","category_id/id","brand_id/id"
-"marin.vehicle_model_101","32-8FG25","Car","Automatic","LPG","0","","True","0","marin.vehicle_model_category_1","fleet.brand_toyota"
-"marin.vehicle_model_102","32-8FG30","Car","Automatic","LPG","0","","True","0","marin.vehicle_model_category_1","fleet.brand_toyota"
-"marin.vehicle_model_103","Acterra","Car","","","0","","True","0","","fleet.brand_mercedes"
-"marin.vehicle_model_104","Aveo","Car","Manual","Gasoline","4","","True","0","marin.vehicle_model_category_7","fleet.brand_chevrolet"
-"marin.vehicle_model_105","Canyon","Car","Automatic","Gasoline","4","","True","0","marin.vehicle_model_category_4","marin.vehicle_brand_gmc"
-"marin.vehicle_model_106","Cascadia","Car","Manual","Diesel","2","","True","0","marin.vehicle_model_category_6","marin.vehicle_brand_freightliner"
-"marin.vehicle_model_107","Cayenne","Car","","","0","","True","0","","fleet.brand_porsche"
-"marin.vehicle_model_108","Chasis cabina","Car","Manual","Diesel","2","","True","0","marin.vehicle_model_category_6","marin.vehicle_brand_international"
-"marin.vehicle_model_109","Chasis cabina","Car","","Diesel","2","","True","0","marin.vehicle_model_category_6","marin.vehicle_brand_hino"
-"marin.vehicle_model_110","Chasis cabina","Car","","Diesel","2","","True","0","","fleet.brand_isuzu"
-"marin.vehicle_model_111","Cheyenne Z71 cabina regular 4x4 gasolina TA","Car","Automatic","Gasoline","2","","True","0","marin.vehicle_model_category_3","fleet.brand_chevrolet"
-"marin.vehicle_model_112","Class GLA","Car","Automatic","Gasoline","4","","True","0","marin.vehicle_model_category_7","fleet.brand_mercedes"
-"marin.vehicle_model_113","Class GLK 300","Car","Automatic","Gasoline","4","","True","0","marin.vehicle_model_category_8","fleet.brand_mercedes"
-"marin.vehicle_model_114","Class GLS","Car","Automatic","Gasoline","4","","True","0","marin.vehicle_model_category_8","fleet.brand_mercedes"
-"marin.vehicle_model_115","Elf300","Car","Manual","Diesel","0","","True","0","marin.vehicle_model_category_5","fleet.brand_isuzu"
-"marin.vehicle_model_116","F-350","Car","Manual","Gasoline","2","","True","0","marin.vehicle_model_category_5","fleet.brand_ford"
-"marin.vehicle_model_117","Frontier doble cabina 4x2 gasolina TM","Car","Manual","Gasoline","4","","True","0","marin.vehicle_model_category_4","fleet.brand_nissan"
-"marin.vehicle_model_118","Hilux cabina regular chasis 4x2 gasolina TM","Car","Manual","Gasoline","0","","True","0","marin.vehicle_model_category_3","fleet.brand_toyota"
-"marin.vehicle_model_119","Hilux doble cabina 4x2 gasolina TM","Car","Manual","Gasoline","4","","True","0","marin.vehicle_model_category_4","fleet.brand_toyota"
-"marin.vehicle_model_120","Hilux doble cabina 4x4 diesel TA","Car","Automatic","Diesel","4","","True","0","marin.vehicle_model_category_4","fleet.brand_toyota"
-"marin.vehicle_model_121","Hilux doble cabina 4x4 diesel TM","Car","Manual","Diesel","4","","True","0","marin.vehicle_model_category_4","fleet.brand_toyota"
-"marin.vehicle_model_122","Hino 500","Car","","Diesel","0","","True","0","marin.vehicle_model_category_5","fleet.brand_toyota"
-"marin.vehicle_model_123","Jetta","Car","Automatic","Gasoline","4","","True","0","marin.vehicle_model_category_7","fleet.brand_volkswagen"
-"marin.vehicle_model_124","L200 doble cabina 4x2 gasolina TM","Car","Manual","Gasoline","4","","True","0","marin.vehicle_model_category_4","fleet.brand_mitsubishi"
-"marin.vehicle_model_125","L200 doble cabina 4x4 diesel TA","Car","Automatic","Diesel","4","","True","0","marin.vehicle_model_category_4","fleet.brand_mitsubishi"
-"marin.vehicle_model_126","Lobo Raptor","Car","","Gasoline","5","","True","0","marin.vehicle_model_category_4","fleet.brand_ford"
-"marin.vehicle_model_127","M2 Rabon","Car","Manual","Diesel","2","","True","0","marin.vehicle_model_category_6","marin.vehicle_brand_freightliner"
-"marin.vehicle_model_128","M2 Torton","Car","","Diesel","2","","True","0","marin.vehicle_model_category_6","marin.vehicle_brand_freightliner"
-"marin.vehicle_model_129","Macan","Car","","Gasoline","5","","True","0","marin.vehicle_model_category_8","fleet.brand_porsche"
-"marin.vehicle_model_130","Maverick","Car","Automatic","Gasoline","2","","True","0","marin.vehicle_model_category_2","marin.vehicle_brand_brp"
-"marin.vehicle_model_131","N35ZDR2","Car","Automatic","Electric","0","","True","0","marin.vehicle_model_category_1","marin.vehicle_brand_hyster"
-"marin.vehicle_model_132","NP300 cabina regular chasis 4x2 diesel TM","Car","Manual","Diesel","2","","True","0","marin.vehicle_model_category_5","fleet.brand_nissan"
-"marin.vehicle_model_133","NP300 cabina regular chasis 4x2 gasolina TM","Car","Manual","Gasoline","0","","True","0","marin.vehicle_model_category_3","fleet.brand_nissan"
-"marin.vehicle_model_134","Outlander","Car","Automatic","Gasoline","0","","True","0","marin.vehicle_model_category_2","marin.vehicle_brand_brp"
-"marin.vehicle_model_135","Patriot","Car","Automatic","Gasoline","4","","True","0","marin.vehicle_model_category_8","fleet.brand_jeep"
-"marin.vehicle_model_136","RAM 400","Car","","","0","","True","0","","fleet.brand_dodge"
-"marin.vehicle_model_137","RAM 700","Car","Manual","Gasoline","2","","True","0","marin.vehicle_model_category_3","fleet.brand_dodge"
-"marin.vehicle_model_138","RAV4","Car","Automatic","Gasoline","4","","True","0","marin.vehicle_model_category_8","fleet.brand_toyota"
-"marin.vehicle_model_139","Saveiro Robust cabina regular","Car","","Gasoline","2","","True","0","marin.vehicle_model_category_3","fleet.brand_volkswagen"
-"marin.vehicle_model_140","Semiremolque/jaula 45 pies","Car","","Diesel","0","","True","0","marin.vehicle_model_category_6","marin.vehicle_brand_trailers"
-"marin.vehicle_model_141","Sentra","Car","Automatic","Gasoline","4","","True","0","marin.vehicle_model_category_7","fleet.brand_nissan"
-"marin.vehicle_model_142","Suburban","Car","Automatic","Gasoline","4","","True","0","marin.vehicle_model_category_8","fleet.brand_chevrolet"
-"marin.vehicle_model_143","Tacoma TRD doble cabina 4x2 gasolina TA","Car","Automatic","Gasoline","4","","True","0","marin.vehicle_model_category_4","fleet.brand_toyota"
-"marin.vehicle_model_144","Tacoma TRD doble cabina 4x4 gasolina TA","Car","Automatic","Gasoline","4","","True","0","marin.vehicle_model_category_4","fleet.brand_toyota"
-"marin.vehicle_model_145","Terrain","Car","Automatic","Gasoline","4","","True","0","marin.vehicle_model_category_8","marin.vehicle_brand_gmc"
-"marin.vehicle_model_146","Tundra","Car","","Gasoline","0","","True","0","marin.vehicle_model_category_4","fleet.brand_toyota"
-"marin.vehicle_model_147","Vento","Car","","","0","","True","0","","fleet.brand_volkswagen"
-"marin.vehicle_model_148","Versa","Car","Automatic","Gasoline","4","","True","0","marin.vehicle_model_category_7","fleet.brand_nissan"
-"marin.vehicle_model_149","Wrangler","Car","","Gasoline","0","","True","0","marin.vehicle_model_category_8","fleet.brand_jeep"
-"marin.vehicle_model_150","X5","Car","Automatic","Gasoline","4","","True","0","marin.vehicle_model_category_8","fleet.brand_bmw"
-"marin.vehicle_model_151","A4","Car","Automatic","Gasoline","4","","True","0","marin.vehicle_model_category_7","fleet.brand_audi"
-"marin.vehicle_model_152","Q5","Car","Automatic","Gasoline","4","","True","0","marin.vehicle_model_category_8","fleet.brand_audi"
+id,name,vehicle_type,transmission,default_fuel_type,doors,electric_assistance,active,horsepower,category_id/id,brand_id/id
+marin.vehicle_model_101,32-8FG25,Car,Automatic,LPG,0,,True,0,marin.vehicle_model_category_1,fleet.brand_toyota
+marin.vehicle_model_102,32-8FG30,Car,Automatic,LPG,0,,True,0,marin.vehicle_model_category_1,fleet.brand_toyota
+marin.vehicle_model_103,A4,Car,Automatic,Gasoline,4,,True,0,marin.vehicle_model_category_7,fleet.brand_audi
+marin.vehicle_model_104,Acterra,Car,Manual,Diesel,0,,True,0,marin.vehicle_model_category_6,fleet.brand_mercedes
+marin.vehicle_model_105,Aveo,Car,Manual,Gasoline,4,,True,0,marin.vehicle_model_category_7,fleet.brand_chevrolet
+marin.vehicle_model_106,Canyon,Car,Automatic,Gasoline,4,,True,0,marin.vehicle_model_category_4,marin.vehicle_brand_gmc
+marin.vehicle_model_107,Cascadia,Car,Manual,Diesel,2,,True,0,marin.vehicle_model_category_6,marin.vehicle_brand_freightliner
+marin.vehicle_model_108,Cayenne,Car,Automatic,Gasoline,0,,True,0,marin.vehicle_model_category_8,fleet.brand_porsche
+marin.vehicle_model_109,Chasis cabina,Car,Manual,Diesel,2,,True,0,marin.vehicle_model_category_6,marin.vehicle_brand_kenworth
+marin.vehicle_model_110,Cheyenne cabina regular 4x4 gasolina TA,Car,Automatic,Gasoline,2,,True,0,marin.vehicle_model_category_3,fleet.brand_chevrolet
+marin.vehicle_model_111,Class GLA,Car,Automatic,Gasoline,4,,True,0,marin.vehicle_model_category_7,fleet.brand_mercedes
+marin.vehicle_model_112,Class GLK 300,Car,Automatic,Gasoline,4,,True,0,marin.vehicle_model_category_8,fleet.brand_mercedes
+marin.vehicle_model_113,Class GLS,Car,Automatic,Gasoline,4,,True,0,marin.vehicle_model_category_8,fleet.brand_mercedes
+marin.vehicle_model_114,Elf300,Car,Manual,Diesel,0,,True,0,marin.vehicle_model_category_5,fleet.brand_isuzu
+marin.vehicle_model_115,F-350,Car,Manual,Gasoline,2,,True,0,marin.vehicle_model_category_5,fleet.brand_ford
+marin.vehicle_model_116,Frontier doble cabina 4x2 gasolina TM,Car,Manual,Gasoline,4,,True,0,marin.vehicle_model_category_4,fleet.brand_nissan
+marin.vehicle_model_117,Hilux cabina regular chasis 4x2 gasolina TM,Car,Manual,Gasoline,2,,True,0,marin.vehicle_model_category_3,fleet.brand_toyota
+marin.vehicle_model_118,Hilux doble cabina 4x2 gasolina TM,Car,Manual,Gasoline,4,,True,0,marin.vehicle_model_category_4,fleet.brand_toyota
+marin.vehicle_model_119,Hilux doble cabina 4x4 diesel TA,Car,Automatic,Diesel,4,,True,0,marin.vehicle_model_category_4,fleet.brand_toyota
+marin.vehicle_model_120,Hilux doble cabina 4x4 diesel TA MHEV,Car,Automatic,Diesel,4,,True,0,marin.vehicle_model_category_4,fleet.brand_toyota
+marin.vehicle_model_121,Hilux doble cabina 4x4 diesel TM,Car,Manual,Diesel,4,,True,0,marin.vehicle_model_category_4,fleet.brand_toyota
+marin.vehicle_model_122,Hino 500,Car,Manual,Diesel,0,,True,0,marin.vehicle_model_category_5,marin.vehicle_brand_hino
+marin.vehicle_model_123,Jetta,Car,Automatic,Gasoline,4,,True,0,marin.vehicle_model_category_7,fleet.brand_volkswagen
+marin.vehicle_model_124,L200 doble cabina 4x2 gasolina TM,Car,Manual,Gasoline,4,,True,0,marin.vehicle_model_category_4,fleet.brand_mitsubishi
+marin.vehicle_model_125,L200 doble cabina 4x4 diesel TA,Car,Automatic,Diesel,4,,True,0,marin.vehicle_model_category_4,fleet.brand_mitsubishi
+marin.vehicle_model_126,Lobo Raptor,Car,Automatic,Gasoline,5,,True,0,marin.vehicle_model_category_4,fleet.brand_ford
+marin.vehicle_model_127,M2 Rabon,Car,Manual,Diesel,2,,True,0,marin.vehicle_model_category_6,marin.vehicle_brand_freightliner
+marin.vehicle_model_128,M2 Torton,Car,Manual,Diesel,2,,True,0,marin.vehicle_model_category_6,marin.vehicle_brand_freightliner
+marin.vehicle_model_129,Macan,Car,Automatic,Gasoline,5,,True,0,marin.vehicle_model_category_8,fleet.brand_porsche
+marin.vehicle_model_130,Maverick,Car,Automatic,Gasoline,2,,True,0,marin.vehicle_model_category_2,marin.vehicle_brand_brp
+marin.vehicle_model_131,N35ZDR2,Car,Automatic,Electric,0,,True,0,marin.vehicle_model_category_1,marin.vehicle_brand_hyster
+marin.vehicle_model_132,NP300 cabina regular chasis 4x2 diesel TM,Car,Manual,Diesel,2,,True,0,marin.vehicle_model_category_5,fleet.brand_nissan
+marin.vehicle_model_133,NP300 cabina regular chasis 4x2 gasolina TM,Car,Manual,Gasoline,0,,True,0,marin.vehicle_model_category_3,fleet.brand_nissan
+marin.vehicle_model_134,Outlander,Car,Automatic,Gasoline,0,,True,0,marin.vehicle_model_category_2,marin.vehicle_brand_brp
+marin.vehicle_model_135,Patriot,Car,Automatic,Gasoline,4,,True,0,marin.vehicle_model_category_8,fleet.brand_jeep
+marin.vehicle_model_136,Q5,Car,Automatic,Gasoline,4,,True,0,marin.vehicle_model_category_8,fleet.brand_audi
+marin.vehicle_model_137,RAM 400,Car,Manual,Gasoline,0,,True,0,marin.vehicle_model_category_5,fleet.brand_dodge
+marin.vehicle_model_138,RAM 700 cabina regular,Car,Manual,Gasoline,2,,True,0,marin.vehicle_model_category_3,fleet.brand_dodge
+marin.vehicle_model_139,RAV4,Car,Automatic,Gasoline,4,,True,0,marin.vehicle_model_category_8,fleet.brand_toyota
+marin.vehicle_model_140,Saveiro Robust cabina regular,Car,Manual,Gasoline,2,,True,0,marin.vehicle_model_category_3,fleet.brand_volkswagen
+marin.vehicle_model_141,Semiremolque/jaula 45 pies,Car,,Gasoline,0,,True,0,marin.vehicle_model_category_6,marin.vehicle_brand_trailers
+marin.vehicle_model_142,Sentra,Car,Automatic,Gasoline,4,,True,0,marin.vehicle_model_category_7,fleet.brand_nissan
+marin.vehicle_model_143,Sierra doble cabina,Car,Automatic,Gasoline,4,,True,0,marin.vehicle_model_category_4,marin.vehicle_brand_gmc
+marin.vehicle_model_144,Suburban,Car,Automatic,Gasoline,4,,True,0,marin.vehicle_model_category_8,fleet.brand_chevrolet
+marin.vehicle_model_145,Tacoma TRD doble cabina 4x2 gasolina TA,Car,Automatic,Gasoline,4,,True,0,marin.vehicle_model_category_4,fleet.brand_toyota
+marin.vehicle_model_146,Tacoma TRD doble cabina 4x4 gasolina TA,Car,Automatic,Gasoline,4,,True,0,marin.vehicle_model_category_4,fleet.brand_toyota
+marin.vehicle_model_147,Terrain,Car,Automatic,Gasoline,4,,True,0,marin.vehicle_model_category_8,marin.vehicle_brand_gmc
+marin.vehicle_model_148,Tundra doble cabina,Car,Automatic,Gasoline,0,,True,0,marin.vehicle_model_category_4,fleet.brand_toyota
+marin.vehicle_model_149,Vento,Car,Manual,Gasoline,0,,True,0,marin.vehicle_model_category_7,fleet.brand_volkswagen
+marin.vehicle_model_150,Versa,Car,Automatic,Gasoline,4,,True,0,marin.vehicle_model_category_7,fleet.brand_nissan
+marin.vehicle_model_151,Wrangler,Car,Automatic,Gasoline,0,,True,0,marin.vehicle_model_category_8,fleet.brand_jeep
+marin.vehicle_model_152,X5,Car,Automatic,Gasoline,4,,True,0,marin.vehicle_model_category_8,fleet.brand_bmw
