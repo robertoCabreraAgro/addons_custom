@@ -404,7 +404,7 @@
         <field name="name">Sale orders</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">sale.order</field>
-        <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
+        <field name="view_mode">list,kanban,form,calendar,pivot,graph,activity</field>
         <field name="view_id" ref="view_sale_order_tree_marin" />
         <field name="search_view_id" ref="view_sales_order_filter_marin" />
         <field name="context">{}</field>
@@ -421,7 +421,7 @@
     <record id="action_quotation_new" model="ir.actions.act_window">
         <field name="name">Quotation</field>
         <field name="res_model">sale.order</field>
-        <field name="view_mode">form,tree,graph</field>
+        <field name="view_mode">form,list,graph</field>
         <field name="domain">[('opportunity_id', '=', active_id)]</field>
         <field name="context">{'search_default_opportunity_id': active_id, 'default_opportunity_id': active_id}</field>
     </record>

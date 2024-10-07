@@ -159,7 +159,7 @@ def _post_init_marin(env):
 
     tools.convert.convert_file(env, "marin", "data/stock.picking.type.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/stock.route.csv", None, mode="init", kind="data")
-#    # tools.convert.convert_file(env, "marin", "data/stock.rule.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin", "data/stock.rule.csv", None, mode="init", kind="data")
 
     tools.convert.convert_file(env, "marin", "data/account.account.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/account.analytic.plan.csv", None, mode="init", kind="data")
@@ -298,11 +298,11 @@ def _post_init_marin(env):
     tools.convert.convert_file(env, "marin", "data/account.analytic.account.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin", "data/account.analytic.distribution.model.csv", None, mode="init", kind="data")
 
-#    tools.convert.convert_file(env, "marin", "data/project.project.csv", None, mode="init", kind="data")
-#    tools.convert.convert_file(env, "marin", "data/project.task.type.csv", None, mode="init", kind="data")
-#
-#    tools.convert.convert_file(env, "marin", "data/res.company.csv", None, mode="init", kind="data")
-#
+    tools.convert.convert_file(env, "marin", "data/project.project.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin", "data/project.task.type.csv", None, mode="init", kind="data")
+
+    tools.convert.convert_file(env, "marin", "data/res.company.csv", None, mode="init", kind="data")
+
 #    env.cr.execute(
 #        """
 #        UPDATE ir_model_data SET noupdate='t' WHERE module='marin' AND model NOT IN(

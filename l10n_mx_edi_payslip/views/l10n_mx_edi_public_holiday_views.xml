@@ -47,7 +47,7 @@
     <record id="l10n_mx_edi_public_holiday_action" model="ir.actions.act_window">
         <field name="name">Public Time Off</field>
         <field name="res_model">l10n_mx_edi.public.holiday</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
 
     <menuitem

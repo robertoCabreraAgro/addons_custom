@@ -190,13 +190,13 @@
     <record id="action_hr_employee_loan_method" model="ir.actions.act_window">
         <field name="name">Loan</field>
         <field name="res_model">hr.employee.loan</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
 
     <record id="act_hr_employee_loan_list" model="ir.actions.act_window">
         <field name="res_model">hr.employee.loan</field>
         <field name="name">Loans</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="context">{'search_default_employee_id': [active_id], 'default_employee_id': active_id}</field>
     </record>
 

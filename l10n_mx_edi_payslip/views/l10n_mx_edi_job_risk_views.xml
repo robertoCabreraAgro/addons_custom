@@ -38,7 +38,7 @@
     <record id="l10n_mx_edi_job_risk_action" model="ir.actions.act_window">
         <field name="name">Job Risk</field>
         <field name="res_model">l10n_mx_edi.job.risk</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
 
     <menuitem

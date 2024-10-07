@@ -47,7 +47,7 @@
     <record id="l10n_mx_edi_employer_registration_action" model="ir.actions.act_window">
         <field name="name">Employer Registration</field>
         <field name="res_model">l10n_mx_edi.employer.registration</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
 
     <menuitem

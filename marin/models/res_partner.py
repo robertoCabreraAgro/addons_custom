@@ -132,6 +132,10 @@ class ResPartner(models.Model):
         partners = self.search([("birthdate", "!=", False)])
         partners._compute_age_range_id()
 
+    def _compute_available_debt_limits(self):
+        for partner in self:
+            partner.credit_limit_available = partner.credit_limit - partner.credit
+
     # New method inspired by the one in account.move
     def _build_credit_warning_message(self, future_credit, currency):
         msg = _(

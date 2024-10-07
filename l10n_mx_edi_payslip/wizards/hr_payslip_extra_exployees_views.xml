@@ -22,7 +22,7 @@
     <record id="hr_payslip_extra_employees_action" model="ir.actions.act_window">
         <field name="name">Assign Employees</field>
         <field name="res_model">hr.payslip.extra.employees</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="view_id" ref="hr_payslip_extra_employees_view_form" />
         <field name="target">new</field>
     </record>

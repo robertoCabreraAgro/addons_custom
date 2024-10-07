@@ -4,14 +4,13 @@
     <record id="documents_control_folder" model="documents.document" forcecreate="0">
         <field name="name">Control</field>
         <field name="type">folder</field>
-        <field name="folder_id" ref="documents.documents_internal_folder" />
+        <field name="folder_id" ref="documents.document_internal_folder" />
     </record>
 
     <record id="documents_credentials_folder" model="documents.document" forcecreate="0">
         <field name="name">Credentials and passwords</field>
         <field name="type">folder</field>
-        <field name="folder_id" ref="documents.documents_internal_folder" />
-        <field name="group_ids" eval="[Command.link(ref('group_documents_password_manager'))]" />
+        <field name="folder_id" ref="documents.document_internal_folder" />
     </record>
 
     <!-- Folders -->
@@ -57,54 +56,36 @@
     <record id="documents_bank_statements_folder" model="documents.document" forcecreate="0">
         <field name="name">Bank Statements</field>
         <field name="type">folder</field>
-        <field name="folder_id" ref="documents.documents_finance_folder" />
-        <field name="group_ids" eval="[
-            Command.link(ref('account.group_account_user')),
-        ]" />
+        <field name="folder_id" ref="documents.document_finance_folder" />
     </record>
 
     <record id="documents_payment_receipts_folder" model="documents.document" forcecreate="0">
         <field name="name">Payment Receipts</field>
         <field name="type">folder</field>
-        <field name="folder_id" ref="documents.documents_finance_folder" />
-        <field name="group_ids" eval="[
-            Command.link(ref('account.group_account_user')),
-        ]" />
+        <field name="folder_id" ref="documents.document_finance_folder" />
     </record>
 
     <record id="documents_sat_folder" model="documents.document" forcecreate="0">
         <field name="name">SAT</field>
         <field name="type">folder</field>
-        <field name="folder_id" ref="documents.documents_finance_folder" />
-        <field name="group_ids" eval="[
-            Command.link(ref('account.group_account_user')),
-        ]" />
+        <field name="folder_id" ref="documents.document_finance_folder" />
     </record>
 
     <record id="documents_edomex_folder" model="documents.document" forcecreate="0">
         <field name="name">EdoMex</field>
         <field name="type">folder</field>
-        <field name="folder_id" ref="documents.documents_finance_folder" />
-        <field name="group_ids" eval="[
-            Command.link(ref('account.group_account_user')),
-        ]" />
+        <field name="folder_id" ref="documents.document_finance_folder" />
     </record>
 
     <record id="documents_partners_ledger_folder" model="documents.document" forcecreate="0">
         <field name="name">Partner Ledger</field>
         <field name="type">folder</field>
-        <field name="folder_id" ref="documents.documents_finance_folder" />
-        <field name="group_ids" eval="[
-            Command.link(ref('account.group_account_user')),
-        ]" />
+        <field name="folder_id" ref="documents.document_finance_folder" />
     </record>
 
     <record id="documents_assets_folder" model="documents.document" forcecreate="0">
         <field name="name">Assets</field>
         <field name="type">folder</field>
-        <field name="folder_id" ref="documents.documents_finance_folder" />
-        <field name="group_ids" eval="[
-            Command.link(ref('account.group_account_user')),
-        ]" />
+        <field name="folder_id" ref="documents.document_finance_folder" />
     </record>
 </odoo>

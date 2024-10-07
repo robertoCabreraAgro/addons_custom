@@ -28,7 +28,7 @@
     <record id="create_company_global_time_off_action" model="ir.actions.act_window">
         <field name="name">Create Company Public Time Off</field>
         <field name="res_model">create.company.global.time.off</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="view_id" ref="create_company_global_time_off_view_form" />
         <field name="target">new</field>
     </record>
