@@ -30,7 +30,7 @@
         # "stock_3dpicking",
         "mrp_plm",
         "product_margin",
-        # "account_move_name_sequence",
+        "account_move_name_sequence",
         # "account_move_operation",
         "account_invoice_extract",
         "account_reports_cash_basis",
@@ -61,7 +61,7 @@
         "website_slides",
         # "website_tiledesk",
         # "users_working_hours",
-        # "syngenta_edi",
+        "syngenta_edi",
     ],
     "data": [
         "security/res_groups.xml",

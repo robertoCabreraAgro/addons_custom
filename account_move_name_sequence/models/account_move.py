@@ -14,16 +14,13 @@ class AccountMove(models.Model):
     highest_name = fields.Char(compute=False)
     sequence_prefix = fields.Char(compute=False)
     sequence_number = fields.Integer(compute=False)
-    # made_sequence_hole is not relevant anymore (since based on sequence_prefix/number)
-    # -> compute=False to improve perf and to avoid displaying warning
-    made_sequence_hole = fields.Boolean(compute=False)
 
     _sql_constraints = [
         (
             "name_state_diagonal",
             "CHECK(COALESCE(name, '') NOT IN ('/', '') OR state!='posted')",
             'A move can not be posted with name "/" or empty value\n'
-            "Check the journal sequence, please",
+            "Check the journal sequence",
         ),
     ]
 
