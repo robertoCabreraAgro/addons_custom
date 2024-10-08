@@ -183,7 +183,7 @@ class HrPayslip(models.Model):
         "used on report.",
     )
     l10n_mx_edi_cfdi_certificate_id = fields.Many2one(
-        "l10n_mx_edi.certificate",
+        comodel_name="certificate.certificate",
         string="Certificate",
         compute="_compute_cfdi_values",
         help="The certificate used during the generation of the cfdi.",
@@ -319,7 +319,7 @@ class HrPayslip(models.Model):
             record.l10n_mx_edi_cfdi_supplier_rfc = tree.Emisor.get("Rfc", tree.Emisor.get("rfc"))
             record.l10n_mx_edi_cfdi_customer_rfc = tree.Receptor.get("Rfc", tree.Receptor.get("rfc"))
             record.l10n_mx_edi_cfdi_certificate_id = (
-                self.env["l10n_mx_edi.certificate"]
+                self.env["certificate.certificate"]
                 .sudo()
                 .search([("serial_number", "=", tree.get("NoCertificado", tree.get("noCertificado")))], limit=1)
             )
