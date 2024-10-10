@@ -6,4 +6,3 @@ from . import l10n_mx_edi_esignature
 from . import l10n_mx_edi_session
 from . import res_company
 from . import res_config_settings
-from . import documents_workflow_rule

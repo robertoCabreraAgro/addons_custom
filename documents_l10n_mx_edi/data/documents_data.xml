@@ -9,13 +9,13 @@
     <record id="documents_l10n_mx_edi_folder_received" model="documents.document" forcecreate="0">
         <field name="name">Received</field>
         <field name="type">folder</field>
-        <field name="parent_folder_id" ref="documents_l10n_mx_edi_folder" />
+        <field name="folder_id" ref="documents_l10n_mx_edi_folder" />
     </record>
 
     <record id="documents_l10n_mx_edi_folder_issued" model="documents.document" forcecreate="0">
         <field name="name">Issued</field>
         <field name="type">folder</field>
-        <field name="parent_folder_id" ref="documents_l10n_mx_edi_folder" />
+        <field name="folder_id" ref="documents_l10n_mx_edi_folder" />
     </record>
 
     <!-- Tags -->
@@ -45,14 +45,6 @@
 
     <record id="documents_l10n_mx_edi_tag_retencion" model="documents.tag">
         <field name="name">Retention</field>
-    </record>
-
-    <record id="documents_l10n_mx_edi_tag_fiscal_year_now" model="documents.tag" forcecreate="0">
-        <field name="name" eval="str(datetime.now().year)" />
-    </record>
-
-    <record id="documents_l10n_mx_edi_tag_fiscal_year_minus_1" model="documents.tag" forcecreate="0">
-        <field name="name" eval="str(datetime.now().year-1)" />
     </record>
 
     <record id="documents_l10n_mx_edi_tag_fiscal_year_minus_2" model="documents.tag" forcecreate="0">
