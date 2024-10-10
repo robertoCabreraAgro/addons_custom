@@ -38,7 +38,7 @@
         "l10n_mx_avoid_reversal_entry",
         "l10n_mx_partner_blocklist",
         "documents_account",
-        # "documents_l10n_mx_edi",
+        "documents_l10n_mx_edi",
         "hr_payroll_expense",
         "hr_expense_extract",
         "documents_hr_payroll",
