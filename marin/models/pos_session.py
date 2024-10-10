@@ -101,7 +101,7 @@ class PosSession(models.Model):
         return {
             "type": "ir.actions.act_window",
             "name": "Cash Transfer Payments",
-            "view_mode": "tree,form",
+            "view_mode": "list,form",
             "res_model": "account.payment",
             "domain": [("id", "in", self.cash_transfer_payment_ids.ids)],
         }

@@ -59,7 +59,7 @@ class HrPayslipInputBatch(models.Model):
         return {
             "type": "ir.actions.act_window",
             "res_model": "hr.payslip.input.batch.detail",
-            "views": [[False, "tree"], [False, "form"]],
+            "views": [[False, "list"], [False, "form"]],
             "domain": [["id", "in", self.detail_ids.ids]],
             "name": "Lines",
         }

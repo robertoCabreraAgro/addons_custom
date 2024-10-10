@@ -25,7 +25,7 @@ class LostReason(models.Model):
     def action_tasks_lost(self):
         return {
             'name': _('Tasks'),
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'domain': [('lost_reason_id', 'in', self.ids)],
             'res_model': 'project.task',
             'type': 'ir.actions.act_window',

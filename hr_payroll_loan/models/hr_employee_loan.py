@@ -196,7 +196,7 @@ class HrEmployeeLoan(models.Model):
         return {
             "name": _("Loan Payslips"),
             "view_type": "form",
-            "view_mode": "tree,form",
+            "view_mode": "list,form",
             "res_model": "hr.payslip",
             "view_id": False,
             "type": "ir.actions.act_window",

@@ -100,7 +100,7 @@
                 </group>
                 <notebook>
                     <page string="Lines" name="document_lines">
-                        <field name="sale_line_ids" mode="tree" readonly="state in ['done', 'cancel']">
+                        <field name="sale_line_ids" mode="list" readonly="state in ['done', 'cancel']">
                             <list string="Sale Lines" editable="bottom" limit="200">
                                 <field name="sequence" widget="handle" />
                                 <field name="agreement_id" column_invisible="True" />

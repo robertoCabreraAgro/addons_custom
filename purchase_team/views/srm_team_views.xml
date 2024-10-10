@@ -238,7 +238,7 @@
                                 context="{
                                     'kanban_view_ref': 'purchase_team.srm_team_member_view_kanban_from_team',
                                     'form_view_ref': 'purchase_team.srm_team_member_view_form_from_team',
-                                    'tree_view_ref': 'purchase_team.srm_team_member_view_tree_from_team',
+                                    'list_view_ref': 'purchase_team.srm_team_member_view_tree_from_team',
                                     'default_srm_team_id': id,
                                 }"
                             />

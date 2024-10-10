@@ -35,7 +35,7 @@ class AccountMove(models.Model):
             "type": "ir.actions.act_window",
             "res_model": "account.move.line",
             "view_mode": "list",
-            "views": [(self.env.ref("account.view_move_line_tree").id, "tree"), (False, "form")],
+            "views": [(self.env.ref("account.view_move_line_tree").id, "list"), (False, "form")],
             "context": {"search_default_group_by_move": True},
             "domain": [("id", "in", self.line_ids.ids)],
         }

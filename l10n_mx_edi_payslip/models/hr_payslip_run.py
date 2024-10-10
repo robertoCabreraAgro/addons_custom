@@ -98,7 +98,7 @@ class HrPayslipRun(models.Model):
             weeks.append((self.date_start + timedelta(days=day)).isocalendar()[1])
         return {
             "name": _("Overtimes"),
-            "view_mode": "tree,form",
+            "view_mode": "list,form",
             "res_model": "hr.payslip.overtime",
             "view_id": False,
             "type": "ir.actions.act_window",
