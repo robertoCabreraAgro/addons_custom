@@ -18,7 +18,6 @@
         "views/documents_views.xml",
         "views/account_move_views.xml",
         "views/account_move_line_views.xml",
-        "views/account_payment_views.xml",
         "views/l10n_mx_edi_esignature_views.xml",
         "wizard/sat_sync_wizard.xml",
         "wizard/mx_edi_to_record_wizard.xml",
