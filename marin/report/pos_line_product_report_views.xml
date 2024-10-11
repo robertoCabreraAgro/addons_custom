@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record model="ir.ui.view" id="view_pos_line_product_report_tree">
+        <field name="name">pos.line.product.report.tree</field>
+        <field name="model">pos.line.product.report</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="config_id" />
+                <field name="product_id" />
+                <field name="quarter" />
+                <field name="total_qty" />
+                <field name="average_real_cost" />
+                <field name="average_sale_price" />
+                <field name="sale_price_total" />
+                <field name="real_margin_value" />
+            </list>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_pos_line_product_report_form">
+        <field name="name">pos.line.product.report.form</field>
+        <field name="model">pos.line.product.report</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                    </div>
+                    <div class="oe_title">
+                        <!-- <label for="name" string="Name" />
+                        <field name="name" /> -->
+                    </div>
+                    <group name="name">
+                        <field name="config_id" />
+                        <field name="product_id" />
+                        <field name="product_categ_id" />
+                    </group>
+                    <notebook>
+                        <page name="values" string="Values">
+                            <group>
+                                <group string="Totals">
+                                    <field name="total_qty" />
+                                    <field name="sale_price_total" />
+                                    <field name="cost_purchase_total" />
+                                    <field name="real_margin_value" />
+                                    <field name="average_real_cost" />
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_pos_line_product_report_pivot">
+        <field name="name">pos.line.product.report.pivot</field>
+        <field name="model">pos.line.product.report</field>
+        <field name="arch" type="xml">
+            <pivot>
+                <field name="total_qty" type="measure" />
+                <field name="average_real_cost" type="measure" />
+                <field name="average_sale_price" type="measure" />
+                <field name="sale_price_total" type="measure" />
+                <field name="real_margin_value" type="measure" />
+            </pivot>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_pos_line_product_report_search_view">
+        <field name="name">pos.line.product.report.search.view</field>
+        <field name="model">pos.line.product.report</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="config_id" />
+                <field name="product_id" />
+                <field name="product_categ_id" />
+                <group expand="0" string="Group By">
+                    <filter name="group_by_config_id" string="Terminal" context="{'group_by':'config_id'}" />
+                    <filter name="group_by_product" string="Product" context="{'group_by':'product_id'}" />
+                    <filter
+                        name="group_by_product_categ"
+                        string="Product Category"
+                        context="{'group_by':'product_categ_id'}"
+                    />
+                    <filter
+                        name="group_by_quarter"
+                        string="Quarter"
+                        context="{'group_by':'quarter_str'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_pos_line_product_report" model="ir.actions.act_window">
+        <field name="name">PoS Report</field>
+        <field name="res_model">pos.line.product.report</field>
+        <field name="view_mode">list,form,pivot</field>
+    </record>
+
+    <menuitem
+        id="menu_pos_line_product_report"
+        name="PoS Report"
+        parent="point_of_sale.menu_point_rep"
+        groups="point_of_sale.group_pos_manager"
+        action="action_pos_line_product_report"
+    />
+
+</odoo>

@@ -27,3 +27,10 @@ access_account_payment_pos_cash_transfer,access.account.payment.pos.cash.transfe
 access_stock_quant_lot_wizard,access.stock.quant.lot.wizard,model_stock_quant_lot,marin.group_stock_inventory_adjustment_lot,1,1,1,1
 access_project_task_lost_reason_manager,project.task.lost.reason.manager,model_project_task_lost_reason,project.group_project_manager,1,1,1,1
 access_project_task_lost_reason_user,project.task.lost.reason.user,model_project_task_lost_reason,base.group_user,1,0,0,0
+access_invoice_line_in_report,access.invoice.line.in.report,model_invoice_line_in_report,account.group_account_invoice,1,0,0,0
+access_invoice_line_out_report,access.invoice.line.out.report,model_invoice_line_out_report,account.group_account_invoice,1,0,0,0
+access_invoice_line_out_team_report,access.invoice.line.out.team.report,model_invoice_line_out_team_report,account.group_account_invoice,1,0,0,0
+access_invoice_line_out_team_yearly_report,access.invoice.line.out.team.yearly.report,model_invoice_line_out_team_yearly_report,account.group_account_invoice,1,0,0,0
+access_pos_line_report,access.pos.line.report,model_pos_line_report,account.group_account_invoice,1,0,0,0
+access_pos_line_product_report,access.pos.line.product.report,model_pos_line_product_report,account.group_account_invoice,1,0,0,0
+access_stock_need_report,access.stock.need.report,model_stock_need_report,account.group_account_invoice,1,0,0,0
