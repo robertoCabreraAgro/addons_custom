@@ -7,6 +7,7 @@ from odoo.exceptions import UserError
 class Picking(models.Model):
     _inherit = "stock.picking"
 
+
     # New fields
     show_purchase_lines = fields.Boolean(compute="_compute_show_purchase_lines")
     show_sale_lines = fields.Boolean(compute="_compute_show_sale_lines")
@@ -15,6 +16,7 @@ class Picking(models.Model):
     # Security
     show_mark_as_todo = fields.Boolean(compute="_compute_custom_permissions")
     show_validate = fields.Boolean(compute="_compute_custom_permissions")
+
 
     def _prepare_compute_custom_permissions(self):
         mark_as_todo = (
@@ -47,6 +49,18 @@ class Picking(models.Model):
         for rec in self:
             to_from_customer = rec.location_dest_id.usage == "customer" or rec.location_id.usage == "customer"
             rec.show_sale_lines = bool(rec.sale_id and to_from_customer)
+
+    @api.depends("state")
+    def _compute_waiting_warning(self):
+        for picking in self:
+            picking.waiting_warning = (
+                _(
+                    "All products could not be reserved. Click on the 'Check Availability' button to try to "
+                    "reserve products."
+                )
+                if picking.state == "confirmed"
+                else ""
+            )
 
     def action_view_purchase_order(self):
         self.ensure_one()
@@ -87,7 +101,9 @@ class Picking(models.Model):
         invalid_pickings = self.filtered(lambda pick: pick.state != "done")
         if invalid_pickings:
             picking_names = "\n".join(picking.name for picking in invalid_pickings)
-            raise UserError(_("Following pickings are not valid to print their delivery slip: \n%s", picking_names))
+            raise UserError(
+                _("Following pickings are not valid to print their delivery slip: \n%s", picking_names)
+            )
         return True
 
     @api.model
@@ -100,7 +116,9 @@ class Picking(models.Model):
             lambda pick: pick.state != "assigned"
             and not (
                 pick.state == "confirmed"
-                and pick.move_ids.filtered(lambda sm: sm.state in ["partially_available", "assigned"])
+                and pick.move_ids.filtered(
+                    lambda sm: sm.state in ["partially_available", "assigned"]
+                )
             )
         )
         if invalid_pickings:
@@ -114,15 +132,3 @@ class Picking(models.Model):
     def _print_picking_operation(self):
         self._validate_picking_operation()
         return self.env.ref("stock.action_report_picking").report_action(self)
-
-    @api.depends("state")
-    def _compute_waiting_warning(self):
-        for picking in self:
-            picking.waiting_warning = (
-                _(
-                    "All products could not be reserved. Click on the 'Check Availability' button to try to "
-                    "reserve products."
-                )
-                if picking.state == "confirmed"
-                else ""
-            )

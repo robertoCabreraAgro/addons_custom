@@ -6,12 +6,14 @@ from odoo.tools.float_utils import float_compare
 class StockQuant(models.Model):
     _inherit = "stock.quant"
 
+
     # Extend core fields
     product_categ_id = fields.Many2one(store=True, readonly=True)
     warehouse_id = fields.Many2one(store=True, readonly=True)
 
     # New fields
     removal_priority = fields.Integer(related="location_id.removal_priority", store=True)
+
 
     def _apply_inventory_group_validate(self):
         if not self.env.user.has_group("marin.group_stock_inventory_adjustment"):

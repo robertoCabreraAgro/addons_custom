@@ -5,19 +5,6 @@ from odoo.exceptions import UserError, ValidationError
 class StockPickingTypeInherit(models.Model):
     _inherit = "stock.picking.type"
 
-    # This is a bug fix
-    @api.constrains("active")
-    def _check_active(self):
-        for picking_type in self:
-            pos_config = self.env["pos.config"].search([("picking_type_id", "=", picking_type.id)], limit=1)
-            if not picking_type.active and pos_config:
-                raise ValidationError(
-                    _(
-                        "You cannot archive '%s' as it is used by a POS configuration '%s'.",
-                        picking_type.name,
-                        pos_config.name,
-                    )
-                )
 
     # Add search
     count_picking_ready = fields.Integer(search="_search_count_picking_ready")
@@ -58,6 +45,21 @@ class StockPickingTypeInherit(models.Model):
         "Users can validate",
         help="Users that can validate pickings of this type of operation.",
     )
+
+
+    # This is a bug fix
+    @api.constrains("active")
+    def _check_active(self):
+        for picking_type in self:
+            pos_config = self.env["pos.config"].search([("picking_type_id", "=", picking_type.id)], limit=1)
+            if not picking_type.active and pos_config:
+                raise ValidationError(
+                    _(
+                        "You cannot archive '%s' as it is used by a POS configuration '%s'.",
+                        picking_type.name,
+                        pos_config.name,
+                    )
+                )
 
     def _search_count_picking_ready(self, operator, value):
         if operator not in ["=", "!="] or not isinstance(value, bool):
