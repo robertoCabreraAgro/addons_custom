@@ -63,7 +63,8 @@
                 <attribute name="readonly">not user_sale_manager</attribute>
             </xpath>
             <xpath expr="//page[@name='sales_purchases']//field[@name='user_id']" position="after">
-                <field name="social_style_color" />
+                <field name="team_id" readonly="not user_sale_manager" />
+                <field name="social_style_color" readonly="not user_sale_manager" />
             </xpath>
             <xpath expr="//page[@name='sales_purchases']//group[@name='purchase']" position="attributes">
                 <attribute name="groups">marin.group_purchase_readonly</attribute>
@@ -74,6 +75,17 @@
             </xpath>-->
             <xpath expr="//page[@name='sales_purchases']//field[@name='industry_id']" position="after">
                 <field name="b2x" />
+            </xpath>
+<!--             <xpath expr="//page[@name='accounting']" position="attributes">
+                <attribute name="groups">marin.group_sale_readonly</attribute>
+            </xpath>
+ -->            <xpath expr="//page[@name='accounting']//field[@name='property_account_receivable_id']" position="attributes">
+                <attribute name="required">False</attribute>
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+            <xpath expr="//page[@name='accounting']//field[@name='property_account_payable_id']" position="attributes">
+                <attribute name="required">False</attribute>
+                <attribute name="options">{'no_create': True}</attribute>
             </xpath>
             <xpath expr="//page[@name='internal_notes']" position="before">
                 <page
