@@ -74,13 +74,13 @@ class ResPartner(models.Model):
         ],
         "Social style color"
     )
-    team_id = fields.Many2one(
-        'crm.team',
-        'Sales Team',
+    # team_id = fields.Many2one(
+    #     'crm.team',
+    #     'Sales Team',
     #     compute='_compute_team_id', store=True, precompute=True,  # avoid queries post-create
-        readonly=False,
-        ondelete='set null',
-    )
+    #     readonly=False,
+    #     ondelete='set null',
+    # )
 
     def _prepare_compute_group(self):
         return {
