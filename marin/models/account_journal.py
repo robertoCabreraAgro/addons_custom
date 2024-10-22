@@ -9,8 +9,10 @@ class AccountJournalInherit(models.Model):
         "account.account",
         "Default Receivable Account",
         check_company=True,
-        domain="""[("deprecated", "=", False),
-                   ("account_type", "=", "asset_receivable")]""",
+        domain=[
+            ("deprecated", "=", False),
+            ("account_type", "=", "asset_receivable")
+        ],
         copy=False,
         ondelete="restrict",
         help="It acts as a default account for receivable amount instead of the Company's default",
@@ -19,8 +21,10 @@ class AccountJournalInherit(models.Model):
         "account.account",
         "Default Payable Account",
         check_company=True,
-        domain="""[("deprecated", "=", False),
-                   ("account_type", "=", "liability_payable")]""",
+        domain=[
+            ("deprecated", "=", False),
+            ("account_type", "=", "liability_payable")
+        ],
         copy=False,
         ondelete="restrict",
         help="It acts as a default account for payable amount instead of the Company's default",
@@ -29,8 +33,10 @@ class AccountJournalInherit(models.Model):
         "account.account",
         "Default Refund Account",
         check_company=True,
-        domain="""[("deprecated", "=", False),
-                   ("account_type", "in", ("expense", "expense_direct_cost", "income", "income_other"))]""",
+        domain=[
+            ("deprecated", "=", False),
+            ("account_type", "in", ("expense", "expense_direct_cost", "income", "income_other"))
+        ],
         copy=False,
         ondelete="restrict",
         help="It acts as a default account for refunds",

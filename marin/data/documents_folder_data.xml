@@ -88,4 +88,9 @@
         <field name="type">folder</field>
         <field name="folder_id" ref="documents.document_finance_folder" />
     </record>
+
+    <record id="documents_partner_folder" model="documents.document" forcecreate="0">
+        <field name="name">Partners</field>
+        <field name="type">folder</field>
+    </record>
 </odoo>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo noupdate="1">
-    <function model="ir.config_parameter" name="set_param" eval="('web.web_app_name', 'Xiuman Agro')" />
+    <function model="ir.config_parameter" name="set_param" eval="('web.web_app_name', 'Agro Marin')" />
     <function model="ir.config_parameter" name="set_param" eval="('auth_signup.invitation_scope', 'b2b')" />
     <function model="ir.config_parameter" name="set_param" eval="('auth_signup.reset_password', 'False')" />
     <function model="ir.config_parameter" name="set_param" eval="('base_setup.default_user_rights', 'True')" />

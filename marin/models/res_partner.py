@@ -7,22 +7,22 @@ from odoo.tools.misc import formatLang
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
-    # def _prepare_partner_category_domain(self):
-    #     parents = []
-    #     if self.env.user.has_group("account.group_account_basic"):
-    #         parents.append(self.env.ref("marin.partner_category_management").id)
-    #     if self.env.user.has_group("sales_team.group_sale_manager"):
-    #         parents.append(self.env.ref("marin.partner_category_commercial").id)
-    #     if self.env.user.has_group("marin.group_security_compliance"):
-    #         parents.append(self.env.ref("marin.partner_category_security").id)
-    #     if self.env.user.has_group("purchase.group_purchase_manager"):
-    #         parents.append(self.env.ref("marin.partner_category_purchase").id)
-    #     if not parents:
-    #         return [("id", "=", False)]
-    #     return [("parent_id", "!=", False), ("parent_id", "in", parents)]
+    def _prepare_partner_category_domain(self):
+        parents = []
+        if self.env.user.has_group("account.group_account_basic"):
+            parents.append(self.env.ref("marin.partner_category_management").id)
+        if self.env.user.has_group("sales_team.group_sale_manager"):
+            parents.append(self.env.ref("marin.partner_category_commercial").id)
+        if self.env.user.has_group("marin.group_security_compliance"):
+            parents.append(self.env.ref("marin.partner_category_security").id)
+        if self.env.user.has_group("purchase.group_purchase_manager"):
+            parents.append(self.env.ref("marin.partner_category_purchase").id)
+        if not parents:
+            return [("id", "=", False)]
+        return [("parent_id", "!=", False), ("parent_id", "in", parents)]
 
     # Extend core fields
-    # category_id = fields.Many2many(domain=_prepare_partner_category_domain)
+    category_id = fields.Many2many(domain=_prepare_partner_category_domain)
     credit_limit = fields.Float(tracking=True, help="Receivable limit specific to this partner.")
 
     # New fields

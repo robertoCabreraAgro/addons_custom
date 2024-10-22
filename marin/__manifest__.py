@@ -53,6 +53,7 @@
         "account_invoice_margin_sale",
         # "stock_move_location",
         "sale_loyalty_delivery",
+        "sale_commission_margin",
         "sale_renting",
         "pos_sale_margin",
         "pos_hr",
@@ -79,8 +80,10 @@
         "data/res_bank_data.xml",
         "data/documents_folder_data.xml",
         "data/documents_tag_data.xml",
-        "data/documents_partner_data.xml",
         "data/product_removal_data.xml",
+        "data/res.partner.category.csv",
+        "data/uom.category.csv",
+        "data/uom.uom.csv",
         # "report/report_deliveryslip.xml",
         # "report/report_stock_picking_operations.xml",
         # "report/report_invoice.xml",
@@ -130,10 +133,7 @@
         "wizards/sale_order_line_price_history.xml",
         "wizards/stock_quant_lot.xml",
     ],
-    "demo": [
-        "demo/ir_default_data.xml",
-    ],
-    "post_init_hook": "_post_init_marin",
+    "pre_init_hook": "_pre_init_marin",
     "assets": {
         "web.assets_backend": [
             "marin/static/src/widgets/**/*",
