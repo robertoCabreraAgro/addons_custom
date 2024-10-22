@@ -35,7 +35,7 @@
         <field name="model">account.analytic.distribution.model</field>
         <field name="inherit_id" ref="analytic.account_analytic_distribution_model_tree_view" />
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='company_id']" position="before">
+            <xpath expr="//field[@name='partner_category_id']" position="after">
                 <field name="vehicle_id" optional="show" />
             </xpath>
         </field>

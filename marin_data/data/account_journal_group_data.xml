@@ -2,49 +2,49 @@
 <odoo noupdate="1">
     <record id="journal_group_1" model="account.journal.group">
         <field name="name">Not simulated</field>
-        <field name="company_id" ref="marin.company_lmmr" />
+        <field name="company_id" ref="marin_data.company_lmmr" />
         <field name="sequence" eval="10" />
     </record>
 
     <record id="journal_group_2" model="account.journal.group">
         <field name="name">Not fiscal</field>
-        <field name="company_id" ref="marin.company_lmmr" />
+        <field name="company_id" ref="marin_data.company_lmmr" />
         <field name="sequence" eval="11" />
     </record>
 
     <record id="journal_group_3" model="account.journal.group">
         <field name="name">Not simulated</field>
-        <field name="company_id" ref="marin.company_tjgl" />
+        <field name="company_id" ref="marin_data.company_tjgl" />
         <field name="sequence" eval="10" />
     </record>
 
     <record id="journal_group_4" model="account.journal.group">
         <field name="name">Not fiscal</field>
-        <field name="company_id" ref="marin.company_tjgl" />
+        <field name="company_id" ref="marin_data.company_tjgl" />
         <field name="sequence" eval="11" />
     </record>
 
     <record id="journal_group_5" model="account.journal.group">
         <field name="name">Not simulated</field>
-        <field name="company_id" ref="marin.company_lmmg" />
+        <field name="company_id" ref="marin_data.company_lmmg" />
         <field name="sequence" eval="10" />
     </record>
 
     <record id="journal_group_6" model="account.journal.group">
         <field name="name">Not fiscal</field>
-        <field name="company_id" ref="marin.company_lmmg" />
+        <field name="company_id" ref="marin_data.company_lmmg" />
         <field name="sequence" eval="11" />
     </record>
 
     <record id="journal_group_7" model="account.journal.group">
         <field name="name">Not simulated</field>
-        <field name="company_id" ref="marin.company_society" />
+        <field name="company_id" ref="marin_data.company_society" />
         <field name="sequence" eval="10" />
     </record>
 
     <record id="journal_group_8" model="account.journal.group">
         <field name="name">Not fiscal</field>
-        <field name="company_id" ref="marin.company_society" />
+        <field name="company_id" ref="marin_data.company_society" />
         <field name="sequence" eval="11" />
     </record>
 </odoo>

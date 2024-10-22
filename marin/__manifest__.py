@@ -7,7 +7,7 @@
     "website": "https://www.agromarin.mx",
     "license": "OPL-1",
     "category": "Installer",
-    "version": "1.0",
+    "version": "1.1",
     "depends": [
         "date_range",
         "board",

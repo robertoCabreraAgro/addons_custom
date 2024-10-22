@@ -4,7 +4,7 @@
         <field name="name">Standard 45 hours/week</field>
         <field name="tz">America/Mexico_City</field>
         <field name="full_time_required_hours">45</field>
-        <field name="company_id" ref="marin.company_lmmr" />
+        <field name="company_id" ref="marin_data.company_lmmr" />
         <field
             name="attendance_ids"
             eval="[(5, 0, 0),
@@ -28,7 +28,7 @@
         />
     </record>
 
-    <record id="marin.company_lmmr" model="res.company">
+    <record id="marin_data.company_lmmr" model="res.company">
         <field name="resource_calendar_id" ref="resource_calendar_std_45_lmmr" />
     </record>
 
@@ -36,7 +36,7 @@
         <field name="name">Standard 45 hours/week</field>
         <field name="tz">America/Phoenix</field>
         <field name="full_time_required_hours">45</field>
-        <field name="company_id" ref="marin.company_lmmr" />
+        <field name="company_id" ref="marin_data.company_lmmr" />
         <field
             name="attendance_ids"
             eval="[(5, 0, 0),
@@ -64,7 +64,7 @@
         <field name="name">Standard 45 hours/week</field>
         <field name="tz">America/Mexico_City</field>
         <field name="full_time_required_hours">45</field>
-        <field name="company_id" ref="marin.company_lmmg" />
+        <field name="company_id" ref="marin_data.company_lmmg" />
         <field
             name="attendance_ids"
             eval="[(5, 0, 0),
@@ -88,7 +88,7 @@
         />
     </record>
 
-    <record id="marin.company_lmmg" model="res.company">
+    <record id="marin_data.company_lmmg" model="res.company">
         <field name="resource_calendar_id" ref="resource_calendar_std_45_lmmg" />
     </record>
 
@@ -96,7 +96,7 @@
         <field name="name">Standard 45 hours/week</field>
         <field name="tz">America/Mexico_City</field>
         <field name="full_time_required_hours">45</field>
-        <field name="company_id" ref="marin.company_society" />
+        <field name="company_id" ref="marin_data.company_society" />
         <field
             name="attendance_ids"
             eval="[(5, 0, 0),
@@ -120,7 +120,7 @@
         />
     </record>
 
-    <record id="marin.company_society" model="res.company">
+    <record id="marin_data.company_society" model="res.company">
         <field name="resource_calendar_id" ref="resource_calendar_std_45_xm" />
     </record>
 </odoo>
