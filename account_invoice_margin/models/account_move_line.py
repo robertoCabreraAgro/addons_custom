@@ -4,48 +4,44 @@ from odoo import api, fields, models
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
 
+
     margin = fields.Float(
         digits="Product Price",
-        compute="_compute_margin",
-        store=True,
+        compute="_compute_margin", store=True,
     )
     margin_signed = fields.Float(
         digits="Product Price",
-        compute="_compute_margin",
-        store=True,
+        compute="_compute_margin", store=True,
     )
     margin_percent = fields.Float(
         string="Margin (%)",
-        compute="_compute_margin",
-        store=True,
+        digits="Product Price",
+        compute="_compute_margin", store=True,
         readonly=True
     )
     purchase_price = fields.Float(
         string="Cost",
         digits="Product Price",
-        compute="_compute_purchase_price",
-        store=True,
+        compute="_compute_purchase_price", store=True,
         readonly=False,
     )
 
+
     @api.depends("purchase_price", "price_subtotal")
     def _compute_margin(self):
-        for line in self:
-            if not line.move_id.is_invoice():
-                continue
-            if line.move_id and line.move_id.is_purchase_document():
-                line.update(
-                    {"margin": 0.0, "margin_signed": 0.0, "margin_percent": 0.0}
-                )
-                continue
-            tmp_margin = line.price_subtotal - (line.purchase_price * line.quantity)
-            sign = line.move_id.move_type == "out_refund" and -1 or 1
+        for line in self.filtered(
+            lambda l:
+                l.move_id.is_sale_document()
+                and l.display_type == 'product'
+        ):
+            margin = line.price_subtotal - (line.purchase_price * line.quantity)
+            sign = -1 if line.move_id.move_type == "out_refund" else 1
             line.update(
                 {
-                    "margin": tmp_margin,
-                    "margin_signed": tmp_margin * sign,
+                    "margin": margin,
+                    "margin_signed": margin * sign,
                     "margin_percent": (
-                        tmp_margin / line.price_subtotal * 100.0
+                        margin / line.price_subtotal * 100.0
                         if line.price_subtotal
                         else 0.0
                     ),

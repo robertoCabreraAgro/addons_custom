@@ -4,22 +4,21 @@ from odoo import api, fields, models
 class AccountMove(models.Model):
     _inherit = "account.move"
 
+
     margin = fields.Monetary(
         currency_field="currency_id",
-        compute="_compute_margin",
-        store=True,
+        compute="_compute_margin", store=True,
     )
     margin_signed = fields.Monetary(
         currency_field="currency_id",
-        compute="_compute_margin",
-        store=True,
+        compute="_compute_margin", store=True,
     )
     margin_percent = fields.Float(
         string="Margin (%)",
         digits="Product Price",
-        compute="_compute_margin",
-        store=True,
+        compute="_compute_margin", store=True,
     )
+
 
     def _get_margin_applicable_lines(self):
         self.ensure_one()
