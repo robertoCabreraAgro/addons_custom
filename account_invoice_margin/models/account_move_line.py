@@ -5,6 +5,12 @@ class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
 
 
+    purchase_price = fields.Float(
+        string="Cost",
+        digits="Product Price",
+        compute="_compute_purchase_price", store=True,
+        readonly=False,
+    )
     margin = fields.Float(
         digits="Product Price",
         compute="_compute_margin", store=True,
@@ -19,34 +25,7 @@ class AccountMoveLine(models.Model):
         compute="_compute_margin", store=True,
         readonly=True
     )
-    purchase_price = fields.Float(
-        string="Cost",
-        digits="Product Price",
-        compute="_compute_purchase_price", store=True,
-        readonly=False,
-    )
 
-
-    @api.depends("purchase_price", "price_subtotal")
-    def _compute_margin(self):
-        for line in self.filtered(
-            lambda l:
-                l.move_id.is_sale_document()
-                and l.display_type == 'product'
-        ):
-            margin = line.price_subtotal - (line.purchase_price * line.quantity)
-            sign = -1 if line.move_id.move_type == "out_refund" else 1
-            line.update(
-                {
-                    "margin": margin,
-                    "margin_signed": margin * sign,
-                    "margin_percent": (
-                        margin / line.price_subtotal * 100.0
-                        if line.price_subtotal
-                        else 0.0
-                    ),
-                }
-            )
 
     def _get_purchase_price(self):
         self.ensure_one()
@@ -74,3 +53,24 @@ class AccountMoveLine(models.Model):
                 )
             else:
                 line.purchase_price = 0.0
+
+    @api.depends("purchase_price", "price_subtotal")
+    def _compute_margin(self):
+        for line in self.filtered(
+            lambda l:
+                l.move_id.is_sale_document()
+                and l.display_type == 'product'
+        ):
+            margin = line.price_subtotal - (line.purchase_price * line.quantity)
+            sign = -1 if line.move_id.move_type == "out_refund" else 1
+            line.update(
+                {
+                    "margin": margin,
+                    "margin_signed": margin * sign,
+                    "margin_percent": (
+                        margin / line.price_subtotal * 100.0
+                        if line.price_subtotal
+                        else 0.0
+                    ),
+                }
+            )
