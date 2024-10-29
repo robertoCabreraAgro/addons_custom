@@ -235,7 +235,7 @@ class AccountMove(models.Model):
             move._compute_origin_po_count()
         return True
 
-    # Extend original method
+    # Override original method
     @api.depends("company_currency_id", "move_type", "origin_payment_id", "statement_line_id")
     def _compute_l10n_mx_edi_is_cfdi_needed(self):
         for move in self:
@@ -246,7 +246,7 @@ class AccountMove(models.Model):
                 and (move.move_type in ("out_invoice", "out_refund") or move._l10n_mx_edi_is_cfdi_payment())
             )
 
-    # Extend original method
+    # Override original method
     @api.depends(
         "move_type", "invoice_date_due", "invoice_date", "invoice_payment_term_id", "force_payment_policy_pue"
     )
