@@ -3,6 +3,7 @@ from os.path import splitext
 
 from odoo import _, api, fields, models, Command
 
+
 STATUS = {
     "No Encontrado": "not_found",
     "Cancelado": "cancelled",
@@ -24,6 +25,7 @@ CANCEL_STATUS = {
 
 class Document(models.Model):
     _inherit = "documents.document"
+
 
     l10n_mx_edi_is_cfdi = fields.Boolean(help="Specify if this is a CFDI document.")
     l10n_mx_edi_sat_state = fields.Selection(
@@ -90,15 +92,42 @@ class Document(models.Model):
         help='In case this is a CFDI file, show invoice"s product list',
     )
 
+
     def check_document_already_linked(self):
-        documents_link_record = [d for d in self if d.res_model != "documents.document"]
-        if documents_link_record:
+        if documents_link_record := self.filtered(
+            lambda d: d.res_model != 'documents.document'
+        ):
             return {
-                'warning': {
-                    'title': _("Already linked Documents"),
-                    'documents': [d.name for d in documents_link_record],
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'type': 'warning',
+                    'message': _(
+                        "Already linked Documents: %s",
+                        ", ".join(documents_link_record.mapped('name'))
+                    ),
                 }
             }
+
+    def prepare_action_create_from_cfdi(self):
+        action = {
+            'name': _('MX EDI to record'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'documents.mx_edi_to_record_wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'views': [(False, "form")],
+            "context": {}
+        }
+        return action
+
+    def create_from_cfdi(self):
+        check = self.check_document_already_linked()
+        if check:
+            return check
+        action = self.prepare_action_create_from_cfdi()
+        action.update({"context": {"default_document_ids": self.ids}})
+        return action
 
     def prepare_l10n_mx_edi_common_fields(self, document):
         vals = {}

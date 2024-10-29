@@ -13,12 +13,12 @@
 
     <record id="group_documents_l10n_mx_edi" model="res.groups">
         <field name="name">Access to MX EDI documents</field>
-        <field name="category_id" ref="base.module_category_hidden" />
+        <field name="category_id" ref="base.module_category_usability" />
     </record>
 
     <record id="group_documents_l10n_mx_edi_manager" model="res.groups">
         <field name="name">Access to MX EDI documents Manager</field>
-        <field name="category_id" ref="base.module_category_hidden" />
+        <field name="category_id" ref="base.module_category_usability" />
         <field
             name="implied_ids"
             eval="[

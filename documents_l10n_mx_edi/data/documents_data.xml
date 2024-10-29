@@ -4,18 +4,24 @@
     <record id="documents_l10n_mx_edi_folder" model="documents.document" forcecreate="0">
         <field name="name">EDI Documents</field>
         <field name="type">folder</field>
+        <field name="access_internal">view</field>
+        <field name="is_pinned_folder">True</field>
     </record>
-
+    
     <record id="documents_l10n_mx_edi_folder_received" model="documents.document" forcecreate="0">
         <field name="name">Received</field>
         <field name="type">folder</field>
         <field name="folder_id" ref="documents_l10n_mx_edi_folder" />
+        <field name="access_internal">view</field>
+        <field name="is_pinned_folder">True</field>
     </record>
-
+    
     <record id="documents_l10n_mx_edi_folder_issued" model="documents.document" forcecreate="0">
         <field name="name">Issued</field>
         <field name="type">folder</field>
         <field name="folder_id" ref="documents_l10n_mx_edi_folder" />
+        <field name="access_internal">view</field>
+        <field name="is_pinned_folder">True</field>
     </record>
 
     <!-- Tags -->
