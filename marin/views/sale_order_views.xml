@@ -212,13 +212,6 @@
                     required="state == 'draft'"
                 />
             </xpath>
-            <xpath expr="//page[@name='order_lines']//form//field[@name='price_unit']" position="replace">
-                <label for="price_unit" />
-                <div class="o_row" name="price_unit">
-                    <field name="price_unit" />
-                    <widget name="sale_line_price_history_widget" width="20px" />
-                </div>
-            </xpath>
             <xpath
                 expr="//page/field[@name='order_line']/list/field[@name='product_packaging_id']"
                 position="attributes"
@@ -245,6 +238,7 @@
             <xpath expr="//page/field[@name='order_line']/list/field[@name='price_unit']" position="after">
                 <field name="order_partner_id" column_invisible="1" />
                 <field name="delivery_status" column_invisible="1" />
+                <widget name="sale_line_price_history_widget" width="20px" />
             </xpath>
             <xpath expr="//page[@name='other_information']/group" position="inside">
                 <group
