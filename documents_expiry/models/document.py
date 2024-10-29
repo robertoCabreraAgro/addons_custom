@@ -4,15 +4,23 @@ from odoo import api, fields, models
 class Documents(models.Model):
     _inherit = "documents.document"
 
-    issued_by = fields.Many2one("res.partner", "Issued by", help="The authority that issued this licence")
+
+    issued_by = fields.Many2one(
+        "res.partner",
+        "Issued by",
+        help="The authority that issued this licence",
+    )
     issued_date = fields.Date(help="The date on which this document was issued")
     expiration_date = fields.Date(
         help="The date on which this document will be expired. Leave it blank for non-expiration"
     )
     days_left = fields.Integer(
-        "Days to expire", compute="_compute_days_left", help="The number of days to the expired date"
+        "Days to expire",
+        compute="_compute_days_left",
+        help="The number of days to the expired date"
     )
     expired = fields.Boolean(default=False)
+
 
     @api.depends("expiration_date")
     def _compute_days_left(self):
