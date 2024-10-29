@@ -6,7 +6,12 @@ class SyngentaCommercialAgreement(models.Model):
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _description = "Customer purchase agreements with the distributor to earn benefits"
 
-    company_id = fields.Many2one("res.company", index=True, required=True, default=lambda self: self.env.company.id)
+    company_id = fields.Many2one(
+        "res.company",
+        required=True,
+        default=lambda self: self.env.company.id,
+        index=True,
+    )
     partner_id = fields.Many2one(
         "res.partner",
         "Customer",
@@ -60,9 +65,10 @@ class SyngentaCommercialAgreement(models.Model):
         help="The base percentage of discount that this agreement can asign to the customers purchases.",
     )
     notes = fields.Html(
-        "Terms and Conditions", help="The reach levels with their respective discount must be noted here."
+        "Terms and Conditions",
+        help="The reach levels with their respective discount must be noted here."
     )
-    document_ids = fields.One2many(
+    report_ids = fields.One2many(
         "syngenta.sale.report",
         "agreement_id",
         "Documents",
@@ -77,6 +83,7 @@ class SyngentaCommercialAgreement(models.Model):
     )
     line_count = fields.Integer(compute="_compute_line_count")
 
+
     @api.depends("name", "date_from", "date_to")
     def _compute_display_name(self):
         for agreement in self.sudo():
@@ -85,9 +92,31 @@ class SyngentaCommercialAgreement(models.Model):
                 name = "{} [{} - {}]".format(name, agreement.date_from, agreement.date_to)
             agreement.display_name = name
 
+    @api.depends("report_ids")
+    def _compute_document_count(self):
+        for rec in self:
+            rec.document_count = len(rec.report_ids)
+
+    @api.depends("sale_line_ids")
+    def _compute_line_count(self):
+        for rec in self:
+            rec.line_count = len(rec.sale_line_ids)
+
+    def action_close(self):
+        self.state = "closed"
+
+    def action_new_document(self):
+        self.ensure_one()
+        action = self.env["ir.actions.actions"]._for_xml_id("syngenta_edi.action_syngenta_sale_report")
+        action["views"] = [(self.env.ref("syngenta_edi.view_syngenta_sale_report_form").id, "form")]
+        action["context"] = {
+            "default_agreement_id": self.id,
+        }
+        return action
+
     def action_view_documents(self, documents=False):
         if not documents:
-            documents = self.mapped("document_ids")
+            documents = self.mapped("report_ids")
         action = self.env["ir.actions.actions"]._for_xml_id("syngenta_edi.action_syngenta_sale_report")
         if len(documents) > 1:
             action["domain"] = [("id", "in", documents.ids)]
@@ -110,26 +139,4 @@ class SyngentaCommercialAgreement(models.Model):
             action["domain"] = [("id", "in", lines.ids)]
         else:
             action = {"type": "ir.actions.act_window_close"}
-        return action
-
-    @api.depends("document_ids")
-    def _compute_document_count(self):
-        for rec in self:
-            rec.document_count = len(rec.document_ids)
-
-    @api.depends("sale_line_ids")
-    def _compute_line_count(self):
-        for rec in self:
-            rec.line_count = len(rec.sale_line_ids)
-
-    def action_close(self):
-        self.state = "closed"
-
-    def action_new_document(self):
-        self.ensure_one()
-        action = self.env["ir.actions.actions"]._for_xml_id("syngenta_edi.action_syngenta_sale_report")
-        action["views"] = [(self.env.ref("syngenta_edi.view_syngenta_sale_report_form").id, "form")]
-        action["context"] = {
-            "default_agreement_id": self.id,
-        }
         return action
