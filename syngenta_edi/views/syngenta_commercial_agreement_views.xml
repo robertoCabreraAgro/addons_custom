@@ -39,41 +39,46 @@
             <form string="Syngenta Sale Agreement">
                 <header>
                     <button
-                        name="action_new_document"
-                        string="New Document"
+                        name="action_new_report"
+                        string="New Report"
                         type="object"
                         class="btn-primary"
                         invisible="state == 'closed'"
                     />
-                    <button name="action_close" string="Close" type="object" invisible="state == 'closed'" />
+                    <button
+                        name="action_close"
+                        string="Close"
+                        type="object"
+                        invisible="state == 'closed'"
+                    />
                     <field name="state" widget="statusbar" />
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button
-                            name="action_view_documents"
+                            name="action_view_reports"
                             type="object"
                             class="oe_stat_button"
                             icon="fa-file-text-o"
-                            invisible="document_count == 0"
+                            invisible="count_report == 0"
                         >
-                            <field name="document_count" widget="statinfo" string="Documents" />
+                            <field name="count_report" widget="statinfo" string="Documents" />
                         </button>
                         <button
                             name="action_view_lines"
                             type="object"
                             class="oe_stat_button"
                             icon="fa-list"
-                            invisible="line_count == 0"
+                            invisible="count_line == 0"
                         >
-                            <field name="line_count" widget="statinfo" string="Lines" />
+                            <field name="count_line" widget="statinfo" string="Lines" />
                         </button>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active" />
                     <div class="row justify-content-between position-relative w-100 m-0 mb-2">
                         <div class="oe_title mw-75 ps-0 pe-2">
                             <h1 class="d-flex flex-row align-items-center">
-                                <field name="partner_id" style="font-size: min(4vw, 2.6rem);" placeholder="Partner"/>
+                                <field name="partner_id" style="font-size: min(4vw, 2.6rem);" placeholder="Select Customer"/>
                             </h1>
                             <field name="number" placeholder="Syngenta code" />
                         </div>

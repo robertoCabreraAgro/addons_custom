@@ -7,7 +7,12 @@ class SyngentaStockReportLine(models.Model):
     _description = "Inventory report line send to Syngenta"
 
 
-    company_id = fields.Many2one("res.company", index=True, required=True, default=lambda self: self.env.company.id)
+    company_id = fields.Many2one(
+        "res.company",
+        required=True,
+        default=lambda self: self.env.company.id,
+        index=True,
+    )
     product_id = fields.Many2one(
         "product.product",
         "Product",

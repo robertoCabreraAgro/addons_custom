@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <menuitem
-        name="Syngenta EDI"
         id="menu_syngenta_root"
+        name="Syngenta EDI"
         web_icon="syngenta_edi,static/description/icon.png"
         sequence="135"
         groups="group_syngenta_edi"
@@ -12,7 +12,6 @@
         id="menu_syngenta_sale"
         name="Sale"
         parent="menu_syngenta_root"
-        action="action_syngenta_commercial_agreement"
         sequence="10"
     />
 

@@ -1,7 +1,7 @@
 import logging
-import uuid
 import requests
 from requests.exceptions import ConnectionError as ConnError, RequestException, Timeout
+import uuid
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
@@ -33,10 +33,10 @@ class SyngentaSaleReport(models.Model):
     name = fields.Char(
         string="Document Reference",
         required=True,
-        copy=False,
-        readonly=False,
-        index="trigram",
         default=lambda self: _("New"),
+        readonly=True,
+        copy=False,
+        index="trigram",
     )
     state = fields.Selection(
         [
@@ -63,7 +63,7 @@ class SyngentaSaleReport(models.Model):
     response_error = fields.Char(readonly=True, copy=False)
     response_json = fields.Text(readonly=True, copy=False)
     sent_json = fields.Text(readonly=True, copy=False)
-    sale_line_ids = fields.One2many(
+    report_line_ids = fields.One2many(
         "syngenta.sale.report.line",
         "report_id",
         "Sale Lines",
@@ -101,7 +101,7 @@ class SyngentaSaleReport(models.Model):
             rec.folio = folio
 
     def _get_json_data(self):
-        lines = self.sale_line_ids._get_json_lines()
+        lines = self.report_line_ids._get_json_lines()
         return {
             "clave_Distribuidor": self.company_id.syngenta_customer_code,
             "nombre_distribuidor": self.company_id.name,

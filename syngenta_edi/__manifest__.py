@@ -12,12 +12,9 @@
         "product_manufacturer",
     ],
     "data": [
-        # Security
-        "security/security.xml",
+        "security/res_group_data.xml",
         "security/ir.model.access.csv",
-        # Data
         "data/ir_sequence_data.xml",
-        # Views
         "views/res_company_views.xml",
         "views/syngenta_commercial_agreement_views.xml",
         "views/syngenta_sale_report_views.xml",
