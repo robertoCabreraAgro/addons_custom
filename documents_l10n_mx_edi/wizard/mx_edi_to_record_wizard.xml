@@ -12,18 +12,4 @@
             </form>
         </field>
     </record>
-
-    <record id="mx_edi_to_record_action" model="ir.actions.act_window">
-        <field name="name">Sync with SAT</field>
-        <field name="res_model">documents.mx_edi_to_record_wizard</field>
-        <field name="view_mode">form</field>
-        <field name="view_id" ref="mx_edi_to_record_view_form" />
-        <field name="target">new</field>
-        <field
-            name="groups_id"
-            eval="[
-            (6, 0, [ref('documents_l10n_mx_edi.group_documents_l10n_mx_edi')])
-        ]"
-        />
-    </record>
 </odoo>

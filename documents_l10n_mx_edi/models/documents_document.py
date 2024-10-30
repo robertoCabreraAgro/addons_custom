@@ -73,7 +73,8 @@ class Document(models.Model):
         help="Refers to the status of the cancellation in the SAT system.",
     )
     l10n_mx_edi_stamp_date = fields.Datetime(
-        "CFDI stamp date", compute="_compute_l10n_mx_edi_common_fields", store=True
+        "CFDI stamp date",
+        compute="_compute_l10n_mx_edi_common_fields", store=True
     )
     l10n_mx_edi_cfdi_total_amount = fields.Float(
         "Total Amount",
@@ -87,8 +88,7 @@ class Document(models.Model):
     )
     l10n_mx_edi_product_list = fields.Text(
         "Products",
-        compute="_compute_l10n_mx_edi_common_fields",
-        store=True,
+        compute="_compute_l10n_mx_edi_common_fields", store=True,
         help='In case this is a CFDI file, show invoice"s product list',
     )
 

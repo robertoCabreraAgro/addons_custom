@@ -10,20 +10,4 @@
         <field name="perm_unlink">False</field>
         <field name="domain_force">['|', ('company_id', 'in', company_ids), ('company_id','=', False)]</field>
     </record>
-
-    <record id="group_documents_l10n_mx_edi" model="res.groups">
-        <field name="name">Access to MX EDI documents</field>
-        <field name="category_id" ref="base.module_category_usability" />
-    </record>
-
-    <record id="group_documents_l10n_mx_edi_manager" model="res.groups">
-        <field name="name">Access to MX EDI documents Manager</field>
-        <field name="category_id" ref="base.module_category_usability" />
-        <field
-            name="implied_ids"
-            eval="[
-                (4, ref('documents_l10n_mx_edi.group_documents_l10n_mx_edi')),
-            ]"
-        />
-    </record>
 </odoo>
