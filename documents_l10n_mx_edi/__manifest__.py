@@ -10,9 +10,9 @@
         "l10n_mx_edi",
     ],
     "data": [
-        "security/ir_rule_security.xml",
         "security/res_group_security.xml",
         "security/ir.model.access.csv",
+        "security/ir_rule_security.xml",
         "data/ir_cron_data.xml",
         "data/documents_data.xml",
         "data/ir_actions_server_data.xml",
