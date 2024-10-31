@@ -1,7 +1,35 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<!-- © 2017 Sergio Teruel <sergio.teruel@tecnativa.com>
-     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl-3). -->
 <odoo>
+    <record id="view_invoice_tree" model="ir.ui.view">
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree" />
+        <field name="arch" type="xml">
+            <field name="amount_untaxed_in_currency_signed" position="before">
+                <field
+                    name="margin_signed"
+                    sum="Total"
+                    column_invisible="
+                        context.get('default_move_type') not in (
+                            'out_invoice', 'out_refund', 'out_receipt'
+                        )
+                    "
+                    optional="show"
+                    groups="account_invoice_margin.group_account_invoice_margin_security"
+                />
+                <field
+                    name="margin_percent"
+                    column_invisible="
+                        context.get('default_move_type') not in (
+                            'out_invoice', 'out_refund', 'out_receipt'
+                        )
+                    "
+                    optional="show"
+                    groups="account_invoice_margin.group_account_invoice_margin_security"
+                />
+            </field>
+        </field>
+    </record>
+    
     <record id="view_move_form" model="ir.ui.view">
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form" />
@@ -52,26 +80,6 @@
                 />
                 <field
                     name="margin_percent"
-                    groups="account_invoice_margin.group_account_invoice_margin_security"
-                />
-            </field>
-        </field>
-    </record>
-
-    <record id="view_invoice_tree" model="ir.ui.view">
-        <field name="model">account.move</field>
-        <field name="inherit_id" ref="account.view_invoice_tree" />
-        <field name="arch" type="xml">
-            <field name="amount_untaxed_in_currency_signed" position="before">
-                <field
-                    name="margin_signed"
-                    sum="Total"
-                    optional="show"
-                    groups="account_invoice_margin.group_account_invoice_margin_security"
-                />
-                <field
-                    name="margin_percent"
-                    optional="show"
                     groups="account_invoice_margin.group_account_invoice_margin_security"
                 />
             </field>
