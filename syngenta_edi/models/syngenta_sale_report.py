@@ -101,7 +101,16 @@ class SyngentaSaleReport(models.Model):
             rec.folio = folio
 
     def _get_json_data(self):
-        lines = self.report_line_ids._get_json_lines()
+        lines = []
+        for line in self.report_line_ids:
+            lines.append(line._get_json_line())
+        if lines:
+            lines[0].update(
+                {
+                    "rfc": self[0].report_id.partner_id.vat or "",
+                    "numero_Convenio": self[0].agreement_id.number or "",
+                }
+            )
         return {
             "clave_Distribuidor": self.company_id.syngenta_customer_code,
             "nombre_distribuidor": self.company_id.name,

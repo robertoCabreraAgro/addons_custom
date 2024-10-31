@@ -144,16 +144,3 @@ class SyngentaSaleReportLine(models.Model):
             "rfc": "",  # Not required
             "numero_Convenio": "",  # Not required
         }
-
-    def _get_json_lines(self):
-        lines = []
-        for line in self:
-            lines.append(line._get_json_line())
-        if lines:
-            lines[0].update(
-                {
-                    "rfc": self[0].report_id.partner_id.vat or "",
-                    "numero_Convenio": self[0].agreement_id.number or "",
-                }
-            )
-        return lines

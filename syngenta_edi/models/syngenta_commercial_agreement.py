@@ -1,4 +1,4 @@
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
 
@@ -116,29 +116,31 @@ class SyngentaCommercialAgreement(models.Model):
         }
         return action
 
-    def action_view_reports(self, documents=False):
-        if not documents:
-            documents = self.mapped("report_ids")
+    def action_view_reports(self):
+        if not self.report_ids:
+            raise UserError(_("There are no reports to show."))
+
         action = self.env["ir.actions.actions"]._for_xml_id("syngenta_edi.action_syngenta_sale_report")
-        if len(documents) > 1:
-            action["domain"] = [("id", "in", documents.ids)]
-        elif len(documents) == 1:
+        if self.count_report > 1:
+            action["domain"] = [("id", "in", self.report_ids.ids)]
+        elif self.count_report == 1:
             form_view = [(self.env.ref("syngenta_edi.view_syngenta_sale_report_form").id, "form")]
             if "views" in action:
                 action["views"] = form_view + [(state, view) for state, view in action["views"] if view != "form"]
             else:
                 action["views"] = form_view
-            action["res_id"] = documents.id
+            action["res_id"] = self.report_ids.ids[0]
         else:
             action = {"type": "ir.actions.act_window_close"}
         return action
 
-    def action_view_lines(self, lines=False):
-        if not lines:
-            lines = self.mapped("report_line_ids")
+    def action_view_lines(self):
+        if not self.report_line_ids:
+            raise UserError(_("There are no reports lines to show."))
+
         action = self.env["ir.actions.actions"]._for_xml_id("syngenta_edi.action_syngenta_sale_report_line")
-        if len(lines) >= 1:
-            action["domain"] = [("id", "in", lines.ids)]
+        if self.count_line >= 1:
+            action["domain"] = [("id", "in", self.report_line_ids.ids)]
         else:
             action = {"type": "ir.actions.act_window_close"}
         return action
