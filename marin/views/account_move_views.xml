@@ -118,6 +118,7 @@
             <xpath expr="//field[@name='company_id']" position="replace">
             </xpath>
             <xpath expr="//field[@name='move_type']" position="after">
+                <field name="invoice_payment_term_id" optional="hide" />
                 <field name="company_id" optional="hide" />
             </xpath>
             <xpath expr="//field[@name='amount_untaxed_in_currency_signed']" position="attributes">
@@ -130,9 +131,9 @@
                 <attribute name="optional">show</attribute>
             </xpath>
             <xpath expr="//field[@name='invoice_date_due']" position="attributes">
-                <attribute
-                    name="invisible"
-                >payment_state in ['paid', 'in_payment', 'reversed'] or state == 'cancel'</attribute>
+                <attribute name="invisible">
+                    payment_state in ['paid', 'in_payment', 'reversed'] or state == 'cancel'
+                </attribute>
             </xpath>
             <xpath expr="//field[@name='invoice_origin']" position="after">
                 <field name="l10n_mx_edi_cfdi_origin" optional="hide" />
