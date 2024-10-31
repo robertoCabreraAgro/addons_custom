@@ -13,7 +13,7 @@
     "installable": True,
     "depends": ["account"],
     "data": [
-        "security/account_invoice_margin_security.xml",
+        "security/res_groups_data.xml",
         "views/account_invoice_margin_view.xml",
     ],
     "pre_init_hook": "pre_init_hook",
