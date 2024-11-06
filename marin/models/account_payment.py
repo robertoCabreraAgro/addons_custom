@@ -1,5 +1,3 @@
-from werkzeug.urls import url_quote_plus
-
 from odoo import _, api, fields, models
 
 
