@@ -33,7 +33,9 @@ class AccountMoveLine(models.Model):
             parent_state = line.move_id.state # Changes here
 
             if account.deprecated and not self.env.context.get("skip_account_deprecation_check"):
-                raise UserError(_('The account %(name)s (%(code)s) is deprecated.', name=account.name, code=account.code))
+                raise UserError(_(
+                    'The account %(name)s (%(code)s) is deprecated.', name=account.name, code=account.code
+                ))
 
             account_currency = account.currency_id
             if (
@@ -41,36 +43,30 @@ class AccountMoveLine(models.Model):
                 and account_currency != line.company_currency_id
                 and account_currency != line.currency_id
             ):
-                raise UserError(
-                    _(
-                        "The account selected on your journal entry forces to provide a secondary currency. "
-                        "You should remove the secondary currency on the account."
-                    )
-                )
+                raise UserError(_(
+                    "The account selected on your journal entry forces to provide a secondary currency. "
+                    "You should remove the secondary currency on the account."
+                ))
             # Change made in the line below
             if account.allowed_journal_ids and journal not in account.allowed_journal_ids and parent_state == "posted":
-                raise UserError(
-                    _(
-                        'You cannot use the account (%s) in the journal (%s), check the field "Allowed Journals" '
-                        "on the related account.",
-                        account.display_name,
-                        journal.name,
-                    )
-                )
+                raise UserError(_(
+                    'You cannot use the account (%s) in the journal (%s), check the field "Allowed Journals" '
+                    "on the related account.",
+                    account.display_name,
+                    journal.name,
+                ))
 
             if account in (journal.default_account_id, journal.suspense_account_id):
                 continue
 
             # Changes made below
             if journal.account_control_ids and account not in journal.account_control_ids and parent_state == "posted":
-                raise UserError(
-                    _(
-                        'You cannot use the account (%s) in the journal (%s), check the section "Control-Access" '
-                        'under tab "Advanced Settings" on the related journal.',
-                        account.display_name,
-                        journal.name,
-                    )
-                )
+                raise UserError(_(
+                    'You cannot use the account (%s) in the journal (%s), check the section "Control-Access" '
+                    'under tab "Advanced Settings" on the related journal.',
+                    account.display_name,
+                    journal.name,
+                ))
 
 #    # Override original method
 #    def _compute_account_id(self):
@@ -248,8 +244,10 @@ class AccountMoveLine(models.Model):
     # Extend original method
     @api.depends("account_id", "partner_id", "product_id", "vehicle_id")
     def _compute_analytic_distribution(self):
-        vehicle_lines = self.filtered(lambda line: line.vehicle_id
-            and line.display_type == "product"
+        vehicle_lines = self.filtered(
+            lambda line:
+                line.vehicle_id
+                and line.display_type == "product"
         )
         super(AccountMoveLine, self - vehicle_lines)._compute_analytic_distribution()
         cache = {}
@@ -278,22 +276,10 @@ class AccountMoveLine(models.Model):
         res.update({"move_line_id": self.id})
         return res
 
-    def _get_po_line_candidate(self, po_lines):
-        lines = sorted(po_lines, key=lambda line: (line.price_unit, line.qty_to_invoice), reverse=True)
-        for line in lines:
-            qty = (
-                line.qty_to_invoice
-                if not self.product_uom_id or line.product_uom == self.product_uom_id
-                else (line.product_uom._compute_quantity(line.qty_to_invoice, self.product_uom_id))
-            )
-            if qty >= self.quantity:
-                return line
-        return False
-
     @api.depends(
-        "move_id.related_purchase_order_id",
-        "move_id.relate_purchase_order",
         "move_id.partner_id",
+        "move_id.relate_purchase_order",
+        "move_id.related_purchase_order_id",
         "move_id.line_ids.purchase_line_id",
     )
     def _compute_allowed_purchase_line_ids(self):
@@ -306,12 +292,6 @@ class AccountMoveLine(models.Model):
                 else purchase_obj.search([("partner_id", "=", move.partner_id.id)])
             )
             rec.allowed_purchase_line_ids = orders.order_line | move.line_ids.mapped("purchase_line_id")
-
-    @api.onchange("purchase_line_id")
-    def _onchange_purchase_line(self):
-        for rec in self:
-            if rec.purchase_line_id:
-                rec.product_id = rec.purchase_line_id.product_id
 
     @api.depends("move_id.partner_id", "move_id.line_ids.sale_line_ids")
     def _compute_allowed_sale_line_ids(self):
@@ -329,3 +309,9 @@ class AccountMoveLine(models.Model):
             rec.allowed_sale_line_ids = (
                 lines if not rec.product_id else lines.filtered(lambda line: line.product_id == rec.product_id)
             )
+
+    @api.onchange("purchase_line_id")
+    def _onchange_purchase_line(self):
+        for rec in self:
+            if rec.purchase_line_id:
+                rec.product_id = rec.purchase_line_id.product_id

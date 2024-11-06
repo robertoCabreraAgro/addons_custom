@@ -27,7 +27,6 @@ class AccountMove(models.Model):
         help="If this checkbox is ticked, it means that a management representative has "
         "received and stored a printed invoice on credit signed by the customer. ",
     )
-    # document_share_id = fields.Many2one("documents.share", readonly=True)
 
     def action_open_move_lines(self):
         return {
@@ -148,20 +147,11 @@ class AccountMove(models.Model):
 
     # Extend original method
     def action_post(self):
-        #folder = self.env.ref("documents.documents_finance_folder")
         self._pre_post_invoice_edi_amounts_match_validation()
         res = self._pre_post_invoice_credit_limit_validation()
         if res is not True:
             return res
-        #for rec in self:
-        #    if rec.move_type in ["out_invoice", "out_refund"] and not rec.document_share_id:
-        #        self.document_share_id = self.env["documents.share"].create(
-        #            {
-        #                "type": "ids",
-        #                "name": "share_link_ids",
-        #                "folder_id": folder.id,
-        #            }
-        #        )
+
         return super().action_post()
 
     def button_draft(self):
@@ -182,7 +172,8 @@ class AccountMove(models.Model):
             "dest_address_id": False,  # False since only supported in stock
             "date_order": self.invoice_date,
             "fiscal_position_id": (
-                self.fiscal_position_id or self.fiscal_position_id._get_fiscal_position(self.commercial_partner_id)
+                self.fiscal_position_id
+                or self.fiscal_position_id._get_fiscal_position(self.commercial_partner_id)
             ).id,
             "payment_term_id": self.invoice_payment_term_id.id,
             "origin": self.name,
@@ -216,6 +207,7 @@ class AccountMove(models.Model):
         for move in self:
             if any(not line.product_id for line in move.invoice_line_ids):
                 raise UserError(_("Some move lines does not have a product set. Please review"))
+
             purchase_exist = self.env["purchase.order"].search(
                 [
                     ("partner_id", "=", self.commercial_partner_id.id),
@@ -224,7 +216,10 @@ class AccountMove(models.Model):
                 ]
             )
             if purchase_exist and len(purchase_exist) >= 1:
-                raise UserError(_("More than one Purchase Orders with the same origin have been found. Please review"))
+                raise UserError(_(
+                    "More than one Purchase Orders with the same origin have been found. Please review"
+                ))
+
             if not purchase_exist:
                 purchase_exist = self.env["purchase.order"].create(self._prepare_purchase_order_vals())
                 purchase_line_vals = self._prepare_purchase_line_vals(move, purchase_exist)
@@ -243,12 +238,16 @@ class AccountMove(models.Model):
                 move.country_code == "MX"
                 and move.company_currency_id.name == "MXN"
                 and move.journal_id.x_treatment in ("fiscal_simulated", "fiscal_real")
-                and (move.move_type in ("out_invoice", "out_refund") or move._l10n_mx_edi_is_cfdi_payment())
+                and (
+                    move.move_type in ("out_invoice", "out_refund")
+                    or move._l10n_mx_edi_is_cfdi_payment()
+                )
             )
 
     # Override original method
     @api.depends(
-        "move_type", "invoice_date_due", "invoice_date", "invoice_payment_term_id", "force_payment_policy_pue"
+        "move_type", "invoice_date", "invoice_payment_term_id",
+        "invoice_date_due", "force_payment_policy_pue"
     )
     def _compute_l10n_mx_edi_payment_policy(self):
         for move in self:
@@ -272,49 +271,3 @@ class AccountMove(models.Model):
                     move.l10n_mx_edi_payment_policy = "PPD"
             if move.l10n_mx_edi_payment_policy and move.force_payment_policy_pue:
                 move.l10n_mx_edi_payment_policy = "PUE"
-
-    @api.onchange("purchase_vendor_bill_id", "purchase_id")
-    def _onchange_purchase_auto_complete(self):
-        if not self.relate_purchase_order:
-            return super()._onchange_purchase_auto_complete()
-        self.related_purchase_order_id = self.purchase_vendor_bill_id.purchase_order_id
-        self.purchase_vendor_bill_id = False
-        self._relate_with_purchase_lines()
-
-    def _relate_with_purchase_lines(self):
-        if not self.related_purchase_order_id:
-            return
-        purchase = self.related_purchase_order_id
-        for record in self.invoice_line_ids.filtered(lambda l: not l.purchase_line_id and l.product_id):
-            prod = record.product_id
-            lines = purchase.mapped("order_line").filtered(lambda p: p.product_id == prod)
-            if not lines:
-                continue
-            record.purchase_line_id = record._get_po_line_candidate(lines)
-
-    def _generate_document_from_report(self, report_content):
-        doc_name = _("Credit Note %s", self.name) if self.move_type == "out_refund" else _("Invoice %s", self.name)
-        folder = self.env.ref("documents.documents_finance_folder")
-        attachment = self.env["ir.attachment"].create(
-            {
-                "name": doc_name,
-                "raw": report_content,
-                "mimetype": "application/pdf",
-            }
-        )
-        vals = {
-            "folder_id": folder.id,
-            "name": doc_name,
-            "attachment_id": attachment.id,
-        }
-        self.document_share_id.document_ids.attachment_id.unlink()
-        self.document_share_id.document_ids.unlink()
-        self.document_share_id.write({"document_ids": [(0, 0, vals)]})
-
-    def _is_valid_generate_document_from_report(self):
-        return self and len(self) == 1 and self.document_share_id and self.move_type in ["out_invoice", "out_refund"]
-
-    def _get_invoice_qr(self):
-        barcode_value = url_quote_plus(self.document_share_id.full_url)
-        barcode_src = f"/report/barcode/?barcode_type=QR&value={barcode_value}&width=120&height=120"
-        return barcode_src

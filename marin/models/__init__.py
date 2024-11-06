@@ -14,7 +14,6 @@ from . import fleet_vehicle_log_services
 from . import hr_contract
 from . import hr_payslip
 from . import hr_payslip_run
-# from . import ir_actions_report
 # from . import mrp_production
 from . import pos_config
 from . import pos_order
