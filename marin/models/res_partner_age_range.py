@@ -14,8 +14,12 @@ class ResPartnerDateRange(models.Model):
         return age_from
 
     name = fields.Char(required=True)
-    age_from = fields.Integer(string="From", required=True, default=lambda self: self._default_age_from())
-    age_to = fields.Integer(string="To", required=True)
+    age_from = fields.Integer(
+        string="From", required=True, default=lambda self: self._default_age_from()
+    )
+    age_to = fields.Integer(
+        string="To", required=True
+    )
 
     _sql_constraints = [("name_uniq", "unique (name)", "A name must be unique !")]
 
@@ -23,14 +27,12 @@ class ResPartnerDateRange(models.Model):
     def _validate_range(self):
         for rec in self:
             if rec.age_from >= rec.age_to:
-                raise ValidationError(
-                    _(
-                        "%(name)s is not a valid range (%(age_from)s >= %(age_to)s)",
-                        name=rec.name,
-                        age_from=rec.age_from,
-                        age_to=rec.age_to,
-                    )
-                )
+                raise ValidationError(_(
+                    "%(name)s is not a valid range (%(age_from)s >= %(age_to)s)",
+                    name=rec.name,
+                    age_from=rec.age_from,
+                    age_to=rec.age_to,
+                ))
             range_id = rec.search(
                 [
                     ("age_from", "<=", rec.age_to),
@@ -40,10 +42,8 @@ class ResPartnerDateRange(models.Model):
                 limit=1,
             )
             if range_id:
-                raise ValidationError(
-                    _(
-                        "%(name)s is overalapping with range %(age_from)s",
-                        name=rec.name,
-                        age_from=range_id.name,
-                    )
-                )
+                raise ValidationError(_(
+                    "%(name)s is overalapping with range %(age_from)s",
+                    name=rec.name,
+                    age_from=range_id.name,
+                ))

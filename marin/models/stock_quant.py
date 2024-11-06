@@ -6,7 +6,6 @@ from odoo.tools.float_utils import float_compare
 class StockQuant(models.Model):
     _inherit = "stock.quant"
 
-
     # Extend core fields
     product_categ_id = fields.Many2one(store=True, readonly=True)
     warehouse_id = fields.Many2one(store=True, readonly=True)

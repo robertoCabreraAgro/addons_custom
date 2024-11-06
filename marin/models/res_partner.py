@@ -152,13 +152,18 @@ class ResPartner(models.Model):
             "Total amount due (including this document): %s\n",
             formatLang(self.env, future_credit, currency_obj=currency),
         )
-        msg += _("Credit available: %s", formatLang(self.env, self.credit_limit_available, currency_obj=currency))
+        msg += _(
+            "Credit available: %s",
+            formatLang(self.env, self.credit_limit_available, currency_obj=currency)
+        )
         return msg
 
     # Override method to be like it was on v16 showing the partner ledger report
     # instead of showing the partner account move lines like it's done on v17.
     def open_partner_ledger(self):
-        action = self.env["ir.actions.actions"]._for_xml_id("account_reports.action_account_report_partner_ledger")
+        action = self.env["ir.actions.actions"]._for_xml_id(
+            "account_reports.action_account_report_partner_ledger"
+        )
         action["params"] = {
             "options": {"partner_ids": [self.id]},
             "ignore_session": "both",

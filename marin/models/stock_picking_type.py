@@ -5,7 +5,6 @@ from odoo.exceptions import UserError, ValidationError
 class StockPickingTypeInherit(models.Model):
     _inherit = "stock.picking.type"
 
-
     # Add search
     count_picking_ready = fields.Integer(search="_search_count_picking_ready")
     count_picking_waiting = fields.Integer(search="_search_count_picking_waiting")
@@ -53,17 +52,16 @@ class StockPickingTypeInherit(models.Model):
         for picking_type in self:
             pos_config = self.env["pos.config"].search([("picking_type_id", "=", picking_type.id)], limit=1)
             if not picking_type.active and pos_config:
-                raise ValidationError(
-                    _(
+                raise ValidationError(_(
                         "You cannot archive '%s' as it is used by a POS configuration '%s'.",
                         picking_type.name,
                         pos_config.name,
-                    )
-                )
+                ))
 
     def _search_count_picking_ready(self, operator, value):
         if operator not in ["=", "!="] or not isinstance(value, bool):
             raise UserError(_("Operation not supported"))
+
         picking_type_ids = []
         pickings_groupby = self.env["stock.picking"].read_group(
             [("state", "=", "assigned")], ["picking_type_id"], ["picking_type_id"]
@@ -75,6 +73,7 @@ class StockPickingTypeInherit(models.Model):
     def _search_count_picking_waiting(self, operator, value):
         if operator not in ["=", "!="] or not isinstance(value, bool):
             raise UserError(_("Operation not supported"))
+
         picking_type_ids = []
         pickings_groupby = self.env["stock.picking"].read_group(
             [("state", "in", ("confirmed", "waiting"))], ["picking_type_id"], ["picking_type_id"]

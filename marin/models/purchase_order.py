@@ -25,7 +25,9 @@ class PurchaseOrderInherit(models.Model):
     invoice_status = fields.Selection(
         selection_add=[("partially", "Partially billed"), ("over invoiced", "Over billed")]
     )
-    receipt_status = fields.Selection(selection_add=[("no", "Nothing to receive"), ("over full", "Over received")])
+    receipt_status = fields.Selection(
+        selection_add=[("no", "Nothing to receive"), ("over full", "Over received")]
+    )
 
     # New fields
     is_user_id_editable = fields.Boolean(

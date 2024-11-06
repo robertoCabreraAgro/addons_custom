@@ -1,12 +1,9 @@
-# Copyright 2019 ForgeFlow S.L.
-
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 
 class Picking(models.Model):
     _inherit = "stock.picking"
-
 
     # New fields
     show_purchase_lines = fields.Boolean(compute="_compute_show_purchase_lines")

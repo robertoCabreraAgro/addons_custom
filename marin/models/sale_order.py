@@ -7,7 +7,9 @@ class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     # Extended fields
-    delivery_status = fields.Selection(selection_add=[("no", "Nothing to deliver"), ("over full", "Over delivered")])
+    delivery_status = fields.Selection(
+        selection_add=[("no", "Nothing to deliver"), ("over full", "Over delivered")]
+    )
     margin = fields.Float(digits="Product Price")
     margin_percent = fields.Float(digits="Product Price")
 
@@ -23,13 +25,14 @@ class SaleOrder(models.Model):
         "stock.route",
         "Route",
         domain=[("sale_selectable", "=", True)],
-        help="When you change this field all the lines will be changed."
-        " After use it you will be able to change each line.",
+        help="When you change this field all the lines will be changed. "
+             "After use it you will be able to change each line.",
     )
     season_id = fields.Many2one(
         "date.range",
         "AG season",
-        help="Since every farmer can have several growing seasons the specific one can be selected.",
+        help="Since every farmer can have several growing seasons the specific one "
+             "can be selected.",
     )
 
     # Extend original method
@@ -47,7 +50,9 @@ class SaleOrder(models.Model):
                 if order.state in ("draft", "sent") or not order.ids:
                     order.journal_id = (
                         default_sale_journal_id
-                        or order.user_id.with_company(order.company_id.id)._get_default_sale_journal_id()
+                        or order.user_id.with_company(
+                            order.company_id.id
+                        )._get_default_sale_journal_id()
                     )
         return res
 
@@ -148,15 +153,19 @@ class SaleOrder(models.Model):
     def validate_credit_limit(self):
         if self.partner_credit_warning and not self.payment_term_id.is_immediate:
             if self.commercial_partner_id.credit_on_hold:
-                raise UserError(_("The partner's credit line has been held. Contact the Credit Manager."))
+                raise UserError(_(
+                    "The partner's credit line has been held. Contact the Credit Manager."
+                ))
+
             if not self.env.user.has_group("marin.group_account_debt_manager"):
-                raise UserError(
-                    _(
-                        "The Partner %s does not have an authorized credit line. Contact the Credit Manager.",
-                        self.partner_invoice_id.name,
-                    )
-                )
+                raise UserError(_(
+                    "The Partner %s does not have an authorized credit line. "
+                    "Contact the Credit Manager.",
+                    self.partner_invoice_id.name,
+                ))
+
             return self.action_sale_authorize_debt()
+
         return True
 
     # Extend original method
@@ -164,6 +173,7 @@ class SaleOrder(models.Model):
         res = self.validate_credit_limit()
         if res is not True:
             return res
+
         return super().action_confirm()
 
     def action_clean_3_0(self):
