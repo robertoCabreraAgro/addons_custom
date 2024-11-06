@@ -19,11 +19,12 @@ class PurchaseOrderLineInherit(models.Model):
             ("over invoiced", "Over billed"),
         ],
         default="no",
-        compute="_compute_invoice_status",
-        store=True,
+        compute="_compute_invoice_status", store=True,
     )
     qty_to_receive = fields.Float(
-        "Quantity to receive", compute="_compute_qty_to_receive", store=True, digits="Product Unit of measure"
+        "Quantity to receive",
+        digits="Product Unit of measure",
+        compute="_compute_qty_to_receive", store=True,
     )
     reception_status = fields.Selection(
         [
@@ -33,9 +34,8 @@ class PurchaseOrderLineInherit(models.Model):
             ("received", "Received"),
             ("over received", "Over received"),
         ],
-        compute="_compute_reception_status",
-        store=True,
         default="no",
+        compute="_compute_reception_status", store=True,
     )
     force_company_id = fields.Many2one(
         "res.company",
@@ -44,7 +44,9 @@ class PurchaseOrderLineInherit(models.Model):
         readonly=False,
         help="Technical field to force company or get it " "from env user if order don't exist.",
     )
-    product_updatable = fields.Boolean("Can Edit Product", default=True, compute="_compute_product_updatable")
+    product_updatable = fields.Boolean(
+        "Can Edit Product", default=True, compute="_compute_product_updatable"
+    )
 
     @api.depends("state", "product_uom_qty", "qty_invoiced", "qty_to_invoice")
     def _compute_invoice_status(self):
@@ -110,6 +112,37 @@ class PurchaseOrderLineInherit(models.Model):
                 or self.env.company
             )
 
+    @api.depends("order_id.state", "product_id", "qty_invoiced", "qty_received")
+    def _compute_product_updatable(self):
+        for line in self:
+            if line.state in ["done", "cancel"] or (
+                line.state == "purchase" and (line.qty_invoiced > 0 or line.qty_received > 0)
+            ):
+                line.product_updatable = False
+            else:
+                line.product_updatable = True
+
+    def _get_partner_display(self):
+        self.ensure_one()
+        commercial_partner = self.order_id.partner_id.commercial_partner_id
+        return f"({commercial_partner.ref or commercial_partner.name})"
+
+    def _additional_name_per_id(self):
+        return {po_line.id: po_line._get_partner_display() for po_line in self}
+
+    @api.depends("order_id.partner_id", "order_id", "product_id")
+    def _compute_display_name(self):
+        name_per_id = self._additional_name_per_id()
+        for po_line in self.sudo():
+            name = "{} - {}".format(
+                po_line.order_id.name,
+                po_line.name and po_line.name.split("\n")[0] or po_line.product_id.name
+            )
+            additional_name = name_per_id.get(po_line.id)
+            if additional_name:
+                name = f"{name} {additional_name}"
+            po_line.display_name = name
+
     @api.onchange("force_company_id")
     def _onchange_force_company_id(self):
         """Assign company_id because is used in domains as partner,
@@ -122,22 +155,13 @@ class PurchaseOrderLineInherit(models.Model):
         """Create order to correct compute of taxes"""
         if not self.partner_id or self.order_id:
             return
+
         purchase_order = self.env["purchase.order"]
         new_so = purchase_order.new({"partner_id": self.partner_id, "company_id": self.force_company_id})
         for onchange_method in new_so._onchange_methods["partner_id"]:
             onchange_method(new_so)
         order_vals = new_so._convert_to_write(new_so._cache)
         self.order_id = purchase_order.create(order_vals)
-
-    @api.depends("product_id", "order_id.state", "qty_invoiced", "qty_received")
-    def _compute_product_updatable(self):
-        for line in self:
-            if line.state in ["done", "cancel"] or (
-                line.state == "purchase" and (line.qty_invoiced > 0 or line.qty_received > 0)
-            ):
-                line.product_updatable = False
-            else:
-                line.product_updatable = True
 
     def action_purchase_order_form(self):
         self.ensure_one()
@@ -147,23 +171,3 @@ class PurchaseOrderLineInherit(models.Model):
         action["views"] = [(form.id, "form")]
         action["res_id"] = self.order_id.id
         return action
-
-    @api.depends("order_id.partner_id", "order_id", "product_id")
-    def _compute_display_name(self):
-        name_per_id = self._additional_name_per_id()
-        for po_line in self.sudo():
-            name = "{} - {}".format(
-                po_line.order_id.name, po_line.name and po_line.name.split("\n")[0] or po_line.product_id.name
-            )
-            additional_name = name_per_id.get(po_line.id)
-            if additional_name:
-                name = f"{name} {additional_name}"
-            po_line.display_name = name
-
-    def _get_partner_display(self):
-        self.ensure_one()
-        commercial_partner = self.order_id.partner_id.commercial_partner_id
-        return f"({commercial_partner.ref or commercial_partner.name})"
-
-    def _additional_name_per_id(self):
-        return {po_line.id: po_line._get_partner_display() for po_line in self}
