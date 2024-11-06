@@ -51,11 +51,14 @@ class FleetVehicleInherit(models.Model):
 
     @api.depends("fuel_card_id")
     def _compute_fuel_card_name(self):
-        for rec in self:
-            rec.fuel_card_name = rec.fuel_card_id.name.split(".", 1)[0] if rec.fuel_card_id else ""
+        for vehicle in self:
+            vehicle.fuel_card_name = vehicle.fuel_card_id.name.split(".", 1)[0] if vehicle.fuel_card_id else ""
 
     def _inverse_fuel_card(self):
-        """Set the vehicle on the corresponding document, and unset the vehicle on previously related documents"""
+        """
+        Set the vehicle on the corresponding document, and unset the vehicle on 
+        previously related documents
+        """
         tag = self.env.ref("marin.documents_fleet_fuel_card", False)
         for rec in self:
             doc = rec.fuel_card_id
@@ -80,22 +83,25 @@ class FleetVehicleInherit(models.Model):
 
     @api.depends("highway_pass_id")
     def _compute_highway_pass_name(self):
-        for rec in self:
-            rec.highway_pass_name = rec.highway_pass_id.name.split(".", 1)[0] if rec.highway_pass_id else ""
+        for vehicle in self:
+            vehicle.highway_pass_name = vehicle.highway_pass_id.name.split(".", 1)[0] if vehicle.highway_pass_id else ""
 
     def _inverse_highway_pass(self):
-        """Set the vehicle on the corresponding document, and unset the vehicle on previously related documents"""
+        """
+        Set the vehicle on the corresponding document, and unset the vehicle on
+        previously related documents
+        """
         tag = self.env.ref("marin.documents_fleet_highway_pass", False)
-        for rec in self:
-            doc = rec.highway_pass_id
-            other_docs = doc.search([("vehicle_id", "=", rec.id), ("tag_ids", "in", tag.ids)]) - doc
+        for vehicle in self:
+            doc = vehicle.highway_pass_id
+            other_docs = doc.search([("vehicle_id", "=", vehicle.id), ("tag_ids", "in", tag.ids)]) - doc
             if doc:
                 doc.write(
                     {
-                        "res_model": rec._name,
-                        "res_id": rec.id,
+                        "res_model": vehicle._name,
+                        "res_id": vehicle.id,
                         "is_editable_attachment": True,
-                        "vehicle_id": rec.id,
+                        "vehicle_id": vehicle.id,
                     }
                 )
             for od in other_docs:
