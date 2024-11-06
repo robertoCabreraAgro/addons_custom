@@ -42,7 +42,7 @@ class PurchaseOrderLineInherit(models.Model):
         "Forced Company",
         compute="_compute_force_company_id",
         readonly=False,
-        help="Technical field to force company or get it " "from env user if order don't exist.",
+        help="Technical field to force company or get it from env user if order don't exist.",
     )
     product_updatable = fields.Boolean(
         "Can Edit Product", default=True, compute="_compute_product_updatable"
