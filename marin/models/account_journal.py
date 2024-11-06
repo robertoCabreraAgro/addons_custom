@@ -54,11 +54,11 @@ class AccountJournalInherit(models.Model):
     )
     can_access_user_ids = fields.Many2many(
         "res.users",
-        "account_journal_res_users_access_rel",
+        "account_journal_res_users_can_access_rel",
         "journal_id",
         "user_id",
-        "Allowed Users",
-        help="Users that can visualize and perform actions on this journal.",
+        "Allowed users",
+        help="Users that can visualize entries of this journal.",
     )
 
     @api.constrains("type", "default_receivable_account_id", "default_payable_account_id")
