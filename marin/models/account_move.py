@@ -231,7 +231,7 @@ class AccountMove(models.Model):
         return True
 
     # Override original method
-    @api.depends("company_currency_id", "move_type", "origin_payment_id", "statement_line_id")
+    @api.depends("move_type", "company_currency_id", "origin_payment_id", "statement_line_id")
     def _compute_l10n_mx_edi_is_cfdi_needed(self):
         for move in self:
             move.l10n_mx_edi_is_cfdi_needed = (

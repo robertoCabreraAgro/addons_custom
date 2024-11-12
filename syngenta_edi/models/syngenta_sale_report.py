@@ -107,7 +107,7 @@ class SyngentaSaleReport(models.Model):
         if lines:
             lines[0].update(
                 {
-                    "rfc": self[0].report_id.partner_id.vat or "",
+                    "rfc": self.partner_id.vat or "",
                     "numero_Convenio": self[0].agreement_id.number or "",
                 }
             )
@@ -140,6 +140,7 @@ class SyngentaSaleReport(models.Model):
 
         if not self.folio:
             self._compute_folio()
+
         timeout = int(
             self.env["ir.config_parameter"].sudo().get_param("syngenta_edi.request_timeout")
         ) or 60
@@ -151,11 +152,10 @@ class SyngentaSaleReport(models.Model):
             return self._handle_response(resp_json, data)
         except (Timeout, ConnError, RequestException, ValueError):
             _logger.warning("Syngenta synchronization error")
-            raise UserError(
-                _("The syngenta synchronization service is not available at the moment. "
-                  "Please try again later."
-                )
-            )
+            raise UserError(_(
+                "The syngenta synchronization service is not available at the moment. "
+                "Please try again later."
+            ))
 
     def action_cancel(self):
         self.filtered(lambda doc: doc.state not in ["done", "cancel"]).state = "cancel"
