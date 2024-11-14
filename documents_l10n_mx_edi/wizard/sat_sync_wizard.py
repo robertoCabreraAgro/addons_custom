@@ -114,7 +114,7 @@ class SatSyncWizard(models.TransientModel):
     def _default_date_from(self):
         """Day 1 of current month by default."""
         date_from = fields.Datetime.now()
-        return date_from.replace(day=1)
+        return date_from.replace(day=1, hour=0, minute=0, second=0)
 
     @api.onchange("date_from", "date_to")
     def _onchange_date(self):
