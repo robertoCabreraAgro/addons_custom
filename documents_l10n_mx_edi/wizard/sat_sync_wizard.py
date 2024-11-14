@@ -31,7 +31,21 @@ class SatSyncWizard(models.TransientModel):
     _name = "sat.sync.wizard"
     _description = "SAT sync wizard"
 
+
     company_id = fields.Many2one("res.company", "Company", default=lambda self: self.env.company)
+    uuid = fields.Char("UUID")
+    date_from = fields.Datetime(
+        "From",
+        required=True,
+        default=lambda self: self._default_date_from(),
+        help="Day 1 of current month by default.",
+    )
+    date_to = fields.Datetime(
+        "To",
+        required=True,
+        default=fields.Datetime.now,
+        help="Today."
+    )
     complement = fields.Selection(
         [
             ("acreditamientoieps10", "acreditamientoieps10"),
@@ -89,19 +103,12 @@ class SatSyncWizard(models.TransientModel):
         ],
     )
     cdfi_state = fields.Selection([("0", "Cancelled"), ("1", "Valid")], "State")
-    date_from = fields.Datetime(
-        "From",
-        required=True,
-        default=lambda self: self._default_date_from(),
-        help="Day 1 of current month by default.",
-    )
-    date_to = fields.Datetime("To", required=True, default=fields.Datetime.now, help="Today.")
-    uuid = fields.Char("UUID")
+    cfdi_type = fields.Selection(CFDI_TYPE, "CFDI Type")
     thirth_party_vat = fields.Char("Thirth Party VAT")
     emitter_vat = fields.Char("Emitter VAT")
     receiver_vat = fields.Char("Receiver VAT")
-    cfdi_type = fields.Selection(CFDI_TYPE, "CFDI Type")
     request_type = fields.Selection([("CFDI", "CFDI"), ("Metadata", "Metadata")], default="CFDI")
+
 
     @api.model
     def _default_date_from(self):
