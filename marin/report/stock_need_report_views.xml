@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record model="ir.ui.view" id="view_stock_need_report_tree">
+        <field name="name">stock.need.report.tree</field>
+        <field name="model">stock.need.report</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="product_id" />
+                <field name="product_categ_id" optional="show" />
+                <field name="parent_categ_id" optional="show" />
+                <field name="root_categ_id" optional="hide" />
+                <field name="available_quantity" optional="show" />
+                <field name="quantity" optional="show" />
+                <field name="standard_price" optional="show" />
+                <field name="available_stock_cost_value" optional="show" />
+                <field name="available_stock_price_value" optional="show" />
+                <field name="last_year_qty_sold" optional="show" />
+                <field name="current_year_qty_sold" optional="show" />
+                <field name="stock_supply_need" optional="show" />
+                <field name="stock_supply_need_value" optional="show" />
+            </list>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_stock_need_report_form">
+        <field name="name">stock.need.report.form</field>
+        <field name="model">stock.need.report</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" string="Name" />
+                        <field name="name" />
+                    </div>
+                    <group name="name">
+                        <field name="product_id" />
+                        <field name="product_categ_id" />
+                        <field name="parent_categ_id" />
+                        <field name="root_categ_id" invisible="1" />
+                    </group>
+                    <notebook>
+                        <page name="values" string="Values">
+                            <group>
+                                <group string="Stock">
+                                    <field name="available_quantity" />
+                                    <field name="quantity" />
+                                    <field name="standard_price" />
+                                </group>
+                                <group string="Value">
+                                    <field name="available_stock_cost_value" />
+                                    <field name="available_stock_price_value" />
+                                </group>
+                                <group string="Current Year">
+                                    <field name="current_year_qty_sold" />
+                                </group>
+                                <group string="Last Year">
+                                    <field name="last_year_qty_sold" />
+                                </group>
+                                <group string="Supply Need">
+                                    <field name="stock_supply_need" />
+                                    <field name="stock_supply_need_value" />
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_stock_need_report_pivot">
+        <field name="name">stock.need.report.pivot</field>
+        <field name="model">stock.need.report</field>
+        <field name="arch" type="xml">
+            <pivot>
+                <field name="available_quantity" type="measure" />
+                <field name="quantity" type="measure" />
+                <field name="standard_price" type="measure" />
+                <field name="available_stock_cost_value" type="measure" />
+                <field name="available_stock_price_value" type="measure" />
+                <field name="last_year_qty_sold" type="measure" />
+                <field name="current_year_qty_sold" type="measure" />
+                <field name="stock_supply_need" type="measure" />
+                <field name="stock_supply_need_value" type="measure" />
+            </pivot>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_stock_need_report_search_view">
+        <field name="name">stock.need.report.search.view</field>
+        <field name="model">stock.need.report</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="product_id" />
+                <field name="product_categ_id" />
+                <field name="parent_categ_id" />
+                <field name="root_categ_id" />
+                <group expand="0" string="Group By">
+                    <filter name="group_by_product" string="Product" context="{'group_by':'product_id'}" />
+                    <filter
+                        name="group_by_product_categ"
+                        string="Product Category"
+                        context="{'group_by':'product_categ_id'}"
+                    />
+                    <filter
+                        name="group_by_parent_categ"
+                        string="Parent Category"
+                        context="{'group_by':'parent_categ_id'}"
+                    />
+                    <filter
+                        name="group_by_root_categ"
+                        string="Root Category"
+                        context="{'group_by':'root_categ_id'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_stock_need_report" model="ir.actions.act_window">
+        <field name="name">Stock Need Report</field>
+        <field name="res_model">stock.need.report</field>
+        <field name="view_mode">list,form,pivot</field>
+        <field name="context">{'group_by': ['root_categ_id', 'parent_categ_id', 'product_categ_id', 'product_id']}</field>
+    </record>
+
+    <menuitem
+        id="menu_stock_need_report"
+        name="Stock Need Report"
+        parent="purchase.purchase_report_main"
+        groups="purchase.group_purchase_manager"
+        action="action_stock_need_report"
+    />
+
+</odoo>

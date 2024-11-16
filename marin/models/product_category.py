@@ -1,4 +1,4 @@
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class ProductCategoryInherit(models.Model):
@@ -41,3 +41,15 @@ class ProductCategoryInherit(models.Model):
         help="Number of days before the Expiration Date after which an alert should be "
              "raised on the lot/serial number. It will be computed on the lot/serial number.",
     )
+    root_categ_id = fields.Many2one(
+        "product.category", string="Root Category",
+        compute="_compute_root_category", store=True,
+        recursive=True, index=True)
+
+    @api.depends("parent_id.root_categ_id")
+    def _compute_root_category(self):
+        for categ in self:
+            if not categ.parent_id:
+                categ.root_categ_id = categ
+            else:
+                categ.root_categ_id = categ.parent_id.root_categ_id
