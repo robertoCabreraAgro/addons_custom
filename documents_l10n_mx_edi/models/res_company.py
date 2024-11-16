@@ -18,12 +18,9 @@ ERROR_TYPE = [
 ]
 
 
-# import logging
-# _logger = logging.getLogger(__name__)
-
-
 class ResCompany(models.Model):
     _inherit = "res.company"
+
 
     l10n_mx_edi_esignature_ids = fields.Many2many("l10n_mx_edi.esignature", string="MX E-signature")
     last_sat_fetch_date = fields.Datetime("Last CFDI fetch date", default=fields.Datetime.now)
@@ -43,17 +40,22 @@ class ResCompany(models.Model):
             esignature = company.l10n_mx_edi_esignature_ids.get_valid_esignature()
             if not esignature:
                 continue
-            company.sudo().download_cfdi_files(esignature=esignature)
+            company.sudo().download_cfdi_files()
             company.last_sat_fetch_date = fields.Datetime.now()
         return True
 
-    def download_cfdi_files(self, esignature):
+    def download_cfdi_files(self, esignature, **kwargs):
         edi_obj = self.env["l10n_mx_edi.document"]
         sanitized = {}
-        sanitized["date_from"] = self.last_sat_fetch_date or fields.Datetime.now().replace(
-            month=1, day=1, hour=0, minute=0, second=0
+        sanitized["date_from"] = (
+            kwargs["date_from"]
+            or self.last_sat_fetch_date
+            or fields.Datetime.now().replace(month=1, day=1, hour=0, minute=0, second=0)
         )
-        sanitized["date_to"] = fields.Datetime.now().replace(hour=0, minute=0, second=0)
+        sanitized["date_to"] = (
+            kwargs["date_to"]
+            or fields.Datetime.now().replace(hour=0, minute=0, second=0)
+        )
         _cer_pem, certificate = esignature.get_cert_data()
         _key_pem, private_key = esignature.get_pk_data()
         uuid = uid.uuid4()
@@ -92,15 +94,16 @@ class ResCompany(models.Model):
             verify_download = edi_obj.l10n_mx_ws_verify_package(certificate, private_key, ses.token, ses.request)
             ses.write(
                 {
-                    "request_state": int(verify_download["estado_solicitud"]),
+                    "request_state": verify_download["estado_solicitud"],
                     "file_count": int(verify_download["numero_cfdis"]),
                     "request_message": verify_download["mensaje"],
                 }
             )
-            if ses.request_state <= 2:
+            if int(ses.request_state) <= 2:
                 time.sleep(20)
                 continue
-            if ses.request_state >= 4:
+    
+            if int(ses.request_state) >= 4:
                 message = f"{ERROR_TYPE[ses.request_state]} - {ses.request_message}"
                 self.env["bus.bus"]._sendone(
                     self.env.user.partner_id,
@@ -108,8 +111,9 @@ class ResCompany(models.Model):
                     {"title": "Error", "message": message, "sticky": False, "warning": True},
                 )
                 break
+    
             download_res = edi_obj.l10n_mx_ws_download_package(
-                certificate, private_key, ses.token, verify_download["paquetes"]
+                certificate, private_key, ses.token, verify_download["paquetes"][0]
             )
             if download_res["paquete_b64"]:
                 content.append(download_res["paquete_b64"])

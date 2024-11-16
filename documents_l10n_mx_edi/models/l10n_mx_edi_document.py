@@ -638,8 +638,10 @@ class L10nMxEdiDocument(models.Model):
             "Accept": "text/xml",
         }
         if condition:
-            extend = {"Cache-Control": "no-cache", "Authorization": f'WRAP access_token="{token}"' if token else ""}
-            headers.update(extend)
+            headers.update({
+                "Cache-Control": "no-cache",
+                "Authorization": f'WRAP access_token="{token}"' if token else ""
+            })
         return headers
 
     def check_comm(self, url, data, headers, result_xpath, external_nsmap):
@@ -655,12 +657,15 @@ class L10nMxEdiDocument(models.Model):
         except etree.XMLSyntaxError as e:
             _logger.error(str(e))
             raise ValidationError(str(e))
+
         except Exception as e:
             _logger.error(str(e))
             raise ValidationError(str(e))
+
         if communication.status_code != requests.codes.ok:
             error = response.find(".//faultstring").text
             raise ValidationError(error)
+
         return response.find(result_xpath, external_nsmap)
 
     def prepare_soap_data(
@@ -682,24 +687,23 @@ class L10nMxEdiDocument(models.Model):
         parser = etree.XMLParser(remove_blank_text=True)
         element_root = etree.fromstring(envelop, parser)
         element = element_root.find(xpath, internal_nsmap)
-        signature = (
-            '<Signature xmlns="http://www.w3.org/2000/09/xmldsig#">'
-            "<SignedInfo>"
-            '<CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>'
-            '<SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>'
-            '<Reference URI="#_0">'
-            "<Transforms>"
-            '<Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>'
-            "</Transforms>"
-            '<DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>'
-            "<DigestValue></DigestValue>"
-            "</Reference>"
-            "</SignedInfo>"
-            "<SignatureValue></SignatureValue>"
-            "</Signature>"
-        )
+        signature = '''
+            <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+                <SignedInfo>
+                    <CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+                    <SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+                    <Reference URI="#_0">
+                        <Transforms>
+                            <Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+                        </Transforms>
+                        <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+                        <DigestValue></DigestValue>
+                    </Reference>
+                </SignedInfo>
+                <SignatureValue></SignatureValue>
+            </Signature>
+        '''
         element_signature = etree.fromstring(signature, parser)
-
         element_to_digest = element_root.find(".//u:Timestamp", internal_nsmap)
         if not etree.iselement(element_to_digest):
             element_to_digest = element.getparent()
@@ -710,6 +714,7 @@ class L10nMxEdiDocument(models.Model):
                             element_receptor = element_root.find(".//des:RfcReceptor", internal_nsmap)
                             element_receptor.text = rfc_receptor
                     continue
+
                 if arguments[key] is not None:
                     element.set(key, arguments[key])
 
@@ -720,30 +725,31 @@ class L10nMxEdiDocument(models.Model):
         element_to_sign = element_signature.find(".//SignedInfo", internal_nsmap)
         element_to_sign = etree.tostring(element_to_sign, method="c14n", exclusive=1)
         element_signed = element_signature.find(".//SignatureValue", internal_nsmap)
-        element_signed.text = (
-            base64.b64encode(crypto.sign(private_key, element_to_sign, "sha1")).decode("UTF-8").replace("\n", "")
-        )
+        element_signed.text = base64.b64encode(
+            crypto.sign(private_key, element_to_sign, "sha1")
+        ).decode("UTF-8").replace("\n", "")
+
 
         if not token:
-            key_info = (
-                '<KeyInfo xmlns:o="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">'
-                "<o:SecurityTokenReference>"
-                '<o:Reference URI="#{uuid}" ValueType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3"/>'  # noqa
-                "</o:SecurityTokenReference>"
-                "</KeyInfo>".format(**arguments)
-            )
+            key_info = '''
+                <KeyInfo xmlns:o="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+                    <o:SecurityTokenReference>
+                        <o:Reference URI="#{uuid}" ValueType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3"/>
+                    </o:SecurityTokenReference>
+                </KeyInfo>
+                '''.format(**arguments)
         else:
-            key_info = (
-                "<KeyInfo>"
-                "<X509Data>"
-                "<X509IssuerSerial>"
-                "<X509IssuerName></X509IssuerName>"
-                "<X509SerialNumber></X509SerialNumber>"
-                "</X509IssuerSerial>"
-                "<X509Certificate></X509Certificate>"
-                "</X509Data>"
-                "</KeyInfo>"
-            )
+            key_info = '''
+                <KeyInfo>
+                    <X509Data>
+                        <X509IssuerSerial>
+                            <X509IssuerName></X509IssuerName>
+                            <X509SerialNumber></X509SerialNumber>
+                        </X509IssuerSerial>
+                        <X509Certificate></X509Certificate>
+                    </X509Data>
+                </KeyInfo>
+            '''
         element_key_info = etree.fromstring(key_info, parser)
         if not token:
             element_certificate = element_root.find(".//o:BinarySecurityToken", internal_nsmap)
@@ -762,7 +768,6 @@ class L10nMxEdiDocument(models.Model):
 
         element_signature.append(element_key_info)
         element.append(element_signature)
-
         return etree.tostring(element_root, method="c14n", exclusive=1)
 
     def l10n_mx_ws_get_cfdi_status(self, emmiter_vat, receiver_vat, total, uuid):
@@ -772,20 +777,20 @@ class L10nMxEdiDocument(models.Model):
             total or 0.0,
             uuid or "",
         )
-        data = (
-            '<?xml version="1.0" encoding="UTF-8"?>'
-            "<s:Envelope "
-            'xmlns:ns0="http://tempuri.org/" '
-            'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" '
-            'xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">'
-            "<s:Header/>"
-            "<s:Body>"
-            "<ns0:Consulta>"
-            "<ns0:expresionImpresa>${expression}</ns0:expresionImpresa>"
-            "</ns0:Consulta>"
-            "</s:Body>"
-            "</s:Envelope>".format(expression=expression)
-        )
+        data = f'''
+            <?xml version="1.0" encoding="UTF-8"?>
+            <s:Envelope 
+                xmlns:ns0="http://tempuri.org/" 
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+                xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+                <s:Header/>
+                <s:Body>
+                    <ns0:Consulta>
+                        <ns0:expresionImpresa>${expression}</ns0:expresionImpresa>
+                    </ns0:Consulta>
+                </s:Body>
+            </s:Envelope>
+        '''
         url = "https://consultaqr.facturaelectronica.sat.gob.mx/ConsultaCFDIService.svc?wsdl"
         soap_action = "http://tempuri.org/IConsultaCFDIService/Consulta"
         headers = self.get_headers(soap_action, condition=False)
@@ -810,30 +815,29 @@ class L10nMxEdiDocument(models.Model):
         date_expires = date_created + timedelta(seconds=300)
         date_created = date_created.isoformat()
         date_expires = date_expires.isoformat()
-        duration = {
-            "created": date_created,
-            "expires": date_expires,
-            "uuid": f"uuid-{uuid}-4",
-        }
-        envelop = (
-            "<s:Envelope "
-            'xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" '
-            'xmlns:u="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" '
-            'xmlns:o="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">'
-            "<s:Header>"
-            '<o:Security s:mustUnderstand="1">'
-            '<u:Timestamp u:Id="_0">'
-            "<u:Created>{created}</u:Created>"
-            "<u:Expires>{expires}</u:Expires>"
-            "</u:Timestamp>"
-            '<o:BinarySecurityToken u:Id="{uuid}" ValueType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3" EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary"></o:BinarySecurityToken>'  # noqa
-            "</o:Security>"
-            "</s:Header>"
-            "<s:Body>"
-            '<Autentica xmlns="http://DescargaMasivaTerceros.gob.mx"/>'
-            "</s:Body>"
-            "</s:Envelope>".format(**duration)
-        )
+        envelop = f'''
+            <s:Envelope 
+                xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" 
+                xmlns:u="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" 
+                xmlns:o="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+                <s:Header>
+                    <o:Security s:mustUnderstand="1">
+                        <u:Timestamp u:Id="_0">
+                            <u:Created>{date_created}</u:Created>
+                            <u:Expires>{date_expires}</u:Expires>
+                        </u:Timestamp>
+                        <o:BinarySecurityToken 
+                            u:Id="uuid-{uuid}-4" 
+                            ValueType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3" 
+                            EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary">
+                        </o:BinarySecurityToken>
+                    </o:Security>
+                </s:Header>
+                <s:Body>
+                <Autentica xmlns="http://DescargaMasivaTerceros.gob.mx"/>
+                </s:Body>
+            </s:Envelope>
+        '''
         xpath = "s:Header/o:Security"
         data = self.prepare_soap_data(certificate, private_key, {"uuid": f"uuid-{uuid}-4"}, envelop, xpath, False)
         url = "https://cfdidescargamasivasolicitud.clouda.sat.gob.mx/Autenticacion/Autenticacion.svc"
@@ -872,9 +876,10 @@ class L10nMxEdiDocument(models.Model):
                 sanitized_arg[key] = value
         return sanitized_arg
 
-    def l10n_mx_ws_request_download(self, certificate, private_key, token, args):
+    def l10n_mx_ws_request_download(self, certificate, private_key, token, **args):
         if not isinstance(args, dict):
             raise ValidationError(_("Validation error"))
+
         holder_vat = "".join(certificate.get_subject().x500UniqueIdentifier.split(" ")[0])
         sanitized = self.sanitize_args(args)
         arguments = {
@@ -898,22 +903,22 @@ class L10nMxEdiDocument(models.Model):
             else None,
             "Complemento": sanitized["complement"] if "complement" in sanitized and "uuid" not in sanitized else None,
         }
-        envelop = (
-            "<s:Envelope "
-            'xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" '
-            'xmlns:des="http://DescargaMasivaTerceros.sat.gob.mx">'
-            "<s:Header/>"
-            "<s:Body>"
-            "<des:SolicitaDescarga>"
-            "<des:solicitud>"
-            "<des:RfcReceptores>"
-            "<des:RfcReceptor/>"
-            "</des:RfcReceptores>"
-            "</des:solicitud>"
-            "</des:SolicitaDescarga>"
-            "</s:Body>"
-            "</s:Envelope>"
-        )
+        envelop = '''
+            <s:Envelope 
+                xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" 
+                xmlns:des="http://DescargaMasivaTerceros.sat.gob.mx">
+                <s:Header/>
+                <s:Body>
+                    <des:SolicitaDescarga>
+                        <des:solicitud>
+                            <des:RfcReceptores>
+                                <des:RfcReceptor/>
+                                </des:RfcReceptores>
+                        </des:solicitud>
+                    </des:SolicitaDescarga>
+                </s:Body>
+            </s:Envelope>
+        '''
         xpath = "s:Body/des:SolicitaDescarga/des:solicitud"
         data = self.prepare_soap_data(certificate, private_key, arguments, envelop, xpath, token)
         url = "https://cfdidescargamasivasolicitud.clouda.sat.gob.mx/SolicitaDescargaService.svc"
@@ -942,18 +947,18 @@ class L10nMxEdiDocument(models.Model):
             "RfcSolicitante": certificate.get_subject().x500UniqueIdentifier.split(" ")[0],
             "IdSolicitud": id_solicitud,
         }
-        envelop = (
-            "<s:Envelope "
-            'xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" '
-            'xmlns:des="http://DescargaMasivaTerceros.sat.gob.mx">'
-            "<s:Header/>"
-            "<s:Body>"
-            "<des:VerificaSolicitudDescarga>"
-            '<des:solicitud IdSolicitud="" RfcSolicitante=""/>'
-            "</des:VerificaSolicitudDescarga>"
-            "</s:Body>"
-            "</s:Envelope>"
-        )
+        envelop = '''
+            <s:Envelope 
+                xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" 
+                xmlns:des="http://DescargaMasivaTerceros.sat.gob.mx">
+                <s:Header/>
+                <s:Body>
+                    <des:VerificaSolicitudDescarga>
+                        <des:solicitud IdSolicitud="" RfcSolicitante=""/>
+                    </des:VerificaSolicitudDescarga>
+                </s:Body>"
+            </s:Envelope>"
+        '''
         xpath = "s:Body/des:VerificaSolicitudDescarga/des:solicitud"
         data = self.prepare_soap_data(certificate, private_key, arguments, envelop, xpath, token)
         url = "https://cfdidescargamasivasolicitud.clouda.sat.gob.mx/VerificaSolicitudDescargaService.svc"
@@ -989,18 +994,18 @@ class L10nMxEdiDocument(models.Model):
             "RfcSolicitante": certificate.get_subject().x500UniqueIdentifier.split(" ")[0],
             "IdPaquete": id_paquete,
         }
-        envelop = (
-            "<s:Envelope "
-            'xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" '
-            'xmlns:des="http://DescargaMasivaTerceros.sat.gob.mx">'
-            "<s:Header/>"
-            "<s:Body>"
-            "<des:PeticionDescargaMasivaTercerosEntrada>"
-            '<des:peticionDescarga IdPaquete="" RfcSolicitante=""/>'
-            "</des:PeticionDescargaMasivaTercerosEntrada>"
-            "</s:Body>"
-            "</s:Envelope>"
-        )
+        envelop = '''
+            <s:Envelope 
+                xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" 
+                xmlns:des="http://DescargaMasivaTerceros.sat.gob.mx">
+                <s:Header/>
+                <s:Body>
+                    <des:PeticionDescargaMasivaTercerosEntrada>
+                        <des:peticionDescarga IdPaquete="" RfcSolicitante=""/>
+                    </des:PeticionDescargaMasivaTercerosEntrada>
+                </s:Body>
+            </s:Envelope>
+        '''
         xpath = "s:Body/des:PeticionDescargaMasivaTercerosEntrada/des:peticionDescarga"
         data = self.prepare_soap_data(certificate, private_key, arguments, envelop, xpath, token)
         url = "https://cfdidescargamasiva.clouda.sat.gob.mx/DescargaMasivaService.svc"

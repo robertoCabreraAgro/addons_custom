@@ -159,30 +159,8 @@ class SatSyncWizard(models.TransientModel):
         attachment_ids = []
         for company in self.company_id:
             params = self.get_params()
-            attachment_ids.extend(company.download_cfdi_files(**params))
+            esignature = company.l10n_mx_edi_esignature_ids.get_valid_esignature()
+            attachment_ids.extend(company.download_cfdi_files(esignature, **params))
         action = self.env.ref("base.action_attachment").read()[0]
         action["domain"] = [("id", "in", attachment_ids)]
         return action
-
-    def action_button_reprocess(self):
-        process_move_ids = []
-        moves = self.get_moves()
-        if not moves:
-            raise UserError(_("No records found for your selection."))
-        move_obj = self.env["account.move"]
-        for record in split_every(100, moves.ids):
-            for move in move_obj.browse(record):
-                res = self.action_fix_move_cash_basis(move)
-                if res:
-                    process_move_ids.append(move.id)
-        # _logger.debug("%d account moves reprocesed.", len(process_move_ids))
-        return {
-            "type": "ir.actions.act_window",
-            "name": _("Reprocess Account Moves"),
-            "res_model": "account.move",
-            "domain": [("id", "in", process_move_ids)],
-            "view_type": "form",
-            "view_mode": "tree,form",
-            "context": self.env.context,
-            "target": "current",
-        }

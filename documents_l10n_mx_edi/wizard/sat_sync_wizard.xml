@@ -8,12 +8,12 @@
                 <p>This wizard will download CFDI from SAT</p>
                 <group>
                     <group string="Date ranges">
+                        <field name="company_id" readonly="1" />
                         <field name="date_from" />
                         <field name="date_to" />
                         <field name="request_type" />
                     </group>
                     <group string="General Data">
-                        <field name="company_id" invisible="1" />
                         <field name="emitter_vat" invisble="1" />
                         <field name="receiver_vat" invisible="uuid != False" />
                         <field name="cfdi_type" invisible="uuid != False" />
