@@ -40,12 +40,14 @@ class ResCompany(models.Model):
             esignature = company.l10n_mx_edi_esignature_ids.get_valid_esignature()
             if not esignature:
                 continue
-            company.sudo().download_cfdi_files()
+
+            company.sudo().download_cfdi_files(esignature, {})
             company.last_sat_fetch_date = fields.Datetime.now()
         return True
 
     def download_cfdi_files(self, esignature, **kwargs):
         edi_obj = self.env["l10n_mx_edi.document"]
+        esignature = esignature or self.l10n_mx_edi_esignature_ids.get_valid_esignature()
         sanitized = {}
         sanitized["date_from"] = (
             kwargs["date_from"]
@@ -128,6 +130,7 @@ class ResCompany(models.Model):
                 doc_exist = doc_obj.sudo().search([("name", "=", name), ("company_id", "=", self.id)])
                 if doc_exist:
                     continue
+
                 with container.open(fname) as file:
                     file_content = base64.b64encode(file.read())
                     cfdi_etree = self.env["l10n_mx_edi.document"].check_objectify_xml(

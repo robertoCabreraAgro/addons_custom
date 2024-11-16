@@ -16,5 +16,5 @@ class ResConfigSettings(models.TransientModel):
     l10n_mx_edi_folder = fields.Many2one(related="company_id.l10n_mx_edi_folder", readonly=False)
 
     def sync_sat(self):
-        self.company_id.download_cfdi_files()
+        self.company_id.download_cfdi_files(False, {})
         return True

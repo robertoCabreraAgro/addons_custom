@@ -159,8 +159,7 @@ class SatSyncWizard(models.TransientModel):
         attachment_ids = []
         for company in self.company_id:
             params = self.get_params()
-            esignature = company.l10n_mx_edi_esignature_ids.get_valid_esignature()
-            attachment_ids.extend(company.download_cfdi_files(esignature, **params))
+            attachment_ids.extend(company.download_cfdi_files(False, params))
         action = self.env.ref("base.action_attachment").read()[0]
         action["domain"] = [("id", "in", attachment_ids)]
         return action
