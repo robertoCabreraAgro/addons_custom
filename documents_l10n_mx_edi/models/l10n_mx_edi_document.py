@@ -876,7 +876,7 @@ class L10nMxEdiDocument(models.Model):
                 sanitized_arg[key] = value
         return sanitized_arg
 
-    def l10n_mx_ws_request_download(self, certificate, private_key, token, **args):
+    def l10n_mx_ws_request_download(self, certificate, private_key, token, args):
         if not isinstance(args, dict):
             raise ValidationError(_("Validation error"))
 
