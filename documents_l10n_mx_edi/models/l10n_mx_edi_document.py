@@ -954,10 +954,10 @@ class L10nMxEdiDocument(models.Model):
                 <s:Header/>
                 <s:Body>
                     <des:VerificaSolicitudDescarga>
-                        <des:solicitud IdSolicitud="" RfcSolicitante=""/>
+                        <des:solicitud IdSolicitud="" RfcSolicitante="" />
                     </des:VerificaSolicitudDescarga>
-                </s:Body>"
-            </s:Envelope>"
+                </s:Body>
+            </s:Envelope>
         '''
         xpath = "s:Body/des:VerificaSolicitudDescarga/des:solicitud"
         data = self.prepare_soap_data(certificate, private_key, arguments, envelop, xpath, token)
