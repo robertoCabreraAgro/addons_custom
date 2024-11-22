@@ -1,7 +1,6 @@
 from psycopg2.extensions import AsIs
 
 from odoo import fields, models
-
 from odoo.addons.account.models.account_move import PAYMENT_STATE_SELECTION
 
 
@@ -11,19 +10,60 @@ class InvoiceLineOut(models.Model):
     _auto = False
     _order = "payment_reference ASC, date ASC"
 
-    aml_id = fields.Many2one("account.move.line", readonly=True)
+
+    company_id = fields.Many2one("res.company", readonly=True)
+    move_type = fields.Selection(
+        selection=[
+            ("entry", "Journal Entry"),
+            ("out_invoice", "Customer Invoice"),
+            ("out_refund", "Customer Credit Note"),
+            ("in_invoice", "Vendor Bill"),
+            ("in_refund", "Vendor Credit Note"),
+            ("out_receipt", "Sales Receipt"),
+            ("in_receipt", "Purchase Receipt"),
+        ],
+        string="Type",
+        readonly=True,
+    )
+    commercial_partner_id = fields.Many2one("res.partner", readonly=True)
+    partner_id = fields.Many2one("res.partner", readonly=True)
     move_id = fields.Many2one("account.move", readonly=True)
     journal_id = fields.Many2one("account.journal", readonly=True)
-    company_id = fields.Many2one("res.company", readonly=True)
-    partner_id = fields.Many2one("res.partner", readonly=True)
-    commercial_partner_id = fields.Many2one("res.partner", readonly=True)
+    x_treatment = fields.Selection(
+        [
+            ("not_fiscal_simulated", "Not Fiscal simulated"),
+            ("not_fiscal_real", "Not Fiscal real"),
+            ("fiscal_simulated", "Fiscal simulated"),
+            ("fiscal_real", "Fiscal real"),
+        ],
+        "Treatment",
+        readonly=True,
+    )
+    invoice_user_id = fields.Many2one("res.users", readonly=True)
+    team_id = fields.Many2one("crm.team", readonly=True)
+    ref = fields.Char(readonly=True)
+    date = fields.Date(readonly=True)
+    year = fields.Integer(readonly=True)
+    month = fields.Integer(readonly=True)
+    month_name = fields.Char(readonly=True)
+    quarter = fields.Integer(readonly=True)
+    week_of_year = fields.Integer(readonly=True)
+    day_of_month = fields.Integer(readonly=True)
+    day_of_week = fields.Integer(readonly=True)
+    day_of_year = fields.Integer(readonly=True)
+    payment_reference = fields.Char(readonly=True)
+    payment_state = fields.Selection(
+        selection=PAYMENT_STATE_SELECTION,
+        string="Payment Status",
+        readonly=True,
+    )
+
+    aml_id = fields.Many2one("account.move.line", readonly=True)
+    sequence = fields.Integer(readonly=True)
     product_id = fields.Many2one("product.product", readonly=True)
     product_categ_id = fields.Many2one("product.category", readonly=True)
     parent_categ_id = fields.Many2one("product.category", string="Parent Category", readonly=True)
     root_categ_id = fields.Many2one("product.category", string="Root Category", readonly=True)
-    team_id = fields.Many2one("crm.team", readonly=True)
-    sequence = fields.Integer(readonly=True)
-    move_name = fields.Char("Name", readonly=True)
     parent_state = fields.Char(
         selection=[
             ("draft", "Draft"),
@@ -33,8 +73,6 @@ class InvoiceLineOut(models.Model):
         string="State",
         readonly=True,
     )
-    ref = fields.Char(readonly=True)
-    name = fields.Char(readonly=True)
     display_type = fields.Selection(
         selection=[
             ("product", "Product"),
@@ -49,53 +87,18 @@ class InvoiceLineOut(models.Model):
         ],
         readonly=True,
     )
-    date = fields.Date(readonly=True)
+    move_name = fields.Char("Name", readonly=True)
+    name = fields.Char(readonly=True)
     quantity = fields.Float(readonly=True)
     price_unit = fields.Float(readonly=True)
     price_subtotal = fields.Float("Subtotal", readonly=True)
     price_total = fields.Float("Total", readonly=True)
     discount = fields.Float(readonly=True)
-    move_type = fields.Selection(
-        selection=[
-            ("entry", "Journal Entry"),
-            ("out_invoice", "Customer Invoice"),
-            ("out_refund", "Customer Credit Note"),
-            ("in_invoice", "Vendor Bill"),
-            ("in_refund", "Vendor Credit Note"),
-            ("out_receipt", "Sales Receipt"),
-            ("in_receipt", "Purchase Receipt"),
-        ],
-        string="Type",
-        readonly=True,
-    )
-    payment_reference = fields.Char(readonly=True)
-    payment_state = fields.Selection(
-        selection=PAYMENT_STATE_SELECTION,
-        string="Payment Status",
-        readonly=True,
-    )
-    x_treatment = fields.Selection(
-        [
-            ("not_fiscal_simulated", "Not Fiscal simulated"),
-            ("not_fiscal_real", "Not Fiscal real"),
-            ("fiscal_simulated", "Fiscal simulated"),
-            ("fiscal_real", "Fiscal real"),
-        ],
-        "Treatment",
-        readonly=True,
-    )
     purchase_price = fields.Float(readonly=True)
     purchase_price_total = fields.Float("Total Purchase", readonly=True)
     margin = fields.Float(readonly=True)
     margin_percent = fields.Float(readonly=True)
-    year = fields.Integer(readonly=True)
-    month = fields.Integer(readonly=True)
-    month_name = fields.Char(readonly=True)
-    quarter = fields.Integer(readonly=True)
-    week_of_year = fields.Integer(readonly=True)
-    day_of_month = fields.Integer(readonly=True)
-    day_of_week = fields.Integer(readonly=True)
-    day_of_year = fields.Integer(readonly=True)
+
 
     def _query(self):
         return """
@@ -144,6 +147,7 @@ class InvoiceLineOut(models.Model):
                     inv.move_type,
                     inv.payment_reference,
                     inv.payment_state,
+                    inv.invoice_user_id
                     inv.team_id
                 FROM
                     amls
@@ -217,41 +221,35 @@ class InvoiceLineOut(models.Model):
                 date
         """
 
-    def refresh_concurrently(self):
-        table = AsIs(self._table)
-        if not self._check_populated(table):
-            self._cr.execute("REFRESH MATERIALIZED VIEW %s" % (table,))
-            return
-        self._cr.execute("REFRESH MATERIALIZED VIEW CONCURRENTLY %s", (table,))
 
     def _check_populated(self, table):
         self._cr.execute(
-            "SELECT relispopulated FROM pg_class WHERE relname = '%s' and relkind = 'm'" % (table,)
+            f"SELECT relispopulated FROM pg_class WHERE relname = '{table}' and relkind = 'm'"
         )
         res = self._cr.fetchone()
         return res and res[0]
 
+    def refresh_concurrently(self):
+        table = AsIs(self._table)
+        if not self._check_populated(table):
+            self._cr.execute(f"REFRESH MATERIALIZED VIEW {table}")
+            return
+
+        self._cr.execute(f"REFRESH MATERIALIZED VIEW CONCURRENTLY {table}")
+
     def init(self):
         table = AsIs(self._table)
         query = AsIs(self._query())
-        self._cr.execute("DROP MATERIALIZED view IF EXISTS %s CASCADE", (table,))
+        self._cr.execute(f"DROP MATERIALIZED view IF EXISTS {table} CASCADE")
         if self._context.get("with_data"):
             # When calling with that context it will create the view and populate it
             self._cr.execute(
-                "CREATE MATERIALIZED VIEW %s AS (%s)",
-                (
-                    table,
-                    query,
-                ),
+                f"CREATE MATERIALIZED VIEW {table} AS ({query})"
             )
         else:
             # To avoid long time to update the module we create the view without data
             # and later be populated by the cron that executes the method refresh_concurrently()
             self._cr.execute(
-                "CREATE MATERIALIZED VIEW %s AS (%s) WITH NO DATA",
-                (
-                    table,
-                    query,
-                ),
+                f"CREATE MATERIALIZED VIEW {table} AS ({query}) WITH NO DATA"
             )
-        self._cr.execute("CREATE UNIQUE INDEX id_%s ON %s(aml_id)", (table, table))
+        self._cr.execute(f"CREATE UNIQUE INDEX id_{table} ON {table}(aml_id)")
