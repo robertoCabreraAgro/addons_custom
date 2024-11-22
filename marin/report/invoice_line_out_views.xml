@@ -23,6 +23,13 @@
                     domain="[('payment_state', '=', 'in_payment')]"
                     help="In Payment Invoices" />
                 <filter name="date" string="Date" date="date" />
+                <separator />
+                <filter name="real" string="Real"
+                    domain="[('journal_id.x_treatment', 'in', ('not_fiscal_real', 'fiscal_real'))]" />
+                <filter name="fiscal" string="Fiscal"
+                    domain="[('journal_id.x_treatment', 'in', ('fiscal_real', 'fiscal_simulated'))]" />
+                <filter name="not_fiscal" string="Not Fiscal"
+                    domain="[('journal_id.x_treatment', 'in', ('not_fiscal_real', 'not_fiscal_simulated'))]" />
 
                 <group expand="0" string="Group By">
                     <filter name="group_by_move_type" string="Invoice Type"
