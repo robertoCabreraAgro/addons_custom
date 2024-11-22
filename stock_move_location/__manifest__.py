@@ -13,10 +13,10 @@
     "category": "Stock",
     "data": [
         "security/ir.model.access.csv",
-        "views/stock_quant_view.xml",
-        "views/stock_picking_type_views.xml",
+        "views/stock_quant_views.xml",
+        # "views/stock_picking_type_views.xml",
         "views/stock_picking_views.xml",
-        "wizard/stock_relocate_views.xml",
+        "wizard/stock_quant_relocate_views.xml",
     ],
     "post_init_hook": "enable_multi_locations",
 }

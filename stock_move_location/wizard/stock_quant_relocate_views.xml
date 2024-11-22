@@ -42,7 +42,7 @@
                             nolabel="1"
                             mode="tree,kanban"
                             colspan="2">
-                            <tree
+                            <list
                                 editable="bottom"
                                 decoration-info="move_quantity != max_quantity"
                                 decoration-danger="(move_quantity &lt; 0) or (move_quantity > max_quantity)"
@@ -79,7 +79,7 @@
                                 <field name="total_quantity"
                                     readonly="1"
                                     force_save="1" />
-                            </tree>
+                            </list>
                             <kanban class="o_kanban_mobile">
                                 <templates>
                                     <t t-name="kanban-box">
@@ -125,8 +125,9 @@
     </record>
 
     <record id="stock_quant_relocate_action" model="ir.actions.act_window">
-        <field name="name">Move from location...</field>
+        <field name="name">Quant relocate</field>
         <field name="res_model">stock.quant.relocate</field>
+        <field name="view_id" ref="stock_quant_relocate_form" />
         <field name="view_mode">form</field>
         <field name="target">new</field>
         <field name="context">{}</field>

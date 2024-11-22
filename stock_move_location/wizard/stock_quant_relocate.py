@@ -4,7 +4,7 @@ from odoo.osv import expression
 
 
 class StockQuantRelocate(models.TransientModel):
-    _name = "stock.quant.relocate"
+    _inherit = "stock.quant.relocate"
     _description = "Wizard move location"
 
 
@@ -12,24 +12,23 @@ class StockQuantRelocate(models.TransientModel):
         "res.company",
         default=lambda self: self.env.company,
     )
-    quant_ids = fields.Many2many("stock.quant")
     picking_type_id = fields.Many2one(
         comodel_name="stock.picking.type",
         compute="_compute_picking_type_id", store=True,
         readonly=False,
-        domain=[("company_id", "=", company_id), ("code", "=", "internal")],
+        domain="[('company_id', '=', company_id), ('code', '=', 'internal')]",
     )
     location_origin_id = fields.Many2one(
         comodel_name="stock.location",
         string="Origin Location",
         required=True,
-        domain=[("company_id", "in", (company_id.id, False))],
+        domain="[('company_id', 'in', (company_id, False))]",
     )
     location_destination_id = fields.Many2one(
         comodel_name="stock.location",
         string="Destination Location",
         required=True,
-        domain=[("company_id", "in", (company_id.id, False))],
+        domain="[('company_id', 'in', (company_id, False))]",
     )
     picking_id = fields.Many2one(
         comodel_name="stock.picking",
