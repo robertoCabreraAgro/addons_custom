@@ -147,7 +147,7 @@ class InvoiceLineOut(models.Model):
                     inv.move_type,
                     inv.payment_reference,
                     inv.payment_state,
-                    inv.invoice_user_id
+                    inv.invoice_user_id,
                     inv.team_id
                 FROM
                     amls
