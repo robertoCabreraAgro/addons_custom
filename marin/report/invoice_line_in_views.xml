@@ -1,5 +1,62 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
+    <record model="ir.ui.view" id="view_invoice_line_in_report_search_view">
+        <field name="name">invoice.line.in.report.search.view</field>
+        <field name="model">invoice.line.in.report</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="move_id" />
+                <field name="journal_id" />
+                <field name="product_id" />
+                <field name="partner_id" />
+                <field name="ref" />
+                <field name="payment_reference" />
+                <filter domain="[('move_type', '=', 'in_invoice')]" name="in_invoices" help="Invoices" />
+                <filter domain="[('move_type', '=', 'in_refund')]" name="in_refunds" help="Credit Notes" />
+                <separator />
+                <filter domain="[('parent_state', '=', 'draft')]" name="draft_invoices" help="Draft Invoices" />
+                <filter domain="[('parent_state', '=', 'posted')]" name="posted_invoices" help="Open Invoices" />
+                <filter
+                    domain="[('payment_state', '=', 'in_payment')]"
+                    name="in_payment_invoices"
+                    help="In Payment Invoices"
+                />
+                <filter domain="[('payment_state', '=', 'paid')]" name="paid_invoices" help="Paid Invoices" />
+                <filter domain="[('parent_state', '=', 'cancel')]" name="cancel_invoices" help="Cancelled Invoices" />
+                <group expand="0" string="Group By">
+                    <filter name="group_by_move_type" string="Invoice Type" context="{'group_by':'move_type'}" />
+                    <filter name="group_by_move_state" string="Invoice State" context="{'group_by':'parent_state'}" />
+                    <filter
+                        name="group_by_payment_state"
+                        string="Payment State"
+                        context="{'group_by':'payment_state'}"
+                    />
+                    <filter name="group_by_move" string="Invoice" context="{'group_by':'move_id'}" />
+                    <filter name="group_by_move_line" string="Invoice Line" context="{'group_by':'aml_id'}" />
+                    <filter name="group_by_move_product" string="Product" context="{'group_by':'product_id'}" />
+                    <separator />
+                    <filter name="group_by_partner" string="Partner" context="{'group_by':'partner_id'}" />
+                    <filter name="group_by_journal" string="Journal" context="{'group_by':'journal_id'}" />
+                    <filter name="group_by_treatment" string="Treatment" context="{'group_by':'x_treatment'}" />
+                    <filter
+                        name="group_by_product_categ"
+                        string="Product Category"
+                        context="{'group_by':'product_categ_id'}"
+                    />
+                    <filter
+                        name="group_by_parent_categ"
+                        string="Parent Category"
+                        context="{'group_by':'parent_categ_id'}"
+                    />
+                    <filter
+                        name="group_by_root_categ"
+                        string="Root Category"
+                        context="{'group_by':'root_categ_id'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
 
     <record model="ir.ui.view" id="view_invoice_line_in_report_tree">
         <field name="name">invoice.line.in.report.tree</field>
@@ -97,64 +154,6 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="view_invoice_line_in_report_search_view">
-        <field name="name">invoice.line.in.report.search.view</field>
-        <field name="model">invoice.line.in.report</field>
-        <field name="arch" type="xml">
-            <search>
-                <field name="move_id" />
-                <field name="journal_id" />
-                <field name="product_id" />
-                <field name="partner_id" />
-                <field name="ref" />
-                <field name="payment_reference" />
-                <filter domain="[('move_type', '=', 'in_invoice')]" name="in_invoices" help="Invoices" />
-                <filter domain="[('move_type', '=', 'in_refund')]" name="in_refunds" help="Credit Notes" />
-                <separator />
-                <filter domain="[('parent_state', '=', 'draft')]" name="draft_invoices" help="Draft Invoices" />
-                <filter domain="[('parent_state', '=', 'posted')]" name="posted_invoices" help="Open Invoices" />
-                <filter
-                    domain="[('payment_state', '=', 'in_payment')]"
-                    name="in_payment_invoices"
-                    help="In Payment Invoices"
-                />
-                <filter domain="[('payment_state', '=', 'paid')]" name="paid_invoices" help="Paid Invoices" />
-                <filter domain="[('parent_state', '=', 'cancel')]" name="cancel_invoices" help="Cancelled Invoices" />
-                <group expand="0" string="Group By">
-                    <filter name="group_by_move_type" string="Invoice Type" context="{'group_by':'move_type'}" />
-                    <filter name="group_by_move_state" string="Invoice State" context="{'group_by':'parent_state'}" />
-                    <filter
-                        name="group_by_payment_state"
-                        string="Payment State"
-                        context="{'group_by':'payment_state'}"
-                    />
-                    <filter name="group_by_move" string="Invoice" context="{'group_by':'move_id'}" />
-                    <filter name="group_by_move_line" string="Invoice Line" context="{'group_by':'aml_id'}" />
-                    <filter name="group_by_move_product" string="Product" context="{'group_by':'product_id'}" />
-                    <separator />
-                    <filter name="group_by_partner" string="Partner" context="{'group_by':'partner_id'}" />
-                    <filter name="group_by_journal" string="Journal" context="{'group_by':'journal_id'}" />
-                    <filter name="group_by_treatment" string="Treatment" context="{'group_by':'x_treatment'}" />
-                    <filter
-                        name="group_by_product_categ"
-                        string="Product Category"
-                        context="{'group_by':'product_categ_id'}"
-                    />
-                    <filter
-                        name="group_by_parent_categ"
-                        string="Parent Category"
-                        context="{'group_by':'parent_categ_id'}"
-                    />
-                    <filter
-                        name="group_by_root_categ"
-                        string="Root Category"
-                        context="{'group_by':'root_categ_id'}"
-                    />
-                </group>
-            </search>
-        </field>
-    </record>
-
     <record id="action_invoice_line_in_report" model="ir.actions.act_window">
         <field name="name">Invoice Line In Report</field>
         <field name="res_model">invoice.line.in.report</field>
@@ -167,7 +166,5 @@
         name="Invoice Line In Report"
         parent="purchase.purchase_report_main"
         groups="purchase.group_purchase_manager"
-        action="action_invoice_line_in_report"
-    />
-
+        action="action_invoice_line_in_report"/>
 </odoo>

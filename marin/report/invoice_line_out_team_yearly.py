@@ -8,6 +8,7 @@ class InvoiceLineOutTeamYearly(models.Model):
     _description = "Invoice Line Out by Team"
     _auto = False
 
+
     team_id = fields.Many2one("crm.team", readonly=True)
     partner_id = fields.Many2one("res.partner", readonly=True)
     commercial_partner_id = fields.Many2one("res.partner", readonly=True)
@@ -43,6 +44,7 @@ class InvoiceLineOutTeamYearly(models.Model):
     real_price_variation = fields.Float(readonly=True, aggregator="avg")
     sale_price_variation = fields.Float(readonly=True)
     real_margin_variation = fields.Float(readonly=True)
+
 
     def _query(self):
         return """
@@ -246,41 +248,34 @@ class InvoiceLineOutTeamYearly(models.Model):
                 gl.product_id ASC
         """
 
-    def refresh_concurrently(self):
-        table = AsIs(self._table)
-        if not self._check_populated(table):
-            self._cr.execute("REFRESH MATERIALIZED VIEW %s" % (table,))
-            return
-        self._cr.execute("REFRESH MATERIALIZED VIEW CONCURRENTLY %s", (table,))
-
-    def _check_populated(self, table):
+    def _check_is_populated(self, table):
         self._cr.execute(
-            "SELECT relispopulated FROM pg_class WHERE relname = '%s' and relkind = 'm'" % (table,)
+            f"SELECT relispopulated FROM pg_class WHERE relname = '{table}' and relkind = 'm'"
         )
         res = self._cr.fetchone()
         return res and res[0]
 
+    def refresh_concurrently(self):
+        table = AsIs(self._table)
+        if not self._check_is_populated(table):
+            self._cr.execute(f"REFRESH MATERIALIZED VIEW {table}")
+            return
+
+        self._cr.execute(f"REFRESH MATERIALIZED VIEW CONCURRENTLY {table}")
+
     def init(self):
         table = AsIs(self._table)
         query = AsIs(self._query())
-        self._cr.execute("DROP MATERIALIZED view IF EXISTS %s CASCADE", (table,))
+        self._cr.execute(f"DROP MATERIALIZED view IF EXISTS {table} CASCADE")
         if self._context.get("with_data"):
             # When calling with that context it will create the view and populate it
             self._cr.execute(
-                "CREATE MATERIALIZED VIEW %s AS (%s)",
-                (
-                    table,
-                    query,
-                ),
+                f"CREATE MATERIALIZED VIEW {table} AS ({query})"
             )
         else:
             # To avoid long time to update the module we create the view without data
             # and later be populated by the cron that executes the method refresh_concurrently()
             self._cr.execute(
-                "CREATE MATERIALIZED VIEW %s AS (%s) WITH NO DATA",
-                (
-                    table,
-                    query,
-                ),
+                f"CREATE MATERIALIZED VIEW {table} AS ({query}) WITH NO DATA"
             )
-        self._cr.execute("CREATE UNIQUE INDEX id_%s ON %s(id)", (table, table))
+        self._cr.execute(f"CREATE UNIQUE INDEX id_{table} ON {table} (id)")
