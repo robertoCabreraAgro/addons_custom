@@ -12,6 +12,7 @@ class InvoiceLineOut(models.Model):
 
 
     company_id = fields.Many2one("res.company", readonly=True)
+    move_id = fields.Many2one("account.move", readonly=True)
     move_type = fields.Selection(
         selection=[
             ("entry", "Journal Entry"),
@@ -25,9 +26,6 @@ class InvoiceLineOut(models.Model):
         string="Type",
         readonly=True,
     )
-    commercial_partner_id = fields.Many2one("res.partner", readonly=True)
-    partner_id = fields.Many2one("res.partner", readonly=True)
-    move_id = fields.Many2one("account.move", readonly=True)
     journal_id = fields.Many2one("account.journal", readonly=True)
     x_treatment = fields.Selection(
         [
@@ -39,9 +37,10 @@ class InvoiceLineOut(models.Model):
         "Treatment",
         readonly=True,
     )
+    partner_id = fields.Many2one("res.partner", readonly=True)
+    commercial_partner_id = fields.Many2one("res.partner", readonly=True)
     invoice_user_id = fields.Many2one("res.users", readonly=True)
     team_id = fields.Many2one("crm.team", readonly=True)
-    ref = fields.Char(readonly=True)
     date = fields.Date(readonly=True)
     year = fields.Integer(readonly=True)
     quarter = fields.Integer(readonly=True)
@@ -51,12 +50,12 @@ class InvoiceLineOut(models.Model):
     day_of_year = fields.Integer(readonly=True)
     day_of_month = fields.Integer(readonly=True)
     day_of_week = fields.Integer(readonly=True)
+    invoice_payment_term_id = fields.Many2one("account.payment.term", readonly=True)
     payment_state = fields.Selection(
         selection=PAYMENT_STATE_SELECTION,
         string="Payment Status",
         readonly=True,
     )
-    aml_id = fields.Many2one("account.move.line", readonly=True)
     product_id = fields.Many2one("product.product", readonly=True)
     product_categ_id = fields.Many2one("product.category", readonly=True)
     parent_categ_id = fields.Many2one("product.category", string="Parent Category", readonly=True)
@@ -74,118 +73,60 @@ class InvoiceLineOut(models.Model):
 
     def _query(self):
         return """
-            WITH amls AS (
-                SELECT
-                    id,
-                    id as aml_id,
-                    move_id,
-                    journal_id,
-                    company_id,
-                    partner_id,
-                    product_id,
-                    ref,
-                    date,
-                    quantity,
-                    price_unit,
-                    price_subtotal,
-                    price_total,
-                    discount,
-                    purchase_price,
-                    (purchase_price * quantity) AS purchase_price_total,
-                    margin,
-                    margin_percent,
-                    EXTRACT(YEAR FROM date) AS year,
-                    EXTRACT(MONTH FROM date) AS month,
-                    TO_CHAR(date, 'Month') AS month_name,
-                    EXTRACT(QUARTER FROM date) AS quarter,
-                    EXTRACT(WEEK FROM date) AS week_of_year,
-                    EXTRACT(DAY FROM date) AS day_of_month,
-                    EXTRACT(DOW FROM date) AS day_of_week,
-                    EXTRACT(DOY FROM date) AS day_of_year
-                FROM
-                    account_move_line
-                WHERE
-                    display_type = 'product'
-                    AND quantity != 0.0
-            ),
-            inv_amls AS (
-                SELECT
-                    amls.*,
-                    inv.move_type,
-                    inv.payment_state,
-                    inv.invoice_user_id,
-                    inv.team_id
-                FROM
-                    amls
-                LEFT OUTER JOIN
-                    account_move AS inv
-                    ON amls.move_id = inv.id
-                WHERE
-                    inv.move_type IN ('out_invoice', 'out_refund')
-                    AND amls.date > '2017-12-31'
-            ),
-            product_amls AS (
-                SELECT
-                    inv_amls.*,
-                    pt.name AS product_name,
-                    pt.categ_id AS product_categ_id,
-                    CASE
-                        WHEN pc.parent_id = pc.root_categ_id THEN pc.id
-                        ELSE pc.parent_id
-                    END AS parent_categ_id,
-                    pc.root_categ_id
-                FROM
-                    inv_amls
-                LEFT OUTER JOIN
-                    product_product AS pp
-                    ON inv_amls.product_id = pp.id
-                LEFT OUTER JOIN
-                    product_template AS pt
-                    ON pp.product_tmpl_id = pt.id
-                LEFT OUTER JOIN
-                    product_category AS pc
-                    ON pc.id = pt.categ_id
-            ),
-            journal_amls AS (
-                SELECT
-                    product_amls.*,
-                    aj.name AS journal_name,
-                    x_treatment
-                FROM
-                    product_amls
-                LEFT OUTER JOIN
-                    account_journal AS aj
-                    ON product_amls.journal_id = aj.id
-            ),
-            company_amls AS (
-                SELECT
-                    journal_amls.*,
-                    rc.name AS company_name
-                FROM
-                    journal_amls
-                LEFT OUTER JOIN
-                    res_company AS rc
-                    ON journal_amls.company_id = rc.id
-            ),
-            partner_amls AS (
-                SELECT
-                    company_amls.*,
-                    rp.name AS partner_name,
-                    rp.commercial_partner_id
-                FROM
-                    company_amls
-                LEFT OUTER JOIN
-                    res_partner AS rp
-                    ON company_amls.partner_id = rp.id
-            )
             SELECT
-                *
+                aml.id,
+                move.company_id,
+                aml.move_id,
+                move.move_type,
+                aml.journal_id,
+                journal.x_treatment,
+                move.commercial_partner_id,
+                move.partner_id,
+                move.invoice_user_id,
+                move.team_id,
+                move.invoice_date AS date, 
+                EXTRACT(YEAR FROM move.invoice_date) AS year,
+                EXTRACT(MONTH FROM move.invoice_date) AS month,
+                TO_CHAR(move.invoice_date, 'Month') AS month_name,
+                EXTRACT(QUARTER FROM move.invoice_date) AS quarter,
+                EXTRACT(WEEK FROM move.invoice_date) AS week_of_year,
+                EXTRACT(DAY FROM move.invoice_date) AS day_of_month,
+                EXTRACT(DOW FROM move.invoice_date) AS day_of_week,
+                EXTRACT(DOY FROM move.invoice_date) AS day_of_year,
+                move.invoice_payment_term_id,
+                move.payment_state,
+                aml.sequence,
+                aml.product_id,
+                pc.id AS product_categ_id,
+                CASE
+                    WHEN pc.parent_id = pc.root_categ_id THEN pc.id
+                    ELSE pc.parent_id
+                    END AS parent_categ_id,
+                pc.root_categ_id,
+                aml.quantity,
+                aml.price_unit,
+                aml.discount,
+                aml.price_subtotal,
+                aml.price_total,
+                aml.purchase_price,
+                ROUND((aml.purchase_price * quantity), 2) AS purchase_price_total,
+                aml.margin,aml.margin_percent
             FROM
-                partner_amls
+                account_move_line aml
+                INNER JOIN account_move move ON move.id = aml.move_id
+                LEFT JOIN account_journal journal ON journal.id = aml.journal_id
+                LEFT JOIN product_product pp ON pp.id = aml.product_id
+                LEFT JOIN product_template pt ON pt.id = pp.product_tmpl_id
+                LEFT JOIN product_category pc ON pc.id = pt.categ_id
+            WHERE
+                move.move_type IN ('out_invoice', 'out_refund')
+                AND move."state" = 'posted'
+                AND journal.x_treatment IN ('fiscal_real', 'not_fiscal_real')
+                AND aml.display_type = 'product'
+                AND aml.quantity != 0.0
             ORDER BY
-                date
+                move.invoice_date, move.id
         """
-
 
     def _check_is_populated(self, table):
         self._cr.execute(
@@ -217,4 +158,4 @@ class InvoiceLineOut(models.Model):
             self._cr.execute(
                 f"CREATE MATERIALIZED VIEW {table} AS ({query}) WITH NO DATA"
             )
-        self._cr.execute(f"CREATE UNIQUE INDEX id_{table} ON {table}(aml_id)")
+        self._cr.execute(f"CREATE UNIQUE INDEX id_{table} ON {table} (id)")
