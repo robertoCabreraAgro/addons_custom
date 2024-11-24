@@ -8,7 +8,7 @@ class InvoiceLineOut(models.Model):
     _name = "invoice.line.out.report"
     _description = "Invoice Line Out"
     _auto = False
-    _order = "payment_reference ASC, date ASC"
+    _order = 'date DESC'
 
 
     company_id = fields.Many2one("res.company", readonly=True)
@@ -44,56 +44,28 @@ class InvoiceLineOut(models.Model):
     ref = fields.Char(readonly=True)
     date = fields.Date(readonly=True)
     year = fields.Integer(readonly=True)
+    quarter = fields.Integer(readonly=True)
     month = fields.Integer(readonly=True)
     month_name = fields.Char(readonly=True)
-    quarter = fields.Integer(readonly=True)
     week_of_year = fields.Integer(readonly=True)
+    day_of_year = fields.Integer(readonly=True)
     day_of_month = fields.Integer(readonly=True)
     day_of_week = fields.Integer(readonly=True)
-    day_of_year = fields.Integer(readonly=True)
-    payment_reference = fields.Char(readonly=True)
     payment_state = fields.Selection(
         selection=PAYMENT_STATE_SELECTION,
         string="Payment Status",
         readonly=True,
     )
-
     aml_id = fields.Many2one("account.move.line", readonly=True)
-    sequence = fields.Integer(readonly=True)
     product_id = fields.Many2one("product.product", readonly=True)
     product_categ_id = fields.Many2one("product.category", readonly=True)
     parent_categ_id = fields.Many2one("product.category", string="Parent Category", readonly=True)
     root_categ_id = fields.Many2one("product.category", string="Root Category", readonly=True)
-    parent_state = fields.Char(
-        selection=[
-            ("draft", "Draft"),
-            ("posted", "Posted"),
-            ("cancel", "Cancelled"),
-        ],
-        string="State",
-        readonly=True,
-    )
-    display_type = fields.Selection(
-        selection=[
-            ("product", "Product"),
-            ("cogs", "Cost of Goods Sold"),
-            ("tax", "Tax"),
-            ("discount", "Discount"),
-            ("rounding", "Rounding"),
-            ("payment_term", "Payment Term"),
-            ("line_section", "Section"),
-            ("line_note", "Note"),
-            ("epd", "Early Payment Discount"),
-        ],
-        readonly=True,
-    )
-    move_name = fields.Char("Name", readonly=True)
-    name = fields.Char(readonly=True)
     quantity = fields.Float(readonly=True)
     price_unit = fields.Float(readonly=True)
+    discount = fields.Float(readonly=True)
     price_subtotal = fields.Float("Subtotal", readonly=True)
     price_total = fields.Float("Total", readonly=True)
-    discount = fields.Float(readonly=True)
     purchase_price = fields.Float(readonly=True)
     purchase_price_total = fields.Float("Total Purchase", readonly=True)
     margin = fields.Float(readonly=True)
@@ -109,14 +81,9 @@ class InvoiceLineOut(models.Model):
                     move_id,
                     journal_id,
                     company_id,
-                    sequence,
                     partner_id,
                     product_id,
-                    move_name,
-                    parent_state,
                     ref,
-                    name,
-                    display_type,
                     date,
                     quantity,
                     price_unit,
@@ -145,7 +112,6 @@ class InvoiceLineOut(models.Model):
                 SELECT
                     amls.*,
                     inv.move_type,
-                    inv.payment_reference,
                     inv.payment_state,
                     inv.invoice_user_id,
                     inv.team_id
@@ -155,8 +121,8 @@ class InvoiceLineOut(models.Model):
                     account_move AS inv
                     ON amls.move_id = inv.id
                 WHERE
-                    inv.move_type in ('out_invoice', 'out_refund')
-                    AND amls.date > '2022-12-31'
+                    inv.move_type IN ('out_invoice', 'out_refund')
+                    AND amls.date > '2017-12-31'
             ),
             product_amls AS (
                 SELECT
@@ -217,12 +183,11 @@ class InvoiceLineOut(models.Model):
             FROM
                 partner_amls
             ORDER BY
-                payment_reference,
                 date
         """
 
 
-    def _check_populated(self, table):
+    def _check_is_populated(self, table):
         self._cr.execute(
             f"SELECT relispopulated FROM pg_class WHERE relname = '{table}' and relkind = 'm'"
         )
@@ -231,7 +196,7 @@ class InvoiceLineOut(models.Model):
 
     def refresh_concurrently(self):
         table = AsIs(self._table)
-        if not self._check_populated(table):
+        if not self._check_is_populated(table):
             self._cr.execute(f"REFRESH MATERIALIZED VIEW {table}")
             return
 

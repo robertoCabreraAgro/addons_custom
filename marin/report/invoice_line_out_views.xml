@@ -13,12 +13,16 @@
                 <field name="journal_id" />
                 <field name="move_id" />
                 <field name="ref" />
-                <field name="payment_reference" />
-
-                <filter domain="[('move_type', '=', 'out_invoice')]" name="in_invoices" help="Invoices" />
-                <filter domain="[('move_type', '=', 'out_refund')]" name="in_refunds" help="Credit Notes" />
+                <filter name="in_invoices"
+                    domain="[('move_type', '=', 'out_invoice')]"
+                    help="Invoices" />
+                <filter name="in_refunds"
+                    domain="[('move_type', '=', 'out_refund')]"
+                    help="Credit Notes" />
                 <separator />
-                <filter domain="[('payment_state', '=', 'paid')]" name="paid_invoices" help="Paid Invoices" />
+                <filter name="paid_invoices"
+                    domain="[('payment_state', '=', 'paid')]"
+                    help="Paid Invoices" />
                 <filter name="in_payment_invoices"
                     domain="[('payment_state', '=', 'in_payment')]"
                     help="In Payment Invoices" />
@@ -30,12 +34,9 @@
                     domain="[('journal_id.x_treatment', 'in', ('fiscal_real', 'fiscal_simulated'))]" />
                 <filter name="not_fiscal" string="Not Fiscal"
                     domain="[('journal_id.x_treatment', 'in', ('not_fiscal_real', 'not_fiscal_simulated'))]" />
-
                 <group expand="0" string="Group By">
                     <filter name="group_by_move_type" string="Invoice Type"
                         context="{'group_by':'move_type'}" />
-                    <filter name="group_by_move_state" string="Invoice State"
-                        context="{'group_by':'parent_state'}" />
                     <filter name="group_by_payment_state" string="Payment State"
                         context="{'group_by':'payment_state'}" />
                     <filter name="group_by_move" string="Invoice"
@@ -45,7 +46,6 @@
                     <filter name="group_by_move_product" string="Product"
                         context="{'group_by':'product_id'}" />
                     <separator />
-
                     <filter name="group_by_team" string="Team"
                         context="{'group_by': 'team_id'}" />
                     <filter name="group_by_user" string="Salesperson"
@@ -59,19 +59,14 @@
                     <filter name="group_by_treatment" string="Treatment"
                         context="{'group_by':'x_treatment'}" />
                     <separator />
-                    <filter name="group_by_date" string="Date" context="{'group_by':'date'}" />
+                    <filter name="group_by_date" string="Date"
+                        context="{'group_by':'date'}" />
                     <separator />
-                    <filter
-                        name="group_by_product_categ"
-                        string="Product Category"
+                    <filter name="group_by_product_categ" string="Product Category"
                         context="{'group_by':'product_categ_id'}" />
-                    <filter
-                        name="group_by_parent_categ"
-                        string="Parent Category"
+                    <filter name="group_by_parent_categ" string="Parent Category"
                         context="{'group_by':'parent_categ_id'}" />
-                    <filter
-                        name="group_by_root_categ"
-                        string="Root Category"
+                    <filter name="group_by_root_categ" string="Root Category"
                         context="{'group_by':'root_categ_id'}" />
                 </group>
             </search>
@@ -83,28 +78,24 @@
         <field name="model">invoice.line.out.report</field>
         <field name="arch" type="xml">
             <list>
-                <field name="journal_id" />
-                <field name="x_treatment" />
-                <field name="move_type" />
-                <field name="date" />
-                <field name="move_name" />
-                <field name="ref" />
-                <field name="payment_reference" />
-                <field name="partner_id" />
-                <field name="parent_state" />
-                <field name="payment_state" />
-                <field name="product_id" />
-                <field name="quantity" />
-                <field name="price_unit" />
-                <field name="discount" />
-                <field name="price_subtotal" />
-                <field name="price_total" />
-                <field name="purchase_price" />
-                <field name="purchase_price_total" />
-                <field name="margin" />
-                <field name="margin_percent" />
-                <field name="company_id" />
-                <field name="sequence" />
+                <field name="journal_id" optional="show" />
+                <field name="move_type" optional="show" />
+                <field name="date" optional="show" />
+                <field name="move_id" optional="show" />
+                <field name="ref" optional="show" />
+                <field name="partner_id" optional="show" />
+                <field name="payment_state" optional="show" />
+                <field name="product_id" optional="show" />
+                <field name="quantity" optional="show" />
+                <field name="price_unit" optional="show" />
+                <field name="discount" optional="show" />
+                <field name="price_subtotal" optional="show" />
+                <field name="price_total" optional="show" />
+                <field name="purchase_price" optional="show" />
+                <field name="purchase_price_total" optional="show" />
+                <field name="margin" optional="show" />
+                <field name="margin_percent" optional="show" />
+                <field name="company_id" optional="show" />
             </list>
         </field>
     </record>
@@ -118,25 +109,25 @@
                     <!-- <field name="state" widget="statusbar" readonly="1"/> -->
                 </header>
                 <sheet>
-                    <div class="oe_button_box" name="button_box">
-                    </div>
-                    <div class="oe_title">
-                        <label for="move_name" string="Name" />
-                        <field name="move_name" />
+                    <div name="button_box" class="oe_button_box">
                     </div>
                     <group name="name">
-                        <field name="move_id" />
-                        <field name="company_id" />
+                        <group>
+                            <field name="move_id" />
+                            <field name="journal_id" />
+                            <field name="x_treatment" />
+                            <field name="partner_id" />
+                </group>
+                        <group>
+                            <field name="company_id" />
+                        </group>
                     </group>
                     <notebook>
                         <page name="values" string="Values">
                             <group>
                                 <group string="Invoice">
                                     <field name="aml_id" />
-                                    <field name="parent_state" />
                                     <field name="ref" />
-                                    <field name="name" />
-                                    <field name="display_type" />
                                     <field name="date" />
                                     <field name="quantity" />
                                     <field name="price_unit" />
@@ -144,7 +135,6 @@
                                     <field name="price_total" />
                                     <field name="discount" />
                                     <field name="move_type" />
-                                    <field name="payment_reference" />
                                     <field name="payment_state" />
                                     <field name="purchase_price" />
                                     <field name="purchase_price_total" />
@@ -153,13 +143,6 @@
                                 </group>
                                 <group string="Product">
                                     <field name="product_id" />
-                                </group>
-                                <group string="Journal">
-                                    <field name="journal_id" />
-                                    <field name="x_treatment" />
-                                </group>
-                                <group string="Partner">
-                                    <field name="partner_id" />
                                 </group>
                             </group>
                         </page>

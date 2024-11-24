@@ -53,8 +53,7 @@ class InvoiceLineOutTeam(models.Model):
                 FROM
                     invoice_line_out_report
                 WHERE
-                    parent_state = 'posted'
-                    AND move_type = 'out_invoice'
+                    move_type = 'out_invoice'
                     AND x_treatment IN ('fiscal_real', 'not_fiscal_real')
                     AND company_id = 2
             ),
