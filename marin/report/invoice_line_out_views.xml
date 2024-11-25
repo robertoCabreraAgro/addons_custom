@@ -80,15 +80,15 @@
                 <field name="partner_id" optional="show" />
                 <field name="payment_state" optional="show" />
                 <field name="product_id" optional="show" />
-                <field name="quantity" optional="show" />
-                <field name="price_unit" optional="show" />
-                <field name="discount" optional="show" />
-                <field name="price_subtotal" optional="show" />
-                <field name="price_total" optional="show" />
-                <field name="purchase_price" optional="show" />
-                <field name="purchase_price_total" optional="show" />
-                <field name="margin" optional="show" />
-                <field name="margin_percent" optional="show" />
+                <field name="quantity" sum="Total qty" optional="show" />
+                <field name="price_unit" avg="Avg price" optional="show" />
+                <field name="discount" string="Disc(%)" avg="Avg discount" optional="show" />
+                <field name="price_subtotal" sum="Subtotal" optional="show" />
+                <field name="price_total" sum="Total" optional="show" />
+                <field name="purchase_price" avg="Avg purchase" optional="show" />
+                <field name="purchase_price_total" sum="Total purchase" optional="show" />
+                <field name="margin" sum="Total margin" optional="show" />
+                <field name="margin_percent" avg="Avg margin" optional="show" />
                 <field name="invoice_payment_term_id" optional="show" />
                 <field name="company_id" optional="show" />
             </list>
