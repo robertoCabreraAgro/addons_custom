@@ -7,12 +7,7 @@
             <form>
                 <sheet>
                     <div class="oe_button_box" name="button_box" />
-                    <div>
-                        <label for="edit_locations">
-                            Edit Locations
-                        </label>
-                        <field name="edit_locations" widget="boolean_toggle" />
-                    </div>
+                    
                     <div>
                         <label for="exclude_reserved_qty">
                             Exclude Reserved Quantities
@@ -29,12 +24,10 @@
                         <field name="picking_type_id" />
                     </group>
                     <group name="main">
-                        <field name="location_origin_readonly" invisible="True" />
-                        <field name="location_origin_id"
-                            readonly="location_origin_readonly" />
+                        <field name="location_origin_readonly" invisible="True"  />
+                        <field name="location_origin_id" />
                         <field name="location_destination_readonly" invisible="True" />
-                        <field name="location_destination_id"
-                            readonly="location_destination_readonly" />
+                        <field name="location_destination_id" />
                         <field name="company_id" invisible="1" />
                     </group>
                     <group name="lines">
@@ -54,7 +47,7 @@
                                     groups="uom.group_uom" />
                                 <field name="location_origin_id"
                                     readonly="1"
-                                    force_save="1" />
+                                />
                                 <field name="location_destination_id"
                                     readonly="1"
                                     force_save="1" />

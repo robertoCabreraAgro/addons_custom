@@ -1,6 +1,9 @@
 from odoo import api, fields, models
 from odoo.fields import first
 from odoo.osv import expression
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class StockQuantRelocate(models.TransientModel):
@@ -22,6 +25,7 @@ class StockQuantRelocate(models.TransientModel):
         comodel_name="stock.location",
         string="Origin Location",
         required=True,
+        readonly=True,
         domain="[('company_id', 'in', (company_id, False))]",
     )
     location_destination_id = fields.Many2one(
@@ -34,14 +38,14 @@ class StockQuantRelocate(models.TransientModel):
         comodel_name="stock.picking",
         string="Connected Picking",
     )
-    edit_locations = fields.Boolean(default=True)
+    # edit_locations = fields.Boolean(default=True)
     location_origin_readonly = fields.Boolean(
-        compute="_compute_locations_readonly",
+        readonly=True,
         help="technical field to disable the edition of origin location.",
     )
     location_destination_readonly = fields.Boolean(
-        compute="_compute_locations_readonly",
-        help="technical field to disable the edition of destination location.",
+    #     compute="_compute_locations_readonly",
+         help="technical field to disable the edition of destination location.",
     )
     apply_putaway_strategy = fields.Boolean()
     exclude_reserved_qty = fields.Boolean(default=True)
@@ -56,14 +60,16 @@ class StockQuantRelocate(models.TransientModel):
     @api.model
     def default_get(self, fields_list):
         res = super().default_get(fields_list)
+
         if self.env.context.get("active_model", False) != "stock.quant":
             return res
 
         quants = self.env["stock.quant"].browse(
-            self.env.context.get("active_ids", False)
+            self.env.context.get("active_ids", [])
         )
-        res["line_ids"] = self._prepare_wizard_move_lines(self.quant_ids)
-        res["location_origin_id"] = first(quants).location_id.id
+            
+        res["location_origin_id"] = quants[0].location_id.id
+        res["line_ids"] = self._prepare_wizard_move_lines(quants)
         return res
 
     @api.model
@@ -100,19 +106,6 @@ class StockQuantRelocate(models.TransientModel):
                     )
                 )
         return res
-
-    @api.depends("edit_locations")
-    def _compute_locations_readonly(self):
-        for rec in self:
-            rec.location_origin_readonly = self.env.context.get(
-                "location_origin_readonly", False
-            )
-            rec.location_destination_readonly = self.env.context.get(
-                "location_destination_readonly", False
-            )
-            if not rec.edit_locations:
-                rec.location_origin_readonly = True
-                rec.location_destination_readonly = True
 
     @api.depends_context("company")
     @api.depends("location_origin_id")
@@ -163,6 +156,28 @@ class StockQuantRelocate(models.TransientModel):
         exclude_reserved_qty = self.env.context.get(
             "only_reserved_qty", self.exclude_reserved_qty
         )
+        if self.line_ids:
+            for line in self.line_ids:
+                product_data.append(
+                    {
+                        "product_id": line.product_id.id,
+                        "move_quantity": line.move_quantity,
+                        "max_quantity": line.max_quantity,
+                        "reserved_quantity": line.reserved_quantity,
+                        "total_quantity": line.total_quantity,
+                        "location_origin_id": line.location_origin_id.id,
+                        "location_destination_id": line.location_destination_id.id,
+                        "lot_id": line.lot_id.id if line.lot_id else False,
+                        "package_id": line.package_id.id if line.package_id else False,
+                        "owner_id": line.owner_id.id if line.owner_id else False,
+                        "product_uom_id": line.product_uom_id.id,
+                        "custom": line.custom,
+                    }
+                )
+            return product_data
+        exclude_reserved_qty = self.env.context.get(
+            "only_reserved_qty", self.exclude_reserved_qty
+        )
         for group in self._get_group_quants():
             product = product_obj.browse(group.get("product_id")).exists()
             # Apply the putaway strategy
@@ -196,22 +211,6 @@ class StockQuantRelocate(models.TransientModel):
                 }
             )
         return product_data
-
-    @api.onchange("location_origin_id", "exclude_reserved_qty")
-    def onchange_origin_location(self):
-        # Get location_origin_readonly context key to prevent load all origin
-        # location products when user opens the wizard from stock quants to
-        # move it to other location.
-        if (
-            not self.env.context.get("location_origin_readonly")
-            and self.location_origin_id
-        ):
-            lines = [[5, 0, 0]] + [
-                [0, 0, line_vals]
-                for line_vals in self._get_stock_move_location_lines_values()
-                if line_vals.get("max_quantity", 0.0) > 0.0
-            ]
-            self.update({"line_ids": lines})
 
     @api.onchange("location_destination_id")
     def _onchange_location_destination_id(self):
@@ -357,3 +356,4 @@ class StockQuantRelocate(models.TransientModel):
     def clear_lines(self):
         self._clear_lines()
         return {"type": "ir.action.do_nothing"}
+
