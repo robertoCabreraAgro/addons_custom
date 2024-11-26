@@ -14,13 +14,19 @@
                         </label>
                         <field name="exclude_reserved_qty" widget="boolean_toggle" />
                     </div>
-                    <div groups="stock.group_stock_multi_locations">
+                    <!-- <div groups="stock.group_stock_multi_locations">
                         <label for="apply_putaway_strategy">
                             Apply putaway strategy for moving products
                         </label>
                         <field name="apply_putaway_strategy" widget="boolean_toggle" />
+                    </div> -->
+                    <div>
+                        <label for="skip_picking">
+                            Skip Picking
+                        </label>
+                        <field name="skip_picking" widget="boolean_toggle" />
                     </div>
-                    <group name="picking_type">
+                    <group name="picking_type" invisible="skip_picking">
                         <field name="picking_type_id" />
                     </group>
                     <group name="main">

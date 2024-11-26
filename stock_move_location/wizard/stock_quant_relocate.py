@@ -55,7 +55,11 @@ class StockQuantRelocate(models.TransientModel):
         "move_location_wizard_id",
         string="Move Location lines",
     )
-
+    skip_picking = fields.Boolean(
+        string="Skip Picking",
+        default=False,
+        help="If it is active, no pickings will be generated, only movements."
+    )
 
     @api.model
     def default_get(self, fields_list):
@@ -218,6 +222,8 @@ class StockQuantRelocate(models.TransientModel):
             line.location_destination_id = self.location_destination_id
 
     def _create_picking(self):
+        _logger.info( "Relocating with picking %s")
+
         return self.env["stock.picking"].create(
             {
                 "picking_type_id": self.picking_type_id.id,
@@ -236,6 +242,8 @@ class StockQuantRelocate(models.TransientModel):
         return lines_grouped
 
     def _create_moves(self, picking):
+        _logger.info( "_create_moves %s", picking)
+
         self.ensure_one()
         groups = self.group_lines()
         moves = self.env["stock.move"]
@@ -245,11 +253,12 @@ class StockQuantRelocate(models.TransientModel):
 
     def _get_move_values(self, picking, lines):
         # locations are same for the products
-        location_from_id = lines[0].location_origin_id.id
-        location_to_id = lines[0].location_destination_id.id
+        location_from_id = self.location_origin_id.id
+        location_to_id = self.location_destination_id.id
         product = lines[0].product_id
-        product_uom_id = lines[0].product_uom_id.id
+        product_uom_id = product.uom_id.id
         qty = sum(x.move_quantity for x in lines)
+
         return {
             "name": product.display_name,
             "location_id": location_from_id,
@@ -257,7 +266,7 @@ class StockQuantRelocate(models.TransientModel):
             "product_id": product.id,
             "product_uom": product_uom_id,
             "product_uom_qty": qty,
-            "picking_id": picking.id,
+            "picking_id": picking.id if picking else False,
             "location_move": True,
         }
 
@@ -341,14 +350,18 @@ class StockQuantRelocate(models.TransientModel):
 
     def action_move_location(self):
         self.ensure_one()
-        picking = self.picking_id if self.picking_id else self._create_picking()
-        self._create_moves(picking)
-        if not self.env.context.get("planned"):
-            moves_to_reassign = self._unreserve_moves(picking)
-            picking.button_validate()
-            moves_to_reassign._action_assign()
-        self.picking_id = picking
-        return self._get_picking_action(picking.id)
+        if self.skip_picking:
+            return self._create_moves()
+        else:    
+            picking = self.picking_id if self.picking_id else self._create_picking()
+
+            self._create_moves(picking)
+            if not self.env.context.get("planned"):
+                moves_to_reassign = self._unreserve_moves(picking)
+                picking.button_validate()
+                moves_to_reassign._action_assign()
+            self.picking_id = picking
+            return self._get_picking_action(picking.id)
 
     def _clear_lines(self):
         self.line_ids = False
@@ -361,19 +374,5 @@ class StockQuantRelocate(models.TransientModel):
         self.ensure_one()
         lot_ids = self.quant_ids.lot_id
         product_ids = self.quant_ids.product_id
-
-        if not self.dest_location_id and not self.dest_package_id:
-            return
-        self.quant_ids.action_clear_inventory_quantity()
-
-        if self.is_partial_package and not self.dest_package_id:
-            quants_to_unpack = self.quant_ids.filtered(lambda q: not all(sub_q in self.quant_ids.ids for sub_q in q.package_id.quant_ids.ids))
-            quants_to_unpack.move_quants(location_dest_id=self.dest_location_id, message=self.message, unpack=True)
-            self.quant_ids -= quants_to_unpack
-        self.quant_ids.move_quants(location_dest_id=self.dest_location_id, package_dest_id=self.dest_package_id, message=self.message)
-
-        if self.env.context.get('default_lot_id', False) and len(lot_ids) == 1:
-            return lot_ids.action_lot_open_quants()
-        elif self.env.context.get('single_product', False) and len(product_ids) == 1:
-            return product_ids.action_update_quantity_on_hand()
-        return self.quant_ids.with_context(always_show_loc=1).action_view_quants()
+        _logger.info( "action_relocate_quants %s")
+        return
