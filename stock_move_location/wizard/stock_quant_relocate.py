@@ -1,4 +1,4 @@
-from odoo import api, fields, models
+from odoo import SUPERUSER_ID, _, api, fields, models
 from odoo.fields import first
 from odoo.osv import expression
 import logging
@@ -282,7 +282,6 @@ class StockQuantRelocate(models.TransientModel):
         return move_values
 
     def _create_move(self, picking, lines):
-        _logger.info( "_create_move %s", picking)
         self.ensure_one()
         move = self.env["stock.move"].create(self._get_move_values(picking, lines))
         lines.create_move_lines(picking, move)
@@ -365,15 +364,8 @@ class StockQuantRelocate(models.TransientModel):
 
         if self.skip_picking:
             moves=self._create_moves(picking=None)
-            _logger.info("move ID: %s, Name: %s, Product: %s, From Location: %s, To Location: %s, Qty: %s",
-                moves.id,
-                moves.name,
-                moves.product_id.name,
-                moves.location_id.id,
-                moves.location_dest_id.id,
-                moves.product_uom_qty
-            )
-        
+            for move in moves:
+                self.move_quants_2(move, message='Relocated whitout picking')
 
         else:    
             picking = self.picking_id if self.picking_id else self._create_picking()
@@ -392,3 +384,42 @@ class StockQuantRelocate(models.TransientModel):
     def clear_lines(self):
         self._clear_lines()
         return {"type": "ir.action.do_nothing"}
+
+    def move_quants_2(self, moves, message=False):
+        message = message or _('Quantity Relocated')
+        move_vals = []
+        for quant in self:
+            move_vals.append(quant.with_context(inventory_name=message)._get_inventory_move_values_2(
+                moves
+                ))
+            _logger.info( "_create_move %s", move_vals)
+        moves = self.env['stock.move'].create(move_vals)
+        moves._action_done()
+    
+    def _get_inventory_move_values_2(self, moves):
+        self.ensure_one()
+        return {
+            'name': moves.product_id.name,
+            'product_id': moves.product_id.id,
+            'product_uom': moves.product_uom.id,
+            'product_uom_qty': moves.product_uom_qty,
+            'company_id': self.company_id.id or self.env.company.id,
+            'state': 'confirmed',
+            'location_id': moves.location_id.id,
+            'location_dest_id': moves.location_dest_id.id,
+            'restrict_partner_id':  False,
+            'is_inventory': True,
+            'picked': True,
+            'move_line_ids': [(0, 0, {
+                'product_id': moves.product_id.id,
+                'product_uom_id':  moves.product_uom.id,
+                'quantity': moves.product_uom_qty,
+                'location_id': moves.location_id.id,
+                'location_dest_id': moves.location_dest_id.id,
+                'company_id': self.company_id.id or self.env.company.id,
+                'lot_id': False,
+                'package_id': False,
+                'result_package_id':False,
+                'owner_id': False,
+            })]
+    }
