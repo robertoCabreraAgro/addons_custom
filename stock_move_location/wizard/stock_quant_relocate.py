@@ -25,7 +25,6 @@ class StockQuantRelocate(models.TransientModel):
         comodel_name="stock.location",
         string="Origin Location",
         required=True,
-        readonly=True,
         domain="[('company_id', 'in', (company_id, False))]",
     )
     location_destination_id = fields.Many2one(
@@ -38,14 +37,14 @@ class StockQuantRelocate(models.TransientModel):
         comodel_name="stock.picking",
         string="Connected Picking",
     )
-    # edit_locations = fields.Boolean(default=True)
+    edit_locations = fields.Boolean(default=False)
     location_origin_readonly = fields.Boolean(
-        readonly=True,
+        compute="_compute_locations_readonly",
         help="technical field to disable the edition of origin location.",
     )
     location_destination_readonly = fields.Boolean(
-    #     compute="_compute_locations_readonly",
-         help="technical field to disable the edition of destination location.",
+        compute="_compute_locations_readonly",
+        help="technical field to disable the edition of destination location.",
     )
     apply_putaway_strategy = fields.Boolean()
     exclude_reserved_qty = fields.Boolean(default=True)
@@ -110,7 +109,19 @@ class StockQuantRelocate(models.TransientModel):
                     )
                 )
         return res
-
+    @api.depends("edit_locations")
+    def _compute_locations_readonly(self):
+        for rec in self:
+            rec.location_origin_readonly = self.env.context.get(
+                "location_origin_readonly", False
+            )
+            rec.location_destination_readonly = self.env.context.get(
+                "location_destination_readonly", False
+            )
+            if not rec.edit_locations:
+                rec.location_origin_readonly = True
+                rec.location_destination_readonly = True
+                
     @api.depends_context("company")
     @api.depends("location_origin_id")
     def _compute_picking_type_id(self):
@@ -242,8 +253,6 @@ class StockQuantRelocate(models.TransientModel):
         return lines_grouped
 
     def _create_moves(self, picking):
-        _logger.info( "_create_moves %s", picking)
-
         self.ensure_one()
         groups = self.group_lines()
         moves = self.env["stock.move"]
@@ -259,18 +268,21 @@ class StockQuantRelocate(models.TransientModel):
         product_uom_id = product.uom_id.id
         qty = sum(x.move_quantity for x in lines)
 
-        return {
+        move_values = {
             "name": product.display_name,
             "location_id": location_from_id,
             "location_dest_id": location_to_id,
             "product_id": product.id,
             "product_uom": product_uom_id,
             "product_uom_qty": qty,
-            "picking_id": picking.id if picking else False,
             "location_move": True,
         }
+        if picking:
+            move_values["picking_id"] = picking.id
+        return move_values
 
     def _create_move(self, picking, lines):
+        _logger.info( "_create_move %s", picking)
         self.ensure_one()
         move = self.env["stock.move"].create(self._get_move_values(picking, lines))
         lines.create_move_lines(picking, move)
@@ -350,8 +362,19 @@ class StockQuantRelocate(models.TransientModel):
 
     def action_move_location(self):
         self.ensure_one()
+
         if self.skip_picking:
-            return self._create_moves()
+            moves=self._create_moves(picking=None)
+            _logger.info("move ID: %s, Name: %s, Product: %s, From Location: %s, To Location: %s, Qty: %s",
+                moves.id,
+                moves.name,
+                moves.product_id.name,
+                moves.location_id.id,
+                moves.location_dest_id.id,
+                moves.product_uom_qty
+            )
+        
+
         else:    
             picking = self.picking_id if self.picking_id else self._create_picking()
 
@@ -369,10 +392,3 @@ class StockQuantRelocate(models.TransientModel):
     def clear_lines(self):
         self._clear_lines()
         return {"type": "ir.action.do_nothing"}
-
-    def action_relocate_quants(self):
-        self.ensure_one()
-        lot_ids = self.quant_ids.lot_id
-        product_ids = self.quant_ids.product_id
-        _logger.info( "action_relocate_quants %s")
-        return

@@ -129,7 +129,7 @@ class StockQuantRelocateLine(models.TransientModel):
             or self.location_destination_id.id
         )
         qty_done = self._get_available_quantity()
-        return {
+        move_values = {
             "product_id": self.product_id.id,
             "lot_id": self.lot_id.id,
             "package_id": self.package_id.id,
@@ -139,9 +139,11 @@ class StockQuantRelocateLine(models.TransientModel):
             "location_dest_id": location_dest_id,
             "quantity": qty_done,
             "product_uom_id": self.product_uom_id.id,
-            "picking_id": picking.id,
             "move_id": move.id,
         }
+        if picking:
+            move_values["picking_id"] = picking.id
+        return move_values
 
     def create_move_lines(self, picking, move):
         for line in self:
