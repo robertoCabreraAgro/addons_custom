@@ -14,14 +14,14 @@
                                 <label for="exclude_reserved_qty">
                                     Exclude Reserved Quantities
                                 </label>
-                                <field name="exclude_reserved_qty" widget="boolean_toggle" />
+                                <field name="exclude_reserved_qty" widget="boolean_toggle" style="margin-left: 10px;" />
                             </div>
                     
                             <div>
                                 <label for="skip_picking">
                                     Skip Picking
                                 </label>
-                                <field name="skip_picking" widget="boolean_toggle" />
+                                <field name="skip_picking" widget="boolean_toggle" style="margin-left: 10px;" />
                             </div>
                             
                             <!-- Campo condicional que depende de 'skip_picking' -->
@@ -36,7 +36,7 @@
                                 <label for="edit_locations">
                                     Edit Origin Location
                                 </label>
-                                <field name="edit_locations" widget="boolean_toggle" />
+                                <field name="edit_locations" widget="boolean_toggle" style="margin-left: 10px;" />
                             </div>
                     
                             <group name="main">
@@ -126,15 +126,15 @@
                     <footer>
                         <button
                             name="action_move_location"
-                            string="Immediate Transfer"
+                            string="Transfer"
                             type="object"
                             class="btn-primary" />
-                        <button
+                        <!-- <button
                             name="action_move_location"
                             string="Planned Transfer"
                             type="object"
                             class="btn-primary"
-                            context="{'planned': True}" />
+                            context="{'planned': True}" /> -->
                         <button special="cancel" string="Cancel" class="btn-default" />
                     </footer>
                 </sheet>

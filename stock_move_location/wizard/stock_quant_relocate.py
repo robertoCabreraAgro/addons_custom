@@ -25,18 +25,23 @@ class StockQuantRelocate(models.TransientModel):
         string='Origin Location',
         required=True,
         domain="[('company_id', 'in', (company_id, False))]",
+        help='Select the origin location where the products are being moved from.',
     )
     location_destination_id = fields.Many2one(
         comodel_name='stock.location',
         string='Destination Location',
         required=True,
         domain="[('company_id', 'in', (company_id, False))]",
+        help='Select the destination location where the products are being moved to.',
     )
     picking_id = fields.Many2one(
         comodel_name='stock.picking',
         string='Connected Picking',
     )
-    edit_locations = fields.Boolean(default=False)
+    edit_locations = fields.Boolean(
+        default=False,
+        help='Select this option to enable editing of the origin location.',
+    )
     location_origin_readonly = fields.Boolean(
         compute='_compute_locations_readonly',
         help='technical field to disable the edition of origin location.',
