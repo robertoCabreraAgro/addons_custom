@@ -1,7 +1,9 @@
 from odoo import SUPERUSER_ID, _, api, fields, models
 from odoo.fields import first
 from odoo.osv import expression
+import logging
 
+_logger = logging.getLogger(__name__)
 
 class StockQuantRelocate(models.TransientModel):
     _inherit = 'stock.quant.relocate'
@@ -106,18 +108,18 @@ class StockQuantRelocate(models.TransientModel):
                     )
                 )
         return res
+    
     @api.depends('edit_locations')
     def _compute_locations_readonly(self):
         for rec in self:
-            rec.location_origin_readonly = self.env.context.get(
-                'location_origin_readonly', False
-            )
-            rec.location_destination_readonly = self.env.context.get(
-                'location_destination_readonly', False
-            )
-            if not rec.edit_locations:
-                rec.location_origin_readonly = True
-                rec.location_destination_readonly = True
+            rec.location_origin_readonly =  not rec.edit_locations
+            rec.location_destination_readonly = False
+
+    @api.onchange('edit_locations')
+    def _onchange_edit_locations(self):
+        for rec in self:
+            rec.location_origin_readonly = not rec.edit_locations
+
                 
     @api.depends_context('company')
     @api.depends('location_origin_id')
