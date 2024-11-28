@@ -1,7 +1,9 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools import float_compare
+import logging
 
+_logger = logging.getLogger(__name__)
 
 class StockQuantRelocateLine(models.TransientModel):
     _name = "stock.quant.relocate.line"
@@ -62,7 +64,13 @@ class StockQuantRelocateLine(models.TransientModel):
     @api.constrains("max_quantity", "move_quantity")
     def _constraint_max_move_quantity(self):
         for record in self:
-            rounding = record.product_uom_id.rounding
+            
+            rounding = record.product_uom_id.rounding or 1
+            if rounding < 1:
+                _logger.warning(
+                    "Rounding value '%s' adjusted to 1 for float_compare compatibility", rounding
+                )
+                rounding = 1
             move_qty_gt_max_qty = (
                 float_compare(record.move_quantity, record.max_quantity, rounding) == 1
             )
@@ -121,7 +129,7 @@ class StockQuantRelocateLine(models.TransientModel):
             or self.location_destination_id.id
         )
         qty_done = self._get_available_quantity()
-        return {
+        move_values = {
             "product_id": self.product_id.id,
             "lot_id": self.lot_id.id,
             "package_id": self.package_id.id,
@@ -131,9 +139,11 @@ class StockQuantRelocateLine(models.TransientModel):
             "location_dest_id": location_dest_id,
             "quantity": qty_done,
             "product_uom_id": self.product_uom_id.id,
-            "picking_id": picking.id,
             "move_id": move.id,
         }
+        if picking:
+            move_values["picking_id"] = picking.id
+        return move_values
 
     def create_move_lines(self, picking, move):
         for line in self:

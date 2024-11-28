@@ -7,36 +7,54 @@
             <form>
                 <sheet>
                     <div class="oe_button_box" name="button_box" />
-                    <div>
-                        <label for="edit_locations">
-                            Edit Locations
-                        </label>
-                        <field name="edit_locations" widget="boolean_toggle" />
+                    <div class="row">
+                        <!-- Columna Izquierda -->
+                        <div class="col-md-6">
+                            <div>
+                                <label for="exclude_reserved_qty">
+                                    Exclude Reserved Quantities
+                                </label>
+                                <field name="exclude_reserved_qty" widget="boolean_toggle" style="margin-left: 10px;" />
+                            </div>
+                    
+                            <div>
+                                <label for="skip_picking">
+                                    Skip Picking
+                                </label>
+                                <field name="skip_picking" widget="boolean_toggle" style="margin-left: 10px;" />
+                            </div>
+                            
+                            <!-- Campo condicional que depende de 'skip_picking' -->
+                            <group name="picking_type" invisible="skip_picking">
+                                <field name="picking_type_id" />
+                            </group>
+                        </div>
+                    
+                        <!-- Columna Derecha -->
+                        <div class="col-md-6">
+                            <div>
+                                <label for="edit_locations">
+                                    Edit Origin Location
+                                </label>
+                                <field name="edit_locations" widget="boolean_toggle" style="margin-left: 10px;" />
+                            </div>
+                    
+                            <group name="main">
+                                <div>
+                                    <label for="location_origin_id">
+                                        Origin Location
+                                    </label>
+                                    <field name="location_origin_id" readonly="location_origin_readonly" />
+                                
+                                    <label for="location_destination_id">
+                                        Destination Location
+                                    </label>
+                                    <field name="location_destination_id" readonly="location_destination_readonly" />
+                                </div>
+                            </group>
+                        </div>
                     </div>
-                    <div>
-                        <label for="exclude_reserved_qty">
-                            Exclude Reserved Quantities
-                        </label>
-                        <field name="exclude_reserved_qty" widget="boolean_toggle" />
-                    </div>
-                    <div groups="stock.group_stock_multi_locations">
-                        <label for="apply_putaway_strategy">
-                            Apply putaway strategy for moving products
-                        </label>
-                        <field name="apply_putaway_strategy" widget="boolean_toggle" />
-                    </div>
-                    <group name="picking_type">
-                        <field name="picking_type_id" />
-                    </group>
-                    <group name="main">
-                        <field name="location_origin_readonly" invisible="True" />
-                        <field name="location_origin_id"
-                            readonly="location_origin_readonly" />
-                        <field name="location_destination_readonly" invisible="True" />
-                        <field name="location_destination_id"
-                            readonly="location_destination_readonly" />
-                        <field name="company_id" invisible="1" />
-                    </group>
+                    
                     <group name="lines">
                         <field name="line_ids"
                             nolabel="1"
@@ -54,7 +72,7 @@
                                     groups="uom.group_uom" />
                                 <field name="location_origin_id"
                                     readonly="1"
-                                    force_save="1" />
+                                />
                                 <field name="location_destination_id"
                                     readonly="1"
                                     force_save="1" />
@@ -108,15 +126,15 @@
                     <footer>
                         <button
                             name="action_move_location"
-                            string="Immediate Transfer"
+                            string="Transfer"
                             type="object"
                             class="btn-primary" />
-                        <button
+                        <!-- <button
                             name="action_move_location"
                             string="Planned Transfer"
                             type="object"
                             class="btn-primary"
-                            context="{'planned': True}" />
+                            context="{'planned': True}" /> -->
                         <button special="cancel" string="Cancel" class="btn-default" />
                     </footer>
                 </sheet>
