@@ -1,5 +1,4 @@
-from odoo import SUPERUSER_ID, _, api, fields, models
-from odoo.fields import first
+from odoo import _, api, fields, models
 from odoo.osv import expression
 import logging
 
@@ -125,7 +124,6 @@ class StockQuantRelocate(models.TransientModel):
         for rec in self:
             rec.location_origin_readonly = not rec.edit_locations
 
-                
     @api.depends_context('company')
     @api.depends('location_origin_id')
     def _compute_picking_type_id(self):
@@ -268,7 +266,11 @@ class StockQuantRelocate(models.TransientModel):
         product = lines[0].product_id
         product_uom_id = product.uom_id.id
         qty = sum(x.move_quantity for x in lines)
-
+        lot_name = lines[0].lot_id.name
+        lot_id = self.env['stock.lot'].search([
+            ('product_id', '=', product.id),
+            ('name', '=', lot_name)
+        ], limit=1)
         move_values = {
             'name': product.display_name,
             'location_id': location_from_id,
@@ -277,6 +279,7 @@ class StockQuantRelocate(models.TransientModel):
             'product_uom': product_uom_id,
             'product_uom_qty': qty,
             'location_move': True,
+            'lot_ids': lot_id,
         }
         if picking:
             move_values['picking_id'] = picking.id
@@ -345,7 +348,6 @@ class StockQuantRelocate(models.TransientModel):
                 ]
             )
             moves_to_unreserve = move_lines.mapped('move_id')
-            # Unreserve in old location
             moves_to_unreserve._do_unreserve()
             moves_to_reassign |= moves_to_unreserve
         return moves_to_reassign
@@ -362,12 +364,10 @@ class StockQuantRelocate(models.TransientModel):
 
     def action_move_location(self):
         self.ensure_one()
-
         if self.skip_picking:
             moves=self._create_moves(picking=None)
             for move in moves:
                 self.move_quants_2(move, message='Relocated whitout picking')
-
         else:    
             picking = self.picking_id if self.picking_id else self._create_picking()
 
@@ -417,7 +417,7 @@ class StockQuantRelocate(models.TransientModel):
                 'location_id': moves.location_id.id,
                 'location_dest_id': moves.location_dest_id.id,
                 'company_id': self.company_id.id or self.env.company.id,
-                'lot_id': False,
+                'lot_id':moves.lot_ids.id,
                 'package_id': False,
                 'result_package_id':False,
                 'owner_id': False,
