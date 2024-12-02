@@ -4,12 +4,14 @@ from odoo import _, api, fields, models
 class FleetVehicleInherit(models.Model):
     _inherit = "fleet.vehicle"
 
-    fuel_tank_capacity = fields.Float(
-        "Tank capacity",
+    fuel_tank_capacity = fields.Integer(
+        string="Tank capacity",
         help="Fuel tank capacity in liters",
     )
-    cilinders = fields.Float("Cilinders Number")
-    fuel_efficiency = fields.Float(help="Fuel efficiency in kilometers per liter (km/L)")
+    cilinders = fields.Integer(string="Cilinders Number")
+    fuel_efficiency = fields.Float(
+        help="Fuel efficiency in kilometers per liter (km/L)"
+    )
     fuel_card_id = fields.Many2one(
         "documents.document",
         # domain=lambda self: [
