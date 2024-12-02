@@ -18,7 +18,7 @@ class PosLineReport(models.Model):
     product_id = fields.Many2one("product.product", readonly=True)
     product_categ_id = fields.Many2one("product.category", readonly=True)
     config_id = fields.Many2one("pos.config", readonly=True)
-    parent_state = fields.Char(
+    parent_state = fields.Selection(
         selection=[
             ('draft', 'New'),
             ('cancel', 'Cancelled'),

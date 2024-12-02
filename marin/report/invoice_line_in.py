@@ -22,7 +22,7 @@ class InvoiceLineIn(models.Model):
     root_categ_id = fields.Many2one("product.category", string="Root Category", readonly=True)
     sequence = fields.Integer(readonly=True)
     move_name = fields.Char("Name", readonly=True)
-    parent_state = fields.Char(
+    parent_state = fields.Selection(
         selection=[
             ("draft", "Draft"),
             ("posted", "Posted"),
