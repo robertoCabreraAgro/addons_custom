@@ -33,8 +33,11 @@ class StockMoveLineInherit(models.Model):
     @api.depends("location_id", "product_id")
     def _compute_location_lot_domain(self):
         for line in self:
-            domain = [("company_id", "=", line.company_id.id), ("product_id", "=", line.product_id.id)]
-            if line.location_id.usage in ("internal"):
+            domain = [
+                ("company_id", "=", line.company_id.id),
+                ("product_id", "=", line.product_id.id)
+            ]
+            if line.location_usage in ("internal"):
                 quant_lot_ids = line.location_id.quant_ids.filtered(
                     lambda q: q.quantity > 0 and q.company_id == line.company_id
                 ).mapped("lot_id")
@@ -46,9 +49,7 @@ class StockMoveLineInherit(models.Model):
     def _unlink_except_done_or_cancel(self):
         for ml in self:
             if ml.state == "done":
-                raise UserError(
-                    _(
+                raise UserError(_(
                         "You can not delete product moves if the picking is done. "
                         "You can only correct the done quantities."
-                    )
-                )
+                ))

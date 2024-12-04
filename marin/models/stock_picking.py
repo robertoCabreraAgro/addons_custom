@@ -1,19 +1,40 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
+import logging
+
+_logger = logging.getLogger(__name__)
+
 
 class Picking(models.Model):
     _inherit = "stock.picking"
 
+
     # New fields
     show_purchase_lines = fields.Boolean(compute="_compute_show_purchase_lines")
     show_sale_lines = fields.Boolean(compute="_compute_show_sale_lines")
-    waiting_warning = fields.Text(compute="_compute_waiting_warning")
-
-    # Security
     show_mark_as_todo = fields.Boolean(compute="_compute_custom_permissions")
     show_validate = fields.Boolean(compute="_compute_custom_permissions")
+    waiting_warning = fields.Text(compute="_compute_waiting_warning")
+    all_product_ids = fields.Boolean(default=False)
+    suitable_product_ids = fields.Many2many(
+        comodel_name="product.product",
+        compute="_compute_suitable_product_ids",
+    )
 
+
+    @api.depends("picking_type_id", "location_id")
+    def _compute_suitable_product_ids(self):
+        for p in self:
+            p.suitable_product_ids = False
+            if self.picking_type_id.code == "internal" and not self.all_product_ids:
+                p.suitable_product_ids = self.env["stock.quant"].search(
+                    [("location_id", "=", self.location_id.id)]
+                ).mapped("product_id")
+            else:
+                p.suitable_product_ids = self.env["product.product"].search(
+                    [('type', '=', 'consu')]
+                )
 
     def _prepare_compute_custom_permissions(self):
         mark_as_todo = (
