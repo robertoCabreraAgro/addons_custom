@@ -32,7 +32,7 @@ class Picking(models.Model):
     def _compute_suitable_product_ids(self):
         for p in self:
             p.suitable_product_ids = self.env["product.product"].search([
-                    ("company_id", "in", (self.env.company, False)),
+                    ("company_id", "in", (self.env.company.id, False)),
                     ("type", "=", "consu"),
                 ])
             if self.picking_type_id.code == "internal" and not self.all_product_ids:
