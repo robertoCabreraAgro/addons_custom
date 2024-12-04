@@ -16,25 +16,29 @@ class Picking(models.Model):
     show_mark_as_todo = fields.Boolean(compute="_compute_custom_permissions")
     show_validate = fields.Boolean(compute="_compute_custom_permissions")
     waiting_warning = fields.Text(compute="_compute_waiting_warning")
-    all_product_ids = fields.Boolean(default=False)
+    all_product_ids = fields.Boolean(
+        default=False,
+        help="By default Odoo let the user choose over every product available in the "
+             "catalogue but Main required that only the ones available in the location "
+             "being displayed. This button enables dynamicly this feature.",
+    )
     suitable_product_ids = fields.Many2many(
         comodel_name="product.product",
         compute="_compute_suitable_product_ids",
     )
 
 
-    @api.depends("picking_type_id", "location_id")
+    @api.depends("picking_type_id", "location_id", "all_product_ids")
     def _compute_suitable_product_ids(self):
         for p in self:
-            p.suitable_product_ids = False
+            p.suitable_product_ids = self.env["product.product"].search([
+                    ("company_id", "in", (self.env.company, False)),
+                    ("type", "=", "consu"),
+                ])
             if self.picking_type_id.code == "internal" and not self.all_product_ids:
                 p.suitable_product_ids = self.env["stock.quant"].search(
                     [("location_id", "=", self.location_id.id)]
                 ).mapped("product_id")
-            else:
-                p.suitable_product_ids = self.env["product.product"].search(
-                    [('type', '=', 'consu')]
-                )
 
     def _prepare_compute_custom_permissions(self):
         mark_as_todo = (
