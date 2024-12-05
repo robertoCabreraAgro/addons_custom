@@ -11,12 +11,12 @@
     "depends": ["base", "web"],
     "data": [
         "security/data.xml",
-        "security/ir.model.access.csv",
         "views/base_geoengine_view.xml",
         "views/ir_model_view.xml",
         "views/ir_view_view.xml",
         "views/geo_raster_layer_view.xml",
         "views/geo_vector_layer_view.xml",
+        "security/ir.model.access.csv",
     ],
     "assets": {
         "web.assets_backend": [

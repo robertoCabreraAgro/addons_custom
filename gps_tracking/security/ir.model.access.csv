@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_gps_tracking_data_history,gps_tracking_data_history,model_gps_tracking_data_history,,1,1,1,1
+access_gps_tracking_device_user,gps.tracking.device user,model_gps_tracking_device,base.group_user,1,1,1,1
+access_gps_tracking_point_user,gps.tracking.point user,model_gps_tracking_point,base.group_user,1,1,1,1

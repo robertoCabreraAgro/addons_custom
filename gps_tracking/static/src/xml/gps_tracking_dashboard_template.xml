@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="gps_tracking.gps_tracking_dashboard_template">
+        <div class="o_gps_tracking_dashboard">
+            <ControlPanel t-props="controlPanelProps"/>
+            <div class="o_gps_tracking_kanban">
+                <t t-foreach="state.devices" t-as="device" t-key="device.imei">
+                    <div class="o_gps_tracking_card" t-on-click.prevent="() => this.onCardClick(device)">
+                        <div class="card_header">
+                            <strong><t t-esc="device.imei"/></strong>
+                        </div>
+                        <div class="card_body">
+                            <div>Speed: <t t-esc="device.speed"/></div>
+                            <div>Timestamp: <t t-esc="device.timestamp"/></div>
+                            <div>Altitude: <t t-esc="device.altitude"/></div>
+                        </div>
+                    </div>
+                </t>
+            </div>
+            <div class="o_gps_tracking_map" t-ref="mapContainer">
+                <!-- El mapa se renderiza aquí -->
+            </div>
+        </div>
+    </t>
+</templates>
