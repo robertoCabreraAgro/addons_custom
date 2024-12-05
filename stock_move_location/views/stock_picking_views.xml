@@ -11,7 +11,7 @@
                     string="Fill with stock"
                     type="object"
                     class="oe_highlight"
-                    invisible="state != 'draft'"
+                    invisible="1"
                     groups="stock.group_stock_user" />
             </button>
         </field>

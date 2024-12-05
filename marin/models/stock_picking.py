@@ -43,11 +43,14 @@ class Picking(models.Model):
     def _prepare_compute_custom_permissions(self):
         mark_as_todo = (
             self.state == "draft"
-            and self.env.user in self.picking_type_id.can_todo_user_ids
+            #and self.env.user in self.picking_type_id.can_todo_user_ids
+            and self.env.user in self.env.ref('stock.group_stock_manager').users
         )
+
         validate = (
             self.state in ("confirmed", "assigned")
-            and self.env.user in self.picking_type_id.can_validate_user_ids
+            #and self.env.user in self.picking_type_id.can_validate_user_ids
+            and self.env.user in self.env.ref('stock.group_stock_manager').users
         )
         return {
             "show_mark_as_todo": mark_as_todo,
