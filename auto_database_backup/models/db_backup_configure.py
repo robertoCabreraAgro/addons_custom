@@ -57,156 +57,223 @@ class DbBackupConfigure(models.Model):
        Nextcloud and Amazon S3"""
     _name = 'db.backup.configure'
     _description = 'Automatic Database Backup'
-
-    name = fields.Char(string='Name', required=True, help='Add the name')
-    db_name = fields.Char(string='Database Name', required=True,
-                          help='Name of the database')
-    master_pwd = fields.Char(string='Master Password', required=True,
-                             help='Master password')
-    backup_format = fields.Selection([
-        ('zip', 'Zip'),
-        ('dump', 'Dump')
-    ], string='Backup Format', default='zip', required=True,
-        help='Format of the backup')
-    backup_destination = fields.Selection([
-        ('local', 'Local Storage'),
-        ('google_drive', 'Google Drive'),
-        ('ftp', 'FTP'),
-        ('sftp', 'SFTP'),
-        ('dropbox', 'Dropbox'),
-        ('onedrive', 'Onedrive'),
-        ('next_cloud', 'Next Cloud'),
-        ('amazon_s3', 'Amazon S3')
-    ], string='Backup Destination', help='Destination of the backup')
-    backup_frequency = fields.Selection([
-        ('daily', 'Daily'),
-        ('weekly', 'Weekly'),
-        ('monthly', 'Monthly'),
-    ], default='daily', string='Backup Frequency', help='Frequency of Backup Scheduling')
-    backup_path = fields.Char(string='Backup Path',
-                              help='Local storage directory path')
-    sftp_host = fields.Char(string='SFTP Host', help='SFTP host details')
-    sftp_port = fields.Char(string='SFTP Port', default=22,
-                            help='SFTP port details')
-    sftp_user = fields.Char(string='SFTP User', copy=False,
-                            help='SFTP user details')
-    sftp_password = fields.Char(string='SFTP Password', copy=False,
-                                help='SFTP password')
-    sftp_path = fields.Char(string='SFTP Path', help='SFTP path details')
-    ftp_host = fields.Char(string='FTP Host', help='FTP host details')
-    ftp_port = fields.Char(string='FTP Port', default=21,
-                           help='FTP port details')
-    ftp_user = fields.Char(string='FTP User', copy=False,
-                           help='FTP user details')
-    ftp_password = fields.Char(string='FTP Password', copy=False,
-                               help='FTP password')
-    ftp_path = fields.Char(string='FTP Path', help='FTP path details')
-    dropbox_client_key = fields.Char(string='Dropbox Client ID', copy=False,
-                                     help='Client id of the dropbox')
-    dropbox_client_secret = fields.Char(string='Dropbox Client Secret',
-                                        copy=False,
-                                        help='Client secret id of the dropbox')
-    dropbox_refresh_token = fields.Char(string='Dropbox Refresh Token',
-                                        copy=False,
-                                        help='Refresh token for the dropbox')
+    name = fields.Char(string="Name", required=True, help="Add the name")
+    db_name = fields.Char(
+        string="Database Name", required=True, help="Name of the database"
+    )
+    master_pwd = fields.Char(
+        string="Master Password", required=True, help="Master password"
+    )
+    backup_format = fields.Selection(
+        [("zip", "Zip"), ("dump", "Dump")],
+        string="Backup Format",
+        default="zip",
+        required=True,
+        help="Format of the backup",
+    )
+    backup_destination = fields.Selection(
+        [
+            ("local", "Local Storage"),
+            ("google_drive", "Google Drive"),
+            ("ftp", "FTP"),
+            ("sftp", "SFTP"),
+            ("dropbox", "Dropbox"),
+            ("onedrive", "Onedrive"),
+            ("next_cloud", "Next Cloud"),
+            ("amazon_s3", "Amazon S3"),
+        ],
+        string="Backup Destination",
+        help="Destination of the backup",
+    )
+    backup_frequency = fields.Selection(
+        [("daily", "Daily"), ("weekly", "Weekly"), ("monthly", "Monthly")],
+        default="daily",
+        string="Backup Frequency",
+        help="Frequency of Backup Scheduling",
+    )
+    backup_path = fields.Char(
+        string="Backup Path", help="Local storage directory path"
+    )
+    sftp_host = fields.Char(string="SFTP Host", help="SFTP host details")
+    sftp_port = fields.Char(
+        string="SFTP Port", default=22, help="SFTP port details"
+    )
+    sftp_user = fields.Char(
+        string="SFTP User", copy=False, help="SFTP user details"
+    )
+    sftp_password = fields.Char(
+        string="SFTP Password", copy=False, help="SFTP password"
+    )
+    sftp_path = fields.Char(string="SFTP Path", help="SFTP path details")
+    ftp_host = fields.Char(string="FTP Host", help="FTP host details")
+    ftp_port = fields.Char(
+        string="FTP Port", default=21, help="FTP port details"
+    )
+    ftp_user = fields.Char(
+        string="FTP User", copy=False, help="FTP user details"
+    )
+    ftp_password = fields.Char(
+        string="FTP Password", copy=False, help="FTP password"
+    )
+    ftp_path = fields.Char(string="FTP Path", help="FTP path details")
+    dropbox_client_key = fields.Char(
+        string="Dropbox Client ID", copy=False, help="Client id of the dropbox"
+    )
+    dropbox_client_secret = fields.Char(
+        string="Dropbox Client Secret",
+        copy=False,
+        help="Client secret id of the dropbox",
+    )
+    dropbox_refresh_token = fields.Char(
+        string="Dropbox Refresh Token",
+        copy=False,
+        help="Refresh token for the dropbox",
+    )
     is_dropbox_token_generated = fields.Boolean(
-        string='Dropbox Token Generated',
-        compute='_compute_is_dropbox_token_generated',
-        copy=False, help='Is the dropbox token generated or not?')
-    dropbox_folder = fields.Char(string='Dropbox Folder',
-                                 help='Dropbox folder')
-    active = fields.Boolean(default=False, string='Active',
-                            help='Activate the Scheduled Action or not')
-    hide_active = fields.Boolean(string="Hide Active",
-                                 help="Make active field to readonly")
-    auto_remove = fields.Boolean(string='Remove Old Backups',
-                                 help='Remove old backups')
-    days_to_remove = fields.Integer(string='Remove After',
-                                    help='Automatically delete stored backups'
-                                         ' after this specified number of days')
-    google_drive_folder_key = fields.Char(string='Drive Folder ID',
-                                          help='Folder id of the drive')
-    notify_user = fields.Boolean(string='Notify User',
-                                 help='Send an email notification to user when'
-                                      'the backup operation is successful'
-                                      'or failed')
-    user_id = fields.Many2one('res.users', string='User',
-                              help='Name of the user')
-    backup_filename = fields.Char(string='Backup Filename',
-                                  help='For Storing generated backup filename')
-    generated_exception = fields.Char(string='Exception',
-                                      help='Exception Encountered while Backup'
-                                           'generation')
-    onedrive_client_key = fields.Char(string='Onedrive Client ID', copy=False,
-                                      help='Client ID of the onedrive')
-    onedrive_client_secret = fields.Char(string='Onedrive Client Secret',
-                                         copy=False, help='Client secret id of'
-                                                          ' the onedrive')
-    onedrive_access_token = fields.Char(string='Onedrive Access Token',
-                                        copy=False,
-                                        help='Access token for one drive')
-    onedrive_refresh_token = fields.Char(string='Onedrive Refresh Token',
-                                         copy=False,
-                                         help='Refresh token for one drive')
-    onedrive_token_validity = fields.Datetime(string='Onedrive Token Validity',
-                                              copy=False,
-                                              help='Token validity date')
-    onedrive_folder_key = fields.Char(string='Folder ID',
-                                      help='Folder id of the onedrive')
+        string="Dropbox Token Generated",
+        compute="_compute_is_dropbox_token_generated",
+        copy=False,
+        help="Is the dropbox token generated or not?",
+    )
+    dropbox_folder = fields.Char(string="Dropbox Folder", help="Dropbox folder")
+    active = fields.Boolean(
+        default=False,
+        string="Active",
+        help="Activate the Scheduled Action or not",
+    )
+    hide_active = fields.Boolean(
+        string="Hide Active", help="Make active field to readonly"
+    )
+    auto_remove = fields.Boolean(
+        string="Remove Old Backups", help="Remove old backups"
+    )
+    days_to_remove = fields.Integer(
+        string="Remove After",
+        help="Automatically delete stored backups after this specified number of days",
+    )
+    google_drive_folder_key = fields.Char(
+        string="Drive Folder ID", help="Folder id of the drive"
+    )
+    notify_user = fields.Boolean(
+        string="Notify User",
+        help="Send an email notification to user whenthe backup operation is successfulor failed",
+    )
+
+    user_id = fields.Many2one(
+        "res.users", string="User", help="Name of the user"
+    )
+    backup_filename = fields.Char(
+        string="Backup Filename", help="For Storing generated backup filename"
+    )
+    generated_exception = fields.Char(
+        string="Exception", help="Exception Encountered while Backupgeneration"
+    )
+    onedrive_client_key = fields.Char(
+        string="Onedrive Client ID",
+        copy=False,
+        help="Client ID of the onedrive",
+    )
+    onedrive_client_secret = fields.Char(
+        string="Onedrive Client Secret",
+        copy=False,
+        help="Client secret id of the onedrive",
+    )
+    onedrive_access_token = fields.Char(
+        string="Onedrive Access Token",
+        copy=False,
+        help="Access token for one drive",
+    )
+    onedrive_refresh_token = fields.Char(
+        string="Onedrive Refresh Token",
+        copy=False,
+        help="Refresh token for one drive",
+    )
+    onedrive_token_validity = fields.Datetime(
+        string="Onedrive Token Validity", copy=False, help="Token validity date"
+    )
+    onedrive_folder_key = fields.Char(
+        string="Folder ID", help="Folder id of the onedrive"
+    )
     is_onedrive_token_generated = fields.Boolean(
-        string='onedrive Tokens Generated',
-        compute='_compute_is_onedrive_token_generated',
-        copy=False, help='Whether to generate onedrive token?')
-    gdrive_refresh_token = fields.Char(string='Google drive Refresh Token',
-                                       copy=False,
-                                       help='Refresh token for google drive')
-    gdrive_access_token = fields.Char(string='Google Drive Access Token',
-                                      copy=False,
-                                      help='Access token for google drive')
+        string="onedrive Tokens Generated",
+        compute="_compute_is_onedrive_token_generated",
+        copy=False,
+        help="Whether to generate onedrive token?",
+    )
+    gdrive_refresh_token = fields.Char(
+        string="Google drive Refresh Token",
+        copy=False,
+        help="Refresh token for google drive",
+    )
+    gdrive_access_token = fields.Char(
+        string="Google Drive Access Token",
+        copy=False,
+        help="Access token for google drive",
+    )
     is_google_drive_token_generated = fields.Boolean(
-        string='Google drive Token Generated',
-        compute='_compute_is_google_drive_token_generated', copy=False,
-        help='Google drive token generated or not')
-    gdrive_client_key = fields.Char(string='Google Drive Client ID',
-                                    copy=False,
-                                    help='Client id of the google drive')
-    gdrive_client_secret = fields.Char(string='Google Drive Client Secret',
-                                       copy=False,
-                                       help='Client secret id of the google'
-                                            ' drive')
+        string="Google drive Token Generated",
+        compute="_compute_is_google_drive_token_generated",
+        copy=False,
+        help="Google drive token generated or not",
+    )
+    gdrive_client_key = fields.Char(
+        string="Google Drive Client ID",
+        copy=False,
+        help="Client id of the google drive",
+    )
+    gdrive_client_secret = fields.Char(
+        string="Google Drive Client Secret",
+        copy=False,
+        help="Client secret id of the google drive",
+    )
     gdrive_token_validity = fields.Datetime(
-        string='Google Drive Token Validity', copy=False,
-        help='Token validity of the google drive')
-    onedrive_redirect_uri = fields.Char(string='Onedrive Redirect URI',
-                                        compute='_compute_redirect_uri',
-                                        help='Redirect URI of the onedrive')
-    gdrive_redirect_uri = fields.Char(string='Google Drive Redirect URI',
-                                      compute='_compute_redirect_uri',
-                                      help='Redirect URI of the google drive')
-    domain = fields.Char(string='Domain Name', help="Field used to store the "
-                                                    "name of a domain")
-    next_cloud_user_name = fields.Char(string='User Name',
-                                       help="Field used to store the user name"
-                                            " for a Nextcloud account.")
-    next_cloud_password = fields.Char(string='Password',
-                                      help="Field used to store the password"
-                                           " for a Nextcloud account.")
-    nextcloud_folder_key = fields.Char(string='Next Cloud Folder Id',
-                                       help="Field used to store the unique "
-                                            "identifier for a Nextcloud "
-                                            "folder.")
-    aws_access_key = fields.Char(string="Amazon S3 Access Key",
-                                 help="Field used to store the Access Key"
-                                      " for an Amazon S3 bucket.")
-    aws_secret_access_key = fields.Char(string='Amazon S3 Secret Key',
-                                        help="Field used to store the Secret"
-                                             " Key for an Amazon S3 bucket.")
-    bucket_file_name = fields.Char(string='Bucket Name',
-                                   help="Field used to store the name of an"
-                                        " Amazon S3 bucket.")
-    aws_folder_name = fields.Char(string='File Name',
-                                  help="field used to store the name of a"
-                                       " folder in an Amazon S3 bucket.")
+        string="Google Drive Token Validity",
+        copy=False,
+        help="Token validity of the google drive",
+    )
+    onedrive_redirect_uri = fields.Char(
+        string="Onedrive Redirect URI",
+        compute="_compute_redirect_uri",
+        help="Redirect URI of the onedrive",
+    )
+    gdrive_redirect_uri = fields.Char(
+        string="Google Drive Redirect URI",
+        compute="_compute_redirect_uri",
+        help="Redirect URI of the google drive",
+    )
+    domain = fields.Char(
+        string="Domain Name", help="Field used to store the name of a domain"
+    )
+    next_cloud_user_name = fields.Char(
+        string="User Name",
+        help="Field used to store the user name for a Nextcloud account.",
+    )
+    next_cloud_password = fields.Char(
+        string="Password",
+        help="Field used to store the password for a Nextcloud account.",
+    )
+    nextcloud_folder_key = fields.Char(
+        string="Next Cloud Folder Id",
+        help="Field used to store the unique identifier for a Nextcloud folder.",
+    )
+
+    aws_access_key = fields.Char(
+        string="Amazon S3 Access Key",
+        help="Field used to store the Access Key for an Amazon S3 bucket.",
+    )
+    aws_secret_access_key = fields.Char(
+        string="Amazon S3 Secret Key",
+        help="Field used to store the Secret Key for an Amazon S3 bucket.",
+    )
+    bucket_file_name = fields.Char(
+        string="Bucket Name",
+        help="Field used to store the name of an Amazon S3 bucket.",
+    )
+    aws_folder_name = fields.Char(
+        string="File Name",
+        help="field used to store the name of a folder in an Amazon S3 bucket.",
+    )
+
 
     def action_s3cloud(self):
         """If it has aws_secret_access_key, which will perform s3cloud
@@ -963,6 +1030,7 @@ class DbBackupConfigure(models.Model):
                         if rec.aws_folder_name in prefixes:
                             temp = tempfile.NamedTemporaryFile(
                                 suffix='.%s' % rec.backup_format)
+                            #temp.name = "C:\\Odoo\\server\\temp"
                             with open(temp.name, "wb+") as tmp:
                                 self.dump_data(rec.db_name, tmp,
                                                         rec.backup_format, rec.backup_frequency)
