@@ -5,7 +5,7 @@ import time
 import struct
 
 # Configuración del servidor (IP y Puerto)
-SERVER_IP = '192.101.68.44'  # Cambia por la IP de tu servidor
+SERVER_IP = '34.229.87.213'  # Cambia por la IP de tu servidor
 SERVER_PORT = 5055           # Cambia por el puerto que estás utilizando
 
 # Duración de la simulación en segundos (1 minuto)
