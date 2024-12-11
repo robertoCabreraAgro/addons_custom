@@ -136,6 +136,7 @@ class SyngentaSaleReportLine(models.Model):
             "nombre_Cliente": self.partner_id.name or "",
             "nombre_Vendedor_Distribuidor": "",  # Not required
             "codeProduct_Distribuidor": self.product_id.manufacturer_pref or "",
+            "nombreProduct_Distribuidor": self.product_id.name or "",
             "localidad": "",  # Not required
             "sucursal": "",  # Not required
             "linea_Producto": "",  # Not required

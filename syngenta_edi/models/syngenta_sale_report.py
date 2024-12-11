@@ -70,6 +70,10 @@ class SyngentaSaleReport(models.Model):
         domain="[('agreement_id', '=', agreement_id)]",
         copy=True,
     )
+    amount_total = fields.Float(
+        string="Total",
+        compute="compute_amounts", store=True,
+    )
 
 
     @api.model_create_multi
@@ -99,6 +103,15 @@ class SyngentaSaleReport(models.Model):
                 folio = self._get_random_folio()
                 doc = self.search([("folio", "=", folio)], limit=1)
             rec.folio = folio
+
+    @api.depends('report_line_ids.price_subtotal')
+    def _compute_amounts(self):
+        for order in self:
+            amount = 0.0
+            order.amount_total = amount
+            for line in order.report_line_ids:
+                amount += line.price_subtotal
+            order.amount_total = amount
 
     def _get_json_data(self):
         lines = []
