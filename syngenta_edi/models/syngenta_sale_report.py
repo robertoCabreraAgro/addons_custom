@@ -72,7 +72,7 @@ class SyngentaSaleReport(models.Model):
     )
     amount_total = fields.Float(
         string="Total",
-        compute="compute_amounts", store=True,
+        compute="_compute_amounts", store=True,
     )
 
 
