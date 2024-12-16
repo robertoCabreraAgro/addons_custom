@@ -1,5 +1,6 @@
 .o_gps_tracking_dashboard {
     display: flex;
+    flex-wrap: wrap; /* Permite apilar los elementos si no hay suficiente espacio */
     height: 100%;
 }
 
@@ -8,6 +9,21 @@
     overflow-y: auto;
     padding: 10px;
     background-color: #f5f5f5;
+    transition: width 0.3s ease; /* Animación suave para cambios de ancho */
+}
+
+@media (max-width: 768px) {
+    .o_gps_tracking_kanban {
+        width: 100%; /* Toma todo el ancho en pantallas pequeñas */
+        height: 40%; /* Ajusta la altura cuando está apilado */
+        margin-bottom: 10px;
+    }
+}
+
+.kanban_toggle_view {
+    position: absolute;
+    top: 10px;
+    right: 10px;
 }
 
 .o_gps_tracking_card {
@@ -17,14 +33,52 @@
     margin-bottom: 10px;
     background-color: #fff;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: background-color 0.2s, transform 0.2s ease; /* Añade una animación de escala */
 }
 
 .o_gps_tracking_card:hover {
     background-color: #e6f7ff;
+    transform: scale(1.02); /* Destaca visualmente el hover */
 }
 
 .o_gps_tracking_map {
     width: 70%;
     height: 100%;
+    transition: width 0.3s ease; /* Animación suave para cambios de ancho */
+}
+
+@media (max-width: 768px) {
+    .o_gps_tracking_map {
+        width: 100%; /* Toma todo el ancho en pantallas pequeñas */
+        height: 60%; /* Ajusta la altura cuando está apilado */
+    }
+}
+
+.o_gps_tracking_card.active {
+    border-color: #28a745; /* Color verde para el dispositivo activo */
+    background-color: #e6ffe6;
+    transform: scale(1.01); /* Escala ligeramente el dispositivo activo */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Añade sombra para mayor énfasis */
+}
+
+.o_gps_tracking_card.active:hover {
+    background-color: #d4fcd4; /* Cambia ligeramente el color al pasar el mouse */
+}
+
+.kanban_info i {
+    margin-right: 5px; /* Ajusta según sea necesario */
+}
+
+.expand_button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    float: right;
+    font-size: 1.2em;
+    color: #007bff;
+    padding: 0;
+    margin-right: 20px;
+}
+.expand_button:focus {
+    outline: none;
 }

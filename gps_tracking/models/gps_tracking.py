@@ -1,6 +1,7 @@
 from odoo import fields, models, api
 from pyproj import Transformer
 import logging
+import requests
 
 _logger = logging.getLogger(__name__)
 
@@ -12,8 +13,10 @@ class GpsTrackingDevice(models.Model):
     tracking_points = fields.One2many('gps.tracking.point', 'device_id', string='Tracking Points')
     last_point_id = fields.Many2one('gps.tracking.point', string='Last Tracking Point', compute='_compute_last_point', store=True)
     speed = fields.Float(string='Speed', related='last_point_id.speed', store=True)
+    satellite = fields.Integer(string='Satélites', related='last_point_id.satellites', store=True)
     timestamp = fields.Datetime(string='Timestamp', related='last_point_id.timestamp', store=True)
     altitude = fields.Float(string='Altitude', related='last_point_id.altitude', store=True)
+    address = fields.Char(string='Altitude', related='last_point_id.address', store=True)
     the_point = fields.GeoPoint(string='Current Position', related='last_point_id.the_point', store=True)
     history_route = fields.GeoLine(string='History Route', compute='_compute_history_route', store=True, srid=3857,)
 
@@ -56,8 +59,8 @@ class GpsTrackingPoint(models.Model):
 
     latitude = fields.Float(string='Latitude', digits=(16, 7))
     longitude = fields.Float(string='Longitude', digits=(16, 7))
-
     the_point = fields.GeoPoint(string='Position', srid=3857, compute='_compute_the_point', store=True)
+    address = fields.Char(string='Address', compute='_compute_address', store=True)
 
     @api.depends('latitude', 'longitude')
     def _compute_the_point(self):
@@ -71,3 +74,31 @@ class GpsTrackingPoint(models.Model):
             else:
                 _logger.warning(f"Faltan latitud o longitud en el registro {rec.id}, no se puede convertir a SRID 3857.")
                 rec.the_point = False
+                
+
+    @api.depends('latitude', 'longitude')
+    def _compute_address(self):
+        api_key = ''  # Sustituye por tu clave de API
+        for rec in self:
+            _logger.info(f"Ejecutando _compute_address para ID {rec.id} con latitude={rec.latitude}, longitude={rec.longitude}")
+            if rec.latitude and rec.longitude:
+                url = f"https://maps.googleapis.com/maps/api/geocode/json?latlng={rec.latitude},{rec.longitude}&key={api_key}"
+                try:
+                    response = requests.get(url)
+                    if response.status_code == 200:
+                        data = response.json()
+                        if data['results']:
+                            rec.address = data['results'][0]['formatted_address']
+                            _logger.info(f"Dirección obtenida para ID {rec.id}: {rec.address}")
+                        else:
+                            rec.address = "Address not found"
+                            _logger.warning(f"Sin resultados para las coordenadas ID {rec.id}: {url}")
+                    else:
+                        _logger.error(f"Error al consultar la API de Google Maps para ID {rec.id}: {response.status_code}")
+                        rec.address = "Error fetching address"
+                except Exception as e:
+                    _logger.exception(f"Excepción al consultar la API de Google Maps para ID {rec.id}: {e}")
+                    rec.address = "Error fetching address"
+            else:
+                rec.address = "Coordinates not set"
+                _logger.warning(f"Coordenadas no establecidas para ID {rec.id}")
