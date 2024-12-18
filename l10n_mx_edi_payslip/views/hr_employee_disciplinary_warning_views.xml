@@ -45,7 +45,7 @@
         </field>
     </record>
 
-    <record id="hr_employee_disciplinary_warning_list" model="ir.ui.view">
+    <record id="hr_employee_disciplinary_warning_tree" model="ir.ui.view">
         <field name="name">view.l10n_mx.disciplinary.list</field>
         <field name="model">hr.employee.disciplinary.warning</field>
         <field name="arch" type="xml">

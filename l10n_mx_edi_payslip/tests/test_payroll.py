@@ -3,24 +3,24 @@ import time
 import unittest
 from datetime import date, datetime, time as dt_time, timedelta
 
-from lxml import etree, objectify
+from lxml import objectify
+from pytz import timezone
 
 from odoo import Command, fields
 from odoo.exceptions import UserError
-from odoo.tests.common import Form, tagged
+from odoo.tests import Form, tagged
 from odoo.tools import float_is_zero, float_round
 
 from .common import L10nMxEdiPayslipTransactionCase
 
 
-@tagged("hr_payroll", "post_install", "-at_install")
+@tagged("payroll", "post_install", "-at_install")
 class HRPayroll(L10nMxEdiPayslipTransactionCase):
-    @unittest.skip("Blocking un-mocked external HTTP request")
     def test_001_xml_structure(self):
-        """Use XML expected to verify that is equal to generated. And SAT
-        status"""
+        """Use XML expected to verify that is equal to generated. And SAT status"""
         self.employee.sudo().contract_id = self.contract
         payroll = self.create_payroll()
+        payroll.l10n_mx_edi_payment_date = "2017-11-01"
         self.env["hr.payslip.overtime"].create(
             {
                 "employee_id": self.employee.id,
@@ -30,31 +30,17 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         )
         payroll.compute_sheet()
         payroll.action_payslip_done()
-        payroll.l10n_mx_edi_update_pac_status()
+        with self.with_mocked_mx_payslip_pac_sucess():
+            payroll.l10n_mx_edi_update_pac_status()
         self.assertEqual(payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)
-        self.env.ref("l10n_mx_edi_payslip.ir_cron_update_sat_status_payroll").sudo().method_direct_trigger()
-        self.assertEqual(payroll.l10n_mx_edi_sat_status, "not_found")
-        payroll.invalidate_recordset()
         xml = payroll.l10n_mx_edi_get_xml_etree()
-        self.xml_expected.attrib["Fecha"] = xml.attrib["Fecha"]
-        self.xml_expected.attrib["Folio"] = xml.attrib["Folio"]
-        self.xml_expected.attrib["Sello"] = xml.attrib["Sello"]
         node_payroll = payroll.l10n_mx_edi_get_payroll_etree(xml)
-        node_expected = payroll.l10n_mx_edi_get_payroll_etree(self.xml_expected)
         self.assertTrue(node_payroll is not None, "Complement to payroll not added.")
-        node_expected.Receptor.attrib["FechaInicioRelLaboral"] = node_payroll.Receptor.attrib["FechaInicioRelLaboral"]
-        node_expected.attrib["FechaFinalPago"] = node_payroll.attrib["FechaFinalPago"]
-        node_expected.attrib["FechaInicialPago"] = node_payroll.attrib["FechaInicialPago"]
-        node_expected.attrib["FechaPago"] = node_payroll.attrib["FechaPago"]
-        node_expected.Receptor.attrib["Antig\xfcedad"] = node_payroll.Receptor.attrib["Antig\xfcedad"]
+        self.assertXmlTreeEqual(xml, self.xml_expected)
+        with self.with_mocked_mx_payslip_sat_status_sucess():
+            self.env.ref("l10n_mx_edi_payslip.ir_cron_update_sat_status_payroll").sudo().method_direct_trigger()
+        self.assertEqual(payroll.l10n_mx_edi_sat_status, "not_found")
 
-        # Replace node TimbreFiscalDigital
-        tfd_expected = self.payslip_obj.l10n_mx_edi_get_tfd_etree(self.xml_expected)
-        tfd_xml = objectify.fromstring(etree.tostring(self.payslip_obj.l10n_mx_edi_get_tfd_etree(xml)))
-        self.xml_expected.Complemento.replace(tfd_expected, tfd_xml)
-        self.assertEqualXML(xml, self.xml_expected)
-
-    @unittest.skip("Blocking un-mocked external HTTP request")
     def test_002_perception_022(self):
         """When perception code have 022, the payroll have node SeparacionIndemnizacion."""
         self.struct = self.env.ref("l10n_mx_edi_payslip.payroll_structure_data_03")
@@ -67,10 +53,10 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         )
         payroll.compute_sheet()
         payroll.action_payslip_done()
-        payroll.l10n_mx_edi_update_pac_status()
+        with self.with_mocked_mx_payslip_pac_sucess():
+            payroll.l10n_mx_edi_update_pac_status()
         self.assertEqual(payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)
 
-    @unittest.skip("Blocking un-mocked external HTTP request")
     def test_003_perception_039(self):
         """When perception code have 039, the payroll have node
         JubilacionPensionRetiro."""
@@ -94,10 +80,10 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         )
         payroll.compute_sheet()
         payroll.action_payslip_done()
-        payroll.l10n_mx_edi_update_pac_status()
+        with self.with_mocked_mx_payslip_pac_sucess():
+            payroll.l10n_mx_edi_update_pac_status()
         self.assertEqual(payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)
 
-    @unittest.skip("Blocking un-mocked external HTTP request")
     def test_004_other_payment_004(self):
         """When other payment have the code 004, this must have node
         CompensacionSaldosAFavor."""
@@ -124,10 +110,10 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         )
         payroll.compute_sheet()
         payroll.action_payslip_done()
-        payroll.l10n_mx_edi_update_pac_status()
+        with self.with_mocked_mx_payslip_pac_sucess():
+            payroll.l10n_mx_edi_update_pac_status()
         self.assertEqual(payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)
 
-    @unittest.skip("Blocking un-mocked external HTTP request")
     def test_005_perception_045(self):
         """When one perception have the code 045, this must have node
         AccionesOTitulos,."""
@@ -160,7 +146,8 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         )
         payroll.compute_sheet()
         payroll.action_payslip_done()
-        payroll.l10n_mx_edi_update_pac_status()
+        with self.with_mocked_mx_payslip_pac_sucess():
+            payroll.l10n_mx_edi_update_pac_status()
         self.assertEqual(payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)
 
     @unittest.skip("Review this test to print pdf")
@@ -258,7 +245,6 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         self.assertEqual(len(mail_composer.attachment_ids), 2, "Documents not attached")
         self.assertTrue(payroll.sent, "Sent field is not marked in the slip.")
 
-    @unittest.skip("Blocking un-mocked external HTTP request")
     def test_009_batches(self):
         """Verify payroll information and confirm payslips from batches
         Verify fiscal position on account move generation"""
@@ -273,8 +259,8 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         )
         payslip_run.write(
             {
-                "l10n_mx_edi_date_start": payslip_run.date_start,
-                "l10n_mx_edi_date_end": payslip_run.date_end,
+                "secondary_date_from": payslip_run.date_start,
+                "secondary_date_to": payslip_run.date_end,
             }
         )
         self.regenerate_work_entries()
@@ -291,18 +277,18 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
                 "Payment date not assigned in a payroll created.",
             )
             self.assertEqual(
-                slip.l10n_mx_edi_date_from,
-                payslip_run.l10n_mx_edi_date_start,
+                slip.secondary_date_from,
+                payslip_run.secondary_date_from,
                 "Date from not assigned in the payroll created.",
             )
             self.assertEqual(
-                slip.l10n_mx_edi_date_to,
-                payslip_run.l10n_mx_edi_date_end,
+                slip.secondary_date_to,
+                payslip_run.secondary_date_to,
                 "Date to not assigned in the payroll created.",
             )
 
         # Action that generate the overtimes
-        payslip_run.slip_ids.mapped("contract_id").write({"l10n_mx_edi_allow_overtimes": True})
+        payslip_run.slip_ids.contract_id.write({"l10n_mx_edi_allow_overtimes": True})
         payslip_run.action_set_overtimes()
         overtimes = self.env["hr.payslip.overtime"].search(
             [("employee_id", "in", payslip_run.slip_ids.mapped("employee_id").ids)]
@@ -312,8 +298,8 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
 
         payslip_run.slip_ids.write({"l10n_mx_edi_source_resource": "IP"})
         payslip_run.action_validate()
-        payslip_run.action_payslips_done()
-        self.env.ref("l10n_mx_edi_payslip.ir_cron_mx_edi_payslip_web_services").sudo().method_direct_trigger()
+        with self.with_mocked_mx_payslip_pac_sucess():
+            payslip_run.action_payslips_done()
         for slip in payslip_run.slip_ids:
             self.assertEqual(slip.l10n_mx_edi_pac_status, "signed", slip.l10n_mx_edi_error)
         # Test lines generated in account move
@@ -322,11 +308,11 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
             lambda line: line.name == "Sueldos, Salarios Rayas y Jornales"
         )
         self.assertEqual(len(salary_lines), 2, "There should be 2 lines for sueldos, salarios... in the account move")
-        accounts = salary_lines.mapped("account_id")
+        accounts = salary_lines.account_id
         account1 = self.env.ref("l10n_mx_edi_payslip.cuenta601_08").id
         account1 = accounts.filtered(lambda a, account1=account1: a.id == account1)
         self.assertTrue(account1, "In the account move, should be a line for the account")
-        account2 = accounts.filtered(lambda a: "601.84.01" in a.code)
+        account2 = accounts.filtered(lambda a: "602.08.01" in a.code)
         self.assertTrue(account2, "In the account move, should be a line for the account")
 
         # Ensure that dispersions action works correctly
@@ -359,20 +345,20 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         )
         payroll.compute_sheet()
         payroll.action_payslip_done()
-        # Mute: Blocking un-mocked external HTTP request
-        # payroll.l10n_mx_edi_update_pac_status()
-        # self.assertEqual(payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)
-        # xml = payroll.l10n_mx_edi_get_xml_etree()
-        # node_payroll = payroll.l10n_mx_edi_get_payroll_etree(xml)
-        # self.assertEqual("11000.00", node_payroll.get("TotalPercepciones", ""))
+        with self.with_mocked_mx_payslip_pac_sucess():
+            payroll.l10n_mx_edi_update_pac_status()
+        self.assertEqual(payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)
+        xml = payroll.l10n_mx_edi_get_xml_etree()
+        node_payroll = payroll.l10n_mx_edi_get_payroll_etree(xml)
+        self.assertEqual("11000.00", node_payroll.get("TotalPercepciones", ""))
 
-    @unittest.skip("Blocking un-mocked external HTTP request")
     def test_012_resign_process(self):
         """Tests the re-sign process (recovery a previously signed xml)"""
         payroll = self.create_payroll()
         payroll.compute_sheet()
         payroll.action_payslip_done()
-        payroll.l10n_mx_edi_update_pac_status()
+        with self.with_mocked_mx_payslip_pac_sucess():
+            payroll.l10n_mx_edi_update_pac_status()
         self.assertEqual(payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)
         xml_attachs = payroll.l10n_mx_edi_retrieve_attachments()
         self.assertEqual(len(xml_attachs), 1)
@@ -383,14 +369,14 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
                 break
             time.sleep(2)
             payroll.l10n_mx_edi_retrieve_last_attachment().unlink()
-            payroll.l10n_mx_edi_update_pac_status()
+            with self.with_mocked_mx_payslip_pac_sucess():
+                payroll.l10n_mx_edi_update_pac_status()
         self.assertEqual(payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)
         xml_attachs = payroll.l10n_mx_edi_retrieve_attachments()
         self.assertEqual(len(xml_attachs), 1, "There should be just one xml")
         xml_2 = objectify.fromstring(base64.b64decode(xml_attachs[0].datas))
-        self.assertEqualXML(xml_1, xml_2)
+        self.assertXmlTreeEqual(xml_1, xml_2)
 
-    @unittest.skip("Blocking un-mocked external HTTP request")
     def test_013_assimilated(self):
         """Tests case when the employee is assimilated"""
         payroll = self.create_payroll()
@@ -399,10 +385,10 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         payroll.contract_id.sudo().contract_type_id = self.env.ref("l10n_mx_edi_payslip.hr_contract_type_99")
         payroll.compute_sheet()
         payroll.action_payslip_done()
-        payroll.l10n_mx_edi_update_pac_status()
+        with self.with_mocked_mx_payslip_pac_sucess():
+            payroll.l10n_mx_edi_update_pac_status()
         self.assertEqual(payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)
 
-    @unittest.skip("Blocking un-mocked external HTTP request")
     def test_014_allow_validate_payslip(self):
         """Test case when an employee"""
         payroll = self.create_payroll()
@@ -417,10 +403,10 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         # Get back permission group and finish to test normal flow
         group_e.sudo().write({"users": [Command.link(self.env.user.id)]})
         payroll.action_payslip_done()
-        payroll.l10n_mx_edi_update_pac_status()
+        with self.with_mocked_mx_payslip_pac_sucess():
+            payroll.l10n_mx_edi_update_pac_status()
         self.assertEqual(payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)
 
-    @unittest.skip("Blocking un-mocked external HTTP request")
     def test_015_alimony(self):
         """Test case with alimony in the employee. Also test the report
         Seven alimony types. Alimony expected amounts
@@ -497,7 +483,8 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         payroll = self.create_payroll()
         payroll.compute_sheet()
         payroll.action_payslip_done()
-        payroll.l10n_mx_edi_update_pac_status()
+        with self.with_mocked_mx_payslip_pac_sucess():
+            payroll.l10n_mx_edi_update_pac_status()
         self.assertEqual(payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)
         # Test Report
         # TODO: Enable
@@ -529,8 +516,7 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
     def test_017_allocations(self):
         """Ensure that allocations are generated"""
         holiday = self.env.ref("l10n_mx_edi_payslip.mexican_holiday")
-        mexico_tz = self.env["l10n_mx_edi.certificate"]._get_timezone()
-        date_mx = datetime.now(mexico_tz)
+        date_mx = datetime.now(timezone("America/Mexico_City"))
         self.contract.date_start = date_mx.replace(year=date_mx.year - 1)
         self.contract.state = "open"
         self.env.ref("l10n_mx_edi_payslip.ir_cron_create_mx_allocation").sudo().method_direct_trigger()
@@ -540,7 +526,6 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         self.assertTrue(allocation, "Allocation not generated")
         self.assertEqual(allocation.number_of_days, 12.0, "The contract has a year, the expected days are 12")
 
-    @unittest.skip("Blocking un-mocked external HTTP request")
     def test_018_inabilities(self):
         """Ensure that inabilities are created"""
         self.remove_leaves()
@@ -552,7 +537,6 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         )
         leave = self.env["hr.leave"].create(
             {
-                "holiday_type": "employee",
                 "employee_id": self.employee.id,
                 "holiday_status_id": self.env.ref("l10n_mx_edi_payslip.mexican_maternity").id,
                 "request_date_from": "%s-%s-01" % (time.strftime("%Y"), time.strftime("%m")),
@@ -568,39 +552,18 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         payroll = self.create_payroll()
         payroll.action_refresh_from_work_entries()
         payroll.action_payslip_done()
-        payroll.l10n_mx_edi_update_pac_status()
+        with self.with_mocked_mx_payslip_pac_sucess():
+            payroll.l10n_mx_edi_update_pac_status()
         self.check_inability_node(payroll, "03", "3")
         # Base + finiquito
         self.struct = self.env.ref("l10n_mx_edi_payslip.payroll_structure_data_06")
         payroll = self.create_payroll()
         payroll.action_refresh_from_work_entries()
         payroll.action_payslip_done()
-        payroll.l10n_mx_edi_update_pac_status()
+        with self.with_mocked_mx_payslip_pac_sucess():
+            payroll.l10n_mx_edi_update_pac_status()
         self.check_inability_node(payroll, "03", "3")
 
-    def check_inability_node(self, payroll, i_type, days):
-        """Check if the Incapacidad node was created as expected.
-        :param payroll: A payroll object already signed
-        :type payroll: hr.payslip
-        :param i_type: Inhability type according SAT catalog
-        :type i_type: string
-        :param days: Expected days in the node. Integer as a string
-        :type days: string
-        """
-        self.assertEqual(payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)
-        xml = payroll.l10n_mx_edi_get_xml_etree()
-        self.assertEqual(
-            i_type,
-            payroll.l10n_mx_edi_get_payroll_etree(xml).Incapacidades.Incapacidad.get("TipoIncapacidad"),
-            "Inability not added.",
-        )
-        self.assertEqual(
-            days,
-            payroll.l10n_mx_edi_get_payroll_etree(xml).Incapacidades.Incapacidad.get("DiasIncapacidad"),
-            "Days in CFDI does not match with the leave.",
-        )
-
-    @unittest.skip("Blocking un-mocked external HTTP request")
     def test_019_inabilities(self):
         """Ensure that inabilities are created"""
         self.remove_leaves()
@@ -612,7 +575,6 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         )
         leave = self.env["hr.leave"].create(
             {
-                "holiday_type": "employee",
                 "employee_id": self.employee.id,
                 "holiday_status_id": self.env.ref("l10n_mx_edi_payslip.mexican_riesgo_de_trabajo").id,
                 "request_date_from": "%s-%s-01" % (time.strftime("%Y"), time.strftime("%m")),
@@ -627,17 +589,18 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         payroll = self.create_payroll()
         payroll.action_refresh_from_work_entries()
         payroll.action_payslip_done()
-        payroll.l10n_mx_edi_update_pac_status()
+        with self.with_mocked_mx_payslip_pac_sucess():
+            payroll.l10n_mx_edi_update_pac_status()
         self.check_inability_node(payroll, "01", "3")
         # Base + finiquito
         self.struct = self.env.ref("l10n_mx_edi_payslip.payroll_structure_data_06")
         payroll = self.create_payroll()
         payroll.action_refresh_from_work_entries()
         payroll.action_payslip_done()
-        payroll.l10n_mx_edi_update_pac_status()
+        with self.with_mocked_mx_payslip_pac_sucess():
+            payroll.l10n_mx_edi_update_pac_status()
         self.check_inability_node(payroll, "01", "3")
 
-    @unittest.skip("Blocking un-mocked external HTTP request")
     def test_020_inabilities(self):
         """Ensure that inability for 'Enfermedad General' created"""
         self.remove_leaves()
@@ -649,7 +612,6 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         )
         leave = self.env["hr.leave"].create(
             {
-                "holiday_type": "employee",
                 "employee_id": self.employee.id,
                 "holiday_status_id": self.env.ref("l10n_mx_edi_payslip.mexican_enfermedad_general").id,
                 "request_date_from": "%s-%s-01" % (time.strftime("%Y"), time.strftime("%m")),
@@ -664,17 +626,18 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         payroll = self.create_payroll()
         payroll.action_refresh_from_work_entries()
         payroll.action_payslip_done()
-        payroll.l10n_mx_edi_update_pac_status()
+        with self.with_mocked_mx_payslip_pac_sucess():
+            payroll.l10n_mx_edi_update_pac_status()
         self.check_inability_node(payroll, "02", "7")
         # Base + finiquito
         self.struct = self.env.ref("l10n_mx_edi_payslip.payroll_structure_data_06")
         payroll = self.create_payroll()
         payroll.action_refresh_from_work_entries()
         payroll.action_payslip_done()
-        payroll.l10n_mx_edi_update_pac_status()
+        with self.with_mocked_mx_payslip_pac_sucess():
+            payroll.l10n_mx_edi_update_pac_status()
         self.check_inability_node(payroll, "02", "7")
 
-    @unittest.skip("Blocking un-mocked external HTTP request")
     def test_021_inabilities(self):
         """Ensure that inability for 'Hijos con Cancer' is created"""
         self.remove_leaves()
@@ -686,7 +649,6 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         )
         leave = self.env["hr.leave"].create(
             {
-                "holiday_type": "employee",
                 "employee_id": self.employee.id,
                 "holiday_status_id": self.env.ref("l10n_mx_edi_payslip.mexican_licencia_padres_hijo_cancer").id,
                 "request_date_from": "%s-%s-01" % (time.strftime("%Y"), time.strftime("%m")),
@@ -701,14 +663,16 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         payroll = self.create_payroll()
         payroll.action_refresh_from_work_entries()
         payroll.action_payslip_done()
-        payroll.l10n_mx_edi_update_pac_status()
+        with self.with_mocked_mx_payslip_pac_sucess():
+            payroll.l10n_mx_edi_update_pac_status()
         self.check_inability_node(payroll, "04", "3")
         # Base + finiquito
         self.struct = self.env.ref("l10n_mx_edi_payslip.payroll_structure_data_06")
         payroll = self.create_payroll()
         payroll.action_refresh_from_work_entries()
         payroll.action_payslip_done()
-        payroll.l10n_mx_edi_update_pac_status()
+        with self.with_mocked_mx_payslip_pac_sucess():
+            payroll.l10n_mx_edi_update_pac_status()
         self.check_inability_node(payroll, "04", "3")
 
     def test_022_working_days(self):
@@ -768,26 +732,21 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         self.employee.tz = self.contract.resource_calendar_id.tz = self.env.user.tz
         self.employee.parent_id = False
         holiday = self.env.ref("l10n_mx_edi_payslip.mexican_holiday")
-        mexico_tz = self.env["l10n_mx_edi.certificate"]._get_timezone()
+        mexico_tz = timezone("America/Mexico_City")
         date_mx = datetime.now(mexico_tz)
         self.contract.state = "open"
         self.contract.date_start = date_mx.replace(year=date_mx.year - 2)
         self.remove_leaves()
 
         # Create an allocation for the last year
-        old_allocation = self.allocation_obj.create(
-            {
-                "name": "%s MX %s" % (holiday.name, (date_mx.year - 1)),
-                "holiday_status_id": holiday.id,
-                "number_of_days": 6,
-                "holiday_type": "employee",
-                "employee_id": self.employee.id,
-                "state": "confirm",
-                "allocation_type": "regular",
-                "date_from": date_mx.replace(year=date_mx.year - 1),
-                "date_to": date_mx - timedelta(days=1),
-            }
-        )
+        self.env.user.groups_id += self.env.ref("hr_holidays.group_hr_holidays_user")
+        allocation_form = Form(self.env["hr.leave.allocation"].with_context(**{"is_employee_allocation": True}))
+        allocation_form.number_of_days_display = 6
+        allocation_form.holiday_status_id = holiday
+        allocation_form.employee_id = self.employee
+        allocation_form.date_from = date_mx.replace(year=date_mx.year - 1)
+        allocation_form.date_to = date_mx - timedelta(days=1)
+        old_allocation = allocation_form.save()
         old_allocation.action_validate()
         # Use Cron, update the holidays. The old allocation should not be refused
         self.env.ref("l10n_mx_edi_payslip.ir_cron_create_mx_allocation").sudo().method_direct_trigger()
@@ -808,18 +767,16 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
             "The allocation created by the cron should be named as the actual year",
         )
         # Ensure that holiday is available and paid in the payslip
-        payroll = self.create_payroll()
+        leave_date = new_allocation.date_from + timedelta(days=1)
+        payroll = self.create_payroll(date_from=leave_date, date_to=leave_date + timedelta(days=15))
         leave = self.env["hr.leave"].create(
             {
-                "holiday_type": "employee",
                 "employee_id": self.employee.id,
                 "holiday_status_id": holiday.id,
+                "request_date_from": leave_date,
+                "request_date_to": leave_date + timedelta(days=3),
             }
         )
-        leave = Form(leave)
-        leave.request_date_from = "%s-%s-01" % (time.strftime("%Y"), time.strftime("%m"))
-        leave.request_date_to = "%s-%s-03" % (time.strftime("%Y"), time.strftime("%m"))
-        leave = leave.save()
         # TODO: Review: This regenerate work entries should not be needed, maybe a odoo's ticket is needed
         self.regenerate_work_entries()
         leave.action_approve()
@@ -831,7 +788,6 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
             "Holidays not paid.",
         )
 
-    @unittest.skip("Blocking un-mocked external HTTP request")
     def test_027_extra_dinamic_concepts_cfdi(self):
         """Check dinamic concepts on cfdi"""
         self.contract.state = "open"
@@ -883,7 +839,8 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         )
         # Check the line string on the CFDI
         payroll.action_payslip_done()
-        payroll.l10n_mx_edi_update_pac_status()
+        with self.with_mocked_mx_payslip_pac_sucess():
+            payroll.l10n_mx_edi_update_pac_status()
         self.assertEqual(payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)
         xml = payroll.l10n_mx_edi_get_xml_etree()
         node_payroll = payroll.l10n_mx_edi_get_payroll_etree(xml)
@@ -904,7 +861,8 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         extras.action_approve()
         new_payroll.l10n_mx_edi_update_extras()
         new_payroll.action_payslip_done()
-        new_payroll.l10n_mx_edi_update_pac_status()
+        with self.with_mocked_mx_payslip_pac_sucess():
+            new_payroll.l10n_mx_edi_update_pac_status()
         self.assertEqual(new_payroll.l10n_mx_edi_pac_status, "signed", new_payroll.l10n_mx_edi_error)
 
     def test_028_out_of_contract(self):
@@ -932,7 +890,6 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         self.contract.date_end = payroll.date_to - timedelta(days=3)
         self._check_out_of_contract_config(payroll, 6)
 
-    @unittest.skip("Blocking un-mocked external HTTP request")
     def test_029_schedule_action_pac_sign(self):
         """Test the normal flow for the schedule action to sign the payslips
         Create one or more payslips prepere them to be sign and sign them by the action"""
@@ -942,20 +899,21 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         payroll2 = self.create_payroll()
         payroll2.compute_sheet()
         payroll2.action_payslip_done()
-        self.env.ref("l10n_mx_edi_payslip.ir_cron_mx_edi_payslip_web_services").sudo().method_direct_trigger()
+        with self.with_mocked_mx_payslip_pac_sucess():
+            self.env.ref("l10n_mx_edi_payslip.ir_cron_mx_edi_payslip_web_services").sudo().method_direct_trigger()
         self.assertEqual(payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)
         self.assertEqual(payroll2.l10n_mx_edi_pac_status, "signed", payroll2.l10n_mx_edi_error)
 
-    @unittest.skip("Blocking un-mocked external HTTP request")
     def test_030_expected_sign_fails_catch_flow(self):
         """When a configuration or sign fail is showing the error should be managed, this test checks if
         the error the catch flow is working as expected"""
         # Error on sign/sent to pac. Invalid RFC
-        self.employee.l10n_mx_edi_private_vat = "MAR980114GQR"
+        self.employee.l10n_mx_rfc = "MAR980114GQR"
         payroll = self.create_payroll()
         payroll.compute_sheet()
         payroll.action_payslip_done()
-        payroll.l10n_mx_edi_update_pac_status()
+        with self.with_mocked_mx_payslip_pac_retry():
+            payroll.l10n_mx_edi_update_pac_status()
         self.assertEqual(payroll.l10n_mx_edi_pac_status, "retry", "The sign must fail, The pac status must be Retry")
         self.assertTrue(payroll.l10n_mx_edi_error, "The sign must fail, the error variable must show a message")
 
@@ -976,7 +934,7 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
                 "l10n_mx_edi_payment_date": "%s-%s-15" % (time.strftime("%Y"), time.strftime("%m")),
             }
         )
-        self.env["hr.work.entry"].sudo().search([]).unlink()
+        self.env["hr.work.entry"].sudo().search([("state", "!=", "validated")]).unlink()
         employees.generate_work_entries(payslip_run.date_start, payslip_run.date_end, True)
         self.wizard_batch.create(
             {
@@ -1068,7 +1026,6 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         second_payroll.action_payslip_done()
         self.assertEqual(len(company_loan.payslip_ids), 1, "There should be one payslip linked to the loan")
 
-    @unittest.skip("Blocking un-mocked external HTTP request")
     def test_034_extra_hours(self):
         """Test if the extra hours salary rules are being calculated with the three rules from ART 93 from ISR law
         1. If the employee has the general minimal salary, 9 hours extra hours by week are exempt
@@ -1147,7 +1104,8 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         # Check if the overtime node can be added to the cfdi and can be printed
         payroll.action_payslip_done()
         payroll.with_context(payslip_generate_pdf=True).action_payslip_done()
-        payroll.l10n_mx_edi_update_pac_status()
+        with self.with_mocked_mx_payslip_pac_sucess():
+            payroll.l10n_mx_edi_update_pac_status()
         self.assertEqual(payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)
         xml = payroll.l10n_mx_edi_get_xml_etree()
         node_payroll = payroll.l10n_mx_edi_get_payroll_etree(xml)
@@ -1319,7 +1277,6 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         leave_type = self.env.ref("l10n_mx_edi_payslip.mexican_riesgo_de_trabajo")
         leave = self.env["hr.leave"].create(
             {
-                "holiday_type": "employee",
                 "employee_id": self.employee.id,
                 "holiday_status_id": leave_type.id,
                 "request_date_from": payroll.date_from,
@@ -1359,7 +1316,7 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         )
         self.assertTrue(payroll.date_to.isocalendar()[1] in weeks, "Wrong weeks in the payslips overtimes view")
 
-    @unittest.skip("Blocking un-mocked external HTTP request")
+    @unittest.skip("Blocking un-mocked external HTTP request solfact")
     def test_040_solfact_sign_cancel(self):
         """Test the sign process using solfact as PAC, simple sign and cancel"""
         self.env.company.sudo().l10n_mx_edi_pac = "solfact"
@@ -1478,33 +1435,6 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
             "Three disciplinary warnings are expected in the count.",
         )
 
-    def _check_out_of_contract_config(self, payroll, expected_out_of_contract_days, expected_lines=2):
-        total_period_days = (payroll.date_to - payroll.date_from).days + 1
-        payroll.action_refresh_from_work_entries()
-        worked_lines = payroll.worked_days_line_ids
-        self.assertEqual(len(worked_lines), expected_lines, "%d Lines expected" % expected_lines)
-        self.assertEqual(
-            sum(worked_lines.mapped("number_of_days")),
-            total_period_days,
-            "The total sum of number of days must be the total of days in the period, %d days" % total_period_days,
-        )
-        self.assertTrue(
-            len(worked_lines.mapped("name")) == len(set(worked_lines.mapped("name"))),
-            "No concept should be repeated in worked days lines",
-        )
-        self.assertFalse(
-            [item for item in worked_lines.mapped("number_of_days") if item < 1],
-            "There should be no lines with negative or zero days in the worked days",
-        )
-        out_contract_line = worked_lines.filtered(lambda w: w.name == "Out of Contract")
-        self.assertTrue(out_contract_line, "There must be an Out of Contract line")
-        self.assertEqual(
-            out_contract_line.number_of_days,
-            expected_out_of_contract_days,
-            "There must be %s days out of contract" % expected_out_of_contract_days,
-        )
-
-    @unittest.skip("Blocking un-mocked external HTTP request")
     def test_base_finiquito(self):
         """Ensure that structure base + finiquito is executed correctly."""
         self.struct = self.env.ref("l10n_mx_edi_payslip.payroll_structure_data_06")
@@ -1517,10 +1447,10 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         )
         payroll.compute_sheet()
         payroll.action_payslip_done()
-        payroll.l10n_mx_edi_update_pac_status()
+        with self.with_mocked_mx_payslip_pac_sucess():
+            payroll.l10n_mx_edi_update_pac_status()
         self.assertEqual(payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)
 
-    @unittest.skip("Blocking un-mocked external HTTP request")
     def test_base_viaticos(self):
         """Ensure that structure for viaticos is executed correctly."""
         self.struct = self.env.ref("l10n_mx_edi_payslip.payroll_structure_data_07")
@@ -1530,10 +1460,10 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         )
         payroll.compute_sheet()
         payroll.action_payslip_done()
-        payroll.l10n_mx_edi_update_pac_status()
+        with self.with_mocked_mx_payslip_pac_sucess():
+            payroll.l10n_mx_edi_update_pac_status()
         self.assertEqual(payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)
 
-    @unittest.skip("Blocking un-mocked external HTTP request")
     def test_base_week(self):
         """Ensure that structure base is executed correctly for week."""
         payroll = self.create_payroll()
@@ -1541,7 +1471,8 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         payroll.date_to = payroll.date_from + timedelta(days=7)
         payroll.compute_sheet()
         payroll.action_payslip_done()
-        payroll.l10n_mx_edi_update_pac_status()
+        with self.with_mocked_mx_payslip_pac_sucess():
+            payroll.l10n_mx_edi_update_pac_status()
         self.assertEqual(payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)
 
     def test_net_salary_in_0(self):
@@ -1555,7 +1486,6 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         payroll.action_payslip_done()
         self.assertFalse(payroll.l10n_mx_edi_pac_status, payroll.l10n_mx_edi_error)
 
-    @unittest.skip("Blocking un-mocked external HTTP request")
     def test_xml_subsidy(self):
         """Ensure that payroll is signed with subsidy"""
         self.employee.sudo().contract_id = self.contract
@@ -1563,40 +1493,36 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         payroll = self.create_payroll()
         payroll.compute_sheet()
         payroll.action_payslip_done()
-        payroll.l10n_mx_edi_update_pac_status()
+        with self.with_mocked_mx_payslip_pac_sucess():
+            payroll.l10n_mx_edi_update_pac_status()
         self.assertEqual(payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)
 
-    @unittest.skip("Blocking un-mocked external HTTP request")
     def test_prorrate_isr(self):
         """Ensure that rules with l10n_mx_edi_prorate_isr works correctly"""
         payroll = self.create_payroll()
         payroll.company_id.sudo().l10n_mx_edi_prorate_isr = True
         payroll.compute_sheet()
         payroll.action_payslip_done()
-        payroll.l10n_mx_edi_update_pac_status()
+        with self.with_mocked_mx_payslip_pac_sucess():
+            payroll.l10n_mx_edi_update_pac_status()
         self.assertEqual(payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)
 
     def test_leave_without_salary(self):
         """Ensure that leave for 'Falta Justificada Sin Goce de Salario' is created"""
-        holiday = self.env.ref("l10n_mx_edi_payslip.work_entry_type_mexican_faltas_injustificadas").id
+        holiday = self.env.ref("l10n_mx_edi_payslip.mexican_falta_justificada")
         self.employee.parent_id = False
-        allocation = self.env["hr.leave.allocation"].create(
-            {
-                "name": "Test",
-                "holiday_status_id": holiday,
-                "number_of_days": 10,
-                "holiday_type": "employee",
-                "employee_id": self.employee.id,
-                "state": "confirm",
-            }
-        )
+        self.env.user.groups_id += self.env.ref("hr_holidays.group_hr_holidays_user")
+        allocation_form = Form(self.env["hr.leave.allocation"].with_context(**{"is_employee_allocation": True}))
+        allocation_form.holiday_status_id = holiday
+        allocation_form.number_of_days_display = 10
+        allocation_form.employee_id = self.employee
+        allocation = allocation_form.save()
         allocation.sudo().action_validate()
         self.remove_leaves()
         leave = self.env["hr.leave"].create(
             {
-                "holiday_type": "employee",
                 "employee_id": self.employee.id,
-                "holiday_status_id": holiday,
+                "holiday_status_id": holiday.id,
                 "request_date_from": "%s-%s-01" % (time.strftime("%Y"), time.strftime("%m")),
                 "request_date_to": "%s-%s-03" % (time.strftime("%Y"), time.strftime("%m")),
                 "number_of_days": 3,
@@ -1630,7 +1556,6 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         self.remove_leaves()
         leave = self.env["hr.leave"].create(
             {
-                "holiday_type": "employee",
                 "employee_id": self.employee.id,
                 "holiday_status_id": self.env.ref("l10n_mx_edi_payslip.mexican_licencia_padres_hijo_cancer").id,
                 "request_date_from": "%s-%s-01" % (time.strftime("%Y"), time.strftime("%m")),
@@ -1686,9 +1611,9 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         payroll = self.create_payroll()
         payroll.compute_sheet()
         payroll.action_payslip_done()
-        # TODO: Enable with mock
-        # payroll.l10n_mx_edi_update_pac_status()
-        # self.assertEqual(payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)
+        with self.with_mocked_mx_payslip_pac_sucess():
+            payroll.l10n_mx_edi_update_pac_status()
+        self.assertEqual(payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)
 
     def test_ptu_structure(self):
         """Ensure that PTU is generated correctly."""
@@ -1702,6 +1627,6 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         )
         payroll.compute_sheet()
         payroll.action_payslip_done()
-        # TODO: Enable with mock
-        # payroll.l10n_mx_edi_update_pac_status()
-        # self.assertEqual(payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)
+        with self.with_mocked_mx_payslip_pac_sucess():
+            payroll.l10n_mx_edi_update_pac_status()
+        self.assertEqual(payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)

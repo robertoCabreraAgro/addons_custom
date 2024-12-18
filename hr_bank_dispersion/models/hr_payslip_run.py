@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import UserError
 
 
@@ -33,7 +33,7 @@ class HrPayslipRun(models.Model):
         self.ensure_one()
         if not self.env.user.has_group("hr_bank_dispersion.allow_print_payslip_dispersion"):
             raise UserError(
-                _(
+                self.env._(
                     "Only Managers with the group 'Allow to Print Payslip Dispersion' can generate "
                     "payslip dispersion files"
                 )
@@ -42,7 +42,7 @@ class HrPayslipRun(models.Model):
         bank_ids = self.mapped("slip_ids.employee_id.bank_account_id.bank_id")
         if not bank_ids:
             raise UserError(
-                _(
+                self.env._(
                     "To use this option, please configure the bank account on your employees, "
                     "no employees are currently configured."
                 )
@@ -60,14 +60,14 @@ class HrPayslipRun(models.Model):
 
         if not any(dispersion_methods):
             raise UserError(
-                _(
+                self.env._(
                     "We currently do not support generating payroll dispersions for "
                     "any of the employee banks in this payroll batch."
                 )
             )
-
-        if bank_errors:
-            body_msg = _("The following of your banks are not available for payroll dispersion")
+        dispersion_type = self._get_dispersion_type_parameter()
+        if bank_errors and not dispersion_type:
+            body_msg = self.env._("The following of your banks are not available for payroll dispersion")
             self.message_post(body=body_msg + create_list_html(bank_errors))
 
     def _get_payslips_dispersions(self):
@@ -75,6 +75,9 @@ class HrPayslipRun(models.Model):
         :return: List of tuples, 2 values. Report name and text
         :rtype: list"""
         dispersions = []
+        dispersion_type = self._get_dispersion_type_parameter()
+        if dispersion_type:
+            return self._get_generic_bank_dispersion(dispersion_type)
 
         for bank_id in self.mapped("slip_ids.employee_id.bank_account_id.bank_id"):
             # using search instead filtered to keep performance in batch with many payslips like action_payslips_done()
@@ -97,7 +100,7 @@ class HrPayslipRun(models.Model):
     def _get_payslips_dispersion_report_name(self, bank_name=False):
         self.ensure_one()
         name = self.name.replace(" ", "_")
-        bank_name = bank_name.replace(" ", "_") if bank_name else _("Dispersions")
+        bank_name = bank_name.replace(" ", "_") if bank_name else self.env._("Dispersions")
         date = self.date_end.strftime("%d_%m_%Y")
         return "%s_%s_%s" % (bank_name, date, name)
 
@@ -126,3 +129,16 @@ class HrPayslipRun(models.Model):
         \n = LF (Line Feed) → Used as a new line character in Unix/Mac OS X
         \r\n = CR + LF → Used as a new line character in Windows"""
         return "\r\n".join(lines) + "\r\n"
+
+    def _get_dispersion_type_parameter(self):
+        """Returns the dispersion type to generate the batch dispersion file.
+
+        This method considers the following:
+
+        - If the system parameter l10n_mx_edi_dispersion_type has an assigned value then a single dispersion file
+          will be generated for all payslips in the batch.
+        - The structure of the payslip lines will be the same for all banks, except for payslips where the employee's
+          account is the l10n_mx_edi_dispersion_type.
+        """
+        get_param = self.env["ir.config_parameter"].sudo().get_param
+        return get_param("l10n_mx_edi_dispersion_type")

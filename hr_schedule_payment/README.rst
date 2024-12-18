@@ -30,7 +30,7 @@ Repositories needed for this module:
 
 See oca_dependencies.txt file
 
-Just declare all this repositories on 17.0 branches in your addons-path and install "hr_schedule_payment" module.
+Just declare all this repositories on 18.0 branches in your addons-path and install "hr_schedule_payment" module.
 
 
 

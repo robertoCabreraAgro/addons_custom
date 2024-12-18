@@ -1,1 +1,1 @@
-from . import test_hr_payslip_input_batch
+from . import test_hr_payroll_input_batch

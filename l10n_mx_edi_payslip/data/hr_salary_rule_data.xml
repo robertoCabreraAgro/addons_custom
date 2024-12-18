@@ -161,30 +161,6 @@ result = contract.l10n_mx_edi_daily_wage * permit
         </field>
     </record>
 
-    <record id="hr_rule_l10n_mx_payroll_perception_001_public_holiday" model="hr.salary.rule">
-        <field name="name">Días Inhábiles Trabajados</field>
-        <field name="sequence" eval="1025" />
-        <field name="code">DIT</field>
-        <field name="l10n_mx_edi_code">001</field>
-        <field name="l10n_mx_edi_sdi_variable" eval="True" />
-        <field name="category_id" ref="hr_salary_rule_category_perception_mx_taxed" />
-        <field name="struct_id" ref="payroll_structure_data_01" />
-        <field name="amount_select">code</field>
-        <field name="amount_python_compute">
-result = 0
-daily_wage = contract.l10n_mx_edi_daily_wage
-if worked_days.get('LEAVE140'):
-    working_schedule = contract.resource_calendar_id
-    attendances = payslip._get_attendances()
-    date_from, date_to = payslip._get_dates_on_datetime()
-
-    for leave in working_schedule.global_leave_ids.filtered(lambda leave: date_from &lt;= leave.date_from &lt;= date_to):
-        for attendance in attendances.filtered(lambda att: leave.date_from &lt;= att.check_in &lt;= leave.date_to):
-            result += daily_wage * 2
-result += (inputs['dit'].amount * daily_wage * 2) if 'dit' in inputs else 0.0
-        </field>
-    </record>
-
     <record id="hr_rule_l10n_mx_payroll_perception_001_public_holiday_simple" model="hr.salary.rule">
         <field name="name">Días de Descanso Trabajados</field>
         <field name="sequence" eval="1026" />
@@ -662,10 +638,11 @@ result = sundays_payment - exempt if sundays_payment &gt; exempt else 0
 vacation_bonus = payslip.company_id.l10n_mx_edi_vacation_bonus
 holidays = 0
 result = inputs['pg_021'].amount if 'pg_021' in inputs else 0.0
+date_start = contract.l10n_mx_edi_imss_date or contract.date_start
 if not vacation_bonus or vacation_bonus == 'on_holidays':
     holidays = worked_days['LEAVE120'].number_of_days if 'LEAVE120' in worked_days else 0.0
-elif vacation_bonus == 'on_anniversary' and payslip.date_from.month == contract.date_start.month and payslip.date_from.year != contract.date_start.year and payslip.date_from.day &lt;= contract.date_start.day &lt;= payslip.date_to.day:
-    holidays = contract.l10n_mx_edi_holidays
+elif vacation_bonus == 'on_anniversary' and payslip.date_from.month == date_start.month and payslip.date_from.year != date_start.year and payslip.date_from.day &lt;= date_start.day &lt;= payslip.date_to.day:
+    holidays = contract._l10n_mx_get_holidays(contract.get_seniority(date_from=contract.l10n_mx_edi_imss_date)["years"] - 1)
 if holidays:
     result += contract.l10n_mx_edi_daily_wage * holidays * contract.l10n_mx_edi_vacation_bonus / 100
 
@@ -694,10 +671,11 @@ if result:
 vacation_bonus = payslip.company_id.l10n_mx_edi_vacation_bonus
 holidays = 0
 result = inputs['pg_021'].amount if 'pg_021' in inputs else 0.0
+date_start = contract.l10n_mx_edi_imss_date or contract.date_start
 if not vacation_bonus or vacation_bonus == 'on_holidays':
     holidays = worked_days['LEAVE120'].number_of_days if 'LEAVE120' in worked_days else 0.0
-elif vacation_bonus == 'on_anniversary' and payslip.date_from.month == contract.date_start.month and payslip.date_from.year != contract.date_start.year and payslip.date_from.day &lt;= contract.date_start.day &lt;= payslip.date_to.day:
-    holidays = contract.l10n_mx_edi_holidays
+elif vacation_bonus == 'on_anniversary' and payslip.date_from.month == date_start.month and payslip.date_from.year != date_start.year and payslip.date_from.day &lt;= date_start.day &lt;= payslip.date_to.day:
+    holidays = contract._l10n_mx_get_holidays(contract.get_seniority(date_from=contract.l10n_mx_edi_imss_date)["years"] - 1)
 if holidays:
     result += contract.l10n_mx_edi_daily_wage * holidays * contract.l10n_mx_edi_vacation_bonus / 100
 
@@ -1050,6 +1028,58 @@ for day in attended_days:
         <field name="amount_python_compute">result = inputs['comp_038'].amount if 'comp_038' in inputs else 0.0</field>
     </record>
 
+    <record id="hr_rule_l10n_mx_payroll_perception_001_public_holiday_e" model="hr.salary.rule">
+        <field name="name">Días Inhábiles Trabajados</field>
+        <field name="sequence" eval="38070" />
+        <field name="code">DIT</field>
+        <field name="l10n_mx_edi_code">038</field>
+        <field name="l10n_mx_edi_sdi_variable" eval="True" />
+        <field name="category_id" ref="hr_salary_rule_category_perception_mx_exempt" />
+        <field name="struct_id" ref="payroll_structure_data_01" />
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = 0
+daily_wage = contract.l10n_mx_edi_daily_wage * 2
+if worked_days.get('LEAVE140'):
+    working_schedule = contract.resource_calendar_id
+    attendances = payslip._get_attendances()
+    date_from, date_to = payslip._get_dates_on_datetime()
+
+    for leave in working_schedule.global_leave_ids.filtered(lambda leave: date_from &lt;= leave.date_from &lt;= date_to):
+        for attendance in attendances.filtered(lambda att: leave.date_from &lt;= att.check_in &lt;= leave.date_to):
+            result += daily_wage
+result += (inputs['dit'].amount * daily_wage) if 'dit' in inputs else 0.0
+
+result = min((result / 2), contract.company_id.l10n_mx_edi_uma * 5)
+        </field>
+    </record>
+
+    <record id="hr_rule_l10n_mx_payroll_perception_001_public_holiday" model="hr.salary.rule">
+        <field name="name">Días Inhábiles Trabajados</field>
+        <field name="sequence" eval="38071" />
+        <field name="code">DITG</field>
+        <field name="l10n_mx_edi_code">038</field>
+        <field name="l10n_mx_edi_sdi_variable" eval="True" />
+        <field name="category_id" ref="hr_salary_rule_category_perception_mx_taxed" />
+        <field name="struct_id" ref="payroll_structure_data_01" />
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = 0
+daily_wage = contract.l10n_mx_edi_daily_wage * 2
+if worked_days.get('LEAVE140'):
+    working_schedule = contract.resource_calendar_id
+    attendances = payslip._get_attendances()
+    date_from, date_to = payslip._get_dates_on_datetime()
+
+    for leave in working_schedule.global_leave_ids.filtered(lambda leave: date_from &lt;= leave.date_from &lt;= date_to):
+        for attendance in attendances.filtered(lambda att: leave.date_from &lt;= att.check_in &lt;= leave.date_to):
+            result += daily_wage
+result += (inputs['dit'].amount * daily_wage) if 'dit' in inputs else 0.0
+
+result -= DIT
+        </field>
+    </record>
+
     <record id="hr_rule_l10n_mx_payroll_perception_039_e" model="hr.salary.rule">
         <field name="name">Jubilaciones, pensiones o haberes de retiro (E)</field>
         <field name="sequence" eval="39000" />
@@ -1324,9 +1354,184 @@ else:
     </record>
 
     <!-- Deductions -->
+    <record id="hr_rule_l10n_mx_payroll_deduction_excedente_imss" model="hr.salary.rule">
+        <field name="name">Especie - Excedente</field>
+        <field name="sequence" eval="54000" />
+        <field name="code">AUX_SS_EE</field>
+        <field name="category_id" ref="hr_salary_rule_category_aux_mx" />
+        <field name="struct_id" ref="payroll_structure_data_01" />
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = not employee.l10n_mx_edi_is_assimilated</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = 0
+# Asistencia
+days_work = worked_days['WORK100'].number_of_days if 'WORK100' in worked_days else 0.0
+# Vacaciones
+days_work += worked_days['LEAVE120'].number_of_days if 'LEAVE120' in worked_days else 0.0
+# Feriado
+days_work += worked_days['LEAVE140'].number_of_days if 'LEAVE140' in worked_days else 0.0
+# Generic Time Off
+days_work += worked_days['LEAVE100'].number_of_days if 'LEAVE100' in worked_days else 0.0
+# Licencia de adopción
+days_work += worked_days['LEAVE116'].number_of_days if 'LEAVE116' in worked_days else 0.0
+work_entry = payslip.env['hr.work.entry'].search(contract._get_work_hours_domain(payslip.date_from, payslip.date_to, domain=[], inside=True))
+holiday_days_not_enjoyed = sum(work_entry.leave_id.filtered('l10n_mx_edi_payslip_no_enjoy_days').mapped('number_of_days'))
+# Vacaciones no disfrutadas
+days_work += holiday_days_not_enjoyed
+if days_work:
+    sbc = contract.l10n_mx_edi_sbc
+    uma = contract.company_id.l10n_mx_edi_uma
+    # Faltas
+    leaves = worked_days['LEAVE90'].number_of_days if 'LEAVE90' in worked_days else 0.0
+    # Falta justificada sin goce de salario
+    leaves += worked_days['LEAVE114'].number_of_days if 'LEAVE114' in worked_days else 0.0
+    # Licencia sin goce de salario
+    leaves += worked_days['LEAVE115'].number_of_days if 'LEAVE115' in worked_days else 0.0
+    result = ((sbc - (uma * 3)) * 0.004 * (days_work + leaves)) if (sbc - (uma * 3)) &gt; 0 else 0  # Especie - Excedente
+        </field>
+    </record>
+    <record id="hr_rule_l10n_mx_payroll_deduction_aux_enfermedades_imss" model="hr.salary.rule">
+        <field name="name">Enfermedades y maternidad en dinero</field>
+        <field name="sequence" eval="54001" />
+        <field name="code">AUX_SS_EM</field>
+        <field name="category_id" ref="hr_salary_rule_category_aux_mx" />
+        <field name="struct_id" ref="payroll_structure_data_01" />
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = not employee.l10n_mx_edi_is_assimilated</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = 0
+# Asistencia
+days_work = worked_days['WORK100'].number_of_days if 'WORK100' in worked_days else 0.0
+# Vacaciones
+days_work += worked_days['LEAVE120'].number_of_days if 'LEAVE120' in worked_days else 0.0
+# Feriado
+days_work += worked_days['LEAVE140'].number_of_days if 'LEAVE140' in worked_days else 0.0
+# Generic Time Off
+days_work += worked_days['LEAVE100'].number_of_days if 'LEAVE100' in worked_days else 0.0
+# Licencia de adopción
+days_work += worked_days['LEAVE116'].number_of_days if 'LEAVE116' in worked_days else 0.0
+work_entry = payslip.env['hr.work.entry'].search(contract._get_work_hours_domain(payslip.date_from, payslip.date_to, domain=[], inside=True))
+holiday_days_not_enjoyed = sum(work_entry.leave_id.filtered('l10n_mx_edi_payslip_no_enjoy_days').mapped('number_of_days'))
+# Vacaciones no disfrutadas
+days_work += holiday_days_not_enjoyed
+if days_work:
+    sbc = contract.l10n_mx_edi_sbc
+    # Faltas
+    leaves = worked_days['LEAVE90'].number_of_days if 'LEAVE90' in worked_days else 0.0
+    # Falta justificada sin goce de salario
+    leaves += worked_days['LEAVE114'].number_of_days if 'LEAVE114' in worked_days else 0.0
+    # Licencia sin goce de salario
+    leaves += worked_days['LEAVE115'].number_of_days if 'LEAVE115' in worked_days else 0.0
+    result = 0.0025 * sbc * (days_work + leaves)  # Enfermedades y maternidad en dinero
+        </field>
+    </record>
+    <record id="hr_rule_l10n_mx_payroll_deduction_aux_pensionados_imss" model="hr.salary.rule">
+        <field name="name">Gastos médicos para pensionados y beneficiarios</field>
+        <field name="sequence" eval="54002" />
+        <field name="code">AUX_SS_GMPB</field>
+        <field name="category_id" ref="hr_salary_rule_category_aux_mx" />
+        <field name="struct_id" ref="payroll_structure_data_01" />
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = not employee.l10n_mx_edi_is_assimilated</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = 0
+# Asistencia
+days_work = worked_days['WORK100'].number_of_days if 'WORK100' in worked_days else 0.0
+# Vacaciones
+days_work += worked_days['LEAVE120'].number_of_days if 'LEAVE120' in worked_days else 0.0
+# Feriado
+days_work += worked_days['LEAVE140'].number_of_days if 'LEAVE140' in worked_days else 0.0
+# Generic Time Off
+days_work += worked_days['LEAVE100'].number_of_days if 'LEAVE100' in worked_days else 0.0
+# Licencia de adopción
+days_work += worked_days['LEAVE116'].number_of_days if 'LEAVE116' in worked_days else 0.0
+work_entry = payslip.env['hr.work.entry'].search(contract._get_work_hours_domain(payslip.date_from, payslip.date_to, domain=[], inside=True))
+holiday_days_not_enjoyed = sum(work_entry.leave_id.filtered('l10n_mx_edi_payslip_no_enjoy_days').mapped('number_of_days'))
+# Vacaciones no disfrutadas
+days_work += holiday_days_not_enjoyed
+if days_work:
+    sbc = contract.l10n_mx_edi_sbc
+    # Faltas
+    leaves = worked_days['LEAVE90'].number_of_days if 'LEAVE90' in worked_days else 0.0
+    # Falta justificada sin goce de salario
+    leaves += worked_days['LEAVE114'].number_of_days if 'LEAVE114' in worked_days else 0.0
+    # Licencia sin goce de salario
+    leaves += worked_days['LEAVE115'].number_of_days if 'LEAVE115' in worked_days else 0.0
+    result = 0.00375 * sbc * (days_work + leaves)  # Gastos médicos para pensionados y beneficiarios
+        </field>
+    </record>
+    <record id="hr_rule_l10n_mx_payroll_deduction_aux_invalides_imss" model="hr.salary.rule">
+        <field name="name">Invalides y vida</field>
+        <field name="sequence" eval="54003" />
+        <field name="code">AUX_SS_IV</field>
+        <field name="category_id" ref="hr_salary_rule_category_aux_mx" />
+        <field name="struct_id" ref="payroll_structure_data_01" />
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = not employee.l10n_mx_edi_is_assimilated</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = 0
+# Asistencia
+days_work = worked_days['WORK100'].number_of_days if 'WORK100' in worked_days else 0.0
+# Vacaciones
+days_work += worked_days['LEAVE120'].number_of_days if 'LEAVE120' in worked_days else 0.0
+# Feriado
+days_work += worked_days['LEAVE140'].number_of_days if 'LEAVE140' in worked_days else 0.0
+# Generic Time Off
+days_work += worked_days['LEAVE100'].number_of_days if 'LEAVE100' in worked_days else 0.0
+# Licencia de adopción
+days_work += worked_days['LEAVE116'].number_of_days if 'LEAVE116' in worked_days else 0.0
+work_entry = payslip.env['hr.work.entry'].search(contract._get_work_hours_domain(payslip.date_from, payslip.date_to, domain=[], inside=True))
+holiday_days_not_enjoyed = sum(work_entry.leave_id.filtered('l10n_mx_edi_payslip_no_enjoy_days').mapped('number_of_days'))
+# Vacaciones no disfrutadas
+days_work += holiday_days_not_enjoyed
+if days_work:
+    sbc = contract.l10n_mx_edi_sbc
+    # Faltas
+    leaves = worked_days['LEAVE90'].number_of_days if 'LEAVE90' in worked_days else 0.0
+    # Falta justificada sin goce de salario
+    leaves += worked_days['LEAVE114'].number_of_days if 'LEAVE114' in worked_days else 0.0
+    # Licencia sin goce de salario
+    leaves += worked_days['LEAVE115'].number_of_days if 'LEAVE115' in worked_days else 0.0
+    result = 0.00625 * sbc * days_work  # Invalides y vida
+        </field>
+    </record>
+    <record id="hr_rule_l10n_mx_payroll_deduction_aux_retiro_imss" model="hr.salary.rule">
+        <field name="name">Retiro, Cesantía en Edad Avanzada y Vejez</field>
+        <field name="sequence" eval="54004" />
+        <field name="code">AUX_SS_RCEAV</field>
+        <field name="category_id" ref="hr_salary_rule_category_aux_mx" />
+        <field name="struct_id" ref="payroll_structure_data_01" />
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = not employee.l10n_mx_edi_is_assimilated</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = 0
+# Asistencia
+days_work = worked_days['WORK100'].number_of_days if 'WORK100' in worked_days else 0.0
+# Vacaciones
+days_work += worked_days['LEAVE120'].number_of_days if 'LEAVE120' in worked_days else 0.0
+# Feriado
+days_work += worked_days['LEAVE140'].number_of_days if 'LEAVE140' in worked_days else 0.0
+# Generic Time Off
+days_work += worked_days['LEAVE100'].number_of_days if 'LEAVE100' in worked_days else 0.0
+# Licencia de adopción
+days_work += worked_days['LEAVE116'].number_of_days if 'LEAVE116' in worked_days else 0.0
+work_entry = payslip.env['hr.work.entry'].search(contract._get_work_hours_domain(payslip.date_from, payslip.date_to, domain=[], inside=True))
+holiday_days_not_enjoyed = sum(work_entry.leave_id.filtered('l10n_mx_edi_payslip_no_enjoy_days').mapped('number_of_days'))
+# Vacaciones no disfrutadas
+days_work += holiday_days_not_enjoyed
+if days_work:
+    sbc = contract.l10n_mx_edi_sbc
+    result = 0.01125 * sbc * days_work
+        </field>
+    </record>
     <record id="hr_rule_l10n_mx_payroll_deduction_001" model="hr.salary.rule">
         <field name="name">Seguridad social</field>
-        <field name="sequence" eval="54000" />
+        <field name="sequence" eval="54010" />
         <field name="code">SS001</field>
         <field name="l10n_mx_edi_code">001</field>
         <field name="category_id" ref="hr_payroll.DED" />
@@ -1336,36 +1541,7 @@ else:
         <field name="amount_python_compute">
 result = 0
 if not employee.l10n_mx_edi_is_assimilated:
-    sbc = contract.l10n_mx_edi_sbc
-    uma = contract.company_id.l10n_mx_edi_uma
-    # Asistencia
-    days_work = worked_days['WORK100'].number_of_days if 'WORK100' in worked_days else 0.0
-    # Vacaciones
-    days_work += worked_days['LEAVE120'].number_of_days if 'LEAVE120' in worked_days else 0.0
-    # Feriado
-    days_work += worked_days['LEAVE140'].number_of_days if 'LEAVE140' in worked_days else 0.0
-    # Generic Time Off
-    days_work += worked_days['LEAVE100'].number_of_days if 'LEAVE100' in worked_days else 0.0
-    # Licencia de adopción
-    days_work += worked_days['LEAVE116'].number_of_days if 'LEAVE116' in worked_days else 0.0
-    work_entry = payslip.env['hr.work.entry'].search(contract._get_work_hours_domain(payslip.date_from, payslip.date_to, domain=[], inside=True))
-    holiday_days_not_enjoyed = sum(work_entry.leave_id.filtered('l10n_mx_edi_payslip_no_enjoy_days').mapped('number_of_days'))
-    # Vacaciones no disfrutadas
-    days_work += holiday_days_not_enjoyed
-    # Faltas
-    leaves = worked_days['LEAVE90'].number_of_days if 'LEAVE90' in worked_days else 0.0
-    # Falta justificada sin goce de salario
-    leaves += worked_days['LEAVE114'].number_of_days if 'LEAVE114' in worked_days else 0.0
-    # Licencia sin goce de salario
-    leaves += worked_days['LEAVE115'].number_of_days if 'LEAVE115' in worked_days else 0.0
-    specie_excess = ((sbc - (uma * 3)) * 0.004 * (days_work + leaves)) if (sbc - (uma * 3)) &gt; 0 else 0  # Especie - Excedente
-    benefits = 0.0025 * sbc * (days_work + leaves)  # Enfermedades y maternidad en dinero
-    pensioners = 0.00375 * sbc * (days_work + leaves)  # Gastos médicos para pensionados y beneficiarios
-    disability = 0.00625 * sbc * days_work  # Invalides y vida
-    unemployment = 0.01125 * sbc * days_work  # Retiro, Cesantía en Edad Avanzada y Vejez
-    result = specie_excess + benefits + pensioners + disability + unemployment
-    if not days_work:
-        result = 0
+    result = AUX_SS_EE + AUX_SS_EM + AUX_SS_GMPB + AUX_SS_IV + AUX_SS_RCEAV
         </field>
         <field name="note">
 Sumatoria de primas para cuotas obrero.
@@ -2168,7 +2344,7 @@ if INF009:
     elif contract.l10n_mx_edi_schedule_pay_id.code == '10':
         days = 10
     for loan in payslip.get_loans('inf_009'):
-        date_from = payslip.l10n_mx_edi_date_from or payslip.date_from
+        date_from = payslip.secondary_date_from or payslip.date_from
         if date_from.month in [1, 3, 5, 7, 9, 11] and date_from.day &lt;= days or \
            loan.date_from and (
                loan.date_from &gt;= payslip.date_from and loan.date_from &lt;= payslip.date_to or \
@@ -3402,13 +3578,31 @@ if contract.l10n_mx_edi_schedule_pay_id.code == '05':
 elif contract.l10n_mx_edi_special_isr:
     result = income_period * contract.l10n_mx_edi_special_isr
 elif contract.company_id.l10n_mx_edi_isr_monthly:
-    income_period = contract.wage
+    income_period = contract.wage - DNL004
+    leaves = worked_days['LEAVE90'].number_of_days if 'LEAVE90' in worked_days else 0.0
+    if leaves:
+        # Cuando hay faltas, primero se calcula el ISR del monto mensual
+        for value in month_table:
+            if income_period >=value[0] and value[1] >= income_period:
+                extra = income_period - value[0]
+                result_month = (extra * value[3]) + value[2]
+                break
+        # Se divide el ISR mensual / 2 y se resta el subsidio
+        result_month = result_month / 2
+        result_month -= AUX_OP002
+        # Ahora se va a calcular el ISR considerando la falta
+        income_period = income_period / 2
+        income_period += contract.wage / 30.4167 * (15.2083 - leaves)
     for value in month_table:
         if income_period >=value[0] and value[1] >= income_period:
             extra = income_period - value[0]
             result = (extra * value[3]) + value[2]
             break
-    result = result / 2
+    if not leaves:
+         result = result / 2
+    if leaves:
+        # Si hay faltas, el resultado es igual a la resta del ISR considerando la falta - el ISR si no hubiera falta - el subsidio esperado para la segunda quincena
+        result -= result_month + AUX_OP002
 elif not contract.company_id.l10n_mx_edi_prorate_isr:
     table_isr = table.get(contract.l10n_mx_edi_schedule_pay_id.code, [])
     if table_isr:
@@ -3463,12 +3657,40 @@ else:
 result = 0
 # Monto maximo para quienes aplica el subsidio
 max_amount = 9081.00
-if contract.wage &lt; max_amount:
+is_last_slip = payslip.l10n_mx_edi_is_last_payslip()
+# Si no es la última nómina del mes se subsidia basado en la peridiocidad a pagar
+wage = categories['PERGRA'] - DNL004
+max_amount_by_period = max_amount / 30 * contract.l10n_mx_edi_schedule_pay_id.days_to_pay
+if not is_last_slip and wage &lt; max_amount_by_period:
     if contract.l10n_mx_edi_schedule_pay_id.days_to_pay == '30':
         result = round(round(contract.company_id.l10n_mx_edi_uma * 30.4, 2) * (11.82 / 100))
     else:
         subsidy_by_month = round(contract.company_id.l10n_mx_edi_uma * 30.4, 2) * (11.82 / 100)
+        # Para evitar subsidio en la primer quincena si se reciben bonos que excedan el maximo para el subsidio
         result = subsidy_by_month / 30.4 * contract.l10n_mx_edi_schedule_pay_id.days_to_pay
+# Si es la última nómina del mes se hace un ajuste del monto mensual - lo descontado
+if is_last_slip:
+    aguinaldo = employee.env.ref('l10n_mx_edi_payslip.payroll_structure_data_02')
+    payslips = employee.slip_ids.filtered(
+        lambda sl: sl.state in ('done', 'paid') and
+        sl.id != payslip.id and
+        sl.struct_id != aguinaldo and
+        sl.date_from.month == payslip.date_from.month and
+        sl.date_from.year == payslip.date_from.year)
+    lines = payslips.mapped('line_ids')
+    subsidy = sum(lines.filtered(lambda li: li.salary_rule_id.code == 'AUX_OP002').mapped('total'))
+
+    category = employee.env.ref('l10n_mx_edi_payslip.hr_salary_rule_category_perception_mx_taxed')
+    accumulated = sum(lines.filtered(lambda li: li.category_id.id == category.id).mapped('total')) - sum(lines.filtered(lambda li: li.code in ('IEG006',  'IM006', 'IRT006', 'LPHC006')).mapped('total'))
+    accumulated -= sum(lines.filtered(lambda li: li.code in ('D020', 'FJSS')).mapped('total')) if contract.company_id.l10n_mx_edi_use_leave_deduction else 0
+
+    income_taxed = accumulated + categories['PERGRA']
+    # Si se presentó un ajuste de salario, y se había subsidiado, pero ya no le corresponde, debe regresarse el subsidio
+    if income_taxed &gt; max_amount and subsidy:
+        result = -subsidy
+    # Si aún se debe subsidiar, debe ser el monto mensual - el monto ya subsiddiado
+    elif income_taxed &lt; max_amount:
+        result = round(round(contract.company_id.l10n_mx_edi_uma * 30.4, 2) * (11.82 / 100)) - subsidy
         </field>
         <field name="note">
 Se otorga un subsidio para el empleo mensual a los trabajadores a que hace referencia el artículo primero de este
@@ -3495,6 +3717,11 @@ por dichos pagos.
         <field name="amount_python_compute">
 result = AUX_ISR - AUX_OP002 if abs(AUX_ISR) - AUX_OP002 &gt; 0 else 0
 result = result if result &gt; 0 else 0
+if contract.company_id.l10n_mx_edi_subsidy_isr:
+    minimum_wage = employee.l10n_mx_edi_employer_registration_id.minimum_wage or contract.company_id.l10n_mx_edi_minimum_wage
+    # If employee's Salary is the minimal. The 0.001 is a rounding margin
+    if contract.l10n_mx_edi_daily_wage &lt;= minimum_wage + 0.001:
+        result = 0
         </field>
     </record>
     <record id="hr_rule_l10n_mx_payroll_deduction_isr_174" model="hr.salary.rule">
@@ -3829,7 +4056,7 @@ if not employee.l10n_mx_edi_is_assimilated and NET > 0:
     # Asistencia
     days_work = worked_days['WORK100'].number_of_days if 'WORK100' in worked_days else 0.0
     # Vacaciones
-    days_work = worked_days['LEAVE120'].number_of_days if 'LEAVE120' in worked_days else 0.0
+    days_work += worked_days['LEAVE120'].number_of_days if 'LEAVE120' in worked_days else 0.0
     # Feriado
     days_work += worked_days['LEAVE140'].number_of_days if 'LEAVE140' in worked_days else 0.0
     # Generic Time Off

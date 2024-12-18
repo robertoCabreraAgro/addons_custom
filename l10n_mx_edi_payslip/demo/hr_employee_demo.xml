@@ -5,15 +5,15 @@
         <field name="name">MARIA OLIVIA MARTINEZ SAGAZ</field>
         <field name="ssnid" eval="123456789236958" />
         <field name="category_ids" eval="[Command.link(ref('hr_employee_category_01'))]" />
-        <field name='l10n_mx_edi_risk_rank_id' eval="class_job_risk_1" />
-        <field name='work_contact_id' ref="res_partner_address_mx_qdp" />
-        <field name='bank_account_id' ref="account_bank_employee_qdp" />
+        <field name="l10n_mx_edi_risk_rank_id" eval="class_job_risk_1" />
+        <field name="work_contact_id" ref="res_partner_address_mx_qdp" />
+        <field name="bank_account_id" ref="account_bank_employee_qdp" />
         <field name="l10n_mx_edi_contract_regime_type">02</field>
         <field name="l10n_mx_edi_type">1</field>
         <field name="l10n_mx_edi_medical_unit">T21</field>
         <field name="pin">12345</field>
         <field name="l10n_mx_birth_state_id" ref="base.state_mx_gto" />
-        <field name="company_id" ref="l10n_mx.demo_company_mx" />
+        <field name="company_id" ref="base.demo_company_mx" />
         <field name="resource_calendar_id" ref="l10n_mx_edi_payslip.resource_calendar_std" />
         <field name="tz">America/Mexico_City</field>
         <field name="user_id" ref="base.user_demo" />
@@ -32,22 +32,22 @@
         <field name="private_email">info@vauxoo.com</field>
         <field name="private_phone">477-773-3346</field>
         <field name="l10n_mx_rfc">MASO451221PM4</field>
-        <field name='l10n_mx_curp'>PUXB571021HNELXR00</field>
+        <field name="l10n_mx_curp">PUXB571021HNELXR00</field>
     </record>
 
     <record id="mx_employee_felix" model="hr.employee">
         <field name="name">FELIX MANUEL ANDRADE BALLADO</field>
         <field name="ssnid" eval="123456789236958" />
         <field name="category_ids" eval="[Command.link(ref('hr_employee_category_01'))]" />
-        <field name='l10n_mx_edi_risk_rank_id' eval="class_job_risk_1" />
-        <field name='work_contact_id' ref="res_partner_address_mx_felix" />
-        <field name='bank_account_id' ref="account_bank_employee_felix" />
+        <field name="l10n_mx_edi_risk_rank_id" eval="class_job_risk_1" />
+        <field name="work_contact_id" ref="res_partner_address_mx_felix" />
+        <field name="bank_account_id" ref="account_bank_employee_felix" />
         <field name="l10n_mx_edi_contract_regime_type">02</field>
         <field name="l10n_mx_edi_type">1</field>
         <field name="l10n_mx_edi_medical_unit">T21</field>
         <field name="pin">12345</field>
         <field name="l10n_mx_birth_state_id" ref="base.state_mx_mich" />
-        <field name="company_id" ref="l10n_mx.demo_company_mx" />
+        <field name="company_id" ref="base.demo_company_mx" />
         <field name="resource_calendar_id" ref="l10n_mx_edi_payslip.resource_calendar_std" />
         <field name="tz">America/Mexico_City</field>
         <field name="department_id" ref="hr.dep_rd" />
@@ -64,23 +64,23 @@
         <field name="private_email">felix@vauxoo.com</field>
         <field name="private_phone">667-712-2459</field>
         <field name="l10n_mx_rfc">AABF800614HI0</field>
-        <field name='l10n_mx_curp'>PUXB571021HNELXR00</field>
+        <field name="l10n_mx_curp">PUXB571021HNELXR00</field>
     </record>
 
     <record id="mx_employee_berenice" model="hr.employee">
         <field name="name">BERENICE XIMO QUEZADA</field>
         <field name="ssnid" eval="876456747936008" />
         <field name="category_ids" eval="[Command.link(ref('hr_employee_category_01'))]" />
-        <field name='l10n_mx_edi_risk_rank_id' eval="class_job_risk_1" />
-        <field name='address_id' ref="l10n_mx.partner_demo_company_mx" />
-        <field name='work_contact_id' ref="res_partner_address_mx_berenice" />
-        <field name='bank_account_id' ref="account_bank_employee_berenice" />
+        <field name="l10n_mx_edi_risk_rank_id" eval="class_job_risk_1" />
+        <field name="address_id" ref="base.partner_demo_company_mx" />
+        <field name="work_contact_id" ref="res_partner_address_mx_berenice" />
+        <field name="bank_account_id" ref="account_bank_employee_berenice" />
         <field name="l10n_mx_edi_contract_regime_type">02</field>
         <field name="l10n_mx_edi_type">1</field>
         <field name="l10n_mx_edi_medical_unit">T21</field>
         <field name="pin">12345</field>
         <field name="l10n_mx_birth_state_id" ref="base.state_mx_oax" />
-        <field name="company_id" ref="l10n_mx.demo_company_mx" />
+        <field name="company_id" ref="base.demo_company_mx" />
         <field name="resource_calendar_id" ref="l10n_mx_edi_payslip.resource_calendar_std" />
         <field name="tz">America/Mexico_City</field>
         <field name="department_id" ref="hr_department_mx_sales" />
@@ -98,23 +98,23 @@
         <field name="private_email">berenice@vauxoo.com</field>
         <field name="private_phone">951-517-5483</field>
         <field name="l10n_mx_rfc">XIQB891116QE4</field>
-        <field name='l10n_mx_curp'>PUXB571021HNELXR00</field>
+        <field name="l10n_mx_curp">PUXB571021HNELXR00</field>
     </record>
 
     <record id="mx_employee_cesar" model="hr.employee">
         <field name="name">CESAR OSBALDO CRUZ SOLORZANO</field>
         <field name="ssnid" eval="468456721653600" />
         <field name="category_ids" eval="[Command.link(ref('hr_employee_category_01'))]" />
-        <field name='l10n_mx_edi_risk_rank_id' eval="class_job_risk_1" />
-        <field name='address_id' ref="l10n_mx.partner_demo_company_mx" />
-        <field name='work_contact_id' ref="res_partner_address_mx_cesar" />
-        <field name='bank_account_id' ref="account_bank_employee_cesar" />
+        <field name="l10n_mx_edi_risk_rank_id" eval="class_job_risk_1" />
+        <field name="address_id" ref="base.partner_demo_company_mx" />
+        <field name="work_contact_id" ref="res_partner_address_mx_cesar" />
+        <field name="bank_account_id" ref="account_bank_employee_cesar" />
         <field name="l10n_mx_edi_contract_regime_type">02</field>
         <field name="l10n_mx_edi_type">1</field>
         <field name="l10n_mx_edi_medical_unit">T21</field>
         <field name="pin">12345</field>
         <field name="l10n_mx_birth_state_id" ref="base.state_mx_jal" />
-        <field name="company_id" ref="l10n_mx.demo_company_mx" />
+        <field name="company_id" ref="base.demo_company_mx" />
         <field name="resource_calendar_id" ref="l10n_mx_edi_payslip.resource_calendar_std" />
         <field name="tz">America/Mexico_City</field>
         <field name="department_id" ref="hr_department_mx_sales" />
@@ -132,7 +132,7 @@
         <field name="private_email">cesar@vauxoo.com</field>
         <field name="private_phone">951-517-5483</field>
         <field name="l10n_mx_rfc">CUSC850516316</field>
-        <field name='l10n_mx_curp'>PUXB571021HNELXR00</field>
+        <field name="l10n_mx_curp">PUXB571021HNELXR00</field>
     </record>
 
 </odoo>

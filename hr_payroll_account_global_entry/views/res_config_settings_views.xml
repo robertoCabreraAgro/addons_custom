@@ -5,7 +5,7 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="hr_payroll.res_config_settings_view_form" />
         <field name="arch" type="xml">
-            <xpath expr="//setting[@name='module_hr_payroll_account_sepa']" position="after">
+            <xpath expr="//setting[@name='module_hr_payroll_account_iso20022']" position="after">
                 <setting string="Not global entry?" help="Entries for payslips">
                     <field name="not_global_entry" />
                 </setting>

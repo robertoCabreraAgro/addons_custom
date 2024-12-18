@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='UTF-8' ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
 
     <record id="hr_schedule_payment_list_view" model="ir.ui.view">
@@ -19,7 +19,7 @@
         <field name="arch" type="xml">
             <form string="Schedule Payments">
                 <sheet>
-                    <group name="schedule_payment" col="4">
+                    <group name="schedule_payment">
                         <field name="code" />
                         <field name="name" />
                         <field name="days_to_pay" />

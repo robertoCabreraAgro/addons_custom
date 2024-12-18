@@ -22,12 +22,13 @@ contracts.l10n_mx_allocate_annual_holidays()
         <field name="model_id" ref="hr_contract.model_hr_contract" />
         <field name="state">code</field>
         <field name="code">
-mexico_tz = self.env["l10n_mx_edi.certificate"]._get_timezone()
+mexico_tz = timezone("America/Mexico_City")
 date_mx = datetime.now(mexico_tz)
 contracts = model.search([('state', '=', 'open')])
 to_update = env[model._name]
 for contract in contracts:
-    if contract.date_start.day == date_mx.day and contract.date_start.month == date_mx.month and contract.date_start.year != date_mx.year:
+    date_start = contract.l10n_mx_edi_imss_date or contract.date_start
+    if date_start.day == date_mx.day and date_start.month == date_mx.month and date_start.year != date_mx.year:
         to_update |= contract
 to_update.action_update_current_holidays()
 to_update._compute_integrated_salary()

@@ -1,6 +1,9 @@
+from odoo.tests import tagged
+
 from .common import L10nMxEdiPayslipTransactionCase
 
 
+@tagged("raya_list_report", "post_install", "-at_install")
 class TestRayaListReport(L10nMxEdiPayslipTransactionCase):
     def setUp(self):
         super().setUp()

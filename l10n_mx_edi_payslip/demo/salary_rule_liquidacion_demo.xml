@@ -4,7 +4,7 @@
     <record
         id="hr_rule_l10n_mx_payroll_perception_022_e_04"
         model="hr.salary.rule"
-        context="{'allowed_company_ids': [ref('l10n_mx.demo_company_mx')]}"
+        context="{'allowed_company_ids': [ref('base.demo_company_mx')]}"
     >
         <field name="account_debit" ref="cuenta601_08" />
     </record>
@@ -12,7 +12,7 @@
     <record
         id="hr_rule_l10n_mx_payroll_perception_022_g_04"
         model="hr.salary.rule"
-        context="{'allowed_company_ids': [ref('l10n_mx.demo_company_mx')]}"
+        context="{'allowed_company_ids': [ref('base.demo_company_mx')]}"
     >
         <field name="account_debit" ref="cuenta601_08" />
     </record>
@@ -20,7 +20,7 @@
     <record
         id="hr_rule_l10n_mx_payroll_perception_023_g_1_04"
         model="hr.salary.rule"
-        context="{'allowed_company_ids': [ref('l10n_mx.demo_company_mx')]}"
+        context="{'allowed_company_ids': [ref('base.demo_company_mx')]}"
     >
         <field name="account_debit" ref="cuenta601_08" />
     </record>
@@ -28,7 +28,7 @@
     <record
         id="hr_rule_l10n_mx_payroll_perception_023_e_2_04"
         model="hr.salary.rule"
-        context="{'allowed_company_ids': [ref('l10n_mx.demo_company_mx')]}"
+        context="{'allowed_company_ids': [ref('base.demo_company_mx')]}"
     >
         <field name="account_debit" ref="cuenta601_08" />
     </record>
@@ -36,7 +36,7 @@
     <record
         id="hr_rule_l10n_mx_payroll_perception_023_e_3_04"
         model="hr.salary.rule"
-        context="{'allowed_company_ids': [ref('l10n_mx.demo_company_mx')]}"
+        context="{'allowed_company_ids': [ref('base.demo_company_mx')]}"
     >
         <field name="account_debit" ref="cuenta601_08" />
     </record>
@@ -44,7 +44,7 @@
     <record
         id="hr_rule_l10n_mx_payroll_perception_023_g_3_04"
         model="hr.salary.rule"
-        context="{'allowed_company_ids': [ref('l10n_mx.demo_company_mx')]}"
+        context="{'allowed_company_ids': [ref('base.demo_company_mx')]}"
     >
         <field name="account_debit" ref="cuenta601_08" />
     </record>
@@ -52,7 +52,7 @@
     <record
         id="hr_rule_l10n_mx_payroll_perception_023_g_2_04"
         model="hr.salary.rule"
-        context="{'allowed_company_ids': [ref('l10n_mx.demo_company_mx')]}"
+        context="{'allowed_company_ids': [ref('base.demo_company_mx')]}"
     >
         <field name="account_debit" ref="cuenta601_08" />
     </record>
@@ -60,7 +60,7 @@
     <record
         id="hr_rule_l10n_mx_payroll_perception_025_g_04"
         model="hr.salary.rule"
-        context="{'allowed_company_ids': [ref('l10n_mx.demo_company_mx')]}"
+        context="{'allowed_company_ids': [ref('base.demo_company_mx')]}"
     >
         <field name="account_debit" ref="cuenta601_08" />
     </record>
@@ -68,7 +68,7 @@
     <record
         id="hr_rule_l10n_mx_payroll_perception_025_e_04"
         model="hr.salary.rule"
-        context="{'allowed_company_ids': [ref('l10n_mx.demo_company_mx')]}"
+        context="{'allowed_company_ids': [ref('base.demo_company_mx')]}"
     >
         <field name="account_debit" ref="cuenta601_08" />
     </record>
@@ -76,7 +76,7 @@
     <record
         id="hr_rule_l10n_mx_payroll_deduction_finiquito_002_04"
         model="hr.salary.rule"
-        context="{'allowed_company_ids': [ref('l10n_mx.demo_company_mx')]}"
+        context="{'allowed_company_ids': [ref('base.demo_company_mx')]}"
     >
         <field name="account_credit" ref="cuenta210_01" />
     </record>
@@ -85,7 +85,7 @@
     <record
         id="hr_rule_net_salary_0_04"
         model="hr.salary.rule"
-        context="{'allowed_company_ids': [ref('l10n_mx.demo_company_mx')]}"
+        context="{'allowed_company_ids': [ref('base.demo_company_mx')]}"
     >
         <field name="account_credit" ref="cuenta210_02" />
     </record>
@@ -93,7 +93,7 @@
     <record
         id="hr_rule_l10n_mx_isn_liquidacion"
         model="hr.salary.rule"
-        context="{'allowed_company_ids': [ref('l10n_mx.demo_company_mx')]}"
+        context="{'allowed_company_ids': [ref('base.demo_company_mx')]}"
     >
         <field name="account_debit" ref="cuenta601_08" />
         <field name="account_credit" ref="cuenta210_01" />

@@ -5,7 +5,7 @@
     <record
         id="hr_rule_l10n_mx_payroll_perception_002_e"
         model="hr.salary.rule"
-        context="{'allowed_company_ids': [ref('l10n_mx.demo_company_mx')]}"
+        context="{'allowed_company_ids': [ref('base.demo_company_mx')]}"
     >
         <field name="account_debit" ref="cuenta601_08" />
     </record>
@@ -13,7 +13,7 @@
     <record
         id="hr_rule_l10n_mx_payroll_perception_002_g"
         model="hr.salary.rule"
-        context="{'allowed_company_ids': [ref('l10n_mx.demo_company_mx')]}"
+        context="{'allowed_company_ids': [ref('base.demo_company_mx')]}"
     >
         <field name="account_debit" ref="cuenta601_08" />
     </record>
@@ -21,7 +21,7 @@
     <record
         id="hr_rule_l10n_mx_payroll_other_payment_aux_02"
         model="hr.salary.rule"
-        context="{'allowed_company_ids': [ref('l10n_mx.demo_company_mx')]}"
+        context="{'allowed_company_ids': [ref('base.demo_company_mx')]}"
     >
         <field name="account_debit" ref="cuenta601_08" />
     </record>
@@ -29,7 +29,7 @@
     <record
         id="hr_rule_l10n_mx_payroll_deduction_aguinaldo_002"
         model="hr.salary.rule"
-        context="{'allowed_company_ids': [ref('l10n_mx.demo_company_mx')]}"
+        context="{'allowed_company_ids': [ref('base.demo_company_mx')]}"
     >
         <field name="account_credit" ref="cuenta210_01" />
     </record>
@@ -37,7 +37,7 @@
     <record
         id="hr_rule_l10n_mx_payroll_other_payment_002_02"
         model="hr.salary.rule"
-        context="{'allowed_company_ids': [ref('l10n_mx.demo_company_mx')]}"
+        context="{'allowed_company_ids': [ref('base.demo_company_mx')]}"
     >
         <field name="account_credit" ref="cuenta210_01" />
     </record>
@@ -45,7 +45,7 @@
     <record
         id="hr_rule_l10n_mx_payroll_deduction_007_a02"
         model="hr.salary.rule"
-        context="{'allowed_company_ids': [ref('l10n_mx.demo_company_mx')]}"
+        context="{'allowed_company_ids': [ref('base.demo_company_mx')]}"
     >
         <field name="account_credit" ref="cuenta210_01" />
     </record>
@@ -53,7 +53,7 @@
     <record
         id="hr_rule_l10n_mx_payroll_deduction_007_b02"
         model="hr.salary.rule"
-        context="{'allowed_company_ids': [ref('l10n_mx.demo_company_mx')]}"
+        context="{'allowed_company_ids': [ref('base.demo_company_mx')]}"
     >
         <field name="account_credit" ref="cuenta210_01" />
     </record>
@@ -61,7 +61,7 @@
     <record
         id="hr_rule_l10n_mx_payroll_deduction_007_c02"
         model="hr.salary.rule"
-        context="{'allowed_company_ids': [ref('l10n_mx.demo_company_mx')]}"
+        context="{'allowed_company_ids': [ref('base.demo_company_mx')]}"
     >
         <field name="account_credit" ref="cuenta210_01" />
     </record>
@@ -69,7 +69,7 @@
     <record
         id="hr_rule_net_salary_02"
         model="hr.salary.rule"
-        context="{'allowed_company_ids': [ref('l10n_mx.demo_company_mx')]}"
+        context="{'allowed_company_ids': [ref('base.demo_company_mx')]}"
     >
         <field name="account_credit" ref="cuenta210_02" />
     </record>
@@ -77,7 +77,7 @@
     <record
         id="hr_rule_l10n_mx_isn_chrismas"
         model="hr.salary.rule"
-        context="{'allowed_company_ids': [ref('l10n_mx.demo_company_mx')]}"
+        context="{'allowed_company_ids': [ref('base.demo_company_mx')]}"
     >
         <field name="account_debit" ref="cuenta601_08" />
         <field name="account_credit" ref="cuenta210_01" />

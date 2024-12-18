@@ -86,3 +86,15 @@ class TestHrContract(L10nMxEdiPayslipTransactionCase):
         payroll.action_payslip_done()
         payroll.contract_id.compute_integrated_salary_variable()
         self.assertTrue(payroll.contract_id.l10n_mx_edi_sdi_variable, "SDI variable not assigned.")
+
+    def test_007_imss_holidays_assignment(self):
+        contract = self.env.ref("l10n_mx_edi_payslip.hr_contract_maria")
+        contract.action_update_current_holidays()
+        self.assertFalse(contract.l10n_mx_edi_imss_date, "An IMSS date has been assigned.")
+        date_start = contract.date_start
+        contract.l10n_mx_edi_imss_date = "%s-%s-%s" % (date_start.year - 1, date_start.month, date_start.day)
+        contract.action_update_current_holidays()
+        self.assertTrue(
+            contract.l10n_mx_edi_imss_holidays,
+            "The IMSS holidays wasn't updated even though an IMSS date was defined.",
+        )

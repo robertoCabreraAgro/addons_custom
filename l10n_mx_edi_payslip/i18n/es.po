@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0+e\n"
+"Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-27 20:45+0000\n"
-"PO-Revision-Date: 2024-08-27 20:45+0000\n"
+"POT-Creation-Date: 2024-12-02 20:46+0000\n"
+"PO-Revision-Date: 2024-12-02 20:46+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -108,39 +108,39 @@ msgid "<span> to </span>"
 msgstr "<span> a </span>"
 
 #. module: l10n_mx_edi_payslip
-#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.l10n_mx_edi_report_payslip
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.report_payslip
 msgid "<span> | Bank:</span>"
 msgstr "<span> | Banco:</span>"
 
 #. module: l10n_mx_edi_payslip
-#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.l10n_mx_edi_report_payslip
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.report_payslip
 msgid "<span> | Certification Date:</span>"
-msgstr "<span> | Fecha de Certificación:</span>"
+msgstr "<span> | Fecha de certificación:</span>"
 
 #. module: l10n_mx_edi_payslip
-#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.l10n_mx_edi_report_payslip
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.report_payslip
 msgid "<span> | Emission Date:</span>"
-msgstr "<span> | Fecha de Emisión:</span>"
+msgstr "<span> | Fecha de emisión:</span>"
 
 #. module: l10n_mx_edi_payslip
-#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.l10n_mx_edi_report_payslip
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.report_payslip
 msgid "<span> | Employer registration:</span>"
-msgstr "<span> | Registro Patronal:</span>"
+msgstr "<span>| Registro de empleadores:</span>"
 
 #. module: l10n_mx_edi_payslip
-#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.l10n_mx_edi_report_payslip
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.report_payslip
 msgid "<span> | Expedition place:</span>"
-msgstr "<span> | Lugar de expedición:</span>"
+msgstr "<span> | Lugar de la expedición:</span>"
 
 #. module: l10n_mx_edi_payslip
-#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.l10n_mx_edi_report_payslip
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.report_payslip
 msgid "<span> | Fiscal Folio:</span>"
-msgstr "<span> | Folio Fiscal:</span>"
+msgstr "<span> | Folio fiscal:</span>"
 
 #. module: l10n_mx_edi_payslip
-#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.l10n_mx_edi_report_payslip
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.report_payslip
 msgid "<span> | Fiscal Regime:</span>"
-msgstr "<span> | Régimen Fiscal:</span>"
+msgstr "<span> | Régimen fiscal:</span>"
 
 #. module: l10n_mx_edi_payslip
 #: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.hr_contract_gross_salary_form
@@ -158,32 +158,32 @@ msgid "<span>@</span>"
 msgstr ""
 
 #. module: l10n_mx_edi_payslip
-#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.l10n_mx_edi_report_payslip
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.report_payslip
 msgid "<span>Digital stamp SAT</span>"
-msgstr "<span>Sello digital de SAT</span>"
+msgstr "<span>Sello digital SAT</span>"
 
 #. module: l10n_mx_edi_payslip
-#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.l10n_mx_edi_report_payslip
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.report_payslip
 msgid "<span>Digital stamp of the emitter</span>"
 msgstr "<span>Sello digital del emisor</span>"
 
 #. module: l10n_mx_edi_payslip
-#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.l10n_mx_edi_report_payslip
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.report_payslip
 msgid "<span>Emitter certificate:</span>"
 msgstr "<span>Certificado del emisor:</span>"
 
 #. module: l10n_mx_edi_payslip
-#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.l10n_mx_edi_report_payslip
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.report_payslip
 msgid "<span>Extra Info</span>"
-msgstr "<span>Información Extra</span>"
+msgstr "<span>Información adicional</span>"
 
 #. module: l10n_mx_edi_payslip
-#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.l10n_mx_edi_report_payslip
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.report_payslip
 msgid "<span>Issued from</span>"
-msgstr "<span>Emitido en</span>"
+msgstr "<span>Emitido desde</span>"
 
 #. module: l10n_mx_edi_payslip
-#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.l10n_mx_edi_report_payslip
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.report_payslip
 msgid "<span>Original chain complement of digital certification SAT</span>"
 msgstr ""
 "<span>Cadena original del complemento del certificado digital del SAT</span>"
@@ -348,7 +348,7 @@ msgstr ""
 "                                                    </strong>"
 
 #. module: l10n_mx_edi_payslip
-#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.l10n_mx_edi_report_payslip
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.report_payslip
 msgid "<strong><span style=\"font-size:14px;\">Overtimes</span></strong>"
 msgstr "<strong><span style=\"font-size:14px;\">Horas extras</span></strong>"
 
@@ -358,7 +358,7 @@ msgid "<strong>Deduction</strong>"
 msgstr "<strong>Deducción</strong>"
 
 #. module: l10n_mx_edi_payslip
-#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.l10n_mx_edi_report_payslip
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.report_payslip
 msgid "<strong>Deductions</strong>"
 msgstr "<strong>Deducciones</strong>"
 
@@ -373,23 +373,23 @@ msgid "<strong>Import</strong>"
 msgstr "<strong>Importe</strong>"
 
 #. module: l10n_mx_edi_payslip
-#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.l10n_mx_edi_report_payslip
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.report_payslip
 msgid ""
 "<strong>Name</strong><br/>\n"
-"                        <strong>RFC</strong><br/>\n"
-"                        <strong>CURP</strong><br/>\n"
-"                        <strong>Start of Employment</strong><br/>\n"
-"                        <strong>Working hours</strong><br/>\n"
-"                        <strong>Payment Period</strong><br/>\n"
-"                        <strong>NSS</strong><br/>"
+"                            <strong>RFC</strong><br/>\n"
+"                            <strong>CURP</strong><br/>\n"
+"                            <strong>Start of Employment</strong><br/>\n"
+"                            <strong>Working hours</strong><br/>\n"
+"                            <strong>Payment Period</strong><br/>\n"
+"                            <strong>NSS</strong><br/>"
 msgstr ""
 "<strong>Nombre</strong><br/>\n"
-"                        <strong>RFC</strong><br/>\n"
-"                        <strong>CURP</strong><br/>\n"
-"                        <strong>Fecha de inicio laboral</strong><br/>\n"
-"                        <strong>Jornada</strong><br/>\n"
-"                        <strong>Plazo de Pago</strong><br/>\n"
-"                        <strong>NSS</strong><br/>"
+"                            <strong>RFC</strong><br/>\n"
+"                            <strong>CURP</strong><br/>\n"
+"                            <strong>Inicio del empleo</strong><br/>\n"
+"                            <strong>Jornada</strong><br/>\n"
+"                            <strong>Período de pago</strong><br/>\n"
+"                            <strong>NSS</strong><br/>"
 
 #. module: l10n_mx_edi_payslip
 #: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.report_raya_document
@@ -402,33 +402,33 @@ msgid "<strong>Perception</strong>"
 msgstr "<strong>Percepción</strong>"
 
 #. module: l10n_mx_edi_payslip
-#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.l10n_mx_edi_report_payslip
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.report_payslip
 msgid "<strong>Perceptions</strong>"
 msgstr "<strong>Percepciones</strong>"
 
 #. module: l10n_mx_edi_payslip
-#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.l10n_mx_edi_report_payslip
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.report_payslip
 msgid ""
 "<strong>Period</strong><br/>\n"
-"                        <strong>Designation</strong><br/>\n"
-"                        <strong>Department</strong><br/>\n"
-"                        <strong>Payment days</strong><br/>\n"
-"                        <strong>Payment date</strong><br/>\n"
-"                        <strong>Salary Integrated</strong><br/>\n"
-"                        <strong>SBC</strong><br/>\n"
-"                        <strong>Daily Wage</strong><br/>"
+"                            <strong>Job</strong><br/>\n"
+"                            <strong>Department</strong><br/>\n"
+"                            <strong>Payment days</strong><br/>\n"
+"                            <strong>Payment date</strong><br/>\n"
+"                            <strong>Salary Integrated</strong><br/>\n"
+"                            <strong>SBC</strong><br/>\n"
+"                            <strong>Daily Wage</strong><br/>"
 msgstr ""
-"<strong>Periodo</strong><br/>\n"
-"                        <strong>Puesto</strong><br/>\n"
-"                        <strong>Departamento</strong><br/>\n"
-"                        <strong>Días de pago</strong><br/>\n"
-"                        <strong>Fecha de pago</strong><br/>\n"
-"                        <strong>Salario Integrado</strong><br/>\n"
-"                        <strong>SBC</strong><br/>\n"
-"                        <strong>Salario Diario</strong><br/>"
+"<strong>Período</strong><br/>\n"
+"                            <strong>Puesto</strong><br/>\n"
+"                            <strong>Departmento</strong><br/>\n"
+"                            <strong>Días de pago</strong><br/>\n"
+"                            <strong>Fecha de pago</strong><br/>\n"
+"                            <strong>Salario Integrado</strong><br/>\n"
+"                            <strong>SBC</strong><br/>\n"
+"                            <strong>Salario diario</strong><br/>"
 
 #. module: l10n_mx_edi_payslip
-#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.l10n_mx_edi_report_payslip
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.report_payslip
 msgid "<strong>This document is a printed representation of a CFDI</strong>"
 msgstr ""
 "<strong>Este documento es una representación impresa de un CFDI</strong>"
@@ -439,19 +439,18 @@ msgid "<strong>Total Gral.</strong>"
 msgstr ""
 
 #. module: l10n_mx_edi_payslip
-#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.l10n_mx_edi_report_payslip
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.report_payslip
 msgid "<strong>Total/Net Salary:</strong>"
 msgstr "<strong>Total/Salario Neto:</strong>"
 
 #. module: l10n_mx_edi_payslip
 #. odoo-python
 #: code:addons/l10n_mx_edi_payslip/models/hr_payslip.py:0
-#, python-format
 msgid "A delay of 2 hours has to be respected before to cancel"
 msgstr "Un retraso de 2 horas tiene que ser respetado antes de cancelar"
 
 #. module: l10n_mx_edi_payslip
-#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.l10n_mx_edi_report_payslip
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.report_payslip
 msgid "A signature of this payment is required, but it is not signed."
 msgstr "Se requiere una firma para este pago, pero no está firmado."
 
@@ -629,6 +628,11 @@ msgstr ""
 #: model:hr.salary.rule,name:l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_107
 #: model:hr.salary.rule,name:l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_107_bf
 msgid "Ajuste al Subsidio Causado"
+msgstr ""
+
+#. module: l10n_mx_edi_payslip
+#: model:account.account,name:l10n_mx_edi_payslip.cuenta_401_08
+msgid "Ajuste de nómina"
 msgstr ""
 
 #. module: l10n_mx_edi_payslip
@@ -1157,7 +1161,6 @@ msgstr "Reporte de Pensión Alimenticia"
 #. module: l10n_mx_edi_payslip
 #. odoo-python
 #: code:addons/l10n_mx_edi_payslip/reports/hr_alimony_report_handler.py:0
-#, python-format
 msgid "Alimony_%(vat)s_%(date)s"
 msgstr "Pensión_Alimenticia_%(vat)s_%(date)s"
 
@@ -1213,7 +1216,7 @@ msgstr "Permitir ausencia pagada pero no disfrutada"
 
 #. module: l10n_mx_edi_payslip
 #: model:ir.model.fields,field_description:l10n_mx_edi_payslip.field_hr_payslip_extra_detail__amount
-#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.l10n_mx_edi_report_payslip
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.report_payslip
 #: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.report_raya_document
 msgid "Amount"
 msgstr "Importe"
@@ -1528,9 +1531,9 @@ msgid "Balance in Favor"
 msgstr "Balance a favor"
 
 #. module: l10n_mx_edi_payslip
-#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.l10n_mx_edi_report_payslip
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.report_payslip
 msgid "Barcode"
-msgstr "Codigo de Barras"
+msgstr "Código de Barras"
 
 #. module: l10n_mx_edi_payslip
 #: model:ir.model.fields,help:l10n_mx_edi_payslip.field_hr_payslip_audit_isr__period_taxable_income
@@ -1615,18 +1618,6 @@ msgid "Branch"
 msgstr "Sucursal"
 
 #. module: l10n_mx_edi_payslip
-#: model:ir.model.fields,field_description:l10n_mx_edi_payslip.field_hr_payslip__l10n_mx_edi_date_from
-#: model:ir.model.fields,field_description:l10n_mx_edi_payslip.field_hr_payslip_run__l10n_mx_edi_date_start
-msgid "CFDI Date From"
-msgstr "CFDI Fecha desde"
-
-#. module: l10n_mx_edi_payslip
-#: model:ir.model.fields,field_description:l10n_mx_edi_payslip.field_hr_payslip__l10n_mx_edi_date_to
-#: model:ir.model.fields,field_description:l10n_mx_edi_payslip.field_hr_payslip_run__l10n_mx_edi_date_end
-msgid "CFDI Date To"
-msgstr "CFDI Fecha Hasta"
-
-#. module: l10n_mx_edi_payslip
 #: model:ir.model.fields,field_description:l10n_mx_edi_payslip.field_hr_payslip__l10n_mx_edi_origin
 msgid "CFDI Origin"
 msgstr "CFDI Origen"
@@ -1637,12 +1628,6 @@ msgid "CFDI Original String"
 msgstr "Cadena original CFDI"
 
 #. module: l10n_mx_edi_payslip
-#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.hr_payslip_run_form
-#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.view_hr_payslip_form
-msgid "CFDI Period"
-msgstr "Periodo CFDI"
-
-#. module: l10n_mx_edi_payslip
 #: model:ir.model.fields,field_description:l10n_mx_edi_payslip.field_hr_payslip__l10n_mx_edi_cfdi
 msgid "CFDI content"
 msgstr "Contenido CFDI"
@@ -1650,7 +1635,6 @@ msgstr "Contenido CFDI"
 #. module: l10n_mx_edi_payslip
 #. odoo-python
 #: code:addons/l10n_mx_edi_payslip/models/hr_payslip.py:0
-#, python-format
 msgid "CFDI document generated (may be not signed)"
 msgstr "Documento de CFDI generado (puede no estar firmado)"
 
@@ -1695,8 +1679,6 @@ msgstr "Cancelado"
 #. module: l10n_mx_edi_payslip
 #. odoo-python
 #: code:addons/l10n_mx_edi_payslip/models/hr_payslip.py:0
-#: code:addons/l10n_mx_edi_payslip/models/hr_payslip.py:0
-#, python-format
 msgid "Cancelling got an error"
 msgstr "La cancelación obtuvo un error"
 
@@ -1714,11 +1696,6 @@ msgstr "Eventual de Construcción"
 #: model:ir.model.fields,field_description:l10n_mx_edi_payslip.field_hr_payslip_action_titles__category_id
 msgid "Category"
 msgstr "Categoría"
-
-#. module: l10n_mx_edi_payslip
-#: model:ir.model.fields,field_description:l10n_mx_edi_payslip.field_hr_payslip__l10n_mx_edi_cfdi_certificate_id
-msgid "Certificate"
-msgstr "Certificado"
 
 #. module: l10n_mx_edi_payslip
 #: model:hr.salary.rule,name:l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_cesantia_company
@@ -1760,7 +1737,7 @@ msgstr "Clausura"
 #: model:ir.model.fields,field_description:l10n_mx_edi_payslip.field_hr_departure_reason__l10n_mx_code
 #: model:ir.model.fields,field_description:l10n_mx_edi_payslip.field_l10n_mx_edi_job_risk__code
 #: model:ir.model.fields,field_description:l10n_mx_edi_payslip.field_l10n_mx_edi_schedule_pay__code
-#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.l10n_mx_edi_report_payslip
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.report_payslip
 msgid "Code"
 msgstr "Código"
 
@@ -1779,8 +1756,6 @@ msgstr "Código definido por el catálogo del SAT, será utilizado en el CFDI."
 #. module: l10n_mx_edi_payslip
 #. odoo-python
 #: code:addons/l10n_mx_edi_payslip/models/hr_payslip.py:0
-#: code:addons/l10n_mx_edi_payslip/models/hr_payslip.py:0
-#, python-format
 msgid "Code: "
 msgstr "Código: "
 
@@ -1798,7 +1773,7 @@ msgstr "Comisión"
 #. module: l10n_mx_edi_payslip
 #: model:ir.model,name:l10n_mx_edi_payslip.model_res_company
 msgid "Companies"
-msgstr "Compañías"
+msgstr "Empresas"
 
 #. module: l10n_mx_edi_payslip
 #: model:ir.model.fields,field_description:l10n_mx_edi_payslip.field_create_company_global_time_off__company_id
@@ -1835,12 +1810,11 @@ msgstr "Saldos de compensación a favor"
 #. module: l10n_mx_edi_payslip
 #. odoo-python
 #: code:addons/l10n_mx_edi_payslip/models/hr_payslip.py:0
-#, python-format
 msgid "Compose Email"
 msgstr "Redactar correo electrónico"
 
 #. module: l10n_mx_edi_payslip
-#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.l10n_mx_edi_report_payslip
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.report_payslip
 #: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.report_payslip_document_details_by_rule
 msgid "Concept"
 msgstr "Concepto"
@@ -1930,7 +1904,7 @@ msgstr ""
 #. module: l10n_mx_edi_payslip
 #: model:ir.model,name:l10n_mx_edi_payslip.model_res_country_state
 msgid "Country state"
-msgstr "Provincia del país"
+msgstr "Estado"
 
 #. module: l10n_mx_edi_payslip
 #: model:ir.model.fields,field_description:l10n_mx_edi_payslip.field_hr_employee_alimony__court
@@ -2125,7 +2099,7 @@ msgstr ""
 "domingos como días libres."
 
 #. module: l10n_mx_edi_payslip
-#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.l10n_mx_edi_report_payslip
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.report_payslip
 msgid "Days"
 msgstr "Días"
 
@@ -2144,6 +2118,11 @@ msgstr "Dias a considerar para salario mensual"
 #: model:ir.model.fields,field_description:l10n_mx_edi_payslip.field_hr_contract__l10n_mx_edi_holidays
 msgid "Days of holidays"
 msgstr "Días de vacaciones"
+
+#. module: l10n_mx_edi_payslip
+#: model:ir.model.fields,field_description:l10n_mx_edi_payslip.field_hr_contract__l10n_mx_edi_imss_holidays
+msgid "Days of holidays (IMSS)"
+msgstr "Días de vacaciones (IMSS)"
 
 #. module: l10n_mx_edi_payslip
 #: model:account.report.column,name:l10n_mx_edi_payslip.sua_move_days
@@ -2187,9 +2166,9 @@ msgid "Deduction"
 msgstr "Deducción"
 
 #. module: l10n_mx_edi_payslip
-#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.l10n_mx_edi_report_payslip
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.report_payslip
 msgid "Deductions:"
-msgstr "Deducciones"
+msgstr "Deducciones:"
 
 #. module: l10n_mx_edi_payslip
 #: model:ir.model.fields,help:l10n_mx_edi_payslip.field_l10n_mx_edi_schedule_pay__isr_table
@@ -2339,7 +2318,12 @@ msgstr "Descuento/Porcentaje"
 #. module: l10n_mx_edi_payslip
 #. odoo-python
 #: code:addons/l10n_mx_edi_payslip/models/hr_payslip_run.py:0
-#, python-format
+msgid "Dispersion"
+msgstr "Dispersión"
+
+#. module: l10n_mx_edi_payslip
+#. odoo-python
+#: code:addons/l10n_mx_edi_payslip/models/hr_payslip_run.py:0
 msgid "Dispersions"
 msgstr "Dispersión"
 
@@ -2400,6 +2384,8 @@ msgstr "¿Conceptos Dinámicos?"
 #. module: l10n_mx_edi_payslip
 #: model:hr.salary.rule,name:l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_perception_001_public_holiday
 #: model:hr.salary.rule,name:l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_perception_001_public_holiday_bf
+#: model:hr.salary.rule,name:l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_perception_001_public_holiday_bf_e
+#: model:hr.salary.rule,name:l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_perception_001_public_holiday_e
 msgid "Días Inhábiles Trabajados"
 msgstr ""
 
@@ -2499,7 +2485,6 @@ msgstr "Clave de Ubicación"
 #. module: l10n_mx_edi_payslip
 #. odoo-python
 #: code:addons/l10n_mx_edi_payslip/models/hr_payslip.py:0
-#, python-format
 msgid "Employee has not a contract and is required"
 msgstr "El empleado no tiene un contrato y se requiere"
 
@@ -2640,6 +2625,12 @@ msgid "End Date"
 msgstr "Fecha Final"
 
 #. module: l10n_mx_edi_payslip
+#: model:hr.salary.rule,name:l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_aux_enfermedades_imss
+#: model:hr.salary.rule,name:l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_aux_enfermedades_imss_bf
+msgid "Enfermedades y maternidad en dinero"
+msgstr ""
+
+#. module: l10n_mx_edi_payslip
 #: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.res_config_settings_view_form
 msgid "Entries for payslips."
 msgstr "Entradas para la nómina."
@@ -2647,7 +2638,6 @@ msgstr "Entradas para la nómina."
 #. module: l10n_mx_edi_payslip
 #. odoo-python
 #: code:addons/l10n_mx_edi_payslip/models/hr_payslip.py:0
-#, python-format
 msgid "Error during the process:"
 msgstr ""
 
@@ -2655,6 +2645,12 @@ msgstr ""
 #: model:hr.salary.rule,name:l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_014
 #: model:hr.salary.rule,name:l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_014_bf
 msgid "Errores"
+msgstr ""
+
+#. module: l10n_mx_edi_payslip
+#: model:hr.salary.rule,name:l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_aux_excedente_imss_bf
+#: model:hr.salary.rule,name:l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_excedente_imss
+msgid "Especie - Excedente"
 msgstr ""
 
 #. module: l10n_mx_edi_payslip
@@ -2689,7 +2685,7 @@ msgstr ""
 " de ISR a la base gravable del período."
 
 #. module: l10n_mx_edi_payslip
-#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.l10n_mx_edi_report_payslip
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.report_payslip
 msgid "Exempt"
 msgstr "Exento"
 
@@ -2701,7 +2697,6 @@ msgstr "Exento"
 #: code:addons/l10n_mx_edi_payslip/reports/hr_sua_affiliation_report_handler.py:0
 #: code:addons/l10n_mx_edi_payslip/reports/hr_sua_mov_report_handler.py:0
 #: code:addons/l10n_mx_edi_payslip/reports/hr_sua_report_handler.py:0
-#, python-format
 msgid "Export IMSS (TXT)"
 msgstr "Exportar IMSS (TXT)"
 
@@ -2899,6 +2894,12 @@ msgstr "Viernes"
 #. module: l10n_mx_edi_payslip
 #: model:account.account,name:l10n_mx_edi_payslip.cuenta601_08
 msgid "Gasto de nómina"
+msgstr ""
+
+#. module: l10n_mx_edi_payslip
+#: model:hr.salary.rule,name:l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_aux_pensionados_imss
+#: model:hr.salary.rule,name:l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_aux_pensionados_imss_bf
+msgid "Gastos médicos para pensionados y beneficiarios"
 msgstr ""
 
 #. module: l10n_mx_edi_payslip
@@ -3108,7 +3109,7 @@ msgstr ""
 
 #. module: l10n_mx_edi_payslip
 #: model:ir.model.fields,field_description:l10n_mx_edi_payslip.field_hr_payslip_overtime__hours
-#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.l10n_mx_edi_report_payslip
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.report_payslip
 msgid "Hours"
 msgstr "Horas"
 
@@ -3188,6 +3189,12 @@ msgid "IDSE report for Wage Update"
 msgstr "Reporte IDSE para actualización de salario"
 
 #. module: l10n_mx_edi_payslip
+#: model:ir.model.fields,field_description:l10n_mx_edi_payslip.field_hr_contract__l10n_mx_edi_imss_date
+#: model:ir.model.fields,field_description:l10n_mx_edi_payslip.field_hr_employee__l10n_mx_edi_imss_date
+msgid "IMSS Date"
+msgstr "Alta IMSS"
+
+#. module: l10n_mx_edi_payslip
 #. odoo-python
 #: code:addons/l10n_mx_edi_payslip/reports/hr_idse_baja_report_handler.py:0
 #: code:addons/l10n_mx_edi_payslip/reports/hr_idse_report_handler.py:0
@@ -3195,7 +3202,6 @@ msgstr "Reporte IDSE para actualización de salario"
 #: code:addons/l10n_mx_edi_payslip/reports/hr_sua_affiliation_report_handler.py:0
 #: code:addons/l10n_mx_edi_payslip/reports/hr_sua_mov_report_handler.py:0
 #: code:addons/l10n_mx_edi_payslip/reports/hr_sua_report_handler.py:0
-#, python-format
 msgid "IMSS TXT"
 msgstr "TXT IMSS"
 
@@ -3522,6 +3528,20 @@ msgstr ""
 "fecha final del periodo."
 
 #. module: l10n_mx_edi_payslip
+#: model:ir.model.fields,help:l10n_mx_edi_payslip.field_hr_contract__l10n_mx_edi_imss_date
+#: model:ir.model.fields,help:l10n_mx_edi_payslip.field_hr_employee__l10n_mx_edi_imss_date
+msgid ""
+"If the IMSS date is different to the contract start date, set here the IMSS "
+"registration date, this value will be used on SBC amount. If the "
+"registration date is the same that the contract start date, then this could "
+"be empty."
+msgstr ""
+"Si la fecha de alta en el IMSS es diferente a la fecha inicial del contrato,"
+" coloque aquí la fecha de alta en el IMSS, este valor será utilizado en el "
+"SBC. Si la fecha de alta es igual a la fecha inicial del contrato, este "
+"valor puede quedar vacío."
+
+#. module: l10n_mx_edi_payslip
 #: model:ir.model.fields,help:l10n_mx_edi_payslip.field_hr_employee_alimony__increase_based_on
 msgid "If the alimony must increase, indicate base in with will be increased."
 msgstr ""
@@ -3622,30 +3642,6 @@ msgstr ""
 "afectará la deducción del empleado."
 
 #. module: l10n_mx_edi_payslip
-#: model:ir.model.fields,help:l10n_mx_edi_payslip.field_hr_payslip__l10n_mx_edi_date_from
-#: model:ir.model.fields,help:l10n_mx_edi_payslip.field_hr_payslip_run__l10n_mx_edi_date_start
-msgid ""
-"If the payroll period is different to the dates that must be show in the "
-"CFDI, please set here the date from for the CFDI. If is empty, will be used "
-"the Date From."
-msgstr ""
-"Si el periodo de la nómina es diferente a las fechas que deben mostrarse en "
-"el CFDI, asigne aquí las fechas para el CFDI. Si se deja vació, se utilizara"
-" la fecha de la nómina."
-
-#. module: l10n_mx_edi_payslip
-#: model:ir.model.fields,help:l10n_mx_edi_payslip.field_hr_payslip__l10n_mx_edi_date_to
-#: model:ir.model.fields,help:l10n_mx_edi_payslip.field_hr_payslip_run__l10n_mx_edi_date_end
-msgid ""
-"If the payroll period is different to the dates that must be show in the "
-"CFDI, please set here the date to for the CFDI. If is empty, will be used "
-"the Date To."
-msgstr ""
-"Si el periodo de la nómina es diferente a las fechas que deben mostrarse en "
-"el CFDI, asigne aquí las fechas para el CFDI. Si se deja vació, se utilizara"
-" la fecha de la nómina."
-
-#. module: l10n_mx_edi_payslip
 #: model:ir.model.fields,help:l10n_mx_edi_payslip.field_hr_payslip__l10n_mx_edi_action_title_ids
 msgid ""
 "If the payslip have perceptions with code 045, assign here the values to the"
@@ -3735,6 +3731,17 @@ msgid ""
 msgstr ""
 "Si se marca esta opción, el ISR será calculado basado en la tabla mensual "
 "sin importar la peridiocidad de pago"
+
+#. module: l10n_mx_edi_payslip
+#: model:ir.model.fields,help:l10n_mx_edi_payslip.field_res_company__l10n_mx_edi_subsidy_isr
+#: model:ir.model.fields,help:l10n_mx_edi_payslip.field_res_config_settings__l10n_mx_edi_subsidy_isr
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.res_config_settings_view_form
+msgid ""
+"If this option is checked, the company will subsidize the ISR fee for "
+"employees earning the minimum wage."
+msgstr ""
+"Si esta opción está marcada, la empresa subsidiará el impuesto sobre la "
+"renta (ISR) a los empleados que reciban el salario mínimo."
 
 #. module: l10n_mx_edi_payslip
 #: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.res_config_settings_view_form
@@ -3894,7 +3901,6 @@ msgstr ""
 #. module: l10n_mx_edi_payslip
 #. odoo-python
 #: code:addons/l10n_mx_edi_payslip/models/hr_payslip.py:0
-#, python-format
 msgid "In order to allow cancel, please define a correct cancellation case."
 msgstr ""
 "Para permitir la cancelación, por favor defina correctamente el caso de "
@@ -3903,7 +3909,6 @@ msgstr ""
 #. module: l10n_mx_edi_payslip
 #. odoo-python
 #: code:addons/l10n_mx_edi_payslip/models/hr_payslip.py:0
-#, python-format
 msgid "In order to allow cancel, please define the cancellation case."
 msgstr ""
 "Para permitir la cancelación, por favor defina un caso de cancelación."
@@ -4172,6 +4177,7 @@ msgstr ""
 
 #. module: l10n_mx_edi_payslip
 #: model:ir.model.fields,help:l10n_mx_edi_payslip.field_hr_contract__l10n_mx_edi_holidays
+#: model:ir.model.fields,help:l10n_mx_edi_payslip.field_hr_contract__l10n_mx_edi_imss_holidays
 msgid "Initial number of days for holidays. The minimum is 12 days."
 msgstr "Número inicial de días de vacaciones. El mínimo es 12 días."
 
@@ -4205,6 +4211,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_mx_edi_payslip.field_hr_contract__l10n_mx_edi_internet_ho
 msgid "Internet for Home Office"
 msgstr "Internet por Home Office"
+
+#. module: l10n_mx_edi_payslip
+#: model:hr.salary.rule,name:l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_aux_invalides_imss
+#: model:hr.salary.rule,name:l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_aux_invalides_imss_bf
+msgid "Invalides y vida"
+msgstr ""
 
 #. module: l10n_mx_edi_payslip
 #: model:ir.model.fields,field_description:l10n_mx_edi_payslip.field_hr_employee_alimony__message_is_follower
@@ -4510,7 +4522,7 @@ msgstr "Error MX Edi"
 #. module: l10n_mx_edi_payslip
 #: model:ir.model.fields,field_description:l10n_mx_edi_payslip.field_hr_employee__l10n_mx_edi_type
 msgid "MX Employee Type"
-msgstr ""
+msgstr "Tipo de empleado MX"
 
 #. module: l10n_mx_edi_payslip
 #: model:ir.model.fields,field_description:l10n_mx_edi_payslip.field_hr_contract_gross_salary__marginal_tax
@@ -4547,8 +4559,6 @@ msgstr "Error de Envío de Mensaje"
 #. module: l10n_mx_edi_payslip
 #. odoo-python
 #: code:addons/l10n_mx_edi_payslip/models/hr_payslip.py:0
-#: code:addons/l10n_mx_edi_payslip/models/hr_payslip.py:0
-#, python-format
 msgid "Message: "
 msgstr "Mensaje: "
 
@@ -4757,23 +4767,20 @@ msgstr "Siguiente tipo de actividad"
 #. module: l10n_mx_edi_payslip
 #. odoo-python
 #: code:addons/l10n_mx_edi_payslip/models/hr_payslip.py:0
-#, python-format
 msgid "No PAC credentials specified."
 msgstr "No se especificaron credenciales de PAC."
 
 #. module: l10n_mx_edi_payslip
 #. odoo-python
 #: code:addons/l10n_mx_edi_payslip/models/hr_payslip.py:0
-#, python-format
 msgid "No PAC specified."
 msgstr "PAC no especificado."
 
 #. module: l10n_mx_edi_payslip
 #. odoo-python
 #: code:addons/l10n_mx_edi_payslip/models/hr_payslip.py:0
-#, python-format
-msgid "No valid certificate found"
-msgstr "No se ha encontrado ningún certificado válido"
+msgid "No valid certificate found."
+msgstr "No se ha encontrado ningún certificado válido."
 
 #. module: l10n_mx_edi_payslip
 #: model:ir.model.fields,field_description:l10n_mx_edi_payslip.field_hr_payslip_extra_perception__node
@@ -4928,7 +4935,6 @@ msgstr "En Vacaciones"
 #. module: l10n_mx_edi_payslip
 #. odoo-python
 #: code:addons/l10n_mx_edi_payslip/models/hr_payslip_run.py:0
-#, python-format
 msgid ""
 "Only Managers who are allow to Validate payslip can perform this operation"
 msgstr ""
@@ -4938,7 +4944,6 @@ msgstr ""
 #. module: l10n_mx_edi_payslip
 #. odoo-python
 #: code:addons/l10n_mx_edi_payslip/models/hr_payslip.py:0
-#, python-format
 msgid ""
 "Only Managers who are allow to validate payslip can perform this operation"
 msgstr ""
@@ -5004,7 +5009,6 @@ msgstr "Hora Extra"
 #: code:addons/l10n_mx_edi_payslip/models/hr_payslip_run.py:0
 #: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.hr_payslip_overtime_form
 #: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.hr_payslip_overtime_search
-#, python-format
 msgid "Overtimes"
 msgstr "Horas Extras"
 
@@ -5440,7 +5444,7 @@ msgid "Perception Taxed"
 msgstr "Percepción gravada"
 
 #. module: l10n_mx_edi_payslip
-#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.l10n_mx_edi_report_payslip
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.report_payslip
 msgid "Perceptions:"
 msgstr "Percepciones:"
 
@@ -5490,7 +5494,6 @@ msgstr ""
 #. module: l10n_mx_edi_payslip
 #. odoo-python
 #: code:addons/l10n_mx_edi_payslip/models/hr_payslip.py:0
-#, python-format
 msgid "Please check your configuration: "
 msgstr "Por favor, compruebe su configuración: "
 
@@ -5498,7 +5501,6 @@ msgstr "Por favor, compruebe su configuración: "
 #. odoo-python
 #: code:addons/l10n_mx_edi_payslip/models/hr_payslip.py:0
 #: code:addons/l10n_mx_edi_payslip/models/hr_payslip_run.py:0
-#, python-format
 msgid ""
 "Please note that the payment date falls outside the payslip period. Proceed "
 "only if this is expected."
@@ -5509,7 +5511,6 @@ msgstr ""
 #. module: l10n_mx_edi_payslip
 #. odoo-python
 #: code:addons/l10n_mx_edi_payslip/models/l10n_mx_edi_public_holiday.py:0
-#, python-format
 msgid ""
 "Please, set you a timezone to continue this operation. To set a timezone, go"
 " to your user, on the upper right corner and select My Profile"
@@ -5521,7 +5522,6 @@ msgstr ""
 #. module: l10n_mx_edi_payslip
 #. odoo-python
 #: code:addons/l10n_mx_edi_payslip/models/hr_payslip.py:0
-#, python-format
 msgid ""
 "Please, you set the minimum wage in Mexico to that you can calculate the "
 "payroll."
@@ -5871,6 +5871,12 @@ msgstr "Jubilación / Indemnización"
 #: model:hr.salary.rule,name:l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_retirement_company
 #: model:hr.salary.rule,name:l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_retirement_company_bf
 msgid "Retiro Compañía"
+msgstr ""
+
+#. module: l10n_mx_edi_payslip
+#: model:hr.salary.rule,name:l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_aux_retiro_imss
+#: model:hr.salary.rule,name:l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_retiro_imss_bf
+msgid "Retiro, Cesantía en Edad Avanzada y Vejez"
 msgstr ""
 
 #. module: l10n_mx_edi_payslip
@@ -6254,7 +6260,6 @@ msgstr "Cónyuge"
 #. module: l10n_mx_edi_payslip
 #. odoo-python
 #: code:addons/l10n_mx_edi_payslip/models/hr_payslip.py:0
-#, python-format
 msgid "Stamp process omitted because the Net Salary is 0."
 msgstr "El proceso de timbrado se omitió porque el salario neto es 0."
 
@@ -6350,6 +6355,13 @@ msgid "Subsidy"
 msgstr "Subsidio"
 
 #. module: l10n_mx_edi_payslip
+#: model:ir.model.fields,field_description:l10n_mx_edi_payslip.field_res_company__l10n_mx_edi_subsidy_isr
+#: model:ir.model.fields,field_description:l10n_mx_edi_payslip.field_res_config_settings__l10n_mx_edi_subsidy_isr
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.res_config_settings_view_form
+msgid "Subsidy ISR?"
+msgstr "¿Subsidiar ISR?"
+
+#. module: l10n_mx_edi_payslip
 #: model:ir.model.fields,field_description:l10n_mx_edi_payslip.field_res_company__l10n_mx_edi_subsidy_imss
 #: model:ir.model.fields,field_description:l10n_mx_edi_payslip.field_res_config_settings__l10n_mx_edi_subsidy_imss
 #: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.res_config_settings_view_form
@@ -6377,6 +6389,11 @@ msgstr "Sustituido por"
 #. module: l10n_mx_edi_payslip
 #: model:ir.model.fields.selection,name:l10n_mx_edi_payslip.selection__hr_employee__l10n_mx_edi_contract_regime_type__02
 msgid "Sueldos"
+msgstr ""
+
+#. module: l10n_mx_edi_payslip
+#: model:account.journal,name:l10n_mx_edi_payslip.salaries_account_journal_demo
+msgid "Sueldos y Salarios"
 msgstr ""
 
 #. module: l10n_mx_edi_payslip
@@ -6547,7 +6564,7 @@ msgid "Tasa"
 msgstr ""
 
 #. module: l10n_mx_edi_payslip
-#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.l10n_mx_edi_report_payslip
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.report_payslip
 msgid "Taxed"
 msgstr "Gravado"
 
@@ -6568,7 +6585,6 @@ msgstr ""
 #. module: l10n_mx_edi_payslip
 #. odoo-python
 #: code:addons/l10n_mx_edi_payslip/models/hr_payslip.py:0
-#, python-format
 msgid ""
 "The PAC has sent this document to cancel, but the SAT has not processed it "
 "yet. Please try again in a few minutes or wait for the automatic action. SAT"
@@ -6619,27 +6635,18 @@ msgstr "El nombre del archivo adjunto del CFDI."
 #. module: l10n_mx_edi_payslip
 #. odoo-python
 #: code:addons/l10n_mx_edi_payslip/models/hr_payslip.py:0
-#: code:addons/l10n_mx_edi_payslip/models/hr_payslip.py:0
-#, python-format
 msgid "The cancel service has been called with success"
 msgstr "El servicio de cancelación se ha llamado con éxito"
 
 #. module: l10n_mx_edi_payslip
 #. odoo-python
 #: code:addons/l10n_mx_edi_payslip/models/hr_payslip.py:0
-#, python-format
 msgid "The cancel service requested failed"
 msgstr "El servicio de cancelación solicitado falló"
 
 #. module: l10n_mx_edi_payslip
-#: model:ir.model.fields,help:l10n_mx_edi_payslip.field_hr_payslip__l10n_mx_edi_cfdi_certificate_id
-msgid "The certificate used during the generation of the cfdi."
-msgstr "El certificado utilizado durante la generación del cfdi."
-
-#. module: l10n_mx_edi_payslip
 #. odoo-python
 #: code:addons/l10n_mx_edi_payslip/models/hr_payslip.py:0
-#, python-format
 msgid "The cfdi generated is not valid"
 msgstr "El CFDI generado no es válido"
 
@@ -6651,14 +6658,12 @@ msgstr "El contenido xml del cfdi codificado en base64."
 #. module: l10n_mx_edi_payslip
 #. odoo-python
 #: code:addons/l10n_mx_edi_payslip/models/hr_payslip.py:0
-#, python-format
 msgid "The content of the attachment has been updated"
 msgstr "El contenido del archivo adjunto se ha actualizado"
 
 #. module: l10n_mx_edi_payslip
 #. odoo-python
 #: code:addons/l10n_mx_edi_payslip/wizards/hr_payroll_payslip_employees.py:0
-#, python-format
 msgid ""
 "The contract will expire at the end of the payslip period.\n"
 "                The salary structure was replaced from %(struct)s to %(sett)s"
@@ -6722,14 +6727,12 @@ msgstr "El reporte va a ser generado con nóminas antes a esta fecha"
 #. module: l10n_mx_edi_payslip
 #. odoo-python
 #: code:addons/l10n_mx_edi_payslip/models/hr_payslip.py:0
-#, python-format
 msgid "The sign service has been called with success"
 msgstr "El servicio de firma ha sido llamado con éxito"
 
 #. module: l10n_mx_edi_payslip
 #. odoo-python
 #: code:addons/l10n_mx_edi_payslip/models/hr_payslip.py:0
-#, python-format
 msgid "The sign service requested failed"
 msgstr "El servicio de firma solicitado falló"
 
@@ -6784,7 +6787,6 @@ msgstr ""
 #. module: l10n_mx_edi_payslip
 #. odoo-python
 #: code:addons/l10n_mx_edi_payslip/models/hr_payslip.py:0
-#, python-format
 msgid "This payslip can be erroneous :"
 msgstr "Este recibo de nómina puede estar incorrecto: "
 
@@ -6839,10 +6841,9 @@ msgstr "Tolerancia en entrada"
 #: code:addons/l10n_mx_edi_payslip/reports/hr_alimony_report_handler.py:0
 #: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.hr_payslip_extra_form
 #: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.hr_payslip_overtime_tree
-#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.l10n_mx_edi_report_payslip
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.report_payslip
 #: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.view_hr_payslip_tree
 #: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.view_move_line_form
-#, python-format
 msgid "Total"
 msgstr ""
 
@@ -6942,7 +6943,7 @@ msgid "Tuesday"
 msgstr "Martes"
 
 #. module: l10n_mx_edi_payslip
-#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.l10n_mx_edi_report_payslip
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_payslip.report_payslip
 msgid "Type"
 msgstr "Tipo"
 
@@ -7424,7 +7425,6 @@ msgstr "¿Quién cometió la infracción para ganar esta advertencia?"
 #. module: l10n_mx_edi_payslip
 #. odoo-python
 #: code:addons/l10n_mx_edi_payslip/reports/hr_payslip_run_report.py:0
-#, python-format
 msgid "Without Department"
 msgstr "Sin Departamento"
 
@@ -7456,7 +7456,6 @@ msgstr "Año"
 #. module: l10n_mx_edi_payslip
 #. odoo-python
 #: code:addons/l10n_mx_edi_payslip/models/hr_payslip_overtime.py:0
-#, python-format
 msgid "You cannot delete an overtime which payroll has been posted once."
 msgstr ""
 "No se puede eliminar un tiempo extra cuya nómina ya se haya contabilizado."
@@ -7464,7 +7463,6 @@ msgstr ""
 #. module: l10n_mx_edi_payslip
 #. odoo-python
 #: code:addons/l10n_mx_edi_payslip/models/hr_payslip.py:0
-#, python-format
 msgid ""
 "You have perceptions with code 039 and 044. You can only have one of them."
 msgstr ""
@@ -7474,7 +7472,6 @@ msgstr ""
 #. module: l10n_mx_edi_payslip
 #. odoo-python
 #: code:addons/l10n_mx_edi_payslip/models/hr_payslip.py:0
-#, python-format
 msgid ""
 "You have selected payslips whose journal entries are already validated or "
 "that were validated. These payslips cannot be canceled, if you need to "
@@ -7487,7 +7484,6 @@ msgstr ""
 #. module: l10n_mx_edi_payslip
 #. odoo-python
 #: code:addons/l10n_mx_edi_payslip/models/hr_payslip.py:0
-#, python-format
 msgid ""
 "You have selected signed payslips. Please, use the option Request Edi "
 "Cancellation instead directly cancelling the payslip"

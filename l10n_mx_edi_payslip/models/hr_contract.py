@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from math import floor
 
 from dateutil.relativedelta import relativedelta
+from pytz import timezone
 
 from odoo import Command, api, fields, models
 
@@ -21,6 +22,11 @@ class HrContract(models.Model):
     l10n_mx_edi_holidays = fields.Integer(
         string="Days of holidays",
         default=12,
+        tracking=True,
+        help="Initial number of days for holidays. The minimum is 12 days.",
+    )
+    l10n_mx_edi_imss_holidays = fields.Integer(
+        string="Days of holidays (IMSS)",
         tracking=True,
         help="Initial number of days for holidays. The minimum is 12 days.",
     )
@@ -223,6 +229,10 @@ class HrContract(models.Model):
         help="If this set, the ISR percentage for this employee will always the value set. Normally a 35% is used. "
         "This option generally is used for partners, shareholders or for employees whose monthly income is very high.",
     )
+    l10n_mx_edi_imss_date = fields.Date(
+        related="employee_id.l10n_mx_edi_imss_date",
+        store=True,
+    )
 
     @api.depends("wage", "company_id.l10n_mx_edi_days_daily_wage")
     def _compute_l10n_mx_edi_daily_wage(self):
@@ -269,7 +279,8 @@ class HrContract(models.Model):
     def compute_integrated_salary_variable(self):
         """Compute Daily Salary Integrated Variable according to Mexican laws"""
         payslips = self.env["hr.payslip"]
-        date_mx = fields.datetime.now()
+        # Avoid tz issues
+        date_mx = fields.Date.context_today(self)
         date_from = (date_mx - timedelta(days=30 * (2 if date_mx.month % 2 else 3))).replace(day=1)
         date_to = date_mx - timedelta(days=30 * (1 if date_mx.month % 2 else 2))
         date_to = date_to.replace(day=calendar.monthrange(date_to.year, date_to.month)[1])
@@ -284,13 +295,10 @@ class HrContract(models.Model):
             )
             worked = sum(
                 payslips.filtered(lambda p: p.struct_id.type_id.l10n_mx_edi_type == "O")
-                .mapped("worked_days_line_ids")
-                .filtered(lambda work: work.code == "WORK100")
+                .worked_days_line_ids.filtered(lambda work: work.code == "WORK100")
                 .mapped("number_of_days")
             )
-            inputs = sum(
-                payslips.mapped("line_ids").filtered("salary_rule_id.l10n_mx_edi_sdi_variable").mapped("total")
-            )
+            inputs = sum(payslips.line_ids.filtered("salary_rule_id.l10n_mx_edi_sdi_variable").mapped("total"))
             record.l10n_mx_edi_sdi_variable = (inputs / worked) if worked else 0
 
     def _get_static_sdi(self, wage=None):
@@ -310,7 +318,9 @@ class HrContract(models.Model):
         """
         self.ensure_one()
         vacation_bonus = (self.l10n_mx_edi_vacation_bonus or 25) / 100
-        holidays = self.l10n_mx_edi_holidays * vacation_bonus
+        holidays = (
+            self.l10n_mx_edi_imss_holidays if self.l10n_mx_edi_imss_date else self.l10n_mx_edi_holidays
+        ) * vacation_bonus
         bonus = self.l10n_mx_edi_christmas_bonus or 15
         return round(1 + (holidays + bonus) / 365, 4)
 
@@ -319,12 +329,19 @@ class HrContract(models.Model):
         # TODO - Moverlo a la metodología de listado de server action por contrato @nhomar
         for record in self:
             record.l10n_mx_edi_holidays = record._l10n_mx_get_holidays(record.get_seniority()["years"])
+            record.l10n_mx_edi_imss_holidays = (
+                record._l10n_mx_get_holidays(record.get_seniority(date_from=record.l10n_mx_edi_imss_date)["years"])
+                if record.l10n_mx_edi_imss_date
+                else 0
+            )
 
     @api.model
     def _l10n_mx_get_holidays(self, seniority):
         """Get how many holidays an employee has based on a given seniority.
         This method will be used by the assignation method and by the allocation cron."""
         holidays = 12
+        if seniority <= 0:
+            return holidays
         if seniority < 5:
             return holidays + (2 * seniority)
         return holidays + 8 + 2 * floor(seniority / 5)
@@ -332,20 +349,15 @@ class HrContract(models.Model):
     def l10n_mx_allocate_annual_holidays(self, filter_by_anniversary=True):
         """In Mexico each year, when the employee celebrates years on the company, the employee earn holidays,
         this method creates the leave allocation."""
-        mexico_tz = self.env["l10n_mx_edi.certificate"]._get_timezone()
+        mexico_tz = timezone("America/Mexico_City")
         date_mx = datetime.now(mexico_tz)
-        contracts = (
-            self.filtered(
-                lambda contract: contract.employee_id.private_country_id.code == "MX"
-                and contract.date_start.day == date_mx.day
-                and contract.date_start.month == date_mx.month
-                and contract.date_start.year < date_mx.year
-            )
-            if filter_by_anniversary
-            else self
-        )
+        for contract in self:
+            date_start = contract.l10n_mx_edi_imss_date or contract.date_start
+            if filter_by_anniversary and (
+                date_start.day != date_mx.day or date_start.month != date_mx.month or date_start.year >= date_mx.year
+            ):
+                continue
 
-        for contract in contracts:
             # Create and confirm the new allocation
             allocation = self.env["hr.leave.allocation"].create(contract._l10n_mx_prepare_allocation_holidays())
             allocation.sudo().action_validate()
@@ -355,13 +367,14 @@ class HrContract(models.Model):
         """Prepare data to use in allocation for Mexican allocation"""
         self.ensure_one()
         holiday = self.env.ref("l10n_mx_edi_payslip.mexican_holiday")
-        mexico_tz = self.env["l10n_mx_edi.certificate"]._get_timezone()
+        mexico_tz = timezone("America/Mexico_City")
         date_mx = datetime.now(mexico_tz)
         return {
             "name": f"{holiday.name} MX {date_mx.year}",
             "holiday_status_id": holiday.id,
-            "number_of_days": self._l10n_mx_get_holidays(self.get_seniority()["years"] - 1),
-            "holiday_type": "employee",
+            "number_of_days": self._l10n_mx_get_holidays(
+                self.get_seniority(date_from=self.l10n_mx_edi_imss_date)["years"] - 1
+            ),
             "allocation_type": "regular",
             "employee_id": self.employee_id.id,
             "state": "confirm",

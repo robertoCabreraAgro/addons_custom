@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from odoo import Command
 from odoo.exceptions import UserError
 from odoo.tests import tagged
+from odoo.tools import misc
 
 from .common import L10nMxEdiPayslipTransactionCase
 
@@ -79,4 +80,28 @@ class TestHrBankDispersion(L10nMxEdiPayslipTransactionCase):
             "000000001                991234567890          %s"
             "MARIA OLIVIA MARTINEZ SAGAZ             001001\r\n" % amount,
             "Wrong payslip dispersion template",
+        )
+
+    def test_003_general_dispersion(self):
+        """Test General Text Generation. For now, just characteristics for Banamex have been specified."""
+        self.employee.bank_account_id.bank_id = self.env.ref("l10n_mx.acc_bank_002_BANAMEX")
+        self.env["ir.config_parameter"].sudo().set_param("l10n_mx_edi_dispersion_type", "banamex")
+        dispersion_text = self.payslip_run._get_payslips_dispersions()
+        file_path = f"{self.test_module}/tests/data/expected_dispersion.txt"
+        with misc.file_open(file_path, "r") as file:
+            expected_dispersion = file.read()
+        current_month = str(self.payslip_run.l10n_mx_edi_payment_date.month)
+        current_day = str(self.payslip_run.l10n_mx_edi_payment_date.day)
+        expected_dispersion = expected_dispersion.replace("-month-", current_month).replace(
+            "-day-", f"0{current_day}" if len(current_day) == 1 else current_day
+        )
+        self.assertEqual(
+            dispersion_text[0][0],
+            f"PAYSLIP_VX_{self.payslip_run.l10n_mx_edi_payment_date.strftime('%d_%m_%Y')}_Dispersion",
+            "Wrong payslip dispersion file name.",
+        )
+        self.assertEqual(
+            expected_dispersion,
+            dispersion_text[0][1].replace("\r", ""),
+            "The file structure is not as expected.",
         )

@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<odoo>
+
+    <record id="salaries_account_journal_demo" model="account.journal">
+        <field name="name">Sueldos y Salarios</field>
+        <field name="code">SUELD</field>
+        <field name="type">general</field>
+        <field name="default_account_id" ref="l10n_mx_edi_payslip.cuenta_401_08" />
+        <field name="company_id" ref="base.demo_company_mx" />
+    </record>
+
+</odoo>

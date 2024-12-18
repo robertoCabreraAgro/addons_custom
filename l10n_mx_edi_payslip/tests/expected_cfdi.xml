@@ -5,22 +5,22 @@
     xmlns:cfdi="http://www.sat.gob.mx/cfd/4"
     xsi:schemaLocation="http://www.sat.gob.mx/cfd/4 http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd http://www.sat.gob.mx/nomina12 http://www.sat.gob.mx/sitio_internet/cfd/nomina/nomina12.xsd"
     Version="4.0"
-    Sello="lVV5wqWi7pnd0ZoBwrsCNIA4PTicjrRdVhCPboEZBsjmQmhyll+3iAi7Dgz3S8CXi0ec0MdxPCixHnY1b15gmIEQULw/K3dRx3eUa/g1twBi5LDhHXmNJ/dhaUUi/XBsrPJlve8GiYgD1PARpASwJx3DPoGxq8BSI+jr1pHGQLnyNCVZ45s0tLVQ3je3J/DP+8YRTJfbsPZrsP7H3M90DuFGGFTJXGMm0/763cdTZjUrOgg83PF6K5gVa/N6tTkjKr0uJlPLDegMRMsYK3iM5lr0zdV2gXAC9DmE+UKmNIEqh5+espMDooCHIxGQlcyjU+YmT6lUaxVfhaxfO0yJQg=="
+    Sello="___ignore___"
     Moneda="MXN"
     TipoDeComprobante="N"
     MetodoPago="PUE"
     Serie="SLIP/"
-    Folio="42"
-    Fecha="2017-11-28T13:37:40"
-    NoCertificado="30001000000500003416"
-    Certificado="MIIFsDCCA5igAwIBAgIUMzAwMDEwMDAwMDA1MDAwMDM0MTYwDQYJKoZIhvcNAQELBQAwggErMQ8wDQYDVQQDDAZBQyBVQVQxLjAsBgNVBAoMJVNFUlZJQ0lPIERFIEFETUlOSVNUUkFDSU9OIFRSSUJVVEFSSUExGjAYBgNVBAsMEVNBVC1JRVMgQXV0aG9yaXR5MSgwJgYJKoZIhvcNAQkBFhlvc2Nhci5tYXJ0aW5lekBzYXQuZ29iLm14MR0wGwYDVQQJDBQzcmEgY2VycmFkYSBkZSBjYWxpejEOMAwGA1UEEQwFMDYzNzAxCzAJBgNVBAYTAk1YMRkwFwYDVQQIDBBDSVVEQUQgREUgTUVYSUNPMREwDwYDVQQHDAhDT1lPQUNBTjERMA8GA1UELRMIMi41LjQuNDUxJTAjBgkqhkiG9w0BCQITFnJlc3BvbnNhYmxlOiBBQ0RNQS1TQVQwHhcNMjMwNTE4MTE0MzUxWhcNMjcwNTE4MTE0MzUxWjCB1zEnMCUGA1UEAxMeRVNDVUVMQSBLRU1QRVIgVVJHQVRFIFNBIERFIENWMScwJQYDVQQpEx5FU0NVRUxBIEtFTVBFUiBVUkdBVEUgU0EgREUgQ1YxJzAlBgNVBAoTHkVTQ1VFTEEgS0VNUEVSIFVSR0FURSBTQSBERSBDVjElMCMGA1UELRMcRUtVOTAwMzE3M0M5IC8gVkFEQTgwMDkyN0RKMzEeMBwGA1UEBRMVIC8gVkFEQTgwMDkyN0hTUlNSTDA1MRMwEQYDVQQLEwpTdWN1cnNhbCAxMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtmecO6n2GS0zL025gbHGQVxznPDICoXzR2uUngz4DqxVUC/w9cE6FxSiXm2ap8Gcjg7wmcZfm85EBaxCx/0J2u5CqnhzIoGCdhBPuhWQnIh5TLgj/X6uNquwZkKChbNe9aeFirU/JbyN7Egia9oKH9KZUsodiM/pWAH00PCtoKJ9OBcSHMq8Rqa3KKoBcfkg1ZrgueffwRLws9yOcRWLb02sDOPzGIm/jEFicVYt2Hw1qdRE5xmTZ7AGG0UHs+unkGjpCVeJ+BEBn0JPLWVvDKHZAQMj6s5Bku35+d/MyATkpOPsGT/VTnsouxekDfikJD1f7A1ZpJbqDpkJnss3vQIDAQABox0wGzAMBgNVHRMBAf8EAjAAMAsGA1UdDwQEAwIGwDANBgkqhkiG9w0BAQsFAAOCAgEAFaUgj5PqgvJigNMgtrdXZnbPfVBbukAbW4OGnUhNrA7SRAAfv2BSGk16PI0nBOr7qF2mItmBnjgEwk+DTv8Zr7w5qp7vleC6dIsZFNJoa6ZndrE/f7KO1CYruLXr5gwEkIyGfJ9NwyIagvHHMszzyHiSZIA850fWtbqtythpAliJ2jF35M5pNS+YTkRB+T6L/c6m00ymN3q9lT1rB03YywxrLreRSFZOSrbwWfg34EJbHfbFXpCSVYdJRfiVdvHnewN0r5fUlPtR9stQHyuqewzdkyb5jTTw02D2cUfL57vlPStBj7SEi3uOWvLrsiDnnCIxRMYJ2UA2ktDKHk+zWnsDmaeleSzonv2CHW42yXYPCvWi88oE1DJNYLNkIjua7MxAnkNZbScNw01A6zbLsZ3y8G6eEYnxSTRfwjd8EP4kdiHNJftm7Z4iRU7HOVh79/lRWB+gd171s3d/mI9kte3MRy6V8MMEMCAnMboGpaooYwgAmwclI2XZCczNWXfhaWe0ZS5PmytD/GDpXzkX0oEgY9K/uYo5V77NdZbGAjmyi8cE2B2ogvyaN2XfIInrZPgEffJ4AB7kFA2mwesdLOCh0BLD9itmCve3A1FGR4+stO2ANUoiI3w3Tv2yQSg4bjeDlJ08lXaaFCLW2peEXMXjQUk7fmpb5MNuOUTW6BE="
+    Folio="___ignore___"
+    Fecha="___ignore___"
+    NoCertificado="___ignore___"
+    Certificado="___ignore___"
     SubTotal="11722.94"
     Descuento="4409.10"
     Exportacion="01"
     Total="7313.84"
     LugarExpedicion="20928"
 >
-    <cfdi:Emisor Nombre="ESCUELA KEMPER URGATE" Rfc="EKU9003173C9" RegimenFiscal="601" />
+    <cfdi:Emisor Nombre="MY MX COMPANY" Rfc="EKU9003173C9" RegimenFiscal="601" />
     <cfdi:Receptor
         UsoCFDI="CN01"
         Rfc="MASO451221PM4"
@@ -45,8 +45,8 @@
             Version="1.2"
             TipoNomina="O"
             FechaPago="2017-11-01"
-            FechaInicialPago="2017-11-01"
-            FechaFinalPago="2017-11-15"
+            FechaInicialPago="___ignore___"
+            FechaFinalPago="___ignore___"
             NumDiasPagados="15"
             TotalPercepciones="11422.94"
             TotalDeducciones="4409.10"
@@ -54,17 +54,18 @@
             <nomina12:Emisor
                 RegistroPatronal="1203256"
                 RfcPatronOrigen="EKU9003173C9">
+                <nomina12:EntidadSNCF OrigenRecurso="IP"/>
             </nomina12:Emisor>
             <nomina12:Receptor
                 Curp="PUXB571021HNELXR00"
                 NumSeguridadSocial="123456789236958"
-                FechaInicioRelLaboral="2017-11-01"
-                Antigüedad="P0W"
+                FechaInicioRelLaboral="___ignore___"
+                Antigüedad="P2W"
                 TipoContrato="01"
                 Sindicalizado="No"
                 TipoJornada="01"
                 TipoRegimen="02"
-                NumEmpleado="22"
+                NumEmpleado="___ignore___"
                 Departamento="Research &amp; Development"
                 Puesto="Experienced Developer"
                 RiesgoPuesto="1"
@@ -89,21 +90,33 @@
                 <nomina12:Percepcion
                     TipoPercepcion="005"
                     Clave="PE005"
-                    Concepto="Fondo de Ahorro"
+                    Concepto="Fondo de Ahorro Empresa"
                     ImporteGravado="0.00"
                     ImporteExento="200.00">
                 </nomina12:Percepcion>
                 <nomina12:Percepcion
                     TipoPercepcion="019"
+                    Clave="PE019"
+                    Concepto="Horas extra dobles (E)"
+                    ImporteGravado="0.00"
+                    ImporteExento="91.67">
+                    <nomina12:HorasExtra
+                        Dias="1"
+                        TipoHoras="01"
+                        HorasExtra="1"
+                        ImportePagado="91.67"/>
+                </nomina12:Percepcion>
+                <nomina12:Percepcion
+                    TipoPercepcion="019"
                     Clave="PG019"
-                    Concepto="Horas extra dobles"
-                    ImporteGravado="130.06"
+                    Concepto="Horas extra dobles (G)"
+                    ImporteGravado="91.67"
                     ImporteExento="0.00">
                     <nomina12:HorasExtra
                         Dias="1"
                         TipoHoras="01"
                         HorasExtra="1"
-                        ImportePagado="90.46"/>
+                        ImportePagado="91.67"/>
                 </nomina12:Percepcion>
                 <nomina12:Percepcion
                     TipoPercepcion="047"
@@ -118,9 +131,14 @@
                 TotalImpuestosRetenidos="1546.12">
                 <nomina12:Deduccion
                     TipoDeduccion="001"
-                    Clave="001"
+                    Clave="SS001"
                     Concepto="Seguridad social"
-                    Importe="304.60"/>
+                    Importe="300.76"/>
+                <nomina12:Deduccion
+                    TipoDeduccion="004"
+                    Clave="DAP004"
+                    Concepto="Alimentación Patron"
+                    Importe="39.60"/>
                 <nomina12:Deduccion
                     TipoDeduccion="004"
                     Clave="DAT004"
@@ -128,19 +146,24 @@
                     Importe="30.00"/>
                 <nomina12:Deduccion
                     TipoDeduccion="004"
-                    Clave="DAP004"
-                    Concepto="Alimentación Patrón"
-                    Importe="39.6"/>
+                    Clave="FAC"
+                    Concepto="Fondo de Ahorro Empresa"
+                    Importe="200.00"/>
                 <nomina12:Deduccion
-                    TipoDeduccion="010"
-                    Clave="010"
-                    Concepto="Pago por crédito de vivienda"
-                    Importe="2000.00"/>
+                    TipoDeduccion="004"
+                    Clave="FAE"
+                    Concepto="Fondo de Ahorro Empleado"
+                    Importe="200.00"/>
                 <nomina12:Deduccion
-                    TipoDeduccion="071"
-                    Clave="071"
-                    Concepto="Ajuste en Subsidio para el empleo - efectivamente entregado al trabajador"
-                    Importe="0.01"/>
+                    TipoDeduccion="009"
+                    Clave="INF009"
+                    Concepto="Préstamos provenientes del Fondo Nacional de la Vivienda para los Trabajadores"
+                    Importe="2077.62"/>
+                <nomina12:Deduccion
+                    TipoDeduccion="009"
+                    Clave="SINF009"
+                    Concepto="Seguro vivienda infonavit"
+                    Importe="15.00"/>
                 <nomina12:Deduccion
                     TipoDeduccion="002"
                     Clave="ISR002"
@@ -168,11 +191,11 @@
             xmlns:tfd="http://www.sat.gob.mx/TimbreFiscalDigital"
             xsi:schemaLocation="http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/sitio_internet/cfd/TimbreFiscalDigital/TimbreFiscalDigitalv11.xsd"
             Version="1.1"
-            SelloCFD="lVV5wqWi7pnd0ZoBwrsCNIA4PTicjrRdVhCPboEZBsjmQmhyll+3iAi7Dgz3S8CXi0ec0MdxPCixHnY1b15gmIEQULw/K3dRx3eUa/g1twBi5LDhHXmNJ/dhaUUi/XBsrPJlve8GiYgD1PARpASwJx3DPoGxq8BSI+jr1pHGQLnyNCVZ45s0tLVQ3je3J/DP+8YRTJfbsPZrsP7H3M90DuFGGFTJXGMm0/763cdTZjUrOgg83PF6K5gVa/N6tTkjKr0uJlPLDegMRMsYK3iM5lr0zdV2gXAC9DmE+UKmNIEqh5+espMDooCHIxGQlcyjU+YmT6lUaxVfhaxfO0yJQg=="
-            NoCertificadoSAT="20001000000300022323"
-            RfcProvCertif="FIN1203015JA"
-            UUID="975E43C6-404D-4F37-8540-97169C90879F"
-            FechaTimbrado="2017-11-28T13:37:42"
-            SelloSAT="OhHRoA4EDZV6J7WxsdXXOtJzaAEMSuTnS7sKGq+AwKjBm6IitdfNZDVw0Ro8gBwOgM6V7qa/SkXCdflof2v7CEdqThfcG4NxXMAAoICC12qm9T5Gv9nTC0MHjY3NzGTkv2NQkItmnVE52OHLjQ758/fPrmeUaGjkgMVzxe/VK3p31K4JiDm0SvZbfxfKWJyIm06KGUjlmmCRm2n86UHVQQTp2EZHIB0MAMeCTOUHUS6Ch8B9rx0SEwVFvgaHLW32Wveu5IsiVyztkqBQUwWxZlSptvFXaK88xm+4ca5yheLFSvsvc51YjxxX+4epFQkziwg7oivsqrVgcHPBDdtoKA=="/>
+            SelloCFD="___ignore___"
+            NoCertificadoSAT="___ignore___"
+            RfcProvCertif="___ignore___"
+            UUID="26083EC0-8C43-56FC-B1E9-FF42DA4161BB"
+            FechaTimbrado="___ignore___"
+            SelloSAT="___ignore___"/>
     </cfdi:Complemento>
 </cfdi:Comprobante>

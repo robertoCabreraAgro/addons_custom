@@ -1,5 +1,5 @@
 # pylint: disable=missing-return
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 
 
@@ -14,11 +14,11 @@ class HrSuaReportHandler(models.AbstractModel):
         options.setdefault("buttons", []).extend(
             (
                 {
-                    "name": _("Export IMSS (TXT)"),
+                    "name": self.env._("Export IMSS (TXT)"),
                     "sequence": 40,
                     "action": "export_file",
                     "action_param": "action_get_imss_txt",
-                    "file_export_type": _("IMSS TXT"),
+                    "file_export_type": self.env._("IMSS TXT"),
                 },
             )
         )

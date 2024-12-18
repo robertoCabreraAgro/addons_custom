@@ -3,7 +3,7 @@ import time
 from datetime import timedelta
 from io import StringIO
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -21,16 +21,6 @@ class HrPayslipRun(models.Model):
         "Productivity Bonus",
         help="The amount to distribute to the employees in the payslips.",
     )
-    l10n_mx_edi_date_start = fields.Date(
-        "CFDI Date From",
-        help="If the payroll period is different to the dates that must be show in the CFDI, please set here the date "
-        "from for the CFDI. If is empty, will be used the Date From.",
-    )
-    l10n_mx_edi_date_end = fields.Date(
-        "CFDI Date To",
-        help="If the payroll period is different to the dates that must be show in the CFDI, please set here the date "
-        "to for the CFDI. If is empty, will be used the Date To.",
-    )
     l10n_mx_edi_payment_date_warning = fields.Char(
         "Payment Date Warning",
         compute="_compute_l10n_mx_edi_payment_date_warning",
@@ -41,7 +31,7 @@ class HrPayslipRun(models.Model):
     def _compute_l10n_mx_edi_payment_date_warning(self):
         for payslip_run in self.filtered(lambda p: p.l10n_mx_edi_payment_date):
             if not payslip_run.date_start <= payslip_run.l10n_mx_edi_payment_date <= payslip_run.date_end:
-                payslip_run.l10n_mx_edi_payment_date_warning = _(
+                payslip_run.l10n_mx_edi_payment_date_warning = self.env._(
                     "Please note that the payment date falls outside the payslip period. "
                     "Proceed only if this is expected."
                 )
@@ -51,7 +41,7 @@ class HrPayslipRun(models.Model):
     def action_payslips_done(self):
         self.ensure_one()
         if not self.env.user.has_group("l10n_mx_edi_payslip.allow_validate_payslip"):
-            raise UserError(_("Only Managers who are allow to Validate payslip can perform this operation"))
+            raise UserError(self.env._("Only Managers who are allow to Validate payslip can perform this operation"))
         # using search instead of filtered to keep performance in batch with many payslips
         payslips = self.slip_ids.search([("id", "in", self.slip_ids.ids), ("state", "=", "draft")])
         for payslip in payslips:
@@ -97,7 +87,7 @@ class HrPayslipRun(models.Model):
         for day in range((self.date_end - self.date_start).days + 1):
             weeks.append((self.date_start + timedelta(days=day)).isocalendar()[1])
         return {
-            "name": _("Overtimes"),
+            "name": self.env._("Overtimes"),
             "view_mode": "list,form",
             "res_model": "hr.payslip.overtime",
             "view_id": False,
@@ -113,7 +103,7 @@ class HrPayslipRun(models.Model):
     def _get_payslips_dispersion_report_name(self, bank_name=False):
         self.ensure_one()
         name = self.name.replace(" ", "_")
-        bank_name = bank_name.replace(" ", "_") if bank_name else _("Dispersions")
+        bank_name = bank_name.replace(" ", "_") if bank_name else self.env._("Dispersions")
         date = self.l10n_mx_edi_payment_date.strftime("%d_%m_%Y")
         return "%s_%s_%s" % (bank_name, date, name)
 
@@ -149,3 +139,97 @@ class HrPayslipRun(models.Model):
             writer.writerows(data)
             txt_result = output.getvalue()
         return txt_result
+
+    @api.model
+    def _get_generic_bank_dispersion(self, dispersion_type):
+        """Currently the dispersion file is created considering the specifications for Banamex."""
+        batch_name = self.name.upper()
+        payment_date = self.l10n_mx_edi_payment_date
+        first_line = [
+            "1000061264285",
+            str(payment_date.year)[-2:],
+            str(payment_date.month).zfill(2),
+            str(payment_date.day).zfill(2),
+            "0001",
+            self.company_id.name.upper()[:36].ljust(36),
+            batch_name[:20].ljust(20),
+            "15D01",
+        ]
+        amount_total = round(sum(self.slip_ids.mapped("net_wage")))
+        amount_total = f"{amount_total:.2f}".replace(".", "")
+        amount_total = amount_total[:18].zfill(18)
+        record_number = str(len(self.slip_ids))[:6].zfill(6)
+        second_line = [
+            "21001",
+            amount_total,
+            "0100000000006507368571",
+            record_number,
+        ]
+        data = [{"line": "".join(first_line)}, {"line": "".join(second_line)}]
+        for payslip in self.slip_ids:
+            bank_id = payslip.employee_id.bank_account_id.bank_id
+            amount = round(payslip.net_wage, 2)
+            amount = f"{amount:.2f}".replace(".", "").zfill(18)
+            bank_account = payslip.employee_id.bank_account_id.acc_number
+            employee = payslip.employee_id
+            employee_name = f"{employee.firstname},{employee.lastname}/{employee.lastname2}".upper()
+            name_from, name_to = "ÁÉÍÓÚÑ", "AEIOUN"
+            trans = str.maketrans(name_from, name_to)
+            employee_name = employee_name.translate(trans)[:55].ljust(55)
+
+            if bank_id and bank_id.name.upper() == dispersion_type.upper():
+                line_data = [
+                    "30",
+                    "001",
+                    "01001",
+                    amount,
+                    "01",
+                    bank_account[:20].zfill(20),
+                    batch_name[:16].ljust(16),
+                    employee_name,
+                    "".zfill(140),
+                    "0000",
+                    "00",
+                    "".ljust(152),
+                ]
+            else:
+                clabe = (
+                    payslip.employee_id.bank_account_id.l10n_mx_edi_clabe[:20]
+                    if payslip.employee_id.bank_account_id.l10n_mx_edi_clabe
+                    else "000"
+                )
+                line_data = [
+                    "30",
+                    "002",
+                    "01001",
+                    amount,
+                    "40",
+                    clabe.zfill(20),
+                    batch_name[:7].ljust(16),
+                    employee_name,
+                    "".zfill(140),
+                    f"0{clabe[:3]}",
+                    "00",
+                    "".ljust(152),
+                ]
+            data.append({"line": "".join(line_data)})
+        line_data = [
+            "4001",
+            record_number,
+            amount_total,
+            "000001",
+            amount_total,
+        ]
+        data.append({"line": "".join(line_data)})
+        if not data:
+            return []
+        csv.register_dialect("pipe_separator", delimiter="|", skipinitialspace=True)
+        output = StringIO()
+        writer = csv.DictWriter(output, dialect="pipe_separator", fieldnames=data[0].keys())
+        writer.writerows(data)
+        txt_result = output.getvalue().strip("\n").strip("\r")
+
+        name = self.env._("Dispersion")
+        date = payment_date.strftime("%d_%m_%Y")
+        file_name = f"{batch_name.replace(' ', '_')}_{date}_{name}"
+        return [(file_name, txt_result)]

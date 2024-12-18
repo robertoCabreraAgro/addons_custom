@@ -134,7 +134,7 @@ class HrEmployeeLoan(models.Model):
         for loan in self:
             lines = loan.loan_line_ids
             loan.loan_line_count = len(lines)
-            loan.amount_paid = sum(lines.filtered(lambda l: l.payslip_id.state == "done").mapped("amount"))
+            loan.amount_paid = sum(lines.filtered(lambda line: line.payslip_id.state == "done").mapped("amount"))
 
     @api.depends("total_amount", "amount_paid")
     def _compute_amount_remaining(self):
@@ -151,7 +151,7 @@ class HrEmployeeLoan(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_close_draft(self):
-        if self.filtered(lambda l: l.state not in ["close", "draft"]):
+        if self.filtered(lambda line: line.state not in ["close", "draft"]):
             raise UserError(_("Only loans on draft or close state could be removed."))
 
     def compute_sheet(self):
@@ -161,17 +161,17 @@ class HrEmployeeLoan(models.Model):
         1. Delete the old table.
         2. Get values list to create the lines, with its amount, date, and sequence.
         The sequence will be used by other methods to order and ensure were are using the correct loan line.
-        3. Call compute amount to make sure the accumulative and remaning amount is calculated correctly
+        3. Call compute amount to make sure the accumulative and remaining amount is calculated correctly
         before continue.
         """
         self.loan_line_ids.unlink()
 
-        records = self.filtered(lambda l: l.state in ["draft", "verify"] and not l._is_timeless())
+        records = self.filtered(lambda line: line.state in ["draft", "verify"] and not line._is_timeless())
         records.write({"state": "verify"})
         if not records:
             raise UserError(_("This option only could be used in draft/verify loans and with a positive payment term"))
 
-        for loan in self.filtered(lambda l: l.state in ["draft", "verify"] and not l._is_timeless()):
+        for loan in self.filtered(lambda line: line.state in ["draft", "verify"] and not line._is_timeless()):
             vals_list = []
             days = loan.employee_id.contract_id.hr_schedule_payment_id.days_to_pay or 0
             for num in range(loan.payment_term):
@@ -218,11 +218,11 @@ class HrEmployeeLoan(models.Model):
         manually, however this method will allow to rebuild automatically the loan considering the amount that
         are already deducted to help the user to adjust the loan.
         """
-        for loan in self.filtered(lambda l: not l._is_timeless()):
-            if loan.loan_line_ids and loan.loan_line_ids[-1].remaining_amount == 0:
+        for loan in self.filtered(lambda line: not line._is_timeless()):
+            if loan.loan_line_ids and not loan.loan_line_ids[-1].remaining_amount:
                 continue
 
-            loan.loan_line_ids.filtered(lambda l: not l.payslip_id).unlink()
+            loan.loan_line_ids.filtered(lambda line: not line.payslip_id).unlink()
             vals_list = []
             sequence = len(loan.loan_line_ids) + 1
             days = loan.employee_id.contract_id.hr_schedule_payment_id.days_to_pay or 0
@@ -260,9 +260,9 @@ class HrEmployeeLoan(models.Model):
             record.write({"state": "active", "error_message": False})
 
     def action_force_confirm(self):
-        if not self.env.user.has_group("hr_payroll_loan.allow_force_validate_loan"):
+        if not self.env.user.has_groups("hr_payroll_loan.allow_force_validate_loan"):
             raise UserError(_("Only Managers who are allow to force validate loans can perform this operation"))
-        loans = self.filtered(lambda l: l.state in ["unlocked", "verify"])
+        loans = self.filtered(lambda line: line.state in ["unlocked", "verify"])
         loans.write({"state": "active"})
 
     def action_close(self):
@@ -274,7 +274,6 @@ class HrEmployeeLoan(models.Model):
     def _inverse_total_amount(self):
         for record in self:
             if record._is_timeless():
-                record.amount = 0
                 continue
             record.amount = record.total_amount / (record.payment_term or 1)
 
@@ -286,19 +285,21 @@ class HrEmployeeLoan(models.Model):
         self.ensure_one()
         if not self.loan_line_ids:
             return self.browse()
-        return self.loan_line_ids.filtered(lambda l: not l.payslip_id.id).sorted(key=lambda l: l.sequence)[0]
+        return self.loan_line_ids.filtered(lambda line: not line.payslip_id.id).sorted(key=lambda line: line.sequence)[
+            0
+        ]
 
     def assign_payslip(self, payslip):
         """This method will assign a payslip to the loan, updating the loan lines with a new payment."""
         for input_type in self.mapped("input_type_id"):
             # Inputs are created with rule code but in lower and with a _ to split the code and number, ex: d_001
             input_code = input_type.code.upper().replace("_", "")
-            payslip_line = payslip.line_ids.filtered(lambda l: l.amount and l.code == input_code)
+            payslip_line = payslip.line_ids.filtered(lambda line: line.amount and line.code == input_code)
             if not payslip_line:
                 continue
 
             payslip_amount = abs(payslip_line.total)
-            loans = self.filtered(lambda l: l.input_type_id == input_type)
+            loans = self.filtered(lambda line: line.input_type_id == input_type)
             for loan in loans:
                 if payslip_amount <= 0:
                     continue
@@ -319,7 +320,7 @@ class HrEmployeeLoan(models.Model):
                     self.create_loan_line_fixed(payslip, payslip_line, loan, line_amount, loan_line)
 
     def create_loan_line_timeless(self, payslip, payslip_line, loan, line_amount):
-        last_line = loan.loan_line_ids.sorted(key=lambda l: l.sequence)[-1] if loan.loan_line_ids else False
+        last_line = loan.loan_line_ids.sorted(key=lambda line: line.sequence)[-1] if loan.loan_line_ids else False
         vals = {
             "payslip_line_id": payslip_line.id,
             "sequence": last_line.sequence + 1 if last_line else 1,
@@ -351,7 +352,10 @@ class HrEmployeeLoan(models.Model):
         If the loan is not complete and the next loan line is the last line, check if the loan will be
         correctly finished, if not, set the loan as unlocked and ask for user intervation."""
         self.ensure_one()
-        if not self.loan_line_ids.filtered(lambda l: not l.payslip_id) or self.payslips_count >= self.payment_term > 0:
+        if (
+            not self.loan_line_ids.filtered(lambda line: not line.payslip_id)
+            or self.payslips_count >= self.payment_term > 0
+        ):
             self.write({"state": "close"})
             return
         next_line = self.get_next_line()

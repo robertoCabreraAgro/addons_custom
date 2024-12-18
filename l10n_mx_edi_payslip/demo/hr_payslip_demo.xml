@@ -2,14 +2,67 @@
 <odoo noupdate="1">
 
     <record id="hr_payslip_mlc_cfdi0" model="hr.payslip">
-        <field name="name">Payroll Test CFDI</field>
+        <field name="name">Payroll Maria</field>
         <field name="employee_id" ref="mx_employee_qdp" />
         <field name="contract_id" ref="hr_contract_maria" />
         <field name="date_from" eval="time.strftime('%Y-%m')+'-1'" />
         <field name="date_to" eval="time.strftime('%Y-%m')+'-15'" />
         <field name="l10n_mx_edi_payment_date" eval="time.strftime('%Y-%m')+'-15'" />
+        <field name="payslip_run_id" ref="hr_payslip_run_test_demo" />
         <field name="struct_id" ref="payroll_structure_data_01" />
-        <field name="company_id" ref="l10n_mx.demo_company_mx" />
+        <field name="company_id" ref="base.demo_company_mx" />
+        <field name="l10n_mx_edi_source_resource">IP</field>
     </record>
+
+    <record id="hr_payslip_felix_demo" model="hr.payslip">
+        <field name="name">Payslip Felix</field>
+        <field name="employee_id" ref="mx_employee_felix" />
+        <field name="contract_id" ref="hr_contract_felix" />
+        <field name="date_from" eval="time.strftime('%Y-%m')+'-1'" />
+        <field name="date_to" eval="time.strftime('%Y-%m')+'-15'" />
+        <field name="l10n_mx_edi_payment_date" eval="time.strftime('%Y-%m')+'-15'" />
+        <field name="payslip_run_id" ref="hr_payslip_run_test_demo" />
+        <field name="struct_id" ref="payroll_structure_data_01" />
+        <field name="company_id" ref="base.demo_company_mx" />
+        <field name="l10n_mx_edi_source_resource">IP</field>
+    </record>
+
+    <record id="hr_payslip_berenice_demo" model="hr.payslip">
+        <field name="name">Payslip Berenice</field>
+        <field name="employee_id" ref="mx_employee_berenice" />
+        <field name="contract_id" ref="hr_contract_berenice" />
+        <field name="date_from" eval="time.strftime('%Y-%m')+'-1'" />
+        <field name="date_to" eval="time.strftime('%Y-%m')+'-15'" />
+        <field name="l10n_mx_edi_payment_date" eval="time.strftime('%Y-%m')+'-15'" />
+        <field name="payslip_run_id" ref="hr_payslip_run_test_demo" />
+        <field name="struct_id" ref="payroll_structure_data_01" />
+        <field name="company_id" ref="base.demo_company_mx" />
+        <field name="l10n_mx_edi_source_resource">IP</field>
+    </record>
+
+    <record id="hr_payslip_test_cesar_demo" model="hr.payslip">
+        <field name="name">Payslip Cesar</field>
+        <field name="employee_id" ref="mx_employee_cesar" />
+        <field name="contract_id" ref="hr_contract_cesar" />
+        <field name="date_from" eval="time.strftime('%Y-%m')+'-1'" />
+        <field name="date_to" eval="time.strftime('%Y-%m')+'-15'" />
+        <field name="l10n_mx_edi_payment_date" eval="time.strftime('%Y-%m')+'-15'" />
+        <field name="payslip_run_id" ref="hr_payslip_run_test_demo" />
+        <field name="struct_id" ref="payroll_structure_data_01" />
+        <field name="company_id" ref="base.demo_company_mx" />
+        <field name="l10n_mx_edi_source_resource">IP</field>
+    </record>
+
+    <function model="hr.payslip" name="compute_sheet" context="{'allowed_company_ids': [ref('base.demo_company_mx')]}">
+        <value
+            model="hr.payslip"
+            eval="[
+                ref('hr_payslip_mlc_cfdi0'),
+                ref('hr_payslip_felix_demo'),
+                ref('hr_payslip_berenice_demo'),
+                ref('hr_payslip_test_cesar_demo')
+            ]"
+        />
+    </function>
 
 </odoo>

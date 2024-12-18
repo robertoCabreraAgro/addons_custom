@@ -7,8 +7,11 @@
         <field name="inherit_id" ref="hr.view_employee_form" />
         <field name="arch" type="xml">
             <xpath expr="//div[@id='o_work_employee_main']/group[4]" position="after">
-                <group string="Payroll CFDI">
-                    <field name="ssnid" />
+                <group string="Payroll CFDI" invisible="company_country_code != 'MX'">
+                    <label for="l10n_mx_edi_imss_date" class="oe_inline" />
+                    <div class="o_row">
+                        <field name="l10n_mx_edi_imss_date" class="mw-50" />
+                    </div>
                     <field name="l10n_mx_edi_is_assimilated" />
                     <field name="l10n_mx_edi_syndicated" />
                     <field name="l10n_mx_edi_contract_regime_type" />
@@ -23,8 +26,7 @@
             </xpath>
             <xpath expr="//div[@name='div_km_home_work']" position="after">
                 <field name="l10n_mx_edi_medical_unit" />
-                <field name="l10n_mx_edi_type" />
-                <field name="l10n_mx_edi_contract_regime_type" />
+                <field name="l10n_mx_edi_type" invisible="company_country_code != 'MX'" />
             </xpath>
             <xpath expr="//field[@name='marital']/.." position="before">
                 <group string="Beneficiary" name="beneficiary">

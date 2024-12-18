@@ -12,7 +12,7 @@
         <field name="wage">22000</field>
         <field name="l10n_mx_edi_feeding">60</field>
         <field name="l10n_mx_edi_working_type">0</field>
-        <field name="company_id" ref="l10n_mx.demo_company_mx" />
+        <field name="company_id" ref="base.demo_company_mx" />
         <field name="resource_calendar_id" ref="l10n_mx_edi_payslip.resource_calendar_std" />
         <field name="state">open</field>
     </record>
@@ -28,7 +28,7 @@
         <field name="wage">22000</field>
         <field name="l10n_mx_edi_feeding">60</field>
         <field name="l10n_mx_edi_working_type">0</field>
-        <field name="company_id" ref="l10n_mx.demo_company_mx" />
+        <field name="company_id" ref="base.demo_company_mx" />
         <field name="resource_calendar_id" ref="l10n_mx_edi_payslip.resource_calendar_std" />
         <field name="state">open</field>
     </record>
@@ -44,7 +44,7 @@
         <field name="wage">25000</field>
         <field name="l10n_mx_edi_feeding">60</field>
         <field name="l10n_mx_edi_working_type">0</field>
-        <field name="company_id" ref="l10n_mx.demo_company_mx" />
+        <field name="company_id" ref="base.demo_company_mx" />
         <field name="resource_calendar_id" ref="l10n_mx_edi_payslip.resource_calendar_std" />
         <field name="state">open</field>
     </record>
@@ -60,7 +60,7 @@
         <field name="wage">12000</field>
         <field name="l10n_mx_edi_feeding">60</field>
         <field name="l10n_mx_edi_working_type">0</field>
-        <field name="company_id" ref="l10n_mx.demo_company_mx" />
+        <field name="company_id" ref="base.demo_company_mx" />
         <field name="resource_calendar_id" ref="l10n_mx_edi_payslip.resource_calendar_std" />
         <field name="state">open</field>
     </record>

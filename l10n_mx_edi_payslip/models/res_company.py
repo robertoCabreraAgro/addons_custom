@@ -76,6 +76,11 @@ class ResCompany(models.Model):
         help="If this option is checked, the social security fee will be subsidy by the "
         "company to the employees who receive the minimum wage.",
     )
+    l10n_mx_edi_subsidy_isr = fields.Boolean(
+        "Subsidy ISR?",
+        help="If this option is checked, the company will subsidize the ISR fee for employees earning the minimum "
+        "wage.",
+    )
     l10n_mx_edi_prorate_isr = fields.Boolean(
         "Prorate ISR on worked days?",
         help="If True, will to prorate the ISR and subsidy based on worked days.",
@@ -122,11 +127,11 @@ class ResCompany(models.Model):
         "Use LISR 174 on bonus?",
         help="If True, will be used the LISR 174 on bonus.",
     )
-    # l10n_mx_edi_isr_monthly = fields.Boolean(
-    #     "Get ISR with monthly table?",
-    #     help="If True, the ISR must be calculated based on the monthly table regardless of payment frequency. If False"
-    #     ", the table for the payment frequency will be used.",
-    # )
+    l10n_mx_edi_isr_monthly = fields.Boolean(
+        "Get ISR with monthly table?",
+        help="If True, the ISR must be calculated based on the monthly table regardless of payment frequency. If False"
+        ", the table for the payment frequency will be used.",
+    )
 
     def _compute_l10n_mx_edi_payslip_email(self):
         for record in self:

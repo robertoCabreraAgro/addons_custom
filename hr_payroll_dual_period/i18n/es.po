@@ -1,0 +1,175 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_payroll_dual_period
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-11-25 18:46+0000\n"
+"PO-Revision-Date: 2024-11-25 18:46+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: hr_payroll_dual_period
+#. odoo-python
+#: code:addons/hr_payroll_dual_period/models/hr_payslip.py:0
+msgid "%(start_date_string)s and %(end_date_string)s"
+msgstr "%(start_date_string)s y %(end_date_string)s"
+
+#. module: hr_payroll_dual_period
+#. odoo-python
+#: code:addons/hr_payroll_dual_period/models/hr_payslip.py:0
+msgid "1st semester of %s"
+msgstr "1er semestre de %s"
+
+#. module: hr_payroll_dual_period
+#. odoo-python
+#: code:addons/hr_payroll_dual_period/models/hr_payslip.py:0
+msgid "2nd semester of %s"
+msgstr "2do semestre de %s"
+
+#. module: hr_payroll_dual_period
+#: model_terms:ir.ui.view,arch_db:hr_payroll_dual_period.report_payslip
+msgid "<strong class=\"me-2\">Pay Period:</strong>"
+msgstr "<strong class=\"me-2\">Periodo de pago:</strong>"
+
+#. module: hr_payroll_dual_period
+#: model:ir.model,name:hr_payroll_dual_period.model_res_company
+msgid "Companies"
+msgstr "Empresas"
+
+#. module: hr_payroll_dual_period
+#: model:ir.model,name:hr_payroll_dual_period.model_res_config_settings
+msgid "Config Settings"
+msgstr "Ajustes de configuración"
+
+#. module: hr_payroll_dual_period
+#: model_terms:ir.ui.view,arch_db:hr_payroll_dual_period.res_config_settings_view_form
+msgid "Enable option to manage 2 periods for payroll."
+msgstr "Habilitar la opción de gestionar 2 periodos para nómina."
+
+#. module: hr_payroll_dual_period
+#: model_terms:ir.ui.view,arch_db:hr_payroll_dual_period.report_payslip
+msgid "End Date"
+msgstr "Fecha final"
+
+#. module: hr_payroll_dual_period
+#: model_terms:ir.ui.view,arch_db:hr_payroll_dual_period.report_payslip
+msgid "From"
+msgstr "Desde"
+
+#. module: hr_payroll_dual_period
+#: model:ir.model,name:hr_payroll_dual_period.model_hr_payslip_employees
+msgid "Generate payslips for all selected employees"
+msgstr "Generar los recibos de nómina para todos los empleados seleccionados"
+
+#. module: hr_payroll_dual_period
+#: model:ir.model.fields,help:hr_payroll_dual_period.field_hr_payslip__show_secondary_date_fields
+#: model:ir.model.fields,help:hr_payroll_dual_period.field_hr_payslip_run__show_secondary_date_fields
+#: model:ir.model.fields,help:hr_payroll_dual_period.field_res_company__show_secondary_date_fields
+#: model:ir.model.fields,help:hr_payroll_dual_period.field_res_config_settings__show_secondary_date_fields
+msgid ""
+"If checked, it will enable secondary fields for date from and date to in the"
+" slips and batches to allow manage a second period for payroll."
+msgstr ""
+"Si se marca esta opción, se habilitaran campos secundarios para la fecha de "
+"inicio y la fecha final en las nóminas y sus lotes para permitir manejar un "
+"segundo periodo para las nóminas."
+
+#. module: hr_payroll_dual_period
+#: model:ir.model.fields,help:hr_payroll_dual_period.field_hr_payslip__secondary_date_from
+#: model:ir.model.fields,help:hr_payroll_dual_period.field_hr_payslip_run__secondary_date_from
+msgid ""
+"If the payroll period is different to the dates that must be show in the "
+"PDF, please set here the real date from. If is empty, will be used the Date "
+"From."
+msgstr ""
+"Si el periodo de la nómina es diferente a las fechas que se deben mostrar en"
+" el PDF, por favor asigné aquí la fecha inicial real. Si esta vació, se "
+"utilizará la fecha inicial."
+
+#. module: hr_payroll_dual_period
+#: model:ir.model.fields,help:hr_payroll_dual_period.field_hr_payslip__secondary_date_to
+#: model:ir.model.fields,help:hr_payroll_dual_period.field_hr_payslip_run__secondary_date_to
+msgid ""
+"If the payroll period is different to the dates that must be show in the "
+"PDF, please set here the real date to. If is empty, will be used the Date "
+"To."
+msgstr ""
+"Si el periodo de la nómina es diferente a las fechas que se deben mostrar en"
+" el PDF, por favor asigné aquí la fecha final real. Si esta vació, se "
+"utilizará la fecha final."
+
+#. module: hr_payroll_dual_period
+#: model:ir.model,name:hr_payroll_dual_period.model_hr_payslip
+msgid "Pay Slip"
+msgstr "Recibo de nómina"
+
+#. module: hr_payroll_dual_period
+#: model:ir.model,name:hr_payroll_dual_period.model_hr_payslip_run
+msgid "Payslip Batches"
+msgstr "Lotes de recibos de nómina"
+
+#. module: hr_payroll_dual_period
+#. odoo-python
+#: code:addons/hr_payroll_dual_period/models/hr_payslip.py:0
+msgid "Quarter %(quarter)s of %(year)s"
+msgstr "Trimestre %(quarter)s de %(year)s"
+
+#. module: hr_payroll_dual_period
+#: model_terms:ir.ui.view,arch_db:hr_payroll_dual_period.hr_payslip_run_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll_dual_period.view_hr_payslip_form
+msgid "Second Period"
+msgstr "Segundo periodo"
+
+#. module: hr_payroll_dual_period
+#: model:ir.model.fields,field_description:hr_payroll_dual_period.field_hr_payslip__secondary_date_from
+#: model:ir.model.fields,field_description:hr_payroll_dual_period.field_hr_payslip_run__secondary_date_from
+msgid "Secondary Date From"
+msgstr "Fecha inicial secundaria"
+
+#. module: hr_payroll_dual_period
+#: model:ir.model.fields,field_description:hr_payroll_dual_period.field_hr_payslip__secondary_date_to
+#: model:ir.model.fields,field_description:hr_payroll_dual_period.field_hr_payslip_run__secondary_date_to
+msgid "Secondary Date To"
+msgstr "Fecha final secundaria"
+
+#. module: hr_payroll_dual_period
+#: model:ir.model.fields,field_description:hr_payroll_dual_period.field_hr_payslip__show_secondary_date_fields
+#: model:ir.model.fields,field_description:hr_payroll_dual_period.field_hr_payslip_run__show_secondary_date_fields
+#: model:ir.model.fields,field_description:hr_payroll_dual_period.field_res_company__show_secondary_date_fields
+#: model:ir.model.fields,field_description:hr_payroll_dual_period.field_res_config_settings__show_secondary_date_fields
+msgid "Show Secondary Date Fields"
+msgstr "Mostrar fechas secundarias"
+
+#. module: hr_payroll_dual_period
+#: model_terms:ir.ui.view,arch_db:hr_payroll_dual_period.res_config_settings_view_form
+msgid "Show Secondary Date Fields?"
+msgstr "¿Mostrar campos de fechas secundarias?"
+
+#. module: hr_payroll_dual_period
+#: model_terms:ir.ui.view,arch_db:hr_payroll_dual_period.report_payslip
+msgid "Start Date"
+msgstr "Fecha de inicio"
+
+#. module: hr_payroll_dual_period
+#: model_terms:ir.ui.view,arch_db:hr_payroll_dual_period.report_payslip
+msgid "To"
+msgstr "A"
+
+#. module: hr_payroll_dual_period
+#. odoo-python
+#: code:addons/hr_payroll_dual_period/models/hr_payslip.py:0
+msgid "Week %(week_number)s of %(year)s"
+msgstr "Semana %(week_number)s de %(year)s"
+
+#. module: hr_payroll_dual_period
+#. odoo-python
+#: code:addons/hr_payroll_dual_period/models/hr_payslip.py:0
+msgid "Weeks %(week)s and %(week1)s of %(year)s"
+msgstr "Semanas %(week)s y %(week1)s de %(year)s"

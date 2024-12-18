@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0+e\n"
+"Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-16 16:20+0000\n"
-"PO-Revision-Date: 2024-07-16 16:20+0000\n"
+"POT-Creation-Date: 2024-10-30 18:16+0000\n"
+"PO-Revision-Date: 2024-10-30 18:16+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -81,7 +81,6 @@ msgstr "Monto restante"
 #. module: hr_payroll_loan
 #. odoo-python
 #: code:addons/hr_payroll_loan/models/hr_employee_loan.py:0
-#, python-format
 msgid "An input type is required to continue."
 msgstr "Un tipo de entrada es requerido para continuar."
 
@@ -100,6 +99,11 @@ msgstr "Nº de archivos adjuntos"
 #: model:ir.model.fields,field_description:hr_payroll_loan.field_hr_payslip_input_type__use_in_loan
 msgid "Available for Loans"
 msgstr "Disponible para préstamos"
+
+#. module: hr_payroll_loan
+#: model_terms:ir.ui.view,arch_db:hr_payroll_loan.view_hr_employee_loan_form
+msgid "Close"
+msgstr "Cerrar"
 
 #. module: hr_payroll_loan
 #: model:ir.model.fields.selection,name:hr_payroll_loan.selection__hr_employee_loan__state__close
@@ -166,7 +170,6 @@ msgstr "Fecha Hasta"
 #. module: hr_payroll_loan
 #. odoo-python
 #: code:addons/hr_payroll_loan/models/hr_employee_loan.py:0
-#, python-format
 msgid "Define an employee to allow confirm"
 msgstr "Defina un empleado para poder confirmar"
 
@@ -432,7 +435,6 @@ msgstr "Nota del préstamo"
 #. module: hr_payroll_loan
 #. odoo-python
 #: code:addons/hr_payroll_loan/models/hr_employee_loan.py:0
-#, python-format
 msgid "Loan Payslips"
 msgstr "Nóminas con Préstamos"
 
@@ -499,6 +501,11 @@ msgid "Name"
 msgstr "Nombre"
 
 #. module: hr_payroll_loan
+#: model:ir.model.fields,field_description:hr_payroll_loan.field_hr_employee_loan__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Evento de calendario de la próxima actividad"
+
+#. module: hr_payroll_loan
 #: model:ir.model.fields,field_description:hr_payroll_loan.field_hr_employee_loan__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "Fecha límite para la próxima actividad"
@@ -553,7 +560,6 @@ msgstr "Número de mensajes con error de envío"
 #. module: hr_payroll_loan
 #. odoo-python
 #: code:addons/hr_payroll_loan/models/hr_employee_loan.py:0
-#, python-format
 msgid ""
 "Only Managers who are allow to force validate loans can perform this "
 "operation"
@@ -564,14 +570,12 @@ msgstr ""
 #. module: hr_payroll_loan
 #. odoo-python
 #: code:addons/hr_payroll_loan/models/hr_employee_loan_line.py:0
-#, python-format
 msgid "Only lines without payslip related could be removed."
 msgstr "Solo se pueden eliminar líneas sin nóminas relacionadas."
 
 #. module: hr_payroll_loan
 #. odoo-python
 #: code:addons/hr_payroll_loan/models/hr_employee_loan.py:0
-#, python-format
 msgid "Only loans on draft or close state could be removed."
 msgstr "Solo préstamos en borrador o cerrados pueden ser eliminados."
 
@@ -641,7 +645,6 @@ msgstr "Usuario Responsable"
 #. module: hr_payroll_loan
 #. odoo-python
 #: code:addons/hr_payroll_loan/models/hr_employee_loan.py:0
-#, python-format
 msgid "Review the loan amounts"
 msgstr "Revisar los montos del préstamo"
 
@@ -739,14 +742,12 @@ msgstr ""
 #. module: hr_payroll_loan
 #. odoo-python
 #: code:addons/hr_payroll_loan/models/hr_employee_loan.py:0
-#, python-format
 msgid "The amortization table is empty, it can not be validated"
 msgstr "La tabla de amortización esta vacía, no se puede validar"
 
 #. module: hr_payroll_loan
 #. odoo-python
 #: code:addons/hr_payroll_loan/models/hr_employee_loan.py:0
-#, python-format
 msgid "The amount is required to continue."
 msgstr "El monto es requerido para continuar."
 
@@ -758,7 +759,6 @@ msgstr "El monto asignado en el préstamo será deducido en cada nómina"
 #. module: hr_payroll_loan
 #. odoo-python
 #: code:addons/hr_payroll_loan/models/hr_employee_loan.py:0
-#, python-format
 msgid ""
 "The following loan lines will get a negative remaining amount, please review"
 " the loan amounts and make the necessary adjustments."
@@ -769,7 +769,6 @@ msgstr ""
 #. module: hr_payroll_loan
 #. odoo-python
 #: code:addons/hr_payroll_loan/models/hr_employee_loan.py:0
-#, python-format
 msgid ""
 "The loan is not fully paid or has excess payments, please review the table "
 "and make the necessary adjustments."
@@ -798,7 +797,6 @@ msgstr ""
 #. module: hr_payroll_loan
 #. odoo-python
 #: code:addons/hr_payroll_loan/models/hr_employee_loan.py:0
-#, python-format
 msgid ""
 "This option only could be used in draft/verify loans and with a positive "
 "payment term"
@@ -840,8 +838,3 @@ msgstr "Mensajes del sitio web"
 #: model:ir.model.fields,help:hr_payroll_loan.field_hr_employee_loan__website_message_ids
 msgid "Website communication history"
 msgstr "Historial de comunicaciones del sitio web"
-
-#. module: hr_payroll_loan
-#: model_terms:ir.ui.view,arch_db:hr_payroll_loan.view_hr_employee_loan_form
-msgid "close"
-msgstr "cerrar"

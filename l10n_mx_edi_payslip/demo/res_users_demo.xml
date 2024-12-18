@@ -6,8 +6,8 @@
         <field name="login">payroll_mx_manager</field>
         <field name="password">1234</field>
         <field name="email">payroll_mx_manager@yourcompany.com</field>
-        <field name="company_id" ref="l10n_mx.demo_company_mx" />
-        <field name="company_ids" eval="[Command.link(ref('l10n_mx.demo_company_mx'))]" />
+        <field name="company_id" ref="base.demo_company_mx" />
+        <field name="company_ids" eval="[Command.link(ref('base.demo_company_mx'))]" />
         <field name="tz">America/Mexico_City</field>
         <field
             name="groups_id"

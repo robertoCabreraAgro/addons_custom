@@ -6,7 +6,7 @@ class HrPayslip(models.Model):
 
     def _get_existing_lines(self, line_ids, line, account_id, debit, credit):
         if line.slip_id.company_id.not_global_entry:
-            return False
+            return iter([])
         return super()._get_existing_lines(line_ids, line, account_id, debit, credit)
 
     def _action_create_account_move(self):

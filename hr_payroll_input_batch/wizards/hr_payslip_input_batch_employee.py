@@ -1,7 +1,7 @@
 from odoo import fields, models
 
 
-class HrPayslipInputBatchEmployees(models.TransientModel):
+class HrPayslipInputBatchEmployee(models.TransientModel):
     _name = "hr.payslip.input.batch.employee"
     _description = "Generate payslip extras for all selected employees"
 

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="hr_payslip_run_form" model="ir.ui.view">
+        <field name="name">hr.payslip.run.form.inherith</field>
+        <field name="model">hr.payslip.run</field>
+        <field name="inherit_id" ref="hr_payroll.hr_payslip_run_form" />
+        <field name="arch" type="xml">
+            <xpath expr='//group/group' position="inside">
+                <field name="show_secondary_date_fields" invisible="1" />
+                <label for="secondary_date_from" string="Second Period" invisible="not show_secondary_date_fields" />
+                <div class="o_row" invisible="not show_secondary_date_fields">
+                    <field
+                        name="secondary_date_from"
+                        class="oe_inline o_hr_narrow_field"
+                        readonly="state != 'draft'"
+                    />
+ -                  <field name="secondary_date_to" class="oe_inline o_hr_narrow_field" readonly="state != 'draft'" />
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

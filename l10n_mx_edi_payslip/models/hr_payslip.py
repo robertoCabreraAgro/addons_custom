@@ -11,7 +11,7 @@ from pytz import timezone as pytz_timezone
 from zeep import Client
 from zeep.transports import Transport
 
-from odoo import Command, _, api, fields, models, tools
+from odoo import Command, api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import (
     DEFAULT_SERVER_DATETIME_FORMAT,
@@ -182,12 +182,6 @@ class HrPayslip(models.Model):
         "returned by PAC request when is stamped the CFDI, this attribute is "
         "used on report.",
     )
-    l10n_mx_edi_cfdi_certificate_id = fields.Many2one(
-        comodel_name="certificate.certificate",
-        string="Certificate",
-        compute="_compute_cfdi_values",
-        help="The certificate used during the generation of the cfdi.",
-    )
     l10n_mx_edi_origin = fields.Char(
         string="CFDI Origin",
         copy=False,
@@ -244,16 +238,6 @@ class HrPayslip(models.Model):
         help="It indicates that the payslip has been sent.",
     )
     input_line_ids = fields.One2many(copy=True)
-    l10n_mx_edi_date_from = fields.Date(
-        "CFDI Date From",
-        help="If the payroll period is different to the dates that must be show in the CFDI, please set here the date "
-        "from for the CFDI. If is empty, will be used the Date From.",
-    )
-    l10n_mx_edi_date_to = fields.Date(
-        "CFDI Date To",
-        help="If the payroll period is different to the dates that must be show in the CFDI, please set here the date "
-        "to for the CFDI. If is empty, will be used the Date To.",
-    )
     l10n_mx_edi_employer_registration_id = fields.Many2one(
         related="employee_id.l10n_mx_edi_employer_registration_id",
         store=True,
@@ -280,14 +264,14 @@ class HrPayslip(models.Model):
         for slip in self.filtered(
             lambda p: p.l10n_mx_edi_payment_date and not p.date_from <= p.l10n_mx_edi_payment_date <= p.date_to
         ):
-            date_warning = _(
+            date_warning = self.env._(
                 "Please note that the payment date falls outside the payslip period. Proceed only if "
                 "this is expected."
             )
             if slip.warning_message:
                 date_warning = "%s\n  ・ %s" % (slip.warning_message, date_warning)
             else:
-                date_warning = "%s\n  ・ %s" % (_("This payslip can be erroneous :"), date_warning)
+                date_warning = "%s\n  ・ %s" % (self.env._("This payslip can be erroneous :"), date_warning)
             slip.warning_message = date_warning
         return True
 
@@ -302,7 +286,6 @@ class HrPayslip(models.Model):
                 record.l10n_mx_edi_cfdi_supplier_rfc = ""
                 record.l10n_mx_edi_cfdi_customer_rfc = ""
                 record.l10n_mx_edi_cfdi_amount = 0
-                record.l10n_mx_edi_cfdi_certificate_id = False
                 continue
             # At this moment, the attachment contains the file size in its
             # 'datas' field because to save some memory, the attachment will
@@ -318,16 +301,11 @@ class HrPayslip(models.Model):
             record.l10n_mx_edi_cfdi_amount = tree.get("Total", tree.get("total"))
             record.l10n_mx_edi_cfdi_supplier_rfc = tree.Emisor.get("Rfc", tree.Emisor.get("rfc"))
             record.l10n_mx_edi_cfdi_customer_rfc = tree.Receptor.get("Rfc", tree.Receptor.get("rfc"))
-            record.l10n_mx_edi_cfdi_certificate_id = (
-                self.env["certificate.certificate"]
-                .sudo()
-                .search([("serial_number", "=", tree.get("NoCertificado", tree.get("noCertificado")))], limit=1)
-            )
 
     def compute_sheet(self):
         if self.filtered(lambda r: r.l10n_mx_edi_is_required()) and not self.env.company.l10n_mx_edi_minimum_wage:
             raise ValidationError(
-                _("Please, you set the minimum wage in Mexico to that you can calculate the payroll.")
+                self.env._("Please, you set the minimum wage in Mexico to that you can calculate the payroll.")
             )
         res = super().compute_sheet()
         for payslip in self.filtered(lambda slip: slip.state in ["draft", "verify"]):
@@ -366,8 +344,8 @@ class HrPayslip(models.Model):
         for day in range((self.date_to - self.date_from).days + 1):
             weeks.append((self.date_from + timedelta(days=day)).isocalendar()[1])
         return {
-            "name": _("Overtimes"),
-            "view_mode": "tree,form",
+            "name": self.env._("Overtimes"),
+            "view_mode": "list,form",
             "res_model": "hr.payslip.overtime",
             "view_id": False,
             "type": "ir.actions.act_window",
@@ -394,7 +372,7 @@ class HrPayslip(models.Model):
 
         if "signed" in to_cancel.mapped("l10n_mx_edi_pac_status"):
             raise UserError(
-                _(
+                self.env._(
                     "You have selected signed payslips. Please, use the option Request Edi Cancellation "
                     "instead directly cancelling the payslip"
                 )
@@ -419,7 +397,7 @@ class HrPayslip(models.Model):
         ctx["default_template_id"] = template.id or False
         ctx["default_composition_mode"] = "comment"
         return {
-            "name": _("Compose Email"),
+            "name": self.env._("Compose Email"),
             "type": "ir.actions.act_window",
             "view_mode": "form",
             "res_model": "mail.compose.message",
@@ -443,12 +421,12 @@ class HrPayslip(models.Model):
     def action_payslip_done(self):
         """Generates the cfdi attachments for mexican companies when validated."""
         if not self.env.user.has_group("l10n_mx_edi_payslip.allow_validate_payslip"):
-            raise UserError(_("Only Managers who are allow to validate payslip can perform this operation"))
+            raise UserError(self.env._("Only Managers who are allow to validate payslip can perform this operation"))
         result = super().action_payslip_done()
         version = self.l10n_mx_edi_get_pac_version()
         for record in self.filtered(lambda r: r.l10n_mx_edi_is_required()):
             if not record.net_wage and record.struct_id.type_id.l10n_mx_edi_type == "O":
-                record.message_post(body=_("Stamp process omitted because the Net Salary is 0."))
+                record.message_post(body=self.env._("Stamp process omitted because the Net Salary is 0."))
                 continue
             # Assign overtimes to avoid write in that records
             self.env["hr.payslip.overtime"].search(
@@ -510,7 +488,7 @@ class HrPayslip(models.Model):
         retirement_line_ids = perceptions.filtered(lambda line: line.salary_rule_id.l10n_mx_edi_code == "039")
         retirement_partial_ids = perceptions.filtered(lambda line: line.salary_rule_id.l10n_mx_edi_code == "044")
         if retirement_line_ids and retirement_partial_ids:
-            raise UserError(_("You have perceptions with code 039 and 044. You can only have one of them."))
+            raise UserError(self.env._("You have perceptions with code 039 and 044. You can only have one of them."))
         retirement_line_ids = retirement_line_ids or retirement_partial_ids
         total = round(sum(retirement_line_ids.mapped("total")), 2)
         if retirement_line_ids and total:
@@ -554,7 +532,7 @@ class HrPayslip(models.Model):
         # TODO - Same method that on invoice
         self.ensure_one()
         if not self.l10n_mx_edi_error:
-            self.l10n_mx_edi_error = _("Error during the process:")
+            self.l10n_mx_edi_error = self.env._("Error during the process:")
         self.l10n_mx_edi_error = "%s%s" % (self.l10n_mx_edi_error, message)
 
     @api.model
@@ -612,21 +590,21 @@ class HrPayslip(models.Model):
         """
         self.ensure_one()
         if xml_signed:
-            body_msg = _("The sign service has been called with success")
+            body_msg = self.env._("The sign service has been called with success")
             # Update the pac status
             self.l10n_mx_edi_pac_status = "signed"
             # Update the content of the attachment
             attachment_id = self.l10n_mx_edi_retrieve_last_attachment()
             attachment_id.write({"datas": xml_signed, "mimetype": "application/xml"})
-            post_msg = [_("The content of the attachment has been updated")]
+            post_msg = [self.env._("The content of the attachment has been updated")]
         else:
             self.l10n_mx_edi_pac_status = "retry"
-            body_msg = _("The sign service requested failed")
+            body_msg = self.env._("The sign service requested failed")
             post_msg = []
         if code:
-            post_msg.extend([_("Code: ") + str(code)])
+            post_msg.extend([self.env._("Code: ") + str(code)])
         if msg:
-            post_msg.extend([_("Message: ") + msg])
+            post_msg.extend([self.env._("Message: ") + msg])
 
         body = body_msg + create_list_html(post_msg)
         if xml_signed:
@@ -647,15 +625,15 @@ class HrPayslip(models.Model):
 
         self.ensure_one()
         if cancelled:
-            body_msg = _("The cancel service has been called with success")
+            body_msg = self.env._("The cancel service has been called with success")
             self.l10n_mx_edi_pac_status = "cancelled"
         else:
-            body_msg = _("The cancel service requested failed")
+            body_msg = self.env._("The cancel service requested failed")
         post_msg = []
         if code:
-            post_msg.extend([_("Code: ") + str(code)])
+            post_msg.extend([self.env._("Code: ") + str(code)])
         if msg:
-            post_msg.extend([_("Message: ") + msg])
+            post_msg.extend([self.env._("Message: ") + msg])
 
         body = body_msg + create_list_html(post_msg)
         if cancelled:
@@ -784,10 +762,10 @@ class HrPayslip(models.Model):
         password = pac_info["password"]
         for record in self:
             uuids = [record.l10n_mx_edi_cfdi_uuid]
-            certificate_id = record.sudo().l10n_mx_edi_cfdi_certificate_id
-            cer_pem = base64.encodebytes(certificate_id._get_pem_cer(certificate_id.content))
-            key_pem = base64.encodebytes(certificate_id._get_pem_key(certificate_id.key, certificate_id.password))
-            key_password = certificate_id.password
+            certificate = self._get_valid_certificate()
+            cer_pem = base64.b64decode(certificate.pem_certificate)
+            key_pem = base64.b64decode(certificate.private_key_id.pem_key)
+            key_password = certificate.password
             try:
                 transport = Transport(timeout=20)
                 client = Client(url, transport=transport)
@@ -859,10 +837,10 @@ class HrPayslip(models.Model):
         password = pac_info["password"]
         for record in self:
             uuid = record.l10n_mx_edi_cfdi_uuid
-            certificate_id = record.sudo().l10n_mx_edi_cfdi_certificate_id
             company_id = self.company_id or self.contract_id.company_id
-            cer_pem = certificate_id._get_pem_cer(certificate_id.content)
-            key_pem = certificate_id._get_pem_key(certificate_id.key, certificate_id.password)
+            certificate = self._get_valid_certificate()
+            cer_pem = certificate._get_pem_cer(certificate.content)
+            key_pem = certificate._get_pem_key(certificate.key, certificate.password)
             cancelled = False
             code = False
             cancellation_data = (record.l10n_mx_edi_cancellation or "").split("|")
@@ -895,16 +873,16 @@ class HrPayslip(models.Model):
             if not getattr(response, "Folios", None):
                 code = getattr(response, "CodEstatus", None)
                 msg = (
-                    _("Cancelling got an error")
+                    self.env._("Cancelling got an error")
                     if code
-                    else _("A delay of 2 hours has to be respected before to cancel")
+                    else self.env._("A delay of 2 hours has to be respected before to cancel")
                 )
             else:
                 code = getattr(response.Folios.Folio[0], "EstatusUUID", None)
                 cancelled = code in ("201", "202")  # cancelled or previously cancelled
                 # no show code and response message if cancel was success
                 code = "" if cancelled else code
-                msg = "" if cancelled else _("Cancelling got an error")
+                msg = "" if cancelled else self.env._("Cancelling got an error")
 
             if not cancelled:
                 record._l10n_mx_edi_post_cancel_process(cancelled, code, msg)
@@ -926,11 +904,11 @@ class HrPayslip(models.Model):
             )
             if not status or status == "None":
                 code = "SAT"
-                msg = _(
+                msg = self.env._(
                     "The PAC has sent this document to cancel, but the SAT has not processed it yet. "
                     "Please try again in a few minutes or wait for the automatic action. SAT status for "
                     "cancellation: %s",
-                    getattr(sat_status, "EsCancelable", _("Not defined")),
+                    getattr(sat_status, "EsCancelable", self.env._("Not defined")),
                 )
                 cancelled = False
 
@@ -990,11 +968,17 @@ class HrPayslip(models.Model):
         for record in records:
             if record.l10n_mx_edi_pac_status in ["to_sign", "retry"]:
                 record.l10n_mx_edi_pac_status = "cancelled"
-                record.message_post(body=_("The cancel service has been called with success"))
+                record.message_post(body=self.env._("The cancel service has been called with success"))
             else:
                 record.l10n_mx_edi_pac_status = "to_cancel"
         records = self.search([("l10n_mx_edi_pac_status", "=", "to_cancel"), ("id", "in", self.ids)])
         records._l10n_mx_edi_call_service("cancel")
+
+    def _get_valid_certificate(self):
+        """Get the valid certificate of the company"""
+        company_id = self.company_id or self.contract_id.company_id
+        certificate = company_id.sudo().l10n_mx_edi_certificate_ids.filtered("is_valid")[:1]
+        return certificate
 
     # -------------------------------------------------------------------------
     # Payslip methods
@@ -1006,12 +990,12 @@ class HrPayslip(models.Model):
         )
         # Ensure that cancellation case is defined
         if to_cancel.filtered(lambda p: not p.l10n_mx_edi_cancellation):
-            raise UserError(_("In order to allow cancel, please define the cancellation case."))
+            raise UserError(self.env._("In order to allow cancel, please define the cancellation case."))
         if to_cancel.filtered(lambda p: p.l10n_mx_edi_cancellation.split("|")[0] not in ["01", "02", "03", "04"]):
-            raise UserError(_("In order to allow cancel, please define a correct cancellation case."))
+            raise UserError(self.env._("In order to allow cancel, please define a correct cancellation case."))
         if to_cancel.mapped("move_id").filtered("posted_before"):
             raise UserError(
-                _(
+                self.env._(
                     "You have selected payslips whose journal entries are already validated or that were "
                     "validated. These payslips cannot be canceled, if you need to cancel just the CFDI, "
                     "please contact your administrator."
@@ -1047,7 +1031,7 @@ class HrPayslip(models.Model):
         # Adding payslip lines to account.move.line
         account_id = self._get_department_account(line, account_id)
         line_values = super()._prepare_line_values(line, account_id, date, debit, credit)
-        line_values["l10n_mx_edi_payslip_line_ids"] = [Command.set([line.id])]
+        line_values["l10n_mx_edi_payslip_line_ids"] = [Command.set(line.ids)]
         return line_values
 
     def _get_existing_lines(self, line_ids, line, account_id, debit, credit):
@@ -1055,8 +1039,11 @@ class HrPayslip(models.Model):
             return False
         account_id = self._get_department_account(line, account_id)
         existing_lines = super()._get_existing_lines(line_ids, line, account_id, debit, credit)
-        # if existing_lines:
-        #     existing_lines["l10n_mx_edi_payslip_line_ids"][0][2].append(line.id)
+        first_line = next(existing_lines, False)
+        if first_line:
+            remaining_lines = list(existing_lines)
+            existing_lines = [first_line] + remaining_lines
+            existing_lines[0]["l10n_mx_edi_payslip_line_ids"][0][2].append(line.id)
         return existing_lines
 
     @api.model
@@ -1111,7 +1098,7 @@ class HrPayslip(models.Model):
                     )
                 )
                 record.message_post(
-                    body=_("CFDI document generated (may be not signed)"),
+                    body=self.env._("CFDI document generated (may be not signed)"),
                     attachment_ids=[attach_id.id],
                 )
             else:
@@ -1210,7 +1197,7 @@ class HrPayslip(models.Model):
         self.ensure_one()
         employee = self.employee_id
         if not self.contract_id:
-            return {"error": _("Employee has not a contract and is required")}
+            return {"error": self.env._("Employee has not a contract and is required")}
         seniority = self.contract_id.get_seniority(date_to=self.date_to)["days"] / 7
         perceptions_data = self.get_cfdi_perceptions_data()
         payroll = {
@@ -1376,49 +1363,51 @@ class HrPayslip(models.Model):
         if values.get("error"):
             error_log.append(values.get("error"))
 
-        # -Check certificate
-        certificate_ids = company_id.sudo().l10n_mx_edi_certificate_ids
-        certificate_id = certificate_ids._get_valid_certificate()
-        if not certificate_id:
-            error_log.append(_("No valid certificate found"))
+        # - Check certificate
+        certificate = self._get_valid_certificate()
+        if not certificate:
+            error_log.append(self.env._("No valid certificate found."))
 
         # -Check PAC
         if pac_name:
             pac_test_env = company_id.sudo().l10n_mx_edi_pac_test_env
             pac_password = company_id.sudo().l10n_mx_edi_pac_password
             if not pac_test_env and not pac_password:
-                error_log.append(_("No PAC credentials specified."))
+                error_log.append(self.env._("No PAC credentials specified."))
         else:
-            error_log.append(_("No PAC specified."))
+            error_log.append(self.env._("No PAC specified."))
 
         if error_log:
             self.l10n_mx_edi_error_count = len(error_log)
-            return {"error": _("Please check your configuration: ") + create_list_html(error_log)}
+            return {"error": self.env._("Please check your configuration: ") + create_list_html(error_log)}
 
         # -----------------------
         # Create the EDI document
         # -----------------------
 
-        # -Compute certificate data
+        # - Compute certificate data
         time_payslip = fields.datetime.strptime(self.l10n_mx_edi_time_payslip, DEFAULT_SERVER_TIME_FORMAT).time()
-        values["date"] = fields.datetime.combine(
-            fields.Datetime.from_string(self.l10n_mx_edi_expedition_date), time_payslip
-        ).strftime("%Y-%m-%dT%H:%M:%S")
-        values["certificate_number"] = certificate_id.serial_number
-        # TODO: Check this temporal decode, Why in odoo V15 this method returns a Bytes object
-        values["certificate"] = certificate_id.sudo()._get_data()[0].decode("utf-8")
+        values.update(
+            {
+                "date": fields.datetime.combine(
+                    fields.Datetime.from_string(self.l10n_mx_edi_expedition_date), time_payslip
+                ).strftime("%Y-%m-%dT%H:%M:%S"),
+                "certificate_number": ("%x" % int(certificate.serial_number))[1::2],
+                "certificate": certificate.sudo()._get_der_certificate_bytes(formatting="base64").decode(),
+            }
+        )
 
-        # -Compute cfdi
+        # - Compute cfdi
         template = PAYSLIP_TEMPLATE_40
         xslt = CFDI_XSLT_CADENA_40
         cfdi = qweb._render(template, values=values)
 
-        # -Compute cadena
+        # - Compute cadena
         tree = self.l10n_mx_edi_get_xml_etree(cfdi)
         cadena = self.l10n_mx_edi_generate_cadena(xslt, tree)
 
         # Post append cadena
-        tree.attrib["Sello"] = certificate_id.sudo()._get_encrypted_cadena(cadena)
+        tree.attrib["Sello"] = certificate.sudo()._sign(cadena, formatting="base64")
 
         # Check with xsd
         attachment = self.env.ref("l10n_mx_edi.xsd_cached_cfdv40_xsd", False)
@@ -1430,7 +1419,9 @@ class HrPayslip(models.Model):
             except (OSError, ValueError):
                 _logger.info("The xsd file to validate the XML structure was not found.")
             except BaseException as e:
-                return {"error": (_("The cfdi generated is not valid") + create_list_html(str(e).split("\\n")))}
+                return {
+                    "error": (self.env._("The cfdi generated is not valid") + create_list_html(str(e).split("\\n")))
+                }
 
         return {"cfdi": etree.tostring(tree, pretty_print=True, xml_declaration=True, encoding="UTF-8")}
 
@@ -1896,6 +1887,10 @@ class HrPayslip(models.Model):
         date_time_mx = fields.datetime.strftime(date_time_mx, DEFAULT_SERVER_DATETIME_FORMAT)
 
         if not self.l10n_mx_edi_expedition_date:
+            if self.l10n_mx_edi_payment_date > l10n_mx_edi_expedition_date:
+                self.l10n_mx_edi_expedition_date = l10n_mx_edi_expedition_date
+                self.l10n_mx_edi_time_payslip = l10n_mx_edi_time_payslip
+                return False
             if l10n_mx_edi_expedition_date.month > self.l10n_mx_edi_payment_date.month:
                 l10n_mx_edi_expedition_date = fields.Date.from_string(
                     "%s-%s-01" % (l10n_mx_edi_expedition_date.year, l10n_mx_edi_expedition_date.month)
@@ -1931,3 +1926,12 @@ class HrPayslip(models.Model):
             self.l10n_mx_edi_time_payslip = l10n_mx_edi_time_payslip
             return True
         return False
+
+    def _get_inability_days(self, leave):
+        """Method to get the sum of the number of days from leaves into the payroll period."""
+        contract = self.contract_id
+        domain = [("work_entry_type_id", "=", leave.id)]
+        work_entry = self.env["hr.work.entry"].search(
+            contract._get_work_hours_domain(self.date_from, self.date_to, domain=domain, inside=True)
+        )
+        return sum(work_entry.mapped("leave_id.number_of_days"))

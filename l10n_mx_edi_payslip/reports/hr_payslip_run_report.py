@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.tools import groupby
 
 
@@ -27,8 +27,15 @@ class RayaListReport(models.AbstractModel):
             batch_obligations = []
             payslip_run_id = self.env["hr.payslip.run"].browse(row.get("payslip_run_id")[0])
             payslips = self.env["hr.payslip"].browse(row.get("payslip_ids"))
+            payslips = sorted(
+                payslips,
+                key=lambda p: p.employee_id.l10n_mx_edi_imss_date or p.employee_id.contract_id.date_start,
+                reverse=False,
+            )
             department_id = row.get("department_id", False)
-            department_name = department.browse(department_id[0]).name if department_id else _("Without Department")
+            department_name = (
+                department.browse(department_id[0]).name if department_id else self.env._("Without Department")
+            )
             data_perception_deduction = defaultdict(dict)
             employer_registration = row.get("l10n_mx_edi_employer_registration_id")
             employer_registration = (

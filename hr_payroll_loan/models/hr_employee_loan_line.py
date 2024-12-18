@@ -41,8 +41,8 @@ class HrEmployeeLoanLine(models.Model):
     @api.depends("loan_id.loan_line_ids")
     def _compute_cumulative_and_remaining_amount(self):
         for record in self:
-            lines = record.loan_id.loan_line_ids.sorted(key=lambda l: l.sequence).filtered(
-                lambda l: l.sequence < record.sequence
+            lines = record.loan_id.loan_line_ids.sorted(key=lambda line: line.sequence).filtered(
+                lambda line: line.sequence < record.sequence
             )
             record.cumulative_amount = record.amount + (lines[-1].cumulative_amount if lines else 0)
             if record.loan_id._is_timeless():
@@ -54,7 +54,7 @@ class HrEmployeeLoanLine(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_close_or_draft(self):
-        if self.filtered(lambda l: l.payslip_id and l.loan_id.state not in ["close", "draft"]):
+        if self.filtered(lambda line: line.payslip_id and line.loan_id.state not in ["close", "draft"]):
             raise UserError(_("Only lines without payslip related could be removed."))
 
     @api.model_create_multi

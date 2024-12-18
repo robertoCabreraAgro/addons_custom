@@ -7,5 +7,5 @@ class HrContract(models.Model):
     hr_schedule_payment_id = fields.Many2one(
         "hr.schedule.payment",
         string="Schedule Payment",
-        help="Schedule payment, according to its schedule pay",
+        help="Schedule payment according to the payment frequency.",
     )

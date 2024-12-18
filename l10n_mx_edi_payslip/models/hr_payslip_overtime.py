@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -41,4 +41,8 @@ class HrPayslipOvertime(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_except_state_done(self):
         if self.filtered(lambda o: o.payslip_id.state == "done"):
-            raise UserError(_("You cannot delete an overtime which payroll has been posted once."))
+            raise UserError(
+                self.env.self.env.self.env.self.env.self.env.self.env.self.env.self.env._(
+                    "You cannot delete an overtime which payroll has been posted once."
+                )
+            )

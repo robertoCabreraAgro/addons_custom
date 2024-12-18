@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
 
-    <template id='l10n_mx_edi_report_payslip' inherit_id="hr_payroll.report_payslip" priority="100">
+    <template id="report_payslip" inherit_id="hr_payroll.report_payslip">
         <xpath expr="//div[hasclass('page')]" position="before">
             <t t-set="company" t-value="o.company_id or o.contract_id.company_id" />
             <t t-if="not o.l10n_mx_edi_cfdi_uuid and o.l10n_mx_edi_is_required()">
@@ -17,247 +17,256 @@
                 <t t-set="tfd_original_string" t-value="o._get_l10n_mx_edi_cadena()" />
             </t>
         </xpath>
-        <xpath expr="//table[2]" position="attributes">
+        <xpath expr="//div[@id='wage']" position="attributes">
             <attribute name="t-if">not o.l10n_mx_edi_cfdi_uuid</attribute>
         </xpath>
-        <xpath expr="//table[@name='employee-infos']" position="attributes">
+        <xpath expr="//div[@id='infos_table']" position="attributes">
             <attribute name="t-if">not o.l10n_mx_edi_cfdi_uuid</attribute>
         </xpath>
-        <xpath expr="//div[@id='total']" position="attributes">
+        <xpath expr="//div[@id='worked_days_table']" position="attributes">
             <attribute name="t-if">not o.l10n_mx_edi_cfdi_uuid</attribute>
         </xpath>
-        <xpath expr="//table[@name='employee-infos']" position="before">
-            <table
-                name="mx-employee-infos"
-                class="table table-condensed table-bordered table-sm"
-                t-if="o.l10n_mx_edi_cfdi_uuid"
-                style="font-size:12px; margin-bottom:1px;"
-            >
-                <tr>
-                    <td>
-                        <strong>Name</strong><br />
-                        <strong>RFC</strong><br />
-                        <strong>CURP</strong><br />
-                        <strong>Start of Employment</strong><br />
-                        <strong>Working hours</strong><br />
-                        <strong>Payment Period</strong><br />
-                        <strong>NSS</strong><br />
-                    </td>
-                    <td>
-                        <span t-field="o.employee_id" /><br />
-                        <span t-out="xml.Receptor.get('Rfc', '')" /><br />
-                        <span t-out="payroll.Receptor.get('Curp', '')" /><br />
-                        <span t-out="payroll.Receptor.get('FechaInicioRelLaboral', '')" /><br />
-                        <span t-out="o.employee_id.get_working_date(whole_text=True)" /><br />
-                        <span
-                            t-out="'%s - %s' % (payroll.Receptor.get('PeriodicidadPago', ''), o.contract_id.l10n_mx_edi_schedule_pay_id.name)"
-                        /><br />
-                        <span t-out="payroll.Receptor.get('NumSeguridadSocial', '')" /><br />
-                    </td>
-                    <td>
-                        <strong>Period</strong><br />
-                        <strong>Designation</strong><br />
-                        <strong>Department</strong><br />
-                        <strong>Payment days</strong><br />
-                        <strong>Payment date</strong><br />
-                        <strong>Salary Integrated</strong><br />
-                        <strong>SBC</strong><br />
-                        <strong>Daily Wage</strong><br />
-                    </td>
-                    <td>
-                        <span t-out="'%s - %s' % (o.date_from, o.date_to)" /><br />
-                        <span t-field="o.employee_id.job_id" /><br />
-                        <span t-out="payroll.Receptor.get('Departamento', '')" /><br />
-                        <span t-out="payroll.get('NumDiasPagados', '')" /><br />
-                        <span t-out="payroll.get('FechaPago', '')" /><br />
-                        <span
-                            t-out="float(payroll.Receptor.get('SalarioDiarioIntegrado', '0.0'))"
-                            t-options='{"widget": "monetary", "display_currency": company.currency_id}'
-                        /><br />
-                        <span
-                            t-out="float(payroll.Receptor.get('SalarioBaseCotApor', '0.0'))"
-                            t-options='{"widget": "monetary", "display_currency": company.currency_id}'
-                        /><br />
-                        <span
-                            t-out="o.employee_id.contract_id.l10n_mx_edi_daily_wage"
-                            t-options='{"widget": "monetary", "display_currency": company.currency_id}'
-                        /><br />
-                    </td>
-                </tr>
-            </table>
-            <t t-if="o.l10n_mx_edi_cfdi_uuid">
-                <br />
-                <div class="row">
-                    <div class="col-7">
-                        <table class="table table-condensed table-sm" style="margin-bottom:1px;">
-                            <thead class="thead-light">
-                                <tr>
-                                    <th><strong>Perceptions</strong></th>
-                                </tr>
-                            </thead>
-                        </table>
-                        <table class="table" style="font-size:14px; margin-bottom:1px;">
-                            <thead>
-                                <tr>
-                                    <th style="width: 10%;">Type</th>
-                                    <th style="width: 10%;">Code</th>
-                                    <th style="width: 50%;">Concept</th>
-                                    <th class="text-right" style="width: 15%;">Taxed</th>
-                                    <th class="text-right" style="width: 15%;">Exempt</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr
-                                    t-foreach="[p for p in payroll.Percepciones.Percepcion if float(p.get('ImporteGravado')) > 0.0]"
-                                    t-as="perception"
-                                >
-                                    <td><span t-out="perception.get('TipoPercepcion', '')" /></td>
-                                    <td><span t-out="perception.get('Clave', '')" /></td>
-                                    <td><span t-out="perception.get('Concepto', '')" /></td>
-                                    <t t-set="amount" t-value="perception.get('ImporteGravado', '')" />
-                                    <td class="text-right"><span
-                                            t-out="float(amount)"
-                                            t-options='{"widget": "monetary", "display_currency": company.currency_id}'
-                                        /></td>
-                                    <td />
-                                </tr>
-                                <tr
-                                    t-foreach="[p for p in payroll.Percepciones.Percepcion if float(p.get('ImporteExento')) > 0.0]"
-                                    t-as="perception"
-                                >
-                                    <td><span t-out="perception.get('TipoPercepcion', '')" /></td>
-                                    <td><span t-out="perception.get('Clave', '')" /></td>
-                                    <td><span t-out="perception.get('Concepto', '')" /></td>
-                                    <t t-set="amount" t-value="perception.get('ImporteExento', '')" />
-                                    <td />
-                                    <td class="text-right"><span
-                                            t-out="float(amount)"
-                                            t-options='{"widget": "monetary", "display_currency": company.currency_id}'
-                                        /></td>
-                                </tr>
-                                <t
-                                    t-if="[a.tag for a in payroll.iterchildren('{http://www.sat.gob.mx/nomina12}OtrosPagos')]"
-                                >
-                                    <tr t-foreach="[p for p in payroll.OtrosPagos.OtroPago]" t-as="perception">
-                                        <td><span t-out="perception.get('TipoOtroPago', '')" /></td>
+
+        <xpath expr="//div[@id='infos_table']" position="before">
+            <div id="mx_employee_infos">
+                <table
+                    name="mx_employee_info"
+                    class="table table-condensed table-bordered table-sm"
+                    t-if="o.l10n_mx_edi_cfdi_uuid"
+                    style="font-size:12px; margin-bottom:1px;"
+                >
+                    <tr>
+                        <td>
+                            <strong>Name</strong><br />
+                            <strong>RFC</strong><br />
+                            <strong>CURP</strong><br />
+                            <strong>Start of Employment</strong><br />
+                            <strong>Working hours</strong><br />
+                            <strong>Payment Period</strong><br />
+                            <strong>NSS</strong><br />
+                        </td>
+                        <td>
+                            <span t-field="o.employee_id" /><br />
+                            <span t-out="xml.Receptor.get('Rfc', '')" /><br />
+                            <span t-out="payroll.Receptor.get('Curp', '')" /><br />
+                            <span t-out="payroll.Receptor.get('FechaInicioRelLaboral', '')" /><br />
+                            <span t-out="o.employee_id.get_working_date(whole_text=True)" /><br />
+                            <span
+                                t-out="'%s - %s' % (payroll.Receptor.get('PeriodicidadPago', ''), o.contract_id.l10n_mx_edi_schedule_pay_id.name)"
+                            /><br />
+                            <span t-out="payroll.Receptor.get('NumSeguridadSocial', '')" /><br />
+                        </td>
+                        <td>
+                            <strong>Period</strong><br />
+                            <strong>Job</strong><br />
+                            <strong>Department</strong><br />
+                            <strong>Payment days</strong><br />
+                            <strong>Payment date</strong><br />
+                            <strong>Salary Integrated</strong><br />
+                            <strong>SBC</strong><br />
+                            <strong>Daily Wage</strong><br />
+                        </td>
+                        <td>
+                            <span t-out="'%s - %s' % (o.date_from, o.date_to)" /><br />
+                            <span t-field="o.employee_id.job_id" /><br />
+                            <span t-out="payroll.Receptor.get('Departamento', '')" /><br />
+                            <span t-out="payroll.get('NumDiasPagados', '')" /><br />
+                            <span t-out="payroll.get('FechaPago', '')" /><br />
+                            <span
+                                t-out="float(payroll.Receptor.get('SalarioDiarioIntegrado', '0.0'))"
+                                t-options='{"widget": "monetary", "display_currency": company.currency_id}'
+                            /><br />
+                            <span
+                                t-out="float(payroll.Receptor.get('SalarioBaseCotApor', '0.0'))"
+                                t-options='{"widget": "monetary", "display_currency": company.currency_id}'
+                            /><br />
+                            <span
+                                t-out="o.employee_id.contract_id.l10n_mx_edi_daily_wage"
+                                t-options='{"widget": "monetary", "display_currency": company.currency_id}'
+                            /><br />
+                        </td>
+                    </tr>
+                </table>
+                <t t-if="o.l10n_mx_edi_cfdi_uuid">
+                    <br />
+                    <div class="row">
+                        <div class="col-7">
+                            <table class="table table-condensed table-sm" style="margin-bottom:1px;">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th><strong>Perceptions</strong></th>
+                                    </tr>
+                                </thead>
+                            </table>
+                            <table class="table" style="font-size:14px; margin-bottom:1px;">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 10%;">Type</th>
+                                        <th style="width: 10%;">Code</th>
+                                        <th style="width: 50%;">Concept</th>
+                                        <th class="text-right" style="width: 15%;">Taxed</th>
+                                        <th class="text-right" style="width: 15%;">Exempt</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr
+                                        t-foreach="[p for p in payroll.Percepciones.Percepcion if float(p.get('ImporteGravado')) > 0.0]"
+                                        t-as="perception"
+                                    >
+                                        <td><span t-out="perception.get('TipoPercepcion', '')" /></td>
                                         <td><span t-out="perception.get('Clave', '')" /></td>
                                         <td><span t-out="perception.get('Concepto', '')" /></td>
+                                        <t t-set="amount" t-value="perception.get('ImporteGravado', '')" />
+                                        <td class="text-right"><span
+                                                t-out="float(amount)"
+                                                t-options='{"widget": "monetary", "display_currency": company.currency_id}'
+                                            /></td>
+                                        <td />
+                                    </tr>
+                                    <tr
+                                        t-foreach="[p for p in payroll.Percepciones.Percepcion if float(p.get('ImporteExento')) > 0.0]"
+                                        t-as="perception"
+                                    >
+                                        <td><span t-out="perception.get('TipoPercepcion', '')" /></td>
+                                        <td><span t-out="perception.get('Clave', '')" /></td>
+                                        <td><span t-out="perception.get('Concepto', '')" /></td>
+                                        <t t-set="amount" t-value="perception.get('ImporteExento', '')" />
                                         <td />
                                         <td class="text-right"><span
-                                                t-out="float(perception.get('Importe', '0.0'))"
+                                                t-out="float(amount)"
                                                 t-options='{"widget": "monetary", "display_currency": company.currency_id}'
                                             /></td>
-
                                     </tr>
-                                </t>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="col-5">
-                        <table class="table table-condensed table-sm" style="margin-bottom:1px;">
-                            <thead class="thead-light">
-                                <tr>
-                                    <th><strong>Deductions</strong></th>
-                                </tr>
-                            </thead>
-                        </table>
-                        <t t-if="[a.tag for a in payroll.iterchildren('{http://www.sat.gob.mx/nomina12}Deducciones')]">
-                                <table class="table" style="font-size:14px; margin-bottom:1px;">
-                                    <thead>
-                                        <tr>
-                                            <th style="width: 10%;">Type</th>
-                                            <th style="width: 10%;">Code</th>
-                                            <th style="width: 60%;">Concept</th>
-                                            <th class="text-right" style="width: 20%;">Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr t-foreach="[d for d in payroll.Deducciones.Deduccion]" t-as="deduction">
-                                            <td><span t-out="deduction.get('TipoDeduccion', '')" /></td>
-                                            <td><span t-out="deduction.get('Clave', '')" /></td>
-                                            <td><span t-out="deduction.get('Concepto', '')" /></td>
+                                    <t
+                                        t-if="[a.tag for a in payroll.iterchildren('{http://www.sat.gob.mx/nomina12}OtrosPagos')]"
+                                    >
+                                        <tr t-foreach="[p for p in payroll.OtrosPagos.OtroPago]" t-as="perception">
+                                            <td><span t-out="perception.get('TipoOtroPago', '')" /></td>
+                                            <td><span t-out="perception.get('Clave', '')" /></td>
+                                            <td><span t-out="perception.get('Concepto', '')" /></td>
+                                            <td />
                                             <td class="text-right"><span
-                                                t-out="float(deduction.get('Importe', '0.0'))"
-                                                t-options='{"widget": "monetary", "display_currency": company.currency_id}'
-                                            /></td>
+                                                    t-out="float(perception.get('Importe', '0.0'))"
+                                                    t-options='{"widget": "monetary", "display_currency": company.currency_id}'
+                                                /></td>
+
                                         </tr>
-                                    </tbody>
-                                </table>
-                            </t>
-                    </div>
-                </div>
-                <!--Totals-->
-                <br />
-                <div class="row" style="margin-bottom:1px;">
-                    <div class="col-6">
-                        <div
-                            name="overtimes"
-                            style="padding-top:5px;"
-                            t-if="[p.HorasExtra for p in payroll.Percepciones.Percepcion if p.get('TipoPercepcion', '') == '019']"
-                        >
-                                    <strong><span style="font-size:14px;">Overtimes</span></strong>
-                                    <table class="table table-condensed table-sm">
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-5">
+                            <table class="table table-condensed table-sm" style="margin-bottom:1px;">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th><strong>Deductions</strong></th>
+                                    </tr>
+                                </thead>
+                            </table>
+                            <t
+                                t-if="[a.tag for a in payroll.iterchildren('{http://www.sat.gob.mx/nomina12}Deducciones')]"
+                            >
+                                    <table class="table" style="font-size:14px; margin-bottom:1px;">
                                         <thead>
-                                            <tr class="border-black" style="font-size:12px;">
-                                                <th style="width: 20%;">Days</th>
-                                                <th style="width: 20%;">Type</th>
-                                                <th style="width: 20%;">Hours</th>
-                                                <th style="width: 40%;">Amount</th>
+                                            <tr>
+                                                <th style="width: 10%;">Type</th>
+                                                <th style="width: 10%;">Code</th>
+                                                <th style="width: 60%;">Concept</th>
+                                                <th class="text-right" style="width: 20%;">Total</th>
                                             </tr>
                                         </thead>
-                                        <tbody style="font-size:9px;">
+                                        <tbody>
                                             <tr
-                                        t-foreach="[p.HorasExtra for p in payroll.Percepciones.Percepcion if p.get('TipoPercepcion', '') == '019']"
-                                        t-as="line"
-                                    >
-                                                <td><span t-out="line.get('Dias')" /></td>
-                                                <td><span
-                                                t-out="'Dobles' if line.get('TipoHoras') == '01' else 'Triples' if line.get('TipoHoras') == '02' else 'Simples'"
-                                            /></td>
-                                                <td><span t-out="line.get('HorasExtra')" /></td>
-                                                <td><span
-                                                t-out="float(line.get('ImportePagado'))"
-                                                t-options='{"widget": "monetary", "display_currency": company.currency_id}'
-                                            /></td>
+                                            t-foreach="[d for d in payroll.Deducciones.Deduccion]"
+                                            t-as="deduction"
+                                        >
+                                                <td><span t-out="deduction.get('TipoDeduccion', '')" /></td>
+                                                <td><span t-out="deduction.get('Clave', '')" /></td>
+                                                <td><span t-out="deduction.get('Concepto', '')" /></td>
+                                                <td class="text-right"><span
+                                                    t-out="float(deduction.get('Importe', '0.0'))"
+                                                    t-options='{"widget": "monetary", "display_currency": company.currency_id}'
+                                                /></td>
                                             </tr>
                                         </tbody>
                                     </table>
-                                </div>
-                            </div>
-                    <div id='total' class="col-6 clearfix">
-                        <table class="table table-condensed table-sm" style="margin-bottom:5px;">
-                            <tbody>
-                                <tr>
-                                    <td>Perceptions:</td>
-                                    <td class="text-right"><span
-                                            t-out="float(xml.get('SubTotal', '0.0'))"
-                                            t-options='{"widget": "monetary", "display_currency": company.currency_id}'
-                                        /></td>
-                                </tr>
-                                <tr>
-                                    <td>Deductions:</td>
-                                    <td class="text-right"><span
-                                            t-out="float(xml.get('Descuento', '0.0'))"
-                                            t-options='{"widget": "monetary", "display_currency": company.currency_id}'
-                                        /></td>
-                                </tr>
-                                <tr class="border-black  o_total">
-                                    <td><strong>Total/Net Salary:</strong></td>
-                                    <td class="text-right">
-                                        <strong><span
-                                                t-out="float(xml.get('Total', '0.0'))"
-                                                t-options='{"widget": "monetary", "display_currency": company.currency_id}'
-                                            /></strong>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-
+                                </t>
+                        </div>
                     </div>
-                </div>
-            </t>
+                    <!--Totals-->
+                    <br />
+                    <div class="row" style="margin-bottom:1px;">
+                        <div class="col-6">
+                            <div
+                                name="overtimes"
+                                style="padding-top:5px;"
+                                t-if="[p.HorasExtra for p in payroll.Percepciones.Percepcion if p.get('TipoPercepcion', '') == '019']"
+                            >
+                                        <strong><span style="font-size:14px;">Overtimes</span></strong>
+                                        <table class="table table-condensed table-sm">
+                                            <thead>
+                                                <tr class="border-black" style="font-size:12px;">
+                                                    <th style="width: 20%;">Days</th>
+                                                    <th style="width: 20%;">Type</th>
+                                                    <th style="width: 20%;">Hours</th>
+                                                    <th style="width: 40%;">Amount</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody style="font-size:9px;">
+                                                <tr
+                                            t-foreach="[p.HorasExtra for p in payroll.Percepciones.Percepcion if p.get('TipoPercepcion', '') == '019']"
+                                            t-as="line"
+                                        >
+                                                    <td><span t-out="line.get('Dias')" /></td>
+                                                    <td><span
+                                                    t-out="'Dobles' if line.get('TipoHoras') == '01' else 'Triples' if line.get('TipoHoras') == '02' else 'Simples'"
+                                                /></td>
+                                                    <td><span t-out="line.get('HorasExtra')" /></td>
+                                                    <td><span
+                                                    t-out="float(line.get('ImportePagado'))"
+                                                    t-options='{"widget": "monetary", "display_currency": company.currency_id}'
+                                                /></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                        <div id='total' class="col-6 clearfix">
+                            <table class="table table-condensed table-sm" style="margin-bottom:5px;">
+                                <tbody>
+                                    <tr>
+                                        <td>Perceptions:</td>
+                                        <td class="text-right"><span
+                                                t-out="float(xml.get('SubTotal', '0.0'))"
+                                                t-options='{"widget": "monetary", "display_currency": company.currency_id}'
+                                            /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Deductions:</td>
+                                        <td class="text-right"><span
+                                                t-out="float(xml.get('Descuento', '0.0'))"
+                                                t-options='{"widget": "monetary", "display_currency": company.currency_id}'
+                                            /></td>
+                                    </tr>
+                                    <tr class="border-black  o_total">
+                                        <td><strong>Total/Net Salary:</strong></td>
+                                        <td class="text-right">
+                                            <strong><span
+                                                    t-out="float(xml.get('Total', '0.0'))"
+                                                    t-options='{"widget": "monetary", "display_currency": company.currency_id}'
+                                                /></strong>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </t>
+            </div>
         </xpath>
-        <xpath expr="//table[@name='employee-infos']" position="after">
+
+        <xpath expr="//div[@id='infos_table']" position="after">
             <t t-if="o.l10n_mx_edi_cfdi_uuid">
                 <div class="row" id='complement'>
                     <div class="barcode col-3">
@@ -324,14 +333,17 @@
                 </div>
             </t>
         </xpath>
-        <xpath expr="//p[contains(@t-if, 'o.net_wage &gt;= 0')]" position="replace">
-            <p t-if="o.net_wage &gt;= 0" />
+        <xpath expr="//div[@id='to_pay']" position="attributes">
+            <attribute name="t-if">False</attribute>
         </xpath>
-        <xpath expr="//p[contains(@t-if, 'o.net_wage &lt; 0')]" position="replace">
-            <p t-if="o.net_wage &lt; 0" />
+        <xpath expr="//h2[@id='payslip_name']" position="attributes">
+            <attribute name="t-if">False</attribute>
         </xpath>
-        <xpath expr="//div[hasclass('page')]/h2[1]" position="replace" />
+        <xpath expr="//div[@id='payslip_lines_table']" position="attributes">
+            <attribute name="t-if">False</attribute>
+        </xpath>
     </template>
+
     <template id="report_payslip_document_details_by_rule">
         <t t-call="web.external_layout">
             <div class="page">

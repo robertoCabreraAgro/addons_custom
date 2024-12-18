@@ -17,6 +17,8 @@ class TestEmployeeLoan(TransactionCase):
         cls.contract.state = "open"
         cls.struct_id = cls.env.ref("hr_payroll.structure_worker_001")
         cls.loan_id = cls.env.ref("hr_payroll_loan.life_ensurance_demo")
+        cls.leave = cls.env.ref("hr_holidays.hr_holidays_sl_qdp")
+        cls.leave.action_refuse()
         cls.prepare_account_settings()
 
     @classmethod
@@ -35,7 +37,7 @@ class TestEmployeeLoan(TransactionCase):
                 "code": "601.08.01",
                 "name": "Payroll Expense",
                 "account_type": "expense",
-                "company_id": cls.contract.company_id.id,
+                "company_ids": [Command.link(cls.contract.company_id.id)],
             }
         )
         cls.struct_id.journal_id = cls.journal_id
@@ -70,7 +72,7 @@ class TestEmployeeLoan(TransactionCase):
         self.assertEqual(self.loan_id.payslips_count, 1, "Payslip not applied in the loan.")
         self.assertEqual(self.employee.loan_count, 1, "Loan not found.")
 
-        loan_line = payroll.line_ids.filtered(lambda l: l.code == "LED" and l.amount)
+        loan_line = payroll.line_ids.filtered(lambda line: line.code == "LED" and line.amount)
         self.assertEqual(
             len(loan_line),
             1,
@@ -115,11 +117,11 @@ class TestEmployeeLoan(TransactionCase):
         payroll.action_payslip_done()
         self.assertEqual(self.employee.loan_count, 3, "The employee must have 3 loans")
 
-        loan_line = payroll.line_ids.filtered(lambda l: l.code == "LED" and l.amount)
+        loan_line = payroll.line_ids.filtered(lambda line: line.code == "LED" and line.amount)
         self.assertEqual(len(loan_line), 1, "There should be just one loan line in the payslip")
         self.assertEqual(loan_line.amount, 1800, "The line amount must be the same than the amount in the loan")
 
-        loan_car_line = payroll.line_ids.filtered(lambda l: l.code == "CLD" and l.amount)
+        loan_car_line = payroll.line_ids.filtered(lambda line: line.code == "CLD" and line.amount)
         self.assertEqual(len(loan_car_line), 1, "There should be just one loan CLD line in the payslip")
         self.assertEqual(
             loan_car_line.amount,
@@ -141,35 +143,35 @@ class TestEmployeeLoan(TransactionCase):
         payroll = self.create_payroll()
         # Inactive Loan, at this point the loan is not confirmed and should not be called
         payroll.compute_sheet()
-        loan_line = payroll.line_ids.filtered(lambda l: l.code == "LED" and l.amount)
+        loan_line = payroll.line_ids.filtered(lambda line: line.code == "LED" and line.amount)
         self.assertFalse(loan_line, "The payslip shouldn't have loan line with amount")
         self.loan_id.compute_sheet()
         self.assertEqual(self.loan_id.state, "verify")
-        loan_line = payroll.line_ids.filtered(lambda l: l.code == "LED" and l.amount)
+        loan_line = payroll.line_ids.filtered(lambda line: line.code == "LED" and line.amount)
         self.assertFalse(loan_line, "The payslip shouldn't have loan line with amount")
         # Now Confirm
         self.loan_id.action_confirm()
         self.assertEqual(self.loan_id.state, "active")
         payroll.compute_sheet()
-        loan_line = payroll.line_ids.filtered(lambda l: l.code == "LED" and l.amount)
+        loan_line = payroll.line_ids.filtered(lambda line: line.code == "LED" and line.amount)
         self.assertTrue(loan_line, "The payslip should have loan line with amount")
         # Now set in edition mode
         self.loan_id.action_unlocked()
         self.assertEqual(self.loan_id.state, "unlocked")
         payroll.compute_sheet()
-        loan_line = payroll.line_ids.filtered(lambda l: l.code == "LED" and l.amount)
+        loan_line = payroll.line_ids.filtered(lambda line: line.code == "LED" and line.amount)
         self.assertFalse(loan_line, "The payslip shouldn't have loan line with amount")
         # Come back to active
         self.loan_id.action_confirm()
         payroll.compute_sheet()
-        loan_line = payroll.line_ids.filtered(lambda l: l.code == "LED" and l.amount)
+        loan_line = payroll.line_ids.filtered(lambda line: line.code == "LED" and line.amount)
         self.assertTrue(loan_line, "The payslip must have a loan line")
         # Date, period out of payslip period
         month = payroll.date_from.month
         self.loan_id.date_from = payroll.date_from.replace(month=month - 1)
         self.loan_id.date_to = payroll.date_to.replace(month=month - 1)
         payroll.compute_sheet()
-        loan_line = payroll.line_ids.filtered(lambda l: l.code == "LED" and l.amount)
+        loan_line = payroll.line_ids.filtered(lambda line: line.code == "LED" and line.amount)
         self.assertFalse(loan_line, "There shouldn't be any loan line in the payslip")
 
     def test_004_loan_count(self):
@@ -194,45 +196,48 @@ class TestEmployeeLoan(TransactionCase):
         loan directly and when the payslips are confirmed, the line should be created.
         """
         loan_amount = 1500.00
-        self.loan_id.write(
-            {
-                "amount": loan_amount,
-                "payment_term": -1,
-            }
-        )
-        self.assertEqual(self.loan_id.state, "draft")
-        self.assertFalse(self.loan_id.loan_line_ids, "This option should not generate table")
-        self.loan_id.action_confirm()
-        self.assertEqual(self.loan_id.state, "active")
+        loan = Form(self.env[self.loan_id._name])
+        loan.name = "Loan X"
+        loan.input_type_id = self.loan_id.input_type_id
+        loan.amount = loan_amount
+        loan.payment_term = -1
+        loan.employee_id = self.loan_id.employee_id
+        loan.date_from = self.loan_id.date_from
+        loan = loan.save()
+        self.assertEqual(loan.amount, loan_amount, "Loan amount not saved correctly.")
+        self.assertEqual(loan.state, "draft")
+        self.assertFalse(loan.loan_line_ids, "This option should not generate table")
+        loan.action_confirm()
+        self.assertEqual(loan.state, "active")
         payroll = self.create_payroll()
         payroll.compute_sheet()
-        payslip_loan_line = payroll.line_ids.filtered(lambda l: l.code == "LED")
+        payslip_loan_line = payroll.line_ids.filtered(lambda line: line.code == "LED")
         self.assertEqual(payslip_loan_line.total, loan_amount)
         payroll.action_payslip_done()
-        self.assertEqual(len(self.loan_id.loan_line_ids), 1, "Now there should be just one line in the loan")
-        loan_line = self.loan_id.loan_line_ids
+        self.assertEqual(len(loan.loan_line_ids), 1, "Now there should be just one line in the loan")
+        loan_line = loan.loan_line_ids
         self.assertEqual(loan_line.amount, loan_amount)
         self.assertEqual(loan_line.cumulative_amount, loan_amount)
         self.assertEqual(loan_line.remaining_amount, 0)
         # Second Payslip
         payroll = self.create_payroll()
         payroll.compute_sheet()
-        payslip_loan_line = payroll.line_ids.filtered(lambda l: l.code == "LED")
+        payslip_loan_line = payroll.line_ids.filtered(lambda line: line.code == "LED")
         self.assertEqual(payslip_loan_line.total, loan_amount)
         payroll.action_payslip_done()
-        self.assertEqual(len(self.loan_id.loan_line_ids), 2, "Now there should two lines in the loan")
-        loan_line = self.loan_id.loan_line_ids[-1]
+        self.assertEqual(len(loan.loan_line_ids), 2, "Now there should two lines in the loan")
+        loan_line = loan.loan_line_ids[-1]
         self.assertEqual(loan_line.amount, loan_amount)
         self.assertEqual(loan_line.cumulative_amount, loan_amount * 2)
         self.assertEqual(loan_line.remaining_amount, 0)
         # Third Payslip, changing for any reason the amount but in the payslip
         payroll = self.create_payroll()
         payroll.compute_sheet()
-        payslip_loan_line = payroll.line_ids.filtered(lambda l: l.code == "LED")
+        payslip_loan_line = payroll.line_ids.filtered(lambda line: line.code == "LED")
         payslip_loan_line.write({"amount": loan_amount + 500, "total": loan_amount + 500})
         payroll.action_payslip_done()
-        self.assertEqual(len(self.loan_id.loan_line_ids), 3, "Now there should be three lines in the loan")
-        loan_line = self.loan_id.loan_line_ids[-1]
+        self.assertEqual(len(loan.loan_line_ids), 3, "Now there should be three lines in the loan")
+        loan_line = loan.loan_line_ids[-1]
         self.assertEqual(
             loan_line.amount,
             payslip_loan_line.total,
@@ -258,7 +263,7 @@ class TestEmployeeLoan(TransactionCase):
 
         # Table check
         self.assertEqual(len(self.loan_id.loan_line_ids), payment_term, "The table should be the same as the term")
-        lines = self.loan_id.loan_line_ids.filtered(lambda l: l.amount != loan_amount)
+        lines = self.loan_id.loan_line_ids.filtered(lambda line: line.amount != loan_amount)
         self.assertFalse(lines, "All lines should have the same amount")
         self.assertEqual(self.loan_id.total_amount, loan_amount * payment_term, "The loan total amount is incorrect")
         # Amount check
@@ -273,7 +278,7 @@ class TestEmployeeLoan(TransactionCase):
         # Create payroll
         payroll = self.create_payroll()
         payroll.compute_sheet()
-        payslip_loan_line = payroll.line_ids.filtered(lambda l: l.code == "LED")
+        payslip_loan_line = payroll.line_ids.filtered(lambda line: line.code == "LED")
         self.assertEqual(payslip_loan_line.total, loan_amount)
         payroll.action_payslip_done()
         # Now check the loan after the payslip confirm
@@ -286,7 +291,7 @@ class TestEmployeeLoan(TransactionCase):
         # Second Payslip
         payroll = self.create_payroll()
         payroll.compute_sheet()
-        payslip_loan_line = payroll.line_ids.filtered(lambda l: l.code == "LED")
+        payslip_loan_line = payroll.line_ids.filtered(lambda line: line.code == "LED")
         self.assertEqual(payslip_loan_line.total, loan_amount)
         payroll.action_payslip_done()
         loan_line = self.loan_id.loan_line_ids.filtered("payslip_id")
@@ -298,7 +303,7 @@ class TestEmployeeLoan(TransactionCase):
         # Third Payslip, changing for any reason the amount but in the payslip
         payroll = self.create_payroll()
         payroll.compute_sheet()
-        payslip_loan_line = payroll.line_ids.filtered(lambda l: l.code == "LED")
+        payslip_loan_line = payroll.line_ids.filtered(lambda line: line.code == "LED")
         payslip_loan_line.write({"amount": loan_amount + 500, "total": loan_amount + 500})
         payroll.action_payslip_done()
         loan_line = self.loan_id.loan_line_ids.filtered("payslip_id")
@@ -345,7 +350,7 @@ class TestEmployeeLoan(TransactionCase):
         # Second Payslip, changing for any reason the amount but in the payslip
         payroll = self.create_payroll()
         payroll.compute_sheet()
-        payslip_loan_line = payroll.line_ids.filtered(lambda l: l.code == "LED")
+        payslip_loan_line = payroll.line_ids.filtered(lambda line: line.code == "LED")
         payslip_loan_line.write({"amount": loan_amount + 500, "total": loan_amount + 500})
         payroll.action_payslip_done()
 
@@ -402,7 +407,7 @@ class TestEmployeeLoan(TransactionCase):
         # For any reason the loan were not apply on payslip, maybe was not time to be paid
         payroll = self.create_payroll()
         payroll.compute_sheet()
-        payslip_loan_line = payroll.line_ids.filtered(lambda l: l.code == "LED")
+        payslip_loan_line = payroll.line_ids.filtered(lambda line: line.code == "LED")
         self.assertTrue(payslip_loan_line, "Payslip Line off the loan were not found")
         # Force value as 0, but could be 0 for more reasons
         payslip_loan_line.write({"amount": 0, "total": 0})

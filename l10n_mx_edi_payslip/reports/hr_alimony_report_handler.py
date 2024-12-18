@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 
 
@@ -24,7 +24,7 @@ class HrAlimonyReportHandler(models.AbstractModel):
     def _get_report_name(self):
         company = self.env.company
         vat = company.vat or ""
-        return _("Alimony_%(vat)s_%(date)s", vat=vat, date=fields.date.today().strftime("%Y%m"))
+        return self.env._("Alimony_%(vat)s_%(date)s", vat=vat, date=fields.date.today().strftime("%Y%m"))
 
     @api.model
     def _get_lines(self, options, line_id=None):
@@ -86,7 +86,7 @@ class HrAlimonyReportHandler(models.AbstractModel):
 
                 line_columns = [
                     {"employee_code": employee.barcode or employee.id},
-                    {"vat": employee.l10n_mx_edi_private_vat},
+                    {"vat": employee.l10n_mx_rfc},
                     {"payment_date": fields.datetime.strftime(slip.l10n_mx_edi_payment_date, "%d-%m-%Y")},
                     {
                         "total_perceptions": sum(
@@ -138,7 +138,7 @@ class HrAlimonyReportHandler(models.AbstractModel):
             {
                 "id": "totals",
                 "type": "line",
-                "name": _("Total"),
+                "name": self.env._("Total"),
                 "level": 0,
                 "class": "hierarchy_total",
                 "columns": total_columns,

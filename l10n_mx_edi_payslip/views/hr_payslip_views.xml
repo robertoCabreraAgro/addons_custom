@@ -4,7 +4,6 @@
     <record id="hr_payslip_l10n_mx_edi_error_list" model="ir.ui.view">
         <field name="name">view.hr.payslip.list.l10n_mx_edi_error</field>
         <field name="model">hr.payslip</field>
-        <field name="type">list</field>
         <field name="arch" type="xml">
             <list>
                 <field name="number" decoration-bf="1" />
@@ -85,7 +84,7 @@
                     string="ISR Calculation Audit"
                 />
             </xpath>
-            <xpath expr="//field[@name='has_refund_slip']" position="after">
+            <xpath expr="//field[@name='date_from']/.." position="after">
                 <label
                     for="l10n_mx_edi_pac_status"
                     invisible="not l10n_mx_edi_pac_status or state not in ['verify', 'done', 'cancel']"
@@ -124,16 +123,10 @@
                         invisible="not l10n_mx_edi_pac_status or state not in ['verify', 'done', 'cancel']"
                     />
                 </div>
-                <label
-                    for="l10n_mx_edi_cfdi_uuid"
+                <field
+                    name="l10n_mx_edi_cfdi_uuid"
                     invisible="not l10n_mx_edi_pac_status or state not in ['verify', 'done', 'cancel']"
                 />
-                <div class="o_row">
-                    <field
-                        name="l10n_mx_edi_cfdi_uuid"
-                        invisible="not l10n_mx_edi_pac_status or state not in ['verify', 'done', 'cancel']"
-                    />
-                </div>
                 <field
                     name="l10n_mx_edi_origin"
                     invisible="not l10n_mx_edi_pac_status and (not l10n_mx_edi_origin or state != 'draft')"
@@ -144,27 +137,15 @@
                 />
                 <field name="l10n_mx_edi_cancel_payslip_id" invisible="not l10n_mx_edi_cancel_payslip_id" />
             </xpath>
-            <xpath expr="//field[@name='date_from']//.." position="attributes">
-                <attribute name="class">o_row</attribute>
-            </xpath>
             <xpath expr="//field[@name='contract_id']" position="before">
-                <field name="l10n_mx_edi_payment_date" readonly="state not in ['draft', 'verify']" />
-                <label for="l10n_mx_edi_date_from" string="CFDI Period" />
-                <div class="o_row">
-                    <field
-                        name="l10n_mx_edi_date_from"
-                        class="oe_inline"
-                        readonly="state not in ['draft', 'verify']"
-                    />
- -                    <field
-                        name="l10n_mx_edi_date_to"
-                        class="oe_inline"
-                        readonly="state not in ['draft', 'verify']"
-                    />
-                </div>
+                <field
+                    name="l10n_mx_edi_payment_date"
+                    readonly="state not in ['draft', 'verify']"
+                    invisible="country_code != 'MX'"
+                />
             </xpath>
             <xpath expr='//notebook' position="inside">
-                <page string="Technical CFDI Information" name="cfdi">
+                <page string="Technical CFDI Information" name="cfdi" invisible="country_code != 'MX'">
                     <separator string="Retirement / Indemnity" />
                     <field name="l10n_mx_edi_extra_node_ids" nolabel="1">
                         <list editable="bottom">
@@ -283,7 +264,6 @@
     <record id="view_hr_payslip_tree" model="ir.ui.view">
         <field name="name">view.hr.payslip.list.inherit</field>
         <field name="model">hr.payslip</field>
-        <field name="type">list</field>
         <field name="inherit_id" ref="hr_payroll.view_hr_payslip_tree" />
         <field name="arch" type="xml">
             <xpath expr="/list/field[@name='state']" position="after">

@@ -132,6 +132,13 @@ class HrEmployee(models.Model):
         "if an attendance is not registered and the employee must work that day, must be reduce that day from the "
         "salary.",
     )
+    l10n_mx_edi_imss_date = fields.Date(
+        "IMSS Date",
+        tracking=True,
+        help="If the IMSS date is different to the contract start date, set here the IMSS registration date, this "
+        "value will be used on SBC amount. If the registration date is the same that the contract start date, then "
+        "this could be empty.",
+    )
 
     @api.depends("l10n_mx_edi_alimony_ids")
     def _compute_l10n_mx_edi_alimony_count(self):

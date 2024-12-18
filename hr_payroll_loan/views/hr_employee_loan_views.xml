@@ -41,7 +41,7 @@
                         invisible="payment_term &lt;= 0 or state not in ['unlocked']"
                     />
                     <button
-                        string="close"
+                        string="Close"
                         name="action_close"
                         type="object"
                         invisible="state not in ['draft', 'verify', 'active', 'unlocked']"
@@ -143,16 +143,12 @@
                         </page>
                     </notebook>
                 </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids" widget="mail_followers" />
-                    <field name="activity_ids" widget="mail_activity" />
-                    <field name="message_ids" widget="mail_thread" />
-                </div>
+                <chatter />
             </form>
         </field>
     </record>
 
-    <record id="view_hr_employee_loan_list" model="ir.ui.view">
+    <record id="view_hr_employee_loan_tree" model="ir.ui.view">
         <field name="name">view.hr.employee.loan.list</field>
         <field name="model">hr.employee.loan</field>
         <field name="arch" type="xml">

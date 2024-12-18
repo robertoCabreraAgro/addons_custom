@@ -26,8 +26,8 @@
                         </div>
                     </setting>
                     <setting string="Global Rules" help="Configure data to rules.">
-                        <group class="mt16">
-                            <field name="l10n_mx_edi_vacation_bonus" />
+                        <group>
+                            <field name="l10n_mx_edi_vacation_bonus" style="width: 100%;" />
                             <field name="l10n_mx_edi_days_daily_wage" />
                             <field name="l10n_mx_edi_tolerance_check_in" />
                             <field name="l10n_mx_edi_percentage_saving_fund" widget="percentage" />
@@ -76,6 +76,12 @@
                         <field name="l10n_mx_edi_subsidy_imss" />
                     </setting>
                     <setting
+                        string="Subsidy ISR?"
+                        help="If this option is checked, the company will subsidize the ISR fee for employees earning the minimum wage."
+                    >
+                        <field name="l10n_mx_edi_subsidy_isr" />
+                    </setting>
+                    <setting
                         string="Prorate ISR on worked days?"
                         help="If this option is checked, will to prorate the ISR and the subsidy based in the worked days."
                     >
@@ -85,8 +91,8 @@
                         string="Get ISR with monthly table?"
                         help="If this option is checked, the ISR must be calculated based on the monthly table regardless of payment frequency."
                     >
-<!--                         <field name="l10n_mx_edi_isr_monthly" />
- -->                    </setting>
+                        <field name="l10n_mx_edi_isr_monthly" />
+                    </setting>
                     <setting
                         string="Company contribution for feeding?"
                         help="If this option is checked, the feeding will to affect 50% employee and 50% the company."
@@ -125,7 +131,8 @@
                     </setting>
                 </block>
             </xpath>
-            <xpath expr="//setting[@name='module_hr_payroll_account_iso20022']" position="after">
+
+            <xpath expr="//block[@id='hr_payroll_settings']" position="inside">
                 <setting string="Not global entry?" help="Entries for payslips.">
                     <field name="l10n_mx_edi_not_global_entry" />
                 </setting>

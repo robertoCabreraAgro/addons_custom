@@ -106,7 +106,9 @@
                                                     <strong>
                                                         <span>Registration date: </span>
                                                     </strong>
-                                                    <span t-out="payslip[0].employee_id.contract_id.date_start" />
+                                                    <span
+                                                        t-out="payslip[0].employee_id.l10n_mx_edi_imss_date or payslip[0].employee_id.contract_id.date_start"
+                                                    />
                                                 </div>
                                                 <div class="col-2">
                                                     <strong>

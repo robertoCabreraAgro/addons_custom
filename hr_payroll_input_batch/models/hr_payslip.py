@@ -13,10 +13,10 @@ class HrPayslip(models.Model):
             [("state", "=", "approved"), ("date", "=", self.mapped("payslip_run_id").date_start or self[0].date_from)]
         )
         for slip in self.filtered("contract_id"):
-            slip_extras = extras.mapped("detail_ids").filtered(
-                lambda e: e.employee_id == slip.employee_id and e.amount
-            )
-            slip.input_line_ids.filtered(lambda l: l.code in slip_extras.mapped("extra_id.input_id.code")).unlink()
+            slip_extras = extras.detail_ids.filtered(lambda e: e.employee_id == slip.employee_id and e.amount)
+            slip.input_line_ids.filtered(
+                lambda line: line.code in slip_extras.extra_id.input_id.mapped("code")
+            ).unlink()
             for extra, _records in groupby(slip_extras, lambda r: r.extra_id):
                 slip.input_line_ids = [
                     Command.create(

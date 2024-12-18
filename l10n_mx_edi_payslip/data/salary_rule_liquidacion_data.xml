@@ -19,7 +19,9 @@ if payslips.mapped('line_ids').filtered(lambda l: l.amount and l.salary_rule_id.
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 result = 0
-seniority = contract.get_seniority(date_to=payslip.date_to).get('years')
+date_start = contract.l10n_mx_edi_imss_date or contract.date_start
+date_to = min(payslip.date_to, contract.date_end or payslip.date_to)
+seniority = contract.get_seniority(date_start, date_to=date_to).get('years')
 if (payslip.struct_id.type_id == payslip.env.ref('l10n_mx_edi_payslip.payroll_structure_type_finiquito') and seniority >= 15) or (payslip.struct_id.type_id == payslip.env.ref('l10n_mx_edi_payslip.payroll_structure_type_liquidacion')):
     minimum_wage = contract.company_id.l10n_mx_edi_minimum_wage
     daily_wage = contract.l10n_mx_edi_daily_wage
@@ -57,7 +59,9 @@ if payslips.mapped('line_ids').filtered(lambda l: l.amount and l.salary_rule_id.
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 result = 0
-seniority = contract.get_seniority(date_to=payslip.date_to).get('years')
+date_start = contract.l10n_mx_edi_imss_date or contract.date_start
+date_to = min(payslip.date_to, contract.date_end or payslip.date_to)
+seniority = contract.get_seniority(date_start, date_to=date_to).get('years')
 if (payslip.struct_id.type_id == payslip.env.ref('l10n_mx_edi_payslip.payroll_structure_type_finiquito') and seniority >= 15) or payslip.struct_id.type_id == payslip.env.ref('l10n_mx_edi_payslip.payroll_structure_type_liquidacion'):
     minimum_wage = contract.company_id.l10n_mx_edi_minimum_wage
     daily_wage = contract.l10n_mx_edi_daily_wage
@@ -77,22 +81,21 @@ if (payslip.struct_id.type_id == payslip.env.ref('l10n_mx_edi_payslip.payroll_st
         <field name="l10n_mx_edi_code">001</field>
         <field name="category_id" ref="hr_salary_rule_category_perception_mx_taxed" />
         <field name="struct_id" ref="payroll_structure_data_04" />
-        <field name="condition_select">python</field>
-        <field name="condition_python">
-result = 1
-payslips = employee.slip_ids.filtered(lambda sl: sl.state == "done" and sl.id != payslip.id and sl.date_from.month == payslip.date_from.month and sl.date_from.year == payslip.date_from.year)
-if payslips.mapped('line_ids').filtered(lambda l: l.amount and l.salary_rule_id.code == 'VPP001'):
-    result = 0
-        </field>
+        <field name="condition_select">none</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 daily_wage = contract.l10n_mx_edi_daily_wage
 days = contract.l10n_mx_edi_holidays
 year = payslip.date_to.year if contract.date_start.replace(year=payslip.date_to.year) &lt; payslip.date_to else payslip.date_to.year -1
-date_start = contract.date_start if contract.date_start.year == payslip.date_to.year else contract.date_start.replace(year=year)
-seniority = contract.get_seniority(date_start, date_to=min(payslip.date_to, contract.date_end or payslip.date_to), method='a')['days'] - 1
+date_start = contract.l10n_mx_edi_imss_date or contract.date_start
+date_start = date_start if date_start.year == payslip.date_to else date_start.replace(year=year)
+seniority = contract.get_seniority(date_start, date_to=min(payslip.date_to, contract.date_end or payslip.date_to), method='a')['days']
 result = daily_wage * (days / 365 * seniority)
 result += daily_wage * (inputs['pg1_023'].amount if 'pg1_023' in inputs else 0.0)
+
+payslips = employee.slip_ids.filtered(lambda sl: sl.state != 'cancel' and sl.id != payslip.id and sl.date_from.month == payslip.date_from.month and sl.date_from.year == payslip.date_from.year)
+if payslips.mapped('line_ids').filtered(lambda l: l.amount and l.salary_rule_id.code == 'VPP001'):
+    result = 0
         </field>
         <field name="note">
 Para este concepto, solo se pagan los días de vacaciones proporcionales al año en curso, es decir,
@@ -118,7 +121,7 @@ aún no se signan en el sistema.
         <field name="condition_select">python</field>
         <field name="condition_python">
 result = 1
-payslips = employee.slip_ids.filtered(lambda sl: sl.state == "done" and sl.id != payslip.id and sl.date_from.month == payslip.date_from.month and sl.date_from.year == payslip.date_from.year)
+payslips = employee.slip_ids.filtered(lambda sl: sl.state != 'cancel' and sl.id != payslip.id and sl.date_from.month == payslip.date_from.month and sl.date_from.year == payslip.date_from.year)
 perceptions = employee.env.ref('l10n_mx_edi_payslip.hr_salary_rule_category_perception_mx_exempt') | employee.env.ref('l10n_mx_edi_payslip.hr_salary_rule_category_perception_mx_taxed')
 if payslips.mapped('line_ids').filtered(lambda l: l.amount and l.salary_rule_id.l10n_mx_edi_code == '021' and l.salary_rule_id.category_id in perceptions):
     result = 0
@@ -167,7 +170,7 @@ result = 0 if accumulated >= holidays_exempt else holidays_exempt - accumulated 
         <field name="condition_select">python</field>
         <field name="condition_python">
 result = 1
-payslips = employee.slip_ids.filtered(lambda sl: sl.state == "done" and sl.id != payslip.id and sl.date_from.month == payslip.date_from.month and sl.date_from.year == payslip.date_from.year)
+payslips = employee.slip_ids.filtered(lambda sl: sl.state != 'cancel' and sl.id != payslip.id and sl.date_from.month == payslip.date_from.month and sl.date_from.year == payslip.date_from.year)
 perceptions = employee.env.ref('l10n_mx_edi_payslip.hr_salary_rule_category_perception_mx_exempt') | employee.env.ref('l10n_mx_edi_payslip.hr_salary_rule_category_perception_mx_taxed')
 if payslips.mapped('line_ids').filtered(lambda l: l.amount and l.salary_rule_id.l10n_mx_edi_code == '021' and l.salary_rule_id.category_id in perceptions):
     result = 0
@@ -217,7 +220,8 @@ result = 0 if payslips.mapped('line_ids').filtered(lambda l: l.amount and l.sala
         <field name="amount_python_compute">
 days = inputs['pgv_001'].amount if 'pgv_001' in inputs else -1
 if days &lt; 0:
-    days = min(contract.l10n_mx_edi_holidays, employee.remaining_leaves) if employee.allocation_count else 0
+    holidays = contract._l10n_mx_get_holidays(contract.get_seniority(date_from=contract.l10n_mx_edi_imss_date)["years"] - 1)
+    days = min(holidays, employee.remaining_leaves) if employee.allocation_count else 0
 result = contract.l10n_mx_edi_daily_wage * days
         </field>
         <field name="note">
@@ -251,7 +255,7 @@ mencionada con monto cero para evitar que se calcule basada en los días restant
         <field name="condition_select">python</field>
         <field name="condition_python">
 result = 1
-payslips = employee.slip_ids.filtered(lambda sl: sl.state == "done" and sl.id != payslip.id and sl.date_from.month == payslip.date_from.month and sl.date_from.year == payslip.date_from.year)
+payslips = employee.slip_ids.filtered(lambda sl: sl.state != 'cancel' and sl.id != payslip.id and sl.date_from.month == payslip.date_from.month and sl.date_from.year == payslip.date_from.year)
 perceptions = employee.env.ref('l10n_mx_edi_payslip.hr_salary_rule_category_perception_mx_exempt') | employee.env.ref('l10n_mx_edi_payslip.hr_salary_rule_category_perception_mx_taxed')
 if payslips.mapped('line_ids').filtered(lambda l: l.amount and l.salary_rule_id.l10n_mx_edi_code == '002' and l.salary_rule_id.category_id in perceptions):
     result = 0
@@ -298,7 +302,7 @@ result = 0 if accumulated >= aguinaldo_exempt else aguinaldo_exempt - accumulate
         <field name="condition_select">python</field>
         <field name="condition_python">
 result = 1
-payslips = employee.slip_ids.filtered(lambda sl: sl.state == "done" and sl.id != payslip.id and sl.date_from.month == payslip.date_from.month and sl.date_from.year == payslip.date_from.year)
+payslips = employee.slip_ids.filtered(lambda sl: sl.state != 'cancel' and sl.id != payslip.id and sl.date_from.month == payslip.date_from.month and sl.date_from.year == payslip.date_from.year)
 perceptions = employee.env.ref('l10n_mx_edi_payslip.hr_salary_rule_category_perception_mx_exempt') | employee.env.ref('l10n_mx_edi_payslip.hr_salary_rule_category_perception_mx_taxed')
 if payslips.mapped('line_ids').filtered(lambda l: l.amount and l.salary_rule_id.l10n_mx_edi_code == '002' and l.salary_rule_id.category_id in perceptions):
     result = 0
@@ -341,16 +345,16 @@ result = aguinaldo - aguinaldo_exempt if aguinaldo >= aguinaldo_exempt else 0
         <field name="condition_select">none</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
-seniority = contract.get_seniority(date_to=payslip.date_to).get('years')
-
+date_start = contract.l10n_mx_edi_imss_date or contract.date_start
+seniority = contract.get_seniority(date_start, date_to=payslip.date_to).get('years')
 result = inputs['p_025'].amount if 'p_025' in inputs else 0.0
 exempt = 90 * contract.company_id.l10n_mx_edi_uma * (seniority or 1)
 result += contract.l10n_mx_edi_daily_wage * 90
 
 # 20 dias por año
 result += seniority * 20 * contract.l10n_mx_edi_daily_wage
-year = payslip.date_to.year if contract.date_start.replace(year=payslip.date_to.year) &lt; payslip.date_to else payslip.date_to.year -1
-date_start = contract.date_start if contract.date_start.year == payslip.date_to.year else contract.date_start.replace(year=year)
+year = payslip.date_to.year if date_start.replace(year=payslip.date_to.year) &lt; payslip.date_to else payslip.date_to.year -1
+date_start = date_start if date_start.year == payslip.date_to.year else date_start.replace(year=year)
 result += round(1 / 365 * (contract.get_seniority(date_start, date_to=min(payslip.date_to, contract.date_end or payslip.date_to), method='a')['days'] - 1), 2) * 20
 
 result = result - exempt if result &gt; exempt else 0
@@ -375,15 +379,16 @@ result = result - exempt if result &gt; exempt else 0
         <field name="condition_select">none</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
-seniority = contract.get_seniority(date_to=payslip.date_to).get('years')
+date_start = contract.l10n_mx_edi_imss_date or contract.date_start
+seniority = contract.get_seniority(date_start, date_to=payslip.date_to).get('years')
 result = inputs['p_025'].amount if 'p_025' in inputs else 0.0
 exempt = 90 * contract.company_id.l10n_mx_edi_uma * (seniority or 1)
 result += contract.l10n_mx_edi_daily_wage * 90
 
 # 20 dias por año
 result += seniority * 20 * contract.l10n_mx_edi_daily_wage
-year = payslip.date_to.year if contract.date_start.replace(year=payslip.date_to.year) &lt; payslip.date_to else payslip.date_to.year -1
-date_start = contract.date_start if contract.date_start.year == payslip.date_to.year else contract.date_start.replace(year=year)
+year = payslip.date_to.year if date_start.replace(year=payslip.date_to.year) &lt; payslip.date_to else payslip.date_to.year -1
+date_start = date_start if date_start.year == payslip.date_to.year else date_start.replace(year=year)
 result += round(1 / 365 * (contract.get_seniority(date_start, date_to=min(payslip.date_to, contract.date_end or payslip.date_to), method='a')['days'] - 1), 2) * 20
 
 result = exempt if result &gt; exempt else result

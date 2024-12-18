@@ -16,7 +16,10 @@ seniority = contract.get_seniority(date_to=payslip.date_to, method='a')
 result = contract.l10n_mx_edi_christmas_bonus or 15
 
 if 1 > seniority['years']:
-    result = (result / 365) * seniority['days']
+    days_year = 365
+    if year % 4 == 0 and year % 100 != 0 or year % 400 == 0:
+        days_year = 366
+    result = (result / days_year) * seniority['days']
         </field>
     </record>
 
@@ -126,7 +129,7 @@ result = bonus_total - aguinaldo_exempt if bonus_total >= aguinaldo_exempt else 
         <field name="amount_python_compute">
 vacation_bonus_type = (payslip.company_id or contract.company_id).l10n_mx_edi_vacation_bonus
 result = 0
-holidays = contract.l10n_mx_edi_holidays if vacation_bonus_type == 'on_christmas_bonus' else 0
+holidays = contract._l10n_mx_get_holidays(contract.get_seniority(date_from=contract.l10n_mx_edi_imss_date)["years"] - 1) if vacation_bonus_type == 'on_christmas_bonus' else 0
 if holidays:
     daily_wage = contract.l10n_mx_edi_daily_wage
     uma = contract.company_id.l10n_mx_edi_uma
@@ -148,7 +151,7 @@ if holidays:
         <field name="amount_python_compute">
 vacation_bonus_type = (payslip.company_id or contract.company_id).l10n_mx_edi_vacation_bonus
 result = 0
-holidays = contract.l10n_mx_edi_holidays if vacation_bonus_type == 'on_christmas_bonus' else 0
+holidays = contract._l10n_mx_get_holidays(contract.get_seniority(date_from=contract.l10n_mx_edi_imss_date)["years"] - 1) if vacation_bonus_type == 'on_christmas_bonus' else 0
 if holidays:
     daily_wage = contract.l10n_mx_edi_daily_wage
     uma = contract.company_id.l10n_mx_edi_uma

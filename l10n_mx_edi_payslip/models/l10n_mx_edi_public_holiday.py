@@ -2,7 +2,7 @@ from datetime import time
 
 from pytz import timezone
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -45,7 +45,7 @@ class L10nMxEdiPublicHoliday(models.Model):
         """Confirm public holiday, and create the global time off for the corresponding companies"""
         if not self.env.user.tz:
             raise ValidationError(
-                _(
+                self.env._(
                     "Please, set you a timezone to continue this operation. To set a timezone, "
                     "go to your user, on the upper right corner and select My Profile"
                 )

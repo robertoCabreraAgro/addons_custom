@@ -7,7 +7,7 @@ from odoo.tests import tagged
 from .common import L10nMxEdiPayslipTransactionCase
 
 
-@tagged("attendance")
+@tagged("attendance", "post_install", "-at_install")
 class TestHrAttendance(L10nMxEdiPayslipTransactionCase):
     def test_time_delay(self):
         self.env["hr.attendance"].unlink()

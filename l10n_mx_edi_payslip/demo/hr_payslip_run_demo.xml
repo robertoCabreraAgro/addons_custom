@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+<odoo>
+
+    <record id="hr_payslip_run_test_demo" model="hr.payslip.run">
+        <field name="name">Payroll Batch Test</field>
+        <field name="date_start" eval="time.strftime('%Y-%m')+'-1'" />
+        <field name="date_end" eval="time.strftime('%Y-%m')+'-15'" />
+        <field name="company_id" ref="base.demo_company_mx" />
+    </record>
+
+</odoo>

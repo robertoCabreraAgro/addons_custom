@@ -19,6 +19,4 @@
         "views/hr_payslip_input_type_views.xml",
         "views/hr_payslip_views.xml",
     ],
-    "installable": True,
-    "auto_install": False,
 }

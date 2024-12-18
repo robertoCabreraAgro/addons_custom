@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0+e\n"
+"Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-09 01:03+0000\n"
-"PO-Revision-Date: 2023-09-14 00:26+0000\n"
+"POT-Creation-Date: 2024-11-22 01:37+0000\n"
+"PO-Revision-Date: 2024-11-22 01:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -23,14 +23,12 @@ msgstr "Permitir generar dispersión bancaria"
 #. module: hr_bank_dispersion
 #. odoo-python
 #: code:addons/hr_bank_dispersion/models/hr_payslip_run.py:0
-#, python-format
 msgid "Dispersions"
 msgstr "Dispersiones"
 
 #. module: hr_bank_dispersion
 #. odoo-python
 #: code:addons/hr_bank_dispersion/models/hr_payslip_run.py:0
-#, python-format
 msgid ""
 "Only Managers with the group 'Allow to Print Payslip Dispersion' can "
 "generate payslip dispersion files"
@@ -51,14 +49,12 @@ msgstr "Lotes de recibos de nómina"
 #. module: hr_bank_dispersion
 #. odoo-python
 #: code:addons/hr_bank_dispersion/models/hr_payslip_run.py:0
-#, python-format
 msgid "The following of your banks are not available for payroll dispersion"
 msgstr "Los siguientes bancos no están disponibles para dispersión bancaria"
 
 #. module: hr_bank_dispersion
 #. odoo-python
 #: code:addons/hr_bank_dispersion/models/hr_payslip_run.py:0
-#, python-format
 msgid ""
 "To use this option, please configure the bank account on your employees, no "
 "employees are currently configured."
@@ -69,7 +65,6 @@ msgstr ""
 #. module: hr_bank_dispersion
 #. odoo-python
 #: code:addons/hr_bank_dispersion/models/hr_payslip_run.py:0
-#, python-format
 msgid ""
 "We currently do not support generating payroll dispersions for any of the "
 "employee banks in this payroll batch."

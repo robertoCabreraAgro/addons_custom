@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 
 
 class HrPayslipEmployees(models.TransientModel):
@@ -11,17 +11,11 @@ class HrPayslipEmployees(models.TransientModel):
         active_id = self.env.context.get("active_id")
         payslips = payslip_obj.search([("payslip_run_id", "=", active_id)])
         [run_data] = (
-            self.env["hr.payslip.run"]
-            .browse(active_id)
-            .read(["l10n_mx_edi_payment_date", "l10n_mx_edi_date_start", "l10n_mx_edi_date_end"])
-            if active_id
-            else []
+            self.env["hr.payslip.run"].browse(active_id).read(["l10n_mx_edi_payment_date"]) if active_id else []
         )
         payslips.write(
             {
                 "l10n_mx_edi_payment_date": run_data.get("l10n_mx_edi_payment_date", False),
-                "l10n_mx_edi_date_from": run_data.get("l10n_mx_edi_date_start", False),
-                "l10n_mx_edi_date_to": run_data.get("l10n_mx_edi_date_end", False),
                 "number": payslips[0].payslip_run_id.name if payslips else "",
             }
         )
@@ -33,14 +27,14 @@ class HrPayslipEmployees(models.TransientModel):
             )
             settlement_struct_id = self.env.ref("l10n_mx_edi_payslip.payroll_structure_data_06")
             changed_slips.write({"struct_id": settlement_struct_id.id})
-            message = _(
+            message = self.env._(
                 """The contract will expire at the end of the payslip period.
                 The salary structure was replaced from %(struct)s to %(sett)s""",
                 struct=struct_id.name,
                 sett=settlement_struct_id.name,
             )
             for slip in changed_slips:
-                slip.message_post(body=_(message))
+                slip.message_post(body=self.env._(message))
 
         payslips.l10n_mx_edi_update_extras()
         return res

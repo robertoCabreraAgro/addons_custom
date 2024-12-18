@@ -3,16 +3,15 @@
     "summary": """Base module to generate the bank dispersion from payslips batch""",
     "author": "Vauxoo",
     "website": "https://www.vauxoo.com",
-    "license": "AGPL-3",
-    "category": "",
+    "license": "OPL-1",
+    "category": "Human Resources/Payroll",
     "version": "18.0.1.0.0",
     "depends": [
         "hr_payroll",
     ],
     "data": [
+        "data/ir_config_parameter_data.xml",
         "security/res_groups_security.xml",
-        "views/hr_payslip_views.xml",
+        "views/hr_payslip_run_views.xml",
     ],
-    "demo": [],
-    "installable": True,
 }

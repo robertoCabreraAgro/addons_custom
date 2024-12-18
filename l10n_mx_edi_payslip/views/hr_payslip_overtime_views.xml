@@ -19,7 +19,7 @@
         </field>
     </record>
 
-    <record id="hr_payslip_overtime_list" model="ir.ui.view">
+    <record id="hr_payslip_overtime_tree" model="ir.ui.view">
         <field name="name">view.l10n_mx.overtime.list</field>
         <field name="model">hr.payslip.overtime</field>
         <field name="arch" type="xml">

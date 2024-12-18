@@ -31,7 +31,7 @@ class HrPayslip(models.Model):
             loans = record.get_loans("all", ["active", "close"]) - record._get_to_not_link_loans()
             loans = loans.filtered(lambda loan: record in loan.payslip_ids)
             loans.write({"payslip_ids": [Command.unlink(record.id)]})
-            loan_lines = loans.mapped("loan_line_ids").filtered(lambda l: l.payslip_id == record)
+            loan_lines = loans.loan_line_ids.filtered(lambda loan: loan.payslip_id == record)
             for line in loan_lines:
                 loan = line.loan_id
                 line.write(
@@ -67,24 +67,30 @@ class HrPayslip(models.Model):
         if input_code == "all":
             # Return all loan types
             return self.employee_id.loan_ids.filtered(
-                lambda l: (self.struct_id in l.input_type_id.struct_ids)
-                and (l.state in states)
-                and (l.payment_term == -1 or l.payslips_count < l.payment_term)
-                and (not l.date_from or l.date_from <= date_to)
-                and (not l.date_to or l.date_to >= date_to or (l.date_to >= date_from and l.date_to <= date_to))
+                lambda loan: (self.struct_id in loan.input_type_id.struct_ids)
+                and (loan.state in states)
+                and (loan.payment_term == -1 or loan.payslips_count < loan.payment_term)
+                and (not loan.date_from or loan.date_from <= date_to)
+                and (
+                    not loan.date_to
+                    or loan.date_to >= date_to
+                    or (loan.date_to >= date_from and loan.date_to <= date_to)
+                )
             )
 
         loans = self.employee_id.loan_ids.filtered(
-            lambda l: l.input_type_id.code == input_code
-            and (l.state in states)
-            and (self.struct_id in l.input_type_id.struct_ids)
-            and (l.payment_term == -1 or l.payslips_count < l.payment_term)
-            and (not l.date_from or l.date_from <= date_to)
-            and (not l.date_to or l.date_to >= date_to or (l.date_to >= date_from and l.date_to <= date_to))
+            lambda loan: loan.input_type_id.code == input_code
+            and (loan.state in states)
+            and (self.struct_id in loan.input_type_id.struct_ids)
+            and (loan.payment_term == -1 or loan.payslips_count < loan.payment_term)
+            and (not loan.date_from or loan.date_from <= date_to)
+            and (
+                not loan.date_to or loan.date_to >= date_to or (loan.date_to >= date_from and loan.date_to <= date_to)
+            )
         )
         return loans
 
     def _get_loan_breakdown_lines(self):
         self.ensure_one()
-        valid_loans = self.get_loans("all", ["active", "close"]).filtered(lambda l: not l._is_timeless())
-        return valid_loans.mapped("loan_line_ids").filtered(lambda l: l.payslip_id == self)
+        valid_loans = self.get_loans("all", ["active", "close"]).filtered(lambda loan: not loan._is_timeless())
+        return valid_loans.mapped("loan_line_ids").filtered(lambda loan: loan.payslip_id == self)
