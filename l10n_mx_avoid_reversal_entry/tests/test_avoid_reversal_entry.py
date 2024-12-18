@@ -36,7 +36,6 @@ class TestL10nMxTaxCashBasis(TestMxEdiCommon):
         self.journal = self.env["account.journal"].search(
             [("type", "=", "purchase"), ("company_id", "=", self.invoice.company_id.id)], limit=1
         )
-        self.iva_tag = self.env["account.account.tag"].search([("name", "=", "IVA")])
         self.tax_account = self.create_account("11111101", "Tax Account")
         cash_tax_account = self.create_account("77777777", "Cash Tax Account")
         account_tax_cash_basis = self.create_account("99999999", "Tax Base Account")
@@ -194,6 +193,48 @@ class TestL10nMxTaxCashBasis(TestMxEdiCommon):
         invoice_id.line_ids.sudo().remove_move_reconcile()
         cash_am_ids = self.env["account.move"].search([("journal_id", "in", self.curr_ex_journal_id.ids)])
         self.assertEqual(len(cash_am_ids), 2, "There should be two journal entry")
+
+    def test_cancel_non_mxn(self):
+        """Invoice and payment in USD, and company currency in MXN, when cancel the payment, the exchange entries
+        must be deleted."""
+        self.delete_journal_data()
+        cash_am_ids = self.env["account.move"].search([("journal_id", "in", self.curr_ex_journal_id.ids)])
+        self.assertFalse(cash_am_ids, "There should be no journal entry")
+
+        invoice_date = self.today - timedelta(days=1)
+        invoice_id = self.invoice.copy(
+            {
+                "move_type": "in_invoice",
+                "currency_id": self.usd.id,
+                "date": invoice_date.date(),
+                "invoice_date": invoice_date.date(),
+                "journal_id": self.journal.id,
+            }
+        )
+
+        invoice_id.line_ids.unlink()
+        invoice_id.invoice_line_ids = [
+            Command.create(
+                {
+                    "account_id": self.product.product_tmpl_id.get_product_accounts()["income"].id,
+                    "product_id": self.product.id,
+                    "quantity": 1,
+                    "price_unit": 450,
+                    "product_uom_id": self.product.uom_id.id,
+                    "name": self.product.name,
+                    "tax_ids": [(6, 0, self.tax_16.ids)],
+                },
+            )
+        ]
+        invoice_id.action_post()
+
+        bank_journal_usd = self.bank_journal_mxn.copy({"currency_id": self.usd.id})
+        self.create_payment(invoice_id, self.today, bank_journal_usd, self.usd)
+        cash_am_ids = self.env["account.move"].search([("journal_id", "in", self.curr_ex_journal_id.ids)])
+        self.assertEqual(len(cash_am_ids), 1, "There should be One journal entry")
+
+        invoice_id.line_ids.sudo().remove_move_reconcile()
+        self.assertFalse(cash_am_ids.exists(), "There should be removed the exchange entry.")
 
     def set_currency_rates(self, mxn_rate, usd_rate):
         date = self.today.date()

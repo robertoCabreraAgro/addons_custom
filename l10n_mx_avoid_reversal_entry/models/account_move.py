@@ -48,15 +48,15 @@ class AccountPartialReconcile(models.Model):
         # let us fetch the full reconciliation from the partial reconciliation
         afr_ids = mxn_moves.mapped("full_reconcile_id")
         # include deletion of exchange rate journal entries
-        fx_move_ids = afr_ids.mapped("exchange_move_id")
+        fx_move_ids = afr_ids.exchange_move_id | self.exchange_move_id
         fx_apr_ids = fx_move_ids.mapped("line_ids.matched_debit_ids")
         fx_apr_ids |= fx_move_ids.mapped("line_ids.matched_credit_ids")
         # delete the tax basis move created at the reconciliation time by the FX moves
-        caba_fx_move_ids = move_obj.search([("tax_cash_basis_rec_id", "in", fx_apr_ids.ids)])
+        caba_fx_move_ids = move_obj.search([("tax_cash_basis_rec_id", "in", (fx_apr_ids | self).ids)])
         caba_fx_apr_ids = caba_fx_move_ids.mapped("line_ids.matched_debit_ids")
         caba_fx_apr_ids |= caba_fx_move_ids.mapped("line_ids.matched_credit_ids")
         caba_fx_afr_ids = caba_fx_move_ids.mapped("line_ids.full_reconcile_id")
-        fx_caba_fx_move_ids = caba_fx_afr_ids.mapped("exchange_move_id")
+        fx_caba_fx_move_ids = caba_fx_afr_ids.exchange_move_id | caba_fx_apr_ids.exchange_move_id
         fx_caba_fx_apr_ids = fx_caba_fx_move_ids.mapped("line_ids.matched_debit_ids")
         fx_caba_fx_apr_ids |= fx_caba_fx_move_ids.mapped("line_ids.matched_credit_ids")
 
