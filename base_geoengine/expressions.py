@@ -33,29 +33,29 @@ expression.TERM_OPERATORS = tuple(list(TERM_OPERATORS) + list(GEO_OPERATORS.keys
 original_condition_to_sql = models.BaseModel._condition_to_sql
 
 def _condition_to_sql(self, alias, field_name, operator, value, query):
-    _logger.info(
-        "Iniciando _condition_to_sql con alias: %s, field_name: %s, operator: %s, value: %s",
-        alias, field_name, operator, value
-    )
+    #_logger.info(
+    #    "Iniciando _condition_to_sql con alias: %s, field_name: %s, operator: %s, value: %s",
+    #    alias, field_name, operator, value
+    #)
 
     if operator in GEO_OPERATORS:
         field = self._fields.get(field_name)
         if field and isinstance(field, GeoField):
-            _logger.info(
-                "Operador geoespacial detectado: %s para campo geoespacial: %s",
-                operator, field_name
-            )
+            #_logger.info(
+            #    "Operador geoespacial detectado: %s para campo geoespacial: %s",
+            #    operator, field_name
+            #)
 
             if isinstance(value, dict):
                 ref_search = value
                 sub_queries = []
                 for key in ref_search:
-                    _logger.info("Procesando subconsulta para key: %s", key)
+                    #_logger.info("Procesando subconsulta para key: %s", key)
                     i = key.rfind(".")
                     rel_model_name = key[0:i]
                     rel_col = key[i + 1:]
                     rel_model = self.env[rel_model_name]
-                    _logger.info("Relación: %s, Columna: %s", rel_model_name, rel_col)
+                    #_logger.info("Relación: %s, Columna: %s", rel_model_name, rel_col)
 
                     if ref_search[key]:
                         rel_alias = (
@@ -63,7 +63,7 @@ def _condition_to_sql(self, alias, field_name, operator, value, query):
                             + "_"
                             + "".join(random.choices(string.ascii_lowercase, k=5))
                         )
-                        _logger.info("Alias generado para la relación: %s", rel_alias)
+                        #_logger.info("Alias generado para la relación: %s", rel_alias)
 
                         rel_query = where_calc(
                             rel_model,
@@ -71,13 +71,13 @@ def _condition_to_sql(self, alias, field_name, operator, value, query):
                             active_test=True,
                             alias=rel_alias,
                         )
-                        _logger.info("Query de relación generada: %s", rel_query)
+                        #_logger.info("Query de relación generada: %s", rel_query)
 
                         #rel_query.add_where(
                         #    rel_model._where_calc([])
                         #)
                         self._apply_ir_rules(rel_query, "read")
-                        _logger.info("Aplicadas reglas de acceso IR para la query")
+                        #_logger.info("Aplicadas reglas de acceso IR para la query")
 
                         # Construir la cláusula WHERE sin pasar objetos como parámetros
                         if operator == "geo_equal":
@@ -124,17 +124,17 @@ def _condition_to_sql(self, alias, field_name, operator, value, query):
                     query_result = sub_queries[0]
                 else:
                     query_result = SQL(' AND ').join(sub_queries)
-                _logger.info("Resultado final de la consulta: %s", query_result)
+                #_logger.info("Resultado final de la consulta: %s", query_result)
                 return query_result
             else:
                 # Manejar el caso donde 'value' no es un diccionario
                 query_result = get_geo_func(
                     operator, alias, field_name, value
                 )
-                _logger.info("Resultado de la función geoespacial: %s", query_result)
+                #_logger.info("Resultado de la función geoespacial: %s", query_result)
                 return query_result
     else:
-        _logger.info("Operador no geoespacial: %s. Llamando al método original.", operator)
+        #_logger.info("Operador no geoespacial: %s. Llamando al método original.", operator)
         return original_condition_to_sql(self, alias, field_name, operator, value, query)
 
 def get_geo_func(operator, alias, field_name, value):
