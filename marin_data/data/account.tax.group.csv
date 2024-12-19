@@ -94,41 +94,22 @@ tax_group_1092_vat_16_0_cfmg,VAT 16.0%,marin_data.company_cfmg,base.mx,,,,11
 tax_group_1093_vat_4_0_retention_cfmg,VAT 4.0% retention,marin_data.company_cfmg,base.mx,,,,11
 tax_group_1094_vat_8_0_cfmg,VAT 8.0%,marin_data.company_cfmg,base.mx,,,,11
 tax_group_1095_vat_exempt_cfmg,VAT exempt,marin_data.company_cfmg,base.mx,,,,11
-tax_group_1096_dsa_glmm,DSA,marin_data.company_glmm,base.mx,,,,10
-tax_group_1097_ieps_25_0_glmm,IEPS 25.0%,marin_data.company_glmm,base.mx,,,,11
-tax_group_1098_ieps_26_5_glmm,IEPS 26.5%,marin_data.company_glmm,base.mx,,,,11
-tax_group_1099_ieps_3_0_glmm,IEPS 3.0%,marin_data.company_glmm,base.mx,,,,10
-tax_group_1100_ieps_30_0_glmm,IEPS 30.0%,marin_data.company_glmm,base.mx,,,,11
-tax_group_1101_ieps_53_0_glmm,IEPS 53.0%,marin_data.company_glmm,base.mx,,,,11
-tax_group_1102_ieps_8_0_glmm,IEPS 8.0%,marin_data.company_glmm,base.mx,,,,11
-tax_group_1103_ieps_pesticides_glmm,IEPS pesticides,marin_data.company_glmm,base.mx,,,,11
-tax_group_1104_ish_glmm,ISH,marin_data.company_glmm,base.mx,,,,11
-tax_group_1105_isr_10_0_retention_glmm,ISR 10.0% retention,marin_data.company_glmm,base.mx,,,,11
-tax_group_1106_isr_63_67_retention_glmm,ISR 63.67% retention,marin_data.company_glmm,base.mx,,,,11
-tax_group_1107_vat_0_0_glmm,VAT 0.0%,marin_data.company_glmm,base.mx,,,,11
-tax_group_1108_vat_1_25_retention_glmm,VAT 1.25% retention,marin_data.company_glmm,base.mx,,,,11
-tax_group_1109_vat_10_0_retention_glmm,VAT 10.0% retention,marin_data.company_glmm,base.mx,,,,11
-tax_group_1110_vat_10_67_retention_glmm,VAT 10.67% retention,marin_data.company_glmm,base.mx,,,,11
-tax_group_1111_vat_16_0_glmm,VAT 16.0%,marin_data.company_glmm,base.mx,,,,11
-tax_group_1112_vat_4_0_retention_glmm,VAT 4.0% retention,marin_data.company_glmm,base.mx,,,,11
-tax_group_1113_vat_8_0_glmm,VAT 8.0%,marin_data.company_glmm,base.mx,,,,11
-tax_group_1114_vat_exempt_glmm,VAT exempt,marin_data.company_glmm,base.mx,,,,11
-tax_group_1115_dsa_xm,DSA,marin_data.company_society,base.mx,,,,10
-tax_group_1116_ieps_25_0_xm,IEPS 25.0%,marin_data.company_society,base.mx,,,,11
-tax_group_1117_ieps_26_5_xm,IEPS 26.5%,marin_data.company_society,base.mx,,,,11
-tax_group_1118_ieps_3_0_xm,IEPS 3.0%,marin_data.company_society,base.mx,,,,10
-tax_group_1119_ieps_30_0_xm,IEPS 30.0%,marin_data.company_society,base.mx,,,,11
-tax_group_1120_ieps_53_0_xm,IEPS 53.0%,marin_data.company_society,base.mx,,,,11
-tax_group_1121_ieps_8_0_xm,IEPS 8.0%,marin_data.company_society,base.mx,,,,11
-tax_group_1122_ieps_pesticides_xm,IEPS pesticides,marin_data.company_society,base.mx,,,,11
-tax_group_1123_ish_xm,ISH,marin_data.company_society,base.mx,,,,11
-tax_group_1124_isr_10_0_retention_xm,ISR 10.0% retention,marin_data.company_society,base.mx,,,,11
-tax_group_1125_isr_63_67_retention_xm,ISR 63.67% retention,marin_data.company_society,base.mx,,,,11
-tax_group_1126_vat_0_0_xm,VAT 0.0%,marin_data.company_society,base.mx,,,,11
-tax_group_1127_vat_1_25_retention_xm,VAT 1.25% retention,marin_data.company_society,base.mx,,,,11
-tax_group_1128_vat_10_0_retention_xm,VAT 10.0% retention,marin_data.company_society,base.mx,,,,11
-tax_group_1129_vat_10_67_retention_xm,VAT 10.67% retention,marin_data.company_society,base.mx,,,,11
-tax_group_1130_vat_16_0_xm,VAT 16.0%,marin_data.company_society,base.mx,,,,11
-tax_group_1131_vat_4_0_retention_xm,VAT 4.0% retention,marin_data.company_society,base.mx,,,,11
-tax_group_1132_vat_8_0_xm,VAT 8.0%,marin_data.company_society,base.mx,,,,11
-tax_group_1133_vat_exempt_xm,VAT exempt,marin_data.company_society,base.mx,,,,11
+tax_group_1096_dsa_xm,DSA,marin_data.company_society,base.mx,,,,10
+tax_group_1097_ieps_25_0_xm,IEPS 25.0%,marin_data.company_society,base.mx,,,,11
+tax_group_1098_ieps_26_5_xm,IEPS 26.5%,marin_data.company_society,base.mx,,,,11
+tax_group_1099_ieps_3_0_xm,IEPS 3.0%,marin_data.company_society,base.mx,,,,10
+tax_group_1100_ieps_30_0_xm,IEPS 30.0%,marin_data.company_society,base.mx,,,,11
+tax_group_1101_ieps_53_0_xm,IEPS 53.0%,marin_data.company_society,base.mx,,,,11
+tax_group_1102_ieps_8_0_xm,IEPS 8.0%,marin_data.company_society,base.mx,,,,11
+tax_group_1103_ieps_pesticides_xm,IEPS pesticides,marin_data.company_society,base.mx,,,,11
+tax_group_1104_ish_xm,ISH,marin_data.company_society,base.mx,,,,11
+tax_group_1105_isr_10_0_retention_xm,ISR 10.0% retention,marin_data.company_society,base.mx,,,,11
+tax_group_1106_isr_63_67_retention_xm,ISR 63.67% retention,marin_data.company_society,base.mx,,,,11
+tax_group_1107_vat_0_0_xm,VAT 0.0%,marin_data.company_society,base.mx,,,,11
+tax_group_1108_vat_1_25_retention_xm,VAT 1.25% retention,marin_data.company_society,base.mx,,,,11
+tax_group_1109_vat_10_0_retention_xm,VAT 10.0% retention,marin_data.company_society,base.mx,,,,11
+tax_group_1110_vat_10_67_retention_xm,VAT 10.67% retention,marin_data.company_society,base.mx,,,,11
+tax_group_1111_vat_16_0_xm,VAT 16.0%,marin_data.company_society,base.mx,,,,11
+tax_group_1112_vat_4_0_retention_xm,VAT 4.0% retention,marin_data.company_society,base.mx,,,,11
+tax_group_1113_vat_8_0_xm,VAT 8.0%,marin_data.company_society,base.mx,,,,11
+tax_group_1114_vat_exempt_xm,VAT exempt,marin_data.company_society,base.mx,,,,11
