@@ -121,7 +121,6 @@
                                     <field name="product_qty" />
                                     <field name="price_unit" />
                                     <field name="price_subtotal" />
-                                    <field name="is_sent" widget="boolean_toggle" />
                                     <field name="company_id" optional="hide" />
                                 </list>
                             </field>

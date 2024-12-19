@@ -46,7 +46,6 @@ class SyngentaSaleReportLine(models.Model):
         help="Amount asigned to the sale agreement that will "
              "be used as base for following calculations.",
     )
-    is_sent = fields.Boolean("Sent to Syngenta", compute="_compute_is_sent", store=True)
     sequence = fields.Integer(default=10)
 
 
@@ -119,11 +118,6 @@ class SyngentaSaleReportLine(models.Model):
             line.update(
                 {"price_subtotal": line.product_qty * line.price_unit}
             )
-
-    @api.depends("report_id.state")
-    def _compute_is_sent(self):
-        for line in self:
-            line.is_sent = self.report_id.state == "done"
 
     def _get_json_line(self):
         self.ensure_one()
