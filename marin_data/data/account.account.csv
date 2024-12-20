@@ -331,7 +331,7 @@ account_101_01_001_tjgl,marin_data.company_tjgl,,l10n_mx.tag_debit_balance_accou
 account_101_01_003_tjgl,marin_data.company_tjgl,base.USD,l10n_mx.tag_debit_balance_account,Cash USD,101.01.003,Bank and Cash,,No,,,,
 account_102_01_001_tjgl,marin_data.company_tjgl,,l10n_mx.tag_debit_balance_account,Bank BBVA 0463866521,102.01.001,Bank and Cash,,No,,,,
 account_102_01_010_tjgl,marin_data.company_tjgl,,l10n_mx.tag_debit_balance_account,Bank BBVA Payroll,102.01.010,Bank and Cash,,No,,,,
-account_102_01_002_tjgl,marin_data.company_tjgl,,l10n_mx.tag_debit_balance_account,Bank Banamex,102.01.010,Bank and Cash,,No,,,,
+account_102_01_002_tjgl,marin_data.company_tjgl,,l10n_mx.tag_debit_balance_account,Bank Banamex,102.01.002,Bank and Cash,,No,,,,
 account_401_04_006_tjgl,marin_data.company_tjgl,,l10n_mx.tag_credit_balance_account,Sales 0% FX - multicompany cash trade --> self bank,401.04.006,Income,,No,,,,
 account_101_01_001_lmmg,marin_data.company_lmmg,,l10n_mx.tag_debit_balance_account,Cash main,101.01.001,Bank and Cash,,No,,,,
 account_101_01_003_lmmg,marin_data.company_lmmg,base.USD,l10n_mx.tag_debit_balance_account,Cash USD,101.01.003,Bank and Cash,,No,,,,
