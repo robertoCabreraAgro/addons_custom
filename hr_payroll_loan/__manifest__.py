@@ -18,7 +18,7 @@
         "views/hr_employee_views.xml",
         "views/hr_payslip_input_type_views.xml",
         "views/hr_payslip_views.xml",
-        "views/report_payslip_templates.xml",
+        # "views/report_payslip_templates.xml",
         "views/res_config_settings_views.xml",
     ],
     "demo": [

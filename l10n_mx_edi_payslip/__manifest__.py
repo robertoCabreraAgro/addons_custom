@@ -74,7 +74,7 @@
         "views/hr_contract_type_views.xml",
         "views/hr_leave_views.xml",
         "views/hr_leave_type_views.xml",
-        "views/report_payslip_templates.xml",
+        # "views/report_payslip_templates.xml",
         "views/hr_payroll_structure_type_views.xml",
         "views/hr_salary_rule_views.xml",
         "views/l10n_mx_edi_job_risk_views.xml",
