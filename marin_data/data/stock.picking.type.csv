@@ -176,4 +176,4 @@ marin_data.picking_type_5055,marin_data.company_lmmr,marin_data.warehouse_111,ma
 marin_data.picking_type_5056,marin_data.company_lmmr,marin_data.warehouse_112,marin_data.stock_location_1090,marin_data.stock_location_5044,Ship orders,Delivery,SHIP,MOCH-SHIP,Manually,,Always,True,,,150,10
 marin_data.picking_type_5057,marin_data.company_lmmr,marin_data.warehouse_113,marin_data.stock_location_1098,marin_data.stock_location_5041,Ship orders,Delivery,SHIP,HMT-SHIP,Manually,,Always,True,,,150,10
 marin_data.picking_type_5058,marin_data.company_lmmr,marin_data.warehouse_104,marin_data.stock_location_1026,marin_data.stock_location_5034,Ship orders 3P,Delivery,SHIP3P,CDG-SHIP3P,Manually,True,Always,True,,,150,10
-__export__.stock_picking_type_5059_655f6526,marin_data.company_lmmg,marin_data.warehouse_4,stock.stock_location_customers,marin_data.stock_location_51,Customer Returns,Receipt,CRTN,,At Confirmation,True,Always,True,,,500,3
+marin_data.picking_type_5059,marin_data.company_lmmg,marin_data.warehouse_4,stock.stock_location_customers,marin_data.stock_location_51,Customer Returns,Receipt,CRTN,,At Confirmation,True,Always,True,,,500,3
