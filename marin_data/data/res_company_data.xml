@@ -183,38 +183,6 @@
         <field name="sequence" eval="15" />
     </record>
 
-    <record id="partner_glmm" model="res.partner">
-        <field name="name">GLADIS LINETTE MANCINAS MIRANDA</field>
-        <field name="type">contact</field>
-        <field name="is_company" eval="True" />
-        <field name="vat">MAMG890621FT4</field>
-        <field name="phone">+52 722 232 0859</field>
-        <field name="street">Tenayuca</field>
-        <field name="street2">Benito Juarez</field>
-        <field name="city">Ciudad de Mexico</field>
-        <field name="zip">03310</field>
-        <field name="state_id" ref="base.state_mx_df" />
-        <field name="country_id" ref="base.mx" />
-        <field name="lang">es_MX</field>
-        <field name="tz">America/Mexico_City</field>
-        <field name="l10n_mx_edi_fiscal_regime">612</field>
-        <field name="l10n_mx_edi_curp">MAMG890621MCHNRL06</field>
-    </record>
-
-    <record id="company_glmm" model="res.company">
-        <field name="name">GLADIS LINETTE MANCINAS MIRANDA</field>
-        <field name="code">GLMM</field>
-        <field name="partner_id" ref="partner_glmm" />
-        <field name="external_report_layout_id" ref="web.external_layout_striped" />
-        <field name="paperformat_id" ref="base.paperformat_us" />
-        <field name="chart_template">mx</field>
-        <field name="anglo_saxon_accounting" eval="True" />
-        <field name="tax_exigibility" eval="True" />
-        <field name="account_use_credit_limit" eval="True" />
-        <field name="l10n_mx_edi_fiscal_regime">612</field>
-        <field name="sequence" eval="12" />
-    </record>
-
     <record id="partner_society" model="res.partner">
         <field name="name">XIUMAN AGRO</field>
         <field name="type">contact</field>
@@ -257,7 +225,6 @@
                 Command.link(ref('marin_data.company_lmmg')),
                 Command.link(ref('marin_data.company_ammg')),
                 Command.link(ref('marin_data.company_cfmg')),
-                Command.link(ref('marin_data.company_glmm')),
                 Command.link(ref('marin_data.company_society')),
             ]"
         />
