@@ -40,11 +40,6 @@
         <field name="company_id" ref="marin_data.company_lmmg" />
     </record>
 
-    <record id="team_glmm" model="crm.team">
-        <field name="name">Direct sale GLMM</field>
-        <field name="company_id" ref="marin_data.company_glmm" />
-    </record>
-
     <record id="team_society" model="crm.team">
         <field name="name">Direct sale XM</field>
         <field name="company_id" ref="marin_data.company_society" />

@@ -609,3 +609,5 @@ marin_data.stock_location_5607,marin_data.company_lmmr,marin_data.stock_location
 marin_data.stock_location_5608,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_3,True,11,37,2,Internal Location,CDG-R7F10N2,1787,R7F10N2
 marin_data.stock_location_5609,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_4,True,11,37,3,Internal Location,CDG-R7F10N3,1788,R7F10N3
 marin_data.stock_location_5610,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_7,True,11,37,4,Internal Location,CDG-R7F10N4,1789,R7F10N4
+marin_data.stock_location_5611,marin_data.company_lmmr,marin_data.stock_location_1026,marin_data.stock_storage_category_2,True,0,0,0,Internal Location,,9999,Damaged
+marin_data.stock_location_5613,marin_data.company_lmmr,marin_data.stock_location_1026,marin_data.stock_storage_category_2,True,0,0,0,Internal Location,,9999,Shelf

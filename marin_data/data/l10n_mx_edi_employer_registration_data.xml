@@ -6,11 +6,4 @@
         <field name="job_risk_id" ref="l10n_mx_edi_payslip.class_job_risk_3" />
         <field name="minimum_wage">248.93</field>
     </record>
-
-    <record id="l10n_mx_edi_employer_registration_2" model="l10n_mx_edi.employer.registration">
-        <field name="name">C6030241106</field>
-        <field name="company_id" ref="marin_data.company_glmm" />
-        <field name="job_risk_id" ref="l10n_mx_edi_payslip.class_job_risk_2" />
-        <field name="minimum_wage">248.93</field>
-    </record>
 </odoo>
