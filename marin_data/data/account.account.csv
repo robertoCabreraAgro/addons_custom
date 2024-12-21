@@ -341,7 +341,7 @@ account_1339_202_03_007_lmmr,,Bank American Express Platinum,202.03.007,Credit C
 account_1340_101_01_001_tjgl,,Cash main,101.01.001,Bank and Cash,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,marin_data.company_tjgl
 account_1341_101_01_003_tjgl,base.USD,Cash USD,101.01.003,Bank and Cash,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,marin_data.company_tjgl
 account_1342_102_01_001_tjgl,,Bank BBVA 1,102.01.001,Bank and Cash,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,marin_data.company_tjgl
-account_1343_102_01_002_tjgl,,Bank BBVA 2,102.01.002,Bank and Cash,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,marin_data.company_tjgl
+account_1343_102_01_010_tjgl,,Bank BBVA Payroll,102.01.010,Bank and Cash,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,marin_data.company_tjgl
 account_1344_102_01_003_tjgl,,Bank Banamex,102.01.003,Bank and Cash,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,marin_data.company_tjgl
 account_1345_101_01_001_lmmg,,Cash main,101.01.001,Bank and Cash,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,marin_data.company_lmmg
 account_1346_101_01_003_lmmg,base.USD,Cash USD,101.01.003,Bank and Cash,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,marin_data.company_lmmg
