@@ -147,14 +147,14 @@ def _post_init_marin(env):
         """
     )
 
-    tools.convert.convert_file(env, "marin_data", "data/stock.picking.type.csv", None, mode="init", kind="data")
+#    tools.convert.convert_file(env, "marin_data", "data/stock.picking.type.csv", None, mode="init", kind="data")
 #    tools.convert.convert_file(env, "marin_data", "data/stock.route.csv", None, mode="init", kind="data")
 #    tools.convert.convert_file(env, "marin_data", "data/stock.rule.csv", None, mode="init", kind="data")
-#
-#    tools.convert.convert_file(env, "marin_data", "data/account.account.csv", None, mode="init", kind="data")
-#    tools.convert.convert_file(env, "marin_data", "data/account.analytic.plan.csv", None, mode="init", kind="data")
+
+    tools.convert.convert_file(env, "marin_data", "data/account.account.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/account.analytic.plan.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/account.journal.group.csv", None, mode="init", kind="data")
 #    tools.convert.convert_file(env, "marin_data", "data/account.journal.csv", None, mode="init", kind="data")
-#    tools.convert.convert_file(env, "marin_data", "data/account.journal.group.csv", None, mode="init", kind="data")
 #    tools.convert.convert_file(env, "marin_data", "data/account.asset.csv", None, mode="init", kind="data")
 #    tools.convert.convert_file(env, "marin_data", "data/account.payment.term.csv", None, mode="init", kind="data")
 #    tools.convert.convert_file(env, "marin_data", "data/account.tax.group.csv", None, mode="init", kind="data")
@@ -186,7 +186,7 @@ def _post_init_marin(env):
 #        if not exist:
 #            name = "tax_repartition_line_%s" % r.id
 #            env["ir.model.data"].create(
-#                {
+#               {
 #                    "module": "marin_data",
 #                    "model": model,
 #                    "name": name,
