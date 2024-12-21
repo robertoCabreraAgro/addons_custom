@@ -156,7 +156,7 @@ def _post_init_marin(env):
     tools.convert.convert_file(env, "marin_data", "data/account.journal.group.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin_data", "data/account.journal.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin_data", "data/account.asset.csv", None, mode="init", kind="data")
-#    tools.convert.convert_file(env, "marin_data", "data/account.payment.term.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/account.payment.term.csv", None, mode="init", kind="data")
 #    tools.convert.convert_file(env, "marin_data", "data/account.tax.group.csv", None, mode="init", kind="data")
 #    tools.convert.convert_file(env, "marin_data", "data/account.tax.csv", None, mode="init", kind="data")
 #
