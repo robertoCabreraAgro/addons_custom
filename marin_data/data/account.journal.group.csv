@@ -1,9 +1,9 @@
-id,name,company_id/id,sequence,excluded_journal_ids/id
-journal_group_1,Not simulated,marin.company_lmmr,10,"journal_cnx_lmmr,journal_cx_lmmr,journal_px_lmmr,journal_pnx_lmmr"
-journal_group_2,Not fiscal,marin.company_lmmr,11,"journal_efc01_lmmr,journal_efc04_lmmr,journal_efc05_lmmr,journal_efc02_lmmr,journal_ant02_lmmr,journal_cn_lmmr,journal_cnx_lmmr,journal_pn_lmmr,journal_pnx_lmmr,journal_eqt02_lmmr,journal_maq02_lmmr,journal_moq02_lmmr,journal_inc02_lmmr,journal_msc02_lmmr,journal_nom02_lmmr,journal_tpv00_lmmr,journal_tpv01_lmmr,journal_tpv02_lmmr,journal_trr02_lmmr"
-journal_group_3,Not simulated,marin.company_tjgl,10,
-journal_group_4,Not fiscal,marin.company_tjgl,11,
-journal_group_5,Not simulated,marin.company_lmmg,10,"journal_cnx_lmmg,journal_cx_lmmg,journal_px_lmmg,journal_pnx_lmmg"
-journal_group_6,Not fiscal,marin.company_lmmg,11,"journal_efc01_lmmg,journal_efc02_lmmg,journal_ant02_lmmg,journal_cn_lmmg,journal_cnx_lmmg,journal_pn_lmmg,journal_pnx_lmmg,journal_eqt02_lmmg,journal_maq02_lmmg,journal_moq02_lmmg,journal_inc02_lmmg,journal_msc02_lmmg,journal_nom02_lmmg,journal_trr02_lmmg"
-journal_group_7,Not simulated,marin.company_society,10,"journal_cx_xm,journal_px_xm"
-journal_group_8,Not fiscal,marin.company_society,11,"journal_efc02_xm,journal_ant02_xm,journal_cn_xm,journal_pn_xm,journal_tpv00_xm"
+id,name,company_id/id,sequence
+journal_group_1,Not simulated,marin_data.company_lmmr,10
+journal_group_2,Not fiscal,marin_data.company_lmmr,11
+journal_group_3,Not simulated,marin_data.company_tjgl,10
+journal_group_4,Not fiscal,marin_data.company_tjgl,11
+journal_group_5,Not simulated,marin_data.company_lmmg,10
+journal_group_6,Not fiscal,marin_data.company_lmmg,11
+journal_group_7,Not simulated,marin_data.company_society,10
+journal_group_8,Not fiscal,marin_data.company_society,11
