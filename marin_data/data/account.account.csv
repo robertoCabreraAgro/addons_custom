@@ -338,19 +338,24 @@ account_1336_202_03_004_lmmr,,Bank BBVA TN 5064,202.03.004,Credit Card,,No,,0.0,
 account_1337_202_03_005_lmmr,,Bank BBVA 1007025823,202.03.005,Credit Card,,No,,0.0,0.0,0.0,l10n_mx.tag_credit_balance_account,marin_data.company_lmmr
 account_1338_202_03_006_lmmr,,Bank American Express Gold,202.03.006,Credit Card,,No,,0.0,0.0,0.0,l10n_mx.tag_credit_balance_account,marin_data.company_lmmr
 account_1339_202_03_007_lmmr,,Bank American Express Platinum,202.03.007,Credit Card,,No,,0.0,0.0,0.0,l10n_mx.tag_credit_balance_account,marin_data.company_lmmr
-account_1340_101_01_001_lmmg,,Cash main,,Bank and Cash,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,marin_data.company_lmmg
-account_1341_101_01_003_lmmg,base.USD,Cash USD,,Bank and Cash,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,marin_data.company_lmmg
-account_1342_102_01_001_lmmg,,Bank BBVA 0478986592,,Bank and Cash,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,marin_data.company_lmmg
-account_1343_102_01_002_lmmg,,Bank BBVA 0110152269,,Bank and Cash,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,marin_data.company_lmmg
-account_1344_102_01_003_lmmg,,Bank Efectivale - Expenses,,Bank and Cash,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,marin_data.company_lmmg
-account_1345_102_01_004_lmmg,,Bank BanBajio 0038383038,,Bank and Cash,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,marin_data.company_lmmg
-account_1346_102_01_010_lmmg,,Bank BBVA Payroll,,Bank and Cash,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,marin_data.company_lmmg
-account_1347_202_03_002_lmmg,,Bank BBVA CC 5435,,Credit Card,,No,,0.0,0.0,0.0,l10n_mx.tag_credit_balance_account,marin_data.company_lmmg
-account_1348_401_04_010_lmmg,,Sales 0% FX - bank trade LMMR --> bank LMMG,,Income,,No,,0.0,0.0,0.0,l10n_mx.tag_credit_balance_account,marin_data.company_lmmg
-account_1349_503_01_006_lmmg,,Purchase discounts due payment in LMMR,,Other Income,,No,,0.0,0.0,0.0,l10n_mx.tag_credit_balance_account,marin_data.company_lmmg
-account_1350_603_100_001_lmmg,,Cash trade LMMG --> bank LMMR,,Expenses,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,marin_data.company_lmmg
-account_1351_603_101_001_lmmg,,Bank trade LMMG --> bank LMMR,,Expenses,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,marin_data.company_lmmg
-account_1352_603_102_001_lmmg,,Bank trade LMMR --> cash LMMG to thirth parties,,Expenses,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,marin_data.company_lmmg
-account_1353_101_01_001_xm,,Cash main,,Bank and Cash,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,marin_data.company_society
-account_1354_101_01_003_xm,base.USD,Cash USD,,Bank and Cash,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,marin_data.company_society
-account_1355_102_01_002_xm,,Bank BBVA main,,Bank and Cash,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,marin_data.company_society
+account_1340_101_01_001_tjgl,,Cash main,,Bank and Cash,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,marin_data.company_tjgl
+account_1341_101_01_003_tjgl,base.USD,Cash USD,,Bank and Cash,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,marin_data.company_tjgl
+account_1342_102_01_001_tjgl,,Bank BBVA 1,,Bank and Cash,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,marin_data.company_tjgl
+account_1343_102_01_002_tjgl,,Bank BBVA 2,,Bank and Cash,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,marin_data.company_tjgl
+account_1344_102_01_003_tjgl,,Bank Banamex,,Bank and Cash,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,marin_data.company_tjgl
+account_1345_101_01_001_lmmg,,Cash main,,Bank and Cash,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,marin_data.company_lmmg
+account_1346_101_01_003_lmmg,base.USD,Cash USD,,Bank and Cash,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,marin_data.company_lmmg
+account_1347_102_01_001_lmmg,,Bank BBVA 0478986592,,Bank and Cash,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,marin_data.company_lmmg
+account_1348_102_01_002_lmmg,,Bank BBVA 0110152269,,Bank and Cash,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,marin_data.company_lmmg
+account_1349_102_01_003_lmmg,,Bank Efectivale - Expenses,,Bank and Cash,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,marin_data.company_lmmg
+account_1350_102_01_004_lmmg,,Bank BanBajio 0038383038,,Bank and Cash,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,marin_data.company_lmmg
+account_1351_102_01_010_lmmg,,Bank BBVA Payroll,,Bank and Cash,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,marin_data.company_lmmg
+account_1352_202_03_002_lmmg,,Bank BBVA CC 5435,,Credit Card,,No,,0.0,0.0,0.0,l10n_mx.tag_credit_balance_account,marin_data.company_lmmg
+account_1353_401_04_010_lmmg,,Sales 0% FX - bank trade LMMR --> bank LMMG,,Income,,No,,0.0,0.0,0.0,l10n_mx.tag_credit_balance_account,marin_data.company_lmmg
+account_1354_503_01_006_lmmg,,Purchase discounts due payment in LMMR,,Other Income,,No,,0.0,0.0,0.0,l10n_mx.tag_credit_balance_account,marin_data.company_lmmg
+account_1355_603_100_001_lmmg,,Cash trade LMMG --> bank LMMR,,Expenses,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,marin_data.company_lmmg
+account_1356_603_101_001_lmmg,,Bank trade LMMG --> bank LMMR,,Expenses,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,marin_data.company_lmmg
+account_1357_603_102_001_lmmg,,Bank trade LMMR --> cash LMMG to thirth parties,,Expenses,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,marin_data.company_lmmg
+account_1358_101_01_001_xm,,Cash main,,Bank and Cash,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,marin_data.company_society
+account_1359_101_01_003_xm,base.USD,Cash USD,,Bank and Cash,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,marin_data.company_society
+account_1360_102_01_002_xm,,Bank BBVA main,,Bank and Cash,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,marin_data.company_society
