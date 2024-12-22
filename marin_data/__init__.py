@@ -17,10 +17,8 @@ def _post_init_marin(env):
     tools.convert.convert_file(env, "marin_data", "data/room.room.csv", None, mode="init", kind="data")
 
     model = "resource.calendar"
-    calendars = (
-        env[model]
-        .sudo()
-        .search([("active", "in", [True, False]), ("id", ">", 100)], order="id ASC")
+    calendars = env[model].sudo().search(
+        [("active", "in", [True, False]), ("id", ">", 100)], order="id ASC"
     )
     for cc in calendars:
         exist = env["ir.model.data"].sudo().search([("model", "=", model), ("res_id", "=", cc.id)])
@@ -70,10 +68,8 @@ def _post_init_marin(env):
     tools.convert.convert_file(env, "marin_data", "data/product.tag.csv", None, mode="init", kind="data")
 
     model = "stock.warehouse"
-    warehouses = (
-        env[model]
-        .sudo()
-        .search([("active", "in", [True, False])], order="id ASC")
+    warehouses = env[model].sudo().search(
+        [("active", "in", [True, False])], order="id ASC"
     )
     for wh in warehouses:
         exist = env["ir.model.data"].sudo().search([("model", "=", model), ("res_id", "=", wh.id)])
@@ -111,10 +107,8 @@ def _post_init_marin(env):
     tools.convert.convert_file(env, "marin_data", "data/stock.location.csv", None, mode="init", kind="data")
 
     model = "stock.picking.type"
-    types = (
-        env[model]
-        .sudo()
-        .search([("active", "in", [True, False])], order="id ASC")
+    types = env[model].sudo().search(
+        [("active", "in", [True, False])], order="id ASC"
     )
     for spt in types:
         exist = env["ir.model.data"].sudo().search([("model", "=", model), ("res_id", "=", spt.id)])
@@ -147,7 +141,7 @@ def _post_init_marin(env):
         """
     )
 
-#    tools.convert.convert_file(env, "marin_data", "data/stock.picking.type.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/stock.picking.type.csv", None, mode="init", kind="data")
 #    tools.convert.convert_file(env, "marin_data", "data/stock.route.csv", None, mode="init", kind="data")
 #    tools.convert.convert_file(env, "marin_data", "data/stock.rule.csv", None, mode="init", kind="data")
 
@@ -157,117 +151,111 @@ def _post_init_marin(env):
     tools.convert.convert_file(env, "marin_data", "data/account.journal.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin_data", "data/account.asset.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin_data", "data/account.payment.term.csv", None, mode="init", kind="data")
-#    tools.convert.convert_file(env, "marin_data", "data/account.tax.group.csv", None, mode="init", kind="data")
-#    tools.convert.convert_file(env, "marin_data", "data/account.tax.csv", None, mode="init", kind="data")
-#
-#    env.cr.execute("""UPDATE account_payment_method_line SET id=id+10000 WHERE id>=1000""")
-#    env.cr.execute("""SELECT id FROM account_payment_method_line WHERE id>=10000 ORDER BY journal_id, payment_method_id""")
-#    records = env.cr.fetchall()
-#    start = 1001
-#    for r in records:
-#        env.cr.execute("""UPDATE account_payment_method_line SET id=%s WHERE id=%s""" % (start, r[0]))
-#        start += 1
-#
-#    env.cr.execute("""UPDATE account_tax_repartition_line SET id=id+10000 WHERE id>=5000""")
-#    env.cr.execute("""SELECT id FROM account_tax_repartition_line WHERE id>=10000 ORDER BY tax_id, document_type, repartition_type""")
-#    records = env.cr.fetchall()
-#    start = 5001
-#    for r in records:
-#        env.cr.execute("""UPDATE account_tax_repartition_line SET id=%s WHERE id=%s""" % (start, r[0]))
-#        start += 1
-#    model = "account.tax.repartition.line"
-#    records = (
-#        env[model]
-#        .sudo()
-#        .search([("id", ">=", "5000")], order="id ASC")
-#    )
-#    for r in records:
-#        exist = env["ir.model.data"].sudo().search([("model", "=", model), ("res_id", "=", r.id)])
-#        if not exist:
-#            name = "tax_repartition_line_%s" % r.id
-#            env["ir.model.data"].create(
-#               {
-#                    "module": "marin_data",
-#                    "model": model,
-#                    "name": name,
-#                    "res_id": r.id,
-#                    "noupdate": True,
-#                }
-#            )
-#
-#    model = "account.account.tag"
-#    aat = (
-#        env[model]
-#        .sudo()
-#        .search([("name", "ilike", "DIOT:")], order="id ASC")
-#    )
-#    for at in aat:
-#        exist = env["ir.model.data"].sudo().search([("model", "=", model), ("res_id", "=", at.id)])
-#        if not exist:
-#            env["ir.model.data"].create(
-#                {
-#                    "module": "l10n_mx",
-#                    "model": model,
-#                    "name": "l10n_mx_%s" % (at.name.replace(" ","_").replace("%","").replace(":","").replace("-","in_").replace("+","out_").lower()),
-#                    "res_id": at.id,
-#                    "noupdate": True,
-#                }
-#            )
-#
-#    tools.convert.convert_file(env, "marin_data", "data/account.account.tag.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/account.tax.group.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/account.tax.csv", None, mode="init", kind="data")
+
+    env.cr.execute("""UPDATE account_payment_method_line SET id=id+10000 WHERE id>=1000""")
+    env.cr.execute("""SELECT id FROM account_payment_method_line WHERE id>=10000 ORDER BY journal_id, payment_method_id""")
+    records = env.cr.fetchall()
+    start = 1001
+    for r in records:
+        env.cr.execute("""UPDATE account_payment_method_line SET id=%s WHERE id=%s""" % (start, r[0]))
+        start += 1
+
+    env.cr.execute("""UPDATE account_tax_repartition_line SET id=id+10000 WHERE id>=5000""")
+    env.cr.execute("""SELECT id FROM account_tax_repartition_line WHERE id>=10000 ORDER BY tax_id, document_type, repartition_type""")
+    records = env.cr.fetchall()
+    start = 5001
+    for r in records:
+        env.cr.execute("""UPDATE account_tax_repartition_line SET id=%s WHERE id=%s""" % (start, r[0]))
+        start += 1
+    model = "account.tax.repartition.line"
+    records = env[model].sudo().search(
+        [("id", ">=", "5000")], order="id ASC"
+    )
+    for r in records:
+        exist = env["ir.model.data"].sudo().search([("model", "=", model), ("res_id", "=", r.id)])
+        if not exist:
+            name = "tax_repartition_line_%s" % r.id
+            env["ir.model.data"].create(
+               {
+                    "module": "marin_data",
+                    "model": model,
+                    "name": name,
+                    "res_id": r.id,
+                    "noupdate": True,
+                }
+            )
+
+    model = "account.account.tag"
+    aat = env[model].sudo().search(
+        [("name", "ilike", "DIOT:")], order="id ASC"
+    )
+    for at in aat:
+        exist = env["ir.model.data"].sudo().search([("model", "=", model), ("res_id", "=", at.id)])
+        if not exist:
+            env["ir.model.data"].create(
+                {
+                    "module": "l10n_mx",
+                    "model": model,
+                    "name": "l10n_mx_%s" % (at.name.replace(" ","_").replace("%","").replace(":","").replace("-","in_").replace("+","out_").lower()),
+                    "res_id": at.id,
+                    "noupdate": True,
+                }
+            )
+
+    tools.convert.convert_file(env, "marin_data", "data/account.account.tag.csv", None, mode="init", kind="data")
 #    tools.convert.convert_file(env, "marin_data", "data/account.tax.repartition.line.csv", None, mode="init", kind="data")
-#
-#    env.cr.execute(
-#        """
-#        SELECT setval('"public"."product_packaging_id_seq"', 1000, true);
-#        SELECT setval('"public"."product_product_id_seq"', 1000, true);
-#        SELECT setval('"public"."product_template_id_seq"', 1000, true);
-#
-#        SELECT setval('"public"."mrp_bom_id_seq"', 1000, true);
-#        SELECT setval('"public"."mrp_bom_line_id_seq"', 1000, true);
-#
-#        SELECT setval('"public"."hr_contract_id_seq"', 1000, true);
-#        SELECT setval('"public"."hr_payroll_structure_type_id_seq"', 100, true);
-#        SELECT setval('"public"."hr_payroll_structure_id_seq"', 100, true);
-#        SELECT setval('"public"."hr_salary_rule_id_seq"', 1000, true);
-#
-#        SELECT setval('"public"."pos_config_id_seq"', 97, true);
-#        SELECT setval('"public"."pos_payment_method_id_seq"', 100, true);
-#
-#        SELECT setval('"public"."fleet_vehicle_model_brand_id_seq"', 100, true);
-#        SELECT setval('"public"."fleet_vehicle_model_id_seq"', 100, true);
-#        SELECT setval('"public"."account_analytic_account_id_seq"', 999, true);
-#        SELECT setval('"public"."account_analytic_distribution_model_id_seq"', 1000, true);
-#        """
-#    )
-#
-#    tools.convert.convert_file(env, "marin_data", "data/pos.category.csv", None, mode="init", kind="data")
-#    tools.convert.convert_file(env, "marin_data", "data/pos.payment.method.csv", None, mode="init", kind="data")
-#    tools.convert.convert_file(env, "marin_data", "data/pos.config.csv", None, mode="init", kind="data")
-#    tools.convert.convert_file(env, "marin_data", "data/product.template.csv", None, mode="init", kind="data")
-#
-#    model = "product.product"
-#    products = (
-#        env[model]
-#        .sudo()
-#        .search([("active", "in", [True, False]), ("id", ">", 1000)], order="id ASC")
-#    )
-#    for pp in products:
-#        exist = env["ir.model.data"].sudo().search([("model", "=", model), ("res_id", "=", pp.id)])
-#        if not exist:
-#            env["ir.model.data"].create(
-#                {
-#                    "module": "marin_data",
-#                    "model": model,
-#                    "name": "product_product_%s" % pp.id,
-#                    "res_id": pp.id,
-#                    "noupdate": True,
-#                }
-#            )
-#    tools.convert.convert_file(env, "marin_data", "data/product.packaging.csv", None, mode="init", kind="data")
-#
-#    tools.convert.convert_file(env, "marin_data", "data/mrp.bom.csv", None, mode="init", kind="data")
-#
+
+    env.cr.execute(
+        """
+        SELECT setval('"public"."product_packaging_id_seq"', 1000, true);
+        SELECT setval('"public"."product_product_id_seq"', 1000, true);
+        SELECT setval('"public"."product_template_id_seq"', 1000, true);
+
+        SELECT setval('"public"."mrp_bom_id_seq"', 1000, true);
+        SELECT setval('"public"."mrp_bom_line_id_seq"', 1000, true);
+
+        SELECT setval('"public"."hr_contract_id_seq"', 1000, true);
+        SELECT setval('"public"."hr_payroll_structure_type_id_seq"', 100, true);
+        SELECT setval('"public"."hr_payroll_structure_id_seq"', 100, true);
+        SELECT setval('"public"."hr_salary_rule_id_seq"', 1000, true);
+
+        SELECT setval('"public"."pos_config_id_seq"', 97, true);
+        SELECT setval('"public"."pos_payment_method_id_seq"', 100, true);
+
+        SELECT setval('"public"."fleet_vehicle_model_brand_id_seq"', 100, true);
+        SELECT setval('"public"."fleet_vehicle_model_id_seq"', 100, true);
+        SELECT setval('"public"."account_analytic_account_id_seq"', 999, true);
+        SELECT setval('"public"."account_analytic_distribution_model_id_seq"', 1000, true);
+        """
+    )
+
+    tools.convert.convert_file(env, "marin_data", "data/pos.category.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/pos.payment.method.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/pos.config.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/product.template.csv", None, mode="init", kind="data")
+
+    model = "product.product"
+    products = env[model].sudo().search(
+        [("active", "in", [True, False]), ("id", ">", 1000)], order="id ASC"
+    )
+    for pp in products:
+        exist = env["ir.model.data"].sudo().search([("model", "=", model), ("res_id", "=", pp.id)])
+        if not exist:
+            env["ir.model.data"].create(
+                {
+                    "module": "marin_data",
+                    "model": model,
+                    "name": f"product_product_{pp.id}",
+                    "res_id": pp.id,
+                    "noupdate": True,
+                }
+            )
+    tools.convert.convert_file(env, "marin_data", "data/product.packaging.csv", None, mode="init", kind="data")
+
+    tools.convert.convert_file(env, "marin_data", "data/mrp.bom.csv", None, mode="init", kind="data")
+
 #    tools.convert.convert_file(env, "marin_data", "data/hr.department.csv", None, mode="init", kind="data")
 #    tools.convert.convert_file(env, "marin_data", "data/hr.job.csv", None, mode="init", kind="data")
 #    tools.convert.convert_file(env, "marin_data", "data/l10n_mx_edi_employer_registration_data.xml", None, mode="init", kind="data")
