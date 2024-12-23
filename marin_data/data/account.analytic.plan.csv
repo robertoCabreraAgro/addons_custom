@@ -1,6 +1,3 @@
 "id","name","default_applicability","color","sequence"
-"analytic_plan_201","Agroquimicos, Fertilizantes","Optional","10","10"
-"analytic_plan_202","Planes de trabajo","Optional","11","12"
-"analytic_plan_203","Arrendamiento","Optional","4","13"
-"analytic_plan_204","Flotilla","Optional","1","11"
-"analytic_plan_205","Terrenos, inmuebles, construcciones, edificios","Optional","8","14"
+"analytic_plan_201","Agrochemicals, assets, properties, vehicles, machinery","Optional","10","10"
+"analytic_plan_202","Projects","Optional","11","12"
