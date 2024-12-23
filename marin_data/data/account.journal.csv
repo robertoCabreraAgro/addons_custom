@@ -111,24 +111,24 @@ journal_msc02_lmmg,Miscellaneous operations NF,Miscellaneous,MSC02,49,0,True,,,,
 journal_nom02_lmmg,Employees NF,Miscellaneous,NOM02,50,6,True,,,,Not Fiscal real,marin_data.company_lmmg,,marin_data.account_210_01_001,,,,,,,,,marin_data.journal_group_6
 journal_trr01_lmmg,Lands FF,Miscellaneous,TRR01,51,0,True,,,,Fiscal real,marin_data.company_lmmg,,,,,,,,,,,
 journal_trr02_lmmg,Lands NF,Miscellaneous,TRR02,52,0,True,,,,Not Fiscal real,marin_data.company_lmmg,,,,,,,,,"marin_data.account_151_01_002,marin_data.account_302_01_002",,marin_data.journal_group_6
-journal_ant01_xm,Suppliers advances FF,Cash,ANT01,28,0,True,True,,,Not Fiscal real,marin_data.company_society,,marin_data.account_120_01_001,,,,account.8_default_cash_difference_expense_account_id,account.8_default_cash_difference_income_account_id,,,,
-journal_ant02_xm,Suppliers advances NF,Cash,ANT02,31,0,True,True,,,Not Fiscal real,marin_data.company_society,,marin_data.account_120_01_002,,,,account.8_default_cash_difference_expense_account_id,account.8_default_cash_difference_income_account_id,,,,marin_data.journal_group_8
-journal_efc01_xm,Cash Main,Cash,EFC01,18,0,True,True,,,Not Fiscal real,marin_data.company_society,,marin_data.account_101_01_001_xm,,,,account.8_default_cash_difference_expense_account_id,account.8_default_cash_difference_income_account_id,,,,
-journal_efc02_xm,Cash USD,Cash,EFC02,25,0,True,True,,,Not Fiscal real,marin_data.company_society,base.USD,marin_data.account_101_01_003_xm,,,,account.8_default_cash_difference_expense_account_id,account.8_default_cash_difference_income_account_id,,,,marin_data.journal_group_8
-journal_bnc01_xm,Bank BBVA main,Bank,BNC01,14,0,True,True,,,Fiscal real,marin_data.company_society,,marin_data.account_102_01_002_xm,,,,account.8_default_cash_difference_expense_account_id,account.8_default_cash_difference_income_account_id,,,,
-journal_pex_xm,Foreign suppliers FF,Purchase,PEX,55,0,True,True,True,,Fiscal real,marin_data.company_society,,marin_data.account_501_01_001,marin_data.account_201_02_001,,,,,,,,
-journal_pf_xm,Suppliers FF,Purchase,PF,63,0,True,True,True,,Not Fiscal real,marin_data.company_society,,marin_data.account_501_01_001,marin_data.account_201_01_001,,,,,,,,
-journal_pn_xm,Suppliers NF,Purchase,PN,73,0,True,True,True,,Not Fiscal real,marin_data.company_society,,marin_data.account_501_01_002,marin_data.account_201_01_002,,,,,,,,marin_data.journal_group_8
-journal_pnx_xm,Suppliers NX,Purchase,PNX,78,0,True,True,True,,Not Fiscal real,marin_data.company_society,,marin_data.account_501_01_001,marin_data.account_201_01_002,,,,,,,,
-journal_pp_xm,Lenders NF,Purchase,PP,36,0,True,True,,,Not Fiscal real,marin_data.company_society,,marin_data.account_501_01_002,marin_data.account_201_01_002,,,,,,marin_data.account_201_01_002,,
-journal_px_xm,Suppliers FX,Purchase,PX,68,0,True,True,True,,Not Fiscal real,marin_data.company_society,,marin_data.account_501_01_001,marin_data.account_201_01_001,,,,,,,,marin_data.journal_group_7
-journal_cf_xm,Customers FF,Sales,CF,38,0,True,True,True,,Not Fiscal real,marin_data.company_society,,marin_data.account_401_04_001,,marin_data.account_105_01_001,,,,,,,
-journal_cn_xm,Customers NF,Sales,CN,46,0,True,True,True,,Not Fiscal real,marin_data.company_society,,marin_data.account_401_04_002,,marin_data.account_105_01_002,,,,,,,marin_data.journal_group_8
-journal_cnx_xm,Customers NX,Sales,CNX,49,0,True,True,True,,Not Fiscal real,marin_data.company_society,,marin_data.account_401_04_016,,marin_data.account_105_01_002,,,,,,,
-journal_cx_xm,Customers FX,Sales,CX,51,0,True,True,True,,Not Fiscal real,marin_data.company_society,,marin_data.account_401_04_003,,marin_data.account_105_01_001,,,,,,,marin_data.journal_group_7
-journal_caba1_xm,Tax declarations FF,Miscellaneous,CABA1,120,0,True,True,,,Fiscal real,marin_data.company_society,,,,,,,,,,,
-journal_cbmx1_xm,Effectively paid FF,Miscellaneous,CBMX1,115,0,True,True,,,Fiscal real,marin_data.company_society,,,,,,,,,,,
-journal_cll01_xm,Customers collaterals FF,Miscellaneous,CLL01,120,0,True,True,,,Fiscal real,marin_data.company_society,,,,,,,,,,,
-journal_cll02_xm,Customers collaterals NF,Miscellaneous,CLL02,120,0,True,True,,,Not Fiscal real,marin_data.company_society,,,,,,,,,,,
-journal_exc01_xm,Exchange difference FF,Miscellaneous,EXC01,125,0,True,True,,,Not Fiscal real,marin_data.company_society,,,,,,,,,,,
-journal_tpv00_xm,POS XM,Miscellaneous,TPV00,145,0,True,True,,,Not Fiscal real,marin_data.company_society,,,,,,,,,,,marin_data.journal_group_8
+journal_ant01_society,Suppliers advances FF,Cash,ANT01,28,0,True,True,,,Not Fiscal real,marin_data.company_society,,marin_data.account_120_01_001,,,,account.8_default_cash_difference_expense_account_id,account.8_default_cash_difference_income_account_id,,,,
+journal_ant02_society,Suppliers advances NF,Cash,ANT02,31,0,True,True,,,Not Fiscal real,marin_data.company_society,,marin_data.account_120_01_002,,,,account.8_default_cash_difference_expense_account_id,account.8_default_cash_difference_income_account_id,,,,marin_data.journal_group_8
+journal_efc01_society,Cash Main,Cash,EFC01,18,0,True,True,,,Not Fiscal real,marin_data.company_society,,marin_data.account_101_01_001_society,,,,account.8_default_cash_difference_expense_account_id,account.8_default_cash_difference_income_account_id,,,,
+journal_efc02_society,Cash USD,Cash,EFC02,25,0,True,True,,,Not Fiscal real,marin_data.company_society,base.USD,marin_data.account_101_01_003_society,,,,account.8_default_cash_difference_expense_account_id,account.8_default_cash_difference_income_account_id,,,,marin_data.journal_group_8
+journal_bnc01_society,Bank BBVA main,Bank,BNC01,14,0,True,True,,,Fiscal real,marin_data.company_society,,marin_data.account_102_01_002_society,,,,account.8_default_cash_difference_expense_account_id,account.8_default_cash_difference_income_account_id,,,,
+journal_pex_society,Foreign suppliers FF,Purchase,PEX,55,0,True,True,True,,Fiscal real,marin_data.company_society,,marin_data.account_501_01_001,marin_data.account_201_02_001,,,,,,,,
+journal_pf_society,Suppliers FF,Purchase,PF,63,0,True,True,True,,Not Fiscal real,marin_data.company_society,,marin_data.account_501_01_001,marin_data.account_201_01_001,,,,,,,,
+journal_pn_society,Suppliers NF,Purchase,PN,73,0,True,True,True,,Not Fiscal real,marin_data.company_society,,marin_data.account_501_01_002,marin_data.account_201_01_002,,,,,,,,marin_data.journal_group_8
+journal_pnx_society,Suppliers NX,Purchase,PNX,78,0,True,True,True,,Not Fiscal real,marin_data.company_society,,marin_data.account_501_01_001,marin_data.account_201_01_002,,,,,,,,
+journal_pp_society,Lenders NF,Purchase,PP,36,0,True,True,,,Not Fiscal real,marin_data.company_society,,marin_data.account_501_01_002,marin_data.account_201_01_002,,,,,,marin_data.account_201_01_002,,
+journal_px_society,Suppliers FX,Purchase,PX,68,0,True,True,True,,Not Fiscal real,marin_data.company_society,,marin_data.account_501_01_001,marin_data.account_201_01_001,,,,,,,,marin_data.journal_group_7
+journal_cf_society,Customers FF,Sales,CF,38,0,True,True,True,,Not Fiscal real,marin_data.company_society,,marin_data.account_401_04_001,,marin_data.account_105_01_001,,,,,,,
+journal_cn_society,Customers NF,Sales,CN,46,0,True,True,True,,Not Fiscal real,marin_data.company_society,,marin_data.account_401_04_002,,marin_data.account_105_01_002,,,,,,,marin_data.journal_group_8
+journal_cnx_society,Customers NX,Sales,CNX,49,0,True,True,True,,Not Fiscal real,marin_data.company_society,,marin_data.account_401_04_016,,marin_data.account_105_01_002,,,,,,,
+journal_cx_society,Customers FX,Sales,CX,51,0,True,True,True,,Not Fiscal real,marin_data.company_society,,marin_data.account_401_04_003,,marin_data.account_105_01_001,,,,,,,marin_data.journal_group_7
+journal_caba1_society,Tax declarations FF,Miscellaneous,CABA1,120,0,True,True,,,Fiscal real,marin_data.company_society,,,,,,,,,,,
+journal_cbmx1_society,Effectively paid FF,Miscellaneous,CBMX1,115,0,True,True,,,Fiscal real,marin_data.company_society,,,,,,,,,,,
+journal_cll01_society,Customers collaterals FF,Miscellaneous,CLL01,120,0,True,True,,,Fiscal real,marin_data.company_society,,,,,,,,,,,
+journal_cll02_society,Customers collaterals NF,Miscellaneous,CLL02,120,0,True,True,,,Not Fiscal real,marin_data.company_society,,,,,,,,,,,
+journal_exc01_society,Exchange difference FF,Miscellaneous,EXC01,125,0,True,True,,,Not Fiscal real,marin_data.company_society,,,,,,,,,,,
+journal_tpv00_society,POS XM,Miscellaneous,TPV00,145,0,True,True,,,Not Fiscal real,marin_data.company_society,,,,,,,,,,,marin_data.journal_group_8

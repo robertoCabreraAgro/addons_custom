@@ -306,14 +306,14 @@ account_603_101_002_lmmr,,Bank trade LMMR --> bank LMMG,603.101.002,Expenses,,No
 account_603_101_003_lmmr,,Bank trade LMMR --> bank GLMM,603.101.003,Expenses,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,marin_data.company_lmmr
 account_603_102_002_lmmr,,Bank trade LMMG --> self cash to thirth parties,603.102.002,Expenses,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,marin_data.company_lmmr
 account_611_01_001,,Income tax (ISR),611.01.001,Expenses,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,"marin_data.company_lmmg,marin_data.company_lmmr,marin_data.company_tjgl"
-account_701_01_001,,Currency exchange loss,701.01.001,Expenses,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,"marin_data.company_lmmg,marin_data.company_lmmr,marin_data.company_tjgl"
+account_701_01_001,,Currency exchange loss,701.01.001,Expenses,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,"marin_data.company_lmmg,marin_data.company_lmmr,marin_data.company_tjgl,marin_data.company_society"
 account_701_04_001,,Interest expense to domestic bank FF,701.04.001,Expenses,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,"marin_data.company_lmmg,marin_data.company_lmmr"
 account_701_08_001,,Interest expense to domestic legal entities FF,701.08.001,Expenses,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,"marin_data.company_lmmg,marin_data.company_lmmr"
 account_701_10_001,,Bank commissions FF,701.10.001,Expenses,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,"marin_data.company_lmmg,marin_data.company_lmmr,marin_data.company_tjgl"
 account_702_01_001,,Currency exchange gain,702.01.001,Other Income,,No,,0.0,0.0,0.0,l10n_mx.tag_credit_balance_account,"marin_data.company_lmmg,marin_data.company_lmmr,marin_data.company_tjgl,marin_data.company_society"
 account_703_21_001,,Other expenses FF,703.21.001,Expenses,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,"marin_data.company_lmmg,marin_data.company_lmmr"
-account_703_21_002,,Loss due to cash discrepancy,703.21.002,Expenses,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,"marin_data.company_lmmg,marin_data.company_lmmr,marin_data.company_tjgl"
-account_703_21_003,,Loss from cash discount,703.21.003,Expenses,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,"marin_data.company_lmmg,marin_data.company_lmmr,marin_data.company_tjgl"
+account_703_21_002,,Loss due to cash discrepancy,703.21.002,Expenses,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,"marin_data.company_lmmg,marin_data.company_lmmr,marin_data.company_tjgl,marin_data.company_society"
+account_703_21_003,,Loss from cash discount,703.21.003,Expenses,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,"marin_data.company_lmmg,marin_data.company_lmmr,marin_data.company_tjgl,marin_data.company_society"
 account_704_01_001,,Gain on sale and/or disposal of lands FF,704.01.001,Other Income,,No,,0.0,0.0,0.0,l10n_mx.tag_credit_balance_account,"marin_data.company_lmmg,marin_data.company_lmmr,marin_data.company_tjgl,marin_data.company_society"
 account_704_03_001,,Gain on sale and/or disposal of machinery and equipment FF,704.03.001,Other Income,,No,,0.0,0.0,0.0,l10n_mx.tag_credit_balance_account,"marin_data.company_lmmg,marin_data.company_lmmr,marin_data.company_tjgl,marin_data.company_society"
 account_704_04_001,,"Gain on sale and/or disposal of automobiles, buses, trucks, forklifts or trailers FF",704.04.001,Other Income,,No,,0.0,0.0,0.0,l10n_mx.tag_credit_balance_account,"marin_data.company_lmmg,marin_data.company_lmmr,marin_data.company_tjgl,marin_data.company_society"
@@ -356,6 +356,6 @@ account_503_01_006_lmmg,,Purchase discounts due payment in LMMR,503.01.006,Other
 account_603_100_001_lmmg,,Cash trade LMMG --> bank LMMR,603.100.001,Expenses,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,marin_data.company_lmmg
 account_603_101_001_lmmg,,Bank trade LMMG --> bank LMMR,603.101.001,Expenses,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,marin_data.company_lmmg
 account_603_102_001_lmmg,,Bank trade LMMR --> cash LMMG to thirth parties,603.102.001,Expenses,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,marin_data.company_lmmg
-account_101_01_001_xm,,Cash main,101.01.001,Bank and Cash,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,marin_data.company_society
-account_101_01_003_xm,base.USD,Cash USD,101.01.003,Bank and Cash,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,marin_data.company_society
-account_102_01_002_xm,,Bank BBVA main,102.01.002,Bank and Cash,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,marin_data.company_society
+account_101_01_001_society,,Cash main,101.01.001,Bank and Cash,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,marin_data.company_society
+account_101_01_003_society,base.USD,Cash USD,101.01.003,Bank and Cash,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,marin_data.company_society
+account_102_01_002_society,,Bank BBVA main,102.01.002,Bank and Cash,,No,,0.0,0.0,0.0,l10n_mx.tag_debit_balance_account,marin_data.company_society

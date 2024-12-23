@@ -302,8 +302,8 @@ def _post_init_marin(env):
     tools.convert.convert_file(env, "marin_data", "data/account.analytic.account.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin_data", "data/account.analytic.distribution.model.csv", None, mode="init", kind="data")
 
-#    tools.convert.convert_file(env, "marin_data", "data/project.project.csv", None, mode="init", kind="data")
-#    tools.convert.convert_file(env, "marin_data", "data/project.task.type.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/project.project.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/project.task.type.csv", None, mode="init", kind="data")
 
     tools.convert.convert_file(env, "marin_data", "data/res.company.csv", None, mode="init", kind="data")
 
