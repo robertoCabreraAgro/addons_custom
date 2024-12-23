@@ -142,8 +142,34 @@ def _post_init_marin(env):
     )
 
     tools.convert.convert_file(env, "marin_data", "data/stock.picking.type.csv", None, mode="init", kind="data")
-#    tools.convert.convert_file(env, "marin_data", "data/stock.route.csv", None, mode="init", kind="data")
-#    tools.convert.convert_file(env, "marin_data", "data/stock.rule.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/stock.route.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/stock.rule.csv", None, mode="init", kind="data")
+    queries = [
+        """UPDATE stock_picking_type SET sequence=100  WHERE name->>'en_US' = 'Delivery Orders'""",
+        """UPDATE stock_picking_type SET sequence=150  WHERE name->>'en_US' = 'Ship orders'""",
+        """UPDATE stock_picking_type SET sequence=150  WHERE name->>'en_US' = 'Ship orders 3P'""",
+        """UPDATE stock_picking_type SET sequence=200  WHERE name->>'en_US' = 'PoS Orders'""",
+        """UPDATE stock_picking_type SET sequence=300  WHERE name->>'en_US' ilike 'receipts'""",
+        """UPDATE stock_picking_type SET sequence=350  WHERE name->>'en_US' ilike 'internal transfers'""",
+        """UPDATE stock_picking_type SET sequence=400  WHERE name->>'en_US' ilike 'interwarehouse%'""",
+        """UPDATE stock_picking_type SET sequence=500  WHERE name->>'en_US' ilike 'Returns from customers'""",
+        """UPDATE stock_picking_type SET sequence=550  WHERE name->>'en_US' ilike 'Returns to suppliers'""",
+        """UPDATE stock_picking_type SET sequence=600  WHERE name->>'en_US' ilike 'manufacturing'""",
+        """UPDATE stock_picking_type SET sequence=700  WHERE name->>'en_US' ilike 'pick'""",
+        """UPDATE stock_picking_type SET sequence=800  WHERE name->>'en_US' ilike 'pick components'""",
+        """UPDATE stock_picking_type SET sequence=900  WHERE name->>'en_US' ilike 'pack'""",
+        """UPDATE stock_picking_type SET sequence=1000 WHERE name->>'en_US' ilike 'store finished product'""",
+        """UPDATE stock_picking_type SET sequence=1100 WHERE name->>'en_US' ilike 'subcontracting'""",
+        """UPDATE stock_picking_type SET sequence=1200 WHERE name->>'en_US' ilike 'resupply subcontractor'""",
+        """UPDATE stock_picking_type SET sequence=1300 WHERE name->>'en_US' ilike 'dropship'""",
+        """UPDATE stock_picking_type SET sequence=1400 WHERE name->>'en_US' ilike 'dropship subcontractor'""",
+        """UPDATE stock_picking_type SET sequence=1500 WHERE name->>'en_US' ilike 'intercompany%'""",
+        """UPDATE stock_picking_type SET sequence=1600 WHERE name->>'en_US' ilike 'Quality Control'""",
+        """UPDATE stock_picking_type SET sequence=1700 WHERE name->>'en_US' ilike 'Storage'""",
+        """UPDATE stock_picking_type SET sequence=1800 WHERE name->>'en_US' ilike 'Cross Dock'""",
+    ]
+    for q in queries:
+        env.cr.execute(q)
 
     tools.convert.convert_file(env, "marin_data", "data/account.account.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin_data", "data/account.analytic.plan.csv", None, mode="init", kind="data")
@@ -205,7 +231,7 @@ def _post_init_marin(env):
             )
 
     tools.convert.convert_file(env, "marin_data", "data/account.account.tag.csv", None, mode="init", kind="data")
-#    tools.convert.convert_file(env, "marin_data", "data/account.tax.repartition.line.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/account.tax.repartition.line.csv", None, mode="init", kind="data")
 
     env.cr.execute(
         """
@@ -256,23 +282,23 @@ def _post_init_marin(env):
 
     tools.convert.convert_file(env, "marin_data", "data/mrp.bom.csv", None, mode="init", kind="data")
 
-#    tools.convert.convert_file(env, "marin_data", "data/hr.department.csv", None, mode="init", kind="data")
-#    tools.convert.convert_file(env, "marin_data", "data/hr.job.csv", None, mode="init", kind="data")
-#    tools.convert.convert_file(env, "marin_data", "data/l10n_mx_edi_employer_registration_data.xml", None, mode="init", kind="data")
-#    tools.convert.convert_file(env, "marin_data", "data/hr.employee.csv", None, mode="init", kind="data")
-#    tools.convert.convert_file(env, "marin_data", "data/hr_payroll_structure_type_data.xml", None, mode="init", kind="data")
-#    tools.convert.convert_file(env, "marin_data", "data/hr_payroll_structure_nomina_data.xml", None, mode="init", kind="data")
-#    tools.convert.convert_file(env, "marin_data", "data/hr_payroll_structure_nomina_christmas_bonus_data.xml", None, mode="init", kind="data")
-#    tools.convert.convert_file(env, "marin_data", "data/hr_payroll_structure_nomina_finiquito_data.xml", None, mode="init", kind="data")
-#    tools.convert.convert_file(env, "marin_data", "data/hr_payroll_structure_misc_data.xml", None, mode="init", kind="data")
-#    tools.convert.convert_file(env, "marin_data", "data/hr.contract.csv", None, mode="init", kind="data")
-#
-#    tools.convert.convert_file(env, "marin_data", "data/fleet.vehicle.model.brand.csv", None, mode="init", kind="data")
-#    tools.convert.convert_file(env, "marin_data", "data/fleet.vehicle.model.category.csv", None, mode="init", kind="data")
-#    tools.convert.convert_file(env, "marin_data", "data/fleet.vehicle.model.csv", None, mode="init", kind="data")
-#    tools.convert.convert_file(env, "marin_data", "data/fleet.vehicle.csv", None, mode="init", kind="data")
-#    tools.convert.convert_file(env, "marin_data", "data/documents_document_data.xml", None, mode="init", kind="data")
-#
+    tools.convert.convert_file(env, "marin_data", "data/hr.department.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/hr.job.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/l10n_mx_edi_employer_registration_data.xml", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/hr.employee.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/hr_payroll_structure_type_data.xml", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/hr_payroll_structure_nomina_data.xml", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/hr_payroll_structure_nomina_christmas_bonus_data.xml", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/hr_payroll_structure_nomina_finiquito_data.xml", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/hr_payroll_structure_misc_data.xml", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/hr.contract.csv", None, mode="init", kind="data")
+
+    tools.convert.convert_file(env, "marin_data", "data/fleet.vehicle.model.brand.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/fleet.vehicle.model.category.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/fleet.vehicle.model.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/fleet.vehicle.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/documents_document_data.xml", None, mode="init", kind="data")
+
 #    tools.convert.convert_file(env, "marin_data", "data/account.analytic.account.csv", None, mode="init", kind="data")
 #    tools.convert.convert_file(env, "marin_data", "data/account.analytic.distribution.model.csv", None, mode="init", kind="data")
 #

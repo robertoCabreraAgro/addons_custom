@@ -1,284 +1,565 @@
-"id","company_id/id","previous_bom_id/id","product_tmpl_id/id","product_uom_id/id","code","product_qty","type","ready_to_produce","consumption","sequence","active","bom_line_ids/id","bom_line_ids/product_id/id","bom_line_ids/product_uom_id/id","bom_line_ids/product_qty","bom_line_ids/manual_consumption","bom_line_ids/sequence"
-"bom_1001","marin_data.company_lmmg","","marin_data.product_template_1201","uom.product_uom_litre","Formulate Alfaspray XM 12x1L Batch 1000L","1000.0","Manufacture this product"," When all components are available","Allowed with warning","15","True","bom_line_1001","marin_data.product_product_1765","uom.product_uom_kgm","604.12","","1"
-"","","","","","","","","","","","","bom_line_1002","marin_data.product_product_1728","uom.product_uom_kgm","34.41","True","2"
-"","","","","","","","","","","","","bom_line_1003","marin_data.product_product_1725","uom.product_uom_kgm","229.4","True","3"
-"","","","","","","","","","","","","bom_line_1004","marin_data.product_product_2080","uom.product_uom_kgm","0.34","True","4"
-"","","","","","","","","","","","","bom_line_1005","marin_data.product_product_2081","uom.product_uom_kgm","1.14","True","5"
-"","","","","","","","","","","","","bom_line_1006","marin_data.product_product_1200","uom.product_uom_kgm","91.76","True","6"
-"","","","","","","","","","","","","bom_line_1007","marin_data.product_product_1727","uom.product_uom_kgm","114.7","True","7"
-"","","","","","","","","","","","","bom_line_1008","marin_data.product_product_2121","uom.product_uom_kgm","19.49","True","8"
-"","","","","","","","","","","","","bom_line_1009","marin_data.product_product_1726","uom.product_uom_kgm","51.61","True","9"
-"","","","","","","","","","","","","bom_line_1010","marin_data.product_product_1868","uom.product_uom_unit","1000.0","","10"
-"","","","","","","","","","","","","bom_line_1011","marin_data.product_product_1870","uom.product_uom_unit","1000.0","","11"
-"","","","","","","","","","","","","bom_line_1012","marin_data.product_product_1839","uom.product_uom_unit","83.0","","12"
-"","","","","","","","","","","","","bom_line_1013","marin_data.product_product_2114","uom.product_uom_unit","1083.0","","13"
-"","","","","","","","","","","","","bom_line_1014","marin_data.product_product_2329","uom.product_uom_unit","1.0","","14"
-"bom_1002","marin_data.company_lmmg","","marin_data.product_template_1201","uom.product_uom_litre","Formulate Alfaspray XM 12x1L Batch 200L","200.0","Manufacture this product"," When all components are available","Allowed with warning","17","True","bom_line_1015","marin_data.product_product_1765","uom.product_uom_kgm","120.82","","1"
-"","","","","","","","","","","","","bom_line_1016","marin_data.product_product_1728","uom.product_uom_kgm","6.88","True","2"
-"","","","","","","","","","","","","bom_line_1017","marin_data.product_product_1725","uom.product_uom_kgm","45.88","True","3"
-"","","","","","","","","","","","","bom_line_1018","marin_data.product_product_2080","uom.product_uom_kgm","0.07","True","4"
-"","","","","","","","","","","","","bom_line_1019","marin_data.product_product_2081","uom.product_uom_kgm","0.22","True","5"
-"","","","","","","","","","","","","bom_line_1020","marin_data.product_product_1200","uom.product_uom_kgm","18.35","True","6"
-"","","","","","","","","","","","","bom_line_1021","marin_data.product_product_1727","uom.product_uom_kgm","22.94","True","7"
-"","","","","","","","","","","","","bom_line_1022","marin_data.product_product_2121","uom.product_uom_kgm","3.89","True","8"
-"","","","","","","","","","","","","bom_line_1023","marin_data.product_product_1726","uom.product_uom_kgm","10.32","True","9"
-"","","","","","","","","","","","","bom_line_1024","marin_data.product_product_1868","uom.product_uom_unit","1.0","","10"
-"","","","","","","","","","","","","bom_line_1025","marin_data.product_product_1870","uom.product_uom_unit","200.0","","11"
-"","","","","","","","","","","","","bom_line_1026","marin_data.product_product_1839","uom.product_uom_unit","17.0","","12"
-"","","","","","","","","","","","","bom_line_1027","marin_data.product_product_2114","uom.product_uom_unit","217.0","","13"
-"","","","","","","","","","","","","bom_line_1028","marin_data.product_product_2329","uom.product_uom_unit","1.0","","14"
-"bom_1003","marin_data.company_lmmg","","marin_data.product_template_1202","marin.uom_uom_153","Formulate Alfaspray XM 1x10L Batch 1000L","100.0","Manufacture this product"," When all components are available","Allowed with warning","12","True","bom_line_1029","marin_data.product_product_1728","uom.product_uom_kgm","34.41","True","2"
-"","","","","","","","","","","","","bom_line_1030","marin_data.product_product_1725","uom.product_uom_kgm","229.4","True","3"
-"","","","","","","","","","","","","bom_line_1031","marin_data.product_product_2080","uom.product_uom_kgm","0.34","True","4"
-"","","","","","","","","","","","","bom_line_1032","marin_data.product_product_2081","uom.product_uom_kgm","1.15","True","5"
-"","","","","","","","","","","","","bom_line_1033","marin_data.product_product_1200","uom.product_uom_kgm","91.76","True","6"
-"","","","","","","","","","","","","bom_line_1034","marin_data.product_product_1727","uom.product_uom_kgm","114.7","True","7"
-"","","","","","","","","","","","","bom_line_1035","marin_data.product_product_2121","uom.product_uom_kgm","19.5","True","8"
-"","","","","","","","","","","","","bom_line_1036","marin_data.product_product_1726","uom.product_uom_kgm","51.62","True","9"
-"","","","","","","","","","","","","bom_line_1037","marin_data.product_product_2113","uom.product_uom_unit","150.0","","10"
-"","","","","","","","","","","","","bom_line_1038","marin_data.product_product_1520","uom.product_uom_unit","100.0","","11"
-"","","","","","","","","","","","","bom_line_1039","marin_data.product_product_2329","uom.product_uom_unit","1.0","","13"
-"bom_1004","marin_data.company_lmmg","","marin_data.product_template_1202","marin.uom_uom_153","Formulate Alfaspray XM 1x10L Batch 200L","20.0","Manufacture this product"," When all components are available","Allowed with warning","14","True","bom_line_1040","marin_data.product_product_1728","uom.product_uom_kgm","6.88","True","2"
-"","","","","","","","","","","","","bom_line_1041","marin_data.product_product_1725","uom.product_uom_kgm","45.88","True","3"
-"","","","","","","","","","","","","bom_line_1042","marin_data.product_product_2080","uom.product_uom_kgm","0.07","True","4"
-"","","","","","","","","","","","","bom_line_1043","marin_data.product_product_2081","uom.product_uom_kgm","0.23","True","5"
-"","","","","","","","","","","","","bom_line_1044","marin_data.product_product_1200","uom.product_uom_kgm","18.35","True","6"
-"","","","","","","","","","","","","bom_line_1045","marin_data.product_product_1727","uom.product_uom_kgm","22.94","True","7"
-"","","","","","","","","","","","","bom_line_1046","marin_data.product_product_2121","uom.product_uom_kgm","3.9","True","8"
-"","","","","","","","","","","","","bom_line_1047","marin_data.product_product_1726","uom.product_uom_kgm","10.32","True","9"
-"","","","","","","","","","","","","bom_line_1048","marin_data.product_product_2113","uom.product_uom_unit","30.0","","10"
-"","","","","","","","","","","","","bom_line_1049","marin_data.product_product_1520","uom.product_uom_unit","20.0","","11"
-"","","","","","","","","","","","","bom_line_1050","marin_data.product_product_2329","uom.product_uom_unit","1.0","","13"
-"bom_1005","marin_data.company_lmmg","","marin_data.product_template_1239","uom.product_uom_kgm","Refill Asanit 50 XM 8x1Kg 1200","1000.0","Manufacture this product"," When all components are available","Allowed with warning","0","True","bom_line_1051","marin_data.product_product_2028","marin.uom_uom_123","48.0","True","1"
-"","","","","","","","","","","","","bom_line_1052","marin_data.product_product_1729","uom.product_uom_unit","1200.0","","2"
-"","","","","","","","","","","","","bom_line_1053","marin_data.product_product_1501","uom.product_uom_unit","100.0","","3"
-"","","","","","","","","","","","","bom_line_1054","marin_data.product_product_2111","uom.product_uom_unit","100.0","","4"
-"","","","","","","","","","","","","bom_line_1055","marin_data.product_product_2329","uom.product_uom_unit","2.0","","6"
-"bom_1006","marin_data.company_lmmg","","marin_data.product_template_1492","uom.product_uom_litre","Refill Deprebac XM 12x1L 1000","1000.0","Manufacture this product"," When all components are available","Allowed with warning","2","True","bom_line_1056","marin_data.product_product_1912","uom.product_uom_litre","1000.0","True","1"
-"","","","","","","","","","","","","bom_line_1057","marin_data.product_product_1663","uom.product_uom_unit","1000.0","","4"
-"","","","","","","","","","","","","bom_line_1058","marin_data.product_product_1664","uom.product_uom_unit","1000.0","","5"
-"","","","","","","","","","","","","bom_line_1059","marin_data.product_product_2094","uom.product_uom_unit","1000.0","","6"
-"","","","","","","","","","","","","bom_line_1060","marin_data.product_product_1501","uom.product_uom_unit","83.33","","7"
-"","","","","","","","","","","","","bom_line_1061","marin_data.product_product_2103","uom.product_uom_unit","83.33","","8"
-"","","","","","","","","","","","","bom_line_1062","marin_data.product_product_2329","uom.product_uom_unit","2.0","","9"
-"bom_1007","marin_data.company_lmmg","","marin_data.product_template_1504","uom.product_uom_litre","Refill Distriva XM 12x1L 1000","600.0","Manufacture this product"," When all components are available","Allowed with warning","1","True","bom_line_1063","marin_data.product_product_2184","uom.product_uom_kgm","1000.0","True","1"
-"","","","","","","","","","","","","bom_line_1064","marin_data.product_product_1663","uom.product_uom_unit","1000.0","","2"
-"","","","","","","","","","","","","bom_line_1065","marin_data.product_product_1664","uom.product_uom_unit","1000.0","","3"
-"","","","","","","","","","","","","bom_line_1066","marin_data.product_product_2095","uom.product_uom_unit","1000.0","","4"
-"","","","","","","","","","","","","bom_line_1067","marin_data.product_product_1501","uom.product_uom_unit","83.33","","5"
-"","","","","","","","","","","","","bom_line_1068","marin_data.product_product_2104","uom.product_uom_unit","83.33","","6"
-"","","","","","","","","","","","","bom_line_1069","marin_data.product_product_2329","uom.product_uom_unit","2.0","","7"
-"bom_1008","marin_data.company_lmmg","","marin_data.product_template_1506","uom.product_uom_litre","Refill Draisig XM 12x1L 1000","1000.0","Manufacture this product"," When all components are available","Allowed with warning","3","True","bom_line_1070","marin_data.product_product_1424","uom.product_uom_kgm","1000.0","True","1"
-"","","","","","","","","","","","","bom_line_1071","marin_data.product_product_1663","uom.product_uom_unit","1000.0","","4"
-"","","","","","","","","","","","","bom_line_1072","marin_data.product_product_1664","uom.product_uom_unit","1000.0","","5"
-"","","","","","","","","","","","","bom_line_1073","marin_data.product_product_2096","uom.product_uom_unit","1000.0","","6"
-"","","","","","","","","","","","","bom_line_1074","marin_data.product_product_1501","uom.product_uom_unit","83.33","","7"
-"","","","","","","","","","","","","bom_line_1075","marin_data.product_product_2105","uom.product_uom_unit","83.33","","8"
-"","","","","","","","","","","","","bom_line_1076","marin_data.product_product_2329","uom.product_uom_unit","2.0","","9"
-"bom_1009","marin_data.company_lmmg","","marin_data.product_template_1527","uom.product_uom_litre","Formulate Estelis XM 12x1L Batch 1000","1000.0","Manufacture this product"," When all components are available","Allowed with warning","19","True","bom_line_1077","marin_data.product_product_1765","uom.product_uom_kgm","822.92","","1"
-"","","","","","","","","","","","","bom_line_1078","marin_data.product_product_1338","uom.product_uom_kgm","284.0","True","2"
-"","","","","","","","","","","","","bom_line_1079","marin_data.product_product_1784","uom.product_uom_kgm","4.54","True","3"
-"","","","","","","","","","","","","bom_line_1080","marin_data.product_product_2121","uom.product_uom_kgm","1.82","True","4"
-"","","","","","","","","","","","","bom_line_1081","marin_data.product_product_1167","uom.product_uom_kgm","11.36","True","5"
-"","","","","","","","","","","","","bom_line_1082","marin_data.product_product_1121","uom.product_uom_kgm","11.36","True","6"
-"","","","","","","","","","","","","bom_line_1083","marin_data.product_product_1663","uom.product_uom_unit","1000.0","","7"
-"","","","","","","","","","","","","bom_line_1084","marin_data.product_product_1664","uom.product_uom_unit","1000.0","","8"
-"","","","","","","","","","","","","bom_line_1085","marin_data.product_product_1124","uom.product_uom_unit","1000.0","","11"
-"","","","","","","","","","","","","bom_line_1086","marin_data.product_product_1129","uom.product_uom_unit","83.0","","12"
-"","","","","","","","","","","","","bom_line_1087","marin_data.product_product_1501","uom.product_uom_unit","83.0","","13"
-"","","","","","","","","","","","","bom_line_1088","marin_data.product_product_2329","uom.product_uom_unit","2.0","","14"
-"bom_1010","marin_data.company_lmmg","","marin_data.product_template_1528","uom.product_uom_litre","Formulate Estelis Soil XM 12x1L Batch 1000","1000.0","Manufacture this product"," When all components are available","Allowed with warning","18","True","bom_line_1089","marin_data.product_product_1765","uom.product_uom_kgm","703.87","","1"
-"","","","","","","","","","","","","bom_line_1090","marin_data.product_product_1338","uom.product_uom_kgm","493.6","True","2"
-"","","","","","","","","","","","","bom_line_1091","marin_data.product_product_1784","uom.product_uom_kgm","4.94","True","3"
-"","","","","","","","","","","","","bom_line_1092","marin_data.product_product_2121","uom.product_uom_kgm","1.97","True","4"
-"","","","","","","","","","","","","bom_line_1093","marin_data.product_product_1167","uom.product_uom_kgm","19.74","True","5"
-"","","","","","","","","","","","","bom_line_1094","marin_data.product_product_1121","uom.product_uom_kgm","9.87","True","6"
-"","","","","","","","","","","","","bom_line_1095","marin_data.product_product_1663","uom.product_uom_unit","1000.0","","7"
-"","","","","","","","","","","","","bom_line_1096","marin_data.product_product_1664","uom.product_uom_unit","1000.0","","8"
-"","","","","","","","","","","","","bom_line_1097","marin_data.product_product_1123","uom.product_uom_unit","1000.0","","9"
-"","","","","","","","","","","","","bom_line_1098","marin_data.product_product_1128","uom.product_uom_unit","83.0","","10"
-"","","","","","","","","","","","","bom_line_1099","marin_data.product_product_1501","uom.product_uom_unit","83.0","","11"
-"","","","","","","","","","","","","bom_line_1100","marin_data.product_product_2329","uom.product_uom_unit","2.0","","12"
-"bom_1011","marin_data.company_lmmg","","marin_data.product_template_1529","uom.product_uom_litre","Refill Eterbel XM 12x1L 1000","1000.0","Manufacture this product"," When all components are available","Allowed with warning","4","True","bom_line_1101","marin_data.product_product_1703","uom.product_uom_litre","1000.0","True","1"
-"","","","","","","","","","","","","bom_line_1102","marin_data.product_product_1663","uom.product_uom_unit","1000.0","","4"
-"","","","","","","","","","","","","bom_line_1103","marin_data.product_product_1664","uom.product_uom_unit","1000.0","","5"
-"","","","","","","","","","","","","bom_line_1104","marin_data.product_product_1125","uom.product_uom_unit","1000.0","","6"
-"","","","","","","","","","","","","bom_line_1105","marin_data.product_product_1501","uom.product_uom_unit","83.33","","7"
-"","","","","","","","","","","","","bom_line_1106","marin_data.product_product_1130","uom.product_uom_unit","83.33","","8"
-"","","","","","","","","","","","","bom_line_1107","marin_data.product_product_2329","uom.product_uom_unit","2.0","","9"
-"bom_1012","marin_data.company_lmmg","","marin_data.product_template_1543","marin.uom_uom_133","Refill Ferti Beet XM 6x2Kg 1000","500.0","Manufacture this product"," When all components are available","Allowed with warning","5","True","bom_line_1108","marin_data.product_product_1309","uom.product_uom_kgm","1000.0","","3"
-"","","","","","","","","","","","","bom_line_1109","marin_data.product_product_1731","uom.product_uom_unit","500.0","","5"
-"","","","","","","","","","","","","bom_line_1110","marin_data.product_product_1131","uom.product_uom_unit","83.0","","6"
-"","","","","","","","","","","","","bom_line_1111","marin_data.product_product_1501","uom.product_uom_unit","83.0","","7"
-"","","","","","","","","","","","","bom_line_1112","marin_data.product_product_2329","uom.product_uom_unit","1.5","","8"
-"bom_1013","marin_data.company_lmmg","","marin_data.product_template_1543","marin.uom_uom_133","Refill Ferti Beet XM 6x2Kg 200","100.0","Manufacture this product"," When all components are available","Allowed with warning","6","True","bom_line_1113","marin_data.product_product_1309","uom.product_uom_kgm","200.0","","5"
-"","","","","","","","","","","","","bom_line_1114","marin_data.product_product_1542","uom.product_uom_kgm","0.0","True","6"
-"","","","","","","","","","","","","bom_line_1115","marin_data.product_product_1731","uom.product_uom_unit","100.0","","7"
-"","","","","","","","","","","","","bom_line_1116","marin_data.product_product_1131","uom.product_uom_unit","17.0","","8"
-"","","","","","","","","","","","","bom_line_1117","marin_data.product_product_1501","uom.product_uom_unit","17.0","","9"
-"","","","","","","","","","","","","bom_line_1118","marin_data.product_product_2329","uom.product_uom_unit","0.5","","10"
-"bom_1014","marin_data.company_lmmg","","marin_data.product_template_1576","uom.product_uom_litre","Refill Fortexyl XM 12x1L 1000","1000.0","Manufacture this product"," When all components are available","Allowed with warning","7","True","bom_line_1119","marin_data.product_product_1805","uom.product_uom_litre","1000.0","True","1"
-"","","","","","","","","","","","","bom_line_1120","marin_data.product_product_1868","uom.product_uom_unit","1000.0","","2"
-"","","","","","","","","","","","","bom_line_1121","marin_data.product_product_1665","uom.product_uom_unit","1000.0","","3"
-"","","","","","","","","","","","","bom_line_1122","marin_data.product_product_1126","uom.product_uom_unit","1000.0","","4"
-"","","","","","","","","","","","","bom_line_1123","marin_data.product_product_1132","uom.product_uom_unit","83.0","","5"
-"","","","","","","","","","","","","bom_line_1124","marin_data.product_product_1501","uom.product_uom_unit","83.0","","6"
-"","","","","","","","","","","","","bom_line_1125","marin_data.product_product_2329","uom.product_uom_unit","2.0","","7"
-"bom_1015","marin_data.company_lmmg","","marin_data.product_template_1661","uom.product_uom_kgm","Refill Ingenux 80 XM 8x1Kg 1000","1000.0","Manufacture this product"," When all components are available","Allowed with warning","8","True","bom_line_1126","marin_data.product_product_1604","uom.product_uom_kgm","1000.0","True","1"
-"","","","","","","","","","","","","bom_line_1127","marin_data.product_product_1732","uom.product_uom_unit","1000.0","","2"
-"","","","","","","","","","","","","bom_line_1283","marin_data.product_product_1502","uom.product_uom_unit","84.0","","4"
-"","","","","","","","","","","","","bom_line_1128","marin_data.product_product_2112","uom.product_uom_unit","84.0","","5"
-"","","","","","","","","","","","","bom_line_1129","marin_data.product_product_2329","uom.product_uom_unit","2.0","","6"
-"bom_1016","marin_data.company_lmmg","","marin_data.product_template_1745","uom.product_uom_litre","Formulate Linexar CT 12x1L Batch 500","500.0","Manufacture this product"," When all components are available","Allowed with warning","21","True","bom_line_1130","marin_data.product_product_1465","uom.product_uom_kgm","43.34","True","1"
-"","","","","","","","","","","","","bom_line_1131","marin_data.product_product_1401","uom.product_uom_kgm","304.54","True","2"
-"","","","","","","","","","","","","bom_line_1132","marin_data.product_product_1728","uom.product_uom_kgm","19.34","True","3"
-"","","","","","","","","","","","","bom_line_1133","marin_data.product_product_1259","uom.product_uom_kgm","10.18","True","4"
-"","","","","","","","","","","","","bom_line_1134","marin_data.product_product_1260","uom.product_uom_kgm","30.55","True","5"
-"","","","","","","","","","","","","bom_line_1135","marin_data.product_product_1832","uom.product_uom_kgm","3.22","True","6"
-"","","","","","","","","","","","","bom_line_1136","marin_data.product_product_1122","uom.product_uom_kgm","0.58","True","7"
-"","","","","","","","","","","","","bom_line_1137","marin_data.product_product_2121","uom.product_uom_kgm","6.45","True","8"
-"","","","","","","","","","","","","bom_line_1138","marin_data.product_product_1573","uom.product_uom_kgm","0.26","","9"
-"","","","","","","","","","","","","bom_line_1139","marin_data.product_product_1663","uom.product_uom_unit","500.0","","12"
-"","","","","","","","","","","","","bom_line_1140","marin_data.product_product_1664","uom.product_uom_unit","500.0","","13"
-"","","","","","","","","","","","","bom_line_1141","marin_data.product_product_2098","uom.product_uom_unit","500.0","","14"
-"","","","","","","","","","","","","bom_line_1142","marin_data.product_product_1501","uom.product_uom_unit","42.0","","15"
-"","","","","","","","","","","","","bom_line_1143","marin_data.product_product_2107","uom.product_uom_unit","42.0","","16"
-"","","","","","","","","","","","","bom_line_1144","marin_data.product_product_2329","uom.product_uom_unit","2.0","","17"
-"bom_1017","marin_data.company_lmmg","","marin_data.product_template_1745","uom.product_uom_litre","Formulate Linexar CT 12x1L Batch 200","200.0","Manufacture this product"," When all components are available","Allowed with warning","22","True","bom_line_1145","marin_data.product_product_1465","uom.product_uom_kgm","17.34","True","1"
-"","","","","","","","","","","","","bom_line_1146","marin_data.product_product_1401","uom.product_uom_kgm","121.82","True","2"
-"","","","","","","","","","","","","bom_line_1147","marin_data.product_product_1728","uom.product_uom_kgm","7.73","True","3"
-"","","","","","","","","","","","","bom_line_1148","marin_data.product_product_1259","uom.product_uom_kgm","4.07","True","4"
-"","","","","","","","","","","","","bom_line_1149","marin_data.product_product_1260","uom.product_uom_kgm","12.22","True","5"
-"","","","","","","","","","","","","bom_line_1150","marin_data.product_product_1832","uom.product_uom_kgm","1.29","True","6"
-"","","","","","","","","","","","","bom_line_1151","marin_data.product_product_1122","uom.product_uom_kgm","0.23","True","7"
-"","","","","","","","","","","","","bom_line_1152","marin_data.product_product_2121","uom.product_uom_kgm","2.58","True","8"
-"","","","","","","","","","","","","bom_line_1153","marin_data.product_product_1573","uom.product_uom_kgm","0.1","","9"
-"","","","","","","","","","","","","bom_line_1154","marin_data.product_product_1868","uom.product_uom_unit","200.0","","10"
-"","","","","","","","","","","","","bom_line_1155","marin_data.product_product_1870","uom.product_uom_unit","200.0","","11"
-"","","","","","","","","","","","","bom_line_1156","marin_data.product_product_2098","uom.product_uom_unit","200.0","","12"
-"","","","","","","","","","","","","bom_line_1157","marin_data.product_product_1839","uom.product_uom_unit","17.0","","13"
-"","","","","","","","","","","","","bom_line_1158","marin_data.product_product_2107","uom.product_uom_unit","17.0","","14"
-"","","","","","","","","","","","","bom_line_1159","marin_data.product_product_2329","uom.product_uom_unit","1.0","","15"
-"bom_1018","marin_data.company_lmmg","","marin_data.product_template_1745","uom.product_uom_litre","Formulate Linexar CT 12x1L Batch 1000","1000.0","Manufacture this product"," When all components are available","Allowed with warning","20","True","bom_line_1160","marin_data.product_product_1465","uom.product_uom_kgm","86.68","True","2"
-"","","","","","","","","","","","","bom_line_1161","marin_data.product_product_1401","uom.product_uom_kgm","609.09","True","3"
-"","","","","","","","","","","","","bom_line_1162","marin_data.product_product_1728","uom.product_uom_kgm","38.67","True","4"
-"","","","","","","","","","","","","bom_line_1163","marin_data.product_product_1259","uom.product_uom_kgm","20.37","True","5"
-"","","","","","","","","","","","","bom_line_1164","marin_data.product_product_1260","uom.product_uom_kgm","61.1","True","6"
-"","","","","","","","","","","","","bom_line_1165","marin_data.product_product_1832","uom.product_uom_kgm","6.45","True","7"
-"","","","","","","","","","","","","bom_line_1166","marin_data.product_product_1122","uom.product_uom_kgm","1.16","True","8"
-"","","","","","","","","","","","","bom_line_1167","marin_data.product_product_2121","uom.product_uom_kgm","12.89","True","9"
-"","","","","","","","","","","","","bom_line_1168","marin_data.product_product_1573","uom.product_uom_kgm","0.52","","10"
-"","","","","","","","","","","","","bom_line_1169","marin_data.product_product_1663","uom.product_uom_unit","1000.0","","13"
-"","","","","","","","","","","","","bom_line_1170","marin_data.product_product_1664","uom.product_uom_unit","1000.0","","14"
-"","","","","","","","","","","","","bom_line_1171","marin_data.product_product_2098","uom.product_uom_unit","1000.0","","15"
-"","","","","","","","","","","","","bom_line_1172","marin_data.product_product_1501","uom.product_uom_unit","83.0","","16"
-"","","","","","","","","","","","","bom_line_1173","marin_data.product_product_2107","uom.product_uom_unit","83.0","","17"
-"","","","","","","","","","","","","bom_line_1174","marin_data.product_product_2329","uom.product_uom_unit","2.0","","18"
-"bom_1019","marin_data.company_lmmg","","marin_data.product_template_1749","uom.product_uom_litre","Formulate Linexar 60 XM 12x1L Batch 200","200.0","Manufacture this product"," When all components are available","Allowed with warning","25","True","bom_line_1175","marin_data.product_product_1122","uom.product_uom_kgm","0.27","True","1"
-"","","","","","","","","","","","","bom_line_1176","marin_data.product_product_1259","uom.product_uom_kgm","3.86","True","1"
-"","","","","","","","","","","","","bom_line_1177","marin_data.product_product_1260","uom.product_uom_kgm","11.57","True","1"
-"","","","","","","","","","","","","bom_line_1178","marin_data.product_product_1465","uom.product_uom_kgm","122.46","True","1"
-"","","","","","","","","","","","","bom_line_1179","marin_data.product_product_1573","uom.product_uom_kgm","0.1","","1"
-"","","","","","","","","","","","","bom_line_1180","marin_data.product_product_1728","uom.product_uom_kgm","7.32","True","1"
-"","","","","","","","","","","","","bom_line_1181","marin_data.product_product_1832","uom.product_uom_kgm","1.95","True","1"
-"","","","","","","","","","","","","bom_line_1182","marin_data.product_product_1839","uom.product_uom_unit","17.0","","1"
-"","","","","","","","","","","","","bom_line_1183","marin_data.product_product_1868","uom.product_uom_unit","200.0","","1"
-"","","","","","","","","","","","","bom_line_1184","marin_data.product_product_1870","uom.product_uom_unit","200.0","","1"
-"","","","","","","","","","","","","bom_line_1185","marin_data.product_product_2097","uom.product_uom_unit","200.0","","1"
-"","","","","","","","","","","","","bom_line_1186","marin_data.product_product_2106","uom.product_uom_unit","17.0","","1"
-"","","","","","","","","","","","","bom_line_1187","marin_data.product_product_2121","uom.product_uom_kgm","2.44","True","1"
-"bom_1020","marin_data.company_lmmg","","marin_data.product_template_1749","uom.product_uom_litre","Formulate Linexar 60 XM 12x1L Batch 1000","1000.0","Manufacture this product"," When all components are available","Allowed with warning","23","True","bom_line_1191","marin_data.product_product_1465","uom.product_uom_kgm","612.32","True","1"
-"","","","","","","","","","","","","bom_line_1189","marin_data.product_product_1259","uom.product_uom_kgm","19.28","True","2"
-"","","","","","","","","","","","","bom_line_1190","marin_data.product_product_1260","uom.product_uom_kgm","57.83","True","3"
-"","","","","","","","","","","","","bom_line_1188","marin_data.product_product_1122","uom.product_uom_kgm","1.34","True","4"
-"","","","","","","","","","","","","bom_line_1193","marin_data.product_product_1728","uom.product_uom_kgm","36.6","True","5"
-"","","","","","","","","","","","","bom_line_1194","marin_data.product_product_1832","uom.product_uom_kgm","9.76","True","6"
-"","","","","","","","","","","","","bom_line_1200","marin_data.product_product_2121","uom.product_uom_kgm","12.2","True","7"
-"","","","","","","","","","","","","bom_line_1192","marin_data.product_product_1573","uom.product_uom_kgm","0.49","","8"
-"","","","","","","","","","","","","bom_line_1195","marin_data.product_product_1839","uom.product_uom_unit","83.0","","9"
-"","","","","","","","","","","","","bom_line_1196","marin_data.product_product_1868","uom.product_uom_unit","1000.0","","10"
-"","","","","","","","","","","","","bom_line_1197","marin_data.product_product_1870","uom.product_uom_unit","1000.0","","11"
-"","","","","","","","","","","","","bom_line_1198","marin_data.product_product_2097","uom.product_uom_unit","1000.0","","12"
-"","","","","","","","","","","","","bom_line_1199","marin_data.product_product_2106","uom.product_uom_unit","83.0","","13"
-"bom_1021","marin_data.company_lmmg","","marin_data.product_template_1767","uom.product_uom_litre","Refill Magistop XM 12x1L 600","600.0","Manufacture this product"," When all components are available","Allowed with warning","9","True","bom_line_1201","marin_data.product_product_2029","uom.product_uom_litre","600.0","True","1"
-"","","","","","","","","","","","","bom_line_1202","marin_data.product_product_1868","uom.product_uom_unit","600.0","","2"
-"","","","","","","","","","","","","bom_line_1203","marin_data.product_product_1665","uom.product_uom_unit","600.0","","4"
-"","","","","","","","","","","","","bom_line_1204","marin_data.product_product_2115","uom.product_uom_unit","650.0","","5"
-"","","","","","","","","","","","","bom_line_1205","marin_data.product_product_1501","uom.product_uom_unit","50.0","","6"
-"","","","","","","","","","","","","bom_line_1206","marin_data.product_product_2329","uom.product_uom_unit","1.0","","7"
-"bom_1022","marin_data.company_lmmg","","marin_data.product_template_1892","uom.product_uom_litre","Formulate Omipro CT Batch 12x1L 1000","1000.0","Manufacture this product"," When all components are available","Allowed with warning","26","True","bom_line_1207","marin_data.product_product_1122","uom.product_uom_kgm","3.45","True","1"
-"","","","","","","","","","","","","bom_line_1208","marin_data.product_product_1259","uom.product_uom_kgm","42.23","True","1"
-"","","","","","","","","","","","","bom_line_1209","marin_data.product_product_1260","uom.product_uom_kgm","42.23","True","1"
-"","","","","","","","","","","","","bom_line_1210","marin_data.product_product_1401","uom.product_uom_kgm","398.96","True","1"
-"","","","","","","","","","","","","bom_line_1211","marin_data.product_product_1521","uom.product_uom_kgm","13.8","True","1"
-"","","","","","","","","","","","","bom_line_1212","marin_data.product_product_1573","uom.product_uom_kgm","1.38","","1"
-"","","","","","","","","","","","","bom_line_1213","marin_data.product_product_1728","uom.product_uom_kgm","41.4","True","1"
-"","","","","","","","","","","","","bom_line_1214","marin_data.product_product_1764","uom.product_uom_kgm","35.69","True","1"
-"","","","","","","","","","","","","bom_line_1215","marin_data.product_product_1765","uom.product_uom_kgm","486.37","","1"
-"","","","","","","","","","","","","bom_line_1216","marin_data.product_product_1832","uom.product_uom_kgm","11.04","True","1"
-"","","","","","","","","","","","","bom_line_1217","marin_data.product_product_1839","uom.product_uom_unit","83.0","","1"
-"","","","","","","","","","","","","bom_line_1218","marin_data.product_product_1868","uom.product_uom_unit","1000.0","","1"
-"","","","","","","","","","","","","bom_line_1219","marin_data.product_product_1870","uom.product_uom_unit","1000.0","","1"
-"","","","","","","","","","","","","bom_line_1220","marin_data.product_product_2009","uom.product_uom_kgm","439.14","True","1"
-"","","","","","","","","","","","","bom_line_1221","marin_data.product_product_2101","uom.product_uom_unit","1000.0","","1"
-"","","","","","","","","","","","","bom_line_1222","marin_data.product_product_2109","uom.product_uom_unit","83.0","","1"
-"","","","","","","","","","","","","bom_line_1223","marin_data.product_product_2329","uom.product_uom_unit","3.0","","1"
-"bom_1023","marin_data.company_lmmg","","marin_data.product_template_1892","uom.product_uom_litre","Formulate Omipro CT 12x1L Batch 200","200.0","Manufacture this product"," When all components are available","Allowed with warning","28","True","bom_line_1224","marin_data.product_product_1122","uom.product_uom_kgm","0.69","True","1"
-"","","","","","","","","","","","","bom_line_1225","marin_data.product_product_1259","uom.product_uom_kgm","8.45","True","1"
-"","","","","","","","","","","","","bom_line_1226","marin_data.product_product_1260","uom.product_uom_kgm","8.45","True","1"
-"","","","","","","","","","","","","bom_line_1227","marin_data.product_product_1401","uom.product_uom_kgm","79.79","True","1"
-"","","","","","","","","","","","","bom_line_1228","marin_data.product_product_1521","uom.product_uom_kgm","2.76","True","1"
-"","","","","","","","","","","","","bom_line_1229","marin_data.product_product_1573","uom.product_uom_kgm","0.28","","1"
-"","","","","","","","","","","","","bom_line_1230","marin_data.product_product_1728","uom.product_uom_kgm","8.28","True","1"
-"","","","","","","","","","","","","bom_line_1231","marin_data.product_product_1764","uom.product_uom_kgm","7.14","True","1"
-"","","","","","","","","","","","","bom_line_1232","marin_data.product_product_1765","uom.product_uom_kgm","97.27","","1"
-"","","","","","","","","","","","","bom_line_1233","marin_data.product_product_1832","uom.product_uom_kgm","2.21","True","1"
-"","","","","","","","","","","","","bom_line_1234","marin_data.product_product_1839","uom.product_uom_unit","17.0","","1"
-"","","","","","","","","","","","","bom_line_1235","marin_data.product_product_1868","uom.product_uom_unit","200.0","","1"
-"","","","","","","","","","","","","bom_line_1236","marin_data.product_product_1870","uom.product_uom_unit","200.0","","1"
-"","","","","","","","","","","","","bom_line_1237","marin_data.product_product_2009","uom.product_uom_kgm","87.83","True","1"
-"","","","","","","","","","","","","bom_line_1238","marin_data.product_product_2101","uom.product_uom_unit","200.0","","1"
-"","","","","","","","","","","","","bom_line_1239","marin_data.product_product_2109","uom.product_uom_unit","17.0","","1"
-"","","","","","","","","","","","","bom_line_1240","marin_data.product_product_2329","uom.product_uom_unit","1.0","","1"
-"bom_1024","marin_data.company_lmmg","","marin_data.product_template_1893","uom.product_uom_litre","Formulate Omipro XM 12x1L Batch 200","200.0","Manufacture this product"," When all components are available","Allowed with warning","31","True","bom_line_1241","marin_data.product_product_1259","uom.product_uom_kgm","2.58","True","1"
-"","","","","","","","","","","","","bom_line_1242","marin_data.product_product_1260","uom.product_uom_kgm","0.22","True","1"
-"","","","","","","","","","","","","bom_line_1243","marin_data.product_product_1427","uom.product_uom_kgm","0.02","","1"
-"","","","","","","","","","","","","bom_line_1244","marin_data.product_product_1521","uom.product_uom_kgm","0.19","True","1"
-"","","","","","","","","","","","","bom_line_1245","marin_data.product_product_1573","uom.product_uom_kgm","0.11","","1"
-"","","","","","","","","","","","","bom_line_1246","marin_data.product_product_1728","uom.product_uom_kgm","6.46","True","1"
-"","","","","","","","","","","","","bom_line_1247","marin_data.product_product_1764","uom.product_uom_kgm","6.46","True","1"
-"","","","","","","","","","","","","bom_line_1248","marin_data.product_product_1765","uom.product_uom_kgm","50.7","","1"
-"","","","","","","","","","","","","bom_line_1249","marin_data.product_product_1839","uom.product_uom_unit","17.0","","1"
-"","","","","","","","","","","","","bom_line_1250","marin_data.product_product_1868","uom.product_uom_unit","200.0","","1"
-"","","","","","","","","","","","","bom_line_1251","marin_data.product_product_1870","uom.product_uom_unit","200.0","","1"
-"","","","","","","","","","","","","bom_line_1252","marin_data.product_product_2009","uom.product_uom_kgm","148.52","True","1"
-"","","","","","","","","","","","","bom_line_1253","marin_data.product_product_2102","uom.product_uom_unit","200.0","","1"
-"","","","","","","","","","","","","bom_line_1254","marin_data.product_product_2110","uom.product_uom_unit","17.0","","1"
-"bom_1025","marin_data.company_lmmg","","marin_data.product_template_1893","uom.product_uom_litre","Formulate Omipro XM 12x1L Batch 1000","1000.0","Manufacture this product"," When all components are available","Allowed with warning","29","True","bom_line_1255","marin_data.product_product_1259","uom.product_uom_kgm","12.91","True","1"
-"","","","","","","","","","","","","bom_line_1256","marin_data.product_product_1260","uom.product_uom_kgm","1.08","True","1"
-"","","","","","","","","","","","","bom_line_1257","marin_data.product_product_1427","uom.product_uom_kgm","0.09","","1"
-"","","","","","","","","","","","","bom_line_1258","marin_data.product_product_1521","uom.product_uom_kgm","0.93","True","1"
-"","","","","","","","","","","","","bom_line_1259","marin_data.product_product_1573","uom.product_uom_kgm","0.54","","1"
-"","","","","","","","","","","","","bom_line_1260","marin_data.product_product_1728","uom.product_uom_kgm","32.29","True","1"
-"","","","","","","","","","","","","bom_line_1261","marin_data.product_product_1764","uom.product_uom_kgm","32.29","True","1"
-"","","","","","","","","","","","","bom_line_1262","marin_data.product_product_1765","uom.product_uom_kgm","253.51","","1"
-"","","","","","","","","","","","","bom_line_1263","marin_data.product_product_1839","uom.product_uom_unit","83.0","","1"
-"","","","","","","","","","","","","bom_line_1264","marin_data.product_product_1868","uom.product_uom_unit","1000.0","","1"
-"","","","","","","","","","","","","bom_line_1265","marin_data.product_product_1870","uom.product_uom_unit","1000.0","","1"
-"","","","","","","","","","","","","bom_line_1266","marin_data.product_product_2009","uom.product_uom_kgm","742.58","True","1"
-"","","","","","","","","","","","","bom_line_1267","marin_data.product_product_2102","uom.product_uom_unit","1000.0","","1"
-"","","","","","","","","","","","","bom_line_1268","marin_data.product_product_2110","uom.product_uom_unit","83.0","","1"
-"bom_1026","marin_data.company_lmmg","","marin_data.product_template_1893","uom.product_uom_litre","Refill Omipro XM 12x1L 1000","1000.0","Manufacture this product"," When all components are available","Allowed with warning","10","True","bom_line_1269","marin_data.product_product_2008","marin.uom_uom_150","5.0","","1"
-"","","","","","","","","","","","","bom_line_1270","marin_data.product_product_1868","uom.product_uom_unit","1000.0","","2"
-"","","","","","","","","","","","","bom_line_1271","marin_data.product_product_1870","uom.product_uom_unit","1000.0","","3"
-"","","","","","","","","","","","","bom_line_1272","marin_data.product_product_2102","uom.product_uom_unit","1000.0","","4"
-"","","","","","","","","","","","","bom_line_1273","marin_data.product_product_1501","uom.product_uom_unit","83.33","","5"
-"","","","","","","","","","","","","bom_line_1274","marin_data.product_product_2110","uom.product_uom_unit","83.33","","6"
-"","","","","","","","","","","","","bom_line_1275","marin_data.product_product_2329","uom.product_uom_unit","2.0","","8"
-"bom_1027","marin_data.company_lmmg","","marin_data.product_template_2302","marin.uom_uom_109","Refill Veridia XM XM 6x2Kg 100","100.0","Manufacture this product"," When all components are available","Allowed with warning","11","True","bom_line_1276","marin_data.product_product_1605","uom.product_uom_kgm","100.0","","5"
-"","","","","","","","","","","","","bom_line_1279","marin_data.product_product_1733","uom.product_uom_unit","100.0","","8"
-"","","","","","","","","","","","","bom_line_1280","marin_data.product_product_1133","uom.product_uom_unit","12.0","","10"
-"","","","","","","","","","","","","bom_line_1277","marin_data.product_product_1502","uom.product_uom_unit","96.0","","11"
-"","","","","","","","","","","","","bom_line_1278","marin_data.product_product_2329","uom.product_uom_unit","0.5","","12"
-"bom_1028","marin_data.company_lmmg","","marin_data.product_template_1344","marin.uom_uom_164","Refill Breisse XM 100","100.0","Manufacture this product"," When all components are available","Allowed with warning","0","True","bom_line_1281","marin_data.product_product_1339","uom.product_uom_kgm","13.0","","1"
-"","","","","","","","","","","","","bom_line_1282","marin_data.product_product_1730","uom.product_uom_unit","1.0","","2"
+id,code,type,product_qty,active,ready_to_produce,consumption,sequence,product_tmpl_id/id,product_uom_id/id,previous_bom_id/id,company_id/id,bom_line_ids/id,bom_line_ids/product_id/id,bom_line_ids/product_uom_id/id,bom_line_ids/product_qty,bom_line_ids/manual_consumption,bom_line_ids/sequence
+mrp_bom_1001,Formulate Alfaspray XM 12x1L Batch 1000L,Manufacture this product,1000.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1201,uom.product_uom_litre,,marin_data.company_lmmr,marin.mrp_bom_line_1001,marin_data.product_product_1765,uom.product_uom_kgm,604.12,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1002,marin_data.product_product_1728,uom.product_uom_kgm,34.41,True,2
+,,,,,,,,,,,,marin.mrp_bom_line_1003,marin_data.product_product_1725,uom.product_uom_kgm,229.4,True,3
+,,,,,,,,,,,,marin.mrp_bom_line_1004,marin_data.product_product_1727,uom.product_uom_kgm,114.7,True,4
+,,,,,,,,,,,,marin.mrp_bom_line_1005,marin_data.product_product_1726,uom.product_uom_kgm,51.61,True,5
+,,,,,,,,,,,,marin.mrp_bom_line_1006,marin_data.product_product_1200,uom.product_uom_kgm,91.76,True,6
+,,,,,,,,,,,,marin.mrp_bom_line_1007,marin_data.product_product_2121,uom.product_uom_kgm,19.49,True,7
+,,,,,,,,,,,,marin.mrp_bom_line_1008,marin_data.product_product_2080,uom.product_uom_kgm,0.34,True,8
+,,,,,,,,,,,,marin.mrp_bom_line_1009,marin_data.product_product_2081,uom.product_uom_kgm,1.14,True,9
+,,,,,,,,,,,,marin.mrp_bom_line_1010,marin_data.product_product_1868,uom.product_uom_unit,1000.0,,10
+,,,,,,,,,,,,marin.mrp_bom_line_1011,marin_data.product_product_1870,uom.product_uom_unit,1000.0,,11
+,,,,,,,,,,,,marin.mrp_bom_line_1012,marin_data.product_product_1839,uom.product_uom_unit,83.0,,12
+,,,,,,,,,,,,marin.mrp_bom_line_1013,marin_data.product_product_2114,uom.product_uom_unit,1083.0,,13
+,,,,,,,,,,,,marin.mrp_bom_line_1014,marin_data.product_product_2329,uom.product_uom_unit,1.0,,14
+mrp_bom_1002,Formulate Alfaspray XM 12x1L Batch 200L,Manufacture this product,200.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1201,uom.product_uom_litre,,marin_data.company_lmmr,marin.mrp_bom_line_1015,marin_data.product_product_1765,uom.product_uom_kgm,120.82,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1016,marin_data.product_product_1728,uom.product_uom_kgm,6.88,True,2
+,,,,,,,,,,,,marin.mrp_bom_line_1017,marin_data.product_product_1725,uom.product_uom_kgm,45.88,True,3
+,,,,,,,,,,,,marin.mrp_bom_line_1018,marin_data.product_product_1727,uom.product_uom_kgm,22.94,True,4
+,,,,,,,,,,,,marin.mrp_bom_line_1019,marin_data.product_product_1726,uom.product_uom_kgm,10.32,True,5
+,,,,,,,,,,,,marin.mrp_bom_line_1020,marin_data.product_product_1200,uom.product_uom_kgm,18.35,True,6
+,,,,,,,,,,,,marin.mrp_bom_line_1021,marin_data.product_product_2121,uom.product_uom_kgm,3.89,True,7
+,,,,,,,,,,,,marin.mrp_bom_line_1022,marin_data.product_product_2080,uom.product_uom_kgm,0.07,True,8
+,,,,,,,,,,,,marin.mrp_bom_line_1023,marin_data.product_product_2081,uom.product_uom_kgm,0.22,True,9
+,,,,,,,,,,,,marin.mrp_bom_line_1024,marin_data.product_product_1868,uom.product_uom_unit,1.0,,10
+,,,,,,,,,,,,marin.mrp_bom_line_1025,marin_data.product_product_1870,uom.product_uom_unit,200.0,,11
+,,,,,,,,,,,,marin.mrp_bom_line_1026,marin_data.product_product_1839,uom.product_uom_unit,17.0,,12
+,,,,,,,,,,,,marin.mrp_bom_line_1027,marin_data.product_product_2114,uom.product_uom_unit,217.0,,13
+,,,,,,,,,,,,marin.mrp_bom_line_1028,marin_data.product_product_2329,uom.product_uom_unit,1.0,,14
+mrp_bom_1003,Formulate Alfaspray XM 1x10L Batch 1000L,Manufacture this product,100.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1202,marin.uom_uom_153,,marin_data.company_lmmr,marin.mrp_bom_line_1029,marin_data.product_product_1728,uom.product_uom_kgm,34.41,True,2
+,,,,,,,,,,,,marin.mrp_bom_line_1030,marin_data.product_product_1725,uom.product_uom_kgm,229.4,True,3
+,,,,,,,,,,,,marin.mrp_bom_line_1031,marin_data.product_product_1727,uom.product_uom_kgm,114.7,True,4
+,,,,,,,,,,,,marin.mrp_bom_line_1032,marin_data.product_product_1726,uom.product_uom_kgm,51.62,True,5
+,,,,,,,,,,,,marin.mrp_bom_line_1033,marin_data.product_product_1200,uom.product_uom_kgm,91.76,True,6
+,,,,,,,,,,,,marin.mrp_bom_line_1034,marin_data.product_product_2121,uom.product_uom_kgm,19.5,True,7
+,,,,,,,,,,,,marin.mrp_bom_line_1035,marin_data.product_product_2080,uom.product_uom_kgm,0.34,True,8
+,,,,,,,,,,,,marin.mrp_bom_line_1036,marin_data.product_product_2081,uom.product_uom_kgm,1.15,True,9
+,,,,,,,,,,,,marin.mrp_bom_line_1037,marin_data.product_product_2113,uom.product_uom_unit,150.0,,10
+,,,,,,,,,,,,marin.mrp_bom_line_1038,marin_data.product_product_1520,uom.product_uom_unit,100.0,,11
+,,,,,,,,,,,,marin.mrp_bom_line_1039,marin_data.product_product_2329,uom.product_uom_unit,1.0,,13
+mrp_bom_1004,Formulate Alfaspray XM 1x10L Batch 200L,Manufacture this product,20.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1202,marin.uom_uom_153,,marin_data.company_lmmr,marin.mrp_bom_line_1040,marin_data.product_product_1728,uom.product_uom_kgm,6.88,True,2
+,,,,,,,,,,,,marin.mrp_bom_line_1041,marin_data.product_product_1725,uom.product_uom_kgm,45.88,True,3
+,,,,,,,,,,,,marin.mrp_bom_line_1042,marin_data.product_product_1727,uom.product_uom_kgm,22.94,True,4
+,,,,,,,,,,,,marin.mrp_bom_line_1043,marin_data.product_product_1726,uom.product_uom_kgm,10.32,True,5
+,,,,,,,,,,,,marin.mrp_bom_line_1044,marin_data.product_product_1200,uom.product_uom_kgm,18.35,True,6
+,,,,,,,,,,,,marin.mrp_bom_line_1045,marin_data.product_product_2121,uom.product_uom_kgm,3.9,True,7
+,,,,,,,,,,,,marin.mrp_bom_line_1046,marin_data.product_product_2080,uom.product_uom_kgm,0.07,True,8
+,,,,,,,,,,,,marin.mrp_bom_line_1047,marin_data.product_product_2081,uom.product_uom_kgm,0.23,True,9
+,,,,,,,,,,,,marin.mrp_bom_line_1048,marin_data.product_product_2113,uom.product_uom_unit,30.0,,10
+,,,,,,,,,,,,marin.mrp_bom_line_1049,marin_data.product_product_1520,uom.product_uom_unit,20.0,,11
+,,,,,,,,,,,,marin.mrp_bom_line_1050,marin_data.product_product_2329,uom.product_uom_unit,1.0,,13
+mrp_bom_1005,Refill Asanit 50 XM 8x1Kg 1200,Manufacture this product,1000.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1239,uom.product_uom_kgm,,marin_data.company_lmmr,marin.mrp_bom_line_1051,marin_data.product_product_2028,marin.uom_uom_123,48.0,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1052,marin_data.product_product_1729,uom.product_uom_unit,1200.0,,2
+,,,,,,,,,,,,marin.mrp_bom_line_1053,marin_data.product_product_1501,uom.product_uom_unit,100.0,,3
+,,,,,,,,,,,,marin.mrp_bom_line_1054,marin_data.product_product_2111,uom.product_uom_unit,100.0,,4
+,,,,,,,,,,,,marin.mrp_bom_line_1055,marin_data.product_product_2329,uom.product_uom_unit,2.0,,6
+mrp_bom_1006,Refill Breisse XM 100,Manufacture this product,100.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1344,marin.uom_uom_164,,marin_data.company_lmmr,marin.mrp_bom_line_1056,marin_data.product_product_1339,uom.product_uom_kgm,13.0,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1057,marin_data.product_product_1730,uom.product_uom_unit,100.0,,2
+mrp_bom_1007,Refill Deprebac XM 12x1L 1000,Manufacture this product,1000.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1492,uom.product_uom_litre,,marin_data.company_lmmr,marin.mrp_bom_line_1058,marin_data.product_product_1912,uom.product_uom_litre,1000.0,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1059,marin_data.product_product_1663,uom.product_uom_unit,1000.0,,4
+,,,,,,,,,,,,marin.mrp_bom_line_1060,marin_data.product_product_1664,uom.product_uom_unit,1000.0,,5
+,,,,,,,,,,,,marin.mrp_bom_line_1061,marin_data.product_product_2094,uom.product_uom_unit,1000.0,,6
+,,,,,,,,,,,,marin.mrp_bom_line_1062,marin_data.product_product_1501,uom.product_uom_unit,83.33,,7
+,,,,,,,,,,,,marin.mrp_bom_line_1063,marin_data.product_product_2103,uom.product_uom_unit,83.33,,8
+,,,,,,,,,,,,marin.mrp_bom_line_1064,marin_data.product_product_2329,uom.product_uom_unit,2.0,,9
+mrp_bom_1008,Refill Distriva XM 12x1L 1000,Manufacture this product,1000.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1504,uom.product_uom_litre,,marin_data.company_lmmr,marin.mrp_bom_line_1065,marin_data.product_product_2184,uom.product_uom_kgm,1000.0,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1066,marin_data.product_product_1663,uom.product_uom_unit,1000.0,,2
+,,,,,,,,,,,,marin.mrp_bom_line_1067,marin_data.product_product_1664,uom.product_uom_unit,1000.0,,3
+,,,,,,,,,,,,marin.mrp_bom_line_1068,marin_data.product_product_2095,uom.product_uom_unit,1000.0,,4
+,,,,,,,,,,,,marin.mrp_bom_line_1069,marin_data.product_product_1501,uom.product_uom_unit,83.33,,5
+,,,,,,,,,,,,marin.mrp_bom_line_1070,marin_data.product_product_2104,uom.product_uom_unit,83.33,,6
+,,,,,,,,,,,,marin.mrp_bom_line_1071,marin_data.product_product_2329,uom.product_uom_unit,2.0,,7
+mrp_bom_1009,Refill Draisig XM 12x1L 1000,Manufacture this product,1000.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1506,uom.product_uom_litre,,marin_data.company_lmmr,marin.mrp_bom_line_1072,marin_data.product_product_1424,uom.product_uom_kgm,1000.0,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1073,marin_data.product_product_1663,uom.product_uom_unit,1000.0,,4
+,,,,,,,,,,,,marin.mrp_bom_line_1074,marin_data.product_product_1664,uom.product_uom_unit,1000.0,,5
+,,,,,,,,,,,,marin.mrp_bom_line_1075,marin_data.product_product_2096,uom.product_uom_unit,1000.0,,6
+,,,,,,,,,,,,marin.mrp_bom_line_1076,marin_data.product_product_1501,uom.product_uom_unit,83.33,,7
+,,,,,,,,,,,,marin.mrp_bom_line_1077,marin_data.product_product_2105,uom.product_uom_unit,83.33,,8
+,,,,,,,,,,,,marin.mrp_bom_line_1078,marin_data.product_product_2329,uom.product_uom_unit,2.0,,9
+mrp_bom_1010,Formulate Estelis XM 12x1L Batch 200,Manufacture this product,200.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1527,uom.product_uom_litre,,marin_data.company_lmmr,marin.mrp_bom_line_1079,marin_data.product_product_1765,uom.product_uom_kgm,164.58,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1080,marin_data.product_product_1338,marin.uom_uom_124,56.8,,2
+,,,,,,,,,,,,marin.mrp_bom_line_1081,marin_data.product_product_1784,uom.product_uom_kgm,0.91,,3
+,,,,,,,,,,,,marin.mrp_bom_line_1082,marin_data.product_product_2121,uom.product_uom_kgm,0.36,,4
+,,,,,,,,,,,,marin.mrp_bom_line_1083,marin_data.product_product_1167,uom.product_uom_kgm,2.272,,5
+,,,,,,,,,,,,marin.mrp_bom_line_1084,marin_data.product_product_1121,uom.product_uom_kgm,2.272,,6
+,,,,,,,,,,,,marin.mrp_bom_line_1085,marin_data.product_product_1663,uom.product_uom_unit,200.0,,7
+,,,,,,,,,,,,marin.mrp_bom_line_1086,marin_data.product_product_1664,uom.product_uom_unit,200.0,,8
+,,,,,,,,,,,,marin.mrp_bom_line_1087,marin_data.product_product_1124,uom.product_uom_unit,200.0,,9
+,,,,,,,,,,,,marin.mrp_bom_line_1088,marin_data.product_product_1501,uom.product_uom_unit,16.0,,10
+,,,,,,,,,,,,marin.mrp_bom_line_1089,marin_data.product_product_1129,uom.product_uom_unit,16.0,,11
+,,,,,,,,,,,,marin.mrp_bom_line_1090,marin_data.product_product_2329,uom.product_uom_unit,1.0,,12
+mrp_bom_1011,Formulate Estelis Soil XM 12x1L Batch 1000,Manufacture this product,1000.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1528,uom.product_uom_litre,,marin_data.company_lmmr,marin.mrp_bom_line_1091,marin_data.product_product_1765,uom.product_uom_kgm,703.87,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1092,marin_data.product_product_1338,uom.product_uom_kgm,493.6,True,2
+,,,,,,,,,,,,marin.mrp_bom_line_1093,marin_data.product_product_1784,uom.product_uom_kgm,4.94,True,3
+,,,,,,,,,,,,marin.mrp_bom_line_1094,marin_data.product_product_2121,uom.product_uom_kgm,1.97,True,4
+,,,,,,,,,,,,marin.mrp_bom_line_1095,marin_data.product_product_1167,uom.product_uom_kgm,19.74,True,5
+,,,,,,,,,,,,marin.mrp_bom_line_1096,marin_data.product_product_1121,uom.product_uom_kgm,9.87,True,6
+,,,,,,,,,,,,marin.mrp_bom_line_1097,marin_data.product_product_1663,uom.product_uom_unit,1000.0,,7
+,,,,,,,,,,,,marin.mrp_bom_line_1098,marin_data.product_product_1664,uom.product_uom_unit,1000.0,,8
+,,,,,,,,,,,,marin.mrp_bom_line_1099,marin_data.product_product_1123,uom.product_uom_unit,1000.0,,9
+,,,,,,,,,,,,marin.mrp_bom_line_1100,marin_data.product_product_1128,uom.product_uom_unit,83.0,,10
+,,,,,,,,,,,,marin.mrp_bom_line_1101,marin_data.product_product_1501,uom.product_uom_unit,83.0,,11
+,,,,,,,,,,,,marin.mrp_bom_line_1102,marin_data.product_product_2329,uom.product_uom_unit,2.0,,12
+mrp_bom_1012,Refill Eterbel XM 12x1L 1000,Manufacture this product,1000.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1529,uom.product_uom_litre,,marin_data.company_lmmr,marin.mrp_bom_line_1103,marin_data.product_product_1703,uom.product_uom_litre,1000.0,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1104,marin_data.product_product_1663,uom.product_uom_unit,1000.0,,4
+,,,,,,,,,,,,marin.mrp_bom_line_1105,marin_data.product_product_1664,uom.product_uom_unit,1000.0,,5
+,,,,,,,,,,,,marin.mrp_bom_line_1106,marin_data.product_product_1125,uom.product_uom_unit,1000.0,,6
+,,,,,,,,,,,,marin.mrp_bom_line_1107,marin_data.product_product_1501,uom.product_uom_unit,83.33,,7
+,,,,,,,,,,,,marin.mrp_bom_line_1108,marin_data.product_product_1130,uom.product_uom_unit,83.33,,8
+,,,,,,,,,,,,marin.mrp_bom_line_1109,marin_data.product_product_2329,uom.product_uom_unit,2.0,,9
+mrp_bom_1013,Refill Ferti Beet XM 6x2Kg 1000,Manufacture this product,500.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1543,marin.uom_uom_133,,marin_data.company_lmmr,marin.mrp_bom_line_1110,marin_data.product_product_1309,uom.product_uom_kgm,1000.0,,3
+,,,,,,,,,,,,marin.mrp_bom_line_1111,marin_data.product_product_1731,uom.product_uom_unit,500.0,,5
+,,,,,,,,,,,,marin.mrp_bom_line_1112,marin_data.product_product_1131,uom.product_uom_unit,83.0,,6
+,,,,,,,,,,,,marin.mrp_bom_line_1113,marin_data.product_product_1501,uom.product_uom_unit,83.0,,7
+,,,,,,,,,,,,marin.mrp_bom_line_1114,marin_data.product_product_2329,uom.product_uom_unit,1.5,,8
+mrp_bom_1014,Refill Ferti Beet XM 6x2Kg 252,Manufacture this product,252.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1543,marin.uom_uom_133,,marin_data.company_lmmr,marin.mrp_bom_line_1115,marin_data.product_product_1309,uom.product_uom_kgm,504.0,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1116,marin_data.product_product_1731,uom.product_uom_unit,252.0,,2
+,,,,,,,,,,,,marin.mrp_bom_line_1117,marin_data.product_product_1501,uom.product_uom_unit,42.0,,3
+,,,,,,,,,,,,marin.mrp_bom_line_1118,marin_data.product_product_2329,uom.product_uom_unit,1.0,,4
+mrp_bom_1015,Refill Fortexyl XM 12x1L 1000,Manufacture this product,1000.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1576,uom.product_uom_litre,,marin_data.company_lmmr,marin.mrp_bom_line_1119,marin_data.product_product_1805,uom.product_uom_litre,1000.0,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1120,marin_data.product_product_1868,uom.product_uom_unit,1000.0,,2
+,,,,,,,,,,,,marin.mrp_bom_line_1121,marin_data.product_product_1665,uom.product_uom_unit,1000.0,,3
+,,,,,,,,,,,,marin.mrp_bom_line_1122,marin_data.product_product_1126,uom.product_uom_unit,1000.0,,4
+,,,,,,,,,,,,marin.mrp_bom_line_1123,marin_data.product_product_1132,uom.product_uom_unit,83.0,,5
+,,,,,,,,,,,,marin.mrp_bom_line_1124,marin_data.product_product_1501,uom.product_uom_unit,83.0,,6
+,,,,,,,,,,,,marin.mrp_bom_line_1125,marin_data.product_product_2329,uom.product_uom_unit,2.0,,7
+mrp_bom_1016,Refill Ingenux 80 XM 8x1Kg 1000,Manufacture this product,1000.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1661,uom.product_uom_kgm,,marin_data.company_lmmr,marin.mrp_bom_line_1126,marin_data.product_product_1604,uom.product_uom_kgm,1000.0,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1127,marin_data.product_product_1732,uom.product_uom_unit,1000.0,,2
+,,,,,,,,,,,,marin.mrp_bom_line_1128,marin_data.product_product_1502,uom.product_uom_unit,84.0,,4
+,,,,,,,,,,,,marin.mrp_bom_line_1129,marin_data.product_product_2112,uom.product_uom_unit,84.0,,5
+,,,,,,,,,,,,marin.mrp_bom_line_1130,marin_data.product_product_2329,uom.product_uom_unit,2.0,,6
+mrp_bom_1017,Formulate Linexar CT 12x1L Batch 1000,Manufacture this product,1000.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1745,uom.product_uom_litre,,marin_data.company_lmmr,marin.mrp_bom_line_1131,marin_data.product_product_1465,uom.product_uom_kgm,86.68,True,2
+,,,,,,,,,,,,marin.mrp_bom_line_1132,marin_data.product_product_1401,uom.product_uom_kgm,609.09,True,3
+,,,,,,,,,,,,marin.mrp_bom_line_1133,marin_data.product_product_1728,uom.product_uom_kgm,38.67,True,4
+,,,,,,,,,,,,marin.mrp_bom_line_1134,marin_data.product_product_1259,uom.product_uom_kgm,20.37,True,5
+,,,,,,,,,,,,marin.mrp_bom_line_1135,marin_data.product_product_1260,uom.product_uom_kgm,61.1,True,6
+,,,,,,,,,,,,marin.mrp_bom_line_1136,marin_data.product_product_1832,uom.product_uom_kgm,6.45,True,7
+,,,,,,,,,,,,marin.mrp_bom_line_1137,marin_data.product_product_1122,uom.product_uom_kgm,1.16,True,8
+,,,,,,,,,,,,marin.mrp_bom_line_1138,marin_data.product_product_2121,uom.product_uom_kgm,12.89,True,9
+,,,,,,,,,,,,marin.mrp_bom_line_1139,marin_data.product_product_1573,uom.product_uom_kgm,0.52,,10
+,,,,,,,,,,,,marin.mrp_bom_line_1140,marin_data.product_product_1663,uom.product_uom_unit,1000.0,,13
+,,,,,,,,,,,,marin.mrp_bom_line_1141,marin_data.product_product_1664,uom.product_uom_unit,1000.0,,14
+,,,,,,,,,,,,marin.mrp_bom_line_1142,marin_data.product_product_2098,uom.product_uom_unit,1000.0,,15
+,,,,,,,,,,,,marin.mrp_bom_line_1143,marin_data.product_product_1501,uom.product_uom_unit,83.0,,16
+,,,,,,,,,,,,marin.mrp_bom_line_1144,marin_data.product_product_2107,uom.product_uom_unit,83.0,,17
+,,,,,,,,,,,,marin.mrp_bom_line_1145,marin_data.product_product_2329,uom.product_uom_unit,2.0,,18
+mrp_bom_1018,Formulate Linexar CT 12x1L Batch 200,Manufacture this product,200.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1745,uom.product_uom_litre,,marin_data.company_lmmr,marin.mrp_bom_line_1146,marin_data.product_product_1465,uom.product_uom_kgm,17.34,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1147,marin_data.product_product_1401,uom.product_uom_kgm,121.82,True,2
+,,,,,,,,,,,,marin.mrp_bom_line_1148,marin_data.product_product_1728,uom.product_uom_kgm,7.73,True,3
+,,,,,,,,,,,,marin.mrp_bom_line_1149,marin_data.product_product_1259,uom.product_uom_kgm,4.07,True,4
+,,,,,,,,,,,,marin.mrp_bom_line_1150,marin_data.product_product_1260,uom.product_uom_kgm,12.22,True,5
+,,,,,,,,,,,,marin.mrp_bom_line_1151,marin_data.product_product_1832,uom.product_uom_kgm,1.29,True,6
+,,,,,,,,,,,,marin.mrp_bom_line_1152,marin_data.product_product_1122,uom.product_uom_kgm,0.23,True,7
+,,,,,,,,,,,,marin.mrp_bom_line_1153,marin_data.product_product_2121,uom.product_uom_kgm,2.58,True,8
+,,,,,,,,,,,,marin.mrp_bom_line_1154,marin_data.product_product_1573,uom.product_uom_kgm,0.1,,9
+,,,,,,,,,,,,marin.mrp_bom_line_1155,marin_data.product_product_1868,uom.product_uom_unit,200.0,,10
+,,,,,,,,,,,,marin.mrp_bom_line_1156,marin_data.product_product_1870,uom.product_uom_unit,200.0,,11
+,,,,,,,,,,,,marin.mrp_bom_line_1157,marin_data.product_product_2098,uom.product_uom_unit,200.0,,12
+,,,,,,,,,,,,marin.mrp_bom_line_1158,marin_data.product_product_1839,uom.product_uom_unit,17.0,,13
+,,,,,,,,,,,,marin.mrp_bom_line_1159,marin_data.product_product_2107,uom.product_uom_unit,17.0,,14
+,,,,,,,,,,,,marin.mrp_bom_line_1160,marin_data.product_product_2329,uom.product_uom_unit,1.0,,15
+mrp_bom_1019,Formulate Linexar CT 12x1L Batch 500,Manufacture this product,500.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1745,uom.product_uom_litre,,marin_data.company_lmmr,marin.mrp_bom_line_1161,marin_data.product_product_1465,uom.product_uom_kgm,43.34,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1162,marin_data.product_product_1401,uom.product_uom_kgm,304.54,True,2
+,,,,,,,,,,,,marin.mrp_bom_line_1163,marin_data.product_product_1728,uom.product_uom_kgm,19.34,True,3
+,,,,,,,,,,,,marin.mrp_bom_line_1164,marin_data.product_product_1259,uom.product_uom_kgm,10.18,True,4
+,,,,,,,,,,,,marin.mrp_bom_line_1165,marin_data.product_product_1260,uom.product_uom_kgm,30.55,True,5
+,,,,,,,,,,,,marin.mrp_bom_line_1166,marin_data.product_product_1832,uom.product_uom_kgm,3.22,True,6
+,,,,,,,,,,,,marin.mrp_bom_line_1167,marin_data.product_product_1122,uom.product_uom_kgm,0.58,True,7
+,,,,,,,,,,,,marin.mrp_bom_line_1168,marin_data.product_product_2121,uom.product_uom_kgm,6.45,True,8
+,,,,,,,,,,,,marin.mrp_bom_line_1169,marin_data.product_product_1573,uom.product_uom_kgm,0.26,,9
+,,,,,,,,,,,,marin.mrp_bom_line_1170,marin_data.product_product_1663,uom.product_uom_unit,500.0,,12
+,,,,,,,,,,,,marin.mrp_bom_line_1171,marin_data.product_product_1664,uom.product_uom_unit,500.0,,13
+,,,,,,,,,,,,marin.mrp_bom_line_1172,marin_data.product_product_2098,uom.product_uom_unit,500.0,,14
+,,,,,,,,,,,,marin.mrp_bom_line_1173,marin_data.product_product_1501,uom.product_uom_unit,42.0,,15
+,,,,,,,,,,,,marin.mrp_bom_line_1174,marin_data.product_product_2107,uom.product_uom_unit,42.0,,16
+,,,,,,,,,,,,marin.mrp_bom_line_1175,marin_data.product_product_2329,uom.product_uom_unit,2.0,,17
+mrp_bom_1020,Formulate Linexar 60 XM 12x1L Batch 1000,Manufacture this product,1000.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1749,uom.product_uom_litre,,marin_data.company_lmmr,marin.mrp_bom_line_1176,marin_data.product_product_1465,uom.product_uom_kgm,612.32,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1177,marin_data.product_product_1259,uom.product_uom_kgm,19.28,True,2
+,,,,,,,,,,,,marin.mrp_bom_line_1178,marin_data.product_product_1260,uom.product_uom_kgm,57.83,True,3
+,,,,,,,,,,,,marin.mrp_bom_line_1179,marin_data.product_product_1122,uom.product_uom_kgm,1.34,True,4
+,,,,,,,,,,,,marin.mrp_bom_line_1180,marin_data.product_product_1728,uom.product_uom_kgm,36.6,True,5
+,,,,,,,,,,,,marin.mrp_bom_line_1181,marin_data.product_product_1832,uom.product_uom_kgm,9.76,True,6
+,,,,,,,,,,,,marin.mrp_bom_line_1182,marin_data.product_product_2121,uom.product_uom_kgm,12.2,True,7
+,,,,,,,,,,,,marin.mrp_bom_line_1183,marin_data.product_product_1573,uom.product_uom_kgm,0.49,,8
+,,,,,,,,,,,,marin.mrp_bom_line_1184,marin_data.product_product_1839,uom.product_uom_unit,83.0,,9
+,,,,,,,,,,,,marin.mrp_bom_line_1185,marin_data.product_product_1868,uom.product_uom_unit,1000.0,,10
+,,,,,,,,,,,,marin.mrp_bom_line_1186,marin_data.product_product_1870,uom.product_uom_unit,1000.0,,11
+,,,,,,,,,,,,marin.mrp_bom_line_1187,marin_data.product_product_2097,uom.product_uom_unit,1000.0,,12
+,,,,,,,,,,,,marin.mrp_bom_line_1188,marin_data.product_product_2106,uom.product_uom_unit,83.0,,13
+mrp_bom_1021,Formulate Linexar 60 XM 12x1L Batch 200,Manufacture this product,200.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1749,uom.product_uom_litre,,marin_data.company_lmmr,marin.mrp_bom_line_1189,marin_data.product_product_1122,uom.product_uom_kgm,0.27,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1190,marin_data.product_product_1259,uom.product_uom_kgm,3.86,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1191,marin_data.product_product_1260,uom.product_uom_kgm,11.57,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1192,marin_data.product_product_1465,uom.product_uom_kgm,122.46,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1193,marin_data.product_product_1573,uom.product_uom_kgm,0.1,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1194,marin_data.product_product_1728,uom.product_uom_kgm,7.32,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1195,marin_data.product_product_1832,uom.product_uom_kgm,1.95,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1196,marin_data.product_product_1839,uom.product_uom_unit,17.0,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1197,marin_data.product_product_1868,uom.product_uom_unit,200.0,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1198,marin_data.product_product_1870,uom.product_uom_unit,200.0,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1199,marin_data.product_product_2097,uom.product_uom_unit,200.0,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1200,marin_data.product_product_2106,uom.product_uom_unit,17.0,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1201,marin_data.product_product_2121,uom.product_uom_kgm,2.44,True,1
+mrp_bom_1022,Refill Magistop XM 12x1L 600,Manufacture this product,600.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1767,uom.product_uom_litre,,marin_data.company_lmmr,marin.mrp_bom_line_1202,marin_data.product_product_2029,uom.product_uom_litre,600.0,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1203,marin_data.product_product_1868,uom.product_uom_unit,600.0,,2
+,,,,,,,,,,,,marin.mrp_bom_line_1204,marin_data.product_product_1665,uom.product_uom_unit,600.0,,4
+,,,,,,,,,,,,marin.mrp_bom_line_1205,marin_data.product_product_2115,uom.product_uom_unit,650.0,,5
+,,,,,,,,,,,,marin.mrp_bom_line_1206,marin_data.product_product_1501,uom.product_uom_unit,50.0,,6
+,,,,,,,,,,,,marin.mrp_bom_line_1207,marin_data.product_product_2329,uom.product_uom_unit,1.0,,7
+mrp_bom_1023,Formulate Omipro CT 12x1L Batch 200,Manufacture this product,200.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1892,uom.product_uom_litre,,marin_data.company_lmmr,marin.mrp_bom_line_1208,marin_data.product_product_1122,uom.product_uom_kgm,0.69,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1209,marin_data.product_product_1259,uom.product_uom_kgm,8.45,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1210,marin_data.product_product_1260,uom.product_uom_kgm,8.45,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1211,marin_data.product_product_1401,uom.product_uom_kgm,79.79,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1212,marin_data.product_product_1521,uom.product_uom_kgm,2.76,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1213,marin_data.product_product_1573,uom.product_uom_kgm,0.28,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1214,marin_data.product_product_1728,uom.product_uom_kgm,8.28,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1215,marin_data.product_product_1764,uom.product_uom_kgm,7.14,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1216,marin_data.product_product_1765,uom.product_uom_kgm,97.27,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1217,marin_data.product_product_1832,uom.product_uom_kgm,2.21,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1218,marin_data.product_product_1839,uom.product_uom_unit,17.0,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1219,marin_data.product_product_1868,uom.product_uom_unit,200.0,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1220,marin_data.product_product_1870,uom.product_uom_unit,200.0,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1221,marin_data.product_product_2009,uom.product_uom_kgm,87.83,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1222,marin_data.product_product_2101,uom.product_uom_unit,200.0,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1223,marin_data.product_product_2109,uom.product_uom_unit,17.0,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1224,marin_data.product_product_2329,uom.product_uom_unit,1.0,,1
+mrp_bom_1024,Formulate Omipro CT Batch 12x1L 1000,Manufacture this product,1000.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1892,uom.product_uom_litre,,marin_data.company_lmmr,marin.mrp_bom_line_1225,marin_data.product_product_1122,uom.product_uom_kgm,3.45,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1226,marin_data.product_product_1259,uom.product_uom_kgm,42.23,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1227,marin_data.product_product_1260,uom.product_uom_kgm,42.23,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1228,marin_data.product_product_1401,uom.product_uom_kgm,398.96,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1229,marin_data.product_product_1521,uom.product_uom_kgm,13.8,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1230,marin_data.product_product_1573,uom.product_uom_kgm,1.38,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1231,marin_data.product_product_1728,uom.product_uom_kgm,41.4,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1232,marin_data.product_product_1764,uom.product_uom_kgm,35.69,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1233,marin_data.product_product_1765,uom.product_uom_kgm,486.37,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1234,marin_data.product_product_1832,uom.product_uom_kgm,11.04,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1235,marin_data.product_product_1839,uom.product_uom_unit,83.0,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1236,marin_data.product_product_1868,uom.product_uom_unit,1000.0,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1237,marin_data.product_product_1870,uom.product_uom_unit,1000.0,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1238,marin_data.product_product_2009,uom.product_uom_kgm,439.14,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1239,marin_data.product_product_2101,uom.product_uom_unit,1000.0,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1240,marin_data.product_product_2109,uom.product_uom_unit,83.0,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1241,marin_data.product_product_2329,uom.product_uom_unit,3.0,,1
+mrp_bom_1025,Formulate Omipro XM 12x1L Batch 1000,Manufacture this product,1000.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1893,uom.product_uom_litre,,marin_data.company_lmmr,marin.mrp_bom_line_1242,marin_data.product_product_1259,uom.product_uom_kgm,12.91,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1243,marin_data.product_product_1260,uom.product_uom_kgm,1.08,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1244,marin_data.product_product_1427,uom.product_uom_kgm,0.09,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1245,marin_data.product_product_1521,uom.product_uom_kgm,0.93,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1246,marin_data.product_product_1573,uom.product_uom_kgm,0.54,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1247,marin_data.product_product_1728,uom.product_uom_kgm,32.29,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1248,marin_data.product_product_1764,uom.product_uom_kgm,32.29,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1249,marin_data.product_product_1765,uom.product_uom_kgm,253.51,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1250,marin_data.product_product_1839,uom.product_uom_unit,83.0,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1251,marin_data.product_product_1868,uom.product_uom_unit,1000.0,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1252,marin_data.product_product_1870,uom.product_uom_unit,1000.0,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1253,marin_data.product_product_2009,uom.product_uom_kgm,742.58,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1254,marin_data.product_product_2102,uom.product_uom_unit,1000.0,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1255,marin_data.product_product_2110,uom.product_uom_unit,83.0,,1
+mrp_bom_1026,Formulate Omipro XM 12x1L Batch 200,Manufacture this product,200.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1893,uom.product_uom_litre,,marin_data.company_lmmr,marin.mrp_bom_line_1256,marin_data.product_product_1259,uom.product_uom_kgm,2.58,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1257,marin_data.product_product_1260,uom.product_uom_kgm,0.22,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1258,marin_data.product_product_1427,uom.product_uom_kgm,0.02,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1259,marin_data.product_product_1521,uom.product_uom_kgm,0.19,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1260,marin_data.product_product_1573,uom.product_uom_kgm,0.11,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1261,marin_data.product_product_1728,uom.product_uom_kgm,6.46,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1262,marin_data.product_product_1764,uom.product_uom_kgm,6.46,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1263,marin_data.product_product_1765,uom.product_uom_kgm,50.7,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1264,marin_data.product_product_1839,uom.product_uom_unit,17.0,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1265,marin_data.product_product_1868,uom.product_uom_unit,200.0,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1266,marin_data.product_product_1870,uom.product_uom_unit,200.0,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1267,marin_data.product_product_2009,uom.product_uom_kgm,148.52,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1268,marin_data.product_product_2102,uom.product_uom_unit,200.0,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1269,marin_data.product_product_2110,uom.product_uom_unit,17.0,,1
+mrp_bom_1027,Refill Omipro XM 12x1L 204,Manufacture this product,204.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1893,uom.product_uom_litre,,marin_data.company_lmmr,marin.mrp_bom_line_1270,marin_data.product_product_2008,uom.product_uom_litre,204.0,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1271,marin_data.product_product_1663,uom.product_uom_unit,204.0,,2
+,,,,,,,,,,,,marin.mrp_bom_line_1272,marin_data.product_product_1664,uom.product_uom_unit,204.0,,3
+,,,,,,,,,,,,marin.mrp_bom_line_1273,marin_data.product_product_2102,uom.product_uom_unit,204.0,,4
+,,,,,,,,,,,,marin.mrp_bom_line_1274,marin_data.product_product_1501,uom.product_uom_unit,17.0,,5
+,,,,,,,,,,,,marin.mrp_bom_line_1275,marin_data.product_product_2110,uom.product_uom_unit,17.0,,6
+,,,,,,,,,,,,marin.mrp_bom_line_1276,marin_data.product_product_2329,uom.product_uom_unit,1.0,,7
+mrp_bom_1028,Refill Veridia XM XM 6x2Kg 100,Manufacture this product,120.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_2302,marin.uom_uom_109,,marin_data.company_lmmr,marin.mrp_bom_line_1277,marin_data.product_product_1605,uom.product_uom_kgm,72.0,,5
+,,,,,,,,,,,,marin.mrp_bom_line_1278,marin_data.product_product_1733,uom.product_uom_unit,120.0,,8
+,,,,,,,,,,,,marin.mrp_bom_line_1279,marin_data.product_product_1133,uom.product_uom_unit,15.0,,10
+,,,,,,,,,,,,marin.mrp_bom_line_1280,marin_data.product_product_1502,uom.product_uom_unit,15.0,,11
+,,,,,,,,,,,,marin.mrp_bom_line_1281,marin_data.product_product_2329,uom.product_uom_unit,0.5,,12
+mrp_bom_1029,Formulate Alfaspray XM 12x1L Batch 1000L,Manufacture this product,1000.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1201,uom.product_uom_litre,,marin_data.company_lmmg,marin.mrp_bom_line_1282,marin_data.product_product_1765,uom.product_uom_kgm,604.12,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1283,marin_data.product_product_1728,uom.product_uom_kgm,34.41,True,2
+,,,,,,,,,,,,marin.mrp_bom_line_1284,marin_data.product_product_1725,uom.product_uom_kgm,229.4,True,3
+,,,,,,,,,,,,marin.mrp_bom_line_1285,marin_data.product_product_1727,uom.product_uom_kgm,114.7,True,4
+,,,,,,,,,,,,marin.mrp_bom_line_1286,marin_data.product_product_1726,uom.product_uom_kgm,51.61,True,5
+,,,,,,,,,,,,marin.mrp_bom_line_1287,marin_data.product_product_1200,uom.product_uom_kgm,91.76,True,6
+,,,,,,,,,,,,marin.mrp_bom_line_1288,marin_data.product_product_2121,uom.product_uom_kgm,19.49,True,7
+,,,,,,,,,,,,marin.mrp_bom_line_1289,marin_data.product_product_2080,uom.product_uom_kgm,0.34,True,8
+,,,,,,,,,,,,marin.mrp_bom_line_1290,marin_data.product_product_2081,uom.product_uom_kgm,1.14,True,9
+,,,,,,,,,,,,marin.mrp_bom_line_1291,marin_data.product_product_1868,uom.product_uom_unit,1000.0,,10
+,,,,,,,,,,,,marin.mrp_bom_line_1292,marin_data.product_product_1870,uom.product_uom_unit,1000.0,,11
+,,,,,,,,,,,,marin.mrp_bom_line_1293,marin_data.product_product_1839,uom.product_uom_unit,83.0,,12
+,,,,,,,,,,,,marin.mrp_bom_line_1294,marin_data.product_product_2114,uom.product_uom_unit,1083.0,,13
+,,,,,,,,,,,,marin.mrp_bom_line_1295,marin_data.product_product_2329,uom.product_uom_unit,1.0,,14
+mrp_bom_1030,Formulate Alfaspray XM 12x1L Batch 200L,Manufacture this product,200.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1201,uom.product_uom_litre,,marin_data.company_lmmg,marin.mrp_bom_line_1296,marin_data.product_product_1765,uom.product_uom_kgm,120.82,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1297,marin_data.product_product_1728,uom.product_uom_kgm,6.88,True,2
+,,,,,,,,,,,,marin.mrp_bom_line_1298,marin_data.product_product_1725,uom.product_uom_kgm,45.88,True,3
+,,,,,,,,,,,,marin.mrp_bom_line_1299,marin_data.product_product_1727,uom.product_uom_kgm,22.94,True,4
+,,,,,,,,,,,,marin.mrp_bom_line_1300,marin_data.product_product_1726,uom.product_uom_kgm,10.32,True,5
+,,,,,,,,,,,,marin.mrp_bom_line_1301,marin_data.product_product_1200,uom.product_uom_kgm,18.35,True,6
+,,,,,,,,,,,,marin.mrp_bom_line_1302,marin_data.product_product_2121,uom.product_uom_kgm,3.89,True,7
+,,,,,,,,,,,,marin.mrp_bom_line_1303,marin_data.product_product_2080,uom.product_uom_kgm,0.07,True,8
+,,,,,,,,,,,,marin.mrp_bom_line_1304,marin_data.product_product_2081,uom.product_uom_kgm,0.22,True,9
+,,,,,,,,,,,,marin.mrp_bom_line_1305,marin_data.product_product_1868,uom.product_uom_unit,1.0,,10
+,,,,,,,,,,,,marin.mrp_bom_line_1306,marin_data.product_product_1870,uom.product_uom_unit,200.0,,11
+,,,,,,,,,,,,marin.mrp_bom_line_1307,marin_data.product_product_1839,uom.product_uom_unit,17.0,,12
+,,,,,,,,,,,,marin.mrp_bom_line_1308,marin_data.product_product_2114,uom.product_uom_unit,217.0,,13
+,,,,,,,,,,,,marin.mrp_bom_line_1309,marin_data.product_product_2329,uom.product_uom_unit,1.0,,14
+mrp_bom_1031,Formulate Alfaspray XM 1x10L Batch 1000L,Manufacture this product,100.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1202,marin.uom_uom_153,,marin_data.company_lmmg,marin.mrp_bom_line_1310,marin_data.product_product_1728,uom.product_uom_kgm,34.41,True,2
+,,,,,,,,,,,,marin.mrp_bom_line_1311,marin_data.product_product_1725,uom.product_uom_kgm,229.4,True,3
+,,,,,,,,,,,,marin.mrp_bom_line_1312,marin_data.product_product_1727,uom.product_uom_kgm,114.7,True,4
+,,,,,,,,,,,,marin.mrp_bom_line_1313,marin_data.product_product_1726,uom.product_uom_kgm,51.62,True,5
+,,,,,,,,,,,,marin.mrp_bom_line_1314,marin_data.product_product_1200,uom.product_uom_kgm,91.76,True,6
+,,,,,,,,,,,,marin.mrp_bom_line_1315,marin_data.product_product_2121,uom.product_uom_kgm,19.5,True,7
+,,,,,,,,,,,,marin.mrp_bom_line_1316,marin_data.product_product_2080,uom.product_uom_kgm,0.34,True,8
+,,,,,,,,,,,,marin.mrp_bom_line_1317,marin_data.product_product_2081,uom.product_uom_kgm,1.15,True,9
+,,,,,,,,,,,,marin.mrp_bom_line_1318,marin_data.product_product_2113,uom.product_uom_unit,150.0,,10
+,,,,,,,,,,,,marin.mrp_bom_line_1319,marin_data.product_product_1520,uom.product_uom_unit,100.0,,11
+,,,,,,,,,,,,marin.mrp_bom_line_1320,marin_data.product_product_2329,uom.product_uom_unit,1.0,,13
+mrp_bom_1032,Formulate Alfaspray XM 1x10L Batch 200L,Manufacture this product,20.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1202,marin.uom_uom_153,,marin_data.company_lmmg,marin.mrp_bom_line_1321,marin_data.product_product_1728,uom.product_uom_kgm,6.88,True,2
+,,,,,,,,,,,,marin.mrp_bom_line_1322,marin_data.product_product_1725,uom.product_uom_kgm,45.88,True,3
+,,,,,,,,,,,,marin.mrp_bom_line_1323,marin_data.product_product_1727,uom.product_uom_kgm,22.94,True,4
+,,,,,,,,,,,,marin.mrp_bom_line_1324,marin_data.product_product_1726,uom.product_uom_kgm,10.32,True,5
+,,,,,,,,,,,,marin.mrp_bom_line_1325,marin_data.product_product_1200,uom.product_uom_kgm,18.35,True,6
+,,,,,,,,,,,,marin.mrp_bom_line_1326,marin_data.product_product_2121,uom.product_uom_kgm,3.9,True,7
+,,,,,,,,,,,,marin.mrp_bom_line_1327,marin_data.product_product_2080,uom.product_uom_kgm,0.07,True,8
+,,,,,,,,,,,,marin.mrp_bom_line_1328,marin_data.product_product_2081,uom.product_uom_kgm,0.23,True,9
+,,,,,,,,,,,,marin.mrp_bom_line_1329,marin_data.product_product_2113,uom.product_uom_unit,30.0,,10
+,,,,,,,,,,,,marin.mrp_bom_line_1330,marin_data.product_product_1520,uom.product_uom_unit,20.0,,11
+,,,,,,,,,,,,marin.mrp_bom_line_1331,marin_data.product_product_2329,uom.product_uom_unit,1.0,,13
+mrp_bom_1033,Refill Asanit 50 XM 8x1Kg 1200,Manufacture this product,1000.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1239,uom.product_uom_kgm,,marin_data.company_lmmg,marin.mrp_bom_line_1332,marin_data.product_product_2028,marin.uom_uom_123,48.0,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1333,marin_data.product_product_1729,uom.product_uom_unit,1200.0,,2
+,,,,,,,,,,,,marin.mrp_bom_line_1334,marin_data.product_product_1501,uom.product_uom_unit,100.0,,3
+,,,,,,,,,,,,marin.mrp_bom_line_1335,marin_data.product_product_2111,uom.product_uom_unit,100.0,,4
+,,,,,,,,,,,,marin.mrp_bom_line_1336,marin_data.product_product_2329,uom.product_uom_unit,2.0,,6
+mrp_bom_1034,Refill Breisse XM 100,Manufacture this product,100.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1344,marin.uom_uom_164,,marin_data.company_lmmg,marin.mrp_bom_line_1337,marin_data.product_product_1339,marin.uom_uom_123,0.52,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1338,marin_data.product_product_1730,uom.product_uom_unit,100.0,,2
+mrp_bom_1035,Refill Deprebac XM 12x1L 1000,Manufacture this product,1000.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1492,uom.product_uom_litre,,marin_data.company_lmmg,marin.mrp_bom_line_1339,marin_data.product_product_1912,uom.product_uom_litre,1000.0,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1340,marin_data.product_product_1663,uom.product_uom_unit,1000.0,,4
+,,,,,,,,,,,,marin.mrp_bom_line_1341,marin_data.product_product_1664,uom.product_uom_unit,1000.0,,5
+,,,,,,,,,,,,marin.mrp_bom_line_1342,marin_data.product_product_2094,uom.product_uom_unit,1000.0,,6
+,,,,,,,,,,,,marin.mrp_bom_line_1343,marin_data.product_product_1501,uom.product_uom_unit,83.33,,7
+,,,,,,,,,,,,marin.mrp_bom_line_1344,marin_data.product_product_2103,uom.product_uom_unit,83.33,,8
+,,,,,,,,,,,,marin.mrp_bom_line_1345,marin_data.product_product_2329,uom.product_uom_unit,2.0,,9
+mrp_bom_1036,Refill Distriva XM 12x1L 1000,Manufacture this product,1000.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1504,uom.product_uom_litre,,marin_data.company_lmmg,marin.mrp_bom_line_1346,marin_data.product_product_2184,uom.product_uom_kgm,1000.0,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1347,marin_data.product_product_1663,uom.product_uom_unit,1000.0,,2
+,,,,,,,,,,,,marin.mrp_bom_line_1348,marin_data.product_product_1664,uom.product_uom_unit,1000.0,,3
+,,,,,,,,,,,,marin.mrp_bom_line_1349,marin_data.product_product_2095,uom.product_uom_unit,1000.0,,4
+,,,,,,,,,,,,marin.mrp_bom_line_1350,marin_data.product_product_1501,uom.product_uom_unit,83.33,,5
+,,,,,,,,,,,,marin.mrp_bom_line_1351,marin_data.product_product_2104,uom.product_uom_unit,83.33,,6
+,,,,,,,,,,,,marin.mrp_bom_line_1352,marin_data.product_product_2329,uom.product_uom_unit,2.0,,7
+mrp_bom_1037,Refill Draisig XM 12x1L 1000,Manufacture this product,1000.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1506,uom.product_uom_litre,,marin_data.company_lmmg,marin.mrp_bom_line_1353,marin_data.product_product_1424,uom.product_uom_kgm,1000.0,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1354,marin_data.product_product_1663,uom.product_uom_unit,1000.0,,4
+,,,,,,,,,,,,marin.mrp_bom_line_1355,marin_data.product_product_1664,uom.product_uom_unit,1000.0,,5
+,,,,,,,,,,,,marin.mrp_bom_line_1356,marin_data.product_product_2096,uom.product_uom_unit,1000.0,,6
+,,,,,,,,,,,,marin.mrp_bom_line_1357,marin_data.product_product_1501,uom.product_uom_unit,83.33,,7
+,,,,,,,,,,,,marin.mrp_bom_line_1358,marin_data.product_product_2105,uom.product_uom_unit,83.33,,8
+,,,,,,,,,,,,marin.mrp_bom_line_1359,marin_data.product_product_2329,uom.product_uom_unit,2.0,,9
+mrp_bom_1038,Formulate Estelis XM 12x1L Batch 1000,Manufacture this product,1000.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1527,uom.product_uom_litre,,marin_data.company_lmmg,marin.mrp_bom_line_1360,marin_data.product_product_1765,uom.product_uom_kgm,822.92,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1361,marin_data.product_product_1338,uom.product_uom_kgm,284.0,True,2
+,,,,,,,,,,,,marin.mrp_bom_line_1362,marin_data.product_product_1784,uom.product_uom_kgm,4.54,True,3
+,,,,,,,,,,,,marin.mrp_bom_line_1363,marin_data.product_product_2121,uom.product_uom_kgm,1.82,True,4
+,,,,,,,,,,,,marin.mrp_bom_line_1364,marin_data.product_product_1167,uom.product_uom_kgm,11.36,True,5
+,,,,,,,,,,,,marin.mrp_bom_line_1365,marin_data.product_product_1121,uom.product_uom_kgm,11.36,True,6
+,,,,,,,,,,,,marin.mrp_bom_line_1366,marin_data.product_product_1663,uom.product_uom_unit,1000.0,,7
+,,,,,,,,,,,,marin.mrp_bom_line_1367,marin_data.product_product_1664,uom.product_uom_unit,1000.0,,8
+,,,,,,,,,,,,marin.mrp_bom_line_1368,marin_data.product_product_1124,uom.product_uom_unit,1000.0,,11
+,,,,,,,,,,,,marin.mrp_bom_line_1369,marin_data.product_product_1501,uom.product_uom_unit,83.0,,12
+,,,,,,,,,,,,marin.mrp_bom_line_1370,marin_data.product_product_1129,uom.product_uom_unit,83.0,,13
+,,,,,,,,,,,,marin.mrp_bom_line_1371,marin_data.product_product_2329,uom.product_uom_unit,2.0,,14
+mrp_bom_1039,Formulate Estelis Soil XM 12x1L Batch 1000,Manufacture this product,1000.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1528,uom.product_uom_litre,,marin_data.company_lmmg,marin.mrp_bom_line_1372,marin_data.product_product_1765,uom.product_uom_kgm,703.87,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1373,marin_data.product_product_1338,uom.product_uom_kgm,493.6,True,2
+,,,,,,,,,,,,marin.mrp_bom_line_1374,marin_data.product_product_1784,uom.product_uom_kgm,4.94,True,3
+,,,,,,,,,,,,marin.mrp_bom_line_1375,marin_data.product_product_2121,uom.product_uom_kgm,1.97,True,4
+,,,,,,,,,,,,marin.mrp_bom_line_1376,marin_data.product_product_1167,uom.product_uom_kgm,19.74,True,5
+,,,,,,,,,,,,marin.mrp_bom_line_1377,marin_data.product_product_1121,uom.product_uom_kgm,9.87,True,6
+,,,,,,,,,,,,marin.mrp_bom_line_1378,marin_data.product_product_1663,uom.product_uom_unit,1000.0,,7
+,,,,,,,,,,,,marin.mrp_bom_line_1379,marin_data.product_product_1664,uom.product_uom_unit,1000.0,,8
+,,,,,,,,,,,,marin.mrp_bom_line_1380,marin_data.product_product_1123,uom.product_uom_unit,1000.0,,9
+,,,,,,,,,,,,marin.mrp_bom_line_1381,marin_data.product_product_1128,uom.product_uom_unit,83.0,,10
+,,,,,,,,,,,,marin.mrp_bom_line_1382,marin_data.product_product_1501,uom.product_uom_unit,83.0,,11
+,,,,,,,,,,,,marin.mrp_bom_line_1383,marin_data.product_product_2329,uom.product_uom_unit,2.0,,12
+mrp_bom_1040,Refill Eterbel XM 12x1L 1000,Manufacture this product,1000.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1529,uom.product_uom_litre,,marin_data.company_lmmg,marin.mrp_bom_line_1384,marin_data.product_product_1703,uom.product_uom_litre,1000.0,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1385,marin_data.product_product_1663,uom.product_uom_unit,1000.0,,4
+,,,,,,,,,,,,marin.mrp_bom_line_1386,marin_data.product_product_1664,uom.product_uom_unit,1000.0,,5
+,,,,,,,,,,,,marin.mrp_bom_line_1387,marin_data.product_product_1125,uom.product_uom_unit,1000.0,,6
+,,,,,,,,,,,,marin.mrp_bom_line_1388,marin_data.product_product_1501,uom.product_uom_unit,83.33,,7
+,,,,,,,,,,,,marin.mrp_bom_line_1389,marin_data.product_product_1130,uom.product_uom_unit,83.33,,8
+,,,,,,,,,,,,marin.mrp_bom_line_1390,marin_data.product_product_2329,uom.product_uom_unit,2.0,,9
+mrp_bom_1041,Refill Ferti Beet XM 6x2Kg 1000,Manufacture this product,500.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1543,marin.uom_uom_133,,marin_data.company_lmmg,marin.mrp_bom_line_1391,marin_data.product_product_1309,uom.product_uom_kgm,1000.0,,3
+,,,,,,,,,,,,marin.mrp_bom_line_1392,marin_data.product_product_1731,uom.product_uom_unit,500.0,,5
+,,,,,,,,,,,,marin.mrp_bom_line_1393,marin_data.product_product_1131,uom.product_uom_unit,83.0,,6
+,,,,,,,,,,,,marin.mrp_bom_line_1394,marin_data.product_product_1501,uom.product_uom_unit,83.0,,7
+,,,,,,,,,,,,marin.mrp_bom_line_1395,marin_data.product_product_2329,uom.product_uom_unit,1.5,,8
+mrp_bom_1042,Refill Ferti Beet XM 6x2Kg 200,Manufacture this product,100.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1543,marin.uom_uom_133,,marin_data.company_lmmg,marin.mrp_bom_line_1396,marin_data.product_product_1309,uom.product_uom_kgm,200.0,,5
+,,,,,,,,,,,,marin.mrp_bom_line_1397,marin_data.product_product_1542,uom.product_uom_kgm,0.0,True,6
+,,,,,,,,,,,,marin.mrp_bom_line_1398,marin_data.product_product_1731,uom.product_uom_unit,100.0,,7
+,,,,,,,,,,,,marin.mrp_bom_line_1399,marin_data.product_product_1131,uom.product_uom_unit,17.0,,8
+,,,,,,,,,,,,marin.mrp_bom_line_1400,marin_data.product_product_1501,uom.product_uom_unit,17.0,,9
+,,,,,,,,,,,,marin.mrp_bom_line_1401,marin_data.product_product_2329,uom.product_uom_unit,0.5,,10
+mrp_bom_1043,Refill Fortexyl XM 12x1L 1000,Manufacture this product,1000.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1576,uom.product_uom_litre,,marin_data.company_lmmg,marin.mrp_bom_line_1402,marin_data.product_product_1805,uom.product_uom_litre,1000.0,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1403,marin_data.product_product_1868,uom.product_uom_unit,1000.0,,2
+,,,,,,,,,,,,marin.mrp_bom_line_1404,marin_data.product_product_1665,uom.product_uom_unit,1000.0,,3
+,,,,,,,,,,,,marin.mrp_bom_line_1405,marin_data.product_product_1126,uom.product_uom_unit,1000.0,,4
+,,,,,,,,,,,,marin.mrp_bom_line_1406,marin_data.product_product_1132,uom.product_uom_unit,83.0,,5
+,,,,,,,,,,,,marin.mrp_bom_line_1407,marin_data.product_product_1501,uom.product_uom_unit,83.0,,6
+,,,,,,,,,,,,marin.mrp_bom_line_1408,marin_data.product_product_2329,uom.product_uom_unit,2.0,,7
+mrp_bom_1044,Refill Ingenux 80 XM 8x1Kg 1000,Manufacture this product,1000.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1661,uom.product_uom_kgm,,marin_data.company_lmmg,marin.mrp_bom_line_1409,marin_data.product_product_1604,uom.product_uom_kgm,1000.0,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1410,marin_data.product_product_1732,uom.product_uom_unit,1000.0,,2
+,,,,,,,,,,,,marin.mrp_bom_line_1411,marin_data.product_product_1502,uom.product_uom_unit,84.0,,4
+,,,,,,,,,,,,marin.mrp_bom_line_1412,marin_data.product_product_2112,uom.product_uom_unit,84.0,,5
+,,,,,,,,,,,,marin.mrp_bom_line_1413,marin_data.product_product_2329,uom.product_uom_unit,2.0,,6
+mrp_bom_1045,Formulate Linexar CT 12x1L Batch 1000,Manufacture this product,1000.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1745,uom.product_uom_litre,,marin_data.company_lmmg,marin.mrp_bom_line_1414,marin_data.product_product_1465,uom.product_uom_kgm,86.68,True,2
+,,,,,,,,,,,,marin.mrp_bom_line_1415,marin_data.product_product_1401,uom.product_uom_kgm,609.09,True,3
+,,,,,,,,,,,,marin.mrp_bom_line_1416,marin_data.product_product_1728,uom.product_uom_kgm,38.67,True,4
+,,,,,,,,,,,,marin.mrp_bom_line_1417,marin_data.product_product_1259,uom.product_uom_kgm,20.37,True,5
+,,,,,,,,,,,,marin.mrp_bom_line_1418,marin_data.product_product_1260,uom.product_uom_kgm,61.1,True,6
+,,,,,,,,,,,,marin.mrp_bom_line_1419,marin_data.product_product_1832,uom.product_uom_kgm,6.45,True,7
+,,,,,,,,,,,,marin.mrp_bom_line_1420,marin_data.product_product_1122,uom.product_uom_kgm,1.16,True,8
+,,,,,,,,,,,,marin.mrp_bom_line_1421,marin_data.product_product_2121,uom.product_uom_kgm,12.89,True,9
+,,,,,,,,,,,,marin.mrp_bom_line_1422,marin_data.product_product_1573,uom.product_uom_kgm,0.52,,10
+,,,,,,,,,,,,marin.mrp_bom_line_1423,marin_data.product_product_1663,uom.product_uom_unit,1000.0,,13
+,,,,,,,,,,,,marin.mrp_bom_line_1424,marin_data.product_product_1664,uom.product_uom_unit,1000.0,,14
+,,,,,,,,,,,,marin.mrp_bom_line_1425,marin_data.product_product_2098,uom.product_uom_unit,1000.0,,15
+,,,,,,,,,,,,marin.mrp_bom_line_1426,marin_data.product_product_1501,uom.product_uom_unit,83.0,,16
+,,,,,,,,,,,,marin.mrp_bom_line_1427,marin_data.product_product_2107,uom.product_uom_unit,83.0,,17
+,,,,,,,,,,,,marin.mrp_bom_line_1428,marin_data.product_product_2329,uom.product_uom_unit,2.0,,18
+mrp_bom_1046,Formulate Linexar CT 12x1L Batch 200,Manufacture this product,200.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1745,uom.product_uom_litre,,marin_data.company_lmmg,marin.mrp_bom_line_1429,marin_data.product_product_1465,uom.product_uom_kgm,17.34,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1430,marin_data.product_product_1401,uom.product_uom_kgm,121.82,True,2
+,,,,,,,,,,,,marin.mrp_bom_line_1431,marin_data.product_product_1728,uom.product_uom_kgm,7.73,True,3
+,,,,,,,,,,,,marin.mrp_bom_line_1432,marin_data.product_product_1259,uom.product_uom_kgm,4.07,True,4
+,,,,,,,,,,,,marin.mrp_bom_line_1433,marin_data.product_product_1260,uom.product_uom_kgm,12.22,True,5
+,,,,,,,,,,,,marin.mrp_bom_line_1434,marin_data.product_product_1832,uom.product_uom_kgm,1.29,True,6
+,,,,,,,,,,,,marin.mrp_bom_line_1435,marin_data.product_product_1122,uom.product_uom_kgm,0.23,True,7
+,,,,,,,,,,,,marin.mrp_bom_line_1436,marin_data.product_product_2121,uom.product_uom_kgm,2.58,True,8
+,,,,,,,,,,,,marin.mrp_bom_line_1437,marin_data.product_product_1573,uom.product_uom_kgm,0.1,,9
+,,,,,,,,,,,,marin.mrp_bom_line_1438,marin_data.product_product_1868,uom.product_uom_unit,200.0,,10
+,,,,,,,,,,,,marin.mrp_bom_line_1439,marin_data.product_product_1870,uom.product_uom_unit,200.0,,11
+,,,,,,,,,,,,marin.mrp_bom_line_1440,marin_data.product_product_2098,uom.product_uom_unit,200.0,,12
+,,,,,,,,,,,,marin.mrp_bom_line_1441,marin_data.product_product_1839,uom.product_uom_unit,17.0,,13
+,,,,,,,,,,,,marin.mrp_bom_line_1442,marin_data.product_product_2107,uom.product_uom_unit,17.0,,14
+,,,,,,,,,,,,marin.mrp_bom_line_1443,marin_data.product_product_2329,uom.product_uom_unit,1.0,,15
+mrp_bom_1047,Formulate Linexar CT 12x1L Batch 500,Manufacture this product,500.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1745,uom.product_uom_litre,,marin_data.company_lmmg,marin.mrp_bom_line_1444,marin_data.product_product_1465,uom.product_uom_kgm,43.34,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1445,marin_data.product_product_1401,uom.product_uom_kgm,304.54,True,2
+,,,,,,,,,,,,marin.mrp_bom_line_1446,marin_data.product_product_1728,uom.product_uom_kgm,19.34,True,3
+,,,,,,,,,,,,marin.mrp_bom_line_1447,marin_data.product_product_1259,uom.product_uom_kgm,10.18,True,4
+,,,,,,,,,,,,marin.mrp_bom_line_1448,marin_data.product_product_1260,uom.product_uom_kgm,30.55,True,5
+,,,,,,,,,,,,marin.mrp_bom_line_1449,marin_data.product_product_1832,uom.product_uom_kgm,3.22,True,6
+,,,,,,,,,,,,marin.mrp_bom_line_1450,marin_data.product_product_1122,uom.product_uom_kgm,0.58,True,7
+,,,,,,,,,,,,marin.mrp_bom_line_1451,marin_data.product_product_2121,uom.product_uom_kgm,6.45,True,8
+,,,,,,,,,,,,marin.mrp_bom_line_1452,marin_data.product_product_1573,uom.product_uom_kgm,0.26,,9
+,,,,,,,,,,,,marin.mrp_bom_line_1453,marin_data.product_product_1663,uom.product_uom_unit,500.0,,12
+,,,,,,,,,,,,marin.mrp_bom_line_1454,marin_data.product_product_1664,uom.product_uom_unit,500.0,,13
+,,,,,,,,,,,,marin.mrp_bom_line_1455,marin_data.product_product_2098,uom.product_uom_unit,500.0,,14
+,,,,,,,,,,,,marin.mrp_bom_line_1456,marin_data.product_product_1501,uom.product_uom_unit,42.0,,15
+,,,,,,,,,,,,marin.mrp_bom_line_1457,marin_data.product_product_2107,uom.product_uom_unit,42.0,,16
+,,,,,,,,,,,,marin.mrp_bom_line_1458,marin_data.product_product_2329,uom.product_uom_unit,2.0,,17
+mrp_bom_1048,Formulate Linexar 60 XM 12x1L Batch 1000,Manufacture this product,1000.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1749,uom.product_uom_litre,,marin_data.company_lmmg,marin.mrp_bom_line_1459,marin_data.product_product_1465,uom.product_uom_kgm,612.32,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1460,marin_data.product_product_1259,uom.product_uom_kgm,19.28,True,2
+,,,,,,,,,,,,marin.mrp_bom_line_1461,marin_data.product_product_1260,uom.product_uom_kgm,57.83,True,3
+,,,,,,,,,,,,marin.mrp_bom_line_1462,marin_data.product_product_1122,uom.product_uom_kgm,1.34,True,4
+,,,,,,,,,,,,marin.mrp_bom_line_1463,marin_data.product_product_1728,uom.product_uom_kgm,36.6,True,5
+,,,,,,,,,,,,marin.mrp_bom_line_1464,marin_data.product_product_1832,uom.product_uom_kgm,9.76,True,6
+,,,,,,,,,,,,marin.mrp_bom_line_1465,marin_data.product_product_2121,uom.product_uom_kgm,12.2,True,7
+,,,,,,,,,,,,marin.mrp_bom_line_1466,marin_data.product_product_1573,uom.product_uom_kgm,0.49,,8
+,,,,,,,,,,,,marin.mrp_bom_line_1467,marin_data.product_product_1839,uom.product_uom_unit,83.0,,9
+,,,,,,,,,,,,marin.mrp_bom_line_1468,marin_data.product_product_1868,uom.product_uom_unit,1000.0,,10
+,,,,,,,,,,,,marin.mrp_bom_line_1469,marin_data.product_product_1870,uom.product_uom_unit,1000.0,,11
+,,,,,,,,,,,,marin.mrp_bom_line_1470,marin_data.product_product_2097,uom.product_uom_unit,1000.0,,12
+,,,,,,,,,,,,marin.mrp_bom_line_1471,marin_data.product_product_2106,uom.product_uom_unit,83.0,,13
+mrp_bom_1049,Formulate Linexar 60 XM 12x1L Batch 200,Manufacture this product,200.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1749,uom.product_uom_litre,,marin_data.company_lmmg,marin.mrp_bom_line_1472,marin_data.product_product_1122,uom.product_uom_kgm,0.27,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1473,marin_data.product_product_1259,uom.product_uom_kgm,3.86,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1474,marin_data.product_product_1260,uom.product_uom_kgm,11.57,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1475,marin_data.product_product_1465,uom.product_uom_kgm,122.46,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1476,marin_data.product_product_1573,uom.product_uom_kgm,0.1,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1477,marin_data.product_product_1728,uom.product_uom_kgm,7.32,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1478,marin_data.product_product_1832,uom.product_uom_kgm,1.95,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1479,marin_data.product_product_1839,uom.product_uom_unit,17.0,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1480,marin_data.product_product_1868,uom.product_uom_unit,200.0,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1481,marin_data.product_product_1870,uom.product_uom_unit,200.0,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1482,marin_data.product_product_2097,uom.product_uom_unit,200.0,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1483,marin_data.product_product_2106,uom.product_uom_unit,17.0,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1484,marin_data.product_product_2121,uom.product_uom_kgm,2.44,True,1
+mrp_bom_1050,Refill Magistop XM 12x1L 600,Manufacture this product,600.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1767,uom.product_uom_litre,,marin_data.company_lmmg,marin.mrp_bom_line_1485,marin_data.product_product_2029,uom.product_uom_litre,600.0,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1486,marin_data.product_product_1868,uom.product_uom_unit,600.0,,2
+,,,,,,,,,,,,marin.mrp_bom_line_1487,marin_data.product_product_1665,uom.product_uom_unit,600.0,,4
+,,,,,,,,,,,,marin.mrp_bom_line_1488,marin_data.product_product_2115,uom.product_uom_unit,650.0,,5
+,,,,,,,,,,,,marin.mrp_bom_line_1489,marin_data.product_product_1501,uom.product_uom_unit,50.0,,6
+,,,,,,,,,,,,marin.mrp_bom_line_1490,marin_data.product_product_2329,uom.product_uom_unit,1.0,,7
+mrp_bom_1051,Formulate Omipro CT 12x1L Batch 200,Manufacture this product,200.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1892,uom.product_uom_litre,,marin_data.company_lmmg,marin.mrp_bom_line_1491,marin_data.product_product_1122,uom.product_uom_kgm,0.69,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1492,marin_data.product_product_1259,uom.product_uom_kgm,8.45,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1493,marin_data.product_product_1260,uom.product_uom_kgm,8.45,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1494,marin_data.product_product_1401,uom.product_uom_kgm,79.79,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1495,marin_data.product_product_1521,uom.product_uom_kgm,2.76,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1496,marin_data.product_product_1573,uom.product_uom_kgm,0.28,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1497,marin_data.product_product_1728,uom.product_uom_kgm,8.28,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1498,marin_data.product_product_1764,uom.product_uom_kgm,7.14,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1499,marin_data.product_product_1765,uom.product_uom_kgm,97.27,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1500,marin_data.product_product_1832,uom.product_uom_kgm,2.21,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1501,marin_data.product_product_1839,uom.product_uom_unit,17.0,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1502,marin_data.product_product_1868,uom.product_uom_unit,200.0,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1503,marin_data.product_product_1870,uom.product_uom_unit,200.0,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1504,marin_data.product_product_2009,uom.product_uom_kgm,87.83,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1505,marin_data.product_product_2101,uom.product_uom_unit,200.0,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1506,marin_data.product_product_2109,uom.product_uom_unit,17.0,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1507,marin_data.product_product_2329,uom.product_uom_unit,1.0,,1
+mrp_bom_1052,Formulate Omipro CT Batch 12x1L 1000,Manufacture this product,1000.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1892,uom.product_uom_litre,,marin_data.company_lmmg,marin.mrp_bom_line_1508,marin_data.product_product_1122,uom.product_uom_kgm,3.45,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1509,marin_data.product_product_1259,uom.product_uom_kgm,42.23,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1510,marin_data.product_product_1260,uom.product_uom_kgm,42.23,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1511,marin_data.product_product_1401,uom.product_uom_kgm,398.96,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1512,marin_data.product_product_1521,uom.product_uom_kgm,13.8,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1513,marin_data.product_product_1573,uom.product_uom_kgm,1.38,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1514,marin_data.product_product_1728,uom.product_uom_kgm,41.4,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1515,marin_data.product_product_1764,uom.product_uom_kgm,35.69,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1516,marin_data.product_product_1765,uom.product_uom_kgm,486.37,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1517,marin_data.product_product_1832,uom.product_uom_kgm,11.04,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1518,marin_data.product_product_1839,uom.product_uom_unit,83.0,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1519,marin_data.product_product_1868,uom.product_uom_unit,1000.0,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1520,marin_data.product_product_1870,uom.product_uom_unit,1000.0,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1521,marin_data.product_product_2009,uom.product_uom_kgm,439.14,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1522,marin_data.product_product_2101,uom.product_uom_unit,1000.0,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1523,marin_data.product_product_2109,uom.product_uom_unit,83.0,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1524,marin_data.product_product_2329,uom.product_uom_unit,3.0,,1
+mrp_bom_1053,Formulate Omipro XM 12x1L Batch 1000,Manufacture this product,1000.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1893,uom.product_uom_litre,,marin_data.company_lmmg,marin.mrp_bom_line_1525,marin_data.product_product_1259,uom.product_uom_kgm,12.91,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1526,marin_data.product_product_1260,uom.product_uom_kgm,1.08,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1527,marin_data.product_product_1427,uom.product_uom_kgm,0.09,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1528,marin_data.product_product_1521,uom.product_uom_kgm,0.93,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1529,marin_data.product_product_1573,uom.product_uom_kgm,0.54,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1530,marin_data.product_product_1728,uom.product_uom_kgm,32.29,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1531,marin_data.product_product_1764,uom.product_uom_kgm,32.29,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1532,marin_data.product_product_1765,uom.product_uom_kgm,253.51,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1533,marin_data.product_product_1839,uom.product_uom_unit,83.0,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1534,marin_data.product_product_1868,uom.product_uom_unit,1000.0,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1535,marin_data.product_product_1870,uom.product_uom_unit,1000.0,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1536,marin_data.product_product_2009,uom.product_uom_kgm,742.58,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1537,marin_data.product_product_2102,uom.product_uom_unit,1000.0,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1538,marin_data.product_product_2110,uom.product_uom_unit,83.0,,1
+mrp_bom_1054,Formulate Omipro XM 12x1L Batch 200,Manufacture this product,200.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1893,uom.product_uom_litre,,marin_data.company_lmmg,marin.mrp_bom_line_1539,marin_data.product_product_1259,uom.product_uom_kgm,2.58,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1540,marin_data.product_product_1260,uom.product_uom_kgm,0.22,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1541,marin_data.product_product_1427,uom.product_uom_kgm,0.02,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1542,marin_data.product_product_1521,uom.product_uom_kgm,0.19,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1543,marin_data.product_product_1573,uom.product_uom_kgm,0.11,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1544,marin_data.product_product_1728,uom.product_uom_kgm,6.46,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1545,marin_data.product_product_1764,uom.product_uom_kgm,6.46,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1546,marin_data.product_product_1765,uom.product_uom_kgm,50.7,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1547,marin_data.product_product_1839,uom.product_uom_unit,17.0,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1548,marin_data.product_product_1868,uom.product_uom_unit,200.0,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1549,marin_data.product_product_1870,uom.product_uom_unit,200.0,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1550,marin_data.product_product_2009,uom.product_uom_kgm,148.52,True,1
+,,,,,,,,,,,,marin.mrp_bom_line_1551,marin_data.product_product_2102,uom.product_uom_unit,200.0,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1552,marin_data.product_product_2110,uom.product_uom_unit,17.0,,1
+mrp_bom_1055,Refill Omipro XM 12x1L 1000,Manufacture this product,1000.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1893,uom.product_uom_litre,,marin_data.company_lmmg,marin.mrp_bom_line_1553,marin_data.product_product_2008,marin.uom_uom_150,5.0,,1
+,,,,,,,,,,,,marin.mrp_bom_line_1554,marin_data.product_product_1868,uom.product_uom_unit,1000.0,,2
+,,,,,,,,,,,,marin.mrp_bom_line_1555,marin_data.product_product_1870,uom.product_uom_unit,1000.0,,3
+,,,,,,,,,,,,marin.mrp_bom_line_1556,marin_data.product_product_2102,uom.product_uom_unit,1000.0,,4
+,,,,,,,,,,,,marin.mrp_bom_line_1557,marin_data.product_product_1501,uom.product_uom_unit,83.33,,5
+,,,,,,,,,,,,marin.mrp_bom_line_1558,marin_data.product_product_2110,uom.product_uom_unit,83.33,,6
+,,,,,,,,,,,,marin.mrp_bom_line_1559,marin_data.product_product_2329,uom.product_uom_unit,2.0,,8
+mrp_bom_1056,Refill Veridia XM XM 6x2Kg 100,Manufacture this product,120.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_2302,marin.uom_uom_109,,marin_data.company_lmmg,marin.mrp_bom_line_1560,marin_data.product_product_1605,uom.product_uom_kgm,72.0,,5
+,,,,,,,,,,,,marin.mrp_bom_line_1561,marin_data.product_product_1733,uom.product_uom_unit,120.0,,8
+,,,,,,,,,,,,marin.mrp_bom_line_1562,marin_data.product_product_1133,uom.product_uom_unit,15.0,,10
+,,,,,,,,,,,,marin.mrp_bom_line_1563,marin_data.product_product_1502,uom.product_uom_unit,15.0,,11
+,,,,,,,,,,,,marin.mrp_bom_line_1564,marin_data.product_product_2329,uom.product_uom_unit,0.5,,12

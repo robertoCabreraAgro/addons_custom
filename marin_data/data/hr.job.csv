@@ -1,20 +1,25 @@
-"id","name","company_id/id","department_id/id","active"
-"hr_job_1","Owner","marin_data.company_lmmr","marin_data.hr_department_3","True"
-"hr_job_2","Management leader","marin_data.company_lmmr","marin_data.hr_department_8","True"
-"hr_job_3","Commercial leader","marin_data.company_lmmr","marin_data.hr_department_4","True"
-"hr_job_4","Business services manager","marin_data.company_lmmr","marin_data.hr_department_5","True"
-"hr_job_5","Auditor","marin_data.company_lmmr","marin_data.hr_department_6","True"
-"hr_job_6","Managment representative","marin_data.company_lmmr","marin_data.hr_department_8","True"
-"hr_job_7","Commercial representative","marin_data.company_lmmr","marin_data.hr_department_4","True"
-"hr_job_8","Operative","marin_data.company_lmmr","marin_data.hr_department_7","True"
-"hr_job_9","General leader","marin_data.company_lmmr","marin_data.hr_department_3","True"
-"hr_job_10","Auxiliar of operations","marin_data.company_lmmr","marin_data.hr_department_7","True"
-"hr_job_11","Project manager","marin_data.company_lmmr","marin_data.hr_department_7","True"
-"hr_job_13","Operations leader","marin_data.company_lmmr","marin_data.hr_department_7","True"
-"hr_job_14","Treasurer","marin_data.company_lmmr","marin_data.hr_department_8","True"
-"hr_job_15","Innovation leader","marin_data.company_lmmr","marin_data.hr_department_8","True"
-"hr_job_16","Management load","marin_data.company_lmmr","marin_data.hr_department_8","True"
-"hr_job_17","Commercial representative junior","marin_data.company_lmmr","marin_data.hr_department_9","True"
-"hr_job_18","Deputy general leader","marin_data.company_lmmr","marin_data.hr_department_3","True"
-"hr_job_19","Debt collection officer","marin_data.company_lmmr","marin_data.hr_department_8","True"
-"hr_job_20","Auxiliar of general leader","marin_data.company_lmmr","marin_data.hr_department_3","True"
+id,name,active,sequence,company_id/id,industry_id/id,contract_type_id/id,department_id/id,address_id/id
+hr_job_1,Owner,True,10,marin_data.company_lmmr,,,marin_data.hr_department_3,marin_data.partner_8376
+hr_job_2,General leader,True,11,marin_data.company_lmmr,base.res_partner_industry_N,hr.contract_type_full_time,marin_data.hr_department_3,marin_data.partner_8376
+hr_job_3,Deputy general leader,True,12,marin_data.company_lmmr,base.res_partner_industry_N,hr.contract_type_full_time,marin_data.hr_department_3,marin_data.partner_8376
+hr_job_4,Talent management leader,True,13,marin_data.company_lmmr,base.res_partner_industry_M,hr.contract_type_full_time,marin_data.hr_department_9,marin_data.partner_8376
+hr_job_5,Commercial leader,True,14,marin_data.company_lmmr,base.res_partner_industry_A,hr.contract_type_full_time,marin_data.hr_department_4,marin_data.partner_8376
+hr_job_6,Operations leader,True,15,marin_data.company_lmmr,base.res_partner_industry_H,hr.contract_type_full_time,marin_data.hr_department_7,marin_data.partner_5003
+hr_job_7,Production leader,True,16,marin_data.company_lmmr,base.res_partner_industry_C,hr.contract_type_full_time,marin_data.hr_department_7,marin_data.partner_5011
+hr_job_8,Management leader,True,17,marin_data.company_lmmr,base.res_partner_industry_N,hr.contract_type_full_time,marin_data.hr_department_8,marin_data.partner_8376
+hr_job_9,Business services leader,True,18,marin_data.company_lmmr,base.res_partner_industry_J,hr.contract_type_full_time,marin_data.hr_department_5,marin_data.partner_8376
+hr_job_10,Innovation leader,True,19,marin_data.company_lmmr,base.res_partner_industry_N,hr.contract_type_full_time,marin_data.hr_department_8,marin_data.partner_8376
+hr_job_11,Auditor,True,20,marin_data.company_lmmr,base.res_partner_industry_K,hr.contract_type_full_time,marin_data.hr_department_6,marin_data.partner_8376
+hr_job_12,Auxiliar of general leader,True,21,marin_data.company_lmmr,base.res_partner_industry_N,hr.contract_type_full_time,marin_data.hr_department_3,marin_data.partner_8376
+hr_job_13,Commercial excellence officer,True,22,marin_data.company_lmmr,base.res_partner_industry_A,hr.contract_type_full_time,marin_data.hr_department_4,marin_data.partner_8376
+hr_job_14,Commercial representative,True,23,marin_data.company_lmmr,base.res_partner_industry_A,hr.contract_type_full_time,marin_data.hr_department_4,marin_data.partner_8376
+hr_job_15,Commercial representative junior,True,24,marin_data.company_lmmr,base.res_partner_industry_A,hr.contract_type_full_time,marin_data.hr_department_4,marin_data.partner_8376
+hr_job_16,Operations officer,True,25,marin_data.company_lmmr,base.res_partner_industry_C,hr.contract_type_full_time,marin_data.hr_department_7,marin_data.partner_5003
+hr_job_17,Logistics officer,True,26,marin_data.company_lmmr,base.res_partner_industry_H,hr.contract_type_full_time,marin_data.hr_department_7,marin_data.partner_5003
+hr_job_18,Operative,True,27,marin_data.company_lmmr,base.res_partner_industry_H,hr.contract_type_full_time,marin_data.hr_department_7,marin_data.partner_5003
+hr_job_19,Debt collection officer,True,28,marin_data.company_lmmr,base.res_partner_industry_N,hr.contract_type_full_time,marin_data.hr_department_8,marin_data.partner_8376
+hr_job_20,Treasurer,True,29,marin_data.company_lmmr,base.res_partner_industry_N,hr.contract_type_full_time,marin_data.hr_department_8,marin_data.partner_8376
+hr_job_21,Managment representative,True,30,marin_data.company_lmmr,base.res_partner_industry_N,hr.contract_type_full_time,marin_data.hr_department_8,marin_data.partner_8376
+hr_job_22,Management load,True,31,marin_data.company_lmmr,,,marin_data.hr_department_8,marin_data.partner_8376
+hr_job_23,Programmer Senior,True,32,marin_data.company_lmmr,base.res_partner_industry_J,hr.contract_type_full_time,marin_data.hr_department_5,marin_data.partner_8376
+hr_job_24,Programmer Junior,True,33,marin_data.company_lmmr,base.res_partner_industry_J,hr.contract_type_full_time,marin_data.hr_department_5,marin_data.partner_8376
