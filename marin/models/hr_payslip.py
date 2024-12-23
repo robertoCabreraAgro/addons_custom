@@ -33,11 +33,11 @@ class HrPayslipInherit(models.Model):
         seniority = self.contract_id.get_seniority(date_to=self.date_to)
         str_seniority = ""
         if seniority["years"] > 0:
-            str_seniority = f"P{seniority["years"]}Y{seniority["months"]}M{seniority["days"]}D"
+            str_seniority = f"""P{seniority["years"]}Y{seniority["months"]}M{seniority["days"]}D"""
         elif seniority["years"] == 0 and seniority["months"] >= 1:
-            str_seniority = f"P{seniority["months"]}M{seniority["days"]}D"
+            str_seniority = f"""P{seniority["months"]}M{seniority["days"]}D"""
         else:
-            str_seniority = f"P{seniority["days"]}D"
+            str_seniority = f"""P{seniority["days"]}D"""
 
         perceptions_data = self.get_cfdi_perceptions_data()
         payroll = {
