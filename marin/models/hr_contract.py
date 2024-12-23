@@ -1,4 +1,5 @@
 from datetime import time
+from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
@@ -56,6 +57,36 @@ class HrContract(models.Model):
         """
         year = float(date.strftime("%Y")) if date else float(time.strftime("%Y"))
         return 366 if (not year % 4 and year % 100 or not year % 400) else 365
+
+    # Override custom method
+    def get_seniority(self, date_from=False, date_to=False, flag="r"):
+        """Return seniority between contract's date_start and date_to or today
+
+        :param date_from: start date (default contract.date_start)
+        :type date_from: str
+        :param date_to: end date (default today)
+        :type date_to: str
+        :param method: {'r', 'a'} kind of values returned
+        :type method: str
+        :return: a dict with the values years, months, days.
+            These values can be relative or absolute.
+        :rtype: dict
+        """
+        self.ensure_one()
+        date_from = date_from or self.date_start
+        date_to = date_to or fields.Date.today()
+        relative_seniority = relativedelta(date_to, date_from)
+        if flag == "r":
+            return {
+                "years": relative_seniority.years,
+                "months": relative_seniority.months,
+                "days": relative_seniority.days,
+            }
+        return {
+            "years": relative_seniority.years,
+            "months": (relative_seniority.months + relative_seniority.years * 12),
+            "days": (date_to - date_from).days + 1,
+        }
 
     def _get_vacation_days(self, date_from=False, date_to=False):
         date_from = date_from or self.date_start

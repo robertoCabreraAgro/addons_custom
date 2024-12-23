@@ -25,33 +25,39 @@ class HrPayslipInherit(models.Model):
         )
         return payroll
 
-    # Uncomment if Vauxoo wont merge on master
     # Override original method
-    # def _l10n_mx_edi_create_payslip_values(self):
-    #    self.ensure_one()
-    #    employee = self.employee_id
-    #    if not self.contract_id:
-    #        return {"error": _("Employee has not a contract and is required")}
-    #    seniority = self.contract_id.get_seniority(
-    #        date_to=self.date_to)["days"] / 7
-    #    payroll = {
-    #        "record": self,
-    #        "company": self.company_id or self.contract_id.company_id,
-    #        "employee": self.employee_id,
-    #        "payslip_type": self.struct_id.type_id.l10n_mx_edi_type or "O",
-    #        "number_of_days": int(sum(self.worked_days_line_ids.mapped(
-    #            "number_of_days"))) or WORKED_DAYS.get(self.contract_id.l10n_mx_edi_schedule_pay_id.days_to_pay),
-    #        "date_start": self.contract_id.date_start,
-    #        "seniority_emp": "P%sW" % int(seniority),
-    #        "contract_type": self.contract_id.l10n_mx_edi_contract_type,
-    #        "emp_diary_salary": "%.2f" % self.contract_id._get_integrated_salary(date_to=self.date_to),
-    #    }
-    #    payroll.update(employee.get_cfdi_employee_data())
-    #    payroll.update(self.get_cfdi_perceptions_data())
-    #    payroll.update(self.get_cfdi_deductions_data())
-    #    payroll.update(self.get_cfdi_other_payments_data())
-    #    payroll["inability_data"] = lambda i, p: p._get_inability_data(i)
-    #    return payroll
+    def _l10n_mx_edi_create_payslip_values(self):
+        self.ensure_one()
+        if not self.contract_id:
+            return {"error": self.env._("Employee has not a contract and is required")}
+        seniority = self.contract_id.get_seniority(date_to=self.date_to)
+        str_seniority = ""
+        if seniority["years"] > 0:
+            str_seniority = f"P{seniority["years"]}Y{seniority["months"]}M{seniority["days"]}D"
+        elif seniority["years"] == 0 and seniority["months"] >= 1:
+            str_seniority = f"P{seniority["months"]}M{seniority["days"]}D"
+        else:
+            str_seniority = f"P{seniority["days"]}D"
+
+        perceptions_data = self.get_cfdi_perceptions_data()
+        payroll = {
+            "record": self,
+            "company": self.company_id or self.contract_id.company_id,
+            "employee": self.employee_id,
+            "payslip_type": self.struct_id.type_id.l10n_mx_edi_type or "O",
+            "number_of_days": int(sum(self.worked_days_line_ids.mapped("number_of_days"))),
+            "date_start": self.contract_id.date_start,
+            "seniority_emp": str_seniority,
+            "is_settlement": bool(perceptions_data["total_compensation"]),
+            "force_other_payments": self._l10n_mx_edi_force_other_payments(),
+            "acc_number": self.employee_id.sudo().bank_account_id.acc_number,
+        }
+        payroll.update(self.employee_id.get_cfdi_employee_data(self.contract_id))
+        payroll.update(perceptions_data)
+        payroll.update(self.get_cfdi_deductions_data())
+        payroll.update(self.get_cfdi_other_payments_data())
+        payroll["inability_data"] = lambda i, p: p._get_inability_data(i)
+        return payroll
 
     @api.onchange("contract_id")
     def onchange_contract(self):
