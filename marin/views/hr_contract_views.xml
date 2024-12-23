@@ -5,8 +5,8 @@
         <field name="model">hr.contract</field>
         <field name="inherit_id" ref="hr_contract.hr_contract_view_form" />
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='yearly_benefits']" position="inside">
-                <field name="final_yearly_costs" />
+            <xpath expr="//field[@name='structure_type_id'][2]" position="after">
+                <field name="structure_default_id" />
             </xpath>
         </field>
     </record>

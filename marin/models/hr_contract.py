@@ -8,6 +8,7 @@ from odoo.osv import expression
 class HrContract(models.Model):
     _inherit = "hr.contract"
 
+
 #    final_yearly_costs = fields.Monetary(
 #        string="Employee Budget",
 #        compute="_compute_final_yearly_costs",
@@ -16,7 +17,13 @@ class HrContract(models.Model):
 #        tracking=True,
 #        help="Total yearly cost of the employee for the employer.",
 #    )
-#
+    structure_default_id = fields.Many2one(
+        comodel_name='hr.payroll.structure',
+        string="Structure",
+        tracking=True,
+    )
+
+
 #    def _get_advantages_costs(self):
 #        self.ensure_one()
 #        return 12.0 * (
@@ -120,18 +127,23 @@ class HrContract(models.Model):
         return l10n_mx_edi_integrated_salary, round(sdi, 2)
 
     # Override original method
-    @api.constrains("employee_id", "state", "kanban_state", "date_start", "date_end", "structure_type_id")
+    @api.constrains(
+        "employee_id", "state", "kanban_state", "date_start", "date_end", "structure_type_id"
+    )
     def _check_current_contract(self):
         """Two contracts in state [incoming | open | close] cannot overlap"""
         for contract in self.filtered(
-            lambda c: (c.state not in ["draft", "cancel"] or c.state == "draft" and c.kanban_state == "done")
+            lambda c: (
+                c.state not in ["draft", "cancel"] 
+                or c.state == "draft" and c.kanban_state == "done"
+            )
             and c.employee_id
         ):
             domain = [
                 ("id", "!=", contract.id),
                 ("employee_id", "=", contract.employee_id.id),
                 ("company_id", "=", contract.company_id.id),
-                ("structure_type_id", "=", contract.structure_type_id.id),
+                ("structure_default_id", "=", contract.structure_default_id.id),
                 "|",
                 ("state", "in", ["open", "close"]),
                 "&",
@@ -148,7 +160,8 @@ class HrContract(models.Model):
             if self.search_count(domain):
                 raise ValidationError(
                     _(
-                        "An employee can only have one contract at the same time. (Excluding Draft and Cancelled "
+                        "An employee can only have one contract at the same time. "
+                        "(Excluding Draft and Cancelled "
                         "contracts).\n\nEmployee: %(employee_name)s",
                         employee_name=contract.employee_id.name,
                     )

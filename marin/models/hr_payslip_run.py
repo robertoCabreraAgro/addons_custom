@@ -115,5 +115,5 @@ class HrPayslipRun(models.Model):
     def x_action_unlink_payslip(self):
         """Unlink the payslips from the payslip run
         so the user can create individual journal entries"""
-        self.slip_ids.write({"payslip_run_id": False})
+        self.slip_ids.update({"payslip_run_id": False})
         return True
