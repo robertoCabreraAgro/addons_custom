@@ -102,6 +102,7 @@
         "views/hr_expense_views.xml",
         # "views/hr_contract_views.xml",
         "views/hr_payslip_views.xml",
+        "views/hr_payslip_run_views.xml",
         "views/pos_config_views.xml",
         "views/pos_order_views.xml",
         "views/pos_session_views.xml",

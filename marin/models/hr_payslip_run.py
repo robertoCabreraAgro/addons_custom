@@ -111,3 +111,9 @@ class HrPayslipRun(models.Model):
                 move_dict["line_ids"].append((0, 0, adjust_debit))
 
         return move_dict
+
+    def x_action_unlink_payslip(self):
+        """Unlink the payslips from the payslip run
+        so the user can create individual journal entries"""
+        self.slip_ids.write({"payslip_run_id": False})
+        return True
