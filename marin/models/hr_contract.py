@@ -25,18 +25,47 @@ class HrContract(models.Model):
     )
 
 
-#    def _get_advantages_costs(self):
-#        self.ensure_one()
-#        return 12.0 * (
-#            self.l10n_mx_edi_food_voucher
-#            + self.l10n_mx_edi_punctuality_bonus
-#            + self.l10n_mx_edi_attendance_bonus
-#            + self.l10n_mx_edi_feeding
-#            + self.l10n_mx_edi_housing
-#            + self.l10n_mx_edi_electric_ho
-#            + self.l10n_mx_edi_internet_ho
-#        )
-#
+    # Override original method
+    @api.constrains(
+        "employee_id", "state", "kanban_state", "date_start", "date_end", "structure_type_id"
+    )
+    def _check_current_contract(self):
+        """Two contracts in state [incoming | open | close] cannot overlap"""
+        for contract in self.filtered(
+            lambda c: (
+                c.state not in ["draft", "cancel"] 
+                or c.state == "draft" and c.kanban_state == "done"
+            )
+            and c.employee_id
+        ):
+            domain = [
+                ("id", "!=", contract.id),
+                ("employee_id", "=", contract.employee_id.id),
+                ("company_id", "=", contract.company_id.id),
+                ("structure_default_id", "=", contract.structure_default_id.id),
+                "|",
+                ("state", "in", ["open", "close"]),
+                "&",
+                ("state", "=", "draft"),
+                ("kanban_state", "=", "done"),  # replaces incoming
+            ]
+            if not contract.date_end:
+                start_domain = []
+                end_domain = ["|", ("date_end", ">=", contract.date_start), ("date_end", "=", False)]
+            else:
+                start_domain = [("date_start", "<=", contract.date_end)]
+                end_domain = ["|", ("date_end", ">", contract.date_start), ("date_end", "=", False)]
+            domain = expression.AND([domain, start_domain, end_domain])
+            if self.search_count(domain):
+                raise ValidationError(
+                    _(
+                        "An employee can only have one contract at the same time. "
+                        "(Excluding Draft and Cancelled "
+                        "contracts).\n\nEmployee: %(employee_name)s",
+                        employee_name=contract.employee_id.name,
+                    )
+                )
+
 #    @api.depends(
 #        "wage",
 #        "l10n_mx_edi_food_voucher",
@@ -50,6 +79,18 @@ class HrContract(models.Model):
 #    def _compute_final_yearly_costs(self):
 #        for contract in self:
 #            contract.final_yearly_costs = contract._get_advantages_costs() + (contract.wage * 12.5)
+
+#    def _get_advantages_costs(self):
+#        self.ensure_one()
+#        return 12.0 * (
+#            self.l10n_mx_edi_food_voucher
+#            + self.l10n_mx_edi_punctuality_bonus
+#            + self.l10n_mx_edi_attendance_bonus
+#            + self.l10n_mx_edi_feeding
+#            + self.l10n_mx_edi_housing
+#            + self.l10n_mx_edi_electric_ho
+#            + self.l10n_mx_edi_internet_ho
+#        )
 
     def _l10n_mx_edi_year_days(self, date=False):
         """Given a date return the number of days in the dates year taking into account leap ones
@@ -156,44 +197,3 @@ class HrContract(models.Model):
         sdi = sdi + self.l10n_mx_edi_sdi_variable
         sdi = sdi if sdi < max_sdi else max_sdi
         return l10n_mx_edi_integrated_salary, round(sdi, 2)
-
-    # Override original method
-    @api.constrains(
-        "employee_id", "state", "kanban_state", "date_start", "date_end", "structure_type_id"
-    )
-    def _check_current_contract(self):
-        """Two contracts in state [incoming | open | close] cannot overlap"""
-        for contract in self.filtered(
-            lambda c: (
-                c.state not in ["draft", "cancel"] 
-                or c.state == "draft" and c.kanban_state == "done"
-            )
-            and c.employee_id
-        ):
-            domain = [
-                ("id", "!=", contract.id),
-                ("employee_id", "=", contract.employee_id.id),
-                ("company_id", "=", contract.company_id.id),
-                ("structure_default_id", "=", contract.structure_default_id.id),
-                "|",
-                ("state", "in", ["open", "close"]),
-                "&",
-                ("state", "=", "draft"),
-                ("kanban_state", "=", "done"),  # replaces incoming
-            ]
-            if not contract.date_end:
-                start_domain = []
-                end_domain = ["|", ("date_end", ">=", contract.date_start), ("date_end", "=", False)]
-            else:
-                start_domain = [("date_start", "<=", contract.date_end)]
-                end_domain = ["|", ("date_end", ">", contract.date_start), ("date_end", "=", False)]
-            domain = expression.AND([domain, start_domain, end_domain])
-            if self.search_count(domain):
-                raise ValidationError(
-                    _(
-                        "An employee can only have one contract at the same time. "
-                        "(Excluding Draft and Cancelled "
-                        "contracts).\n\nEmployee: %(employee_name)s",
-                        employee_name=contract.employee_id.name,
-                    )
-                )
