@@ -206,6 +206,7 @@ class Document(models.Model):
                 ("name", "=", str(self.env["l10n_mx_edi.document"].get_datetime(cfdi_etree).year)),
             ],
             limit=1,
+            order="id desc",
         )
         if tag:
             tags.append(tag.id)
