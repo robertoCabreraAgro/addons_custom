@@ -6,12 +6,15 @@ from odoo.osv import expression
 class Documents(models.Model):
     _inherit = "documents.document"
 
+
     legal_number = fields.Char("Legal number")
     vehicle_id = fields.Many2one(
-        "fleet.vehicle", "Vehicle",
-        compute="_compute_vehicle",
+        comodel_name="fleet.vehicle",
+        string="Vehicle",
+        compute="_compute_vehicle_id",
         search="_search_vehicle_id",
     )
+
 
     @api.constrains("legal_number")
     def _check_duplicated_legal_number(self):
@@ -32,7 +35,7 @@ class Documents(models.Model):
         return super().copy(default=default)
 
     @api.depends("res_id", "res_model")
-    def _compute_vehicle(self):
+    def _compute_vehicle_id(self):
         vehicle = self.env["fleet.vehicle"]
         for document in self:
             document.vehicle_id = (

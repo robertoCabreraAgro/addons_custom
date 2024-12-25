@@ -4,6 +4,7 @@ from odoo import _, api, fields, models
 class FleetVehicleInherit(models.Model):
     _inherit = "fleet.vehicle"
 
+
     fuel_tank_capacity = fields.Integer(
         string="Tank capacity",
         help="Fuel tank capacity in liters",
@@ -14,30 +15,27 @@ class FleetVehicleInherit(models.Model):
     )
     fuel_card_id = fields.Many2one(
         "documents.document",
-        # domain=lambda self: [
-        #     ("tag_ids", "in", self.env.ref("marin.documents_fleet_fuel_card", False).ids),
-        #     "|",
-        #     ("vehicle_id", "=", self.id),
-        #     ("vehicle_id", "=", False),
-        # ],
-        # inverse="_inverse_fuel_card",
-        # store=True,
+        domain=lambda self: [
+            ("tag_ids", "in", self.env.ref("marin.documents_fleet_fuel_card").ids),
+            ("vehicle_id", "in", (self.id, False)),
+        ],
+        inverse="_inverse_fuel_card_id",
+        store=True,
         readonly=False,
     )
     fuel_card_name = fields.Char(compute="_compute_fuel_card_name", store=True)
     highway_pass_id = fields.Many2one(
         "documents.document",
-        # domain=lambda self: [
-        #     ("tag_ids", "in", self.env.ref("marin.documents_fleet_highway_pass", False).ids),
-        #     "|",
-        #     ("vehicle_id", "=", self.id),
-        #     ("vehicle_id", "=", False),
-        # ],
-        # inverse="_inverse_highway_pass",
-        # store=True,
+        domain=lambda self: [
+            ("tag_ids", "in", self.env.ref("marin.documents_fleet_highway_pass").ids),
+            ("vehicle_id", "in", (self.id, False)),
+        ],
+        inverse="_inverse_highway_pass_id",
+        store=True,
         readonly=False,
     )
     highway_pass_name = fields.Char(compute="_compute_highway_pass_name", store=True)
+
 
     # Extend original method
     @api.depends("model_id.brand_id.name", "model_id.name", "model_year", "color", "license_plate")
@@ -56,22 +54,29 @@ class FleetVehicleInherit(models.Model):
         for vehicle in self:
             vehicle.fuel_card_name = vehicle.fuel_card_id.name.split(".", 1)[0] if vehicle.fuel_card_id else ""
 
-    def _inverse_fuel_card(self):
+    @api.depends("highway_pass_id")
+    def _compute_highway_pass_name(self):
+        for vehicle in self:
+            vehicle.highway_pass_name = vehicle.highway_pass_id.name.split(".", 1)[0] if vehicle.highway_pass_id else ""
+
+    def _inverse_fuel_card_id(self):
         """
         Set the vehicle on the corresponding document, and unset the vehicle on 
         previously related documents
         """
         tag = self.env.ref("marin.documents_fleet_fuel_card", False)
-        for rec in self:
-            doc = rec.fuel_card_id
-            other_docs = doc.search([("vehicle_id", "=", rec.id), ("tag_ids", "in", tag.ids)]) - doc
+        for vehicle in self:
+            doc = vehicle.fuel_card_id
+            other_docs = doc.search(
+                [("vehicle_id", "=", vehicle.id), ("tag_ids", "in", tag.ids)]
+            ) - doc
             if doc:
                 doc.write(
                     {
-                        "res_model": rec._name,
-                        "res_id": rec.id,
+                        "res_model": vehicle._name,
+                        "res_id": vehicle.id,
                         "is_editable_attachment": True,
-                        "vehicle_id": rec.id,
+                        "vehicle_id": vehicle.id,
                     }
                 )
             for od in other_docs:
@@ -83,12 +88,7 @@ class FleetVehicleInherit(models.Model):
                     }
                 )
 
-    @api.depends("highway_pass_id")
-    def _compute_highway_pass_name(self):
-        for vehicle in self:
-            vehicle.highway_pass_name = vehicle.highway_pass_id.name.split(".", 1)[0] if vehicle.highway_pass_id else ""
-
-    def _inverse_highway_pass(self):
+    def _inverse_highway_pass_id(self):
         """
         Set the vehicle on the corresponding document, and unset the vehicle on
         previously related documents
@@ -96,7 +96,9 @@ class FleetVehicleInherit(models.Model):
         tag = self.env.ref("marin.documents_fleet_highway_pass", False)
         for vehicle in self:
             doc = vehicle.highway_pass_id
-            other_docs = doc.search([("vehicle_id", "=", vehicle.id), ("tag_ids", "in", tag.ids)]) - doc
+            other_docs = doc.search(
+                [("vehicle_id", "=", vehicle.id), ("tag_ids", "in", tag.ids)]
+            ) - doc
             if doc:
                 doc.write(
                     {
