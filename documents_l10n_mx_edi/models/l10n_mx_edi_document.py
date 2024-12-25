@@ -545,7 +545,6 @@ class L10nMxEdiDocument(models.Model):
         #        "refund_invoice_ids": [(4, invoice_id.id, 0)]
         #     })
         partner = self.partner_search_create(cfdi_etree)
-        account_id = journal_exist.default_account_id.id
         invoice_lines = []
         ecc12_node = self.collect_complemento(
             cfdi_etree,
