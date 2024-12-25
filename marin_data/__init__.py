@@ -293,11 +293,12 @@ def _post_init_marin(env):
     tools.convert.convert_file(env, "marin_data", "data/hr_payroll_structure_misc_data.xml", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin_data", "data/hr.contract.csv", None, mode="init", kind="data")
 
+    tools.convert.convert_file(env, "marin_data", "data/documents_document_data.xml", None, mode="init", kind="data")
+
     tools.convert.convert_file(env, "marin_data", "data/fleet.vehicle.model.brand.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin_data", "data/fleet.vehicle.model.category.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin_data", "data/fleet.vehicle.model.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin_data", "data/fleet.vehicle.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin_data", "data/documents_document_data.xml", None, mode="init", kind="data")
 
     tools.convert.convert_file(env, "marin_data", "data/account.analytic.account.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin_data", "data/account.analytic.distribution.model.csv", None, mode="init", kind="data")
