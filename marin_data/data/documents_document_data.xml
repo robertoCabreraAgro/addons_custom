@@ -821,7 +821,7 @@
         <field name="datas" type="base64" file="marin_data/data/files/Qualitas 7620051121 0032 LF07667.txt" />
         <field name="folder_id" ref="documents_fleet.document_fleet_folder" />
         <field name="tag_ids" eval="[
-            Command.link(ref('marin.documents_fleet_fuel_card')),
+            Command.link(ref('marin.documents_fleet_insurance_policy')),
         ]" />
     </record>
 
