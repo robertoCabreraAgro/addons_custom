@@ -355,7 +355,9 @@ class L10nMxEdiDocument(models.Model):
                     taxes = [tax for tax in taxes if tax.get("tax") != "IEPS"]
                     tax = taxes[0] if taxes else {}
                     tax_ids = []
-                    tax_domain = self.prepare_tax_domain(tax["name"], tax["amount"], tax["l10n_mx_factor_type"])
+                    tax_domain = self.prepare_tax_domain(
+                        tax["name"], tax["amount"], tax["l10n_mx_factor_type"]
+                    )
                     tax_exist = self.env["account.tax"].with_context(
                         lang="es_MX").search(tax_domain, limit=1, order="id asc")
                     if tax_exist:
@@ -373,7 +375,7 @@ class L10nMxEdiDocument(models.Model):
                         "vehicle_id": vehicle.id or False,
                         "quantity": float(line.get("Cantidad", 0.0)),
                         "price_unit": price / float(line.get("Cantidad", 0.0)),
-                        "tax_ids": [Command.set(tax_ids)],
+                        "tax_ids": [Command.set(tax_ids)] if tax_ids else False,
                         "l10n_mx_edi_is_ecc": True,
                         "partner_id": partner.id,
                     },
@@ -385,8 +387,8 @@ class L10nMxEdiDocument(models.Model):
                         "name": _("Fuel - IEPS"),
                         "vehicle_id": vehicle.id or False,
                         "quantity": 1.0,
-                        "price_unit": (
-                            float(line.get("Importe", 0.0)) - price)
+                        "price_unit":
+                            (float(line.get("Importe", 0.0)) - price)
                             + float(ieps[0].get("amount", 0) if ieps else 0),
                         "tax_ids": [Command.set([tax_exempt.id])],
                         "l10n_mx_edi_is_ecc": True,
