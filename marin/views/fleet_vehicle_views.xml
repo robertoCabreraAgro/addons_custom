@@ -35,6 +35,7 @@
                 <field name="highway_pass_name" invisible="True" />
                 <field name="l10n_mx_vehicle_code" />
                 <field name="engine_sn" />
+                <field name="brand_new" />
             </xpath>
             <xpath expr="//field[@name='fuel_type']" position="before">
                 <label for="fuel_tank_capacity" />

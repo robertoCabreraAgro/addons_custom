@@ -48,6 +48,11 @@ class FleetVehicleInherit(models.Model):
         tracking=True,
         help='Unique number that identifies the engine in a vehicle.',
     )
+    brand_new = fields.Boolean(
+        string='Brand New',
+        default=True,
+        help="Mark as True if this vehicle was acquired as brand new.",
+    )
 
 
     # Extend original method
