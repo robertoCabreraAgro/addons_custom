@@ -1,3 +1,2 @@
 "id","name","default_applicability","color","sequence"
-"analytic_plan_201","Agrochemicals, assets, properties, vehicles, machinery","Optional","10","10"
-"analytic_plan_202","Projects","Optional","11","12"
+"analytic_plan_201","Agrochemicals, assets, projects, properties, machinery, vehicles,","Optional","10","10"
