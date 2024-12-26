@@ -52,12 +52,20 @@ class FleetVehicleInherit(models.Model):
     @api.depends("fuel_card_id")
     def _compute_fuel_card_name(self):
         for vehicle in self:
-            vehicle.fuel_card_name = vehicle.fuel_card_id.name.split(".", 1)[0] if vehicle.fuel_card_id else ""
+            name = ""
+            if vehicle.fuel_card_id:
+                name = vehicle.fuel_card_id.name.split(".", 1)[0]
+                name.replace("Efecticard ", "")
+            vehicle.fuel_card_name = name
 
     @api.depends("highway_pass_id")
     def _compute_highway_pass_name(self):
         for vehicle in self:
-            vehicle.highway_pass_name = vehicle.highway_pass_id.name.split(".", 1)[0] if vehicle.highway_pass_id else ""
+            name = ""
+            if vehicle.highway_pass_id:
+                name = vehicle.highway_pass_id.name.split(".", 1)[0]
+                name.replace("IMDM ", "")
+            vehicle.highway_pass_name = name
 
     def _inverse_fuel_card_id(self):
         """
