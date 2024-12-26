@@ -35,6 +35,18 @@ class FleetVehicleInherit(models.Model):
         readonly=False,
     )
     highway_pass_name = fields.Char(compute="_compute_highway_pass_name", store=True)
+    vin_sn = fields.Char(
+        help='Unique number (VIN/SN number)',
+    )
+    l10n_mx_vehicle_code = fields.Char(
+        string='Vehicle Code',
+        tracking=True,
+        help='In Mexico the tax authority assign a 7 character code to identify its characteristics.',
+    )
+    engine_sn = fields.Char(
+        tracking=True,
+        help='Unique number that identifies the engine in a vehicle.',
+    )
 
 
     # Extend original method
