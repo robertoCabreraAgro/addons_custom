@@ -1,0 +1,5116 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* marin
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-12-26 08:37+0000\n"
+"PO-Revision-Date: 2024-12-26 08:37+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_account_bank_statement_line__journal_type
+#: model:ir.model.fields,help:marin.field_account_move__journal_type
+#: model:ir.model.fields,help:marin.field_account_payment__journal_type
+msgid ""
+"\n"
+"        Select 'Sale' for customer invoices journals.\n"
+"        Select 'Purchase' for vendor bills journals.\n"
+"        Select 'Cash', 'Bank' or 'Credit Card' for journals that are used in customer or vendor payments.\n"
+"        Select 'General' for miscellaneous operations journals.\n"
+"        "
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/res_partner_age_range.py:0
+msgid "%(name)s is not a valid range (%(age_from)s >= %(age_to)s)"
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/res_partner_age_range.py:0
+msgid "%(name)s is overalapping with range %(age_from)s"
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/documents_document.py:0
+msgid "%s (copy)"
+msgstr "%s (copia)"
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_119
+msgid "0.010kg"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_118
+msgid "0.015kg"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_147
+msgid "0.100L"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_117
+msgid "0.100kg"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_146
+msgid "0.125L"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_164
+msgid "0.130kg"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_145
+msgid "0.150L"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_116
+msgid "0.150kg"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_115
+msgid "0.160kg"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_144
+msgid "0.200L"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_114
+msgid "0.200kg"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_113
+msgid "0.212kg"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_143
+msgid "0.250L"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_112
+msgid "0.250kg"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_142
+msgid "0.300L"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_111
+msgid "0.300kg"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_162
+msgid "0.350L"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_141
+msgid "0.450L"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_140
+msgid "0.500L"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_110
+msgid "0.500kg"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_139
+msgid "0.600L"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_109
+msgid "0.600kg"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_108
+msgid "0.737kg"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_161
+msgid "0.750kg"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_107
+msgid "0.800kg"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_138
+msgid "0.900L"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_137
+msgid "0.950L"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_136
+msgid "0.960L"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_135
+msgid "0.970L"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_134
+msgid "0.975L"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_157
+msgid "1.6L"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_149
+msgid "1000L"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_153
+msgid "10L"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_127
+msgid "10kg"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_126
+msgid "12kg"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_125
+msgid "15kg"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_152
+msgid "18L"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_160
+msgid "19L"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_150
+msgid "200L"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_120
+msgid "200kg"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_151
+msgid "20L"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_124
+msgid "20kg"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_123
+msgid "25kg"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_133
+msgid "2kg"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_132
+msgid "3.2kg"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_122
+msgid "30kg"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_156
+msgid "4L"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_121
+msgid "50kg"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_155
+msgid "5L"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_131
+msgid "5kg"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_129
+msgid "7.5kg"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_130
+msgid "7kg"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_154
+msgid "9.5L"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_128
+msgid "9kg"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_account_invoice_discount_form
+msgid "<span class=\"o_form_label oe_inline\">%</span>"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_task_form2
+msgid "<span class=\"oe_grey p-2\"> Ha</span>"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.product_category_form_view
+msgid "<span> days after receipt</span>"
+msgstr "<span> dias despues de recibido</span>"
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.product_category_form_view
+msgid "<span> days before expiration date</span>"
+msgstr "<span> dias antes de fecha de caducidad</span>"
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.fleet_vehicle_view_form_marin
+msgid "<span>L</span>"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.fleet_vehicle_view_form_marin
+msgid "<span>km/L</span>"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_project_task__referer_partner_id
+msgid "A customer already existing in company"
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/documents_document.py:0
+msgid "A document with legal number \"%s - %s\" already exists."
+msgstr ""
+
+#. module: marin
+#: model:ir.model.constraint,message:marin.constraint_res_partner_age_range_name_uniq
+msgid "A name must be unique !"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_project_task__season_id
+#: model:ir.model.fields,field_description:marin.field_sale_order__season_id
+msgid "AG season"
+msgstr ""
+
+#. module: marin
+#. odoo-javascript
+#: code:addons/marin/static/src/pos/app/popups/missing_stock_popup/missing_stock_popup.xml:0
+msgid "Abort"
+msgstr ""
+
+#. module: marin
+#: model:ir.model,name:marin.model_account_account
+#: model_terms:ir.ui.view,arch_db:marin.view_account_invoice_filter
+#: model_terms:ir.ui.view,arch_db:marin.view_account_move_filter
+msgid "Account"
+msgstr "Cuenta"
+
+#. module: marin
+#: model:ir.actions.server,name:marin.action_account_purchase_orders
+msgid "Account Purchase"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_management
+msgid "Accounting"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_res_company__pos_cash_transfer_journal_id
+#: model:ir.model.fields,help:marin.field_res_config_settings__pos_cash_transfer_journal_id
+msgid "Accounting journal used to create pos cash withdraw."
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_documents_tag__active
+#: model:ir.model.fields,field_description:marin.field_pos_config__active
+#: model:ir.model.fields,field_description:marin.field_project_task_lost_reason__active
+#: model:ir.model.fields,field_description:marin.field_stock_lot__active
+msgid "Active"
+msgstr "Activo"
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_104
+msgid "Activity"
+msgstr ""
+
+#. module: marin
+#. odoo-javascript
+#: code:addons/marin/static/src/pos/app/popups/missing_stock_popup/missing_stock_popup.xml:0
+msgid "Add new line"
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/hr_payslip_run.py:0
+msgid "Adjustment Entry"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_res_partner__age
+#: model:ir.model.fields,field_description:marin.field_res_users__age
+msgid "Age"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_res_partner__age_range_id
+#: model:ir.model.fields,field_description:marin.field_res_users__age_range_id
+msgid "Age Range"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_agronomic
+msgid "Agronomic"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_product_category__alert_time
+msgid "Alert Date"
+msgstr ""
+
+#. module: marin
+#: model:ir.ui.menu,name:marin.menu_sale_order_all
+msgid "All Orders"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking__all_product_ids
+msgid "All Product"
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/stock_picking.py:0
+msgid ""
+"All products could not be reserved. Click on the 'Check Availability' button"
+" to try to reserve products."
+msgstr ""
+
+#. module: marin
+#: model:res.groups,name:marin.group_pos_cash_transfer
+msgid "Allow POS session cash transfer"
+msgstr ""
+
+#. module: marin
+#: model:res.groups,name:marin.group_account_move_cancel
+msgid "Allow to cancel journal entries"
+msgstr ""
+
+#. module: marin
+#: model:res.groups,name:marin.group_account_move_force_removal
+msgid "Allow to delete journal entries"
+msgstr ""
+
+#. module: marin
+#: model:res.groups,name:marin.group_account_move_draft
+msgid "Allow to draft journal entries"
+msgstr ""
+
+#. module: marin
+#: model:res.groups,name:marin.group_hr_expense_menu
+msgid "Allow to use Expense module"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_account_move_line__allowed_purchase_line_ids
+#: model:ir.model.fields,field_description:marin.field_stock_move__allowed_purchase_line_ids
+msgid "Allowed purchase lines to be related"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_account_move_line__allowed_sale_line_ids
+#: model:ir.model.fields,field_description:marin.field_stock_move__allowed_sale_line_ids
+msgid "Allowed sale lines to be related"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_account_journal__can_access_user_ids
+#: model:ir.model.fields,field_description:marin.field_stock_picking_type__can_access_user_ids
+msgid "Allowed users"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_pos_order__is_total_cost_computed
+msgid ""
+"Allows to know if all the total cost of the order lines have already been "
+"computed"
+msgstr ""
+"Permite saber si ya se calculó el costo total de las líneas de la orden"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_in_report__aml_id
+msgid "Aml"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_authorize_debt_wizard__amount_authorize
+#: model:ir.model.fields,field_description:marin.field_pos_cash_transfer_wizard__amount
+msgid "Amount"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_account_analytic_line__amount_taxinc
+msgid "Amount Tax included"
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/hr_contract.py:0
+msgid ""
+"An employee can only have one contract at the same time. (Excluding Draft and Cancelled contracts).\n"
+"\n"
+"Employee: %(employee_name)s"
+msgstr ""
+
+#. module: marin
+#: model:ir.model,name:marin.model_account_analytic_distribution_model
+msgid "Analytic Distribution Model"
+msgstr "Modelo de distribución analítica"
+
+#. module: marin
+#: model:ir.model,name:marin.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Línea analítica"
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.wizard_stock_quant_lot_form_view
+msgid "Apply"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_account_invoice_discount_form
+msgid "Apply Cash Discount"
+msgstr ""
+
+#. module: marin
+#. odoo-javascript
+#: code:addons/marin/static/src/pos/app/popups/missing_stock_popup/missing_stock_popup.xml:0
+msgid "Apply changes"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.search_product_lot_filter_marin
+#: model_terms:ir.ui.view,arch_db:marin.view_production_lot_form_marin
+#: model_terms:ir.ui.view,arch_db:marin.view_res_company_search
+msgid "Archived"
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/account_move.py:0
+#: code:addons/marin/models/sale_order.py:0
+#: model:ir.actions.server,name:marin.action_account_move_authorize_debt
+#: model:ir.actions.server,name:marin.action_sale_order_authorize_debt
+msgid "Authorize debt"
+msgstr ""
+
+#. module: marin
+#. odoo-javascript
+#: code:addons/marin/static/src/pos/app/popups/missing_stock_popup/missing_stock_popup.xml:0
+msgid "Available"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_res_partner__credit_limit_available
+#: model:ir.model.fields,field_description:marin.field_res_users__credit_limit_available
+msgid "Available Receivable Limit"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_authorize_debt_wizard__credit_limit_available
+#: model:ir.model.fields,help:marin.field_res_partner__credit_limit_available
+#: model:ir.model.fields,help:marin.field_res_users__credit_limit_available
+msgid "Available receivable limit"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_team_report_tree
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_team_yearly_report_tree
+msgid "Average"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_report__average_abs_sale_price_last_year
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_yearly_report__average_abs_sale_price_last_year
+msgid "Average Abs Sale Price Last Year"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_report__average_real_cost_last_year
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_yearly_report__average_real_cost_last_year
+msgid "Average Real Cost Last Year"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_report__average_sale_price_last_year
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_yearly_report__average_sale_price_last_year
+msgid "Average Sale Price Last Year"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_team_report_form
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_team_yearly_report_form
+msgid "Averages Current Year"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_team_report_form
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_team_yearly_report_form
+msgid "Averages Last Year"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_report_tree
+msgid "Avg discount"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_report_tree
+msgid "Avg margin"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_report_tree
+msgid "Avg price"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_report_tree
+msgid "Avg purchase"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_res_partner__b2x
+#: model:ir.model.fields,field_description:marin.field_res_users__b2x
+msgid "B2X"
+msgstr ""
+
+#. module: marin
+#: model:documents.tag,name:marin.documents_commercial_documents_bi
+msgid "BI"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_account_payment_search_marin
+msgid "Bank"
+msgstr "Banco"
+
+#. module: marin
+#: model:ir.model,name:marin.model_account_bank_statement_line
+msgid "Bank Statement Line"
+msgstr "Línea de estado de cuenta bancario"
+
+#. module: marin
+#: model:ir.ui.menu,name:marin.menu_finance_bank_statement
+msgid "Bank Statements"
+msgstr "Estado de cuenta bancario"
+
+#. module: marin
+#: model:res.groups,name:marin.group_account_bank_statement
+msgid "Bank statements"
+msgstr "Estado de cuenta bancario"
+
+#. module: marin
+#: model:ir.ui.menu,name:marin.menu_finance_bank
+msgid "Banks"
+msgstr "Bancos"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_product_category__use_time
+msgid "Best Before Date"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_purchase_order__invoice_status
+#: model_terms:ir.ui.view,arch_db:marin.purchase_order_view_search_marin
+msgid "Billing Status"
+msgstr "Estado de facturación"
+
+#. module: marin
+#: model:documents.tag,name:marin.documents_partner_documents_birth_registration
+msgid "Birth registration"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_res_partner__birthdate
+#: model:ir.model.fields,field_description:marin.field_res_users__birthdate
+msgid "Birthdate"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__invoice_line_in_report__payment_state__blocked
+#: model:ir.model.fields.selection,name:marin.selection__invoice_line_out_report__payment_state__blocked
+msgid "Blocked"
+msgstr "Bloqueado"
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_sale_order__delivery_status
+msgid ""
+"Blue: Not Delivered/Started\n"
+"            Orange: Partially Delivered\n"
+"            Green: Fully Delivered"
+msgstr ""
+"Azul: Sin entregar/Entrega en curso\n"
+"            Naranja: Entregado de forma parcial\n"
+"            Verde: Entregado"
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_105
+msgid "Box"
+msgstr "Caja"
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__res_partner__b2x__both
+msgid "Business business and consumer"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__res_partner__b2x__b2b
+msgid "Business to business"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__res_partner__b2x__b2c
+msgid "Business to consumer"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_stock_picking__all_product_ids
+msgid ""
+"By default Odoo let the user choose over every product available in the "
+"catalogue but Main required that only the ones available in the location "
+"being displayed. This button enables dynamicly this feature."
+msgstr ""
+
+#. module: marin
+#: model:documents.tag,name:marin.documents_commercial_documents_crm
+msgid "CRM"
+msgstr ""
+
+#. module: marin
+#: model:documents.tag,name:marin.documents_knowledge_documents_cs
+msgid "CS"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_purchase_order_line__product_updatable
+msgid "Can Edit Product"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_account_invoice_discount_form
+#: model_terms:ir.ui.view,arch_db:marin.wizard_pos_cash_transfer_form_view
+#: model_terms:ir.ui.view,arch_db:marin.wizard_stock_quant_lot_form_view
+msgid "Cancel"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__invoice_line_in_report__parent_state__cancel
+#: model:ir.model.fields.selection,name:marin.selection__pos_line_report__parent_state__cancel
+msgid "Cancelled"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_in_report_search_view
+msgid "Cancelled Invoices"
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/hr_payslip.py:0
+msgid "Cannot post a payslip's account move that is not done."
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_report__total_qty_current_year
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_yearly_report__total_qty_current_year
+msgid "Cantidad venta real"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_need_report__current_year_qty_sold
+msgid "Cantidad venta real año actual LMMR"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_need_report__last_year_qty_sold
+msgid "Cantidad venta real año pasado LMMR"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_pos_line_product_report__total_qty
+msgid "Cantidad venta tpv"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_account_payment_search_marin
+msgid "Cash"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_move_form
+msgid "Cash Discount"
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/wizards/pos_cash_transfer_wizard.py:0
+#: model:mail.activity.type,summary:marin.cash_transfer_activity
+#: model_terms:ir.ui.view,arch_db:marin.pos_session_view_form
+#: model_terms:ir.ui.view,arch_db:marin.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:marin.view_pos_config_kanban
+msgid "Cash Transfer"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.wizard_pos_cash_transfer_form_view
+msgid "Cash Transfer Data"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.wizard_pos_cash_transfer_form_view
+msgid "Cash Transfer Destination"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_pos_session__cash_transfer_payment_ids
+msgid "Cash Transfer Payment"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_pos_session__cash_transfer_payment_count
+msgid "Cash Transfer Payment Count"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_account_payment__cash_transfer_pos_id
+msgid "Cash Transfer Pos"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.pos_session_view_form
+msgid "Cash Transfers"
+msgstr ""
+
+#. module: marin
+#: model:res.groups,name:marin.group_account_move_cash_discount
+msgid "Cash discounts"
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/pos_session.py:0
+msgid "Cash transfer is only allowed for the last closed POs Session."
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.quant_search_view_marin
+msgid "Category"
+msgstr ""
+
+#. module: marin
+#: model:documents.tag,name:marin.documents_partner_documents_cerification
+msgid "Certification"
+msgstr ""
+
+#. module: marin
+#. odoo-javascript
+#: code:addons/marin/static/src/pos/app/popups/missing_stock_popup/missing_stock_popup.xml:0
+msgid "Change"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_quant_tree_inventory_editable_marin
+msgid "Change Lot"
+msgstr ""
+
+#. module: marin
+#: model:ir.model,name:marin.model_stock_quant_lot
+msgid "Change Quant Lot Wizard"
+msgstr ""
+
+#. module: marin
+#. odoo-javascript
+#: code:addons/marin/static/src/pos/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/marin/static/src/pos/app/store/order.js:0
+#: code:addons/marin/static/src/pos/app/store/orderline.js:0
+msgid "Choose a lot for this orderline"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_fleet_vehicle__cilinders
+msgid "Cilinders Number"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_order_form_marin
+msgid "Clean 3-0"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_order_form_marin
+msgid "Clean Up"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.invoice_line_price_history_view_form
+#: model_terms:ir.ui.view,arch_db:marin.purchase_order_line_price_history_view_form
+#: model_terms:ir.ui.view,arch_db:marin.sale_order_line_price_history_view_form
+#: model_terms:ir.ui.view,arch_db:marin.view_authorize_debt_wizard_form
+msgid "Close"
+msgstr ""
+
+#. module: marin
+#: model:product.removal,name:marin.removal_closest_priority
+msgid "Closest Location + Priority"
+msgstr ""
+
+#. module: marin
+#: model:documents.tag,name:marin.documents_partner_documents_collateral
+msgid "Collateral"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_commercial
+msgid "Commercial"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_sale_order__commercial_partner_id
+msgid "Commercial Entity"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_report__commercial_partner_id
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_report__commercial_partner_id
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_yearly_report__commercial_partner_id
+#: model:ir.model.fields,field_description:marin.field_pos_line_report__commercial_partner_id
+#: model_terms:ir.ui.view,arch_db:marin.view_account_invoice_filter
+#: model_terms:ir.ui.view,arch_db:marin.view_account_move_filter
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_report_search_view
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_team_report_search_view
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_team_yearly_report_search_view
+msgid "Commercial Partner"
+msgstr ""
+
+#. module: marin
+#: model:ir.model,name:marin.model_res_company
+msgid "Companies"
+msgstr "Empresas"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_authorize_debt_wizard__company_id
+#: model:ir.model.fields,field_description:marin.field_invoice_line_in_report__company_id
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_report__company_id
+#: model:ir.model.fields,field_description:marin.field_pos_line_report__company_id
+msgid "Company"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_res_partner__competitor
+#: model:ir.model.fields,field_description:marin.field_res_users__competitor
+msgid "Competitor"
+msgstr "Competidor"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_res_company__complete_name
+msgid "Complete Name"
+msgstr ""
+
+#. module: marin
+#: model:ir.model,name:marin.model_account_invoice_cash_discount
+msgid "Compute cash discount directly on product unit price"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_pos_line_report__config_id
+msgid "Config"
+msgstr ""
+
+#. module: marin
+#: model:ir.model,name:marin.model_res_config_settings
+msgid "Config Settings"
+msgstr "Ajustes de configuración"
+
+#. module: marin
+#: model:ir.ui.menu,name:marin.menu_configuration
+msgid "Configuration"
+msgstr ""
+
+#. module: marin
+#: model:ir.model,name:marin.model_res_partner
+msgid "Contact"
+msgstr "Contacto"
+
+#. module: marin
+#: model:ir.actions.server,name:marin.ir_cron_partner_age_range_ir_actions_server
+msgid "Contact: Update Age Range"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_pos_order_line__price_cost
+msgid "Cost"
+msgstr "Costo"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_pos_line_product_report__cost_purchase_total
+msgid "Cost Purchase Total"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_report__cost_purchase_total_current_year
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_yearly_report__cost_purchase_total_current_year
+msgid "Cost Purchase Total Current Year"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_report__cost_purchase_total_last_year
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_yearly_report__cost_purchase_total_last_year
+msgid "Cost Purchase Total Last Year"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__invoice_line_in_report__display_type__cogs
+msgid "Cost of Goods Sold"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_report__average_real_cost_current_year
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_yearly_report__average_real_cost_current_year
+msgid "Costo promedio real"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_authorize_debt_wizard__count_move
+msgid "Count Move"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_type__count_picking_ready
+msgid "Count Picking Ready"
+msgstr "Número de recolecciones listas"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_type__count_picking_waiting
+msgid "Count Picking Waiting"
+msgstr "Número de recolecciones en espera"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_authorize_debt_wizard__count_so
+msgid "Count So"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_res_company_search
+msgid "Country"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.purchase_order_view_list
+msgid "Create Bills"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_move_form
+msgid "Create Purchase"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.actions.act_window,help:marin.action_orders_marin
+msgid "Create a new quotation, the first step of a new sale!"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_task_form2
+msgid "Create new quotation"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_account_invoice_cash_discount__create_uid
+#: model:ir.model.fields,field_description:marin.field_authorize_debt_wizard__create_uid
+#: model:ir.model.fields,field_description:marin.field_invoice_line_price_history__create_uid
+#: model:ir.model.fields,field_description:marin.field_invoice_line_price_history_line__create_uid
+#: model:ir.model.fields,field_description:marin.field_pos_cash_transfer_wizard__create_uid
+#: model:ir.model.fields,field_description:marin.field_project_task_lost_reason__create_uid
+#: model:ir.model.fields,field_description:marin.field_purchase_order_line_price_history__create_uid
+#: model:ir.model.fields,field_description:marin.field_purchase_order_line_price_history_line__create_uid
+#: model:ir.model.fields,field_description:marin.field_res_partner_age_range__create_uid
+#: model:ir.model.fields,field_description:marin.field_sale_order_line_price_history__create_uid
+#: model:ir.model.fields,field_description:marin.field_sale_order_line_price_history_line__create_uid
+#: model:ir.model.fields,field_description:marin.field_stock_quant_lot__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_account_invoice_cash_discount__create_date
+#: model:ir.model.fields,field_description:marin.field_authorize_debt_wizard__create_date
+#: model:ir.model.fields,field_description:marin.field_invoice_line_price_history__create_date
+#: model:ir.model.fields,field_description:marin.field_invoice_line_price_history_line__create_date
+#: model:ir.model.fields,field_description:marin.field_pos_cash_transfer_wizard__create_date
+#: model:ir.model.fields,field_description:marin.field_project_task_lost_reason__create_date
+#: model:ir.model.fields,field_description:marin.field_purchase_order_line_price_history__create_date
+#: model:ir.model.fields,field_description:marin.field_purchase_order_line_price_history_line__create_date
+#: model:ir.model.fields,field_description:marin.field_res_partner_age_range__create_date
+#: model:ir.model.fields,field_description:marin.field_sale_order_line_price_history__create_date
+#: model:ir.model.fields,field_description:marin.field_sale_order_line_price_history_line__create_date
+#: model:ir.model.fields,field_description:marin.field_stock_quant_lot__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sale_order_tree_marin
+msgid "Creation Date"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_sale_order_line__date_order
+#: model:ir.model.fields,help:marin.field_sale_order_line_price_history_line__date
+msgid ""
+"Creation date of draft/sent orders,\n"
+"Confirmation date of confirmed orders."
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_res_partner__credit_limit
+#: model:ir.model.fields,field_description:marin.field_res_users__credit_limit
+msgid "Credit Limit"
+msgstr "Límite de crédito"
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_in_report_search_view
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_report_search_view
+msgid "Credit Notes"
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/res_partner.py:0
+msgid "Credit available: %s"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_authorize_debt_wizard__credit_limit
+msgid "Credit limit"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_authorize_debt_wizard__credit_limit_available
+msgid "Credit limit available"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_res_partner__credit_on_hold
+#: model:ir.model.fields,field_description:marin.field_res_users__credit_on_hold
+msgid "Credit on hold"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_120
+msgid "Crop - Avocado"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_121
+msgid "Crop - Barley"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_122
+msgid "Crop - Bean"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_123
+msgid "Crop - Berry"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_124
+msgid "Crop - Carrot"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_125
+msgid "Crop - Citrus"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_126
+msgid "Crop - Corn"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_127
+msgid "Crop - Cucurbits"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_128
+msgid "Crop - Onion"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_129
+msgid "Crop - Ornamentals"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_130
+msgid "Crop - Pepper"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_131
+msgid "Crop - Potato"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_132
+msgid "Crop - Tomato"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_133
+msgid "Crop - Wheat"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_authorize_debt_wizard__company_currency_id
+#: model:ir.model.fields,field_description:marin.field_pos_cash_transfer_wizard__currency_id
+#: model:ir.model.fields,field_description:marin.field_project_task__company_currency
+msgid "Currency"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_need_report_form
+msgid "Current Year"
+msgstr ""
+
+#. module: marin
+#. odoo-javascript
+#: code:addons/marin/static/src/pos/app/popups/missing_stock_popup/missing_stock_popup.xml:0
+msgid "Current lines"
+msgstr ""
+
+#. module: marin
+#: model:documents.tag,name:marin.documents_partner_type_customer
+#: model:ir.model.fields,field_description:marin.field_res_partner__customer
+#: model:ir.model.fields,field_description:marin.field_res_users__customer
+#: model:ir.model.fields,field_description:marin.field_sale_order_line__order_partner_id
+#: model:ir.model.fields,field_description:marin.field_sale_order_line_price_history__partner_id
+#: model:ir.model.fields,field_description:marin.field_sale_order_line_price_history_line__partner_id
+#: model_terms:ir.ui.view,arch_db:marin.view_sales_order_filter_marin
+msgid "Customer"
+msgstr "Cliente"
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__invoice_line_in_report__move_type__out_refund
+#: model:ir.model.fields.selection,name:marin.selection__invoice_line_out_report__move_type__out_refund
+msgid "Customer Credit Note"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sales_order_filter_marin
+msgid "Customer Entity"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__invoice_line_in_report__move_type__out_invoice
+#: model:ir.model.fields.selection,name:marin.selection__invoice_line_out_report__move_type__out_invoice
+msgid "Customer Invoice"
+msgstr ""
+
+#. module: marin
+#: model:res.groups,name:marin.group_account_customer_invoice
+msgid "Customer invoices"
+msgstr ""
+
+#. module: marin
+#: model:res.groups,name:marin.group_account_customer_payment
+msgid "Customer payments"
+msgstr ""
+
+#. module: marin
+#: model:res.groups,name:marin.group_account_customer_refund
+msgid "Customer refunds"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_account_bank_statement_line__date
+#: model:ir.model.fields,field_description:marin.field_account_move__date
+#: model:ir.model.fields,field_description:marin.field_invoice_line_in_report__date
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_report__date
+#: model:ir.model.fields,field_description:marin.field_invoice_line_price_history_line__date
+#: model:ir.model.fields,field_description:marin.field_pos_line_report__date
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_report_search_view
+msgid "Date"
+msgstr "Fecha"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_account_analytic_line__date_impacted
+msgid "Date impacted"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.product_category_form_view
+msgid "Dates"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_report__day_of_month
+#: model:ir.model.fields,field_description:marin.field_pos_line_report__day_of_month
+msgid "Day Of Month"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_report__day_of_week
+#: model:ir.model.fields,field_description:marin.field_pos_line_report__day_of_week
+msgid "Day Of Week"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_report__day_of_year
+#: model:ir.model.fields,field_description:marin.field_pos_line_report__day_of_year
+msgid "Day Of Year"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_res_partner__debit_on_hold
+#: model:ir.model.fields,field_description:marin.field_res_users__debit_on_hold
+msgid "Debit on hold"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_authorize_debt_wizard_form
+msgid "Debt Management"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_134
+msgid "Debt collection - Aaron"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_135
+msgid "Debt collection - Alejandro"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_136
+msgid "Debt collection - Axel"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_137
+msgid "Debt collection - BAL"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_138
+msgid "Debt collection - Bryan"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_139
+msgid "Debt collection - Corporativo"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_140
+msgid "Debt collection - Franco"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_141
+msgid "Debt collection - Hugo"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_142
+msgid "Debt collection - Jesus"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_143
+msgid "Debt collection - Juan"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_144
+msgid "Debt collection - Misael"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_145
+msgid "Debt collection - Reynaldo"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_146
+msgid "Debt collection - SJN"
+msgstr ""
+
+#. module: marin
+#: model:res.groups,name:marin.group_account_debt_manager
+msgid "Debt manager"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_110
+msgid "Debt quality - High"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_111
+msgid "Debt quality - Low"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_112
+msgid "Debt quality - Medium"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_113
+msgid "Debt quality - Uncollectible"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_account_journal__default_payable_account_id
+msgid "Default Payable Account"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_account_journal__default_receivable_account_id
+msgid "Default Receivable Account"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_account_journal__default_refund_account_id
+msgid "Default Refund Account"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_res_users__property_sale_journal_id
+msgid "Default Sale Journal"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_type__route_ids
+msgid "Default destination route"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_stock_picking_type__route_ids
+msgid "Default route to be used."
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__sale_order_line__delivery_status__delivered
+#: model_terms:ir.ui.view,arch_db:marin.view_purchase_order_line_list
+#: model_terms:ir.ui.view,arch_db:marin.view_sale_order_line_list
+#: model_terms:ir.ui.view,arch_db:marin.view_sales_order_filter_marin
+msgid "Delivered"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sale_order_line_list
+msgid "Delivered Qty"
+msgstr ""
+
+#. module: marin
+#: model:ir.actions.server,name:marin.action_print_deliveryslip
+msgid "Delivery Slip"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_sale_order__delivery_status
+#: model:ir.model.fields,field_description:marin.field_sale_order_line__delivery_status
+#: model_terms:ir.ui.view,arch_db:marin.view_order_form_inherit_sale_stock_marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sales_order_filter_marin
+msgid "Delivery Status"
+msgstr "Estado de la entrega"
+
+#. module: marin
+#. odoo-javascript
+#: code:addons/marin/static/src/pos/app/screens/receipt_screen/receipt_screen.xml:0
+msgid "Delivery information from this order:"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sales_order_line_filter
+msgid "Delivery status"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_purchase_order_line_price_history_line__date
+msgid ""
+"Depicts the date within which the Quotation should be confirmed and "
+"converted into a purchase order."
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_project_task_lost_reason__name
+msgid "Description"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.wizard_stock_quant_lot_form_view
+msgid "Destination"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_pos_cash_transfer_wizard__destination_account_id
+msgid "Destination Account"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_pos_cash_transfer_wizard__destination_journal_id
+msgid "Destination Journal"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_quant_lot__dest_lot_id
+msgid "Destination Lot"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_report_tree
+msgid "Disc(%)"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sale_order_line_list
+msgid "Disc.%"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_in_report__discount
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_report__discount
+#: model:ir.model.fields,field_description:marin.field_pos_line_report__discount
+#: model:ir.model.fields.selection,name:marin.selection__invoice_line_in_report__display_type__discount
+msgid "Discount"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_price_history_line__discount
+#: model:ir.model.fields,field_description:marin.field_sale_order_line_price_history_line__discount
+msgid "Discount (%)"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_account_invoice_cash_discount__display_name
+#: model:ir.model.fields,field_description:marin.field_authorize_debt_wizard__display_name
+#: model:ir.model.fields,field_description:marin.field_invoice_line_in_report__display_name
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_report__display_name
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_report__display_name
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_yearly_report__display_name
+#: model:ir.model.fields,field_description:marin.field_invoice_line_price_history__display_name
+#: model:ir.model.fields,field_description:marin.field_invoice_line_price_history_line__display_name
+#: model:ir.model.fields,field_description:marin.field_pos_cash_transfer_wizard__display_name
+#: model:ir.model.fields,field_description:marin.field_pos_line_product_report__display_name
+#: model:ir.model.fields,field_description:marin.field_pos_line_report__display_name
+#: model:ir.model.fields,field_description:marin.field_project_task_lost_reason__display_name
+#: model:ir.model.fields,field_description:marin.field_purchase_order_line_price_history__display_name
+#: model:ir.model.fields,field_description:marin.field_purchase_order_line_price_history_line__display_name
+#: model:ir.model.fields,field_description:marin.field_res_partner_age_range__display_name
+#: model:ir.model.fields,field_description:marin.field_sale_order_line_price_history__display_name
+#: model:ir.model.fields,field_description:marin.field_sale_order_line_price_history_line__display_name
+#: model:ir.model.fields,field_description:marin.field_stock_need_report__display_name
+#: model:ir.model.fields,field_description:marin.field_stock_quant_lot__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_in_report__display_type
+msgid "Display Type"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_account_analytic_distribution_model_search_marin
+msgid "Distribution Model"
+msgstr ""
+
+#. module: marin
+#: model:ir.model,name:marin.model_documents_document
+msgid "Document"
+msgstr "Documento"
+
+#. module: marin
+#: model:ir.model,name:marin.model_documents_link_to_record_wizard
+msgid "Documents Link to Record"
+msgstr "Documentos vinculados para registrar"
+
+#. module: marin
+#: model:res.groups,name:marin.group_documents_password_manager
+msgid "Documents passwords manager"
+msgstr ""
+
+#. module: marin
+#: model:res.groups,name:marin.group_documents_password_readonly
+msgid "Documents passwords readonly"
+msgstr ""
+
+#. module: marin
+#. odoo-javascript
+#: code:addons/marin/static/src/pos/app/screens/receipt_screen/receipt_screen.xml:0
+msgid "Done"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_product_product__x_dose_x_ha
+#: model:ir.model.fields,field_description:marin.field_product_template__x_dose_x_ha
+msgid "Dose per Hectare"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__invoice_line_in_report__parent_state__draft
+#: model_terms:ir.ui.view,arch_db:marin.view_picking_form
+msgid "Draft"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_in_report_search_view
+msgid "Draft Invoices"
+msgstr ""
+
+#. module: marin
+#: model:documents.tag,name:marin.documents_partner_documents_drivers_licence
+msgid "Driver Licence"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_stock_move_line__location_lot_domain
+msgid "Dynamic domain used for the lot that can be set on move line"
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/account_move.py:0
+msgid ""
+"EDI amounts doesn't match with entry ones.\n"
+"\n"
+"Total amount: %s --> Verification total amount: %s. Difference: %s\n"
+"Tax amount: %s --> Verification tax amount: %s. Difference: %s\n"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__invoice_line_in_report__display_type__epd
+msgid "Early Payment Discount"
+msgstr ""
+
+#. module: marin
+#. odoo-javascript
+#: code:addons/marin/static/src/pos/app/store/orderline.js:0
+msgid "Edit Lot/Serial Number"
+msgstr ""
+
+#. module: marin
+#: model:documents.tag,name:marin.documents_partner_type_employee
+msgid "Employee"
+msgstr ""
+
+#. module: marin
+#: model:ir.model,name:marin.model_hr_contract
+msgid "Employee Contract"
+msgstr "Contrato del empleado"
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/hr_payslip.py:0
+msgid "Employee has not a contract and is required"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_pos_session__cash_register_balance_end_real
+msgid "Ending Balance"
+msgstr "Saldo final"
+
+#. module: marin
+#: model:uom.category,name:marin.uom_category_101
+msgid "Energy"
+msgstr ""
+
+#. module: marin
+#: model:documents.tag,name:marin.documents_fleet_environmental_verification
+msgid "Environmental verification"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_authorize_debt_wizard__debt_request
+msgid "Exceeded debit amount"
+msgstr ""
+
+#. module: marin
+#: model:documents.tag,name:marin.documents_knowledge_documents_excel
+msgid "Excel and Power BI"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.project_task_view_tree_main_base
+msgid "Expected Area"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_project_task__expected_revenue
+#: model_terms:ir.ui.view,arch_db:marin.project_task_view_tree_main_base
+msgid "Expected Revenue"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_project_task__expected_area
+msgid "Expected area"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_account_move_line_filter_marin
+msgid "Expense"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_product_category__property_account_expense_refund_id
+#: model:ir.model.fields,field_description:marin.field_product_product__property_account_expense_refund_id
+#: model:ir.model.fields,field_description:marin.field_product_template__property_account_expense_refund_id
+msgid "Expense Refund Account"
+msgstr ""
+
+#. module: marin
+#. odoo-javascript
+#: code:addons/marin/static/src/pos/app/popups/missing_stock_popup/missing_stock_popup.xml:0
+#: model:ir.model.fields,field_description:marin.field_product_category__expiration_time
+msgid "Expiration Date"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__res_partner__gender__female
+msgid "Female"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_account_account__x_sequence
+msgid ""
+"Field introduced to keep custom order when reordering accounts at migration"
+msgstr ""
+
+#. module: marin
+#: model:product.removal,name:marin.removal_fefo_priority
+msgid "First Expiry First Out(FEFO) + Priority"
+msgstr ""
+
+#. module: marin
+#: model:product.removal,name:marin.removal_fifo_priority
+msgid "First In First Out (FIFO) + Priority"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_team_report_search_view
+msgid "First Quarter"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_account_invoice_filter
+#: model_terms:ir.ui.view,arch_db:marin.view_account_move_filter
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_report_search_view
+msgid "Fiscal"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_114
+msgid "Fiscal effect - FF"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_115
+msgid "Fiscal effect - FX"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_116
+msgid "Fiscal effect - NF"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__account_journal__x_treatment__fiscal_real
+#: model:ir.model.fields.selection,name:marin.selection__invoice_line_in_report__x_treatment__fiscal_real
+#: model:ir.model.fields.selection,name:marin.selection__invoice_line_out_report__x_treatment__fiscal_real
+msgid "Fiscal real"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__account_journal__x_treatment__fiscal_simulated
+#: model:ir.model.fields.selection,name:marin.selection__invoice_line_in_report__x_treatment__fiscal_simulated
+#: model:ir.model.fields.selection,name:marin.selection__invoice_line_out_report__x_treatment__fiscal_simulated
+msgid "Fiscal simulated"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_authorize_debt_wizard__flag
+msgid "Flag"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_account_move_line__fleet_vehicle_log_services_ids
+msgid "Fleet services logs"
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/stock_picking.py:0
+msgid ""
+"Following pickings are not valid to print their delivery slip: \n"
+"%s"
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/stock_picking.py:0
+msgid ""
+"Following pickings are not valid to print their picking operation: \n"
+"%s"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_sale_order__force_fully_delivered
+msgid "Force Fully Delivered"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_sale_order__force_fully_invoiced
+msgid "Force Fully Invoiced"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_account_bank_statement_line__force_payment_policy_pue
+#: model:ir.model.fields,field_description:marin.field_account_move__force_payment_policy_pue
+msgid "Force PUE"
+msgstr ""
+
+#. module: marin
+#: model:res.groups,name:marin.group_purchase_force_billing_status
+msgid "Force billing status on Purchase Orders"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_order_form_inherit_sale_stock_marin
+msgid "Force delivery done"
+msgstr ""
+
+#. module: marin
+#: model:res.groups,name:marin.group_sale_force_delivery_status
+msgid "Force delivery status on Sale Orders"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_order_form_marin
+msgid "Force invoice status"
+msgstr ""
+
+#. module: marin
+#: model:res.groups,name:marin.group_sale_force_invoicing_status
+msgid "Force invoicing status on Sale Orders"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.purchase_order_view_form_inherit_marin
+msgid "Force reception done"
+msgstr ""
+
+#. module: marin
+#: model:res.groups,name:marin.group_purchase_force_reception_status
+msgid "Force reception status on Purchase Orders"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_purchase_order_line__force_company_id
+msgid "Forced Company"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_sale_order_line__force_company_id
+msgid "Forced company"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_team_report_search_view
+msgid "Fourth Quarter"
+msgstr ""
+
+#. module: marin
+#. odoo-javascript
+#: code:addons/marin/static/src/pos/app/screens/receipt_screen/receipt_screen.xml:0
+#: model:ir.model.fields,field_description:marin.field_res_partner_age_range__age_from
+msgid "From"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_account_move_line_filter_marin
+msgid "From Expense accounts"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_account_move_line_filter_marin
+msgid "From Income accounts"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_move_line__location_availability
+msgid "From availability"
+msgstr ""
+
+#. module: marin
+#: model:documents.tag,name:marin.documents_fleet_fuel_card
+#: model:ir.model.fields,field_description:marin.field_fleet_vehicle__fuel_card_id
+msgid "Fuel Card"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_fleet_vehicle__fuel_card_name
+msgid "Fuel Card Name"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_fleet_vehicle__fuel_efficiency
+msgid "Fuel Efficiency"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_fleet_vehicle__fuel_efficiency
+msgid "Fuel efficiency in kilometers per liter (km/L)"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_fleet_vehicle__fuel_tank_capacity
+msgid "Fuel tank capacity in liters"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__purchase_order_line__invoice_status__invoiced
+msgid "Fully billed"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sales_order_filter_marin
+msgid "Future Activities"
+msgstr ""
+
+#. module: marin
+#: model:documents.tag,name:marin.documents_fleet_gps
+msgid "GPS"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_res_partner__gender
+msgid "Gender"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.wizard_pos_cash_transfer_form_view
+msgid "Generate Cash Transfer"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_in_report_search_view
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_report_search_view
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_team_report_search_view
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_team_yearly_report_search_view
+#: model_terms:ir.ui.view,arch_db:marin.view_pos_line_product_report_search_view
+#: model_terms:ir.ui.view,arch_db:marin.view_res_company_search
+#: model_terms:ir.ui.view,arch_db:marin.view_sales_order_filter_marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sales_order_line_filter
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_need_report_search_view
+msgid "Group By"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_147
+msgid "Growth perspective - Contraction"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_148
+msgid "Growth perspective - Expansion"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_149
+msgid "Growth perspective - Hold"
+msgstr ""
+
+#. module: marin
+#: model:res.groups,name:marin.group_hr_manager
+msgid "HR manager"
+msgstr ""
+
+#. module: marin
+#: model:res.groups,name:marin.group_hr_readonly
+msgid "HR readonly"
+msgstr ""
+
+#. module: marin
+#: model:res.groups,name:marin.group_hr_user
+msgid "HR user"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_155
+msgid "High Risk"
+msgstr ""
+
+#. module: marin
+#: model:documents.tag,name:marin.documents_fleet_highway_pass
+#: model:ir.model.fields,field_description:marin.field_fleet_vehicle__highway_pass_id
+msgid "Highway Pass"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_fleet_vehicle__highway_pass_name
+msgid "Highway Pass Name"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_price_history__line_ids
+#: model:ir.model.fields,field_description:marin.field_purchase_order_line_price_history__line_ids
+#: model:ir.model.fields,field_description:marin.field_sale_order_line_price_history__line_ids
+msgid "Historical lines"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_account_invoice_cash_discount__id
+#: model:ir.model.fields,field_description:marin.field_authorize_debt_wizard__id
+#: model:ir.model.fields,field_description:marin.field_invoice_line_in_report__id
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_report__id
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_report__id
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_yearly_report__id
+#: model:ir.model.fields,field_description:marin.field_invoice_line_price_history__id
+#: model:ir.model.fields,field_description:marin.field_invoice_line_price_history_line__id
+#: model:ir.model.fields,field_description:marin.field_pos_cash_transfer_wizard__id
+#: model:ir.model.fields,field_description:marin.field_pos_line_product_report__id
+#: model:ir.model.fields,field_description:marin.field_pos_line_report__id
+#: model:ir.model.fields,field_description:marin.field_project_task_lost_reason__id
+#: model:ir.model.fields,field_description:marin.field_purchase_order_line_price_history__id
+#: model:ir.model.fields,field_description:marin.field_purchase_order_line_price_history_line__id
+#: model:ir.model.fields,field_description:marin.field_res_partner_age_range__id
+#: model:ir.model.fields,field_description:marin.field_sale_order_line_price_history__id
+#: model:ir.model.fields,field_description:marin.field_sale_order_line_price_history_line__id
+#: model:ir.model.fields,field_description:marin.field_stock_need_report__id
+#: model:ir.model.fields,field_description:marin.field_stock_quant_lot__id
+msgid "ID"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_account_bank_statement_line__x_stored
+#: model:ir.model.fields,help:marin.field_account_move__x_stored
+msgid ""
+"If this checkbox is ticked, it means that a management representative has "
+"received and stored a printed invoice on credit signed by the customer. "
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_account_payment_term__is_immediate
+msgid "Immediate payment term"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__invoice_line_in_report__payment_state__in_payment
+#: model:ir.model.fields.selection,name:marin.selection__invoice_line_out_report__payment_state__in_payment
+msgid "In Payment"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_in_report_search_view
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_report_search_view
+msgid "In Payment Invoices"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_price_history__include_draft
+msgid "Include Draft Moves"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_sale_order_line_price_history__include_quotations
+msgid "Include Quotations"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_purchase_order_line_price_history__include_rfq
+msgid "Include Request for Quotations"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_account_move_line_filter_marin
+msgid "Income"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_product_category__property_account_income_refund_id
+#: model:ir.model.fields,field_description:marin.field_product_product__property_account_income_refund_id
+#: model:ir.model.fields,field_description:marin.field_product_template__property_account_income_refund_id
+msgid "Income Refund Account"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_authorize_debt_wizard_form
+msgid "Increment debt limit"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_authorize_debt_wizard_form
+msgid "Increment debt limit and Confirm"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_project_task__is_ag_initial
+msgid "Initial AG task"
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/pos_session.py:0
+msgid ""
+"Insufficient cash amount. Cash transfer is trying to use more cash than "
+"available on Pos Session."
+msgstr ""
+
+#. module: marin
+#: model:documents.tag,name:marin.documents_fleet_insurance_policy
+msgid "Insurance policy"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_pickingtype_filter_marin
+msgid "Internal"
+msgstr ""
+
+#. module: marin
+#: model:ir.ui.menu,name:marin.menu_action_account_payments_transfer
+msgid "Internal liquidity transfers"
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/documents_document.py:0
+msgid "Invalid %s search"
+msgstr ""
+
+#. module: marin
+#: model:ir.model,name:marin.model_stock_location
+msgid "Inventory Locations"
+msgstr "Ubicaciones de inventario"
+
+#. module: marin
+#: model:res.groups,name:marin.group_stock_inventory_adjustment
+msgid "Inventory adjustments"
+msgstr ""
+
+#. module: marin
+#: model:res.groups,name:marin.group_stock_inventory_adjustment_lot
+msgid "Inventory adjustments: Lots"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_in_report_form
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_in_report_search_view
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_report_form
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_report_search_view
+msgid "Invoice"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_price_history__line_id
+#: model:ir.model.fields,field_description:marin.field_invoice_line_price_history_line__line_id
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_in_report_search_view
+msgid "Invoice Line"
+msgstr ""
+
+#. module: marin
+#: model:ir.model,name:marin.model_invoice_line_in_report
+msgid "Invoice Line In"
+msgstr ""
+
+#. module: marin
+#: model:ir.actions.act_window,name:marin.action_invoice_line_in_report
+#: model:ir.ui.menu,name:marin.menu_invoice_line_in_report
+msgid "Invoice Line In Report"
+msgstr ""
+
+#. module: marin
+#: model:ir.actions.server,name:marin.ir_cron_initialize_invoice_line_in_report_ir_actions_server
+msgid "Invoice Line In Report: Initialize view"
+msgstr ""
+
+#. module: marin
+#: model:ir.actions.server,name:marin.ir_cron_update_invoice_line_in_report_ir_actions_server
+msgid "Invoice Line In Report: Update view"
+msgstr ""
+
+#. module: marin
+#: model:ir.model,name:marin.model_invoice_line_out_report
+msgid "Invoice Line Out"
+msgstr ""
+
+#. module: marin
+#: model:ir.actions.act_window,name:marin.action_invoice_line_out_report
+#: model:ir.ui.menu,name:marin.menu_invoice_line_out_report
+msgid "Invoice Line Out Report"
+msgstr ""
+
+#. module: marin
+#: model:ir.actions.server,name:marin.ir_cron_initialize_invoice_line_out_report_ir_actions_server
+msgid "Invoice Line Out Report: Initialize views"
+msgstr ""
+
+#. module: marin
+#: model:ir.actions.server,name:marin.ir_cron_update_invoice_line_out_report_ir_actions_server
+msgid "Invoice Line Out Report: Update views"
+msgstr ""
+
+#. module: marin
+#: model:ir.actions.act_window,name:marin.action_invoice_line_out_team_report
+#: model:ir.ui.menu,name:marin.menu_invoice_line_out_team_report
+msgid "Invoice Line Out Team Report"
+msgstr ""
+
+#. module: marin
+#: model:ir.actions.act_window,name:marin.action_invoice_line_out_team_yearly_report
+#: model:ir.ui.menu,name:marin.menu_invoice_line_out_team_yearly_report
+msgid "Invoice Line Out Team Yearly Report"
+msgstr ""
+
+#. module: marin
+#: model:ir.model,name:marin.model_invoice_line_out_team_report
+#: model:ir.model,name:marin.model_invoice_line_out_team_yearly_report
+msgid "Invoice Line Out by Team"
+msgstr ""
+
+#. module: marin
+#: model:ir.model,name:marin.model_invoice_line_price_history
+msgid "Invoice Line price history"
+msgstr ""
+
+#. module: marin
+#: model:ir.model,name:marin.model_invoice_line_price_history_line
+msgid "Invoice Line price history line"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_report__invoice_payment_term_id
+msgid "Invoice Payment Term"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.purchase_order_line_search_marin
+msgid "Invoice Related"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_in_report_search_view
+msgid "Invoice State"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_purchase_order_line__invoice_status
+msgid "Invoice Status"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_in_report_search_view
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_report_search_view
+msgid "Invoice Type"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_report__invoice_user_id
+msgid "Invoice User"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_order_form_marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sales_order_filter_marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sales_order_line_filter
+msgid "Invoice status"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_account_bank_statement_line__invoice_date
+#: model:ir.model.fields,field_description:marin.field_account_move__invoice_date
+msgid "Invoice/Bill Date"
+msgstr "Fecha de factura"
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__pos_line_report__parent_state__invoiced
+#: model_terms:ir.ui.view,arch_db:marin.view_purchase_order_line_list
+#: model_terms:ir.ui.view,arch_db:marin.view_sale_order_line_list
+#: model_terms:ir.ui.view,arch_db:marin.view_sales_order_filter_marin
+msgid "Invoiced"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sale_order_line_list
+msgid "Invoiced Qty"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_in_report_search_view
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_report_search_view
+msgid "Invoices"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__invoice_line_in_report__payment_state__invoicing_legacy
+#: model:ir.model.fields.selection,name:marin.selection__invoice_line_out_report__payment_state__invoicing_legacy
+msgid "Invoicing App Legacy"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_pos_order__is_total_cost_computed
+msgid "Is Total Cost Computed"
+msgstr "Costo total calculado"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_purchase_order__is_user_id_editable
+msgid "Is User Id Editable"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_account_journal__default_payable_account_id
+msgid ""
+"It acts as a default account for payable amount instead of the Company's "
+"default"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_account_journal__default_receivable_account_id
+msgid ""
+"It acts as a default account for receivable amount instead of the Company's "
+"default"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_account_journal__default_refund_account_id
+msgid "It acts as a default account for refunds"
+msgstr ""
+
+#. module: marin
+#: model:ir.model,name:marin.model_account_journal
+#: model:ir.model.fields,field_description:marin.field_invoice_line_in_report__journal_id
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_report__journal_id
+#: model:ir.model.fields,field_description:marin.field_pos_cash_transfer_wizard__journal_id
+#: model_terms:ir.ui.view,arch_db:marin.view_account_invoice_filter
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_in_report_form
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_in_report_search_view
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_report_search_view
+#: model_terms:ir.ui.view,arch_db:marin.view_users_form_marin
+msgid "Journal"
+msgstr "Diario"
+
+#. module: marin
+#: model:ir.model,name:marin.model_account_move
+#: model:ir.model.fields,field_description:marin.field_invoice_line_price_history_line__move_id
+#: model:ir.model.fields.selection,name:marin.selection__invoice_line_in_report__move_type__entry
+#: model:ir.model.fields.selection,name:marin.selection__invoice_line_out_report__move_type__entry
+msgid "Journal Entry"
+msgstr "Asiento contable"
+
+#. module: marin
+#: model:ir.model,name:marin.model_account_move_line
+msgid "Journal Item"
+msgstr "Apunte contable"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_account_bank_statement_line__journal_type
+#: model:ir.model.fields,field_description:marin.field_account_move__journal_type
+#: model:ir.model.fields,field_description:marin.field_account_payment__journal_type
+#: model_terms:ir.ui.view,arch_db:marin.view_account_payment_search_marin
+msgid "Journal type"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_159
+msgid "Julio"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_158
+msgid "Kilowatt hora"
+msgstr ""
+
+#. module: marin
+#: model:product.removal,name:marin.removal_lifo_priority
+msgid "Last In First Out (LIFO) + Priority"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_account_invoice_cash_discount__write_uid
+#: model:ir.model.fields,field_description:marin.field_authorize_debt_wizard__write_uid
+#: model:ir.model.fields,field_description:marin.field_invoice_line_price_history__write_uid
+#: model:ir.model.fields,field_description:marin.field_invoice_line_price_history_line__write_uid
+#: model:ir.model.fields,field_description:marin.field_pos_cash_transfer_wizard__write_uid
+#: model:ir.model.fields,field_description:marin.field_project_task_lost_reason__write_uid
+#: model:ir.model.fields,field_description:marin.field_purchase_order_line_price_history__write_uid
+#: model:ir.model.fields,field_description:marin.field_purchase_order_line_price_history_line__write_uid
+#: model:ir.model.fields,field_description:marin.field_res_partner_age_range__write_uid
+#: model:ir.model.fields,field_description:marin.field_sale_order_line_price_history__write_uid
+#: model:ir.model.fields,field_description:marin.field_sale_order_line_price_history_line__write_uid
+#: model:ir.model.fields,field_description:marin.field_stock_quant_lot__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_account_invoice_cash_discount__write_date
+#: model:ir.model.fields,field_description:marin.field_authorize_debt_wizard__write_date
+#: model:ir.model.fields,field_description:marin.field_invoice_line_price_history__write_date
+#: model:ir.model.fields,field_description:marin.field_invoice_line_price_history_line__write_date
+#: model:ir.model.fields,field_description:marin.field_pos_cash_transfer_wizard__write_date
+#: model:ir.model.fields,field_description:marin.field_project_task_lost_reason__write_date
+#: model:ir.model.fields,field_description:marin.field_purchase_order_line_price_history__write_date
+#: model:ir.model.fields,field_description:marin.field_purchase_order_line_price_history_line__write_date
+#: model:ir.model.fields,field_description:marin.field_res_partner_age_range__write_date
+#: model:ir.model.fields,field_description:marin.field_sale_order_line_price_history__write_date
+#: model:ir.model.fields,field_description:marin.field_sale_order_line_price_history_line__write_date
+#: model:ir.model.fields,field_description:marin.field_stock_quant_lot__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_need_report_form
+msgid "Last Year"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sales_order_filter_marin
+msgid "Late Activities"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_documents_document__legal_number
+msgid "Legal number"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_pos_line_report__line_id
+msgid "Line"
+msgstr ""
+
+#. module: marin
+#. odoo-javascript
+#: code:addons/marin/static/src/pos/app/screens/receipt_screen/receipt_screen.xml:0
+msgid "Loading delivery info..."
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_move_line__location_lot_domain
+msgid "Location Lot domain"
+msgstr ""
+
+#. module: marin
+#: model:ir.ui.menu,name:marin.menu_configuration_logistics
+msgid "Logistics"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_project_task__lost_reason_id
+msgid "Lost Reason"
+msgstr ""
+
+#. module: marin
+#. odoo-javascript
+#: code:addons/marin/static/src/pos/app/screens/receipt_screen/receipt_screen.xml:0
+msgid "Lot"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_scrap__lot_domain
+msgid "Lot domain"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_move_line_detailed_operation_tree
+msgid "Lot/SN"
+msgstr ""
+
+#. module: marin
+#. odoo-javascript
+#: code:addons/marin/static/src/pos/app/popups/missing_stock_popup/missing_stock_popup.xml:0
+#: model:ir.model,name:marin.model_stock_lot
+#: model:ir.model.fields,field_description:marin.field_stock_scrap__lot_id
+msgid "Lot/Serial"
+msgstr "Número de serie/lote"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_quant_lot__lot_id
+msgid "Lot/Serial Number"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_104
+msgid "MRP"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__res_partner__gender__male
+msgid "Male"
+msgstr ""
+
+#. module: marin
+#: model:documents.tag,name:marin.documents_knowledge_documents_mgm_acc
+msgid "Management and accounting"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.quant_search_view_marin
+msgid "Manufacturer"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_report__margin
+#: model:ir.model.fields,field_description:marin.field_pos_line_report__margin
+#: model:ir.model.fields,field_description:marin.field_pos_order__margin
+#: model:ir.model.fields,field_description:marin.field_pos_order_line__margin
+#: model:ir.model.fields,field_description:marin.field_sale_order__margin
+msgid "Margin"
+msgstr "Margen"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_pos_order__margin_percent
+#: model:ir.model.fields,field_description:marin.field_pos_order_line__margin_percent
+#: model:ir.model.fields,field_description:marin.field_sale_order__margin_percent
+#: model:ir.model.fields,field_description:marin.field_sale_order_line__margin_percent
+msgid "Margin (%)"
+msgstr "Margen (%)"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_report__margin_percent
+#: model:ir.model.fields,field_description:marin.field_pos_line_report__margin_percent
+msgid "Margin Percent"
+msgstr ""
+
+#. module: marin
+#. odoo-javascript
+#: code:addons/marin/static/src/pos/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/marin/static/src/pos/app/store/order.js:0
+msgid "Missing inventory for these serials number"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_report__month
+#: model:ir.model.fields,field_description:marin.field_pos_line_report__month
+msgid "Month"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_report__month_name
+#: model:ir.model.fields,field_description:marin.field_pos_line_report__month_name
+msgid "Month Name"
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/account_move.py:0
+msgid ""
+"More than one Purchase Orders with the same origin have been found. Please "
+"review"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_account_invoice_cash_discount__move_ids
+#: model:ir.model.fields,field_description:marin.field_authorize_debt_wizard__move_ids
+#: model:ir.model.fields,field_description:marin.field_invoice_line_in_report__move_id
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_report__move_id
+msgid "Move"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_fleet_vehicle_log_services__move_line_id
+msgid "Move Line"
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/account_move.py:0
+#: model_terms:ir.ui.view,arch_db:marin.view_move_form
+msgid "Move Lines"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_101
+msgid "Mutuamente definido"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sales_order_filter_marin
+msgid "My Orders"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sales_order_line_filter
+msgid "My Sale order lines"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_in_report__move_name
+#: model:ir.model.fields,field_description:marin.field_invoice_line_in_report__name
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_report__name
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_yearly_report__name
+#: model:ir.model.fields,field_description:marin.field_pos_line_product_report__name
+#: model:ir.model.fields,field_description:marin.field_pos_line_report__name
+#: model:ir.model.fields,field_description:marin.field_res_partner_age_range__name
+#: model:ir.model.fields,field_description:marin.field_stock_need_report__name
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_in_report_form
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_team_report_form
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_team_yearly_report_form
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_need_report_form
+msgid "Name"
+msgstr ""
+
+#. module: marin
+#: model:documents.tag,name:marin.documents_partner_documents_national_identification
+msgid "National Identification"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__pos_line_report__parent_state__draft
+#: model_terms:ir.ui.view,arch_db:marin.view_purchase_order_line_list
+#: model_terms:ir.ui.view,arch_db:marin.view_sale_order_line_list
+msgid "New"
+msgstr ""
+
+#. module: marin
+#. odoo-javascript
+#: code:addons/marin/static/src/pos/app/popups/missing_stock_popup/missing_stock_popup.xml:0
+msgid "New Lines"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_task_form2
+msgid "New Quotation"
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/fleet_vehicle.py:0
+msgid "No Plate"
+msgstr ""
+
+#. module: marin
+#. odoo-javascript
+#: code:addons/marin/static/src/pos/app/screens/receipt_screen/receipt_screen.xml:0
+msgid "No delivery info found for this order."
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.actions.act_window,help:marin.purchase_form_action
+msgid "No purchase order found. Let's create one!"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_account_invoice_filter
+#: model_terms:ir.ui.view,arch_db:marin.view_account_move_filter
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_report_search_view
+msgid "Not Fiscal"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__account_journal__x_treatment__not_fiscal_real
+#: model:ir.model.fields.selection,name:marin.selection__invoice_line_in_report__x_treatment__not_fiscal_real
+#: model:ir.model.fields.selection,name:marin.selection__invoice_line_out_report__x_treatment__not_fiscal_real
+msgid "Not Fiscal real"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__account_journal__x_treatment__not_fiscal_simulated
+#: model:ir.model.fields.selection,name:marin.selection__invoice_line_in_report__x_treatment__not_fiscal_simulated
+#: model:ir.model.fields.selection,name:marin.selection__invoice_line_out_report__x_treatment__not_fiscal_simulated
+msgid "Not Fiscal simulated"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.purchase_order_line_search_marin
+msgid "Not Invoice Related"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__invoice_line_in_report__payment_state__not_paid
+#: model:ir.model.fields.selection,name:marin.selection__invoice_line_out_report__payment_state__not_paid
+msgid "Not Paid"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_account_payment_search_marin
+msgid "Not Reconciled"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_106
+msgid "Not available"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__invoice_line_in_report__display_type__line_note
+msgid "Note"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__sale_order__delivery_status__no
+#: model:ir.model.fields.selection,name:marin.selection__sale_order_line__delivery_status__no
+msgid "Nothing to deliver"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__purchase_order_line__invoice_status__no
+msgid "Nothing to invoice"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__purchase_order__receipt_status__no
+#: model:ir.model.fields.selection,name:marin.selection__purchase_order_line__reception_status__no
+msgid "Nothing to receive"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sale_order_tree_marin
+msgid "Number"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_product_category__expiration_time
+msgid ""
+"Number of days after the receipt of the products (from the vendor or in "
+"stock after production) after which the goods may become dangerous and must "
+"not be consumed. It will be computed on the lot/serial number."
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_product_category__alert_time
+msgid ""
+"Number of days before the Expiration Date after which an alert should be "
+"raised on the lot/serial number. It will be computed on the lot/serial "
+"number."
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_product_category__removal_time
+msgid ""
+"Number of days before the Expiration Date after which the goods should be "
+"removed from the stock. It will be computed on the lot/serial number."
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_product_category__use_time
+msgid ""
+"Number of days before the Expiration Date after which the goods starts to "
+"deteriorate. It will be computed on the lot/serial number."
+msgstr ""
+
+#. module: marin
+#: model:documents.tag,name:marin.documents_knowledge_documents_odoo
+msgid "Odoo"
+msgstr ""
+
+#. module: marin
+#. odoo-javascript
+#: code:addons/marin/static/src/pos/app/popups/missing_stock_popup/missing_stock_popup.xml:0
+msgid "On hand"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.actions.act_window,help:marin.action_orders_marin
+msgid ""
+"Once the quotation is confirmed, it becomes a sales order.<br> You will be "
+"able to create an invoice and collect the payment."
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.actions.act_window,help:marin.purchase_form_action
+msgid ""
+"Once you ordered your products to your supplier, confirm your request for "
+"quotation and it will turn into a purchase order."
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_163
+msgid "One"
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/hr_payslip.py:0
+msgid ""
+"Only Managers who are allow to validate payslip can perform this operation"
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/stock_quant.py:0
+msgid "Only a inventory manager can validate an inventory adjustment."
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_in_report_search_view
+msgid "Open Invoices"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_purchase_order_line_list
+msgid "Open Order"
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/stock_picking_type.py:0
+msgid "Operation not supported"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_105
+msgid "Operations"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_pos_line_report__order_id
+#: model_terms:ir.ui.view,arch_db:marin.view_purchase_order_line_list
+#: model_terms:ir.ui.view,arch_db:marin.view_sale_order_line_list
+#: model_terms:ir.ui.view,arch_db:marin.view_sales_order_filter_marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sales_order_line_filter
+msgid "Order"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_sale_order_line__date_order
+#: model:ir.model.fields,field_description:marin.field_sale_order_line_price_history_line__date
+#: model_terms:ir.ui.view,arch_db:marin.view_sale_order_tree_marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sales_order_filter_marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sales_order_line_filter
+msgid "Order Date"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_purchase_order_line_price_history_line__date
+msgid "Order Deadline"
+msgstr ""
+
+#. module: marin
+#: model:ir.ui.menu,name:marin.menu_purchase_order_line_input
+#: model:ir.ui.menu,name:marin.menu_sale_order_line
+#: model_terms:ir.ui.view,arch_db:marin.view_order_form_marin
+msgid "Order Lines"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_purchase_order_line_price_history_line__order_id
+#: model:ir.model.fields,field_description:marin.field_sale_order_line_price_history_line__order_id
+msgid "Order Reference"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sales_order_line_filter
+msgid "Order lines ready to be delivered"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sales_order_line_filter
+msgid "Order lines ready to be invoiced"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_purchase_order_line_list
+#: model_terms:ir.ui.view,arch_db:marin.view_sale_order_line_list
+msgid "Ordered"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_purchase_order_line_list
+#: model_terms:ir.ui.view,arch_db:marin.view_sale_order_line_list
+msgid "Ordered Qty"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_account_bank_statement_line__invoice_origin
+#: model:ir.model.fields,field_description:marin.field_account_move__invoice_origin
+#: model_terms:ir.ui.view,arch_db:marin.wizard_stock_quant_lot_form_view
+msgid "Origin"
+msgstr "Origen"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_pos_session__cash_original_ending_balance
+msgid "Original Ending Balance"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__res_partner__gender__other
+msgid "Other"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sales_order_filter_marin
+msgid "Over Delivered"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.purchase_order_view_search_marin
+msgid "Over Received"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__purchase_order__invoice_status__over_invoiced
+#: model:ir.model.fields.selection,name:marin.selection__purchase_order_line__invoice_status__over_invoiced
+msgid "Over billed"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__sale_order__delivery_status__over_full
+#: model:ir.model.fields.selection,name:marin.selection__sale_order_line__delivery_status__over_delivered
+msgid "Over delivered"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__purchase_order__receipt_status__over_full
+#: model:ir.model.fields.selection,name:marin.selection__purchase_order_line__reception_status__over_received
+msgid "Over received"
+msgstr ""
+
+#. module: marin
+#: model:documents.tag,name:marin.documents_fleet_l10n_mx_ownership_tax
+msgid "Ownership Tax"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__invoice_line_in_report__payment_state__paid
+#: model:ir.model.fields.selection,name:marin.selection__invoice_line_out_report__payment_state__paid
+#: model:ir.model.fields.selection,name:marin.selection__pos_line_report__parent_state__paid
+msgid "Paid"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_in_report_search_view
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_report_search_view
+msgid "Paid Invoices"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_in_report__parent_categ_id
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_report__parent_categ_id
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_report__parent_categ_id
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_yearly_report__parent_categ_id
+#: model:ir.model.fields,field_description:marin.field_stock_need_report__parent_categ_id
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_in_report_search_view
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_report_search_view
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_team_report_search_view
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_team_yearly_report_search_view
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_need_report_search_view
+msgid "Parent Category"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__invoice_line_in_report__payment_state__partial
+#: model:ir.model.fields.selection,name:marin.selection__invoice_line_out_report__payment_state__partial
+msgid "Partially Paid"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__purchase_order__invoice_status__partially
+#: model:ir.model.fields.selection,name:marin.selection__purchase_order_line__invoice_status__partially
+msgid "Partially billed"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__sale_order_line__delivery_status__partially
+#: model_terms:ir.ui.view,arch_db:marin.view_sales_order_filter_marin
+msgid "Partially delivered"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__purchase_order_line__reception_status__partially
+#: model_terms:ir.ui.view,arch_db:marin.purchase_order_view_search_marin
+msgid "Partially received"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_authorize_debt_wizard__partner_id
+#: model:ir.model.fields,field_description:marin.field_invoice_line_in_report__partner_id
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_report__partner_id
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_report__partner_id
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_yearly_report__partner_id
+#: model:ir.model.fields,field_description:marin.field_invoice_line_price_history__partner_id
+#: model:ir.model.fields,field_description:marin.field_invoice_line_price_history_line__partner_id
+#: model:ir.model.fields,field_description:marin.field_pos_cash_transfer_wizard__partner_id
+#: model:ir.model.fields,field_description:marin.field_pos_line_report__partner_id
+#: model:ir.model.fields,field_description:marin.field_purchase_order_line__partner_id
+#: model:ir.model.fields,field_description:marin.field_purchase_order_line_price_history_line__partner_id
+#: model_terms:ir.ui.view,arch_db:marin.view_account_analytic_distribution_model_search_marin
+#: model_terms:ir.ui.view,arch_db:marin.view_account_invoice_filter
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_in_report_form
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_in_report_search_view
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_report_search_view
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_team_report_search_view
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_team_yearly_report_search_view
+#: model_terms:ir.ui.view,arch_db:marin.view_move_form
+msgid "Partner"
+msgstr "Contacto"
+
+#. module: marin
+#: model:ir.model,name:marin.model_res_partner_age_range
+msgid "Partner Age Range"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_account_analytic_distribution_model_search_marin
+msgid "Partner Category"
+msgstr ""
+
+#. module: marin
+#: model:ir.model,name:marin.model_authorize_debt_wizard
+msgid "Partner authorize debt wizard"
+msgstr ""
+
+#. module: marin
+#: model:documents.tag,name:marin.documents_partner_documents_passport
+msgid "Passport"
+msgstr ""
+
+#. module: marin
+#: model:ir.model,name:marin.model_hr_payslip
+msgid "Pay Slip"
+msgstr "Recibo de nómina"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_account_bank_statement_line__l10n_mx_edi_payment_policy
+#: model:ir.model.fields,field_description:marin.field_account_move__l10n_mx_edi_payment_policy
+msgid "Payment Policy"
+msgstr "Política de pago"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_in_report__payment_reference
+msgid "Payment Reference"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_in_report_search_view
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_report_search_view
+msgid "Payment State"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_in_report__payment_state
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_report__payment_state
+msgid "Payment Status"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__invoice_line_in_report__display_type__payment_term
+msgid "Payment Term"
+msgstr ""
+
+#. module: marin
+#: model:ir.model,name:marin.model_account_payment_term
+msgid "Payment Terms"
+msgstr "Términos de pago"
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/pos_config.py:0
+#: code:addons/marin/wizards/pos_cash_transfer_wizard.py:0
+#: model:ir.model,name:marin.model_account_payment
+#: model:ir.model.fields.selection,name:marin.selection__account_move__l10n_mx_edi_usage__cp01
+msgid "Payments"
+msgstr "Pagos"
+
+#. module: marin
+#: model:ir.model,name:marin.model_hr_payslip_run
+msgid "Payslip Batches"
+msgstr "Lotes de recibos de nómina"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_account_invoice_cash_discount__amount
+msgid "Percentage"
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/pos_session.py:0
+msgid "Permission needed"
+msgstr ""
+
+#. module: marin
+#: model:ir.actions.server,name:marin.action_print_picking_operation
+msgid "Picking Operations"
+msgstr ""
+
+#. module: marin
+#: model:ir.model,name:marin.model_stock_picking_type
+msgid "Picking Type"
+msgstr "Tipo de recolección"
+
+#. module: marin
+#: model:documents.tag,name:marin.documents_fleet_l10n_mx_plate
+msgid "Plate"
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/wizards/pos_cash_transfer_wizard.py:0
+msgid "Please specify an amount for the cash transfer different of 0.0"
+msgstr ""
+
+#. module: marin
+#: model:ir.actions.act_window,name:marin.pos_cash_transfer_wizard
+msgid "PoS Cash Transfer"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_res_company__pos_cash_transfer_journal_id
+#: model:ir.model.fields,field_description:marin.field_res_config_settings__pos_cash_transfer_journal_id
+msgid "PoS Cash Transfer Journal"
+msgstr ""
+
+#. module: marin
+#: model:ir.model,name:marin.model_pos_cash_transfer_wizard
+msgid "PoS Cash Transfer Wizard"
+msgstr ""
+
+#. module: marin
+#: model:ir.actions.server,name:marin.ir_cron_initialize_pos_line_report_ir_actions_server
+msgid "PoS Line Report: Initialize views"
+msgstr ""
+
+#. module: marin
+#: model:ir.actions.server,name:marin.ir_cron_update_pos_line_report_ir_actions_server
+msgid "PoS Line Report: Update views"
+msgstr ""
+
+#. module: marin
+#: model:ir.actions.act_window,name:marin.action_pos_line_product_report
+#: model:ir.model,name:marin.model_pos_line_report
+#: model:ir.ui.menu,name:marin.menu_pos_line_product_report
+msgid "PoS Report"
+msgstr ""
+
+#. module: marin
+#: model:ir.model,name:marin.model_pos_line_product_report
+msgid "PoS Report by Product"
+msgstr ""
+
+#. module: marin
+#: model:ir.model,name:marin.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr "Configuración del punto de venta"
+
+#. module: marin
+#: model:ir.model,name:marin.model_pos_order_line
+msgid "Point of Sale Order Lines"
+msgstr "Líneas de orden del Punto de venta"
+
+#. module: marin
+#: model:ir.model,name:marin.model_pos_order
+msgid "Point of Sale Orders"
+msgstr "Órdenes del punto de venta"
+
+#. module: marin
+#: model:ir.model,name:marin.model_pos_session
+msgid "Point of Sale Session"
+msgstr "Sesión del punto de venta"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_pos_cash_transfer_wizard__pos_session_id
+msgid "Pos Session"
+msgstr ""
+
+#. module: marin
+#: model:mail.activity.type,name:marin.cash_transfer_activity
+msgid "Pos Session Cash transfer"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_hr_payslip_form_marin
+msgid "Post Move"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__invoice_line_in_report__parent_state__posted
+#: model:ir.model.fields.selection,name:marin.selection__pos_line_report__parent_state__done
+msgid "Posted"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_pos_line_product_report__average_real_cost
+msgid "Precio compra promedio tpv"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_report__average_sale_price_current_year
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_yearly_report__average_sale_price_current_year
+msgid "Precio venta promedio real"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_report__average_abs_sale_price_current_year
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_yearly_report__average_abs_sale_price_current_year
+msgid "Precio venta promedio real absoluto"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_pos_line_product_report__average_sale_price
+msgid "Precio venta promedio tpv"
+msgstr ""
+
+#. module: marin
+#: model:ir.actions.server,name:marin.action_server_predict_bank_statement_values
+msgid "Predict Partner"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_in_report__price_unit
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_report__price_unit
+#: model:ir.model.fields,field_description:marin.field_pos_line_report__price_unit
+msgid "Price Unit"
+msgstr ""
+
+#. module: marin
+#: model:ir.actions.act_window,name:marin.invoice_line_price_history_action
+msgid "Price history"
+msgstr ""
+
+#. module: marin
+#: model:ir.actions.act_window,name:marin.sale_line_price_history_action
+msgid "Price history per customer"
+msgstr ""
+
+#. module: marin
+#: model:ir.actions.act_window,name:marin.purchase_line_price_history_action
+msgid "Price history per supplier"
+msgstr ""
+
+#. module: marin
+#: model:ir.ui.menu,name:marin.menu_pricelists
+msgid "Pricelists"
+msgstr ""
+
+#. module: marin
+#: model:res.groups,name:marin.group_print_delivery_slip
+msgid "Print Delivery Slip"
+msgstr ""
+
+#. module: marin
+#: model:res.groups,name:marin.group_print_picking_operation
+msgid "Print Picking Operation"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_partner_form
+msgid "Private information"
+msgstr ""
+
+#. module: marin
+#. odoo-javascript
+#: code:addons/marin/static/src/pos/app/screens/receipt_screen/receipt_screen.xml:0
+#: model:ir.model,name:marin.model_product_template
+#: model:ir.model.fields,field_description:marin.field_invoice_line_in_report__product_id
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_report__product_id
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_report__product_id
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_yearly_report__product_id
+#: model:ir.model.fields,field_description:marin.field_invoice_line_price_history__product_id
+#: model:ir.model.fields,field_description:marin.field_pos_line_product_report__product_id
+#: model:ir.model.fields,field_description:marin.field_pos_line_report__product_id
+#: model:ir.model.fields,field_description:marin.field_purchase_order_line_price_history__product_id
+#: model:ir.model.fields,field_description:marin.field_sale_order_line_price_history__product_id
+#: model:ir.model.fields,field_description:marin.field_stock_need_report__product_id
+#: model:ir.model.fields,field_description:marin.field_stock_quant_lot__product_id
+#: model:ir.model.fields.selection,name:marin.selection__invoice_line_in_report__display_type__product
+#: model_terms:ir.ui.view,arch_db:marin.view_account_analytic_distribution_model_search_marin
+#: model_terms:ir.ui.view,arch_db:marin.view_account_invoice_filter
+#: model_terms:ir.ui.view,arch_db:marin.view_account_move_filter
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_in_report_form
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_in_report_search_view
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_report_form
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_report_search_view
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_team_report_search_view
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_team_yearly_report_search_view
+#: model_terms:ir.ui.view,arch_db:marin.view_pos_line_product_report_search_view
+#: model_terms:ir.ui.view,arch_db:marin.view_pos_order_filter_marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sales_order_filter_marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sales_order_line_filter
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_need_report_search_view
+msgid "Product"
+msgstr "Producto"
+
+#. module: marin
+#: model:ir.ui.menu,name:marin.menu_product_attribute
+msgid "Product Attributes"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_report__product_categ_id
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_report__product_categ_id
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_yearly_report__product_categ_id
+#: model:ir.model.fields,field_description:marin.field_pos_line_product_report__product_categ_id
+#: model:ir.model.fields,field_description:marin.field_pos_line_report__product_categ_id
+msgid "Product Categ"
+msgstr ""
+
+#. module: marin
+#: model:ir.ui.menu,name:marin.menu_product_category
+msgid "Product Categories"
+msgstr ""
+
+#. module: marin
+#: model:ir.model,name:marin.model_product_category
+#: model:ir.model.fields,field_description:marin.field_invoice_line_in_report__product_categ_id
+#: model:ir.model.fields,field_description:marin.field_stock_need_report__product_categ_id
+#: model:ir.model.fields,field_description:marin.field_stock_quant__product_categ_id
+#: model_terms:ir.ui.view,arch_db:marin.view_account_analytic_distribution_model_search_marin
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_in_report_search_view
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_report_search_view
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_team_report_search_view
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_team_yearly_report_search_view
+#: model_terms:ir.ui.view,arch_db:marin.view_pos_line_product_report_search_view
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_need_report_search_view
+msgid "Product Category"
+msgstr "Categoría del producto"
+
+#. module: marin
+#: model:ir.ui.menu,name:marin.menu_product_lot
+msgid "Product Lots"
+msgstr ""
+
+#. module: marin
+#: model:ir.model,name:marin.model_stock_move_line
+msgid "Product Moves (Stock Move Line)"
+msgstr "Movimientos de producto (línea de movimiento de stock)"
+
+#. module: marin
+#: model:ir.ui.menu,name:marin.menu_product_packaging
+msgid "Product Packagings"
+msgstr ""
+
+#. module: marin
+#: model:ir.ui.menu,name:marin.menu_product_tag
+msgid "Product Tags"
+msgstr ""
+
+#. module: marin
+#: model:res.groups,name:marin.group_product_cost_manager
+msgid "Product cost manager"
+msgstr ""
+
+#. module: marin
+#: model:res.groups,name:marin.group_product_cost_readonly
+msgid "Product cost readonly"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_need_report__standard_price
+msgid "Product standar price"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_150
+msgid "Production size - Big holder (up to 30mdp)"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_151
+msgid "Production size - Medium holder (up to 18mdp)"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_152
+msgid "Production size - Small holder (up to 10mdp)"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_153
+msgid "Production size - Super big holder (more than 30mdp)"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_154
+msgid "Production size - Very small holder (up to 3mdp)"
+msgstr ""
+
+#. module: marin
+#: model:ir.ui.menu,name:marin.menu_configuration_product
+#: model:ir.ui.menu,name:marin.menu_product_template
+#: model:ir.ui.menu,name:marin.product_menu_root
+msgid "Products"
+msgstr ""
+
+#. module: marin
+#: model:ir.model,name:marin.model_project_task_lost_reason
+msgid "Project Task Lost Reason"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_purchase
+msgid "Purchase"
+msgstr ""
+
+#. module: marin
+#: model:ir.model,name:marin.model_purchase_order
+#: model_terms:ir.ui.view,arch_db:marin.purchase_order_view_list
+msgid "Purchase Order"
+msgstr "Orden de compra"
+
+#. module: marin
+#: model:ir.model,name:marin.model_purchase_order_line
+#: model:ir.model.fields,field_description:marin.field_stock_move__purchase_line_id
+msgid "Purchase Order Line"
+msgstr "Línea de la orden de compra"
+
+#. module: marin
+#: model:ir.actions.act_window,name:marin.action_purchase_order_lines
+#: model_terms:ir.ui.view,arch_db:marin.view_purchase_order_line_pivot
+msgid "Purchase Order Lines"
+msgstr ""
+
+#. module: marin
+#: model:ir.actions.act_window,name:marin.purchase_form_action
+#: model:ir.ui.menu,name:marin.menu_purchase_form_action
+msgid "Purchase Orders"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_report__purchase_price
+#: model:ir.model.fields,field_description:marin.field_pos_line_report__purchase_price
+msgid "Purchase Price"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__invoice_line_in_report__move_type__in_receipt
+#: model:ir.model.fields.selection,name:marin.selection__invoice_line_out_report__move_type__in_receipt
+msgid "Purchase Receipt"
+msgstr ""
+
+#. module: marin
+#: model:res.groups,name:marin.group_purchase_core_business
+msgid "Purchase core business"
+msgstr ""
+
+#. module: marin
+#: model:res.groups,name:marin.group_purchase_general
+msgid "Purchase general"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_purchase_order_line_price_history__line_id
+#: model:ir.model.fields,field_description:marin.field_purchase_order_line_price_history_line__line_id
+msgid "Purchase order line"
+msgstr ""
+
+#. module: marin
+#: model:ir.model,name:marin.model_purchase_order_line_price_history
+msgid "Purchase order line price history"
+msgstr ""
+
+#. module: marin
+#: model:ir.model,name:marin.model_purchase_order_line_price_history_line
+msgid "Purchase order line price history line"
+msgstr ""
+
+#. module: marin
+#: model:res.groups,name:marin.group_purchase_readonly
+msgid "Purchase readonly"
+msgstr ""
+
+#. module: marin
+#: model:res.groups,name:marin.group_purchase_special_projects
+msgid "Purchase special projects"
+msgstr ""
+
+#. module: marin
+#: model:ir.model,name:marin.model_purchase_bill_union
+msgid "Purchases & Bills Union"
+msgstr "Unión de compras y facturas"
+
+#. module: marin
+#. odoo-javascript
+#: code:addons/marin/static/src/pos/app/popups/missing_stock_popup/missing_stock_popup.xml:0
+msgid "Quanity to take from the selected line."
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_quant_lot__quant_id
+msgid "Quant"
+msgstr ""
+
+#. module: marin
+#: model:ir.actions.act_window,name:marin.stock_quant_lot_wizard
+msgid "Quant Transfer Lot"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_in_report__quantity
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_report__quantity
+#: model:ir.model.fields,field_description:marin.field_invoice_line_price_history_line__qty
+#: model:ir.model.fields,field_description:marin.field_pos_line_report__quantity
+#: model:ir.model.fields,field_description:marin.field_purchase_order_line_price_history_line__qty
+#: model:ir.model.fields,field_description:marin.field_sale_order_line_price_history_line__qty
+#: model:ir.model.fields,field_description:marin.field_stock_quant_lot__max_quantity
+#: model:ir.model.fields,field_description:marin.field_stock_quant_lot__quantity
+#: model_terms:ir.ui.view,arch_db:marin.wizard_stock_quant_lot_form_view
+msgid "Quantity"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_stock_quant_lot__max_quantity
+msgid ""
+"Quantity of products in this quant, in the default unit of measure of the "
+"product"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_stock_quant_lot__quantity
+msgid "Quantity to be transfered to the destintation lot."
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_purchase_order_line__qty_to_receive
+msgid "Quantity to receive"
+msgstr ""
+
+#. module: marin
+#: model:ir.model,name:marin.model_stock_quant
+msgid "Quants"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_report__quarter
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_report__quarter
+#: model:ir.model.fields,field_description:marin.field_pos_line_product_report__quarter
+#: model:ir.model.fields,field_description:marin.field_pos_line_report__quarter
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_team_report_search_view
+#: model_terms:ir.ui.view,arch_db:marin.view_pos_line_product_report_search_view
+msgid "Quarter"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_pos_line_product_report__quarter_str
+msgid "Quarter Str"
+msgstr ""
+
+#. module: marin
+#: model:ir.actions.act_window,name:marin.action_quotation_new
+msgid "Quotation"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sales_order_filter_marin
+msgid "Quotations"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_pickingtype_filter_marin
+msgid "Ready"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_account_invoice_filter
+#: model_terms:ir.ui.view,arch_db:marin.view_account_move_filter
+msgid "Real"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_report__real_cost_variation
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_yearly_report__real_cost_variation
+msgid "Real Cost Variation"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_report__real_margin_value_last_year
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_yearly_report__real_margin_value_last_year
+msgid "Real Margin Value Last Year"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_report__real_margin_variation
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_yearly_report__real_margin_variation
+msgid "Real Margin Variation"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_report__real_price_variation
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_yearly_report__real_price_variation
+msgid "Real Price Variation"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_report__real_sale_variation
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_yearly_report__real_sale_variation
+msgid "Real Sale Variation"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_purchase_order__receipt_status
+msgid "Receipt Status"
+msgstr "Estado de entrega"
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_authorize_debt_wizard__credit_limit
+#: model:ir.model.fields,help:marin.field_res_partner__credit_limit
+#: model:ir.model.fields,help:marin.field_res_users__credit_limit
+msgid "Receivable limit specific to this partner."
+msgstr "Límite de crédito específico para este contacto."
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__purchase_order_line__reception_status__received
+#: model_terms:ir.ui.view,arch_db:marin.purchase_order_view_search_marin
+msgid "Received"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_purchase_order_line__reception_status
+#: model_terms:ir.ui.view,arch_db:marin.purchase_order_view_search_marin
+msgid "Reception Status"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_purchase_order__receipt_status
+msgid ""
+"Red: Late\n"
+"            Orange: To process today\n"
+"            Green: On time"
+msgstr ""
+"Rojo: con demora\n"
+"            Naranja: por procesar hoy\n"
+"            Verde: a tiempo"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_in_report__ref
+#: model:ir.model.fields,field_description:marin.field_pos_line_report__ref
+msgid "Ref"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.purchase_order_view_list
+msgid "Reference"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_project_task__referer_partner_id
+msgid "Referred By"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_account_invoice_discount_form
+msgid "Register Cash Discount"
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/account_move.py:0
+#: model:ir.actions.server,name:marin.action_account_move_cash_discount
+msgid "Register cash discount"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_account_bank_statement_line__relate_purchase_order
+#: model:ir.model.fields,field_description:marin.field_account_move__relate_purchase_order
+msgid "Relate Purchase Order"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_account_bank_statement_line__related_purchase_order_id
+#: model:ir.model.fields,field_description:marin.field_account_move__related_purchase_order_id
+msgid "Related Purchase Order"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_product_category__removal_time
+msgid "Removal Date"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_location__removal_priority
+#: model:ir.model.fields,field_description:marin.field_stock_quant__removal_priority
+msgid "Removal Priority"
+msgstr ""
+
+#. module: marin
+#: model:ir.actions.server,name:marin.action_account_move_draft
+msgid "Reset to draft"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_order_form_marin
+msgid "Restore invoice status"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__invoice_line_in_report__payment_state__reversed
+#: model:ir.model.fields.selection,name:marin.selection__invoice_line_out_report__payment_state__reversed
+msgid "Reversed"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_in_report__root_categ_id
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_report__root_categ_id
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_report__root_categ_id
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_yearly_report__root_categ_id
+#: model:ir.model.fields,field_description:marin.field_product_category__root_categ_id
+#: model:ir.model.fields,field_description:marin.field_stock_need_report__root_categ_id
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_in_report_search_view
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_report_search_view
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_team_report_search_view
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_team_yearly_report_search_view
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_need_report_search_view
+msgid "Root Category"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__invoice_line_in_report__display_type__rounding
+msgid "Rounding"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_sale_order__route_id
+msgid "Route"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_picking_type_form_marin
+msgid "Routes"
+msgstr ""
+
+#. module: marin
+#: model:documents.tag,name:marin.documents_knowledge_documents_sat
+msgid "SAT"
+msgstr ""
+
+#. module: marin
+#. odoo-javascript
+#: code:addons/marin/static/src/pos/app/popups/missing_stock_popup/missing_stock_popup.xml:0
+msgid "SN"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sale_order_line_list
+msgid "Sale Order"
+msgstr ""
+
+#. module: marin
+#: model:ir.actions.act_window,name:marin.action_sale_order_line
+msgid "Sale Order Lines"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_authorize_debt_wizard__so_ids
+msgid "Sale Orders"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_report__sale_price_total_last_year
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_yearly_report__sale_price_total_last_year
+msgid "Sale Price Total Last Year"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_report__sale_price_variation
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_yearly_report__sale_price_variation
+msgid "Sale Price Variation"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_sale_order_line_price_history__line_id
+#: model:ir.model.fields,field_description:marin.field_sale_order_line_price_history_line__line_id
+msgid "Sale order line"
+msgstr ""
+
+#. module: marin
+#: model:ir.model,name:marin.model_sale_order_line_price_history
+msgid "Sale order line price history"
+msgstr ""
+
+#. module: marin
+#: model:ir.model,name:marin.model_sale_order_line_price_history_line
+msgid "Sale order line price history line"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sales_order_line_filter
+msgid "Sale order lines related to a Sale order of mine"
+msgstr ""
+
+#. module: marin
+#: model:ir.actions.act_window,name:marin.action_orders_marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sales_order_filter_marin
+msgid "Sale orders"
+msgstr ""
+
+#. module: marin
+#: model:ir.ui.menu,name:marin.menu_product_pricelist
+msgid "Sale pricelists"
+msgstr ""
+
+#. module: marin
+#: model:res.groups,name:marin.group_sale_readonly
+msgid "Sale readonly"
+msgstr ""
+
+#. module: marin
+#: model:ir.model,name:marin.model_sale_order
+msgid "Sales Order"
+msgstr "Orden de venta"
+
+#. module: marin
+#: model:ir.model,name:marin.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Línea de la orden de venta"
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__invoice_line_in_report__move_type__out_receipt
+#: model:ir.model.fields.selection,name:marin.selection__invoice_line_out_report__move_type__out_receipt
+msgid "Sales Receipt"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_res_partner__team_id
+#: model:ir.model.fields,field_description:marin.field_res_users__team_id
+#: model_terms:ir.ui.view,arch_db:marin.view_sales_order_filter_marin
+msgid "Sales Team"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_report_search_view
+#: model_terms:ir.ui.view,arch_db:marin.view_sales_order_filter_marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sales_order_line_filter
+msgid "Salesperson"
+msgstr ""
+
+#. module: marin
+#: model:ir.model,name:marin.model_stock_scrap
+msgid "Scrap"
+msgstr "Desechar"
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sales_order_filter_marin
+msgid "Search Sale Orders"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sales_order_line_filter
+msgid "Search order lines"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_team_report_search_view
+msgid "Second Quarter"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__invoice_line_in_report__display_type__line_section
+msgid "Section"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_security
+#: model_terms:ir.ui.view,arch_db:marin.view_picking_type_form_marin
+msgid "Security"
+msgstr ""
+
+#. module: marin
+#: model:res.groups,name:marin.group_security_compliance
+msgid "Security and compliance"
+msgstr ""
+
+#. module: marin
+#. odoo-javascript
+#: code:addons/marin/static/src/pos/app/popups/edit_list_input/edit_list_input.xml:0
+msgid "Select a lot"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_account_analytic_distribution_model__vehicle_id
+msgid ""
+"Select a vehicle for which the analytic distribution will be used (e.g. "
+"create new customer invoice or Sales order if we select this vehicle, it "
+"will automatically take this as an analytic account)"
+msgstr ""
+
+#. module: marin
+#. odoo-javascript
+#: code:addons/marin/static/src/pos/app/popups/missing_stock_popup/missing_stock_popup.xml:0
+msgid "Select an order line to see the available lots for the product."
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_in_report__sequence
+msgid "Sequence"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_102
+msgid "Service unit"
+msgstr ""
+
+#. module: marin
+#: model:ir.model,name:marin.model_fleet_vehicle_log_services
+msgid "Services for vehicles"
+msgstr "Servicios para los vehículos"
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.invoice_line_price_history_view_form
+#: model_terms:ir.ui.view,arch_db:marin.purchase_order_line_price_history_view_form
+#: model_terms:ir.ui.view,arch_db:marin.sale_order_line_price_history_view_form
+msgid "Set price"
+msgstr ""
+
+#. module: marin
+#: model:ir.ui.menu,name:marin.menu_configuration_settings
+msgid "Settings"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_103
+msgid "Shipment"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_res_company__code
+msgid "Short Code"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking__show_mark_as_todo
+msgid "Show Mark As Todo"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking__show_purchase_lines
+msgid "Show Purchase Lines"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking__show_sale_lines
+msgid "Show Sale Lines"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking__show_validate
+msgid "Show Validate"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sales_order_filter_marin
+msgid "Show all records which has next action date is before today"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_project_task__season_id
+#: model:ir.model.fields,help:marin.field_sale_order__season_id
+msgid ""
+"Since every farmer can have several growing seasons the specific one can be "
+"selected."
+msgstr ""
+
+#. module: marin
+#: model:documents.tag,name:marin.documents_partner_documents_social_security_identification
+msgid "Social Security Identification"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_res_partner__social_style_color
+#: model:ir.model.fields,field_description:marin.field_res_users__social_style_color
+msgid "Social style color"
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/account_move.py:0
+msgid "Some move lines does not have a product set. Please review"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_in_report__parent_state
+#: model:ir.model.fields,field_description:marin.field_pos_line_report__parent_state
+#: model_terms:ir.ui.view,arch_db:marin.view_sales_order_line_filter
+msgid "State"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.purchase_order_view_search_marin
+msgid "Status"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_need_report_form
+msgid "Stock"
+msgstr ""
+
+#. module: marin
+#: model:ir.model,name:marin.model_stock_move
+msgid "Stock Move"
+msgstr "Movimiento de stock"
+
+#. module: marin
+#: model:ir.model,name:marin.model_stock_need_report
+msgid "Stock Need"
+msgstr ""
+
+#. module: marin
+#: model:ir.actions.act_window,name:marin.action_stock_need_report
+#: model:ir.ui.menu,name:marin.menu_stock_need_report
+msgid "Stock Need Report"
+msgstr ""
+
+#. module: marin
+#: model:ir.actions.server,name:marin.ir_cron_initialize_stock_need_report_ir_actions_server
+msgid "Stock Need Report: Initialize view"
+msgstr ""
+
+#. module: marin
+#: model:ir.actions.server,name:marin.ir_cron_update_stock_need_report_ir_actions_server
+msgid "Stock Need Report: Update view"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_move_line__move_id
+msgid "Stock Operation"
+msgstr "Operación de existencias"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_need_report__available_quantity
+msgid "Stock available Qty"
+msgstr ""
+
+#. module: marin
+#: model:res.groups,name:marin.group_stock_manager
+msgid "Stock manager"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_need_report__quantity
+msgid "Stock on hand Qty"
+msgstr ""
+
+#. module: marin
+#: model:res.groups,name:marin.group_stock_readonly
+msgid "Stock readonly"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_need_report__stock_supply_need
+msgid "Stock supply need qty año actual LMMR"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_need_report__stock_supply_need_value
+msgid "Stock supply need value at standard price año actual LMMR"
+msgstr ""
+
+#. module: marin
+#: model:res.groups,name:marin.group_stock_user
+msgid "Stock user"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_account_bank_statement_line__x_stored
+#: model:ir.model.fields,field_description:marin.field_account_move__x_stored
+#: model_terms:ir.ui.view,arch_db:marin.view_move_form
+msgid "Stored"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_hr_contract__structure_default_id
+msgid "Structure"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_in_report__price_subtotal
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_report__price_subtotal
+#: model:ir.model.fields,field_description:marin.field_pos_line_report__price_subtotal
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_report_tree
+msgid "Subtotal"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking__suitable_product_ids
+msgid "Suitable Product"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_need_report__available_stock_cost_value
+msgid "Suma de Valor stock disponible a costo"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_need_report__available_stock_price_value
+msgid "Suma de Valor stock disponible a precio de lista"
+msgstr ""
+
+#. module: marin
+#: model:documents.tag,name:marin.documents_partner_type_supplier
+#: model:ir.model.fields,field_description:marin.field_purchase_order_line_price_history__partner_id
+#: model:ir.model.fields,field_description:marin.field_res_partner__supplier
+#: model:ir.model.fields,field_description:marin.field_res_users__supplier
+msgid "Supplier"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_supplier_core
+msgid "Supplier - Core business"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_supplier_general
+msgid "Supplier - General"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_supplier_xiuman
+msgid "Supplier - Xiuman"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_need_report_form
+msgid "Supply Need"
+msgstr ""
+
+#. module: marin
+#: model:ir.model,name:marin.model_documents_tag
+#: model_terms:ir.ui.view,arch_db:marin.view_sales_order_filter_marin
+msgid "Tag"
+msgstr "Etiqueta"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_res_partner__category_id
+#: model:ir.model.fields,field_description:marin.field_res_users__category_id
+#: model_terms:ir.ui.view,arch_db:marin.quant_search_view_marin
+msgid "Tags"
+msgstr "Etiquetas"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_fleet_vehicle__fuel_tank_capacity
+msgid "Tank capacity"
+msgstr ""
+
+#. module: marin
+#: model:ir.model,name:marin.model_project_task
+msgid "Task"
+msgstr "Tarea"
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/project_task_lost_reason.py:0
+msgid "Tasks"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_project_task_lost_reason__task_count
+msgid "Tasks count"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__invoice_line_in_report__display_type__tax
+msgid "Tax"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sale_order_tree_marin
+msgid "Tax Total"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_price_history_line__tax_ids
+#: model:ir.model.fields,field_description:marin.field_purchase_order_line_price_history_line__tax_ids
+msgid "Taxes"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_report__team_id
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_report__team_id
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_yearly_report__team_id
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_report_search_view
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_team_report_search_view
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_team_yearly_report_search_view
+#: model_terms:ir.ui.view,arch_db:marin.view_sales_order_filter_marin
+msgid "Team"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_purchase_order_line__force_company_id
+#: model:ir.model.fields,help:marin.field_sale_order_line__force_company_id
+msgid ""
+"Technical field to force company or get it from env user if order don't "
+"exist."
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_account_journal__x_treatment
+msgid ""
+"Technical field used to group journal and journal moves according to fiscal "
+"logic."
+msgstr ""
+
+#. module: marin
+#: model:uom.category,name:marin.uom_category_102
+msgid "Temperature"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_pos_line_product_report__config_id
+#: model_terms:ir.ui.view,arch_db:marin.view_pos_line_product_report_search_view
+msgid "Terminal"
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/hr_payslip_run.py:0
+msgid "The Expense Journal \"%s\" has not properly configured the Credit Account!"
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/hr_payslip_run.py:0
+msgid "The Expense Journal \"%s\" has not properly configured the Debit Account!"
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/sale_order.py:0
+msgid ""
+"The Partner %s does not have an authorized credit line. Contact the Credit "
+"Manager."
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/account_move.py:0
+msgid ""
+"The Partner %s does not have enough credit line. Contact the Credit Manager."
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/account_move.py:0
+msgid ""
+"The Partner's %s credit line has been held. Contact the Credit Manager."
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/account_move_line.py:0
+msgid "The account %(name)s (%(code)s) is deprecated."
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/account_move_line.py:0
+msgid ""
+"The account selected on your journal entry forces to provide a secondary "
+"currency. You should remove the secondary currency on the account."
+msgstr ""
+
+#. module: marin
+#: model:ir.model.constraint,message:marin.constraint_res_company_code_uniq
+msgid "The company's code must be unique"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_account_bank_statement_line__invoice_origin
+#: model:ir.model.fields,help:marin.field_account_move__invoice_origin
+msgid "The document(s) that generated the invoice."
+msgstr "El documento o documentos que generaron esta factura"
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_invoice_line_price_history_line__qty
+msgid ""
+"The optional quantity expressed by this line, eg: number of product sold. "
+"The quantity is not a legal requirement but is very useful for some reports."
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/res_partner.py:0
+msgid "The partner %s has reached its credit limit of : %s\n"
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/sale_order.py:0
+msgid "The partner's credit line has been held. Contact the Credit Manager."
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_pos_cash_transfer_wizard__currency_id
+msgid "The payment's currency."
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/account_journal.py:0
+msgid ""
+"The type of the journal's default receivable/payable account should be "
+"'receivable' or 'payable'."
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/pos_session.py:0
+msgid ""
+"The used POS has no CASH Payment method or journal correctly configured, "
+"please check for them."
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_team_report_search_view
+msgid "Third Quarter"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_stock_location__removal_priority
+#: model:ir.model.fields,help:marin.field_stock_quant__removal_priority
+msgid ""
+"This priority applies when removing stock and incoming dates are equal."
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_res_partner_age_range__age_to
+msgid "To"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_move_line__location_dest_availability
+msgid "To availability"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__purchase_order_line__invoice_status__to_invoice
+msgid "To bill"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__sale_order_line__delivery_status__to_deliver
+#: model_terms:ir.ui.view,arch_db:marin.view_sales_order_filter_marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sales_order_line_filter
+msgid "To deliver"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_purchase_order_line_list
+#: model_terms:ir.ui.view,arch_db:marin.view_sale_order_line_list
+#: model_terms:ir.ui.view,arch_db:marin.view_sales_order_filter_marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sales_order_line_filter
+msgid "To invoice"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sale_order_line_list
+msgid "To invoice Qty"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__purchase_order_line__reception_status__to_receive
+#: model_terms:ir.ui.view,arch_db:marin.purchase_order_view_search_marin
+msgid "To receive"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_account_move_filter
+msgid "To store"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sales_order_filter_marin
+msgid "To upsell"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sales_order_filter_marin
+msgid "Today Activities"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_in_report__price_total
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_report__price_total
+#: model:ir.model.fields,field_description:marin.field_pos_line_report__price_total
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_report_tree
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_team_report_tree
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_team_yearly_report_tree
+msgid "Total"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_report__purchase_price_total
+#: model:ir.model.fields,field_description:marin.field_pos_line_report__purchase_price_total
+msgid "Total Purchase"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_report__total_qty_last_year
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_yearly_report__total_qty_last_year
+msgid "Total Qty Last Year"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.purchase_order_view_list
+msgid "Total amount"
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/res_partner.py:0
+msgid "Total amount due (including this document): %s\n"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_authorize_debt_wizard__credit
+msgid "Total amount this customer owes you."
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_report_tree
+msgid "Total margin"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_report_tree
+msgid "Total purchase"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_report_tree
+msgid "Total qty"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_authorize_debt_wizard__credit
+msgid "Total receivable"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sale_order_tree_marin
+msgid "Total tax excluded"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sale_order_tree_marin
+msgid "Total tax included"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.purchase_order_view_list
+msgid "Total untaxed amount"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_pos_line_product_report_form
+msgid "Totals"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_team_report_form
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_team_yearly_report_form
+msgid "Totals Current Year"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_team_report_form
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_team_yearly_report_form
+msgid "Totals Last Year"
+msgstr ""
+
+#. module: marin
+#: model:ir.model,name:marin.model_stock_picking
+#: model:ir.model.fields,field_description:marin.field_stock_move__picking_id
+msgid "Transfer"
+msgstr "Transferir "
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.wizard_stock_quant_lot_form_view
+msgid "Transfer quantity"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_pos_session__cash_transfered
+msgid "Transfered"
+msgstr ""
+
+#. module: marin
+#: model:documents.tag,name:marin.documents_fleet_l10n_mx_transit_permit
+msgid "Transit permit"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_account_journal__x_treatment
+#: model:ir.model.fields,field_description:marin.field_invoice_line_in_report__x_treatment
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_report__x_treatment
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_in_report_search_view
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_report_search_view
+msgid "Treatment"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_account_move_line__move_type
+#: model:ir.model.fields,field_description:marin.field_invoice_line_in_report__move_type
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_report__move_type
+msgid "Type"
+msgstr "Tipo"
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_order_form_inherit_sale_stock_marin
+msgid "Unforce delivery done"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.purchase_order_view_form_inherit_marin
+msgid "Unforce reception done"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_price_history_line__price_unit
+#: model:ir.model.fields,field_description:marin.field_purchase_order_line_price_history_line__price_unit
+#: model:ir.model.fields,field_description:marin.field_sale_order_line_price_history_line__price_unit
+msgid "Unit Price"
+msgstr ""
+
+#. module: marin
+#: model:ir.ui.menu,name:marin.menu_uom_uom
+msgid "Units of measure"
+msgstr ""
+
+#. module: marin
+#: model:ir.ui.menu,name:marin.menu_uom_category
+msgid "Units of measure categories"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.hr_payslip_run_form
+msgid "Unlink Payslips"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_picking_form
+msgid "Unreserve"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.purchase_order_view_list
+msgid "Untaxed"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.purchase_order_line_search_marin
+#: model_terms:ir.ui.view,arch_db:marin.view_purchase_order_line_list
+#: model_terms:ir.ui.view,arch_db:marin.view_sale_order_line_list
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_move_line_detailed_operation_tree
+msgid "UoM"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_order_form_marin
+msgid "Update"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_account_bank_statement_line__l10n_mx_edi_usage
+#: model:ir.model.fields,field_description:marin.field_account_move__l10n_mx_edi_usage
+msgid "Usage"
+msgstr "Uso"
+
+#. module: marin
+#. odoo-javascript
+#: code:addons/marin/static/src/pos/app/popups/missing_stock_popup/missing_stock_popup.xml:0
+msgid "Use"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_product_product__use_expiration_date
+#: model:ir.model.fields,field_description:marin.field_product_template__use_expiration_date
+msgid "Use Expiration Date"
+msgstr "Usar fecha de caducidad"
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_product_product__property_account_income_refund_id
+#: model:ir.model.fields,help:marin.field_product_template__property_account_income_refund_id
+msgid ""
+"Used as default value on the customer credit notes lines. Leave empty to use"
+" the account from the product category."
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_product_category__property_account_income_refund_id
+msgid ""
+"Used as default value on the customer credit notes lines. Leave empty to use"
+" the income account."
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_product_product__property_account_expense_refund_id
+#: model:ir.model.fields,help:marin.field_product_template__property_account_expense_refund_id
+msgid ""
+"Used as default value on the vendor refunds lines. Leave empty to use the "
+"account from the product category."
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_product_category__property_account_expense_refund_id
+msgid ""
+"Used as default value on the vendor refunds lines. Leave empty to use the "
+"expense account."
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_account_bank_statement_line__l10n_mx_edi_usage
+#: model:ir.model.fields,help:marin.field_account_move__l10n_mx_edi_usage
+msgid ""
+"Used in CFDI to express the key to the usage that will gives the receiver to this invoice. This value is defined by the customer.\n"
+"Note: It is not cause for cancellation if the key set is not the usage that will give the receiver of the document."
+msgstr ""
+"Se utiliza en el CFDI para indicar la clave de uso que el receptor proporcionará a esta factura. El cliente define este valor.\n"
+"Nota: no será motivo de cancelación si la clave establecida no tiene el mismo uso que le dará el receptor del documento."
+
+#. module: marin
+#: model:ir.model,name:marin.model_res_users
+msgid "User"
+msgstr "Usuario"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_res_partner__user_account_user
+#: model:ir.model.fields,field_description:marin.field_res_users__user_account_user
+msgid "User Account User"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_res_partner__user_debt_manager
+#: model:ir.model.fields,field_description:marin.field_res_users__user_debt_manager
+msgid "User Debt Manager"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_res_partner__user_hr_manager
+#: model:ir.model.fields,field_description:marin.field_res_users__user_hr_manager
+msgid "User Hr Manager"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_res_partner__user_hr_user
+#: model:ir.model.fields,field_description:marin.field_res_users__user_hr_user
+msgid "User Hr User"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_product_product__user_product_cost_manager
+#: model:ir.model.fields,field_description:marin.field_product_template__user_product_cost_manager
+msgid "User Product Cost Manager"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_product_product__user_product_cost_readonly
+#: model:ir.model.fields,field_description:marin.field_product_template__user_product_cost_readonly
+msgid "User Product Cost Readonly"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_product_product__user_purchase_manager
+#: model:ir.model.fields,field_description:marin.field_product_template__user_purchase_manager
+#: model:ir.model.fields,field_description:marin.field_res_partner__user_purchase_manager
+#: model:ir.model.fields,field_description:marin.field_res_users__user_purchase_manager
+msgid "User Purchase Manager"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_product_product__user_purchase_readonly
+#: model:ir.model.fields,field_description:marin.field_product_template__user_purchase_readonly
+msgid "User Purchase Readonly"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_product_product__user_sale_manager
+#: model:ir.model.fields,field_description:marin.field_product_template__user_sale_manager
+#: model:ir.model.fields,field_description:marin.field_res_partner__user_sale_manager
+#: model:ir.model.fields,field_description:marin.field_res_users__user_sale_manager
+msgid "User Sale Manager"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_product_product__user_sale_readonly
+#: model:ir.model.fields,field_description:marin.field_product_template__user_sale_readonly
+msgid "User Sale Readonly"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_product_product__user_stock_manager
+#: model:ir.model.fields,field_description:marin.field_product_template__user_stock_manager
+#: model:ir.model.fields,field_description:marin.field_res_partner__user_stock_manager
+#: model:ir.model.fields,field_description:marin.field_res_users__user_stock_manager
+msgid "User Stock Manager"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_product_product__user_stock_readonly
+#: model:ir.model.fields,field_description:marin.field_product_template__user_stock_readonly
+msgid "User Stock Readonly"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_res_partner__user_stock_user
+#: model:ir.model.fields,field_description:marin.field_res_users__user_stock_user
+msgid "User Stock User"
+msgstr ""
+
+#. module: marin
+#: model:res.groups,name:marin.group_sale_salesman_team
+msgid "User: Sale team documents"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_type__can_todo_user_ids
+msgid "Users can todo"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_type__can_validate_user_ids
+msgid "Users can validate"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_stock_picking_type__can_todo_user_ids
+msgid "Users that can mark as todo pickings of this type of operation."
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_stock_picking_type__can_validate_user_ids
+msgid "Users that can validate pickings of this type of operation."
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_account_journal__can_access_user_ids
+msgid "Users that can visualize entries of this journal."
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_stock_picking_type__can_access_user_ids
+msgid "Users that can visualize pickings of this type of operation."
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_report__real_margin_value_current_year
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_yearly_report__real_margin_value_current_year
+#: model:ir.model.fields,field_description:marin.field_pos_line_product_report__real_margin_value
+msgid "Valor margen real"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_report__sale_price_total_current_year
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_yearly_report__sale_price_total_current_year
+msgid "Valor ventas real"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_pos_line_product_report__sale_price_total
+msgid "Valor ventas tpv"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_need_report_form
+msgid "Value"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_in_report_form
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_report_form
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_team_report_form
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_team_yearly_report_form
+#: model_terms:ir.ui.view,arch_db:marin.view_pos_line_product_report_form
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_need_report_form
+msgid "Values"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_report__real_sale_variation_percentage
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_yearly_report__real_sale_variation_percentage
+msgid "Variacion % cantidad venta real OYB"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_report__real_cost_variation_percentage
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_yearly_report__real_cost_variation_percentage
+msgid "Variacion % costo promedio real OYB"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_report__real_price_variation_percentage
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_yearly_report__real_price_variation_percentage
+msgid "Variacion % precio venta promedio real OYB"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_report__real_margin_variation_percentage
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_yearly_report__real_margin_variation_percentage
+msgid "Variacion % valor margen real OYB"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_report__sale_price_variation_percentage
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_yearly_report__sale_price_variation_percentage
+msgid "Variacion % valor ventas real OYB"
+msgstr ""
+
+#. module: marin
+#: model:ir.ui.menu,name:marin.menu_product_product
+msgid "Variants"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_team_report_form
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_team_yearly_report_form
+msgid "Variations"
+msgstr ""
+
+#. module: marin
+#: model:ir.model,name:marin.model_fleet_vehicle
+#: model:ir.model.fields,field_description:marin.field_account_analytic_distribution_model__vehicle_id
+#: model:ir.model.fields,field_description:marin.field_account_analytic_line__vehicle_id
+#: model:ir.model.fields,field_description:marin.field_documents_document__vehicle_id
+#: model_terms:ir.ui.view,arch_db:marin.view_account_analytic_distribution_model_search_marin
+#: model_terms:ir.ui.view,arch_db:marin.view_account_analytic_line_filter_marin
+msgid "Vehicle"
+msgstr "Vehículo"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_purchase_order__partner_id
+msgid "Vendor"
+msgstr "Proveedor"
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__invoice_line_in_report__move_type__in_invoice
+#: model:ir.model.fields.selection,name:marin.selection__invoice_line_out_report__move_type__in_invoice
+msgid "Vendor Bill"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__invoice_line_in_report__move_type__in_refund
+#: model:ir.model.fields.selection,name:marin.selection__invoice_line_out_report__move_type__in_refund
+msgid "Vendor Credit Note"
+msgstr ""
+
+#. module: marin
+#: model:res.groups,name:marin.group_account_supplier_bill
+msgid "Vendor bills"
+msgstr ""
+
+#. module: marin
+#: model:res.groups,name:marin.group_account_supplier_payment
+msgid "Vendor payments"
+msgstr ""
+
+#. module: marin
+#: model:ir.ui.menu,name:marin.menu_product_supplierinfo
+msgid "Vendor pricelists"
+msgstr ""
+
+#. module: marin
+#: model:res.groups,name:marin.group_account_supplier_refund
+msgid "Vendor refunds"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_picking_tree_marin
+msgid "View Moves"
+msgstr ""
+
+#. module: marin
+#: model:documents.tag,name:marin.documents_partner_documents_visa
+msgid "Visa"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_pickingtype_filter_marin
+msgid "Waiting"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking__waiting_warning
+msgid "Waiting Warning"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_quant__warehouse_id
+#: model_terms:ir.ui.view,arch_db:marin.quant_search_view_marin
+msgid "Warehouse"
+msgstr "Almacén"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_report__week_of_year
+#: model:ir.model.fields,field_description:marin.field_pos_line_report__week_of_year
+msgid "Week Of Year"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_product_product__use_expiration_date
+#: model:ir.model.fields,help:marin.field_product_template__use_expiration_date
+msgid ""
+"When this box is ticked, you have the possibility to specify dates to manage"
+" product expiration, on the product and on the corresponding lot/serial "
+"numbers"
+msgstr ""
+"Si la casilla está seleccionada puede especificar fechas para gestionar la "
+"caducidad de un producto, ya sea en el producto o en sus números de lote o "
+"serie."
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_sale_order__route_id
+msgid ""
+"When you change this field all the lines will be changed. After use it you "
+"will be able to change each line."
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_price_history_line__wizard_id
+#: model:ir.model.fields,field_description:marin.field_purchase_order_line_price_history_line__wizard_id
+#: model:ir.model.fields,field_description:marin.field_sale_order_line_price_history_line__wizard_id
+msgid "Wizard"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_account_account__x_sequence
+msgid "X Sequence"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_report__year
+#: model:ir.model.fields,field_description:marin.field_pos_line_report__year
+msgid "Year"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_purchase_order__partner_id
+#: model:ir.model.fields,help:marin.field_purchase_order_line__partner_id
+#: model:ir.model.fields,help:marin.field_purchase_order_line_price_history_line__partner_id
+msgid "You can find a vendor by its Name, TIN, Email or Internal Reference."
+msgstr ""
+"Puede encontrar un proveedor por su nombre, NIF, correo electrónico o "
+"referencia interna."
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/stock_move_line.py:0
+msgid ""
+"You can not delete product moves if the picking is done. You can only "
+"correct the done quantities."
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/wizards/authorize_debt.py:0
+msgid "You can only authorize debt for draft journal entries."
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/wizards/authorize_debt.py:0
+msgid "You can only authorize debt for quotations."
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/stock_quant.py:0
+msgid "You can only change lot of one quant at a time."
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/stock_quant.py:0
+msgid "You can only change lots used by a single company."
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/wizards/invoice_cash_discount.py:0
+msgid "You can only register cash discounts on posted moves."
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/wizards/authorize_debt.py:0
+msgid "You can't authorize debt because the records dont match the criteria."
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/wizards/authorize_debt.py:0
+msgid ""
+"You can't authorize debt for records being either all inbound, either all "
+"outbound."
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/stock_picking_type.py:0
+msgid "You cannot archive '%s' as it is used by a POS configuration '%s'."
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/account_move_line.py:0
+msgid ""
+"You cannot use the account (%s) in the journal (%s), check the field "
+"\"Allowed Journals\" on the related account."
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/account_move_line.py:0
+msgid ""
+"You cannot use the account (%s) in the journal (%s), check the section "
+"\"Control-Access\" under tab \"Advanced Settings\" on the related journal."
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/wizards/authorize_debt.py:0
+msgid "You cant authorize debt for records belonging to different companies."
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/wizards/authorize_debt.py:0
+msgid "You cant authorize debt for records belonging to different partners."
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__res_partner__social_style_color__blue
+msgid "blue"
+msgstr ""
+
+#. module: marin
+#: model:product.removal,method:marin.removal_closest_priority
+msgid "closest + priority"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.fleet_vehicle_view_form_marin
+msgid "e.g. Model S"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.fleet_vehicle_view_form_marin
+msgid "e.g. PAE 326"
+msgstr ""
+
+#. module: marin
+#: model:product.removal,method:marin.removal_fefo_priority
+msgid "fefo + priority"
+msgstr ""
+
+#. module: marin
+#: model:product.removal,method:marin.removal_fifo_priority
+msgid "fifo + priority"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__res_partner__social_style_color__green
+msgid "green"
+msgstr ""
+
+#. module: marin
+#: model:product.removal,method:marin.removal_lifo_priority
+msgid "lifo + priority"
+msgstr ""
+
+#. module: marin
+#: model:uom.uom,name:marin.uom_uom_148
+msgid "mililiter (ml)"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__res_partner__social_style_color__red
+msgid "red"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_108
+msgid "temp3"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_109
+msgid "temp4"
+msgstr ""
+
+#. module: marin
+#: model:res.groups,comment:marin.group_sale_salesman_team
+msgid ""
+"the user will have access to all records of everyone of the same sales team "
+"in the sales application."
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__res_partner__social_style_color__yellow
+msgid "yellow"
+msgstr ""
