@@ -44,6 +44,7 @@ class FleetVehicleInherit(models.Model):
         help='In Mexico the tax authority assign a 7 character code to identify its characteristics.',
     )
     engine_sn = fields.Char(
+        string='Engine SN',
         tracking=True,
         help='Unique number that identifies the engine in a vehicle.',
     )
