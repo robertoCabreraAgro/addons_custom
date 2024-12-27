@@ -407,11 +407,12 @@ class HrContract(models.Model):
                 "months": relative_seniority.months,
                 "days": relative_seniority.days,
             }
-        return {
-            "years": relative_seniority.years,
-            "months": (relative_seniority.months + relative_seniority.years * 12),
-            "days": (date - datetime_start).days + 1,
-        }
+        else:
+            return {
+                "years": relative_seniority.years,
+                "months": (relative_seniority.months + relative_seniority.years * 12),
+                "days": (date - datetime_start).days + 1,
+            }
 
     def _get_days_in_current_period(self, date_to=False, start_year=False):
         """Get days at current period to compute payments' proportional part
