@@ -1,7 +1,7 @@
 id,name,active,company_id/id,plan_id/id
 analytic_account_1001,AMMG,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1002,AQ Abamex 1.8EC 0.950L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1003,Aaron Espinosa Herrera,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1002,Aaron Espinosa Herrera,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1003,Abamex 1.8EC 0.950L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
 analytic_account_1004,Acadian 29% ph8 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
 analytic_account_1005,Acadian 29% ph8 1x10L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
 analytic_account_1006,Acaritouch 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
@@ -55,32 +55,32 @@ analytic_account_1053,Arquia 1L,True,marin_data.company_lmmr,marin_data.analytic
 analytic_account_1054,Arrow 120 0.500L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
 analytic_account_1055,Arrow 240 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
 analytic_account_1056,Asanit XM 500 WDG 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1057,Asanit XM 500 WDG 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1058,Aspid Max 0.250L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1059,Aspid Max 0.950L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1060,Atento 0.250kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1061,Atomizador STIHL,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1062,Audi/Q3 2024,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1063,Audi/Q5/2024/Blanca/WAUCFAF32R1032455,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1064,Axe B 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1065,Axefol K-45 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1066,Axefol plus 16-10-15 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1067,Axequel Trans Ca Bo 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1068,Axesal 1x20L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1069,Axestim 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1070,Balanza de precision mod: PX523,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1071,Balanza mod: Scout SPX220,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1072,Banjo 500 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1073,Bankit 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1074,Banvel 12-24 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1075,Bayfolan Forte 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1076,Bayfolan Forte 1x4L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1077,Bayfolan Solido 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1078,Benzimid XM 800 WG 0.600kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1079,Betagli Max 0.500kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1080,Bifen Max 10% CE 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1081,Biozyme TF 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1082,Biozyme TS 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1057,Aspid Max 0.250L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1058,Aspid Max 0.950L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1059,Atento 0.250kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1060,Atomizador STIHL,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1061,Audi/Q3 2024,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1062,Audi/Q5/2024/Blanca/WAUCFAF32R1032455,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1063,Axe B 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1064,Axefol K-45 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1065,Axefol plus 16-10-15 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1066,Axequel Trans Ca Bo 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1067,Axesal 1x20L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1068,Axestim 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1069,Balanza de precision mod: PX523,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1070,Balanza mod: Scout SPX220,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1071,Banjo 500 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1072,Bankit 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1073,Banvel 12-24 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1074,Bayfolan Forte 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1075,Bayfolan Forte 1x4L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1076,Bayfolan Solido 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1077,Benzimid XM 800 WG 0.600kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1078,Betagli Max 0.500kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1079,Bifen Max 10% CE 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1080,Biozyme TF 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1081,Biozyme TS 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1082,Bisulfuro de carbono 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
 analytic_account_1083,Bisulfuro de carbono 1gal,True,marin_data.company_lmmr,marin_data.analytic_plan_201
 analytic_account_1084,Blighter 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
 analytic_account_1085,BlueShield 10LF 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
@@ -285,39 +285,39 @@ analytic_account_1283,Hyster/N35ZDR2 //D264N02296N,True,marin_data.company_lmmr,
 analytic_account_1284,Iguana 0.100kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
 analytic_account_1285,Imidacron 70WG 0.500kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
 analytic_account_1286,Infinito 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1287,Ingenux 80 XM 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1288,Ingenux XM 800 WG 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1289,Inspire Gold 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1290,International/Chasis Cabina/Amarillo/GZ3226C,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1291,International/Chasis cabina/Azul/427AM5,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1292,International/Chasis cabina/Naranja/MT2658H,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1293,Irrigaid Gold 1x10L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1294,Isabion 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1295,Isuzu/2012/Blanco/JAANMR856C7500651,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1296,Isuzu/2024/Blanco/JAANMR858R7500790,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1297,Ixi 0.900L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1298,Ixi 1x5L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1299,Jaca 0.950L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1300,Jade 1x20kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1301,Jeep/Patriot/Verde/NKZ3022,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1302,Jeep/Wrangler/NVR2328,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1303,Jeep/Wrangler/S04BCD,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1304,Jesus Emanuel Martinez Bernal,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1305,Jetta/2000/Verde/NMH6783,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1306,Jorge Alexis Vazquez Espinosa,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1307,Jorge Reynaldo Ibarra Cuadras,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1308,Jose Alberto Celestino Adalid,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1309,Jose Brandon Salgado Dominguez,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1310,Jose Franco Delgado Avila,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1311,Jose Manuel Estrada Mendoza,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1312,Jose Roberto Cabrera Gomez,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1313,Juan Carlos Lino Flores,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1314,Juan Rafael Carranza Sacramento,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1315,K-Fol 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1316,K-Fol 1x10kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1317,K-tionic 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1318,K-tionic 1x20L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1319,Kanamite 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1287,Ingenux XM 800 WG 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1288,Inspire Gold 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1289,International/Chasis Cabina/Amarillo/GZ3226C,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1290,International/Chasis cabina/Azul/427AM5,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1291,International/Chasis cabina/Naranja/MT2658H,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1292,Irrigaid Gold 1x10L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1293,Isabion 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1294,Isuzu/2012/Blanco/JAANMR856C7500651,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1295,Isuzu/2024/Blanco/JAANMR858R7500790,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1296,Ixi 0.900L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1297,Ixi 1x5L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1298,Jaca 0.950L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1299,Jade 1x20kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1300,Jeep/Patriot/Verde/NKZ3022,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1301,Jeep/Wrangler/NVR2328,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1302,Jeep/Wrangler/S04BCD,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1303,Jesus Emanuel Martinez Bernal,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1304,Jetta/2000/Verde/NMH6783,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1305,Jorge Alexis Vazquez Espinosa,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1306,Jorge Reynaldo Ibarra Cuadras,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1307,Jose Alberto Celestino Adalid,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1308,Jose Brandon Salgado Dominguez,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1309,Jose Franco Delgado Avila,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1310,Jose Manuel Estrada Mendoza,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1311,Jose Roberto Cabrera Gomez,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1312,Juan Carlos Lino Flores,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1313,Juan Rafael Carranza Sacramento,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1314,K-Fol 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1315,K-Fol 1x10kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1316,K-tionic 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1317,K-tionic 1x20L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1318,Kanemite 0.250L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1319,Kanemite 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
 analytic_account_1320,Kanemite 1gal,True,marin_data.company_lmmr,marin_data.analytic_plan_201
 analytic_account_1321,Karate Zeon 0.200L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
 analytic_account_1322,Karate Zeon 0.250L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
@@ -366,372 +366,519 @@ analytic_account_1364,Luna Experience 1L,True,marin_data.company_lmmr,marin_data
 analytic_account_1365,Magdalena Garcia Flores,True,marin_data.company_lmmr,marin_data.analytic_plan_201
 analytic_account_1366,Magistop XM 250 EC 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
 analytic_account_1367,Malphos 1000 CE 0.950L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1368,Malphos CE1000 0.950L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1369,Mancozeb PH80 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1370,Mancozeb PH80 1x25kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1371,Manuel Humberto Santiago Calzada,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1372,Manuel Jesus Gonzalez Samano,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1373,Manzate 200WP 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1374,Manzate 200WP 1x25kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1375,Manzate ProStick 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1376,Manzeb 1x25kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1377,Maquinaria y Equipo Fiscal,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1378,Marco Antonio Hernandez Samano,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1379,Marco Antonio Reyes Lopez,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1380,Maria Guadalupe Orozco Mendieta,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1381,Maria de los Angeles Martinez Guzman,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1382,Marvel 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1383,Masai 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1384,Maspor Plus 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1385,Matrix 0.567kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1386,Mauricio Daniel Nieto Martínez,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1387,Mercedes/Class GLA/Gris/Teresita/NVS9689,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1388,Mercedes/Class GLS/Plata/PCW9472,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1389,Mercedes/GLK 300/Gris obscuro/PEV2602,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1390,Merivon 1.6L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1391,Merivon 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1392,Mertec 340 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1393,Metnate 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1394,Miguel Angel Alva Medina,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1395,Minecto Duo 0.600kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1396,Miravis Duo 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1397,Miravis Prime 1gal,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1398,Miriso 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1399,Misael Varela Quiroz,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1400,Mitsubishi/L200 2023/Blanca/PEV3818,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1401,Mitsubishi/L200/Blanca Solido/PEV3859,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1402,Mitsubishi/L200/Blanca/PET3908,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1403,Mitsubishi/L200/Blanca/PET4048,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1404,Mitsubishi/L200/Blanca/PEV2481,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1405,Mitsubishi/L200/Gris Obscuro/PET3909,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1406,Mitsubishi/L200/Gris Obscuro/PET4042,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1407,Mitsubishi/L200/Roja/PEV4006,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1408,Mitsubishi/L200/Silver/PEV3871,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1409,Mocap 15%G 1x10Kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1410,Mocap Extra 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1411,Mocap Extra 1x10L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1412,Moddus 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1413,Monceren 1x10L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1414,Moncut PH50 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1415,Monitor 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1416,Monoupel 0.950L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1417,Monoupel 0.970L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1418,Movento OD150 0.500L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1419,Movento OD150 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1420,Movento SC240 0.950L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1421,Movento SC240 1gal,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1422,Muralla Max 0.250L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1423,Muralla Max 0.500L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1424,Nagata 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1425,Nahum Santos Dominguez,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1426,Nanofos 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1427,Nanofos 1x10L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1428,Navajo 0.500kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1429,Nemacur 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1430,Nemacur 1x10L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1431,Neonic XM 800 WDG 0.600kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1432,New Leverage 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1433,Nicoking 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1434,Nissan/Frontier NP-300/Doble cabina/Blanca/PCU4853-LB54114,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1435,Nissan/Frontier NP-300/Doble cabina/Naranja/NYG7049,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1436,Nissan/NP Chasis 2020/Azul/LF00524,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1437,Nissan/NP300 cabina regular chasis 4x2 diesel TM /LF07690,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1438,Nissan/NP300/Chasis/Blanca/HR6849F,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1439,Nissan/NP300/Chasis/Blanca/LF00514-NCF3953,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1440,Nissan/Versa/Gris Obscuro/NWG8301,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1441,Noster CLN 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1442,Noster MZ 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1443,Nufacid 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1444,Nufacid 1x20L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1445,Nugor 40% EC 0.970L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1446,Nuprid 0.950L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1447,Nuquat 0.900L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1448,Nuquat 1x20L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1449,Nuquat 1x5L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1450,Oberon SC240 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1451,Oberon Speed 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1452,Olla 572l Calibre 14,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1453,Olmer Jimenez Martinez,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1454,Omar Rivera Salinas,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1455,Omipro CT 375+375 SC 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1456,Omipro XM 722 SL 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1457,Omite 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1458,Opnil Xtra 0.200kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1459,OrganicSoil 08-24-10 1x20L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1460,Orkestra 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1461,Orondis 0.950L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1462,Orondis Opti 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1463,Orondis Ultra 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1464,Orondis Ultra 1gal,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1465,Orthene Ultra 0.600kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1466,Orthene Ultra 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1467,Oscar Abdiel Becerril Villafuerte,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1468,Outlander/2016/Azul/3JBLVAX2XHJ000094,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1469,PH Organic 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1470,Pablo de Jesus Valdez,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1471,Papa Fianna mini Cal 16 semilla,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1472,Papas Fritas,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1473,Pardo 90% 0.100kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1474,Pardo 90% 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1475,Parrilla de calentamiento mod:IKA-0003581201,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1476,Patin hidraulico,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1477,Patin hidraulico 3 ton.,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1478,Patin hidraulico 42/01,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1479,Patin hidraulico 42/02,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1480,Patin hidraulico 48/01,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1481,Patin hidraulico 48/02,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1482,"Patin hidraulico Big Joe, modelo P50-27X48",True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1483,Patricia Nicolas Hernandez,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1484,Peak 0.030kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1485,Peak Turbo 0.500kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1486,Pentaclor 600 1x18L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1487,Permekoor 38.4 EC,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1488,Permetrina Diablo 2% 1x25kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1489,Pilatus 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1490,Piriflu 20SC 0.500L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1491,Pitstop 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1492,Planta de luz 150 kw diesel Leroy Somer,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1493,Platino 375 CE 0.975L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1494,Platinum 240SC 0.300L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1495,Platinum 240SC 1x5L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1496,Platinum 75SG 0.907kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1497,Plenum 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1498,Poliquel Boro 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1499,Poliquel Calcio 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1500,Poliquel Calcio 1x20L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1501,Poliquel Fierro 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1502,Poliquel Multi 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1503,Poliquel Zinc 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1504,Poliquel Zinc 1x20L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1505,Porsche/Macan/RBF344A,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1506,Powerful 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1507,Prebact 20SL 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1508,Preguard 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1509,Premium Potato Alto,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1510,Presurizador C Max Press,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1511,Previcur Energy 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1512,Previcur N 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1513,Primagram Gold 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1514,Priori Xtra 0.200L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1515,Prochrid 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1516,Proclaim Opti WG50 0.600kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1517,Proclaim SG50 0.600kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1518,Promyl 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1519,Pronaforte Max 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1520,Propiedad Antares,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1521,Propiedad Avenida Estado de Mexico,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1522,Propiedad Balderas,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1523,Propiedad Bodega Querétaro,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1524,Propiedad CODAGEM,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1525,Propiedad Chevy San Carlos,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1526,Propiedad Florymar,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1527,Propiedad Hipico,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1528,Propiedad La Joya Rancho,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1529,Propiedad Pedro Ascencio,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1530,Propiedad Portofino,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1531,Propiedad San Juan,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1532,Propiedad Santiaguito,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1533,Propiedad Tenango centro,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1534,Propiedad Udeca,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1535,Propiedad los Robles no 19,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1536,Propiedad los Robles no 20,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1537,Propiedad los Robles no 21,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1538,Propiedad los Robles no 22,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1539,Propiedad los Robles no 23,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1540,Propiedad los Robles no 24,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1541,Propoxur 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1542,Proxity XM 350 EC 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1543,Prozycar 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1544,Pulsor 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1545,Pulsor 1x9L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1546,Pulverizadora modelo falcon agricola,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1547,Quadris 1gal,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1548,Quadris 1x2.5gal,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1549,Quadris Opti 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1550,Quilt 0.800L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1551,Raigon XM 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1552,Raizal 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1553,Raptor 720 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1554,Raptor 720 1x10L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1555,Rayoquat 1x5L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1556,Regent SC4 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1557,Reglone 1x5L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1558,Remolque norte cama baja,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1559,Reptile 0.600kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1560,Requiem 1x4L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1561,Revent 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1562,Revolvedora 9 HP,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1563,Revolvedora Powermix,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1564,Revolvedora Powermix 02,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1565,Ridomil Gold 480 0.250L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1566,Ridomil Gold 480 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1567,Ridomil Gold Bravo 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1568,Rizolex 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1569,Rizolex 1x5kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1570,Rod Axel Jimenez Magaña,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1571,Rolling 720 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1572,Rolling 720 1x10L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1573,Rolling 720 1x200L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1574,Ronstar 250EC 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1575,Rooting 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1576,Rooting G 1x15Kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1577,Ruben Daniel Piña Arcos,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1578,SA Propel RTU 0.500L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1579,SHK Amin 800 0.500kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1580,SHK Betagli Max 1x2kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1581,SHK Boron 0.500kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1582,SHK Calcium 18% 0.500kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1583,SHK Calcium Boron 0.500kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1584,SHK Calcium Molibdenum 0.500kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1585,SHK Copper 16.4% 0.050kgr,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1586,SHK Copper 16.4% 0.150kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1587,SHK Iron 15% 0.500kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1588,SHK Magnesium 0.500kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1589,SHK Mixboost 0.500kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1590,SHK Multiboost 0.500kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1591,SHK PK 0-17-17 0.500kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1592,SHK Potassium 24% 0.500kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1593,SHK Romel 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1594,SHK Umeru 0.500kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1595,SHK ZM 9-9 0.500kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1596,SHK Zinc 19.3% 0.500kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1597,Saathi 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1598,Sanson OD 0.700L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1599,Satorius 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1600,Scala SC600 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1601,Scenery 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1602,Score 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1603,"Segadora modelo 370, marca John Deere",True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1604,Selecop 0.950L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1605,Select Ultra 0.500L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1606,Semevin FS350 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1607,Sencor 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1608,Serenade ASO 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1609,Serenade ASO 1x10L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1610,Serenade Max 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1611,Serenade Opti 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1612,Serenade Opti 1x5kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1613,Serenade Soil 1x10L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1614,Serenade Soil 1x5kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1615,Sergio Hernandez Alcantara,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1616,Serifel 0.500kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1617,Shogun 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1618,Silwet Maxx 0.250L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1619,Silwet Maxx 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1620,Sivanto Prime 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1621,Sivanto Prime 1gal,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1622,Solvigo SC108 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1623,Spectro 1x10L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1624,Sportak 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1625,Stargus 1x10L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1626,Stimplex 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1627,Stimplex 1x10L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1628,Stinguo 70 0.250L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1629,Stinguo 70 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1630,Strategy 240 0.950L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1631,Strike 800PH 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1632,Stylet Oil 1x20L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1633,Styron 0.250L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1634,Styron 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1635,Sulfocop 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1636,Sultron 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1637,Sultron 1x18L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1638,Super Coral,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1639,Supremo 0.970L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1640,Switch 0.250kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1641,Switch 0.800kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1642,Switch 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1643,Syrius 720 1x10L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1644,TJGL,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1645,Tag Aqua,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1646,Talentus 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1647,Talstar 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1648,"Tanque extra Serie: A029051, A029425",True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1649,Tazer 80% 0.300kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1650,Tecto 500 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1651,Tecto 60 0.500kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1652,Tega SC500 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1653,Tenzole 60 0.500kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1654,Terracrop 1x20L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1655,Terrazole 0.500kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1656,Thiaba 0.600L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1657,Thimet 1x7.5kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1658,Tilt CE250 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1659,Tiroteo 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1660,Titus 0.050kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1661,Tokat 240 0.250L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1662,Tokat 240 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1663,Tokat CLN 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1664,Topgard 75WP 0.250kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1665,Toretto 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1666,Toyota/32-8FG25 /Naranaja/01,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1667,Toyota/32-8FG30 /Naranja/02,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1668,Toyota/Hilux 4X4 /Doble cabina/Blanca/PCW5106,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1669,Toyota/Hilux 4X4 /Doble cabina/Blanco/PET3939,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1670,Toyota/Hilux 4X4/Doble cabina/Gris obscuro/LZZ340A-NGC2456,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1671,Toyota/Hilux 4X4/Doble cabina/Gris/PEU4299,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1672,Toyota/Hilux 4X4/Doble cabina/Plata/PAU1827,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1673,Toyota/Hilux 4X4/Doble cabina/Plata/PET3929,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1674,Toyota/Hilux 4X4/Doble cabina/Plata/PEV2489,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1675,Toyota/Hilux Doble Cabina DSL AT MHEV 2024/Azul Obscuro/LF07848,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1676,Toyota/Hilux Doble Cabina DSL AT MHEV/LF07838,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1677,Toyota/Hilux doble cabina 4x4 diesel TM 2023/Blanca/PEU4270,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1678,Toyota/Hilux doble cabina 4x4/Gris/NV8009A,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1679,Toyota/Hilux/Chasis/Gris/LD67275,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1680,Toyota/Hino 500/Blanco/LF24527,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1681,Toyota/RAV4 2024/Roja/PVL573E,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1682,Toyota/RAV4 2024/Rojo/NMR754A,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1683,Toyota/RAV4/Verde/PAT9995,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1684,Toyota/Tacoma 2013/Blanca/W02BAB,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1685,Toyota/Tacoma TRD 4x4 2013/LG08516/W02BAD,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1686,Toyota/Tacoma TRD/Blanca/PAU1083,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1687,Toyota/Tacoma TRD/Blanco/PCW5103,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1688,Toyota/Tacoma TRD/Blanco/PEU4259,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1689,Toyota/Tundra/Vino/NEN9999,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1690,"Tractor mod:27200 DT, John Deere",True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1691,Trailers/Semirremolque/Gris/48UL7D,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1692,Traxion 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1693,Trazak Solanum 1x5L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1694,Tridente Malathion 500 1x5L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1695,Trigard 0.100kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1696,Trilogy 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1697,Triunfo T 5% 1x20kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1698,Turbine 0.600kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1699,Turbulans 5G  1x20kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1700,Ultimatum 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1701,Ultra Vigofort 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1702,Uniform 0.500L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1703,Ursus Ciper 0.950L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1704,Ursus Meta 0.950L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1705,Velum One 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1706,Verango Prime 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1707,Veridia XM 200 WP 0.600kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1708,Versoato 0.950L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1709,Vertimec 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1710,Vibrance Beans 0.250L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1711,Vibrance Beans 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1712,Vigold 40SC 0.250L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1713,Vigold 40SC 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1714,Vikingo 5%G 1x20kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1715,Vitavax 200 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1716,Vitavax 34FF 9.46L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1717,Volkswagen/2023 Blanca/PEV3876,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1718,Volkswagen/Jetta 2004/Verde/NMH6783,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1719,Volkswagen/Jetta 2023/Blanco/PEV2784,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1720,Volkswagen/Saveiro Robust cabina regular 2019/Plata/PCB052A,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1721,Volkswagen/Saveiro Robust cabina regular 2019/Roja/LZZ327A,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1722,Volkswagen/Saveiro Robust cabina regular 2023/Blanca/PCW5153,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1723,Volkswagen/Saveiro Robust cabina regular/LF07759,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1724,Volkswagen/Vento/C78ADV,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1725,Vydate CLV 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1726,Vydate CLV 1x10L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1727,Vydate L 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1728,Warton 0.250L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1729,Warton 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1730,Xanil 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1731,Yesica Lizet Bernal Rodriguez,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1732,Yessenia Molina Flores,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1733,Yunke 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1734,Zhen Ji 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1735,Zorvec Enicade pack,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1736,Zulli Faviola Mejia Miranda,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1368,Mancozeb PH80 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1369,Mancozeb PH80 1x25kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1370,Manuel Humberto Santiago Calzada,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1371,Manuel Jesus Gonzalez Samano,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1372,Manzate 200WP 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1373,Manzate 200WP 1x25kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1374,Manzate ProStick 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1375,Manzeb 1x25kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1376,Maquinaria y Equipo Fiscal,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1377,Marco Antonio Hernandez Samano,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1378,Marco Antonio Reyes Lopez,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1379,Maria Guadalupe Orozco Mendieta,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1380,Maria de los Angeles Martinez Guzman,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1381,Marvel 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1382,Masai 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1383,Maspor Plus 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1384,Matrix 0.567kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1385,Mauricio Daniel Nieto Martínez,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1386,Mercedes/Class GLA/Gris/Teresita/NVS9689,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1387,Mercedes/Class GLS/Plata/PCW9472,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1388,Mercedes/GLK 300/Gris obscuro/PEV2602,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1389,Merivon 1.6L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1390,Merivon 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1391,Mertec 340 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1392,Metnate 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1393,Miguel Angel Alva Medina,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1394,Minecto Duo 0.600kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1395,Miravis Duo 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1396,Miravis Prime 1gal,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1397,Miriso 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1398,Misael Varela Quiroz,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1399,Mitsubishi/L200 2023/Blanca/PEV3818,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1400,Mitsubishi/L200/Blanca Solido/PEV3859,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1401,Mitsubishi/L200/Blanca/PET3908,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1402,Mitsubishi/L200/Blanca/PET4048,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1403,Mitsubishi/L200/Blanca/PEV2481,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1404,Mitsubishi/L200/Gris Obscuro/PET3909,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1405,Mitsubishi/L200/Gris Obscuro/PET4042,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1406,Mitsubishi/L200/Roja/PEV4006,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1407,Mitsubishi/L200/Silver/PEV3871,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1408,Mocap 15%G 1x10Kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1409,Mocap Extra 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1410,Mocap Extra 1x10L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1411,Moddus 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1412,Monceren 1x10L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1413,Moncut PH50 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1414,Monitor 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1415,Monoupel 0.950L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1416,Monoupel 0.970L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1417,Movento OD150 0.500L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1418,Movento OD150 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1419,Movento SC240 0.950L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1420,Movento SC240 1gal,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1421,Muralla Max 0.250L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1422,Muralla Max 0.500L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1423,Nagata 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1424,Nahum Santos Dominguez,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1425,Nanofos 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1426,Nanofos 1x10L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1427,Navajo 0.500kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1428,Nemacur 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1429,Nemacur 1x10L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1430,Neonic XM 800 WDG 0.600kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1431,New Leverage 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1432,Nicoking 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1433,Nissan/Frontier NP-300/Doble cabina/Blanca/PCU4853-LB54114,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1434,Nissan/Frontier NP-300/Doble cabina/Naranja/NYG7049,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1435,Nissan/NP Chasis 2020/Azul/LF00524,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1436,Nissan/NP300 cabina regular chasis 4x2 diesel TM /LF07690,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1437,Nissan/NP300/Chasis/Blanca/HR6849F,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1438,Nissan/NP300/Chasis/Blanca/LF00514-NCF3953,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1439,Nissan/Versa/Gris Obscuro/NWG8301,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1440,Noster CLN 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1441,Noster MZ 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1442,Nufacid 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1443,Nufacid 1x20L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1444,Nugor 40% EC 0.970L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1445,Nuprid 0.950L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1446,Nuquat 0.900L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1447,Nuquat 1x20L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1448,Nuquat 1x5L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1449,Oberon SC240 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1450,Oberon Speed 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1451,Olla 572l Calibre 14,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1452,Olmer Jimenez Martinez,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1453,Omar Rivera Salinas,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1454,Omipro CT 375+375 SC 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1455,Omipro XM 722 SL 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1456,Omite 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1457,Opnil Xtra 0.200kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1458,OrganicSoil 08-24-10 1x20L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1459,Orkestra 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1460,Orondis 0.950L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1461,Orondis Opti 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1462,Orondis Ultra 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1463,Orondis Ultra 1gal,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1464,Orthene Ultra 0.600kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1465,Orthene Ultra 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1466,Oscar Abdiel Becerril Villafuerte,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1467,Outlander/2016/Azul/3JBLVAX2XHJ000094,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1468,PH Organic 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1469,Pablo de Jesus Valdez,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1470,Papa Fianna mini Cal 16 semilla,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1471,Papas Fritas,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1472,Pardo 90% 0.100kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1473,Pardo 90% 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1474,Parrilla de calentamiento mod:IKA-0003581201,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1475,Patin hidraulico,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1476,Patin hidraulico 3 ton.,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1477,Patin hidraulico 42/01,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1478,Patin hidraulico 42/02,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1479,Patin hidraulico 48/01,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1480,Patin hidraulico 48/02,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1481,"Patin hidraulico Big Joe, modelo P50-27X48",True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1482,Patricia Nicolas Hernandez,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1483,Peak 0.030kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1484,Peak Turbo 0.500kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1485,Pentaclor 600 1x18L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1486,Permekoor 38.4 EC,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1487,Permetrina Diablo 2% 1x25kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1488,Pilatus 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1489,Piriflu 20SC 0.500L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1490,Pitstop 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1491,Planta de luz 150 kw diesel Leroy Somer,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1492,Platino 375 CE 0.975L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1493,Platinum 240SC 0.300L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1494,Platinum 240SC 1x5L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1495,Platinum 75SG 0.907kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1496,Plenum 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1497,Poliquel Boro 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1498,Poliquel Calcio 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1499,Poliquel Calcio 1x20L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1500,Poliquel Fierro 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1501,Poliquel Multi 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1502,Poliquel Zinc 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1503,Poliquel Zinc 1x20L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1504,Porsche/Macan/RBF344A,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1505,Powerful 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1506,Prebact 20SL 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1507,Preguard 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1508,Premium Potato Alto,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1509,Presurizador C Max Press,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1510,Previcur Energy 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1511,Previcur N 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1512,Primagram Gold 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1513,Priori Xtra 0.200L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1514,Prochrid 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1515,Proclaim Opti WG50 0.600kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1516,Proclaim SG50 0.600kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1517,Promyl 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1518,Pronaforte Max 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1519,Propiedad Antares,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1520,Propiedad Avenida Estado de Mexico,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1521,Propiedad Balderas,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1522,Propiedad Bodega Querétaro,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1523,Propiedad CODAGEM,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1524,Propiedad Chevy San Carlos,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1525,Propiedad Florymar,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1526,Propiedad Hipico,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1527,Propiedad La Joya Rancho,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1528,Propiedad Portofino,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1529,Propiedad San Juan,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1530,Propiedad Santiaguito,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1531,Propiedad Tenango centro,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1532,Propiedad Udeca,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1533,Propiedad los Robles no 19,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1534,Propiedad los Robles no 20,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1535,Propiedad los Robles no 21,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1536,Propiedad los Robles no 22,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1537,Propiedad los Robles no 23,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1538,Propiedad los Robles no 24,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1539,Propoxur 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1540,Proxity XM 350 EC 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1541,Prozycar 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1542,Pulsor 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1543,Pulsor 1x9L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1544,Pulverizadora modelo falcon agricola,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1545,Quadris 1gal,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1546,Quadris 1x2.5gal,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1547,Quadris Opti 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1548,Quilt 0.800L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1549,Raigon XM 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1550,Raizal 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1551,Raptor 720 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1552,Raptor 720 1x10L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1553,Rayoquat 1x5L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1554,Regent SC4 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1555,Reglone 1x5L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1556,Remolque norte cama baja,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1557,Reptile 0.600kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1558,Requiem 1x4L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1559,Revent 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1560,Revolvedora 9 HP,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1561,Revolvedora Powermix,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1562,Revolvedora Powermix 02,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1563,Ridomil Gold 480 0.250L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1564,Ridomil Gold 480 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1565,Ridomil Gold Bravo 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1566,Rizolex 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1567,Rizolex 1x5kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1568,Rod Axel Jimenez Magaña,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1569,Rolling 720 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1570,Rolling 720 1x10L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1571,Rolling 720 1x200L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1572,Ronstar 250EC 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1573,Rooting 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1574,Rooting G 1x15Kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1575,Ruben Daniel Piña Arcos,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1576,SA Propel RTU 0.500L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1577,SHK Amin 800 0.500kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1578,SHK Betagli Max 1x2kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1579,SHK Boron 0.500kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1580,SHK Calcium 18% 0.500kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1581,SHK Calcium Boron 0.500kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1582,SHK Calcium Molibdenum 0.500kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1583,SHK Copper 16.4% 0.050kgr,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1584,SHK Copper 16.4% 0.150kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1585,SHK Iron 15% 0.500kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1586,SHK Magnesium 0.500kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1587,SHK Mixboost 0.500kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1588,SHK Multiboost 0.500kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1589,SHK PK 0-17-17 0.500kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1590,SHK Potassium 24% 0.500kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1591,SHK Romel 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1592,SHK Umeru 0.500kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1593,SHK ZM 9-9 0.500kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1594,SHK Zinc 19.3% 0.500kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1595,Saathi 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1596,Sanson OD 0.700L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1597,Satorius 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1598,Scala SC600 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1599,Scenery 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1600,Score 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1601,"Segadora modelo 370, marca John Deere",True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1602,Selecop 0.950L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1603,Select Ultra 0.500L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1604,Semevin FS350 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1605,Sencor 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1606,Serenade ASO 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1607,Serenade ASO 1x10L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1608,Serenade Max 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1609,Serenade Opti 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1610,Serenade Opti 1x5kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1611,Serenade Soil 1x10L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1612,Serenade Soil 1x5kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1613,Sergio Hernandez Alcantara,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1614,Serifel 0.500kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1615,Shogun 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1616,Silwet Maxx 0.250L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1617,Silwet Maxx 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1618,Sivanto Prime 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1619,Sivanto Prime 1gal,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1620,Solvigo SC108 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1621,Spectro 1x10L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1622,Sportak 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1623,Stargus 1x10L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1624,Stimplex 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1625,Stimplex 1x10L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1626,Stinguo 70 0.250L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1627,Stinguo 70 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1628,Strategy 240 0.950L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1629,Strike 800PH 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1630,Stylet Oil 1x20L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1631,Styron 0.250L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1632,Styron 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1633,Sulfocop 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1634,Sultron 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1635,Sultron 1x18L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1636,Super Coral,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1637,Supremo 0.970L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1638,Switch 0.250kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1639,Switch 0.800kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1640,Switch 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1641,Syrius 720 1x10L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1642,TJGL,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1643,Tag Aqua,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1644,Talentus 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1645,Talstar 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1646,"Tanque extra Serie: A029051, A029425",True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1647,Tazer 80% 0.300kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1648,Tecto 500 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1649,Tecto 60 0.500kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1650,Tega SC500 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1651,Tenzole 60 0.500kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1652,Terracrop 1x20L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1653,Terrazole 0.500kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1654,Thiaba 0.600L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1655,Thimet 1x7.5kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1656,Tilt CE250 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1657,Tiroteo 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1658,Titus 0.050kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1659,Tokat 240 0.250L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1660,Tokat 240 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1661,Tokat CLN 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1662,Topgard 75WP 0.250kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1663,Toretto 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1664,Toyota/32-8FG25 /Naranaja/01,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1665,Toyota/32-8FG30 /Naranja/02,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1666,Toyota/Hilux 4X4 /Doble cabina/Blanca/PCW5106,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1667,Toyota/Hilux 4X4 /Doble cabina/Blanco/PET3939,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1668,Toyota/Hilux 4X4/Doble cabina/Gris obscuro/LZZ340A-NGC2456,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1669,Toyota/Hilux 4X4/Doble cabina/Gris/PEU4299,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1670,Toyota/Hilux 4X4/Doble cabina/Plata/PAU1827,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1671,Toyota/Hilux 4X4/Doble cabina/Plata/PET3929,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1672,Toyota/Hilux 4X4/Doble cabina/Plata/PEV2489,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1673,Toyota/Hilux Doble Cabina DSL AT MHEV 2024/Azul Obscuro/LF07848,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1674,Toyota/Hilux Doble Cabina DSL AT MHEV/LF07838,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1675,Toyota/Hilux doble cabina 4x4 diesel TM 2023/Blanca/PEU4270,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1676,Toyota/Hilux doble cabina 4x4/Gris/NV8009A,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1677,Toyota/Hilux/Chasis/Gris/LD67275,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1678,Toyota/Hino 500/Blanco/LF24527,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1679,Toyota/RAV4 2024/Roja/PVL573E,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1680,Toyota/RAV4 2024/Rojo/NMR754A,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1681,Toyota/RAV4/Verde/PAT9995,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1682,Toyota/Tacoma 2013/Blanca/W02BAB,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1683,Toyota/Tacoma TRD 4x4 2013/LG08516/W02BAD,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1684,Toyota/Tacoma TRD/Blanca/PAU1083,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1685,Toyota/Tacoma TRD/Blanco/PCW5103,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1686,Toyota/Tacoma TRD/Blanco/PEU4259,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1687,Toyota/Tundra/Vino/NEN9999,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1688,"Tractor mod:27200 DT, John Deere",True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1689,Trailers/Semirremolque/Gris/48UL7D,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1690,Traxion 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1691,Trazak Solanum 1x5L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1692,Tridente Malathion 500 1x5L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1693,Trigard 0.100kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1694,Trilogy 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1695,Triunfo T 5% 1x20kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1696,Turbine 0.600kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1697,Turbulans 5G  1x20kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1698,Ultimatum 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1699,Ultra Vigofort 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1700,Uniform 0.500L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1701,Ursus Ciper 0.950L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1702,Ursus Meta 0.950L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1703,Velum One 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1704,Verango Prime 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1705,Veridia XM 200 WP 0.600kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1706,Versoato 0.950L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1707,Vertimec 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1708,Vibrance Beans 0.250L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1709,Vibrance Beans 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1710,Vigold 40SC 0.250L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1711,Vigold 40SC 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1712,Vikingo 5%G 1x20kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1713,Vitavax 200 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1714,Vitavax 34FF 9.46L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1715,Volkswagen/2023 Blanca/PEV3876,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1716,Volkswagen/Jetta 2004/Verde/NMH6783,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1717,Volkswagen/Jetta 2023/Blanco/PEV2784,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1718,Volkswagen/Saveiro Robust cabina regular 2019/Plata/PCB052A,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1719,Volkswagen/Saveiro Robust cabina regular 2019/Roja/LZZ327A,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1720,Volkswagen/Saveiro Robust cabina regular 2023/Blanca/PCW5153,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1721,Volkswagen/Saveiro Robust cabina regular/LF07759,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1722,Volkswagen/Vento/C78ADV,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1723,Vydate CLV 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1724,Vydate CLV 1x10L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1725,Vydate L 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1726,Warton 0.250L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1727,Warton 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1728,Xanil 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1729,Yesica Lizet Bernal Rodriguez,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1730,Yessenia Molina Flores,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1731,Yunke 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1732,Zhen Ji 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1733,Zorvec Enicade pack,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1734,Zulli Faviola Mejia Miranda,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1750,Actara 25WG 0.150kg,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1751,Actara 25WG 0.600kg,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1752,Actigard 50SG 0.015kg,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1753,Actigard SG50 0.212kg,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1754,Agrimec 1.8CE 0.250L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1755,Agrimec 1.8CE 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1756,Alfaspray XM 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1757,Alfaspray XM 1x10L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1758,Alto 100 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1759,Amber 75SG 0.100kg,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1760,Amistar Gold 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1761,Amistar WG500 0.100kg,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1762,Amistar WG500 0.500kg,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1763,Ampligo 0.150L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1764,Ampligo 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1765,Apron XL 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1766,Apron XL 1gal,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1767,Arrow 120 0.500L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1768,Arrow 240 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1769,Asanit XM 500 WDG 1kg,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1770,Axefol K-45 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1771,Axefol plus 16-10-15 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1772,Axequel Trans Ca Bo 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1773,Axestim 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1774,Bankit 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1775,Banvel 12-24 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1776,Benzimid XM 800 WG 0.600kg,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1777,Bravo 720 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1778,Bravo 720 1x10L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1779,Callisto Xtra 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1780,Candor 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1781,Captip XM 50 1kg,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1782,Captive XM 80 0.750kg,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1783,Carial Flex 0.500kg,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1784,Carial Flex 1kg,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1785,Cerillo 0.900L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1786,Coloso Total 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1787,Complesal Calcio 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1788,Complesal Potasio 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1789,Corte 68 1kg,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1790,Cruiser 5FS 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1791,Cruiser Maxx Potato 0.500L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1792,Curacron 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1793,Curyom Fit 0.150kg,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1794,Demolition XM 250 CS 0.200L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1795,Demolition XM 250 CS 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1796,Denim 0.100L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1797,Denim 0.200L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1798,Deprebac XM 46.6+139.8 SL 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1799,Dextrone 0.900L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1800,Dextrone 1x5L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1801,Distriva XM 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1802,Draisig XM 50+250 SC 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1803,Dual Gold 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1804,Elumis 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1805,Engeo 0.200L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1806,Engeo 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1807,Estelis XM 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1808,Estelis XM Soil 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1809,Eterbel XM 41.11 SL 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1810,Ferti Beet XM 2kg,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1811,Flex BIW 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1812,Folio Gold 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1813,Force 2GR 1x15kg,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1814,Fortexyl XM 480 SL 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1815,Fusiflex Gold 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1816,Fusilade BIW 0.960L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1817,Gesaprim Calibre 90 1kg,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1818,Gesaprim Combi 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1819,Gesaprim autosuspensible 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1820,Globetyl Al 80WDG 1x25kg,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1821,Gloprid 200 1kg,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1822,Gramocil 0.900L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1823,Gramoxone 0.900L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1824,Gramoxone 1x5L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1825,Hierbamina 0.950L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1826,Hierbamina 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1827,Ingenux XM 800 WG 1kg,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1828,Propiedad Antares,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1829,Propiedad Codagem,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1830,Propiedad Cuauhtemoc,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1831,Propiedad Robles,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1832,Propiedad San Juan de las Huertas,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1833,Propiedad Santiaguito,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1834,Propiedad UDECA,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1835,Inspire Gold 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1836,Intrali 1kg,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1837,Irrigaid Gold 1x10L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1838,Isabion 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1839,Karate Zeon 0.200L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1840,Karate Zeon 0.250L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1841,Karate Zeon 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1842,Kirio CE70 0.200L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1843,Kirio CE70 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1844,Linexar CT 720+80 SC 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1845,Linexar XM 330 SC 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1846,Linexar XM 600 SC 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1847,Lumax Gold ZC 1x10L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1848,Magistop XM 250 EC 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1849,Manzeb 1x25kg,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1850,Marvel 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1851,Minecto Duo 0.600kg,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1852,Miravis Duo 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1853,Moddus 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1854,Mowicoll M100 1kg,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1855,Neonic XM 800 WDG 0.600kg,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1856,Omipro XM 722 SL 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1857,Orondis Opti 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1858,Orondis Ultra 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1859,Paquete Elumis + Gesaprim 90,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1860,Peak 0.030kg,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1861,Peak Turbo 0.500kg,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1862,Platinum 240SC 0.300L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1863,Platinum 240SC 1x5L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1864,Plenum 1kg,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1865,Primagram Gold 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1866,Priori Xtra 0.200L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1867,Proclaim Opti WG50 0.600kg,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1868,Proclaim SG50 0.600kg,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1869,Propamocarb 722 SC 1x200L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1870,Proxity XM 350 EC 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1871,Quadris Opti 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1872,Quilt 0.800L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1873,Raigon XM 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1874,Reglone 1x5L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1875,Ridomil Gold 480 0.250L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1876,Ridomil Gold 480 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1877,Ridomil Gold Bravo 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1878,Sanson OD 0.700L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1879,Score 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1880,Selecop 0.950L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1881,Shogun 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1882,Solvigo SC108 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1883,Sulfocop 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1884,Switch 0.250kg,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1885,Switch 1kg,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1886,Tecto 500 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1887,Tecto 60 0.500kg,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1888,Thiaba 0.600L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1889,Tilt CE250 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1890,Topik Gold + Amber,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1891,Traxion 1kg,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1892,Trigard 0.100kg,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1893,Triunfo T 5% 1x20kg,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1894,Uniform 0.500L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1895,Veridia XM 200 WP 0.600kg,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1896,Vertimec 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1897,Vibrance Beans 0.250L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1898,Vibrance Beans 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
