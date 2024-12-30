@@ -5,10 +5,17 @@ from odoo.exceptions import UserError
 class StockMoveLineInherit(models.Model):
     _inherit = "stock.move.line"
 
+
     move_id = fields.Many2one(ondelete="cascade")
-    location_availability = fields.Float("From availability", compute="_compute_location_availability", readonly=True)
+    location_availability = fields.Float(
+        "From availability",
+        compute="_compute_location_availability",
+        readonly=True,
+    )
     location_dest_availability = fields.Float(
-        "To availability", compute="_compute_location_availability", readonly=True
+        "To availability",
+        compute="_compute_location_availability",
+        readonly=True
     )
     #TODO It seem odoo 18 will solve this natively, delete if so
     location_lot_domain = fields.Binary(

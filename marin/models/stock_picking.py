@@ -19,12 +19,22 @@ class Picking(models.Model):
     all_product_ids = fields.Boolean(
         default=False,
         help="By default Odoo let the user choose over every product available in the "
-             "catalogue but Main required that only the ones available in the location "
-             "being displayed. This button enables dynamicly this feature.",
+             "catalogue but Marin required that only the ones available in the location "
+             "being displayed. This button enables this feature dynamicly.",
     )
     suitable_product_ids = fields.Many2many(
         comodel_name="product.product",
         compute="_compute_suitable_product_ids",
+    )
+    all_location_dest_ids = fields.Boolean(
+        default=False,
+        help="By default Odoo let the user choose over every location available "
+             "but Marin required that only the ones available in the picking type\'s warehouse "
+             "being displayed. This button enables this feature dynamicly.",
+    )
+    suitable_location_dest_ids = fields.Many2many(
+        comodel_name="stock.location",
+        compute="_compute_suitable_location_dest_ids",
     )
 
 
@@ -32,13 +42,32 @@ class Picking(models.Model):
     def _compute_suitable_product_ids(self):
         for p in self:
             p.suitable_product_ids = self.env["product.product"].search([
-                    ("company_id", "in", (self.env.company.id, False)),
-                    ("type", "=", "consu"),
-                ])
-            if self.picking_type_id.code == "internal" and not self.all_product_ids:
+                ("company_id", "in", (self.company_id.id, False)),
+                ("type", "=", "consu"),
+            ])
+            if (
+                self.picking_type_id.code in ("internal", "outgoing")
+                and not self.all_product_ids
+            ):
                 p.suitable_product_ids = self.env["stock.quant"].search(
                     [("location_id", "=", self.location_id.id)]
                 ).mapped("product_id")
+
+    @api.depends("picking_type_id", "all_location_dest_ids")
+    def _compute_suitable_location_dest_ids(self):
+        for p in self:
+            p.suitable_location_dest_ids = self.env["stock.location"].search([
+                ("company_id", "in", (self.company_id.id, False)),
+                ("usage", "=", "internal"),
+            ])
+            if (
+                self.picking_type_id.code in ("internal", "incoming")
+                and not self.all_location_dest_ids
+            ):
+                p.suitable_location_dest_ids = self.env["stock.location"].search([
+                    ("warehouse_id", "=", self.picking_type_id.warehouse_id.id),
+                    ("usage", "=", "internal"),
+                ])
 
     def _prepare_compute_custom_permissions(self):
         mark_as_todo = (
