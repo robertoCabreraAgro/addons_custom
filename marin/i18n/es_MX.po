@@ -1656,11 +1656,6 @@ msgid "Driver Licence"
 msgstr ""
 
 #. module: marin
-#: model:ir.model.fields,help:marin.field_stock_move_line__location_lot_domain
-msgid "Dynamic domain used for the lot that can be set on move line"
-msgstr ""
-
-#. module: marin
 #. odoo-python
 #: code:addons/marin/models/account_move.py:0
 msgid ""
@@ -2472,11 +2467,6 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/marin/static/src/pos/app/screens/receipt_screen/receipt_screen.xml:0
 msgid "Loading delivery info..."
-msgstr ""
-
-#. module: marin
-#: model:ir.model.fields,field_description:marin.field_stock_move_line__location_lot_domain
-msgid "Location Lot domain"
 msgstr ""
 
 #. module: marin
