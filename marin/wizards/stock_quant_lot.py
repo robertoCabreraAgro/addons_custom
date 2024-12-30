@@ -24,7 +24,6 @@ class StockQuantLotWizard(models.TransientModel):
         "stock.lot",
         related="quant_id.lot_id",
         readonly=True,
-        required=True,
     )
     dest_lot_id = fields.Many2one(
         "stock.lot",
