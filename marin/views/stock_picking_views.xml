@@ -48,6 +48,9 @@
                     invisible="state != 'cancel'"
                     groups="stock.group_stock_user" />
             </xpath>
+            <xpath expr="//button[@name='%(stock.act_stock_return_picking)d']" position="attributes">
+                <attribute name="invisible">picking_type_code == 'internal'</attribute>
+            </xpath>
 <!--             <xpath expr="//button[@name='do_print_picking']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
