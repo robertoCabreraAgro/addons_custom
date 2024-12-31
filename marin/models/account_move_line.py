@@ -30,11 +30,12 @@ class AccountMoveLine(models.Model):
         for line in self.filtered(lambda x: x.display_type not in ("line_section", "line_note")):
             account = line.account_id
             journal = line.move_id.journal_id
-            parent_state = line.move_id.state # Changes here
+            parent_state = line.parent_state # Changes here
 
             if account.deprecated and not self.env.context.get("skip_account_deprecation_check"):
                 raise UserError(_(
-                    'The account %(name)s (%(code)s) is deprecated.', name=account.name, code=account.code
+                    'The account %(name)s (%(code)s) is deprecated.',
+                    name=account.name, code=account.code
                 ))
 
             account_currency = account.currency_id
@@ -47,6 +48,7 @@ class AccountMoveLine(models.Model):
                     "The account selected on your journal entry forces to provide a secondary currency. "
                     "You should remove the secondary currency on the account."
                 ))
+
             # Change made in the line below
             if account.allowed_journal_ids and journal not in account.allowed_journal_ids and parent_state == "posted":
                 raise UserError(_(
@@ -60,10 +62,14 @@ class AccountMoveLine(models.Model):
                 continue
 
             # Changes made below
-            if journal.account_control_ids and account not in journal.account_control_ids and parent_state == "posted":
+            if (
+                journal.account_control_ids
+                and account not in journal.account_control_ids
+                and parent_state == "posted"
+            ):
                 raise UserError(_(
-                    'You cannot use the account (%s) in the journal (%s), check the section "Control-Access" '
-                    'under tab "Advanced Settings" on the related journal.',
+                    'You cannot use the account (%s) in the journal (%s), check the section '
+                    '"Control-Access" under tab "Advanced Settings" on the related journal.',
                     account.display_name,
                     journal.name,
                 ))

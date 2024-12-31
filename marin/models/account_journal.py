@@ -5,9 +5,10 @@ from odoo.exceptions import UserError
 class AccountJournalInherit(models.Model):
     _inherit = "account.journal"
 
+
     default_receivable_account_id = fields.Many2one(
-        "account.account",
-        "Default Receivable Account",
+        comodel_name="account.account",
+        string="Default Receivable Account",
         check_company=True,
         domain=[
             ("deprecated", "=", False),
@@ -18,8 +19,8 @@ class AccountJournalInherit(models.Model):
         help="It acts as a default account for receivable amount instead of the Company's default",
     )
     default_payable_account_id = fields.Many2one(
-        "account.account",
-        "Default Payable Account",
+        comodel_name="account.account",
+        string="Default Payable Account",
         check_company=True,
         domain=[
             ("deprecated", "=", False),
@@ -30,8 +31,8 @@ class AccountJournalInherit(models.Model):
         help="It acts as a default account for payable amount instead of the Company's default",
     )
     default_refund_account_id = fields.Many2one(
-        "account.account",
-        "Default Refund Account",
+        comodel_name="account.account",
+        string="Default Refund Account",
         check_company=True,
         domain=[
             ("deprecated", "=", False),
@@ -48,7 +49,7 @@ class AccountJournalInherit(models.Model):
             ("fiscal_simulated", "Fiscal simulated"),
             ("fiscal_real", "Fiscal real"),
         ],
-        "Treatment",
+        string="Treatment",
         default="not_fiscal_real",
         help="Technical field used to group journal and journal moves according to fiscal logic.",
     )
@@ -57,9 +58,10 @@ class AccountJournalInherit(models.Model):
         "account_journal_res_users_can_access_rel",
         "journal_id",
         "user_id",
-        "Allowed users",
+        string="Allowed users",
         help="Users that can visualize entries of this journal.",
     )
+
 
     @api.constrains("type", "default_receivable_account_id", "default_payable_account_id")
     def _check_type_default_receivable_payable_account_id_type(self):
@@ -68,6 +70,7 @@ class AccountJournalInherit(models.Model):
             "default_payable_account_id"
         )
         if any(account.account_type not in ("asset_receivable", "liability_payable") for account in accounts_to_check):
-            raise UserError(
-                _("The type of the journal's default receivable/payable account should be 'receivable' or 'payable'.")
-            )
+            raise UserError(_(
+                "The type of the journal's default receivable/payable "
+                "account should be 'receivable' or 'payable'."
+            ))

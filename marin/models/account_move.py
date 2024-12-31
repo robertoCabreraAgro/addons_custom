@@ -1,5 +1,3 @@
-from werkzeug.urls import url_quote_plus
-
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools.float_utils import float_compare
@@ -8,6 +6,7 @@ from odoo.tools.misc import formatLang
 
 class AccountMove(models.Model):
     _inherit = "account.move"
+
 
     # Extended fields
     date = fields.Date(copy=True)
@@ -27,6 +26,74 @@ class AccountMove(models.Model):
         help="If this checkbox is ticked, it means that a management representative has "
         "received and stored a printed invoice on credit signed by the customer. ",
     )
+
+
+    # Override original method
+    @api.depends("company_id", "currency_id", "partner_id", "amount_total")
+    def _compute_partner_credit_warning(self):
+        for invoice in self:
+            invoice.with_company(invoice.company_id)
+            invoice.partner_credit_warning = ""
+            amount_total_currency = (
+                invoice.currency_id._convert(
+                    invoice.amount_total, invoice.company_currency_id, invoice.company_id, invoice.date
+                )
+                if invoice.move_type == "out_invoice"
+                else 0
+            )
+            show_warning = (
+                invoice.company_id.account_use_credit_limit
+                and invoice.state == "draft"
+                and invoice.commercial_partner_id
+                and invoice.commercial_partner_id.credit_limit_available < amount_total_currency
+            )
+            if show_warning:
+                future_credit = invoice.commercial_partner_id.credit + amount_total_currency
+                invoice.partner_credit_warning = invoice.commercial_partner_id._build_credit_warning_message(
+                    future_credit, invoice.company_id.currency_id
+                )
+
+    # Override original method
+    @api.depends("move_type", "company_currency_id", "origin_payment_id", "statement_line_id")
+    def _compute_l10n_mx_edi_is_cfdi_needed(self):
+        for move in self:
+            move.l10n_mx_edi_is_cfdi_needed = (
+                move.country_code == "MX"
+                and move.company_currency_id.name == "MXN"
+                and move.journal_id.x_treatment in ("fiscal_simulated", "fiscal_real")
+                and (
+                    move.move_type in ("out_invoice", "out_refund")
+                    or move._l10n_mx_edi_is_cfdi_payment()
+                )
+            )
+
+    # Override original method
+    @api.depends(
+        "move_type", "invoice_date", "invoice_payment_term_id",
+        "invoice_date_due", "force_payment_policy_pue"
+    )
+    def _compute_l10n_mx_edi_payment_policy(self):
+        for move in self:
+            if (
+                move.is_invoice(include_receipts=True)
+                and move.l10n_mx_edi_is_cfdi_needed
+                and move.invoice_date_due
+                and move.invoice_date
+            ):
+                move.l10n_mx_edi_payment_policy = "PUE"
+                if (
+                    move.move_type == "out_invoice"
+                    and not move.l10n_mx_edi_cfdi_to_public
+                    and (
+                        move.invoice_date_due.month > move.invoice_date.month
+                        or move.invoice_date_due.year > move.invoice_date.year
+                        # This is not always true
+                        # or len(move.invoice_payment_term_id.line_ids) > 1
+                    )
+                ):
+                    move.l10n_mx_edi_payment_policy = "PPD"
+            if move.l10n_mx_edi_payment_policy and move.force_payment_policy_pue:
+                move.l10n_mx_edi_payment_policy = "PUE"
 
     def action_open_move_lines(self):
         return {
@@ -62,30 +129,6 @@ class AccountMove(models.Model):
             "context": {"active_model": "account.move", "active_ids": self.ids},
         }
 
-    # Override original method
-    @api.depends("company_id", "currency_id", "partner_id", "amount_total")
-    def _compute_partner_credit_warning(self):
-        for invoice in self:
-            invoice.with_company(invoice.company_id)
-            invoice.partner_credit_warning = ""
-            amount_total_currency = (
-                invoice.currency_id._convert(
-                    invoice.amount_total, invoice.company_currency_id, invoice.company_id, invoice.date
-                )
-                if invoice.move_type == "out_invoice"
-                else 0
-            )
-            show_warning = (
-                invoice.company_id.account_use_credit_limit
-                and invoice.state == "draft"
-                and invoice.commercial_partner_id
-                and invoice.commercial_partner_id.credit_limit_available < amount_total_currency
-            )
-            if show_warning:
-                future_credit = invoice.commercial_partner_id.credit + amount_total_currency
-                invoice.partner_credit_warning = invoice.commercial_partner_id._build_credit_warning_message(
-                    future_credit, invoice.company_id.currency_id
-                )
 
     def _pre_post_invoice_edi_amounts_match_validation(self):
         for invoice in self.filtered(lambda i: i.is_invoice()):
@@ -97,19 +140,17 @@ class AccountMove(models.Model):
                     invoice.x_check_tax, invoice.amount_tax, precision_rounding=invoice.currency_id.rounding
                 )
             ):
-                raise UserError(
-                    _(
-                        "EDI amounts doesn't match with entry ones.\n\n"
-                        "Total amount: %s --> Verification total amount: %s. Difference: %s\n"
-                        "Tax amount: %s --> Verification tax amount: %s. Difference: %s\n",
-                        formatLang(self.env, invoice.amount_total),
-                        formatLang(self.env, invoice.x_check_total),
-                        formatLang(self.env, invoice.x_total_difference),
-                        formatLang(self.env, invoice.amount_tax),
-                        formatLang(self.env, invoice.x_check_tax),
-                        formatLang(self.env, invoice.x_tax_difference),
-                    )
-                )
+                raise UserError(_(
+                    "EDI amounts doesn't match with entry ones.\n\n"
+                    "Total amount: %s --> Verification total amount: %s. Difference: %s\n"
+                    "Tax amount: %s --> Verification tax amount: %s. Difference: %s\n",
+                    formatLang(self.env, invoice.amount_total),
+                    formatLang(self.env, invoice.x_check_total),
+                    formatLang(self.env, invoice.x_total_difference),
+                    formatLang(self.env, invoice.amount_tax),
+                    formatLang(self.env, invoice.x_check_tax),
+                    formatLang(self.env, invoice.x_tax_difference),
+                ))
 
     def _pre_post_invoice_credit_limit_validation(self):
         for invoice in self.filtered(
@@ -118,19 +159,15 @@ class AccountMove(models.Model):
             and not i.invoice_payment_term_id.is_immediate
         ):
             if invoice.commercial_partner_id.credit_on_hold:
-                raise UserError(
-                    _(
-                        "The Partner's %s credit line has been held. Contact the Credit Manager.",
-                        invoice.commercial_partner_id.name,
-                    )
-                )
+                raise UserError(_(
+                    "The Partner's %s credit line has been held. Contact the Credit Manager.",
+                    invoice.commercial_partner_id.name,
+                ))
             if not self.env.user.has_group("marin.group_account_debt_manager"):
-                raise UserError(
-                    _(
-                        "The Partner %s does not have enough credit line. Contact the Credit Manager.",
-                        invoice.commercial_partner_id.name,
-                    )
-                )
+                raise UserError(_(
+                    "The Partner %s does not have enough credit line. Contact the Credit Manager.",
+                    invoice.commercial_partner_id.name,
+                ))
             authorized = self._context.get("debt_authorized")
             if authorized or self.env["ir.config_parameter"].sudo().get_param("marin.avoid_authorize_debt"):
                 return True
@@ -229,45 +266,3 @@ class AccountMove(models.Model):
                     move_line.purchase_line_id = po_line.id
             move._compute_origin_po_count()
         return True
-
-    # Override original method
-    @api.depends("move_type", "company_currency_id", "origin_payment_id", "statement_line_id")
-    def _compute_l10n_mx_edi_is_cfdi_needed(self):
-        for move in self:
-            move.l10n_mx_edi_is_cfdi_needed = (
-                move.country_code == "MX"
-                and move.company_currency_id.name == "MXN"
-                and move.journal_id.x_treatment in ("fiscal_simulated", "fiscal_real")
-                and (
-                    move.move_type in ("out_invoice", "out_refund")
-                    or move._l10n_mx_edi_is_cfdi_payment()
-                )
-            )
-
-    # Override original method
-    @api.depends(
-        "move_type", "invoice_date", "invoice_payment_term_id",
-        "invoice_date_due", "force_payment_policy_pue"
-    )
-    def _compute_l10n_mx_edi_payment_policy(self):
-        for move in self:
-            if (
-                move.is_invoice(include_receipts=True)
-                and move.l10n_mx_edi_is_cfdi_needed
-                and move.invoice_date_due
-                and move.invoice_date
-            ):
-                move.l10n_mx_edi_payment_policy = "PUE"
-                if (
-                    move.move_type == "out_invoice"
-                    and not move.l10n_mx_edi_cfdi_to_public
-                    and (
-                        move.invoice_date_due.month > move.invoice_date.month
-                        or move.invoice_date_due.year > move.invoice_date.year
-                        # This is not always true
-                        # or len(move.invoice_payment_term_id.line_ids) > 1
-                    )
-                ):
-                    move.l10n_mx_edi_payment_policy = "PPD"
-            if move.l10n_mx_edi_payment_policy and move.force_payment_policy_pue:
-                move.l10n_mx_edi_payment_policy = "PUE"
