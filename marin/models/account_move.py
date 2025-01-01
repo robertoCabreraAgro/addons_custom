@@ -24,9 +24,21 @@ class AccountMove(models.Model):
         "Stored",
         tracking=True,
         help="If this checkbox is ticked, it means that a management representative has "
-        "received and stored a printed invoice on credit signed by the customer. ",
+             "received and stored a printed invoice on credit signed by the customer. ",
+    )
+    show_update_line_account = fields.Boolean(
+        string="Has Journal Changed",
+        store=False
     )
 
+
+    # Extend original method
+    def unlink(self):
+        cancelled_moves = self.env["account.move"]
+        if self.env.user.has_group("marin.group_account_move_force_removal"):
+            cancelled_moves |= self.filtered(lambda m: m.state == "cancel")
+            super(AccountMove, cancelled_moves.with_context(force_delete=True)).unlink()
+        return super(AccountMove, self - cancelled_moves).unlink()
 
     # Override original method
     @api.depends("company_id", "currency_id", "partner_id", "amount_total")
@@ -95,40 +107,9 @@ class AccountMove(models.Model):
             if move.l10n_mx_edi_payment_policy and move.force_payment_policy_pue:
                 move.l10n_mx_edi_payment_policy = "PUE"
 
-    def action_open_move_lines(self):
-        return {
-            "name": _("Move Lines"),
-            "type": "ir.actions.act_window",
-            "res_model": "account.move.line",
-            "view_mode": "list",
-            "views": [(self.env.ref("account.view_move_line_tree").id, "list"), (False, "form")],
-            "context": {"search_default_group_by_move": True},
-            "domain": [("id", "in", self.line_ids.ids)],
-        }
-
-    def action_authorize_debt_wizard(self):
-        view = self.env.ref("marin.view_authorize_debt_wizard_form")
-        return {
-            "name": _("Authorize debt"),
-            "type": "ir.actions.act_window",
-            "res_model": "authorize.debt.wizard",
-            "view_mode": "form",
-            "views": [(view.id, "form")],
-            "view_id": view.id,
-            "target": "new",
-            "context": {"active_model": "account.move", "active_ids": self.ids},
-        }
-
-    def action_cash_discount_wizard(self):
-        return {
-            "name": _("Register cash discount"),
-            "type": "ir.actions.act_window",
-            "res_model": "account.invoice.cash.discount",
-            "view_mode": "form",
-            "target": "new",
-            "context": {"active_model": "account.move", "active_ids": self.ids},
-        }
-
+    @api.onchange("journal_id")
+    def _onchange_journal_id_show_update_lines(self):
+        self.show_update_line_account = bool(self.line_ids)
 
     def _pre_post_invoice_edi_amounts_match_validation(self):
         for invoice in self.filtered(lambda i: i.is_invoice()):
@@ -175,14 +156,6 @@ class AccountMove(models.Model):
         return True
 
     # Extend original method
-    def unlink(self):
-        cancelled_moves = self.env["account.move"]
-        if self.env.user.has_group("marin.group_account_move_force_removal"):
-            cancelled_moves |= self.filtered(lambda m: m.state == "cancel")
-            super(AccountMove, cancelled_moves.with_context(force_delete=True)).unlink()
-        return super(AccountMove, self - cancelled_moves).unlink()
-
-    # Extend original method
     def action_post(self):
         self._pre_post_invoice_edi_amounts_match_validation()
         res = self._pre_post_invoice_credit_limit_validation()
@@ -199,6 +172,45 @@ class AccountMove(models.Model):
     def button_set_stored(self):
         for move in self:
             move.x_stored = True
+
+    def action_update_line_account(self):
+        self.ensure_one()
+        self.line_ids._compute_account_id()
+        self.show_update_line_account = False
+
+    def action_open_move_lines(self):
+        return {
+            "name": _("Move Lines"),
+            "type": "ir.actions.act_window",
+            "res_model": "account.move.line",
+            "view_mode": "list",
+            "views": [(self.env.ref("account.view_move_line_tree").id, "list"), (False, "form")],
+            "context": {"search_default_group_by_move": True},
+            "domain": [("id", "in", self.line_ids.ids)],
+        }
+
+    def action_authorize_debt_wizard(self):
+        view = self.env.ref("marin.view_authorize_debt_wizard_form")
+        return {
+            "name": _("Authorize debt"),
+            "type": "ir.actions.act_window",
+            "res_model": "authorize.debt.wizard",
+            "view_mode": "form",
+            "views": [(view.id, "form")],
+            "view_id": view.id,
+            "target": "new",
+            "context": {"active_model": "account.move", "active_ids": self.ids},
+        }
+
+    def action_cash_discount_wizard(self):
+        return {
+            "name": _("Register cash discount"),
+            "type": "ir.actions.act_window",
+            "res_model": "account.invoice.cash.discount",
+            "view_mode": "form",
+            "target": "new",
+            "context": {"active_model": "account.move", "active_ids": self.ids},
+        }
 
     def _prepare_purchase_order_vals(self):
         self.ensure_one()
@@ -229,8 +241,8 @@ class AccountMove(models.Model):
                 "order_id": purchase.id,
                 "product_id": line.product_id.id,
                 "name": "[%s] %s" % (line.product_id.default_code, line.name)
-                if line.product_id.default_code
-                else line.name,
+                    if line.product_id.default_code
+                    else line.name,
                 "product_qty": line.quantity,
                 "product_uom": line.product_uom_id.id,
                 "price_unit": line.price_unit,
@@ -243,15 +255,15 @@ class AccountMove(models.Model):
     def create_purchase_order(self):
         for move in self:
             if any(not line.product_id for line in move.invoice_line_ids):
-                raise UserError(_("Some move lines does not have a product set. Please review"))
+                raise UserError(_(
+                    "Some move lines does not have a product set. Please review"
+                ))
 
-            purchase_exist = self.env["purchase.order"].search(
-                [
+            purchase_exist = self.env["purchase.order"].search([
                     ("partner_id", "=", self.commercial_partner_id.id),
                     ("company_id", "=", self.company_id.id),
                     ("origin", "=", self.name),
-                ]
-            )
+            ])
             if purchase_exist and len(purchase_exist) >= 1:
                 raise UserError(_(
                     "More than one Purchase Orders with the same origin have been found. Please review"

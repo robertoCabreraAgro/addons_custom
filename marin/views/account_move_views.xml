@@ -183,6 +183,7 @@
             </xpath>
             <xpath expr="//field[@name='id']" position="after">
                 <field name="journal_type" invisible="1" />
+                <field name="show_update_line_account" invisible="1" />
             </xpath>
             <xpath expr="//group[@id='header_left_group']/label[@for='partner_id']" position="after">
                 <label for="partner_id" string="Partner" style="font-weight:bold;" invisible="move_type != 'entry'" />
@@ -207,6 +208,16 @@
                 position="attributes"
             >
                 <attribute name="options">{"no_create": True}</attribute>
+            </xpath>
+            <xpath
+                expr="//group[@id='header_right_group']//field[@name='journal_id']"
+                position="after"
+            >
+                <button name="action_update_line_account" string="Update Lines"
+                    type="object" class="btn-link mb-1 px-0" icon="fa-refresh"
+                    invisible="not show_update_line_account or state in ['posted', 'cancel']"
+                    confirm="This will update the accounts of all lines based on the new journal."
+                    help="Recompute all accounts based on this journal" />
             </xpath>
             <xpath
                 expr="//page[@id='invoice_tab']/field[@name='invoice_line_ids']/list/field[@name='product_id']"
