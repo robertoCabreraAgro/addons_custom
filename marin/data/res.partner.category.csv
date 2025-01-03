@@ -18,20 +18,20 @@ marin.partner_category_116,Fiscal effect - NF,10,True,marin.partner_category_man
 marin.partner_category_supplier_core,Supplier - Core business,5,True,marin.partner_category_purchase
 marin.partner_category_supplier_general,Supplier - General,10,True,marin.partner_category_purchase
 marin.partner_category_supplier_xiuman,Supplier - Xiuman,5,True,marin.partner_category_purchase
-marin.partner_category_120,Crop - Avocado,4,True,marin.partner_category_agronomic
-marin.partner_category_121,Crop - Barley,4,True,marin.partner_category_agronomic
-marin.partner_category_122,Crop - Bean,4,True,marin.partner_category_agronomic
-marin.partner_category_123,Crop - Berry,4,True,marin.partner_category_agronomic
-marin.partner_category_124,Crop - Carrot,7,True,marin.partner_category_agronomic
-marin.partner_category_125,Crop - Citrus,4,True,marin.partner_category_agronomic
-marin.partner_category_126,Crop - Corn,4,True,marin.partner_category_agronomic
-marin.partner_category_127,Crop - Cucurbits,4,True,marin.partner_category_agronomic
-marin.partner_category_128,Crop - Onion,4,True,marin.partner_category_agronomic
-marin.partner_category_129,Crop - Ornamentals,4,True,marin.partner_category_agronomic
-marin.partner_category_130,Crop - Pepper,4,True,marin.partner_category_agronomic
-marin.partner_category_131,Crop - Potato,10,True,marin.partner_category_agronomic
-marin.partner_category_132,Crop - Tomato,4,True,marin.partner_category_agronomic
-marin.partner_category_133,Crop - Wheat,4,True,marin.partner_category_agronomic
+marin.partner_category_120,Crop - Avocado,4,True,marin.partner_category_commercial
+marin.partner_category_121,Crop - Barley,4,True,marin.partner_category_commercial
+marin.partner_category_122,Crop - Bean,4,True,marin.partner_category_commercial
+marin.partner_category_123,Crop - Berry,4,True,marin.partner_category_commercial
+marin.partner_category_124,Crop - Carrot,7,True,marin.partner_category_commercial
+marin.partner_category_125,Crop - Citrus,4,True,marin.partner_category_commercial
+marin.partner_category_126,Crop - Corn,4,True,marin.partner_category_commercial
+marin.partner_category_127,Crop - Cucurbits,4,True,marin.partner_category_commercial
+marin.partner_category_128,Crop - Onion,4,True,marin.partner_category_commercial
+marin.partner_category_129,Crop - Ornamentals,4,True,marin.partner_category_commercial
+marin.partner_category_130,Crop - Pepper,4,True,marin.partner_category_commercial
+marin.partner_category_131,Crop - Potato,10,True,marin.partner_category_commercial
+marin.partner_category_132,Crop - Tomato,4,True,marin.partner_category_commercial
+marin.partner_category_133,Crop - Wheat,4,True,marin.partner_category_commercial
 marin.partner_category_134,Debt collection - Aaron,7,True,marin.partner_category_commercial
 marin.partner_category_135,Debt collection - Alejandro,7,True,marin.partner_category_commercial
 marin.partner_category_136,Debt collection - Axel,7,True,marin.partner_category_commercial

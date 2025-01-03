@@ -2,7 +2,7 @@
 <odoo noupdate="1">
     <record id="sale_order_salesteam_rule" model="ir.rule">
         <field name="name">Salesteam Orders</field>
-        <field ref="sale.model_sale_order" name="model_id" />
+        <field name="model_id" ref="sale.model_sale_order" />
         <field
             name="domain_force"
         >['|', '|', ('user_id', '=', user.id), ('user_id', '=', False), ('team_id', 'in', user.crm_team_ids.ids)]</field>
@@ -11,7 +11,7 @@
 
     <record id="sale_order_report_salesteam_rule" model="ir.rule">
         <field name="name">Salesteam Orders Analysis</field>
-        <field ref="sale.model_sale_report" name="model_id" />
+        <field name="model_id" ref="sale.model_sale_report" />
         <field
             name="domain_force"
         >['|', '|', ('user_id', '=', user.id), ('user_id', '=', False), ('team_id', 'in', user.crm_team_ids.ids)]</field>
@@ -20,7 +20,7 @@
 
     <record id="sale_order_line_salesteam_rule" model="ir.rule">
         <field name="name">Salesteam Order Lines</field>
-        <field ref="sale.model_sale_order_line" name="model_id" />
+        <field name="model_id" ref="sale.model_sale_order_line" />
         <field name="domain_force">['|', ('salesman_id', '=', user.id), ('salesman_id', '=', False)]</field>
         <field
             name="domain_force"
