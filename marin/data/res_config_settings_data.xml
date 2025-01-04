@@ -6,7 +6,6 @@
         <field name="group_project_milestone">True</field>
         <field name="group_project_rating">True</field>
         <field name="group_project_recurring_tasks">True</field>
-        <field name="group_project_stages">True</field>
         <field name="group_project_task_dependencies">True</field>
         <field name="group_uom">True</field>
         <field name="group_stock_packaging">True</field>
