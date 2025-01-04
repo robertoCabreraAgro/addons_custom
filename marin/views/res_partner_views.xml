@@ -92,7 +92,7 @@
                     name="personal_information_page"
                     string="Private information"
                     invisible="is_company"
-                    groups="hr.group_hr_user"
+                    groups="sales_team.group_sale_manager"
                 >
                     <group>
                         <group name="personal_information_group">
