@@ -1,8 +1,5 @@
-# Copyright 2015-2019 See manifest
-# License AGPL-3 - See http://www.gnu.org/licenses/agpl-3.0.html
-
-from odoo import _, api, fields, models
-from odoo.exceptions import UserError, ValidationError
+from odoo import _, fields, models
+from odoo.exceptions import UserError
 from odoo.tools.safe_eval import safe_eval
 
 
@@ -11,26 +8,64 @@ class AccountMoveTemplate(models.Model):
     _description = "Journal Entry Template"
     _check_company_auto = True
 
-    name = fields.Char(required=True)
+
     company_id = fields.Many2one(
-        "res.company",
+        comodel_name="res.company",
         string="Company",
         required=True,
-        ondelete="cascade",
         default=lambda self: self.env.company,
+        ondelete="cascade",
+    )
+    company_currency_id = fields.Many2one(
+        related="company_id.currency_id", string="Company Currency", readonly=True,
+    )
+    currency_id = fields.Many2one(
+        comodel_name="res.currency",
+        string="Currency",
+        compute="_compute_currency_id",
+        store=True,
+        readonly=False,
+    )
+    move_type = fields.Selection(
+        selection=[
+            ("entry", "Journal Entry"),
+            ("out_invoice", "Customer Invoice"),
+            ("out_refund", "Customer Credit Note"),
+            ("in_invoice", "Vendor Bill"),
+            ("in_refund", "Vendor Credit Note"),
+            ("out_receipt", "Sales Receipt"),
+            ("in_receipt", "Purchase Receipt"),
+        ],
+        string="Type",
+        default="entry",
+        required=True,
     )
     journal_id = fields.Many2one(
-        "account.journal",
+        comodel_name="account.journal",
         string="Journal",
         required=True,
         check_company=True,
-        domain="[('company_id', '=', company_id)]",
+        domain=[('company_id', '=', company_id)],
     )
+    partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Partner",
+        domain=["|", ("parent_id", "=", False), ("is_company", "=", True)],
+    )
+    payment_term_id = fields.Many2one(
+        comodel_name="account.payment.term",
+        string="Payment Terms",
+        help="Used to compute the due date of the journal item.",
+    )
+    name = fields.Char(required=True)
+    active = fields.Boolean(default=True)
     ref = fields.Char(string="Reference", copy=False)
     line_ids = fields.One2many(
-        "account.move.template.line", inverse_name="template_id", string="Lines"
+        comodel_name="account.move.template.line",
+        inverse_name="template_id",
+        string="Lines",
     )
-    active = fields.Boolean(default=True)
+    autopost = fields.Boolean(help="Set true if want to post the entry as it is created.")
 
     _sql_constraints = [
         (
@@ -101,128 +136,34 @@ class AccountMoveTemplate(models.Model):
             )
         return sequence2amount
 
+    def prepare_wizard_values(self):
+        vals = {
+            "partner_id": self.partner_id.id or False,
+            "journal_id": self.journal_id.id,
+            "currency_id": self.currency_id.id,
+            "move_type": self.move_type,
+            "state": "set_lines",
+            "ref": self.ref,
+            "post": self.post,
+        }
+        if self._context.get("default_partner_id"):
+            vals["partner_id"] = self._context.get("default_partner_id")
+        if self.env.context.get("operation_id"):
+            operation = self.env["account.move.operation"].browse(self.env.context.get("operation_id"))
+            if not vals.get("currency_id") and operation.currency_id:
+                vals["currency_id"] = operation.currency_id.id
+            if not vals.get("partner_id"):
+                vals["partner_id"] = operation.partner_id.id
+            line = self.env["account.move.operation.line"].browse(self.env.context.get("operation_line_id"))
+            if line and line.date_last_document:
+                date_last_document = line._get_latest_document_date()
+                if date_last_document:
+                    vals["date"] = date_last_document
+        return vals
+
     def generate_journal_entry(self):
         """Called by the button on the form view"""
         self.ensure_one()
         wiz = self.env["account.move.template.run"].create({"template_id": self.id})
         action = wiz.load_lines()
         return action
-
-
-class AccountMoveTemplateLine(models.Model):
-    _name = "account.move.template.line"
-    _description = "Journal Item Template"
-    _order = "sequence, id"
-    _inherit = "analytic.mixin"
-    _check_company_auto = True
-
-    template_id = fields.Many2one(
-        "account.move.template", string="Move Template", ondelete="cascade"
-    )
-    name = fields.Char(string="Label")
-    sequence = fields.Integer(required=True)
-    account_id = fields.Many2one(
-        "account.account",
-        string="Account",
-        required=True,
-        domain="[('company_id', '=', company_id), ('deprecated', '=', False)]",
-        check_company=True,
-    )
-    partner_id = fields.Many2one(
-        "res.partner",
-        string="Partner",
-        domain=["|", ("parent_id", "=", False), ("is_company", "=", True)],
-    )
-    tax_ids = fields.Many2many("account.tax", string="Taxes", check_company=True)
-    tax_line_id = fields.Many2one(
-        "account.tax", string="Originator Tax", ondelete="restrict", check_company=True
-    )
-    company_id = fields.Many2one(related="template_id.company_id", store=True)
-    company_currency_id = fields.Many2one(
-        related="template_id.company_id.currency_id",
-        string="Company Currency",
-        store=True,
-    )
-    note = fields.Char()
-    type = fields.Selection(
-        [
-            ("input", "User input"),
-            ("computed", "Computed"),
-        ],
-        required=True,
-        default="input",
-    )
-    python_code = fields.Text(string="Formula")
-    move_line_type = fields.Selection(
-        [("cr", "Credit"), ("dr", "Debit")], required=True, string="Direction"
-    )
-    payment_term_id = fields.Many2one(
-        "account.payment.term",
-        string="Payment Terms",
-        help="Used to compute the due date of the journal item.",
-    )
-    is_refund = fields.Boolean(
-        default=False,
-        string="Is a refund?",
-    )
-    tax_repartition_line_id = fields.Many2one(
-        "account.tax.repartition.line",
-        string="Tax Repartition Line",
-        compute="_compute_tax_repartition_line_id",
-        store=True,
-    )
-    opt_account_id = fields.Many2one(
-        "account.account",
-        string="Account if Negative",
-        domain="[('company_id', '=', company_id), ('deprecated', '=', False)]",
-        check_company=True,
-        help="When amount is negative, use this account instead",
-    )
-
-    @api.depends("is_refund", "account_id", "tax_line_id")
-    def _compute_tax_repartition_line_id(self):
-        for record in self.filtered(lambda x: x.account_id and x.tax_line_id):
-            tax_repartition = "refund_tax_id" if record.is_refund else "invoice_tax_id"
-            record.tax_repartition_line_id = self.env[
-                "account.tax.repartition.line"
-            ].search(
-                [
-                    ("account_id", "=", record.account_id.id),
-                    (tax_repartition, "=", record.tax_line_id.id),
-                ],
-                limit=1,
-            )
-
-    @api.depends("account_id", "partner_id")
-    def _compute_analytic_distribution(self):
-        for line in self:
-            distribution = self.env[
-                "account.analytic.distribution.model"
-            ]._get_distribution(
-                {
-                    "partner_id": line.partner_id.id,
-                    "partner_category_id": line.partner_id.category_id.ids,
-                    "product_id": False,
-                    "product_categ_id": False,
-                    "account_prefix": line.account_id.code,
-                    "company_id": line.template_id.company_id.id,
-                }
-            )
-            line.analytic_distribution = distribution or line.analytic_distribution
-
-    _sql_constraints = [
-        (
-            "sequence_template_uniq",
-            "unique(template_id, sequence)",
-            "The sequence of the line must be unique per template!",
-        )
-    ]
-
-    @api.constrains("type", "python_code")
-    def check_python_code(self):
-        for line in self:
-            if line.type == "computed" and not line.python_code:
-                raise ValidationError(
-                    _("Python Code must be set for computed line with sequence %d.")
-                    % line.sequence
-                )

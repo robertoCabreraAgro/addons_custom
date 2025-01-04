@@ -1,5 +1,3 @@
-# Copyright 2015-2019 See manifest
-# License AGPL-3 - See http://www.gnu.org/licenses/agpl-3.0.html
 from ast import literal_eval
 
 from odoo import Command, _, fields, models
@@ -11,60 +9,49 @@ class AccountMoveTemplateRun(models.TransientModel):
     _description = "Wizard to generate move from template"
     _check_company_auto = True
 
+
     template_id = fields.Many2one(
-        "account.move.template",
+        comodel_name="account.move.template",
         required=True,
         check_company=True,
         domain="[('company_id', '=', company_id)]",
     )
     company_id = fields.Many2one(
-        "res.company",
+        comodel_name="res.company",
         required=True,
         readonly=True,
         default=lambda self: self.env.company,
     )
+    journal_id = fields.Many2one(
+        comodel_name="account.journal",
+        string="Journal",
+        readonly=True,
+    )
     partner_id = fields.Many2one(
-        "res.partner",
-        "Override Partner",
+        comodel_name="res.partner",
+        string="Override Partner",
         domain=["|", ("parent_id", "=", False), ("is_company", "=", True)],
     )
     date = fields.Date(required=True, default=fields.Date.context_today)
-    journal_id = fields.Many2one("account.journal", string="Journal", readonly=True)
-    ref = fields.Char(string="Reference")
-    line_ids = fields.One2many(
-        "account.move.template.line.run", "wizard_id", string="Lines"
-    )
     state = fields.Selection(
         [("select_template", "Select Template"), ("set_lines", "Set Lines")],
         readonly=True,
         default="select_template",
     )
+    ref = fields.Char(string="Reference")
     overwrite = fields.Text(
         help="""
-Valid dictionary to overwrite template lines:
-{'L1': {'partner_id': 1, 'amount': 100, 'name': 'some label'},
- 'L2': {'partner_id': 2, 'amount': 200, 'name': 'some label 2'}, }
-        """
+             Valid dictionary to overwrite template lines:
+             {'L1': {'partner_id': 1, 'amount': 100, 'name': 'some label'},
+             'L2': {'partner_id': 2, 'amount': 200, 'name': 'some label 2'}, }
+             """
+    )
+    line_ids = fields.One2many(
+        comodel_name="account.move.template.line.run",
+        inverse_name="wizard_id",
+        string="Lines"
     )
 
-    def _prepare_wizard_line(self, tmpl_line):
-        vals = {
-            "wizard_id": self.id,
-            "sequence": tmpl_line.sequence,
-            "name": tmpl_line.name,
-            "amount": 0.0,
-            "account_id": tmpl_line.account_id.id,
-            "partner_id": tmpl_line.partner_id.id or False,
-            "move_line_type": tmpl_line.move_line_type,
-            "tax_line_id": tmpl_line.tax_line_id.id,
-            "tax_ids": [Command.set(tmpl_line.tax_ids.ids)],
-            "analytic_distribution": tmpl_line.analytic_distribution,
-            "note": tmpl_line.note,
-            "payment_term_id": tmpl_line.payment_term_id.id or False,
-            "is_refund": tmpl_line.is_refund,
-            "tax_repartition_line_id": tmpl_line.tax_repartition_line_id.id or False,
-        }
-        return vals
 
     # STEP 1
     def load_lines(self):
@@ -98,72 +85,6 @@ Valid dictionary to overwrite template lines:
         result["context"] = dict(result.get("context", {}), overwrite=overwrite_vals)
         return result
 
-    def _get_valid_keys(self):
-        return ["partner_id", "amount", "name", "date_maturity"]
-
-    def _get_overwrite_vals(self):
-        """valid_dict = {
-            'L1': {'partner_id': 1, 'amount': 10},
-            'L2': {'partner_id': 2, 'amount': 20},
-        }
-        """
-        self.ensure_one()
-        valid_keys = self._get_valid_keys()
-        overwrite_vals = self.overwrite or "{}"
-        try:
-            overwrite_vals = literal_eval(overwrite_vals)
-            assert isinstance(overwrite_vals, dict)
-        except (SyntaxError, ValueError, AssertionError) as err:
-            raise ValidationError(
-                _("Overwrite value must be a valid python dict")
-            ) from err
-        # First level keys must be L1, L2, ...
-        keys = overwrite_vals.keys()
-        if list(filter(lambda x: x[:1] != "L" or not x[1:].isdigit(), keys)):
-            raise ValidationError(_("Keys must be line sequence i.e. L1, L2, ..."))
-        # Second level keys must be a valid keys
-        try:
-            if dict(
-                filter(lambda x: set(overwrite_vals[x].keys()) - set(valid_keys), keys)
-            ):
-                raise ValidationError(
-                    _("Valid fields to overwrite are %s") % valid_keys
-                )
-        except ValidationError as e:
-            raise e
-        except Exception as e:
-            msg = """
-    valid_dict = {
-        'L1': {'partner_id': 1, 'amount': 10},
-        'L2': {'partner_id': 2, 'amount': 20},
-    }
-            """
-            raise ValidationError(
-                _(
-                    "Invalid dictionary: %(exception)s\n%(msg)s",
-                    exception=e,
-                    msg=msg,
-                )
-            ) from e
-        return overwrite_vals
-
-    def _safe_vals(self, model, vals):
-        obj = self.env[model]
-        copy_vals = vals.copy()
-        invalid_keys = list(
-            set(list(vals.keys())) - set(list(dict(obj._fields).keys()))
-        )
-        for key in invalid_keys:
-            copy_vals.pop(key)
-        return copy_vals
-
-    def _overwrite_line(self, overwrite_vals):
-        self.ensure_one()
-        for line in self.line_ids:
-            vals = overwrite_vals.get(f"L{line.sequence}", {})
-            safe_vals = self._safe_vals(line._name, vals)
-            line.write(safe_vals)
-
     # STEP 2
     def generate_move(self):
         self.ensure_one()
@@ -174,6 +95,7 @@ Valid dictionary to overwrite template lines:
         self.template_id.compute_lines(sequence2amount)
         if all([company_cur.is_zero(x) for x in sequence2amount.values()]):
             raise UserError(_("Debit and credit of all lines are null."))
+
         move_vals = self._prepare_move()
         for line in self.template_id.line_ids:
             amount = sequence2amount[line.sequence]
@@ -196,6 +118,82 @@ Valid dictionary to overwrite template lines:
             }
         )
         return result
+
+    def _get_valid_keys(self):
+        return ["partner_id", "amount", "name", "date_maturity"]
+
+    def _get_overwrite_vals(self):
+        """valid_dict = {
+            'L1': {'partner_id': 1, 'amount': 10},
+            'L2': {'partner_id': 2, 'amount': 20},
+        }
+        """
+        self.ensure_one()
+        valid_keys = self._get_valid_keys()
+        overwrite_vals = self.overwrite or "{}"
+        try:
+            overwrite_vals = literal_eval(overwrite_vals)
+            assert isinstance(overwrite_vals, dict)
+        except (SyntaxError, ValueError, AssertionError) as err:
+            raise ValidationError(_(
+                "Overwrite value must be a valid python dict"
+            )) from err
+        # First level keys must be L1, L2, ...
+        keys = overwrite_vals.keys()
+        if list(filter(lambda x: x[:1] != "L" or not x[1:].isdigit(), keys)):
+            raise ValidationError(_("Keys must be line sequence i.e. L1, L2, ..."))
+        # Second level keys must be a valid keys
+        try:
+            if dict(
+                filter(lambda x: set(overwrite_vals[x].keys()) - set(valid_keys), keys)
+            ):
+                raise ValidationError(_(
+                    "Valid fields to overwrite are %s"
+                ) % valid_keys)
+        except ValidationError as e:
+            raise e
+        except Exception as e:
+            msg = """
+                valid_dict = {
+                    'L1': {'partner_id': 1, 'amount': 10},
+                    'L2': {'partner_id': 2, 'amount': 20},
+            }
+            """
+            raise ValidationError(
+                _(
+                    "Invalid dictionary: %(exception)s\n%(msg)s",
+                    exception=e,
+                    msg=msg,
+                )
+            ) from e
+        return overwrite_vals
+
+    def _overwrite_line(self, overwrite_vals):
+        self.ensure_one()
+        for line in self.line_ids:
+            vals = overwrite_vals.get(f"L{line.sequence}", {})
+            safe_vals = self._safe_vals(line._name, vals)
+            line.write(safe_vals)
+
+    def _prepare_wizard_line(self, tmpl_line):
+        vals = {
+            "wizard_id": self.id,
+            "sequence": tmpl_line.sequence,
+            "name": tmpl_line.name,
+            "amount": 0.0,
+            "account_id": tmpl_line.account_id.id,
+            "partner_id": tmpl_line.partner_id.id or False,
+            "move_line_type": tmpl_line.move_line_type,
+            "tax_line_id": tmpl_line.tax_line_id.id,
+            "tax_ids": [Command.set(tmpl_line.tax_ids.ids)],
+            "analytic_distribution": tmpl_line.analytic_distribution,
+            "note": tmpl_line.note,
+            "payment_term_id": tmpl_line.payment_term_id.id or False,
+            "is_refund": tmpl_line.is_refund,
+            "tax_repartition_line_id": tmpl_line.tax_repartition_line_id.id or False,
+        }
+        return vals
+
 
     def _prepare_move(self):
         move_vals = {
@@ -245,6 +243,16 @@ Valid dictionary to overwrite template lines:
         self._update_account_on_negative(line, values)
         return values
 
+    def _safe_vals(self, model, vals):
+        obj = self.env[model]
+        copy_vals = vals.copy()
+        invalid_keys = list(
+            set(list(vals.keys())) - set(list(dict(obj._fields).keys()))
+        )
+        for key in invalid_keys:
+            copy_vals.pop(key)
+        return copy_vals
+
     def _update_account_on_negative(self, line, vals):
         if not line.opt_account_id:
             return
@@ -261,33 +269,34 @@ class AccountMoveTemplateLineRun(models.TransientModel):
     _description = "Wizard Lines to generate move from template"
     _inherit = "analytic.mixin"
 
-    wizard_id = fields.Many2one("account.move.template.run", ondelete="cascade")
+
+    wizard_id = fields.Many2one(comodel_name="account.move.template.run", ondelete="cascade")
     company_id = fields.Many2one(related="wizard_id.company_id")
     company_currency_id = fields.Many2one(
         related="wizard_id.company_id.currency_id", string="Company Currency"
     )
-    sequence = fields.Integer(required=True)
     name = fields.Char(readonly=True)
-    account_id = fields.Many2one("account.account", required=True, readonly=True)
-    tax_ids = fields.Many2many("account.tax", string="Taxes", readonly=True)
-    tax_line_id = fields.Many2one(
-        "account.tax", string="Originator Tax", ondelete="restrict", readonly=True
-    )
-    partner_id = fields.Many2one("res.partner", readonly=True, string="Partner")
-    payment_term_id = fields.Many2one(
-        "account.payment.term", string="Payment Terms", readonly=True
-    )
+    sequence = fields.Integer(required=True)
     move_line_type = fields.Selection(
         [("cr", "Credit"), ("dr", "Debit")],
         required=True,
         readonly=True,
         string="Direction",
     )
-    amount = fields.Monetary(required=True, currency_field="company_currency_id")
-    note = fields.Char(readonly=True)
-    is_refund = fields.Boolean(string="Is a refund?", readonly=True)
+    partner_id = fields.Many2one("res.partner", readonly=True, string="Partner")
+    payment_term_id = fields.Many2one(
+        "account.payment.term", string="Payment Terms", readonly=True
+    )
+    account_id = fields.Many2one("account.account", required=True, readonly=True)
+    tax_ids = fields.Many2many("account.tax", string="Taxes", readonly=True)
+    tax_line_id = fields.Many2one(
+        "account.tax", string="Originator Tax", ondelete="restrict", readonly=True
+    )
     tax_repartition_line_id = fields.Many2one(
         "account.tax.repartition.line",
         string="Tax Repartition Line",
         readonly=True,
     )
+    amount = fields.Monetary(required=True, currency_field="company_currency_id")
+    note = fields.Char(readonly=True)
+    is_refund = fields.Boolean(string="Is a refund?", readonly=True)
