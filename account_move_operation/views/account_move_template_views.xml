@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="account_move_template_form" model="ir.ui.view">
+        <field name="name">account.move.template.form</field>
+        <field name="model">account.move.template</field>
+        <field name="inherit_id" ref="account_move_template.account_move_template_form" />
+        <field name="priority">100</field>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='main-left']" position="inside">
+                <field name="partner_id" options="{'no_create': True}" />
+                <field
+                    name="currency_id"
+                    options="{'no_open': True, 'no_create': True}"
+                    invisible="not move_type or move_type == 'entry'"
+                />
+                <field name="move_type" />
+                <field name="post" />
+            </xpath>
+            <xpath expr="//group[@name='lines']" position="replace">
+                <notebook>
+                    <page id="line_tab" name="line_tab" string="Template Lines">
+                        <field name="line_ids" nolabel="1" context="{'default_company_id': company_id}" colspan="2">
+                            <form string="Journal Entry Template Line">
+                                <sheet>
+                                    <group name="main">
+                                        <group name="main-left">
+                                            <field name="company_id" invisible="1" />
+                                            <field name="product_uom_category_id" invisible="1" />
+                                            <field name="sequence" />
+                                            <field name="partner_id" />
+                                            <field name="payment_term_id" />
+                                            <field
+                                                name="product_id"
+                                                invisible="not parent.move_type or parent.move_type == 'entry'"
+                                            />
+                                            <field
+                                                name="product_uom_id"
+                                                string="UoM"
+                                                invisible="not parent.move_type or parent.move_type == 'entry'"
+                                            />
+                                            <field
+                                                name="product_uom_qty"
+                                                string="Qty"
+                                                invisible="not parent.move_type or parent.move_type == 'entry'"
+                                                required="parent.move_type and parent.move_type != 'entry'"
+                                            />
+                                            <field name="name" />
+                                            <field
+                                                name="amount"
+                                                invisible="not parent.move_type or parent.move_type == 'entry'"
+                                            />
+                                            <field name="account_id" />
+                                            <field name="opt_account_id" />
+                                            <field
+                                                name="analytic_distribution"
+                                                widget="analytic_distribution"
+                                                options="{'account_field': 'account_id'}"
+                                                groups="analytic.group_analytic_accounting"
+                                            />
+                                            <field name="tax_ids" widget="many2many_tags" />
+                                            <field name="tax_line_id" />
+                                            <field name="tax_repartition_line_id" invisible="not tax_line_id" />
+                                            <field name="is_refund" />
+                                        </group>
+                                        <group name="main-right">
+                                            <field name="move_line_type" />
+                                            <field name="type" widget="radio" />
+                                            <field name="note" />
+                                        <div name="python_code_help" colspan="2" invisible="type != 'computed'">
+                                            <p>You can refer to other lines using their sequence number e.g. <i
+                                                    >L1</i> for line with sequence = 1. Examples:
+                                            </p>
+                                            <ul>
+                                                <li>L1 * 0.2</li>
+                                                <li>L2 - L1</li>
+                                                <li>L1 + L2 + L3</li>
+                                                <li>1250</li>
+                                            </ul>
+                                        </div>
+                                        <field
+                                                name="python_code"
+                                                invisible="type != 'computed'"
+                                                required="type == 'computed'"
+                                            />
+                                        </group>
+                                    </group>
+                                </sheet>
+                            </form>
+                            <tree>
+                                <field name="company_id" invisible="1" />
+                                <field name="company_currency_id" invisible="1" />
+                                <field name="product_uom_category_id" invisible="1" />
+                                <field name="tax_line_id" invisible="1" />
+                                <field name="sequence" />
+                                <field name="partner_id" />
+                                <field name="payment_term_id" />
+                                <field
+                                    name="product_id"
+                                    column_invisible="not parent.move_type or parent.move_type == 'entry'"
+                                />
+                                <field
+                                    name="product_uom_id"
+                                    string="UoM"
+                                    column_invisible="not parent.move_type or parent.move_type == 'entry'"
+                                />
+                                <field
+                                    name="product_uom_qty"
+                                    string="Qty"
+                                    column_invisible="not parent.move_type or parent.move_type == 'entry'"
+                                />
+                                <field name="name" />
+                                <field
+                                    name="amount"
+                                    column_invisible="not parent.move_type or parent.move_type == 'entry'"
+                                />
+                                <field name="account_id" />
+                                <field name="opt_account_id" />
+                                <field name="move_line_type" />
+                                <field name="type" />
+                                <field
+                                    name="analytic_distribution"
+                                    widget="analytic_distribution"
+                                    groups="analytic.group_analytic_accounting"
+                                />
+                                <field name="tax_ids" widget="many2many_tags" options="{'no_create': True}" />
+                                <field name="note" />
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

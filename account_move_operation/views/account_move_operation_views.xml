@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="account_move_operation_line_tree" model="ir.ui.view">
+        <field name="name">account.move.operation.line.tree</field>
+        <field name="model">account.move.operation.line</field>
+        <field name="arch" type="xml">
+            <tree
+                decoration-info="state == 'ready'"
+                decoration-success="state == 'done'"
+                decoration-muted="state == 'cancel'"
+                decoration-warning="state == 'in_progress'"
+            >
+                <field name="name" />
+                <field name="action" />
+                <field name="operation_id" invisible="1" />
+                <field name="template_id" invisible="1" />
+                <field name="move_id" invisible="1" />
+                <field name="st_line_id" invisible="1" />
+                <field name="payment_id" invisible="1" />
+                <field name="created_operation_id" invisible="1" />
+                <field name="state" widget="badge" />
+                <button
+                    name="action_open_document"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-file-text-o"
+                    invisible="not move_id and not st_line_id and not payment_id and not created_operation_id and action != 'info'"
+                />
+            </tree>
+        </field>
+    </record>
+
+    <record id="account_move_operation_line_form" model="ir.ui.view">
+        <field name="name">account.move.operation.line.form</field>
+        <field name="model">account.move.operation.line</field>
+        <field name="arch" type="xml">
+            <form string="Account Operation Line">
+                <header>
+                    <field name="state" widget="statusbar" />
+                </header>
+                <sheet>
+                    <group name="main">
+                        <group name="main-left">
+                            <field name="name" />
+                            <field name="action" />
+                            <field name="operation_id" />
+                            <field name="template_id" invisible="not template_id" />
+                        </group>
+                        <group name="main-right">
+                            <field name="orig_line_id" invisible="not orig_line_id" />
+                            <field name="dest_line_id" invisible="not dest_line_id" />
+                            <field name="st_line_id" invisible="not st_line_id" />
+                            <field name="move_id" invisible="not move_id" />
+                            <field name="payment_id" invisible="not payment_id" />
+                            <field name="created_operation_id" invisible="not created_operation_id" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="account_move_operation_form" model="ir.ui.view">
+        <field name="name">account.move.operation.form</field>
+        <field name="model">account.move.operation</field>
+        <field name="arch" type="xml">
+            <form string="Account Operation">
+                <header>
+                    <button
+                        string="Start"
+                        name="action_start"
+                        class="btn-primary"
+                        type="object"
+                        invisible="state != 'draft'"
+                    />
+                    <button
+                        string="Next Step"
+                        name="action_next_step"
+                        class="btn-primary"
+                        type="object"
+                        invisible="state != 'in_progress'"
+                    />
+                    <button
+                        string="Cancel"
+                        name="action_cancel"
+                        class="btn-secondary"
+                        type="object"
+                        invisible="state in ['cancel', 'done']"
+                    />
+                    <field name="state" widget="statusbar" />
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            string="Bank Statement"
+                            name="action_open_bank_statement_line"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-file-text-o"
+                            invisible="not st_line_id"
+                        />
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only" />
+                        <h1>
+                            <field name="name" />
+                        </h1>
+                    </div>
+                    <group name="main">
+                        <group name="main-left">
+                            <field name="company_id" invisible="1" />
+                            <field name="company_id" widget="selection" groups="base.group_multi_company" />
+                            <field
+                                name="operation_type_id"
+                                readonly="state in ['in_progress', 'done', 'cancel']"
+                                options="{'no_open': True, 'no_create': True}"
+                            />
+                            <field name="reference" />
+                        </group>
+                        <group name="main-right">
+                            <field
+                                name="partner_id"
+                                readonly="state in ['in_progress', 'done', 'cancel']"
+                                options="{'no_open': True, 'no_create': True}"
+                                required="1"
+                            />
+                            <field
+                                name="currency_id"
+                                options="{'no_open': True, 'no_create': True}"
+                                force_save="1"
+                                readonly="state != 'draft' or st_line_id"
+                            />
+                            <field
+                                name="st_line_id"
+                                options="{'no_open': True, 'no_create': True}"
+                                required="from_bank_statement"
+                                readonly="state in ['in_progress', 'done', 'cancel']"
+                            />
+                            <field name="amount" force_save="1" readonly="state != 'draft' or st_line_id" />
+                            <field name="from_bank_statement" invisible="1" />
+                        </group>
+                    </group>
+                    <group name="lines">
+                        <field name="line_ids" nolabel="1" colspan="2" />
+                    </group>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" />
+                        <field name="activity_ids" widget="mail_activity" />
+                        <field name="message_ids" widget="mail_thread" />
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="account_move_operation_tree" model="ir.ui.view">
+        <field name="name">account.move.operation.tree</field>
+        <field name="model">account.move.operation</field>
+        <field name="arch" type="xml">
+            <tree
+                decoration-info="state == 'in_progress'"
+                decoration-success="state == 'done'"
+                decoration-muted="state == 'cancel'"
+            >
+                <field name="name" />
+                <field name="operation_type_id" />
+                <field name="partner_id" />
+                <field name="reference" />
+                <field name="company_id" groups="base.group_multi_company" />
+                <field name="state" widget="badge" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="account_move_operation_search" model="ir.ui.view">
+        <field name="name">account.move.operation.search</field>
+        <field name="model">account.move.operation</field>
+        <field name="arch" type="xml">
+            <search string="Account Operation">
+                <field name="name" />
+                <field name="operation_type_id" />
+                <field name="partner_id" />
+                <group name="groupby">
+                    <filter name="type_groupby" string="Type" context="{'group_by': 'operation_type_id'}" />
+                    <filter name="partner_groupby" string="Partner" context="{'group_by': 'partner_id'}" />
+                    <filter name="state_groupby" string="State" context="{'group_by': 'state'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="account_move_operation_action" model="ir.actions.act_window">
+        <field name="name">Account Operations</field>
+        <field name="res_model">account.move.operation</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('company_id', 'in', allowed_company_ids)]</field>
+    </record>
+    <menuitem
+        id="account_move_operation_menu"
+        action="account_move_operation_action"
+        parent="account.menu_finance_entries_actions"
+        sequence="10"
+    />
+</odoo>
