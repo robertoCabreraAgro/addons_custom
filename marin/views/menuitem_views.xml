@@ -253,19 +253,13 @@
     </record>
 
     <menuitem
-        id="menu_finance_bank"
-        name="Banks"
+        id="menu_finance_bank_statement"
+        name="Bank Statements"
         parent="account.menu_finance_entries"
+        action="account.action_bank_statement_tree"
         sequence="20"
         groups="account.group_account_readonly,marin.group_account_bank_statement"
-    >
-        <menuitem
-            id="menu_finance_bank_statement"
-            name="Bank Statements"
-            action="account.action_bank_statement_tree"
-            sequence="10"
-        />
-    </menuitem>
+    />
 
     <menuitem
         id="menu_action_account_payments_transfer"
