@@ -1,8 +1,8 @@
 from odoo import api, fields, models
 
 
-class AccountMoveOperationActions(models.Model):
-    _name = "account.move.operation.action"
+class WorkflowTemplateAction(models.Model):
+    _name = "workflow.template.action"
     _description = "Account Operation Actions"
     _order = "sequence, id"
     _check_company_auto = True

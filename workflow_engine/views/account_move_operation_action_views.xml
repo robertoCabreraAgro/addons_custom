@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-    <record id="account_move_operation_action_tree" model="ir.ui.view">
-        <field name="name">account.move.operation.action.tree</field>
-        <field name="model">account.move.operation.action</field>
+    <record id="workflow_template_action_tree" model="ir.ui.view">
+        <field name="name">workflow.template.action.tree</field>
+        <field name="model">workflow.template.action</field>
         <field name="arch" type="xml">
             <list>
                 <field name="sequence" widget="handle" />
@@ -15,9 +15,9 @@
         </field>
     </record>
 
-    <record id="account_move_operation_action_form" model="ir.ui.view">
-        <field name="name">account.move.operation.action.form</field>
-        <field name="model">account.move.operation.action</field>
+    <record id="workflow_template_action_form" model="ir.ui.view">
+        <field name="name">workflow.template.action.form</field>
+        <field name="model">workflow.template.action</field>
         <field name="arch" type="xml">
             <form string="Account Operation Action">
                 <sheet>

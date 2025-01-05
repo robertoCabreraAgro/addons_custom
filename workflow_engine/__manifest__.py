@@ -1,8 +1,8 @@
 {
-    "name": "Account Move Operations",
+    "name": "Workflow Engine",
     "version": "18.0.0.0.0",
     "category": "Accounting",
-    "summary": "Templates for recurring accounting operations",
+    "summary": "Templates for recurring operations",
     "author": "Vauxoo",
     "license": "AGPL-3",
     "depends": [
@@ -15,7 +15,7 @@
         # Views
         # "views/account_move_operation_views.xml",
         "views/workflow_template_views.xml",
-        "views/account_move_operation_action_views.xml",
+        "views/workflow_template_action_views.xml",
         # "views/bank_rec_widget_views.xml",
         # Wizard
         # "wizard/account_invoice_template_run_view.xml",

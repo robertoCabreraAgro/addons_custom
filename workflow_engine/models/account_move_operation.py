@@ -240,7 +240,7 @@ class AccountMoveOperationLine(models.Model):
     move_id = fields.Many2one("account.move", readonly=True)
     payment_id = fields.Many2one("account.payment", readonly=True)
     st_line_id = fields.Many2one("account.bank.statement.line", readonly=True)
-    action_id = fields.Many2one("account.move.operation.action", readonly=True)
+    action_id = fields.Many2one("workflow.template.action", readonly=True)
     created_operation_id = fields.Many2one("account.move.operation", readonly=True)
     date_last_document = fields.Boolean(
         help="When creating an invoice, set the date to be the same of the previous document, "

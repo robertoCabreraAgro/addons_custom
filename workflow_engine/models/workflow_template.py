@@ -29,7 +29,7 @@ class WorkflowTemplate(models.Model):
         index=True,
     )
     action_ids = fields.One2many(
-        comodel_name="account.move.operation.action",
+        comodel_name="workflow.template.action",
         inverse_name="workflow_template_id",
         string="Actions",
         copy=True,

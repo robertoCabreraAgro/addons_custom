@@ -63,7 +63,7 @@ class AccountBankStatementOperation(models.TransientModel):
         }
 
     def open_existing_operations(self):
-        action = self.env["ir.actions.actions"]._for_xml_id("account_move_operation.account_move_operation_action")
+        action = self.env["ir.actions.actions"]._for_xml_id("account_move_operation.workflow_template_action")
         action["domain"] = [("id", "in", self.st_line_id.operation_ids.ids)]
         action["views"] = [
             ((view_id, "list") if view_type == "tree" else (view_id, view_type))

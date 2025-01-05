@@ -174,7 +174,7 @@
         </field>
     </record>
 
-    <record id="account_move_operation_action" model="ir.actions.act_window">
+    <record id="workflow_template_action" model="ir.actions.act_window">
         <field name="name">Account Operations</field>
         <field name="res_model">account.move.operation</field>
         <field name="view_mode">tree,form</field>
@@ -184,6 +184,6 @@
     <menuitem
         id="account_move_operation_menu"
         parent="account.menu_finance_entries_actions"
-        action="account_move_operation_action"
+        action="workflow_template_action"
         sequence="10" />
 </odoo>
