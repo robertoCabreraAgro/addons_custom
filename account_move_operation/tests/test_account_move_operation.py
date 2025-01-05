@@ -66,7 +66,7 @@ class TestAccountMoveTemplate(TestBankRecWidgetCommon):
             self.env.user.groups_id = [(4, group.id)]
         operation = self.operation_obj.create(
             {
-                "operation_type_id": self.operation_type.id,
+                "workflow_template_id": self.operation_type.id,
                 "currency_id": self.company.currency_id.id,
                 "company_id": self.company.id,
             }
@@ -271,7 +271,7 @@ class TestAccountMoveTemplate(TestBankRecWidgetCommon):
     def test_02_cancel_operation(self):
         operation = self.operation_obj.create(
             {
-                "operation_type_id": self.operation_type.id,
+                "workflow_template_id": self.operation_type.id,
                 "partner_id": self.partner.id,
                 "currency_id": self.company.currency_id.id,
             }
@@ -323,7 +323,7 @@ class TestAccountMoveTemplate(TestBankRecWidgetCommon):
     def test_03_create_operation_multicompany(self):
         operation = self.operation_obj.create(
             {
-                "operation_type_id": self.operation_type_2.id,
+                "workflow_template_id": self.operation_type_2.id,
                 "partner_id": self.partner.id,
                 "currency_id": self.company.currency_id.id,
             }
@@ -481,7 +481,7 @@ class TestAccountMoveTemplate(TestBankRecWidgetCommon):
     def test_04_cancel_operation_multicompany(self):
         operation = self.operation_obj.create(
             {
-                "operation_type_id": self.operation_type_2.id,
+                "workflow_template_id": self.operation_type_2.id,
                 "partner_id": self.partner.id,
                 "currency_id": self.company.currency_id.id,
             }
@@ -563,7 +563,7 @@ class TestAccountMoveTemplate(TestBankRecWidgetCommon):
     def test_05_account_operation_errors(self):
         operation = self.operation_obj.create(
             {
-                "operation_type_id": self.operation_type_2.id,
+                "workflow_template_id": self.operation_type_2.id,
                 "currency_id": self.company.currency_id.id,
             }
         )
@@ -581,7 +581,7 @@ class TestAccountMoveTemplate(TestBankRecWidgetCommon):
             self.env.user.groups_id = [(4, group.id)]
         operation = self.operation_obj.create(
             {
-                "operation_type_id": self.operation_type_3.id,
+                "workflow_template_id": self.operation_type_3.id,
                 "currency_id": self.company.currency_id.id,
                 "company_id": self.company.id,
             }

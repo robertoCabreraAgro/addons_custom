@@ -9,8 +9,8 @@ class AccountBankStatementOperation(models.TransientModel):
         "account.bank.statement.line",
         required=True,
     )
-    operation_type_id = fields.Many2one(
-        "account.move.operation.type",
+    workflow_template_id = fields.Many2one(
+        "workflow.template",
         domain="[('from_bank_statement', '=', True), ('company_id', '=', company_id)]",
     )
     company_id = fields.Many2one(
@@ -45,7 +45,7 @@ class AccountBankStatementOperation(models.TransientModel):
     def action_create_operation(self):
         operation = self.env["account.move.operation"].create(
             {
-                "operation_type_id": self.operation_type_id.id,
+                "workflow_template_id": self.workflow_template_id.id,
                 "st_line_id": self.st_line_id.id,
                 "partner_id": self.st_line_id.partner_id.id,
                 "currency_id": self.st_line_id.currency_id.id,

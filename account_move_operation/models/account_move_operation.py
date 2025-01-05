@@ -24,8 +24,8 @@ class AccountMoveOperation(models.Model):
         required=True,
         default=lambda self: self.env.company.currency_id.id,
     )
-    operation_type_id = fields.Many2one(
-        comodel_name="account.move.operation.type",
+    workflow_template_id = fields.Many2one(
+        comodel_name="workflow.template",
         string="Type",
         required=True,
         index=True,
@@ -64,7 +64,7 @@ class AccountMoveOperation(models.Model):
         tracking=True,
     )
     amount = fields.Monetary(currency_field="currency_id")
-    from_bank_statement = fields.Boolean(related="operation_type_id.from_bank_statement")
+    from_bank_statement = fields.Boolean(related="workflow_template_id.from_bank_statement")
     line_ids = fields.One2many(
         comodel_name="account.move.operation.line",
         inverse_name="operation_id",
@@ -106,7 +106,7 @@ class AccountMoveOperation(models.Model):
     def _create_lines(self):
         line = self.env["account.move.operation.line"]
         vals_list = []
-        for rule in self.operation_type_id.action_ids:
+        for rule in self.workflow_template_id.action_ids:
             vals_list.append(self._get_line_vals(rule))
         for vals in vals_list:
             if line:
@@ -358,7 +358,7 @@ class AccountMoveOperationLine(models.Model):
             wiz = self.env["account.move.operation.operation"].create(
                 {
                     "line_id": self.id,
-                    "diff_company_id": self.action_id.operation_type_ids.mapped("company_id")[:1].id,
+                    "diff_company_id": self.action_id.workflow_template_ids.mapped("company_id")[:1].id,
                     "amount": self.operation_id.amount,
                 }
             )

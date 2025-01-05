@@ -22,11 +22,11 @@ class AccountMoveOperationOperation(models.TransientModel):
     )
     amount = fields.Float(readonly=True)
 
-    @api.depends("line_id.action_id.operation_type_ids")
+    @api.depends("line_id.action_id.workflow_template_ids")
     def _compute_available_company_ids(self):
         for rec in self:
             rec.available_company_ids = [
-                Command.set(rec.line_id.action_id.operation_type_ids.mapped("company_id").ids)
+                Command.set(rec.line_id.action_id.workflow_template_ids.mapped("company_id").ids)
             ]
 
     @api.model
@@ -42,12 +42,12 @@ class AccountMoveOperationOperation(models.TransientModel):
         return defaults
 
     def action_create_operation(self):
-        op_type = self.sudo().line_id.action_id.operation_type_ids.filtered(
+        op_type = self.sudo().line_id.action_id.workflow_template_ids.filtered(
             lambda ot: ot.company_id == self.diff_company_id
         )
         operation = self.env["account.move.operation"].sudo().with_company(self.diff_company_id)
         vals = {
-            "operation_type_id": op_type.id,
+            "workflow_template_id": op_type.id,
             "partner_id": self.operation_id.partner_id.id,
             "currency_id": self.operation_id.currency_id.id,
         }

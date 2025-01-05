@@ -14,7 +14,7 @@
         "security/ir.model.access.csv",
         # Views
         # "views/account_move_operation_views.xml",
-        "views/account_move_operation_type_views.xml",
+        "views/workflow_template_views.xml",
         "views/account_move_operation_action_views.xml",
         # "views/bank_rec_widget_views.xml",
         # Wizard
@@ -33,7 +33,7 @@
         # "demo/account_journal.xml",
         # "demo/product.xml",
         # "demo/account_move_template.xml",
-        # "demo/account_move_operation_type.xml",
+        # "demo/workflow_template.xml",
     ],
     "assets": {
         # "web.assets_backend": [

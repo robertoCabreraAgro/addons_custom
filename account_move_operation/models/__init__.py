@@ -1,6 +1,6 @@
 # from . import account_move
 # from . import account_move_template
-from . import account_move_operation_type
+from . import workflow_template
 from . import account_move_operation_action
 # from . import account_move_operation
 # from . import bank_rec_widget

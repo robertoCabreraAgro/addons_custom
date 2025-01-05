@@ -63,10 +63,10 @@
         <field name="arch" type="xml">
             <search string="Account Operation">
                 <field name="name" />
-                <field name="operation_type_id" />
+                <field name="workflow_template_id" />
                 <field name="partner_id" />
                 <group name="groupby">
-                    <filter name="type_groupby" string="Type" context="{'group_by': 'operation_type_id'}" />
+                    <filter name="type_groupby" string="Type" context="{'group_by': 'workflow_template_id'}" />
                     <filter name="partner_groupby" string="Partner" context="{'group_by': 'partner_id'}" />
                     <filter name="state_groupby" string="State" context="{'group_by': 'state'}" />
                 </group>
@@ -84,7 +84,7 @@
                 decoration-muted="state == 'cancel'"
             >
                 <field name="name" />
-                <field name="operation_type_id" />
+                <field name="workflow_template_id" />
                 <field name="partner_id" />
                 <field name="reference" />
                 <field name="company_id" groups="base.group_multi_company" />
@@ -139,7 +139,7 @@
                         <group name="main-left">
                             <field name="company_id" invisible="1" />
                             <field name="company_id" widget="selection" groups="base.group_multi_company" />
-                            <field name="operation_type_id"
+                            <field name="workflow_template_id"
                                 readonly="state in ['in_progress', 'done', 'cancel']"
                                 options="{'no_open': True, 'no_create': True}" />
                             <field name="reference" />

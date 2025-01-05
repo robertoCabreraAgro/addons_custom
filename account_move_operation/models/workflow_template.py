@@ -1,8 +1,8 @@
 from odoo import fields, models
 
 
-class AccountMoveType(models.Model):
-    _name = "account.move.operation.type"
+class WorkflowTemplate(models.Model):
+    _name = "workflow.template"
     _description = "Account Operation Types"
     _order = "sequence"
     _check_company_auto = True
@@ -30,7 +30,7 @@ class AccountMoveType(models.Model):
     )
     action_ids = fields.One2many(
         comodel_name="account.move.operation.action",
-        inverse_name="operation_type_id",
+        inverse_name="workflow_template_id",
         string="Actions",
         copy=True,
     )
