@@ -306,7 +306,8 @@
                 <attribute name="force_save">1</attribute>
             </xpath>
             <xpath expr="//field[@name='l10n_mx_edi_payment_policy']" position="after">
-                <field name="force_payment_policy_pue" invisible="l10n_mx_edi_payment_policy == 'PPD'" />
+                <field name="force_payment_policy_pue"
+                    invisible="l10n_mx_edi_payment_policy == 'PUE'" />
             </xpath>
         </field>
     </record>

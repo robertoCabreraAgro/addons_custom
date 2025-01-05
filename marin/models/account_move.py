@@ -10,10 +10,15 @@ class AccountMove(models.Model):
 
     # Extended fields
     date = fields.Date(copy=True)
-    invoice_date = fields.Date(copy=True)
+    invoice_date = fields.Date(default=fields.Date.today(), copy=True)
     invoice_origin = fields.Char(readonly=False)
-    l10n_mx_edi_payment_policy = fields.Selection(store=True, readonly=False)
-    l10n_mx_edi_usage = fields.Selection(selection_add=[("CP01", "Payments")])
+    l10n_mx_edi_payment_policy = fields.Selection(
+        store=True,
+        readonly=False
+    )
+    l10n_mx_edi_usage = fields.Selection(
+        selection_add=[("CP01", "Payments")]
+    )
 
     # New fields
     journal_type = fields.Selection(
@@ -22,7 +27,10 @@ class AccountMove(models.Model):
         store=True,
         readonly=True
     )
-    force_payment_policy_pue = fields.Boolean("Force PUE")
+    force_payment_policy_pue = fields.Boolean(
+        string="Force PUE",
+        default=False,
+    )
     x_stored = fields.Boolean(
         string="Stored",
         tracking=True,
@@ -70,6 +78,31 @@ class AccountMove(models.Model):
                 invoice.partner_credit_warning = invoice.commercial_partner_id._build_credit_warning_message(
                     future_credit, invoice.company_id.currency_id
                 )
+    # Exxtend original method
+    @api.depends('needed_terms')
+    def _compute_invoice_date_due(self):
+        for move in self:
+            if (
+                move.invoice_payment_term_id
+                and move.invoice_date
+                and not move.line_ids
+            ):
+                invoice_payment_terms = move.invoice_payment_term_id._compute_terms(
+                    date_ref=move.invoice_date,
+                    currency=move.currency_id,
+                    company=move.company_id,
+                    tax_amount=0.0,
+                    tax_amount_currency=0.0,
+                    sign=1,
+                    untaxed_amount=1.0,
+                    untaxed_amount_currency=1.0,
+                    cash_rounding=move.invoice_cash_rounding_id,
+                )
+                move.invoice_date_due = max(
+                    [d["date"] for d in invoice_payment_terms["line_ids"]]
+                )
+            else:
+                super()._compute_invoice_date_due()
 
     # Override original method
     @api.depends("move_type", "company_currency_id", "origin_payment_id", "statement_line_id")
@@ -87,21 +120,55 @@ class AccountMove(models.Model):
 
     # Override original method
     @api.depends(
-        "move_type", "invoice_date", "invoice_payment_term_id",
-        "invoice_date_due", "force_payment_policy_pue"
+        'partner_id',
+        'l10n_mx_edi_is_cfdi_needed',
+        'l10n_mx_edi_cfdi_origin',
+    )
+    def _compute_l10n_mx_edi_cfdi_to_public(self):
+        for move in self:
+            if (
+                move.move_type == 'out_refund'
+                and 'global_sent' in set(
+                    move._l10n_mx_edi_get_refund_original_invoices()\
+                    .mapped('l10n_mx_edi_cfdi_state')
+                )
+            ):
+                move.l10n_mx_edi_cfdi_to_public = True
+            elif (
+                move.partner_id
+                and move.l10n_mx_edi_is_cfdi_needed
+                and not move.l10n_mx_edi_cfdi_to_public
+            ):
+                cfdi_values = self.env['l10n_mx_edi.document']._get_company_cfdi_values(move.company_id)
+                self.env['l10n_mx_edi.document']._add_customer_cfdi_values(
+                    cfdi_values,
+                    customer=move.partner_id,
+                )
+                move.l10n_mx_edi_cfdi_to_public = cfdi_values['receptor']['rfc'] == 'XAXX010101000'
+            else:
+                move.l10n_mx_edi_cfdi_to_public = False
+
+    # Override original method
+    @api.depends(
+        "move_type",
+        "invoice_date",
+        "invoice_date_due",
+        "invoice_payment_term_id",
+        "force_payment_policy_pue"
     )
     def _compute_l10n_mx_edi_payment_policy(self):
         for move in self:
+            move.l10n_mx_edi_payment_policy = False
             if (
-                move.is_invoice(include_receipts=True)
+                move.is_sale_document(include_receipts=True)
                 and move.l10n_mx_edi_is_cfdi_needed
-                and move.invoice_date_due
-                and move.invoice_date
             ):
                 move.l10n_mx_edi_payment_policy = "PUE"
                 if (
                     move.move_type == "out_invoice"
                     and not move.l10n_mx_edi_cfdi_to_public
+                    and move.invoice_date
+                    and move.invoice_date_due
                     and (
                         move.invoice_date_due.month > move.invoice_date.month
                         or move.invoice_date_due.year > move.invoice_date.year
@@ -110,8 +177,8 @@ class AccountMove(models.Model):
                     )
                 ):
                     move.l10n_mx_edi_payment_policy = "PPD"
-            if move.l10n_mx_edi_payment_policy and move.force_payment_policy_pue:
-                move.l10n_mx_edi_payment_policy = "PUE"
+                    if move.force_payment_policy_pue:
+                        move.l10n_mx_edi_payment_policy = "PUE"
 
     @api.onchange("journal_id")
     def _onchange_journal_id_show_update_lines(self):
