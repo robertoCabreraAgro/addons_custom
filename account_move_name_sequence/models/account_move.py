@@ -1,19 +1,16 @@
-# Copyright 2021 Akretion France (http://www.akretion.com/)
-# @author: Alexis de Lattre <alexis.delattre@akretion.com>
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
-
 from odoo import api, fields, models
 
 
 class AccountMove(models.Model):
     _inherit = "account.move"
 
+
     name = fields.Char(compute="_compute_name_by_sequence")
-    # highest_name, sequence_prefix, sequence_number are not needed any more
-    # -> compute=False to improve perf
     highest_name = fields.Char(compute=False)
+    made_sequence_gap = fields.Boolean(compute=False)
     sequence_prefix = fields.Char(compute=False)
     sequence_number = fields.Integer(compute=False)
+
 
     _sql_constraints = [
         (
@@ -23,6 +20,7 @@ class AccountMove(models.Model):
             "Check the journal sequence",
         ),
     ]
+
 
     @api.depends("state", "journal_id", "date")
     def _compute_name_by_sequence(self):
