@@ -14,11 +14,6 @@ class AccountMoveLine(models.Model):
     fleet_vehicle_log_services_ids = fields.One2many(
         "fleet.vehicle.log.services", "move_line_id", "Fleet services logs"
     )
-    allowed_purchase_line_ids = fields.Many2many(
-        comodel_name="purchase.order.line",
-        string="Allowed purchase lines to be related",
-        compute="_compute_allowed_purchase_line_ids",
-    )
     allowed_sale_line_ids = fields.Many2many(
         comodel_name="sale.order.line",
         string="Allowed sale lines to be related",
@@ -45,7 +40,10 @@ class AccountMoveLine(models.Model):
                 )
                 move = line.move_id
                 previous_two_accounts = move.line_ids.filtered(
-                    lambda x: x.account_id and x.display_type == "payment_term" and line._origin.id not in x.ids
+                    lambda x:
+                        x.account_id
+                        and x.display_type == "payment_term"
+                        and line._origin.id not in x.ids
                 )[-2:].account_id
                 account_id = (
                     getattr(journal, journal_prop)
@@ -68,20 +66,34 @@ class AccountMoveLine(models.Model):
                 journal = line.move_id.journal_id
                 if line.product_id:
                     fiscal_position = line.move_id.fiscal_position_id
-                    accounts = line.with_company(line.company_id).product_id.product_tmpl_id.get_product_accounts(
+                    accounts = line.with_company(
+                        line.company_id
+                    ).product_id.product_tmpl_id.get_product_accounts(
                         fiscal_pos=fiscal_position
                     )
                     if line.move_id.move_type in ("out_invoice", "out_receipt"):
-                        line.account_id = accounts["income"] or journal.default_account_id or line.account_id
+                        line.account_id = (
+                            accounts["income"]
+                            or journal.default_account_id
+                            or line.account_id
+                        )
                     elif line.move_id.move_type == "out_refund":
                         line.account_id = (
-                            accounts["income_refund"] or journal.default_refund_account_id or line.account_id
+                            accounts["income_refund"]
+                            or journal.default_refund_account_id
+                            or line.account_id
                         )
                     elif line.move_id.move_type in ("in_invoice", "in_receipt"):
-                        line.account_id = accounts["expense"] or journal.default_account_id or line.account_id
+                        line.account_id = (
+                            accounts["expense"]
+                            or journal.default_account_id
+                            or line.account_id
+                        )
                     elif line.move_id.move_type == "in_refund":
                         line.account_id = (
-                            accounts["expense_refund"] or journal.default_refund_account_id or line.account_id
+                            accounts["expense_refund"]
+                            or journal.default_refund_account_id
+                            or line.account_id
                         )
                 if not line.product_id and line.partner_id:
                     account_id = self.env["account.account"]._get_most_frequent_account_for_partner(
@@ -131,23 +143,6 @@ class AccountMoveLine(models.Model):
             if arguments not in cache:
                 cache[arguments] = self.env['account.analytic.distribution.model']._get_distribution(arguments)
             line.analytic_distribution = cache[arguments] or line.analytic_distribution
-
-    @api.depends(
-        "move_id.partner_id",
-        "move_id.relate_purchase_order",
-        "move_id.related_purchase_order_id",
-        "move_id.line_ids.purchase_line_id",
-    )
-    def _compute_allowed_purchase_line_ids(self):
-        purchase_obj = self.env["purchase.order"]
-        for rec in self:
-            move = rec.move_id
-            orders = (
-                move.related_purchase_order_id
-                if move.related_purchase_order_id and move.relate_purchase_order
-                else purchase_obj.search([("partner_id", "=", move.partner_id.id)])
-            )
-            rec.allowed_purchase_line_ids = orders.order_line | move.line_ids.mapped("purchase_line_id")
 
     @api.depends("move_id.partner_id", "move_id.line_ids.sale_line_ids")
     def _compute_allowed_sale_line_ids(self):

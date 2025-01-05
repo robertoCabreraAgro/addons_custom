@@ -16,12 +16,15 @@ class AccountMove(models.Model):
     l10n_mx_edi_usage = fields.Selection(selection_add=[("CP01", "Payments")])
 
     # New fields
-    journal_type = fields.Selection(related="journal_id.type", string="Journal type", store=True, readonly=True)
+    journal_type = fields.Selection(
+        related="journal_id.type",
+        string="Journal type",
+        store=True,
+        readonly=True
+    )
     force_payment_policy_pue = fields.Boolean("Force PUE")
-    relate_purchase_order = fields.Boolean()
-    related_purchase_order_id = fields.Many2one("purchase.order", readonly=True)
     x_stored = fields.Boolean(
-        "Stored",
+        string="Stored",
         tracking=True,
         help="If this checkbox is ticked, it means that a management representative has "
              "received and stored a printed invoice on credit signed by the customer. ",
@@ -48,7 +51,10 @@ class AccountMove(models.Model):
             invoice.partner_credit_warning = ""
             amount_total_currency = (
                 invoice.currency_id._convert(
-                    invoice.amount_total, invoice.company_currency_id, invoice.company_id, invoice.date
+                    invoice.amount_total,
+                    invoice.company_currency_id,
+                    invoice.company_id,
+                    invoice.date
                 )
                 if invoice.move_type == "out_invoice"
                 else 0
@@ -115,10 +121,14 @@ class AccountMove(models.Model):
         for invoice in self.filtered(lambda i: i.is_invoice()):
             if (invoice.x_check_tax or invoice.x_check_total) and (
                 float_compare(
-                    invoice.x_check_total, invoice.amount_total, precision_rounding=invoice.currency_id.rounding
+                    invoice.x_check_total,
+                    invoice.amount_total,
+                    precision_rounding=invoice.currency_id.rounding
                 )
                 or float_compare(
-                    invoice.x_check_tax, invoice.amount_tax, precision_rounding=invoice.currency_id.rounding
+                    invoice.x_check_tax,
+                    invoice.amount_tax,
+                    precision_rounding=invoice.currency_id.rounding
                 )
             ):
                 raise UserError(_(
@@ -135,24 +145,34 @@ class AccountMove(models.Model):
 
     def _pre_post_invoice_credit_limit_validation(self):
         for invoice in self.filtered(
-            lambda i: i.move_type == "out_invoice"
-            and i.partner_credit_warning
-            and not i.invoice_payment_term_id.is_immediate
+            lambda i:
+                i.move_type == "out_invoice"
+                and i.partner_credit_warning
+                and not i.invoice_payment_term_id.is_immediate
         ):
             if invoice.commercial_partner_id.credit_on_hold:
                 raise UserError(_(
                     "The Partner's %s credit line has been held. Contact the Credit Manager.",
                     invoice.commercial_partner_id.name,
                 ))
+
             if not self.env.user.has_group("marin.group_account_debt_manager"):
                 raise UserError(_(
                     "The Partner %s does not have enough credit line. Contact the Credit Manager.",
                     invoice.commercial_partner_id.name,
                 ))
+
             authorized = self._context.get("debt_authorized")
-            if authorized or self.env["ir.config_parameter"].sudo().get_param("marin.avoid_authorize_debt"):
+            if (
+                authorized
+                or self.env["ir.config_parameter"].sudo().get_param(
+                    "marin.avoid_authorize_debt"
+                )
+            ):
                 return True
+
             return invoice.action_authorize_debt_wizard()
+
         return True
 
     # Extend original method
@@ -266,11 +286,14 @@ class AccountMove(models.Model):
             ])
             if purchase_exist and len(purchase_exist) >= 1:
                 raise UserError(_(
-                    "More than one Purchase Orders with the same origin have been found. Please review"
+                    "More than one Purchase Orders with the same origin have been found. "
+                    "Please review"
                 ))
 
             if not purchase_exist:
-                purchase_exist = self.env["purchase.order"].create(self._prepare_purchase_order_vals())
+                purchase_exist = self.env["purchase.order"].create(
+                    self._prepare_purchase_order_vals()
+                )
                 purchase_line_vals = self._prepare_purchase_line_vals(move, purchase_exist)
                 for line, vals in purchase_line_vals.items():
                     move_line = self.env["account.move.line"].browse(int(line))
