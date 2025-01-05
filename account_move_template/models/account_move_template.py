@@ -45,7 +45,6 @@ class AccountMoveTemplate(models.Model):
         string="Journal",
         required=True,
         check_company=True,
-        domain=[('company_id', '=', company_id)],
     )
     partner_id = fields.Many2one(
         comodel_name="res.partner",
@@ -57,7 +56,7 @@ class AccountMoveTemplate(models.Model):
         string="Payment Terms",
         help="Used to compute the due date of the journal item.",
     )
-    name = fields.Char(required=True)
+    name = fields.Char(required=True, translate=True)
     active = fields.Boolean(default=True)
     ref = fields.Char(string="Reference", copy=False)
     line_ids = fields.One2many(

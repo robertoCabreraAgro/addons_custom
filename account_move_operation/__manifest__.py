@@ -13,33 +13,32 @@
         # Security
         "security/ir.model.access.csv",
         # Views
-        "views/account_move_template_views.xml",
-        "views/account_move_operation_views.xml",
+        # "views/account_move_operation_views.xml",
         "views/account_move_operation_type_views.xml",
         "views/account_move_operation_action_views.xml",
         # "views/bank_rec_widget_views.xml",
         # Wizard
-        "wizard/account_invoice_template_run_view.xml",
-        "wizard/account_move_operation_partner_view.xml",
-        "wizard/account_move_operation_payment_view.xml",
-        "wizard/account_move_operation_reconcile_view.xml",
-        "wizard/account_move_operation_operation_view.xml",
-        "wizard/account_bank_statement_operation_view.xml",
+        # "wizard/account_invoice_template_run_view.xml",
+        # "wizard/account_move_operation_partner_view.xml",
+        # "wizard/account_move_operation_payment_view.xml",
+        # "wizard/account_move_operation_reconcile_view.xml",
+        # "wizard/account_move_operation_operation_view.xml",
+        # "wizard/account_bank_statement_operation_view.xml",
         # Data
         "data/ir_sequence_data.xml",
     ],
     "demo": [
-        "demo/res_company.xml",
-        "demo/account_account.xml",
-        "demo/account_journal.xml",
-        "demo/product.xml",
-        "demo/account_move_template.xml",
-        "demo/account_move_operation_type.xml",
+        # "demo/res_company.xml",
+        # "demo/account_account.xml",
+        # "demo/account_journal.xml",
+        # "demo/product.xml",
+        # "demo/account_move_template.xml",
+        # "demo/account_move_operation_type.xml",
     ],
     "assets": {
-        "web.assets_backend": [
-            "account_move_operation/static/src/components/**/*",
-        ],
+        # "web.assets_backend": [
+        #     "account_move_operation/static/src/components/**/*",
+        # ],
     },
     "installable": True,
 }

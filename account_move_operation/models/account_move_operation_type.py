@@ -7,15 +7,36 @@ class AccountMoveType(models.Model):
     _order = "sequence"
     _check_company_auto = True
 
+
     name = fields.Char("Type", required=True, translate=True)
     active = fields.Boolean(
         default=True,
-        help="If the active field is set to False, it will allow you to hide the type without removing it.",
+        help="If unchecked, it will allow you to hide the action without removing it."
     )
     sequence = fields.Integer(default=0)
-    action_ids = fields.One2many("account.move.operation.action", "operation_type_id", "Actions", copy=True)
-    company_id = fields.Many2one(
-        "res.company", "Company", default=lambda self: self.env.company, index=True, required=True
+    company_ids = fields.Many2many(
+        comodel_name='res.company',
+        string='Companies',
+        required=True,
+        default=lambda self: self.env.company,
+        readonly=False,
     )
-    from_bank_statement = fields.Boolean(help="Enable being set from a bank statement.")
-    sub_operation = fields.Boolean(help="This sets the operation to be used as a sub operation.")
+    execution = fields.Selection(
+        selection=[
+            ("sequencial", "Sequencial"),
+            ("async", "Asynchronous"),
+        ],
+        index=True,
+    )
+    action_ids = fields.One2many(
+        comodel_name="account.move.operation.action",
+        inverse_name="operation_type_id",
+        string="Actions",
+        copy=True,
+    )
+    from_bank_statement = fields.Boolean(
+        help="Enable being set from a bank statement.",
+    )
+    sub_operation = fields.Boolean(
+        help="This sets the operation to be used as a sub operation.",
+    )

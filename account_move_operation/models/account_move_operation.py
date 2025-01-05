@@ -9,6 +9,38 @@ class AccountMoveOperation(models.Model):
     _description = "Account Move Operations"
     _check_company_auto = True
 
+
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        string="Company",
+        default=lambda self: self.env.company,
+        index=True,
+        help="Leave this field empty if this route is shared between all companies",
+        readonly=True,
+    )
+    currency_id = fields.Many2one(
+        comodel_name="res.currency",
+        string="Currency",
+        required=True,
+        default=lambda self: self.env.company.currency_id.id,
+    )
+    operation_type_id = fields.Many2one(
+        comodel_name="account.move.operation.type",
+        string="Type",
+        required=True,
+        index=True,
+        domain="[('company_id', '=', company_id), ('sub_operation', '=', False)]",
+    )
+    partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Partner",
+        domain=["|", ("parent_id", "=", False), ("is_company", "=", True)],
+    )
+    st_line_id = fields.Many2one(
+        comodel_name="account.bank.statement.line",
+        string="Bank Statement Line",
+        domain=["|", ("partner_id", "=", partner_id), ("partner_id", "=", False)],
+    )
     name = fields.Char(
         string="Operation",
         required=True,
@@ -19,18 +51,6 @@ class AccountMoveOperation(models.Model):
         tracking=True,
     )
     reference = fields.Char(copy=False)
-    operation_type_id = fields.Many2one(
-        "account.move.operation.type",
-        string="Type",
-        required=True,
-        index=True,
-        domain="[('company_id', '=', company_id), ('sub_operation', '=', False)]",
-    )
-    partner_id = fields.Many2one(
-        "res.partner",
-        "Partner",
-        domain=["|", ("parent_id", "=", False), ("is_company", "=", True)],
-    )
     state = fields.Selection(
         selection=[
             ("draft", "Draft"),
@@ -43,28 +63,14 @@ class AccountMoveOperation(models.Model):
         readonly=True,
         tracking=True,
     )
-    company_id = fields.Many2one(
-        "res.company",
-        string="Company",
-        default=lambda self: self.env.company,
-        index=True,
-        help="Leave this field empty if this route is shared between all companies",
-        readonly=True,
-    )
-    currency_id = fields.Many2one(
-        "res.currency",
-        "Currency",
-        required=True,
-        default=lambda self: self.env.company.currency_id.id,
-    )
-    st_line_id = fields.Many2one(
-        "account.bank.statement.line",
-        string="Bank Statement Line",
-        domain=["|", ("partner_id", "=", partner_id), ("partner_id", "=", False)],
-    )
     amount = fields.Monetary(currency_field="currency_id")
     from_bank_statement = fields.Boolean(related="operation_type_id.from_bank_statement")
-    line_ids = fields.One2many("account.move.operation.line", "operation_id", readonly=True)
+    line_ids = fields.One2many(
+        comodel_name="account.move.operation.line",
+        inverse_name="operation_id",
+        readonly=True,
+    )
+
 
     def action_start(self):
         self.ensure_one()
