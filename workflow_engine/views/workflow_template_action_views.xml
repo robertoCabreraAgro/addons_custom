@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-    <record id="workflow_template_action_tree" model="ir.ui.view">
-        <field name="name">workflow.template.action.tree</field>
+    <record id="workflow_template_action_list" model="ir.ui.view">
+        <field name="name">workflow.template.action.list</field>
         <field name="model">workflow.template.action</field>
         <field name="arch" type="xml">
             <list>

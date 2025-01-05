@@ -70,10 +70,3 @@ class WorkflowTemplateAction(models.Model):
         default=True,
         help="Help simplify process avoiding using intermediary wizards.",
     )
-
-
-    @api.onchange("workflow_template_id", "company_id")
-    def _onchange_operation_type(self):
-        """Ensure that the rule's company is the same than the route's company."""
-        if self.workflow_template_id.company_id:
-            self.company_id = self.workflow_template_id.company_id
