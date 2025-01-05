@@ -1,10 +1,3 @@
-# Copyright 2021 Akretion France (http://www.akretion.com/)
-# Copyright 2022 Vauxoo (https://www.vauxoo.com/)
-# @author: Alexis de Lattre <alexis.delattre@akretion.com>
-# @author: Moisés López <moylop260@vauxoo.com>
-# @author: Francisco Luna <fluna@vauxoo.com>
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
-
 import logging
 
 from odoo import _, api, fields, models
@@ -17,26 +10,25 @@ class AccountJournal(models.Model):
     _inherit = "account.journal"
 
     sequence_id = fields.Many2one(
-        "ir.sequence",
+        comodel_name="ir.sequence",
         string="Entry Sequence",
-        copy=False,
         check_company=True,
         domain="[('company_id', '=', company_id)]",
+        copy=False,
         help="This sequence will be used to generate the journal entry number.",
     )
     refund_sequence_id = fields.Many2one(
-        "ir.sequence",
+        comodel_name="ir.sequence",
         string="Credit Note Entry Sequence",
-        copy=False,
         check_company=True,
         domain="[('company_id', '=', company_id)]",
+        copy=False,
         help="This sequence will be used to generate the journal entry number for refunds.",
     )
-    # Redefine the default to True as <=v13.0
-    refund_sequence = fields.Boolean(default=True)
     # has_sequence_holes is not relevant anymore (since based on sequence_prefix/number)
     # -> compute=False to improve perf and to avoid displaying warning
     has_sequence_holes = fields.Boolean(compute=False)
+
 
     @api.constrains("refund_sequence_id", "sequence_id")
     def _check_journal_sequence(self):
@@ -46,13 +38,12 @@ class AccountJournal(models.Model):
                 and journal.sequence_id
                 and journal.refund_sequence_id == journal.sequence_id
             ):
-                raise ValidationError(
-                    _(
-                        "On journal '%s', the same sequence is used as "
-                        "Entry Sequence and Credit Note Entry Sequence.",
-                        journal.display_name,
-                    )
-                )
+                raise ValidationError(_(
+                    "On journal '%s', the same sequence is used as "
+                    "Entry Sequence and Credit Note Entry Sequence.",
+                    journal.display_name,
+                ))
+
             if journal.sequence_id and not journal.sequence_id.company_id:
                 msg = _(
                     "The company is not set on sequence '%(sequence)s' configured on "
@@ -61,6 +52,7 @@ class AccountJournal(models.Model):
                     journal=journal.display_name,
                 )
                 raise ValidationError(msg)
+
             if journal.refund_sequence_id and not journal.refund_sequence_id.company_id:
                 msg = _(
                     "The company is not set on sequence '%(sequence)s' configured as "
@@ -220,6 +212,7 @@ class AccountJournal(models.Model):
                             }
                         )
                         continue
+
                     if len(year) == 2:
                         # Year >=50 will be considered as last century 1950
                         # Year <=49 will be considered as current century 2049

@@ -1,20 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<!--
-  Copyright 2021 Akretion France (http://www.akretion.com/)
-  @author: Alexis de Lattre <alexis.delattre@akretion.com>
-  @author: Moisés López <moylop260@vauxoo.com>
-  @author: Francisco Luna <fluna@vauxoo.com>
-  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
--->
 <odoo>
-
     <record id="view_account_journal_form" model="ir.ui.view">
         <field name="model">account.journal</field>
         <field name="inherit_id" ref="account.view_account_journal_form" />
         <field name="arch" type="xml">
             <field name="refund_sequence" position="before">
-                <field
-                    name="sequence_id"
+                <field name="sequence_id"
                     required="1"
                     context="{
                         'default_name': name,
@@ -27,8 +18,7 @@
                 />
             </field>
             <field name="refund_sequence" position="after">
-                <field
-                    name="refund_sequence_id"
+                <field name="refund_sequence_id"
                     invisible="type not in ('sale', 'purchase') or not refund_sequence"
                     required="type in ('sale', 'purchase') and refund_sequence"
                     context="{
@@ -43,5 +33,4 @@
             </field>
         </field>
     </record>
-
 </odoo>
