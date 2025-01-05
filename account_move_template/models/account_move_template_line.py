@@ -17,7 +17,6 @@ class AccountMoveTemplateLine(models.Model):
     )
     name = fields.Char(string="Label")
     sequence = fields.Integer(required=True)
-    company_id = fields.Many2one(related="template_id.company_id", store=True)
     partner_id = fields.Many2one(
         comodel_name="res.partner",
         string="Partner",
@@ -26,7 +25,7 @@ class AccountMoveTemplateLine(models.Model):
     product_id = fields.Many2one(
         comodel_name="product.product",
         check_company=True,
-        domain=[('company_id', 'in', [company_id, False])],
+        # domain=[('company_id', 'in', (template_id.company_ids.ids, False))],
     )
     product_uom_category_id = fields.Many2one(
         related="product_id.uom_id.category_id",

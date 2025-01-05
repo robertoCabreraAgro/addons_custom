@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools.safe_eval import safe_eval
 
@@ -9,22 +9,20 @@ class AccountMoveTemplate(models.Model):
     _check_company_auto = True
 
 
-    company_id = fields.Many2one(
-        comodel_name="res.company",
-        string="Company",
+    company_ids = fields.Many2many(
+        comodel_name='res.company',
+        string='Companies',
         required=True,
         default=lambda self: self.env.company,
-        ondelete="cascade",
+        readonly=False,
     )
     company_currency_id = fields.Many2one(
-        related="company_id.currency_id", string="Company Currency", readonly=True,
+        comodel_name='res.currency',
+        compute='_compute_company_currency_id',
     )
     currency_id = fields.Many2one(
         comodel_name="res.currency",
-        string="Currency",
-        compute="_compute_currency_id",
-        store=True,
-        readonly=False,
+        string="Template Currency",
     )
     move_type = fields.Selection(
         selection=[
@@ -66,18 +64,15 @@ class AccountMoveTemplate(models.Model):
     )
     autopost = fields.Boolean(help="Set true if want to post the entry as it is created.")
 
-    _sql_constraints = [
-        (
-            "name_company_unique",
-            "unique(name, company_id)",
-            "This name is already used by another template!",
-        )
-    ]
 
     def copy(self, default=None):
         self.ensure_one()
         default = dict(default or {}, name=_("%s (copy)") % self.name)
         return super().copy(default)
+
+    @api.depends_context('company')
+    def _compute_company_currency_id(self):
+        self.company_currency_id = self.env.company.currency_id
 
     def eval_computed_line(self, line, sequence2amount):
         safe_eval_dict = {}

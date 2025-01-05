@@ -5,13 +5,11 @@
         <field name="model">account.move.template</field>
         <field name="arch" type="xml">
             <search string="Journal Entry Template">
-                <filter name="inactive"
-                    string="Archived"
+                <filter name="inactive" string="Archived"
                     domain="[('active','=',False)]" />
                 <field name="name" />
                 <group name="groupby">
-                    <filter name="journal_groupby"
-                        string="Journal"
+                    <filter name="journal_groupby" string="Journal"
                         context="{'group_by': 'journal_id'}" />
                 </group>
             </search>
@@ -25,7 +23,10 @@
             <list>
                 <field name="name" />
                 <field name="journal_id" />
-                <field name="company_id" groups="base.group_multi_company" />
+                <field name="company_ids"
+                    widget="many2many_tags"
+                    readonly="True"
+                    groups="base.group_multi_company" />
             </list>
         </field>
     </record>
@@ -65,21 +66,20 @@
                                 options="{'no_open': True, 'no_create': True}" />
                             <field name="ref" />
                             <field name="autopost" />
-                            <field name="company_id" invisible="1" />
-                            <field name="company_id"
-                                widget="selection"
+                            <field name="company_ids"
+                                widget="many2many_tags"
+                                options="{'no_create': True}"
                                 groups="base.group_multi_company" />
                         </group>
                     </group>
                     <notebook>
                         <page id="line_tab" name="line_tab" string="Template Lines">
-                            <field name="line_ids" nolabel="1"
-                                context="{'default_company_id': company_id}" colspan="2">
+                            <field name="line_ids"
+                                nolabel="1" colspan="2">
                                 <form string="Journal Entry Template Line">
                                     <sheet>
                                         <group name="main">
                                             <group name="main-left">
-                                                <field name="company_id" invisible="1" />
                                                 <field name="product_uom_category_id" invisible="1" />
                                                 <field name="sequence" />
                                                 <field name="partner_id" />
@@ -122,7 +122,6 @@
                                     </sheet>
                                 </form>
                                 <list>
-                                    <field name="company_id" invisible="1" />
                                     <field name="product_uom_category_id" invisible="1" />
                                     <field name="sequence" />
                                     <field name="partner_id" />
