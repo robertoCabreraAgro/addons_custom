@@ -113,7 +113,7 @@ class AccountMove(models.Model):
                 and move.company_currency_id.name == "MXN"
                 and move.journal_id.x_treatment in ("fiscal_simulated", "fiscal_real")
                 and (
-                    move.move_type in ("out_invoice", "out_refund")
+                    move.is_sale_document()
                     or move._l10n_mx_edi_is_cfdi_payment()
                 )
             )
