@@ -1,0 +1,11 @@
+<odoo>
+    <!-- Registro del dispositivo GPS -->
+    <record id="gps_tracking_device_test1" model="gps.tracking.device">
+        <field name="imei">867060038729378</field>
+    </record>
+
+    <!-- Registro del dispositivo GPS -->
+    <record id="gps_tracking_device_test2" model="gps.tracking.device">
+        <field name="imei">867060038729377</field>
+    </record>
+</odoo>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="gps_tracking.gps_tracking_dashboard_template">
+            <ControlPanel>
+                <t t-set-slot="layout-actions">
+                <GpsSearchbar
+                    t-props="{ initialQuery: '', onSearch: this.onSearch.bind(this) }"/>
+                <!-- Botón de Actualizar -->
+                <button type="button" class="btn btn-primary" t-on-click="refreshData">
+                    Actualizar
+                </button>
+            </t>
+            </ControlPanel>
+        <div class="o_gps_tracking_dashboard">
+            <div class="o_gps_tracking_kanban">
+                <t t-foreach="state.filteredDevices" t-as="device" t-key="device.imei">
+                    <div class="o_gps_tracking_card" t-att-class="{'active': state.activeDevice === device}" t-on-click.prevent="() => this.onCardClick(device)">
+                        <!-- Checkbox para activar/desactivar la vista -->
+                        <div class="kanban_toggle_view">
+                            <input type="checkbox" t-att-checked="state.activeDevices.includes(device.imei)" 
+                                t-on-click.prevent="() => this.toggleDeviceVisibility(device)"/>
+                        </div>
+                        <div class="card_header">
+                            <strong><t t-esc="device.imei"/></strong>
+                            <!-- Botón de flecha para expandir -->
+                            <button class="expand_button" 
+                                    t-on-click.prevent="() => this.toggleExpand(device)">
+                                <i t-att-class="state.expandedDevices.has(device.imei) ? 'fa fa-chevron-up' : 'fa fa-chevron-down'"></i>
+                            </button>
+                        </div>
+                        <div t-if="state.expandedDevices.has(device.imei)" class="card_body">
+                            <!-- Velocidad -->
+                            <div class="kanban_info">
+                                <i t-att-class="{
+                                    'fa fa-tachometer': true,
+                                    'text-success': device.speed &lt; 50,  
+                                    'text-warning': device.speed &gt;= 50
+                                }"></i>
+                                <span>Velocidad:</span> <t t-esc="device.speed"/> km/h
+                            </div>
+                            <!-- Satélites -->
+                            <div class="kanban_info">
+                                <i class="fa fa-globe"></i>
+                                <span>Satélites:</span> <t t-esc="device.satellite"/>
+                            </div>
+                            <!-- Coordenadas -->
+                            <div class="kanban_info">
+                                <i class="fa fa-map"></i>
+                                <span>Dirección:</span> 
+                                <t t-esc="device.address"/>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </div>
+            <div class="o_gps_tracking_map" t-ref="mapContainer">
+                <!-- El mapa se renderiza aquí -->
+            </div>
+        </div>
+    </t>
+</templates>
