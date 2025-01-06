@@ -28,6 +28,9 @@ class GpsTrackingDashboard extends Component {
             activeDevice: null,
             expandedDevices: new Set(),
             tooltipLocked: false, // <-- Indica si el tooltip está "bloqueado"
+            startDate: null,
+            endDate: null,
+            pathPoints: [],
         });
         this.map = null;
         this.vectorLayer = null;
@@ -53,6 +56,7 @@ class GpsTrackingDashboard extends Component {
                 console.log("mapContainer está disponible.");
                 this.initializeMap();
                 this.addDeviceMarkers();
+                this.loadGeofences(); // Cargar geocercas al iniciar el mapa
                 this.mapInitialized = true;
             } else {
                 console.error("mapContainer no está disponible en onMounted.");
@@ -126,6 +130,12 @@ class GpsTrackingDashboard extends Component {
 
     // Mostrar la info del Feature, si existe
     _displayFeatureInfo(pixel, target, click = false) {
+
+        if (this.state.drawingToolActive) {
+            // No mostrar el tooltip si la herramienta de dibujo está activa
+            return;
+        }
+
         const tooltipElement = this.tooltipRef.el;
         if (!tooltipElement) return;
     
@@ -184,7 +194,7 @@ class GpsTrackingDashboard extends Component {
         const lng = coords4326[0];
     
         // 2. Generar la URL embed con tu API Key
-        const apiKey = "AIzaSyABRnjE6R9eY-5RvAoc2_jHvtcRPvnh7D4";  // <-- pon tu clave real
+        const apiKey = "";  // <-- pon tu clave real
         const embedUrl = this._generateStreetViewEmbedUrl(lat, lng, apiKey);
     
         // 3. Guardar contenido anterior del tooltip
@@ -444,6 +454,212 @@ class GpsTrackingDashboard extends Component {
             }
         }
     }
+
+    async loadGeofences() {
+        try {
+            const geofences = await this.orm.searchRead(
+                "gps.geofence",
+                [["active", "=", true]],
+                ["id", "name", "geometry", "color"]
+            );
+            console.log("Geocercas cargadas:", geofences);
+    
+            const features = geofences.map((geofence) => {
+                const geom = JSON.parse(geofence.geometry); // Validar que el JSON sea válido
+                const color = geofence.color || "#FF0000";
+    
+                // Convertir coordenadas de EPSG:4326 a EPSG:3857
+                const transformedCoords = geom.coordinates.map((ring) =>
+                    ring.map((coord) => ol.proj.transform(coord, "EPSG:4326", "EPSG:3857"))
+                );
+    
+                // Crear la feature usando las coordenadas transformadas
+                return new ol.Feature({
+                    geometry: new ol.geom.Polygon(transformedCoords),
+                    name: geofence.name,
+                    color: color,
+                });
+            });
+    
+            const vectorSource = new ol.source.Vector({
+                features: features,
+            });
+    
+            this.geofenceLayer = new ol.layer.Vector({
+                source: vectorSource,
+                style: (feature) => {
+                    return new ol.style.Style({
+                        stroke: new ol.style.Stroke({
+                            color: feature.get("color"),
+                            width: 2,
+                        }),
+                        fill: new ol.style.Fill({
+                            color: feature.get("color") + "44", // Transparente
+                        }),
+                    });
+                },
+            });
+    
+            this.map.addLayer(this.geofenceLayer);
+            console.log("Geocercas añadidas al mapa.");
+        } catch (error) {
+            console.error("Error al cargar las geocercas:", error);
+        }
+    }
+
+    checkDeviceInGeofence(device) {
+        const point = new ol.geom.Point([device.longitude, device.latitude]);
+        let inside = false;
+    
+        this.geofenceLayer.getSource().getFeatures().forEach((feature) => {
+            if (feature.getGeometry().intersectsCoordinate(point.getCoordinates())) {
+                inside = true;
+                console.log(`${device.imei} está dentro de la geocerca: ${feature.get("name")}`);
+            }
+        });
+    
+        if (!inside) {
+            console.log(`${device.imei} está fuera de todas las geocercas.`);
+        }
+    }
+
+    addGeofenceDrawingTool() {
+        // Verificar si la capa de geocercas está inicializada
+        if (!this.geofenceLayer) {
+            console.error("La capa de geocercas no está inicializada.");
+            return;
+        }
+    
+        // Alternar la herramienta de dibujo
+        if (this.state.drawingToolActive) {
+            this.map.removeInteraction(this.state.drawingInteraction);
+            this.state.drawingToolActive = false;
+            this.state.drawingInteraction = null;
+            console.log("Herramienta de dibujo desactivada desde el botón.");
+            alert("La herramienta de dibujo se ha desactivado.");
+            return;
+        }
+    
+        // Crear una nueva interacción de dibujo
+        const draw = new ol.interaction.Draw({
+            source: this.geofenceLayer.getSource(),
+            type: "Polygon", // Cambia a 'Circle' si deseas geocercas circulares
+        });
+    
+        draw.on("drawend", async (event) => {
+            const geometry = event.feature.getGeometry().clone().transform('EPSG:3857', 'EPSG:4326'); // Convertir a EPSG:4326
+            const geoJson = new ol.format.GeoJSON().writeGeometry(geometry);
+    
+            console.log("Nueva Geocerca creada (GeoJSON):", geoJson);
+    
+            const name = prompt("Ingrese un nombre para la geocerca:");
+            const color = prompt("Ingrese un color para la geocerca (ej. #FF0000):", "#FF0000");
+    
+            try {
+                const newGeofence = {
+                    name: name || "Geocerca sin nombre",
+                    geometry: geoJson,
+                    color: color || "#FF0000",
+                    active: true,
+                };
+    
+                // Guardar la geocerca en Odoo
+                const result = await this.orm.create("gps.geofence", [newGeofence]);
+                console.log("Geocerca guardada en Odoo:", result);
+                alert(`Geocerca "${name}" guardada correctamente.`);
+            } catch (error) {
+                console.error("Error al guardar la geocerca en Odoo:", error);
+                alert("Hubo un error al guardar la geocerca.");
+            }
+    
+            // Desactivar la herramienta de dibujo después de guardar
+            this.map.removeInteraction(draw);
+            this.state.drawingToolActive = false;
+            console.log("Herramienta de dibujo desactivada automáticamente.");
+        });
+    
+        // Agregar interacción al mapa
+        this.map.addInteraction(draw);
+        this.state.drawingInteraction = draw;
+        this.state.drawingToolActive = true;
+        console.log("Herramienta de dibujo activada.");
+        alert("La herramienta de dibujo se ha activado.");
+    }
+
+    // Recorrido por fechas
+    async fetchDevicePath() {
+        if (!this.state.startDate || !this.state.endDate) {
+            alert("Selecciona un rango de fechas.");
+            return;
+        }
+    
+        try {
+            // Filtrar los puntos por `device_id` y rango de fechas
+            const points = await this.orm.searchRead(
+                "gps.tracking.point",
+                [
+                    ["device_id", "=", this.state.activeDevice.id],
+                    ["timestamp", ">=", this.state.startDate],
+                    ["timestamp", "<=", this.state.endDate],
+                ],
+                ["latitude", "longitude", "timestamp"]
+            );
+        
+            if (points.length === 0) {
+                alert("No se encontraron puntos en el rango de fechas seleccionado.");
+                return;
+            }
+        
+            // Convertir los puntos en un formato adecuado para OpenLayers
+            this.state.pathPoints = points.map((point) => [
+                point.longitude,
+                point.latitude,
+            ]);
+        
+            console.log("Puntos obtenidos para el recorrido:", this.state.pathPoints);
+            this.renderDevicePath(); // Dibujar el recorrido en el mapa
+        } catch (error) {
+            console.error("Error al obtener el recorrido:", error);
+        }
+    }
+    
+    renderDevicePath() {
+        if (!this.map || this.state.pathPoints.length === 0) return;
+    
+        // Transformar las coordenadas a EPSG:3857 para OpenLayers
+        const coordinates = this.state.pathPoints.map((coord) =>
+            ol.proj.transform(coord, "EPSG:4326", "EPSG:3857")
+        );
+    
+        // Crear la geometría de línea con los puntos
+        const lineFeature = new ol.Feature({
+            geometry: new ol.geom.LineString(coordinates),
+        });
+    
+        // Crear la capa de línea y agregarla al mapa
+        const lineLayer = new ol.layer.Vector({
+            source: new ol.source.Vector({
+                features: [lineFeature],
+            }),
+            style: new ol.style.Style({
+                stroke: new ol.style.Stroke({
+                    color: "#FF0000", // Color de la línea
+                    width: 3,        // Ancho de la línea
+                }),
+            }),
+        });
+    
+        // Eliminar cualquier capa anterior de recorrido
+        if (this.state.pathLayer) {
+            this.map.removeLayer(this.state.pathLayer);
+        }
+    
+        this.state.pathLayer = lineLayer; // Guardar referencia a la capa de recorrido
+        this.map.addLayer(lineLayer);
+    
+        console.log("Recorrido renderizado en el mapa.");
+    }
+
 }
 
 // Acciones y componentes

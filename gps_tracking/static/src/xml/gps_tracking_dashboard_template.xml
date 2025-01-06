@@ -3,13 +3,31 @@
     <t t-name="gps_tracking.gps_tracking_dashboard_template">
             <ControlPanel>
                 <t t-set-slot="layout-actions">
-                <GpsSearchbar
-                    t-props="{ initialQuery: '', onSearch: this.onSearch.bind(this) }"/>
-                <!-- Botón de Actualizar -->
-                <button type="button" class="btn btn-primary" t-on-click="refreshData">
-                    Actualizar
-                </button>
-            </t>
+                    <GpsSearchbar
+                        t-props="{ initialQuery: '', onSearch: this.onSearch.bind(this) }"/>
+                    <!-- Botón de Actualizar -->
+                    <button type="button" class="btn btn-primary" t-on-click="refreshData">
+                        Actualizar
+                    </button>
+                    <button
+                        type="button"
+                        class="btn btn-primary"
+                        t-on-click="addGeofenceDrawingTool">
+                        Dibujar Geocerca
+                    </button>
+                 <!-- Controles de fecha -->
+                <div class="date-range-controls">
+                    <label for="start-date">Fecha Inicio:</label>
+                    <input type="datetime-local" id="start-date" t-model="state.startDate" />
+
+                    <label for="end-date">Fecha Fin:</label>
+                    <input type="datetime-local" id="end-date" t-model="state.endDate" />
+
+                    <button type="button" class="btn btn-primary" t-on-click="fetchDevicePath">
+                        Consultar Recorrido
+                    </button>
+                </div>
+                </t>
             </ControlPanel>
         <div class="o_gps_tracking_dashboard">
             <div class="o_gps_tracking_kanban">
