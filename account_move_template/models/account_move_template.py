@@ -20,10 +20,28 @@ class AccountMoveTemplate(models.Model):
         comodel_name='res.currency',
         compute='_compute_company_currency_id',
     )
+    journal_id = fields.Many2one(
+        comodel_name="account.journal",
+        string="Journal",
+        required=True,
+        check_company=True,
+    )
     currency_id = fields.Many2one(
         comodel_name="res.currency",
         string="Template Currency",
     )
+    partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Partner",
+        domain=["|", ("parent_id", "=", False), ("is_company", "=", True)],
+    )
+    payment_term_id = fields.Many2one(
+        comodel_name="account.payment.term",
+        string="Payment Terms",
+        help="Used to compute the due date of the journal item.",
+    )
+    name = fields.Char(required=True, translate=True)
+    active = fields.Boolean(default=True)
     move_type = fields.Selection(
         selection=[
             ("entry", "Journal Entry"),
@@ -38,31 +56,12 @@ class AccountMoveTemplate(models.Model):
         default="entry",
         required=True,
     )
-    journal_id = fields.Many2one(
-        comodel_name="account.journal",
-        string="Journal",
-        required=True,
-        check_company=True,
-    )
-    partner_id = fields.Many2one(
-        comodel_name="res.partner",
-        string="Partner",
-        domain=["|", ("parent_id", "=", False), ("is_company", "=", True)],
-    )
-    payment_term_id = fields.Many2one(
-        comodel_name="account.payment.term",
-        string="Payment Terms",
-        help="Used to compute the due date of the journal item.",
-    )
-    name = fields.Char(required=True, translate=True)
-    active = fields.Boolean(default=True)
     ref = fields.Char(string="Reference", copy=False)
     line_ids = fields.One2many(
         comodel_name="account.move.template.line",
         inverse_name="template_id",
         string="Lines",
     )
-    autopost = fields.Boolean(help="Set true if want to post the entry as it is created.")
 
 
     def copy(self, default=None):

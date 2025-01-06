@@ -6,7 +6,6 @@ class AccountMoveTemplateLine(models.Model):
     _name = "account.move.template.line"
     _description = "Journal Item Template"
     _order = "sequence, id"
-    _inherit = "analytic.mixin"
     _check_company_auto = True
 
 
@@ -17,10 +16,26 @@ class AccountMoveTemplateLine(models.Model):
     )
     name = fields.Char(string="Label")
     sequence = fields.Integer(required=True)
+    company_id = fields.Many2one(
+        comodel_name='res.company',
+        string='Companies',
+    )
     partner_id = fields.Many2one(
         comodel_name="res.partner",
         string="Partner",
         domain=["|", ("parent_id", "=", False), ("is_company", "=", True)],
+    )
+    account_prefix = fields.Char(
+        string='Accounts Prefix',
+        help="When creating a new journal item an account having this prefix"
+             "will be looked for",
+    )
+    account_id = fields.Many2one(
+        comodel_name="account.account",
+        string="Account",
+        required=True,
+        check_company=True,
+        domain=[('deprecated', '=', False), ('account_type', '!=', 'off_balance')],
     )
     product_id = fields.Many2one(
         comodel_name="product.product",
@@ -43,17 +58,18 @@ class AccountMoveTemplateLine(models.Model):
         default=1,
     )
     amount = fields.Float(default=0)
-    account_id = fields.Many2one(
-        comodel_name="account.account",
-        string="Account",
-        required=True,
+    tax_ids = fields.Many2many(
+        comodel_name="account.tax",
+        string="Taxes",
         check_company=True,
-        domain=[('deprecated', '=', False), ('account_type', '!=', 'off_balance')],
     )
-    tax_ids = fields.Many2many("account.tax", string="Taxes", check_company=True)
-    note = fields.Char()
     move_line_type = fields.Selection(
-        [("cr", "Credit"), ("dr", "Debit")], required=True, string="Direction"
+        [
+            ("cr", "Credit"),
+            ("dr", "Debit")
+        ],
+        string="Direction",
+        required=True,
     )
     type = fields.Selection(
         [
@@ -64,13 +80,14 @@ class AccountMoveTemplateLine(models.Model):
         default="input",
     )
     python_code = fields.Text(string="Formula")
+    note = fields.Char()
 
 
     _sql_constraints = [
         (
             "sequence_template_uniq",
             "UNIQUE(template_id, sequence)",
-            "The sequence of the line must be unique per template!",
+            "The sequence of the line must be unique per template",
         )
     ]
 

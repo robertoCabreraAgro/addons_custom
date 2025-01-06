@@ -14,7 +14,6 @@
         "security/ir.model.access.csv",
         # "wizard/account_move_template_run_view.xml",
         "view/account_move_template.xml",
-        "view/account_move_template_line.xml",
     ],
     "installable": True,
 }
