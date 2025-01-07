@@ -194,7 +194,7 @@ class TestAccountMoveTemplateEnhanced(TransactionCase):
 
     def test_move_generate_from_action_button(self):
         # `Generate Journal Entry` action button
-        res = self.move_template.generate_journal_entry()
+        res = self.move_template.action_move_template_run()
         self.assertEqual(res["name"], "Create Entry from Template")
         self.assertEqual(res["res_model"], "account.move.template.run")
 

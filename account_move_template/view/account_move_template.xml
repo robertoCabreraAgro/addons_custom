@@ -32,7 +32,7 @@
         <field name="arch" type="xml">
             <form string="Journal Entry Template">
                 <header>
-                    <button name="generate_journal_entry"
+                    <button name="action_move_template_run"
                         string="Generate Journal Entry"
                         class="btn-primary" type="object" />
                 </header>

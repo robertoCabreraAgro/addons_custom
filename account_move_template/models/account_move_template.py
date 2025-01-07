@@ -63,6 +63,7 @@ class AccountMoveTemplate(models.Model):
     )
     use_product = fields.Boolean(default=False)
 
+
     def copy(self, default=None):
         self.ensure_one()
         default = dict(default or {}, name=_("%s (copy)") % self.name)
@@ -153,9 +154,9 @@ class AccountMoveTemplate(models.Model):
                     vals["date"] = date_last_document
         return vals
 
-    def generate_journal_entry(self):
+    def action_move_template_run(self):
         """Called by the button on the form view"""
         self.ensure_one()
         wiz = self.env["account.move.template.run"].create({"template_id": self.id})
-        action = wiz.load_lines()
-        return action
+        #action = wiz.load_lines()
+        #return action

@@ -10,17 +10,16 @@ class AccountMoveTemplateRun(models.TransientModel):
     _check_company_auto = True
 
 
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        required=True,
+        default=lambda self: self.env.company,
+        readonly=True,
+    )
     template_id = fields.Many2one(
         comodel_name="account.move.template",
         required=True,
         check_company=True,
-        domain="[('company_id', '=', company_id)]",
-    )
-    company_id = fields.Many2one(
-        comodel_name="res.company",
-        required=True,
-        readonly=True,
-        default=lambda self: self.env.company,
     )
     journal_id = fields.Many2one(
         comodel_name="account.journal",
@@ -32,9 +31,15 @@ class AccountMoveTemplateRun(models.TransientModel):
         string="Override Partner",
         domain=["|", ("parent_id", "=", False), ("is_company", "=", True)],
     )
-    date = fields.Date(required=True, default=fields.Date.context_today)
+    date = fields.Date(
+        required=True,
+        default=fields.Date.context_today,
+    )
     state = fields.Selection(
-        [("select_template", "Select Template"), ("set_lines", "Set Lines")],
+        [
+            ("select_template", "Select Template"),
+            ("set_lines", "Set Lines")
+        ],
         readonly=True,
         default="select_template",
     )
@@ -51,6 +56,8 @@ class AccountMoveTemplateRun(models.TransientModel):
         inverse_name="wizard_id",
         string="Lines"
     )
+    use_journal = fields.Boolean(default=False)
+    use_partner = fields.Boolean(default=False)
 
 
     # STEP 1
@@ -72,6 +79,7 @@ class AccountMoveTemplateRun(models.TransientModel):
         )
         if not self.line_ids:
             return self.generate_move()
+
         result = self.env["ir.actions.actions"]._for_xml_id(
             "account_move_template.account_move_template_run_action"
         )
@@ -270,8 +278,13 @@ class AccountMoveTemplateLineRun(models.TransientModel):
     _inherit = "analytic.mixin"
 
 
-    wizard_id = fields.Many2one(comodel_name="account.move.template.run", ondelete="cascade")
-    company_id = fields.Many2one(related="wizard_id.company_id")
+    wizard_id = fields.Many2one(
+        comodel_name="account.move.template.run",
+        ondelete="cascade",
+    )
+    company_id = fields.Many2one(
+        related="wizard_id.company_id"
+    )
     company_currency_id = fields.Many2one(
         related="wizard_id.company_id.currency_id", string="Company Currency"
     )
