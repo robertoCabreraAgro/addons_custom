@@ -158,5 +158,5 @@ class AccountMoveTemplate(models.Model):
         """Called by the button on the form view"""
         self.ensure_one()
         wiz = self.env["account.move.template.run"].create({"template_id": self.id})
-        #action = wiz.load_lines()
-        #return action
+        action = wiz.load_lines()
+        return action

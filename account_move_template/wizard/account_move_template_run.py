@@ -19,7 +19,7 @@ class AccountMoveTemplateRun(models.TransientModel):
     template_id = fields.Many2one(
         comodel_name="account.move.template",
         required=True,
-        check_company=True,
+        domain = [('company_ids', 'in', lambda self: self.env.companies.ids)]
     )
     journal_id = fields.Many2one(
         comodel_name="account.journal",
@@ -64,21 +64,21 @@ class AccountMoveTemplateRun(models.TransientModel):
     def load_lines(self):
         self.ensure_one()
         # Verify and get overwrite dict
-        overwrite_vals = self._get_overwrite_vals()
-        amtlro = self.env["account.move.template.line.run"]
-        tmpl_lines = self.template_id.line_ids
-        for tmpl_line in tmpl_lines.filtered(lambda line: line.type == "input"):
-            vals = self._prepare_wizard_line(tmpl_line)
-            amtlro.create(vals)
-        self.write(
-            {
-                "journal_id": self.template_id.journal_id.id,
-                "ref": self.template_id.ref,
-                "state": "set_lines",
-            }
-        )
-        if not self.line_ids:
-            return self.generate_move()
+        #overwrite_vals = self._get_overwrite_vals()
+        #amtlro = self.env["account.move.template.line.run"]
+        #tmpl_lines = self.template_id.line_ids
+        #for tmpl_line in tmpl_lines.filtered(lambda line: line.type == "input"):
+        #    vals = self._prepare_wizard_line(tmpl_line)
+        #    amtlro.create(vals)
+        #self.write(
+        #    {
+        #        "journal_id": self.template_id.journal_id.id,
+        #        "ref": self.template_id.ref,
+        #        "state": "set_lines",
+        #    }
+        #)
+        #if not self.line_ids:
+        #    return self.generate_move()
 
         result = self.env["ir.actions.actions"]._for_xml_id(
             "account_move_template.account_move_template_run_action"
@@ -86,11 +86,11 @@ class AccountMoveTemplateRun(models.TransientModel):
         result.update({"res_id": self.id, "context": self.env.context})
 
         # Overwrite self.line_ids to show overwrite values
-        self._overwrite_line(overwrite_vals)
+        #self._overwrite_line(overwrite_vals)
         # Pass context furtner to generate_move function, only readonly field
-        for key in overwrite_vals.keys():
-            overwrite_vals[key].pop("amount", None)
-        result["context"] = dict(result.get("context", {}), overwrite=overwrite_vals)
+        #for key in overwrite_vals.keys():
+        #    overwrite_vals[key].pop("amount", None)
+        #result["context"] = dict(result.get("context", {}), overwrite=overwrite_vals)
         return result
 
     # STEP 2

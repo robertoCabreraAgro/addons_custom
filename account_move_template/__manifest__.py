@@ -12,7 +12,7 @@
     "data": [
         "security/ir_rule.xml",
         "security/ir.model.access.csv",
-        # "wizard/account_move_template_run_view.xml",
+        "wizard/account_move_template_run_view.xml",
         "view/account_move_template.xml",
     ],
     "installable": True,
