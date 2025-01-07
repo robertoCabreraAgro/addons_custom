@@ -8,10 +8,6 @@
                 <filter name="inactive" string="Archived"
                     domain="[('active','=',False)]" />
                 <field name="name" />
-                <group name="groupby">
-                    <filter name="journal_groupby" string="Journal"
-                        context="{'group_by': 'journal_id'}" />
-                </group>
             </search>
         </field>
     </record>
@@ -22,7 +18,6 @@
         <field name="arch" type="xml">
             <list>
                 <field name="name" />
-                <field name="journal_id" />
                 <field name="company_ids"
                     widget="many2many_tags"
                     readonly="True"
@@ -55,11 +50,11 @@
                     </div>
                     <group name="main">
                         <group name="main-left">
-                            <field name="journal_id"
-                                options="{'no_open': True, 'no_create': True}" />
+                            <field name="journal_code" />
                             <field name="move_type" />
                             <field name="partner_id"
                                 options="{'no_open': True, 'no_create': True}" />
+                            <field name="use_product" />
                         </group>
                         <group name="main-right">
                             <field name="payment_term_id"
@@ -78,24 +73,27 @@
                                 <list>
                                     <field name="product_uom_category_id" column_invisible="1" />
                                     <field name="sequence" />
-                                    <field name="partner_id" />
-                                    <field name="account_id" />
+                                    <field name="partner_id"
+                                        column_invisible="parent.partner_id" />
                                     <field name="product_id"
-                                        column_invisible="not parent.move_type or parent.move_type == 'entry'" />
+                                        column_invisible="not parent.use_product or parent.move_type == 'entry'" />
                                     <field name="product_uom_id"
                                         string="UoM"
-                                        column_invisible="not parent.move_type or parent.move_type == 'entry'" />
-                                    <field name="product_uom_qty"
+                                        column_invisible="not parent.use_product or parent.move_type == 'entry'" />
+                                    <field name="quantity"
                                         string="Qty"
-                                        column_invisible="not parent.move_type or parent.move_type == 'entry'" />
+                                        column_invisible="not parent.use_product or parent.move_type == 'entry'" />
+                                    <field name="discount"
+                                        string="Qty"
+                                        column_invisible="not parent.use_product or parent.move_type == 'entry'" />
+                                    <field name="account_id" />
+                                    <field name="account_prefix" />
                                     <field name="name" />
-                                    <field name="amount"
-                                        column_invisible="not parent.move_type or parent.move_type == 'entry'" />
+                                    <field name="amount" />
                                     <field name="move_line_type" />
                                     <field name="type" />
                                     <field name="tax_ids" widget="many2many_tags"
                                         options="{'no_create': True}" />
-                                    <field name="note" />
                                 </list>
                                 <form string="Journal Entry Template Line">
                                     <sheet>
@@ -105,24 +103,25 @@
                                                 <field name="sequence" />
                                                 <field name="partner_id" />
                                                 <field name="product_id"
-                                                    invisible="not parent.move_type or parent.move_type == 'entry'" />
+                                                    invisible="not parent.use_product or parent.move_type == 'entry'" />
                                                 <field name="product_uom_id"
                                                     string="UoM"
-                                                    invisible="not parent.move_type or parent.move_type == 'entry'" />
-                                                <field name="product_uom_qty"
+                                                    invisible="not parent.use_product or parent.move_type == 'entry'" />
+                                                <field name="quantity"
                                                     string="Qty"
-                                                    invisible="not parent.move_type or parent.move_type == 'entry'"
-                                                    required="parent.move_type and parent.move_type != 'entry'" />
+                                                    invisible="not parent.use_product or parent.move_type == 'entry'" />
+                                                <field name="discount"
+                                                    string="Discount"
+                                                    invisible="not parent.use_product or parent.move_type == 'entry'" />
                                                 <field name="name" />
-                                                <field name="amount"
-                                                    invisible="not parent.move_type or parent.move_type == 'entry'" />
+                                                <field name="amount" />
                                                 <field name="account_id" />
+                                               <field name="account_prefix" />
                                                 <field name="tax_ids" widget="many2many_tags" />
                                             </group>
                                             <group name="main-right">
                                                 <field name="move_line_type" />
                                                 <field name="type" widget="radio" />
-                                                <field name="note" />
                                                 <div name="python_code_help" colspan="2"
                                                     invisible="type != 'computed'">
                                                     <p>You can refer to other lines using their
@@ -138,6 +137,7 @@
                                                 <field name="python_code"
                                                     required="type == 'computed'"
                                                     invisible="type != 'computed'" />
+                                                <field name="note" />
                                             </group>
                                         </group>
                                     </sheet>

@@ -20,11 +20,10 @@ class AccountMoveTemplate(models.Model):
         comodel_name='res.currency',
         compute='_compute_company_currency_id',
     )
-    journal_id = fields.Many2one(
-        comodel_name="account.journal",
-        string="Journal",
-        required=True,
-        check_company=True,
+    journal_code = fields.Char(
+        string='Journal Code',
+        help="When creating a new journal entry a journal having this code"
+             "will be looked for",
     )
     currency_id = fields.Many2one(
         comodel_name="res.currency",
@@ -45,12 +44,12 @@ class AccountMoveTemplate(models.Model):
     move_type = fields.Selection(
         selection=[
             ("entry", "Journal Entry"),
-            ("out_invoice", "Customer Invoice"),
-            ("out_refund", "Customer Credit Note"),
             ("in_invoice", "Vendor Bill"),
             ("in_refund", "Vendor Credit Note"),
-            ("out_receipt", "Sales Receipt"),
             ("in_receipt", "Purchase Receipt"),
+            ("out_invoice", "Customer Invoice"),
+            ("out_refund", "Customer Credit Note"),
+            ("out_receipt", "Sales Receipt"),
         ],
         string="Type",
         default="entry",
@@ -62,7 +61,7 @@ class AccountMoveTemplate(models.Model):
         inverse_name="template_id",
         string="Lines",
     )
-
+    use_product = fields.Boolean(default=False)
 
     def copy(self, default=None):
         self.ensure_one()

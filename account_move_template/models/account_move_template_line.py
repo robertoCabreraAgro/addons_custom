@@ -52,10 +52,17 @@ class AccountMoveTemplateLine(models.Model):
         readonly=False,
         domain=[('category_id', '=', product_uom_category_id)],
     )
-    product_uom_qty = fields.Float(
+    quantity = fields.Float(
         string="Quantity",
         digits="Product Unit of Measure",
-        default=1,
+    )
+    price_unit = fields.Float(
+        string="Unit Price",
+        digits="Product Price",
+    )
+    discount = fields.Float(
+        string='Discount (%)',
+        digits='Discount',
     )
     amount = fields.Float(default=0)
     tax_ids = fields.Many2many(
