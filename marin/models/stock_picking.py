@@ -9,7 +9,6 @@ _logger = logging.getLogger(__name__)
 class Picking(models.Model):
     _inherit = "stock.picking"
 
-
     # New fields
     show_purchase_lines = fields.Boolean(compute="_compute_show_purchase_lines")
     show_sale_lines = fields.Boolean(compute="_compute_show_sale_lines")
@@ -28,7 +27,6 @@ class Picking(models.Model):
         comodel_name="stock.location",
         compute="_compute_suitable_location_ids",
     )
-
 
     @api.depends("picking_type_id", "location_id")
     def _compute_suitable_product_ids(self):
@@ -64,29 +62,35 @@ class Picking(models.Model):
 
     @api.depends("picking_type_id.code", "state")
     def _compute_suitable_location_dest_ids(self):
-        self.suitable_location_dest_ids = []
-        for p in self:
-            if (
-                p.state not in ('cancel', 'done')
+        self.suitable_location_dest_ids = self.env["stock.location"].search(
+            [("usage","=","internal")]
+        )
+        for picking in self.filtered(
+            lambda p: 
+                p.state not in ('cancel', 'done') 
                 and p.picking_type_id.code in ("internal", "incoming")
-            ):
-                p.suitable_location_dest_ids = self.env["stock.location"].search([
-                    ("warehouse_id", "=", p.picking_type_id.warehouse_id.id),
-                    ("usage", "=", "internal"),
-                ])
+        ):
+            self.suitable_location_dest_ids = self.suitable_location_dest_ids.filtered(
+                lambda location:
+                    location.warehouse_id == picking.picking_type_id.warehouse_id
+            )
+            
 
     @api.depends("picking_type_id.code", "state")
     def _compute_suitable_location_ids(self):
-        self.suitable_location_ids = []
-        for p in self:
-            if (
-                p.state not in ('cancel', 'done')
+        self.suitable_location_ids = self.env["stock.location"].search(
+            [("usage","=","internal")]
+        )
+        for picking in self.filtered(
+            lambda p: 
+                p.state not in ('cancel', 'done') 
                 and p.picking_type_id.code in ("internal", "outgoing")
-            ):
-                p.suitable_location_ids = self.env["stock.location"].search([
-                    ("warehouse_id", "=", p.picking_type_id.warehouse_id.id),
-                    ("usage", "=", "internal"),
-                ])
+        ):
+            self.suitable_location_ids = self.suitable_location_ids.filtered(
+                lambda location:
+                    location.warehouse_id == picking.picking_type_id.warehouse_id
+            )
+        
 
     def _prepare_compute_custom_permissions(self):
         mark_as_todo = (
