@@ -26,6 +26,7 @@
                     <field name="show_validate" invisible="True" />
                     <field name="suitable_product_ids" invisible="True" />
                     <field name="suitable_location_dest_ids" invisible="True" />
+                    <field name="suitable_location_ids" invisible="True" />
                 </div>
             </xpath>
             <xpath expr="//button[@name='action_confirm']" position="attributes">
@@ -65,14 +66,11 @@
             <xpath expr="//field[@name='partner_id']" position="attributes">
                 <attribute name="readonly">state != 'draft'</attribute>
             </xpath>
-            <xpath expr="//field[@name='picking_type_id']" position="after">
-                <field name="all_product_ids"
-                    invisible="picking_type_code != 'internal'" />
-                <field name="all_location_dest_ids"
-                    invisible="picking_type_code == 'outgoing'" />
-            </xpath>
             <xpath expr="//field[@name='location_dest_id'][2]" position="attributes">
                 <attribute name="domain">[('id', 'in', (suitable_location_dest_ids))]</attribute>
+            </xpath>
+            <xpath expr="//field[@name='location_id'][2]" position="attributes">
+                <attribute name="domain">[('id', 'in', (suitable_location_ids))]</attribute>
             </xpath>
             <xpath expr="//field[@name='owner_id']" position="attributes">
                 <attribute name="readonly">state != 'draft'</attribute>
