@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority">85</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//block[@name='overtime_settings']" position="inside">
+                <setting
+                    title="Disable Pre Work Extra Hours."
+                    string="Exclude previous work time"
+                    company_dependent="1"
+                    help="Disable the count of the extra hours before the starting hour."
+                >
+                    <field name="exclude_previous_work_time" />
+                </setting>
+                <setting
+                    title="Time tolerance."
+                    string="Set time tolerance "
+                    help="This will to get the attendances out of time and will be considered in some salary rules"
+                >
+                    <field name="tolerance_check_in" />
+                </setting>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

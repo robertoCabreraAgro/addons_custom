@@ -1,0 +1,186 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_attendance_advanced
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-12-26 16:25+0000\n"
+"PO-Revision-Date: 2024-12-26 16:25+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: hr_attendance_advanced
+#. odoo-python
+#: code:addons/hr_attendance_advanced/models/hr_leave.py:0
+msgid "Absence generated due to delay."
+msgstr "Ausencia generada debido a retardo."
+
+#. module: hr_attendance_advanced
+#: model:ir.model,name:hr_attendance_advanced.model_hr_attendance
+msgid "Attendance"
+msgstr "Asistencia"
+
+#. module: hr_attendance_advanced
+#: model:ir.model.fields,field_description:hr_attendance_advanced.field_hr_leave__auto_generated
+msgid "Automatically Generated"
+msgstr "Generada automaticamente"
+
+#. module: hr_attendance_advanced
+#: model:ir.model,name:hr_attendance_advanced.model_res_company
+msgid "Companies"
+msgstr "Compañías"
+
+#. module: hr_attendance_advanced
+#: model:ir.model,name:hr_attendance_advanced.model_res_config_settings
+msgid "Config Settings"
+msgstr "Ajustes de configuración"
+
+#. module: hr_attendance_advanced
+#: model_terms:ir.ui.view,arch_db:hr_attendance_advanced.res_config_settings_view_form
+msgid "Disable Pre Work Extra Hours."
+msgstr "Desactiva las horas extras antes del trabajo."
+
+#. module: hr_attendance_advanced
+#: model_terms:ir.ui.view,arch_db:hr_attendance_advanced.res_config_settings_view_form
+msgid "Disable the count of the extra hours before the starting hour."
+msgstr ""
+"Desactiva el conteo de las horas extras antes del inicio de la jornada."
+
+#. module: hr_attendance_advanced
+#: model:ir.model,name:hr_attendance_advanced.model_hr_employee
+msgid "Employee"
+msgstr "Empleado"
+
+#. module: hr_attendance_advanced
+#: model:ir.model.fields,field_description:hr_attendance_advanced.field_res_company__exclude_previous_work_time
+#: model:ir.model.fields,field_description:hr_attendance_advanced.field_res_config_settings__exclude_previous_work_time
+msgid "Exclude Previous Work time?"
+msgstr "¿Excluye el trabajo antes de la jornada?"
+
+#. module: hr_attendance_advanced
+#: model_terms:ir.ui.view,arch_db:hr_attendance_advanced.res_config_settings_view_form
+msgid "Exclude previous work time"
+msgstr "Excluir el tiempo previo al trabajo"
+
+#. module: hr_attendance_advanced
+#: model:ir.model.fields,field_description:hr_attendance_advanced.field_hr_employee__exempt_absence_for_delay
+msgid "Exempt from Absences for Delay"
+msgstr "Exentar de ausencias por retardo"
+
+#. module: hr_attendance_advanced
+#: model:ir.actions.server,name:hr_attendance_advanced.ir_cron_generate_absences_ir_actions_server
+msgid "Generate automatic absences for delay in attendance"
+msgstr "Generar ausencias automaticas por retardo en asistencia"
+
+#. module: hr_attendance_advanced
+#: model:ir.model.fields,help:hr_attendance_advanced.field_hr_attendance__is_time_delay
+msgid ""
+"If the check-in is out of time and the difference is bigger than the "
+"tolerance time, it will mark the record and be considered in salary rules "
+"related."
+msgstr ""
+"Si el check-in está fuera de tiempo y la diferencia es más grande que los "
+"minutos de tolerancia, será marcada en el registro y considerada en las "
+"reglas de salario correspondientes."
+
+#. module: hr_attendance_advanced
+#: model:ir.model.fields,help:hr_attendance_advanced.field_res_company__exclude_previous_work_time
+#: model:ir.model.fields,help:hr_attendance_advanced.field_res_config_settings__exclude_previous_work_time
+msgid ""
+"If this field is enabled, the hours worked before the start of the workday "
+"will be exclude as overtime."
+msgstr ""
+"Si este campo esta activado, las horas trabajadas antes del inicio de la "
+"jornada serán excluidas de tiempo extra."
+
+#. module: hr_attendance_advanced
+#: model:ir.model.fields,help:hr_attendance_advanced.field_hr_employee__exempt_absence_for_delay
+msgid ""
+"Indicates if the employee is exempt from generating absences due to delays."
+msgstr ""
+"Indica si un empleado esta exento de generar ausencias debido a retardos."
+
+#. module: hr_attendance_advanced
+#: model:ir.model.fields,help:hr_attendance_advanced.field_hr_leave__auto_generated
+msgid "Indicates if the leave was generated automatically due to a delay."
+msgstr "Indica si la ausencia fue generada automaticamente debido a retardo."
+
+#. module: hr_attendance_advanced
+#: model_terms:ir.ui.view,arch_db:hr_attendance_advanced.res_config_settings_view_form
+msgid "Set time tolerance"
+msgstr "Ajusta el tiempo de tolerancia"
+
+#. module: hr_attendance_advanced
+#: model:ir.model.fields,help:hr_attendance_advanced.field_res_company__tolerance_check_in
+#: model:ir.model.fields,help:hr_attendance_advanced.field_res_config_settings__tolerance_check_in
+msgid ""
+"Specifies the tolerance time (in minutes) allowed for late check-ins. If an "
+"employee checks in within this tolerance period, it will be considered on "
+"time. This tolerance is used when processing attendance records and may also"
+" impact salary calculations."
+msgstr ""
+"Especifica el tiempo de tolerancia (en minutos) permitido para retrasos en "
+"el check in. Si un empleado registra su check in dentro del tiempo de "
+"tolerancia, sera considerado a tiempo. Esta tolerancia es utilizada para "
+"procesar registros de asistencia y quizas tambien impacte calculos de "
+"salario"
+
+#. module: hr_attendance_advanced
+#. odoo-python
+#: code:addons/hr_attendance_advanced/models/hr_leave.py:0
+msgid ""
+"The absence is linked to an automatically generated attendance record. If "
+"the absence is not valid, please reject it to prevent it from being "
+"considered in the payroll."
+msgstr ""
+"La ausencia está vinculada a un registro de asistencia generado "
+"automáticamente. Si la ausencia no es válida, rechácela para evitar que se "
+"considere en la nómina."
+
+#. module: hr_attendance_advanced
+#. odoo-python
+#: code:addons/hr_attendance_advanced/models/hr_leave.py:0
+msgid ""
+"This leave request has been automatically generated due to a delay. Please "
+"review it. If it is not valid, reject it to prevent it from being included "
+"in payroll."
+msgstr ""
+"Esta solicitud de ausencia se ha generado automaticamente debido a un "
+"retardo.Por favor revisela. Si no es valida, rechavela para evitar que sea "
+"incluida en nómina."
+
+#. module: hr_attendance_advanced
+#: model_terms:ir.ui.view,arch_db:hr_attendance_advanced.res_config_settings_view_form
+msgid ""
+"This will to get the attendances out of time and will be considered in some "
+"salary rules"
+msgstr ""
+"Esto traerá las asistencias fuera de tiempo y serán consideradas en algunas "
+"reglas de salario."
+
+#. module: hr_attendance_advanced
+#: model:ir.model.fields,field_description:hr_attendance_advanced.field_hr_attendance__is_time_delay
+msgid "Time Delay?"
+msgstr "¿Retardo?"
+
+#. module: hr_attendance_advanced
+#: model:ir.model,name:hr_attendance_advanced.model_hr_leave
+msgid "Time Off"
+msgstr "Ausencias"
+
+#. module: hr_attendance_advanced
+#: model_terms:ir.ui.view,arch_db:hr_attendance_advanced.res_config_settings_view_form
+msgid "Time tolerance."
+msgstr "Timpo de tolerancia"
+
+#. module: hr_attendance_advanced
+#: model:ir.model.fields,field_description:hr_attendance_advanced.field_res_company__tolerance_check_in
+#: model:ir.model.fields,field_description:hr_attendance_advanced.field_res_config_settings__tolerance_check_in
+msgid "Tolerance in check in"
+msgstr "Tolerancia en check in"
