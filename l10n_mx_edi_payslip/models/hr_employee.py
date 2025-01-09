@@ -135,6 +135,7 @@ class HrEmployee(models.Model):
     l10n_mx_edi_imss_date = fields.Date(
         "IMSS Date",
         tracking=True,
+        groups="hr.group_hr_user",
         help="If the IMSS date is different to the contract start date, set here the IMSS registration date, this "
         "value will be used on SBC amount. If the registration date is the same that the contract start date, then "
         "this could be empty.",

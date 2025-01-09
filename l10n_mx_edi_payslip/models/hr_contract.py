@@ -229,10 +229,10 @@ class HrContract(models.Model):
         help="If this set, the ISR percentage for this employee will always the value set. Normally a 35% is used. "
         "This option generally is used for partners, shareholders or for employees whose monthly income is very high.",
     )
-    # l10n_mx_edi_imss_date = fields.Date(
-    #     related="employee_id.l10n_mx_edi_imss_date",
-    #     store=True,
-    # )
+    l10n_mx_edi_imss_date = fields.Date(
+        related="employee_id.l10n_mx_edi_imss_date",
+        store=True,
+    )
 
     @api.depends("wage", "company_id.l10n_mx_edi_days_daily_wage")
     def _compute_l10n_mx_edi_daily_wage(self):
