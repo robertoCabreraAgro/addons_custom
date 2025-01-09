@@ -144,6 +144,7 @@ def _post_init_marin(env):
     tools.convert.convert_file(env, "marin_data", "data/stock.picking.type.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin_data", "data/stock.route.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin_data", "data/stock.rule.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/stock.picking.type-2.csv", None, mode="init", kind="data")
     queries = [
         """UPDATE stock_picking_type SET sequence=100  WHERE name->>'en_US' = 'Delivery Orders'""",
         """UPDATE stock_picking_type SET sequence=150  WHERE name->>'en_US' = 'Ship orders'""",
