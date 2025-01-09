@@ -5,6 +5,14 @@ from odoo.exceptions import UserError, ValidationError
 class StockPickingTypeInherit(models.Model):
     _inherit = "stock.picking.type"
 
+
+    default_location_src_id = fields.Many2one(
+        tracking=True,
+    )
+    default_location_dest_id = fields.Many2one(
+        tracking=True,
+    )
+
     # Add search
     count_picking_ready = fields.Integer(search="_search_count_picking_ready")
     count_picking_waiting = fields.Integer(search="_search_count_picking_waiting")
@@ -25,7 +33,7 @@ class StockPickingTypeInherit(models.Model):
         "stock_picking_type_res_users_can_access_rel",
         "picking_type_id",
         "user_id",
-        "Allowed users",
+        string="Allowed users",
         help="Users that can visualize pickings of this type of operation.",
     )
     can_todo_user_ids = fields.Many2many(
@@ -33,7 +41,7 @@ class StockPickingTypeInherit(models.Model):
         "stock_picking_type_res_users_can_todo_rel",
         "picking_type_id",
         "user_id",
-        "Users can todo",
+        string="Users can todo",
         help="Users that can mark as todo pickings of this type of operation.",
     )
     can_validate_user_ids = fields.Many2many(
@@ -41,7 +49,7 @@ class StockPickingTypeInherit(models.Model):
         "stock_picking_type_res_users_can_validate_rel",
         "picking_type_id",
         "user_id",
-        "Users can validate",
+        string="Users can validate",
         help="Users that can validate pickings of this type of operation.",
     )
 
