@@ -79,6 +79,25 @@
                 <attribute name="options">{"no_create": True}</attribute>
                 <attribute name="domain">[('id', 'in', (parent.suitable_product_ids))]</attribute>
             </xpath>
+            <xpath expr="//page[@name='operations']//list/field[@name='picked']" position="after">
+                <field name="allowed_sale_line_ids"
+                    column_invisible="True" />
+                <field name="sale_line_id"
+                    domain="[['id', 'in', allowed_sale_line_ids]]"
+                    options="{'no_create': True, 'no_open': True', no_edit':True}"
+                    column_invisible="not parent.show_sale_lines"
+                    optional="hide"
+                    groups="stock.group_stock_manager" />
+                <field name="allowed_purchase_line_ids"
+                    column_invisible="True" />
+                <field
+                    name="purchase_line_id"
+                    domain="[['id', 'in', allowed_purchase_line_ids]]"
+                    options="{'no_create': True, 'no_open': True', no_edit':True}"
+                    column_invisible="not parent.show_purchase_lines"
+                    optional="hide"
+                    groups="stock.group_stock_manager" />
+            </xpath>
         </field>
     </record>
 
@@ -106,25 +125,6 @@
                     invisible="not sale_id"
                     groups="stock.group_stock_user"
                 />
-            </xpath>
-            <xpath expr="//page[@name='operations']//list/field[@name='picked']" position="after">
-                <field name="allowed_sale_line_ids"
-                    column_invisible="True" />
-                <field name="sale_line_id"
-                    domain="[['id', 'in', allowed_sale_line_ids]]"
-                    options="{'no_create': True, 'no_open': True', no_edit':True}"
-                    column_invisible="not parent.show_sale_lines"
-                    optional="hide"
-                    groups="stock.group_stock_manager" />
-                <field name="allowed_purchase_line_ids"
-                    column_invisible="True" />
-                <field
-                    name="purchase_line_id"
-                    domain="[['id', 'in', allowed_purchase_line_ids]]"
-                    options="{'no_create': True, 'no_open': True', no_edit':True}"
-                    column_invisible="not parent.show_purchase_lines"
-                    optional="hide"
-                    groups="stock.group_stock_manager" />
             </xpath>
         </field>
     </record>
