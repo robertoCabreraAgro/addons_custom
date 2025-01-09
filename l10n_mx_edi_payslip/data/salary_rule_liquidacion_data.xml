@@ -11,7 +11,7 @@
         <field name="condition_select">python</field>
         <field name="condition_python">
 result = 1
-payslips = employee.slip_ids.filtered(lambda sl: sl.state == "done" and sl.id != payslip.id and sl.date_from.month == payslip.date_from.month and sl.date_from.year == payslip.date_from.year)
+payslips = employee.slip_ids.filtered(lambda sl: sl.state in ("done", "paid") and sl.id != payslip.id and sl.date_from.month == payslip.date_from.month and sl.date_from.year == payslip.date_from.year)
 perceptions = employee.env.ref('l10n_mx_edi_payslip.hr_salary_rule_category_perception_mx_exempt') | employee.env.ref('l10n_mx_edi_payslip.hr_salary_rule_category_perception_mx_taxed')
 if payslips.mapped('line_ids').filtered(lambda l: l.amount and l.salary_rule_id.l10n_mx_edi_code == '022' and l.salary_rule_id.category_id in perceptions):
     result = 0
@@ -51,7 +51,7 @@ Según la Ley, si el salario diario excede el doble del salario mínimo, el cál
         <field name="condition_select">python</field>
         <field name="condition_python">
 result = 1
-payslips = employee.slip_ids.filtered(lambda sl: sl.state == "done" and sl.id != payslip.id and sl.date_from.month == payslip.date_from.month and sl.date_from.year == payslip.date_from.year)
+payslips = employee.slip_ids.filtered(lambda sl: sl.state in ("done", "paid") and sl.id != payslip.id and sl.date_from.month == payslip.date_from.month and sl.date_from.year == payslip.date_from.year)
 perceptions = employee.env.ref('l10n_mx_edi_payslip.hr_salary_rule_category_perception_mx_exempt') | employee.env.ref('l10n_mx_edi_payslip.hr_salary_rule_category_perception_mx_taxed')
 if payslips.mapped('line_ids').filtered(lambda l: l.amount and l.salary_rule_id.l10n_mx_edi_code == '022' and l.salary_rule_id.category_id in perceptions):
     result = 0
@@ -129,12 +129,15 @@ if payslips.mapped('line_ids').filtered(lambda l: l.amount and l.salary_rule_id.
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 holidays_exempt = 15 * contract.company_id.l10n_mx_edi_uma
-holidays_bonus = (PGV001 + VPPG001) * (contract.l10n_mx_edi_vacation_bonus or 25) / 100
-
+holidays_bonus = VPPG001 * (contract.l10n_mx_edi_vacation_bonus or 25) / 100
+vacation_bonus = payslip.company_id.l10n_mx_edi_vacation_bonus
+# Solo se paga la prima vacacional de lo pendiente si la prima se paga en vacaciones, porque de otro modo ya se pagó en el aniversario
+if not vacation_bonus or vacation_bonus == 'on_holidays':
+    holidays_bonus += PGV001 * (contract.l10n_mx_edi_vacation_bonus or 25) / 100
 # Get already paid not in odoo
 accumulated = inputs['pva_021'].amount if 'pva_021' in inputs else 0.0
 # Get previus finiquitos amounts
-payslips = employee.slip_ids.filtered(lambda sl: sl.state == 'done' and sl.id != payslip.id and sl.date_from.year == payslip.date_from.year)
+payslips = employee.slip_ids.filtered(lambda sl: sl.state in ('done', 'paid') and sl.id != payslip.id and sl.date_from.year == payslip.date_from.year)
 lines = payslips.mapped('line_ids')
 # Base + finiquito
 rules = employee.env.ref('l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_perception_023_e_2_bf')
@@ -178,12 +181,15 @@ if payslips.mapped('line_ids').filtered(lambda l: l.amount and l.salary_rule_id.
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 holidays_exempt = 15 * contract.company_id.l10n_mx_edi_uma
-holidays_bonus = (PGV001 + VPPG001) * (contract.l10n_mx_edi_vacation_bonus or 25) / 100
-
+holidays_bonus = VPPG001 * (contract.l10n_mx_edi_vacation_bonus or 25) / 100
+vacation_bonus = payslip.company_id.l10n_mx_edi_vacation_bonus
+# Solo se paga la prima vacacional de lo pendiente si la prima se paga en vacaciones, porque de otro modo ya se pagó en el aniversario
+if not vacation_bonus or vacation_bonus == 'on_holidays':
+    holidays_bonus += PGV001 * (contract.l10n_mx_edi_vacation_bonus or 25) / 100
 # Get already paid not in odoo
 accumulated = inputs['pva_021'].amount if 'pva_021' in inputs else 0.0
 # Get previous finiquitos amounts
-payslips = employee.slip_ids.filtered(lambda sl: sl.state == 'done' and sl.id != payslip.id and sl.date_from.year == payslip.date_from.year)
+payslips = employee.slip_ids.filtered(lambda sl: sl.state in ('done', 'paid') and sl.id != payslip.id and sl.date_from.year == payslip.date_from.year)
 lines = payslips.mapped('line_ids')
 # Base + finiquito
 rules = employee.env.ref('l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_perception_023_e_2_bf')
@@ -265,7 +271,7 @@ if payslips.mapped('line_ids').filtered(lambda l: l.amount and l.salary_rule_id.
 # Get already paid not in odoo
 accumulated = inputs['apa_002'].amount if 'apa_002' in inputs else 0.0
 # Get previous finiquitos amounts
-payslips = employee.slip_ids.filtered(lambda sl: sl.state == 'done' and sl.id != payslip.id and sl.date_from.year == payslip.date_from.year)
+payslips = employee.slip_ids.filtered(lambda sl: sl.state in ('done', 'paid') and sl.id != payslip.id and sl.date_from.year == payslip.date_from.year)
 lines = payslips.mapped('line_ids')
 # Finiquito
 rules = employee.env.ref('l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_perception_023_e_3')
@@ -313,7 +319,7 @@ if payslips.mapped('line_ids').filtered(lambda l: l.amount and l.salary_rule_id.
 accumulated = inputs['apa_002'].amount if 'apa_002' in inputs else 0.0
 
 # Get previous finiquitos amounts
-payslips = employee.slip_ids.filtered(lambda sl: sl.state == 'done' and sl.id != payslip.id and sl.date_from.year == payslip.date_from.year)
+payslips = employee.slip_ids.filtered(lambda sl: sl.state in ('done', 'paid') and sl.id != payslip.id and sl.date_from.year == payslip.date_from.year)
 lines = payslips.mapped('line_ids')
 # Finiquito
 rules = employee.env.ref('l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_perception_023_e_3')

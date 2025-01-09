@@ -263,7 +263,7 @@ result = exempt if result &gt;= exempt else result
 result = inputs['pe_005'].amount if 'pe_005' in inputs else 0.0
 if contract.company_id.l10n_mx_edi_percentage_saving_fund:
     use_leave_ded = payslip.contract_id.company_id.l10n_mx_edi_use_leave_deduction
-    result += contract.company_id.l10n_mx_edi_percentage_saving_fund * (PG001 + PGG001 - IEG006 - IM006 - IRT006 - LPHC006 - (D020 + FJSS if use_leave_ded else 0))
+    result += contract.company_id.l10n_mx_edi_percentage_saving_fund * (PG001 + PGG001 + PGH001 - IEG006 - IM006 - IRT006 - LPHC006 - (D020 + FJSS if use_leave_ded else 0))
 if not contract.company_id.l10n_mx_edi_not_limit_saving_fund:
     days = 1
     if contract.l10n_mx_edi_schedule_pay_id.code ==  '02':
@@ -338,7 +338,7 @@ result = inputs['pg_010'].amount if 'pg_010' in inputs else 0.0
 absence = worked_days['LEAVE90'].number_of_days if 'LEAVE90' in worked_days else 0.0
 if contract.l10n_mx_edi_punctuality_bonus_type == 'percentage':
     use_leave_ded = payslip.contract_id.company_id.l10n_mx_edi_use_leave_deduction
-    result += contract.l10n_mx_edi_punctuality_bonus * (PG001 + PGG001 - IEG006 - IM006 - IRT006 - LPHC006 - (D020 + FJSS if use_leave_ded else 0)) / 100 if not absence else 0
+    result += contract.l10n_mx_edi_punctuality_bonus * (PG001 + PGG001 + PGH001 - IEG006 - IM006 - IRT006 - LPHC006 - (D020 + FJSS if use_leave_ded else 0)) / 100 if not absence else 0
 else:
     result += contract.l10n_mx_edi_punctuality_bonus if not absence else 0
         </field>
@@ -1281,7 +1281,7 @@ result = inputs['pg_049'].amount if 'pg_049' in inputs else 0.0
 absence = worked_days['LEAVE90'].number_of_days if 'LEAVE90' in worked_days else 0.0
 if contract.l10n_mx_edi_attendance_bonus_type == 'percentage':
     use_leave_ded = payslip.contract_id.company_id.l10n_mx_edi_use_leave_deduction
-    result += contract.l10n_mx_edi_attendance_bonus * (PG001 + PGG001 - IEG006 - IM006 - IRT006 - LPHC006 - (D020 + FJSS if use_leave_ded else 0)) / 100 if not absence else 0
+    result += contract.l10n_mx_edi_attendance_bonus * (PG001 + PGG001 + PGH001 - IEG006 - IM006 - IRT006 - LPHC006 - (D020 + FJSS if use_leave_ded else 0)) / 100 if not absence else 0
 else:
     result += contract.l10n_mx_edi_attendance_bonus if not absence else 0
         </field>
@@ -2057,7 +2057,7 @@ alimony = employee.l10n_mx_edi_alimony_ids.filtered(lambda a: a.date_from &lt;= 
 if alimony:
     alimony = alimony[0]
     if alimony.discount_type == 'percentage_wage':
-        result += (PG001 + PGG001) * alimony.discount_amount / 100
+        result += (PG001 + PGG001 + PGH001) * alimony.discount_amount / 100
     elif alimony.discount_type == 'percentage_perceptions_ISR':
         result += (categories['PERGRA'] - PE005 + categories['PEREXE'] - ISR002 - ISR174 - SS001) * alimony.discount_amount / 100
     elif alimony.discount_type == 'amount_fixed':
@@ -2090,7 +2090,7 @@ alimony = employee.l10n_mx_edi_alimony_ids.filtered(lambda a: a.date_from &lt;= 
 if alimony and len(alimony) &gt; 1:
     alimony = alimony[1]
     if alimony.discount_type == 'percentage_wage':
-        result += (PG001 + PGG001) * alimony.discount_amount / 100
+        result += (PG001 + PGG001 + PGH001) * alimony.discount_amount / 100
     elif alimony.discount_type == 'percentage_perceptions_ISR':
         result += (categories['PERGRA'] - PE005 + categories['PEREXE'] - ISR002 - ISR174 - SS001) * alimony.discount_amount / 100
     elif alimony.discount_type == 'amount_fixed':
@@ -2123,7 +2123,7 @@ alimony = employee.l10n_mx_edi_alimony_ids.filtered(lambda a: a.date_from &lt;= 
 if alimony and len(alimony) &gt; 2:
     alimony = alimony[2]
     if alimony.discount_type == 'percentage_wage':
-        result += (PG001 + PGG001) * alimony.discount_amount / 100
+        result += (PG001 + PGG001 + PGH001) * alimony.discount_amount / 100
     elif alimony.discount_type == 'percentage_perceptions_ISR':
         result += (categories['PERGRA'] - PE005 + categories['PEREXE'] - ISR002 - ISR174 - SS001) * alimony.discount_amount / 100
     elif alimony.discount_type == 'amount_fixed':
@@ -2156,7 +2156,7 @@ alimony = employee.l10n_mx_edi_alimony_ids.filtered(lambda a: a.date_from &lt;= 
 if alimony and len(alimony) &gt; 3:
     alimony = alimony[3]
     if alimony.discount_type == 'percentage_wage':
-        result += (PG001 + PGG001) * alimony.discount_amount / 100
+        result += (PG001 + PGG001 + PGH001) * alimony.discount_amount / 100
     elif alimony.discount_type == 'percentage_perceptions_ISR':
         result += (categories['PERGRA'] - PE005 + categories['PEREXE'] - ISR002 - ISR174 - SS001) * alimony.discount_amount / 100
     elif alimony.discount_type == 'amount_fixed':
@@ -2189,7 +2189,7 @@ alimony = employee.l10n_mx_edi_alimony_ids.filtered(lambda a: a.date_from &lt;= 
 if alimony and len(alimony) &gt; 4:
     alimony = alimony[4]
     if alimony.discount_type == 'percentage_wage':
-        result += (PG001 + PGG001) * alimony.discount_amount / 100
+        result += (PG001 + PGG001 + PGH001) * alimony.discount_amount / 100
     elif alimony.discount_type == 'percentage_perceptions_ISR':
         result += (categories['PERGRA'] - PE005 + categories['PEREXE'] - ISR002 - ISR174 - SS001) * alimony.discount_amount / 100
     elif alimony.discount_type == 'amount_fixed':
@@ -2222,7 +2222,7 @@ alimony = employee.l10n_mx_edi_alimony_ids.filtered(lambda a: a.date_from &lt;= 
 if alimony and len(alimony) &gt; 5:
     alimony = alimony[5]
     if alimony.discount_type == 'percentage_wage':
-        result += (PG001 + PGG001) * alimony.discount_amount / 100
+        result += (PG001 + PGG001 + PGH001) * alimony.discount_amount / 100
     elif alimony.discount_type == 'percentage_perceptions_ISR':
         result += (categories['PERGRA'] - PE005 + categories['PEREXE'] - ISR002 - ISR174 - SS001) * alimony.discount_amount / 100
     elif alimony.discount_type == 'amount_fixed':
@@ -2255,7 +2255,7 @@ alimony = employee.l10n_mx_edi_alimony_ids.filtered(lambda a: a.date_from &lt;= 
 if alimony and len(alimony) &gt; 6:
     alimony = alimony[6]
     if alimony.discount_type == 'percentage_wage':
-        result += (PG001 + PGG001) * alimony.discount_amount / 100
+        result += (PG001 + PGG001 + PGH001) * alimony.discount_amount / 100
     elif alimony.discount_type == 'percentage_perceptions_ISR':
         result += (categories['PERGRA'] - PE005 + categories['PEREXE'] - ISR002 - ISR174 - SS001) * alimony.discount_amount / 100
     elif alimony.discount_type == 'amount_fixed':
@@ -3551,7 +3551,7 @@ result = 0
 category = employee.env.ref('l10n_mx_edi_payslip.hr_salary_rule_category_perception_mx_taxed')
 aguinaldo = employee.env.ref('l10n_mx_edi_payslip.payroll_structure_data_02')
 payslips = employee.slip_ids.filtered(
-    lambda sl: sl.state == 'done' and
+    lambda sl: sl.state in ('done', 'paid') and
     sl.id != payslip.id and
     sl.struct_id != aguinaldo and
     sl.date_from.month == payslip.date_from.month and

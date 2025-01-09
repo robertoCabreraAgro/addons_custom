@@ -136,11 +136,15 @@ mencionada con monto cero para evitar que se calcule basada en los días restant
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 holidays_exempt = 15 * contract.company_id.l10n_mx_edi_uma
-holidays_bonus = (PGV001 + VPP001) * (contract.l10n_mx_edi_vacation_bonus or 25) / 100
+holidays_bonus = VPP001 * (contract.l10n_mx_edi_vacation_bonus or 25) / 100
+vacation_bonus = payslip.company_id.l10n_mx_edi_vacation_bonus
+# Solo se paga la prima vacacional de lo pendiente si la prima se paga en vacaciones, porque de otro modo ya se pagó en el aniversario
+if not vacation_bonus or vacation_bonus == 'on_holidays':
+    holidays_bonus += PGV001 * (contract.l10n_mx_edi_vacation_bonus or 25) / 100
 # Get already paid not in odoo
 accumulated = inputs['pva_021'].amount if 'pva_021' in inputs else 0.0
 # Get previus finiquitos amounts
-payslips = employee.slip_ids.filtered(lambda sl: sl.state == 'done' and sl.id != payslip.id and sl.date_from.year == payslip.date_from.year)
+payslips = employee.slip_ids.filtered(lambda sl: sl.state in ('done', 'paid') and sl.id != payslip.id and sl.date_from.year == payslip.date_from.year)
 lines = payslips.mapped('line_ids')
 # Base + finiquito
 rules = employee.env.ref('l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_perception_023_e_2_bf')
@@ -177,11 +181,15 @@ result = 0 if accumulated >= holidays_exempt else holidays_exempt - accumulated 
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 holidays_exempt = 15 * contract.company_id.l10n_mx_edi_uma
-holidays_bonus = (PGV001 + VPP001) * (contract.l10n_mx_edi_vacation_bonus or 25) / 100
+holidays_bonus = VPP001 * (contract.l10n_mx_edi_vacation_bonus or 25) / 100
+vacation_bonus = payslip.company_id.l10n_mx_edi_vacation_bonus
+# Solo se paga la prima vacacional de lo pendiente si la prima se paga en vacaciones, porque de otro modo ya se pagó en el aniversario
+if not vacation_bonus or vacation_bonus == 'on_holidays':
+    holidays_bonus += PGV001 * (contract.l10n_mx_edi_vacation_bonus or 25) / 100
 # Get already paid not in odoo
 accumulated = inputs['pva_021'].amount if 'pva_021' in inputs else 0.0
 # Get previous finiquitos amounts
-payslips = employee.slip_ids.filtered(lambda sl: sl.state == 'done' and sl.id != payslip.id and sl.date_from.year == payslip.date_from.year)
+payslips = employee.slip_ids.filtered(lambda sl: sl.state in ('done', 'paid') and sl.id != payslip.id and sl.date_from.year == payslip.date_from.year)
 lines = payslips.mapped('line_ids')
 # Base + finiquito
 rules = employee.env.ref('l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_perception_023_e_2_bf')
@@ -211,7 +219,7 @@ result = holidays_bonus - holidays_exempt if holidays_bonus >= holidays_exempt e
         <field name="condition_python">
 result = 1
 christmas = employee.env.ref('l10n_mx_edi_payslip.payroll_structure_data_02')
-payslips = employee.slip_ids.filtered(lambda sl: sl.state == "done" and sl.id != payslip.id and sl.date_from.month == payslip.date_from.month and sl.date_from.year == payslip.date_from.year and sl.struct_id == christmas)
+payslips = employee.slip_ids.filtered(lambda sl: sl.state in ("done", "paid") and sl.id != payslip.id and sl.struct_id == christmas and sl.l10n_mx_edi_payment_date.year == payslip.l10n_mx_edi_payment_date.year)
 perceptions = employee.env.ref('l10n_mx_edi_payslip.hr_salary_rule_category_perception_mx_exempt') | employee.env.ref('l10n_mx_edi_payslip.hr_salary_rule_category_perception_mx_taxed')
 if payslips.mapped('line_ids').filtered(lambda l: l.amount and l.salary_rule_id.l10n_mx_edi_code == '002' and l.salary_rule_id.category_id in perceptions):
     result = 0
@@ -222,7 +230,7 @@ if payslips.mapped('line_ids').filtered(lambda l: l.amount and l.salary_rule_id.
 accumulated = inputs['apa_002'].amount if 'apa_002' in inputs else 0.0
 
 # Get previous finiquitos amounts
-payslips = employee.slip_ids.filtered(lambda sl: sl.state == 'done' and sl.id != payslip.id and sl.date_from.year == payslip.date_from.year)
+payslips = employee.slip_ids.filtered(lambda sl: sl.state in ('done', 'paid') and sl.id != payslip.id and sl.date_from.year == payslip.date_from.year)
 lines = payslips.mapped('line_ids')
 # Finiquito
 rules = employee.env.ref('l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_perception_023_e_3')
@@ -261,7 +269,7 @@ result = 0 if accumulated >= aguinaldo_exempt else aguinaldo_exempt - accumulate
         <field name="condition_python">
 result = 1
 christmas = employee.env.ref('l10n_mx_edi_payslip.payroll_structure_data_02')
-payslips = employee.slip_ids.filtered(lambda sl: sl.state == "done" and sl.id != payslip.id and sl.date_from.month == payslip.date_from.month and sl.date_from.year == payslip.date_from.year and sl.struct_id == christmas)
+payslips = employee.slip_ids.filtered(lambda sl: sl.state in ("done", "paid") and sl.id != payslip.id and sl.struct_id == christmas and sl.l10n_mx_edi_payment_date.year == payslip.l10n_mx_edi_payment_date.year)
 perceptions = employee.env.ref('l10n_mx_edi_payslip.hr_salary_rule_category_perception_mx_exempt') | employee.env.ref('l10n_mx_edi_payslip.hr_salary_rule_category_perception_mx_taxed')
 if payslips.mapped('line_ids').filtered(lambda l: l.amount and l.salary_rule_id.l10n_mx_edi_code == '002' and l.salary_rule_id.category_id in perceptions):
     result = 0
@@ -272,7 +280,7 @@ if payslips.mapped('line_ids').filtered(lambda l: l.amount and l.salary_rule_id.
 accumulated = inputs['apa_002'].amount if 'apa_002' in inputs else 0.0
 
 # Get previous finiquitos amounts
-payslips = employee.slip_ids.filtered(lambda sl: sl.state == 'done' and sl.id != payslip.id and sl.date_from.year == payslip.date_from.year)
+payslips = employee.slip_ids.filtered(lambda sl: sl.state in ('done', 'paid') and sl.id != payslip.id and sl.date_from.year == payslip.date_from.year)
 lines = payslips.mapped('line_ids')
 # Finiquito
 rules = employee.env.ref('l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_perception_023_e_3')
@@ -399,7 +407,7 @@ table = {'05': [(0.01, 746.04, 0.00, 0.0192), (746.05, 6332.05, 14.32, 0.0640),
 income_period = categories['PERGRA']
 
 category = employee.env.ref('l10n_mx_edi_payslip.hr_salary_rule_category_perception_mx_taxed')
-payslips = employee.slip_ids.filtered(lambda sl: sl.state == 'done' and sl.id != payslip.id and sl.date_from.month == payslip.date_from.month and sl.date_from.year == payslip.date_from.year)
+payslips = employee.slip_ids.filtered(lambda sl: sl.state in ('done', 'paid') and sl.id != payslip.id and sl.date_from.month == payslip.date_from.month and sl.date_from.year == payslip.date_from.year)
 lines = payslips.mapped('line_ids')
 income_monthly = income_period + sum(lines.filtered(lambda li: li.category_id.id == category.id).mapped('total')) - sum(lines.filtered(lambda li: li.code in ('IEG006',  'IM006', 'IRT006', 'LPHC006')).mapped('total'))
 income_monthly -= sum(lines.filtered(lambda li: li.code in ('D020', 'FJSS')).mapped('total')) if contract.company_id.l10n_mx_edi_use_leave_deduction else 0

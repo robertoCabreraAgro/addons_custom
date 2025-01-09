@@ -75,7 +75,7 @@ if contract.l10n_mx_edi_special_isr:
     result = income_period * contract.l10n_mx_edi_special_isr
 elif not payslip.company_id.l10n_mx_edi_isr_annual_adjustment and payslip.l10n_mx_edi_is_last_payslip():
     category = employee.env.ref('l10n_mx_edi_payslip.hr_salary_rule_category_perception_mx_taxed')
-    payslips = employee.slip_ids.filtered(lambda sl: sl.state == 'done' and sl.id != payslip.id and sl.date_from.month == payslip.date_from.month and sl.date_from.year == payslip.date_from.year)
+    payslips = employee.slip_ids.filtered(lambda sl: sl.state in ('done', 'paid') and sl.id != payslip.id and sl.date_from.month == payslip.date_from.month and sl.date_from.year == payslip.date_from.year)
     lines = payslips.mapped('line_ids')
     income_monthly = income_period + sum(lines.filtered(lambda li: li.category_id.id == category.id).mapped('total')) - sum(lines.filtered(lambda li: li.code in ('IEG006',  'IM006', 'IRT006', 'LPHC006')).mapped('total'))
     income_monthly -= sum(lines.filtered(lambda li: li.code in ('D020', 'FJSS')).mapped('total')) if contract.company_id.l10n_mx_edi_use_leave_deduction else 0

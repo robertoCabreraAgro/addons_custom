@@ -319,7 +319,7 @@ class HrContract(models.Model):
         self.ensure_one()
         vacation_bonus = (self.l10n_mx_edi_vacation_bonus or 25) / 100
         holidays = (
-            self.l10n_mx_edi_imss_holidays if self.employee_id.l10n_mx_edi_imss_date else self.l10n_mx_edi_holidays
+            self.l10n_mx_edi_imss_holidays if self.l10n_mx_edi_imss_date else self.l10n_mx_edi_holidays
         ) * vacation_bonus
         bonus = self.l10n_mx_edi_christmas_bonus or 15
         return round(1 + (holidays + bonus) / 365, 4)
@@ -330,8 +330,8 @@ class HrContract(models.Model):
         for record in self:
             record.l10n_mx_edi_holidays = record._l10n_mx_get_holidays(record.get_seniority()["years"])
             record.l10n_mx_edi_imss_holidays = (
-                record._l10n_mx_get_holidays(record.get_seniority(date_from=record.employee_id.l10n_mx_edi_imss_date)["years"])
-                if record.employee_id.l10n_mx_edi_imss_date
+                record._l10n_mx_get_holidays(record.get_seniority(date_from=record.l10n_mx_edi_imss_date)["years"])
+                if record.l10n_mx_edi_imss_date
                 else 0
             )
 
@@ -352,7 +352,7 @@ class HrContract(models.Model):
         mexico_tz = timezone("America/Mexico_City")
         date_mx = datetime.now(mexico_tz)
         for contract in self:
-            date_start = contract.employee_id.l10n_mx_edi_imss_date or contract.date_start
+            date_start = contract.l10n_mx_edi_imss_date or contract.date_start
             if filter_by_anniversary and (
                 date_start.day != date_mx.day or date_start.month != date_mx.month or date_start.year >= date_mx.year
             ):
@@ -373,7 +373,7 @@ class HrContract(models.Model):
             "name": f"{holiday.name} MX {date_mx.year}",
             "holiday_status_id": holiday.id,
             "number_of_days": self._l10n_mx_get_holidays(
-                self.get_seniority(date_from=self.employee_id.l10n_mx_edi_imss_date)["years"] - 1
+                self.get_seniority(date_from=self.l10n_mx_edi_imss_date)["years"] - 1
             ),
             "allocation_type": "regular",
             "employee_id": self.employee_id.id,
@@ -407,12 +407,11 @@ class HrContract(models.Model):
                 "months": relative_seniority.months,
                 "days": relative_seniority.days,
             }
-        else:
-            return {
-                "years": relative_seniority.years,
-                "months": (relative_seniority.months + relative_seniority.years * 12),
-                "days": (date - datetime_start).days + 1,
-            }
+        return {
+            "years": relative_seniority.years,
+            "months": (relative_seniority.months + relative_seniority.years * 12),
+            "days": (date - datetime_start).days + 1,
+        }
 
     def _get_days_in_current_period(self, date_to=False, start_year=False):
         """Get days at current period to compute payments' proportional part

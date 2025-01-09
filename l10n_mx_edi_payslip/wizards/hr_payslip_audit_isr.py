@@ -109,7 +109,7 @@ class HrPayslipAuditIsr(models.TransientModel):
         if not payslip_id.company_id.l10n_mx_edi_isr_annual_adjustment and payslip_id.l10n_mx_edi_is_last_payslip():
             taxed_categ = self.env.ref("l10n_mx_edi_payslip.hr_salary_rule_category_perception_mx_taxed")
             lines = payslip_id.employee_id.slip_ids.filtered(
-                lambda slip: slip.state == "done"
+                lambda slip: slip.state in ("done", "paid")
                 and slip.id != payslip_id.id
                 and slip.date_from.month == payslip_id.date_from.month
                 and slip.date_from.year == payslip_id.date_from.year
@@ -152,7 +152,7 @@ class HrPayslipAuditIsr(models.TransientModel):
         if payslip_id.l10n_mx_edi_is_last_payslip():
             rule = self.env.ref("l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_isr")
             lines = payslip_id.employee_id.slip_ids.filtered(
-                lambda slip: slip.state == "done"
+                lambda slip: slip.state in ("done", "paid")
                 and slip.id != payslip_id.id
                 and slip.date_from.month == payslip_id.date_from.month
                 and slip.date_from.year == payslip_id.date_from.year

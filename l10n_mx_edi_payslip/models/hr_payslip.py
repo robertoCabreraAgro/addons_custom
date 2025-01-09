@@ -640,6 +640,7 @@ class HrPayslip(models.Model):
             self.message_post(body=body, body_is_html=True)
             self.action_payslip_cancel()
         else:
+            self.l10n_mx_edi_error_count = 1
             self.l10n_mx_edi_log_error(body)
 
     @api.model
@@ -1621,20 +1622,34 @@ class HrPayslip(models.Model):
         return worked_day_lines
 
     def l10n_mx_edi_is_last_payslip(self):
-        """Check if the date to in the payslip is the last of the current month
-        and return True in that case, to know that is the last payslip"""
+        """Determine whether the current payslip is the last of the month.
+
+        This method evaluates several conditions to identify if a payslip should
+        be considered the last one of the month:
+
+        1. If the `date_to` field matches the last day of the month (biweekly case).
+        2. If the range of days in the payslip results in a projection (`next_date`)
+        that falls in the next month. This accounts for irregular or overlapping
+        periods.
+        3. If the `date_to` field matches the `date_end` of the associated contract,
+        indicating a contract termination (final payslip).
+
+        Returns:
+            bool: True if the payslip meets any of the above conditions,
+                indicating it is the last payslip of the month; False otherwise.
+        """
         if not self:
             return False
         self.ensure_one()
         if not self.date_to:
             return False
-        # Case for biweekly
         if self.date_to.day == monthrange(self.date_to.year, self.date_to.month)[1]:
             return True
-        # projection for the next slips
         dbtw = abs((self.date_to - self.date_from).days) + 1
         next_date = self.date_to + timedelta(days=dbtw)
         if self.date_from.month not in (self.date_to.month, next_date.month):
+            return True
+        if self.contract_id.date_end and self.date_to == self.contract_id.date_end:
             return True
         return False
 

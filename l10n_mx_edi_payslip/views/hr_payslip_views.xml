@@ -80,7 +80,7 @@
                     name="%(hr_payslip_audit_isr_action)d"
                     class="oe_stat_button"
                     type="action"
-                    invisible="state not in ['verify', 'done'] or struct_id not in [%(payroll_structure_data_01)d, %(payroll_structure_data_06)d]"
+                    invisible="state not in ['verify', 'done', 'paid'] or struct_id not in [%(payroll_structure_data_01)d, %(payroll_structure_data_06)d]"
                     string="ISR Calculation Audit"
                 />
             </xpath>

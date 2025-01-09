@@ -16,6 +16,7 @@ seniority = contract.get_seniority(date_to=payslip.date_to, method='a')
 result = contract.l10n_mx_edi_christmas_bonus or 15
 
 if 1 > seniority['years']:
+    year = payslip.l10n_mx_edi_payment_date.year
     days_year = 365
     if year % 4 == 0 and year % 100 != 0 or year % 400 == 0:
         days_year = 366
@@ -37,7 +38,7 @@ if 1 > seniority['years']:
 accumulated = inputs['apa_002'].amount if 'apa_002' in inputs else 0.0
 
 # Get previous finiquitos amounts
-payslips = employee.slip_ids.filtered(lambda sl: sl.state == 'done' and sl.id != payslip.id and sl.date_from.year == payslip.date_from.year)
+payslips = employee.slip_ids.filtered(lambda sl: sl.state in ('done', 'paid') and sl.id != payslip.id and sl.date_from.year == payslip.date_from.year)
 lines = payslips.mapped('line_ids')
 # Finiquito
 rules = employee.env.ref('l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_perception_023_e_3')
@@ -82,7 +83,7 @@ result = 0 if accumulated >= aguinaldo_exempt else aguinaldo_exempt - accumulate
 accumulated = inputs['apa_002'].amount if 'apa_002' in inputs else 0.0
 
 # Get previous finiquitos amounts
-payslips = employee.slip_ids.filtered(lambda sl: sl.state == 'done' and sl.id != payslip.id and sl.date_from.year == payslip.date_from.year)
+payslips = employee.slip_ids.filtered(lambda sl: sl.state in ('done', 'paid') and sl.id != payslip.id and sl.date_from.year == payslip.date_from.year)
 lines = payslips.mapped('line_ids')
 # Finiquito
 rules = employee.env.ref('l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_perception_023_e_3')
@@ -103,9 +104,10 @@ bonus_total += inputs['pg002'].amount if 'pg002' in inputs else 0.0
 # Minimum wage set with values of SAT http://www.sat.gob.mx/informacion_fiscal/tablas_indicadores/Documents/salarios_minimos_historico.xls
 
 max_exempt = contract.company_id.l10n_mx_edi_uma * 30
-aguinaldo_exempt = max_exempt if not accumulated else max_exempt - accumulated if accumulated &lt;= max_exempt else 0
+# Obtenemos el aguinaldo a descontar al gravado, puede ser el monto máximo a exentar o el monto que ya se pagó en el año
+aguinaldo_paid = max(max_exempt, accumulated)
 
-result = bonus_total - aguinaldo_exempt if bonus_total >= aguinaldo_exempt else 0
+result = bonus_total - aguinaldo_paid if bonus_total >= aguinaldo_paid else 0
         </field>
         <field name="note">Sólo 30 días de SM queda exento, el excedente es gravado</field>
     </record>

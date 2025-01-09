@@ -2,26 +2,26 @@
 <odoo>
     <template id="payroll12_40">
         <cfdi:Comprobante
-            xmlns:cfdi="http://www.sat.gob.mx/cfd/4"
-            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xmlns:nomina12="http://www.sat.gob.mx/nomina12"
-            xsi:schemaLocation="http://www.sat.gob.mx/cfd/4 http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd http://www.sat.gob.mx/nomina12 http://www.sat.gob.mx/sitio_internet/cfd/nomina/nomina12.xsd"
-            Version="4.0"
-            Sello=""
-            t-att-NoCertificado="certificate_number"
-            t-att-Certificado="certificate"
-            TipoDeComprobante="N"
-            Moneda="MXN"
-            t-att-Fecha="date"
-            t-att-Serie="record._get_string_cfdi(serie or '', 25) or False"
-            t-att-Folio="record._get_string_cfdi(folio or '', 40) or False"
-            Exportacion="01"
-            MetodoPago="PUE"
-            t-att-SubTotal="amount_untaxed"
-            t-att-Descuento="amount_discount"
-            t-att-Total="'%.2f' % abs(float(amount_untaxed) - float(amount_discount))"
-            t-att-LugarExpedicion="supplier.zip"
-            t-att-Confirmacion="confirmation">
+             xsi:schemaLocation="http://www.sat.gob.mx/cfd/4 http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd http://www.sat.gob.mx/nomina12 http://www.sat.gob.mx/sitio_internet/cfd/nomina/nomina12.xsd"
+             xmlns:cfdi="http://www.sat.gob.mx/cfd/4"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:nomina12="http://www.sat.gob.mx/nomina12"
+             Version="4.0"
+             t-att-Serie="record._get_string_cfdi(serie or '', 25) or False"
+             t-att-Folio="record._get_string_cfdi(folio or '', 40) or False"
+             t-att-Fecha="date"
+             Sello=""
+             t-att-NoCertificado="certificate_number"
+             t-att-Certificado="certificate"
+             t-att-SubTotal="amount_untaxed"
+             t-att-Descuento="amount_discount"
+             Moneda="MXN"
+             t-att-Total="'%.2f' % abs(float(amount_untaxed) - float(amount_discount))"
+             TipoDeComprobante="N"
+             Exportacion="01"
+             MetodoPago="PUE"
+             t-att-LugarExpedicion="supplier.zip"
+             t-att-Confirmacion="confirmation">
             <t t-set="related" t-value="record.get_cfdi_related()"/>
             <t t-if="related">
                 <cfdi:CfdiRelacionados
@@ -38,8 +38,8 @@
             <cfdi:Receptor
                 t-att-Rfc="customer_rfc"
                 t-att-Nombre="record._get_string_cfdi(employee.name or '', 254).upper().replace('Á', 'A').replace('É', 'E').replace('Í', 'I').replace('Ó', 'O').replace('Ú', 'U')"
-                RegimenFiscalReceptor="605"
                 t-att-DomicilioFiscalReceptor="employee.private_zip"
+                RegimenFiscalReceptor="605"
                 UsoCFDI="CN01"/>
             <cfdi:Conceptos>
                 <cfdi:Concepto
@@ -50,7 +50,8 @@
                     t-att-ValorUnitario="amount_untaxed"
                     t-att-Importe="amount_untaxed"
                     ObjetoImp="01"
-                    t-att-Descuento="amount_discount" />
+                    t-att-Descuento="amount_discount">
+                </cfdi:Concepto>
             </cfdi:Conceptos>
             <cfdi:Complemento>
                 <nomina12:Nomina

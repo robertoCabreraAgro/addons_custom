@@ -277,7 +277,7 @@ result = exempt if result &gt;= exempt else result
 result = inputs['pe_005'].amount if 'pe_005' in inputs else 0.0
 if contract.company_id.l10n_mx_edi_percentage_saving_fund:
     use_leave_ded = payslip.contract_id.company_id.l10n_mx_edi_use_leave_deduction
-    result += contract.company_id.l10n_mx_edi_percentage_saving_fund * (PG001 + PGG001 - IEG006 - IM006 - IRT006 - LPHC006 - (D020 + FJSS if use_leave_ded else 0))
+    result += contract.company_id.l10n_mx_edi_percentage_saving_fund * (PG001 + PGG001 + PGH001 - IEG006 - IM006 - IRT006 - LPHC006 - (D020 + FJSS if use_leave_ded else 0))
 if not contract.company_id.l10n_mx_edi_not_limit_saving_fund:
     days = 1
     if contract.l10n_mx_edi_schedule_pay_id.code ==  '02':
@@ -335,7 +335,7 @@ result = inputs['pg_010'].amount if 'pg_010' in inputs else 0.0
 absence = worked_days['LEAVE90'].number_of_days if 'LEAVE90' in worked_days else 0.0
 if contract.l10n_mx_edi_punctuality_bonus_type == 'percentage':
     use_leave_ded = payslip.contract_id.company_id.l10n_mx_edi_use_leave_deduction
-    result += contract.l10n_mx_edi_punctuality_bonus * (PG001 + PGG001 - IEG006 - IM006 - IRT006 - LPHC006 - (D020 + FJSS if use_leave_ded else 0)) / 100 if not absence else 0
+    result += contract.l10n_mx_edi_punctuality_bonus * (PG001 + PGG001 + PGH001 - IEG006 - IM006 - IRT006 - LPHC006 - (D020 + FJSS if use_leave_ded else 0)) / 100 if not absence else 0
 else:
     result += contract.l10n_mx_edi_punctuality_bonus if not absence else 0
         </field>
@@ -1304,7 +1304,7 @@ result = inputs['pg_049'].amount if 'pg_049' in inputs else 0.0
 absence = worked_days['LEAVE90'].number_of_days if 'LEAVE90' in worked_days else 0.0
 if contract.l10n_mx_edi_attendance_bonus_type == 'percentage':
     use_leave_ded = payslip.contract_id.company_id.l10n_mx_edi_use_leave_deduction
-    result += contract.l10n_mx_edi_attendance_bonus * (PG001 + PGG001 - IEG006 - IM006 - IRT006 - LPHC006 - (D020 + FJSS if use_leave_ded else 0)) / 100 if not absence else 0
+    result += contract.l10n_mx_edi_attendance_bonus * (PG001 + PGG001 + PGH001 - IEG006 - IM006 - IRT006 - LPHC006 - (D020 + FJSS if use_leave_ded else 0)) / 100 if not absence else 0
 else:
     result += contract.l10n_mx_edi_attendance_bonus if not absence else 0
         </field>
@@ -1850,7 +1850,7 @@ alimony = employee.l10n_mx_edi_alimony_ids.filtered(lambda a: a.date_from &lt;= 
 if alimony:
     alimony = alimony[0]
     if alimony.discount_type == 'percentage_wage':
-        result += (PG001 + PGG001) * alimony.discount_amount / 100
+        result += (PG001 + PGG001 + PGH001) * alimony.discount_amount / 100
     elif alimony.discount_type == 'percentage_perceptions_ISR':
         result += (categories['PERGRA'] - PE005 + categories['PEREXE'] - ISR002 - ISR174 - ISRF - SS001) * alimony.discount_amount / 100
     elif alimony.discount_type == 'amount_fixed':
@@ -1883,7 +1883,7 @@ alimony = employee.l10n_mx_edi_alimony_ids.filtered(lambda a: a.date_from &lt;= 
 if alimony and len(alimony) &gt; 1:
     alimony = alimony[1]
     if alimony.discount_type == 'percentage_wage':
-        result += (PG001 + PGG001) * alimony.discount_amount / 100
+        result += (PG001 + PGG001 + PGH001) * alimony.discount_amount / 100
     elif alimony.discount_type == 'percentage_perceptions_ISR':
         result += (categories['PERGRA'] - PE005 + categories['PEREXE'] - ISR002 - ISR174 - ISRF - SS001) * alimony.discount_amount / 100
     elif alimony.discount_type == 'amount_fixed':
@@ -1916,7 +1916,7 @@ alimony = employee.l10n_mx_edi_alimony_ids.filtered(lambda a: a.date_from &lt;= 
 if alimony and len(alimony) &gt; 2:
     alimony = alimony[2]
     if alimony.discount_type == 'percentage_wage':
-        result += (PG001 + PGG001) * alimony.discount_amount / 100
+        result += (PG001 + PGG001 + PGH001) * alimony.discount_amount / 100
     elif alimony.discount_type == 'percentage_perceptions_ISR':
         result += (categories['PERGRA'] - PE005 + categories['PEREXE'] - ISR002 - ISR174 - ISRF - SS001) * alimony.discount_amount / 100
     elif alimony.discount_type == 'amount_fixed':
@@ -1949,7 +1949,7 @@ alimony = employee.l10n_mx_edi_alimony_ids.filtered(lambda a: a.date_from &lt;= 
 if alimony and len(alimony) &gt; 3:
     alimony = alimony[3]
     if alimony.discount_type == 'percentage_wage':
-        result += (PG001 + PGG001) * alimony.discount_amount / 100
+        result += (PG001 + PGG001 + PGH001) * alimony.discount_amount / 100
     elif alimony.discount_type == 'percentage_perceptions_ISR':
         result += (categories['PERGRA'] - PE005 + categories['PEREXE'] - ISR002 - ISR174 - ISRF - SS001) * alimony.discount_amount / 100
     elif alimony.discount_type == 'amount_fixed':
@@ -1982,7 +1982,7 @@ alimony = employee.l10n_mx_edi_alimony_ids.filtered(lambda a: a.date_from &lt;= 
 if alimony and len(alimony) &gt; 4:
     alimony = alimony[4]
     if alimony.discount_type == 'percentage_wage':
-        result += (PG001 + PGG001) * alimony.discount_amount / 100
+        result += (PG001 + PGG001 + PGH001) * alimony.discount_amount / 100
     elif alimony.discount_type == 'percentage_perceptions_ISR':
         result += (categories['PERGRA'] - PE005 + categories['PEREXE'] - ISR002 - ISR174 - ISRF - SS001) * alimony.discount_amount / 100
     elif alimony.discount_type == 'amount_fixed':
@@ -2015,7 +2015,7 @@ alimony = employee.l10n_mx_edi_alimony_ids.filtered(lambda a: a.date_from &lt;= 
 if alimony and len(alimony) &gt; 5:
     alimony = alimony[5]
     if alimony.discount_type == 'percentage_wage':
-        result += (PG001 + PGG001) * alimony.discount_amount / 100
+        result += (PG001 + PGG001 + PGH001) * alimony.discount_amount / 100
     elif alimony.discount_type == 'percentage_perceptions_ISR':
         result += (categories['PERGRA'] - PE005 + categories['PEREXE'] - ISR002 - ISR174 - ISRF - SS001) * alimony.discount_amount / 100
     elif alimony.discount_type == 'amount_fixed':
@@ -2048,7 +2048,7 @@ alimony = employee.l10n_mx_edi_alimony_ids.filtered(lambda a: a.date_from &lt;= 
 if alimony and len(alimony) &gt; 6:
     alimony = alimony[6]
     if alimony.discount_type == 'percentage_wage':
-        result += (PG001 + PGG001) * alimony.discount_amount / 100
+        result += (PG001 + PGG001 + PGH001) * alimony.discount_amount / 100
     elif alimony.discount_type == 'percentage_perceptions_ISR':
         result += (categories['PERGRA'] - PE005 + categories['PEREXE'] - ISR002 - ISR174 - ISRF - SS001) * alimony.discount_amount / 100
     elif alimony.discount_type == 'amount_fixed':
@@ -3318,7 +3318,7 @@ result = 0
 category = employee.env.ref('l10n_mx_edi_payslip.hr_salary_rule_category_perception_mx_taxed')
 aguinaldo = employee.env.ref('l10n_mx_edi_payslip.payroll_structure_data_02')
 payslips = employee.slip_ids.filtered(
-    lambda sl: sl.state == 'done' and
+    lambda sl: sl.state in ('done', 'paid') and
     sl.id != payslip.id and
     sl.struct_id != aguinaldo and
     sl.date_from.month == payslip.date_from.month and
@@ -3798,11 +3798,15 @@ result += daily_wage * (inputs['pg1_023'].amount if 'pg1_023' in inputs else 0.0
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 holidays_exempt = 15 * contract.company_id.l10n_mx_edi_uma
-holidays_bonus = (PGV001 + VPP001) * (contract.l10n_mx_edi_vacation_bonus or 25) / 100
+holidays_bonus = VPP001 * (contract.l10n_mx_edi_vacation_bonus or 25) / 100
+vacation_bonus = payslip.company_id.l10n_mx_edi_vacation_bonus
+# Solo se paga la prima vacacional de lo pendiente si la prima se paga en vacaciones, porque de otro modo ya se pagó en el aniversario
+if not vacation_bonus or vacation_bonus == 'on_holidays':
+    holidays_bonus += PGV001 * (contract.l10n_mx_edi_vacation_bonus or 25) / 100
 # Get already paid not in odoo
 accumulated = inputs['pva_021'].amount if 'pva_021' in inputs else 0.0
 # Get previus finiquitos amounts
-payslips = employee.slip_ids.filtered(lambda sl: sl.state == 'done' and sl.id != payslip.id and sl.date_from.year == payslip.date_from.year)
+payslips = employee.slip_ids.filtered(lambda sl: sl.state in ('done', 'paid') and sl.id != payslip.id and sl.date_from.year == payslip.date_from.year)
 lines = payslips.mapped('line_ids')
 # Base + finiquito
 rules = employee.env.ref('l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_perception_023_e_2_bf')
@@ -3839,12 +3843,15 @@ result = 0 if accumulated >= holidays_exempt else holidays_exempt - accumulated 
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 holidays_exempt = 15 * contract.company_id.l10n_mx_edi_uma
-holidays_bonus = (PGV001 + VPP001) * (contract.l10n_mx_edi_vacation_bonus or 25) / 100
-
+holidays_bonus = VPP001 * (contract.l10n_mx_edi_vacation_bonus or 25) / 100
+vacation_bonus = payslip.company_id.l10n_mx_edi_vacation_bonus
+# Solo se paga la prima vacacional de lo pendiente si la prima se paga en vacaciones, porque de otro modo ya se pagó en el aniversario
+if not vacation_bonus or vacation_bonus == 'on_holidays':
+    holidays_bonus += PGV001 * (contract.l10n_mx_edi_vacation_bonus or 25) / 100
 # Get already paid not in odoo
 accumulated = inputs['pva_021'].amount if 'pva_021' in inputs else 0.0
 # Get previous finiquitos amounts
-payslips = employee.slip_ids.filtered(lambda sl: sl.state == 'done' and sl.id != payslip.id and sl.date_from.year == payslip.date_from.year)
+payslips = employee.slip_ids.filtered(lambda sl: sl.state in ('done', 'paid') and sl.id != payslip.id and sl.date_from.year == payslip.date_from.year)
 lines = payslips.mapped('line_ids')
 # Base + finiquito
 rules = employee.env.ref('l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_perception_023_e_2_bf')
@@ -3878,7 +3885,7 @@ result = holidays_bonus - holidays_exempt if holidays_bonus >= holidays_exempt e
 accumulated = inputs['apa_002'].amount if 'apa_002' in inputs else 0.0
 
 # Get previous finiquitos amounts
-payslips = employee.slip_ids.filtered(lambda sl: sl.state == 'done' and sl.id != payslip.id and sl.date_from.year == payslip.date_from.year)
+payslips = employee.slip_ids.filtered(lambda sl: sl.state in ('done', 'paid') and sl.id != payslip.id and sl.date_from.year == payslip.date_from.year)
 lines = payslips.mapped('line_ids')
 # Finiquito
 rules = employee.env.ref('l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_perception_023_e_3')
@@ -3899,7 +3906,7 @@ result = 0 if accumulated >= aguinaldo_exempt else aguinaldo_exempt - accumulate
 
 # Not on condition_select because this rule is used in other rules
 christmas = employee.env.ref('l10n_mx_edi_payslip.payroll_structure_data_02')
-payslips = employee.slip_ids.filtered(lambda sl: sl.state == "done" and sl.id != payslip.id and sl.date_from.month == payslip.date_from.month and sl.date_from.year == payslip.date_from.year and sl.struct_id == christmas)
+payslips = employee.slip_ids.filtered(lambda sl: sl.state in ("done", "paid") and sl.id != payslip.id and sl.struct_id == christmas and sl.l10n_mx_edi_payment_date.year == payslip.l10n_mx_edi_payment_date.year)
 perceptions = employee.env.ref('l10n_mx_edi_payslip.hr_salary_rule_category_perception_mx_exempt') | employee.env.ref('l10n_mx_edi_payslip.hr_salary_rule_category_perception_mx_taxed')
 if payslips.mapped('line_ids').filtered(lambda l: l.amount and l.salary_rule_id.l10n_mx_edi_code == '002' and l.salary_rule_id.category_id in perceptions):
     result = 0
@@ -3927,7 +3934,7 @@ if payslips.mapped('line_ids').filtered(lambda l: l.amount and l.salary_rule_id.
 accumulated = inputs['apa_002'].amount if 'apa_002' in inputs else 0.0
 
 # Get previous finiquitos amounts
-payslips = employee.slip_ids.filtered(lambda sl: sl.state == 'done' and sl.id != payslip.id and sl.date_from.year == payslip.date_from.year)
+payslips = employee.slip_ids.filtered(lambda sl: sl.state in ('done', 'paid') and sl.id != payslip.id and sl.date_from.year == payslip.date_from.year)
 lines = payslips.mapped('line_ids')
 # Finiquito
 rules = employee.env.ref('l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_perception_023_e_3')
@@ -3949,7 +3956,7 @@ result = aguinaldo - aguinaldo_exempt if aguinaldo >= aguinaldo_exempt else 0
 
 # Not on condition_select because this rule is used in other rules
 christmas = employee.env.ref('l10n_mx_edi_payslip.payroll_structure_data_02')
-payslips = employee.slip_ids.filtered(lambda sl: sl.state == "done" and sl.id != payslip.id and sl.date_from.month == payslip.date_from.month and sl.date_from.year == payslip.date_from.year and sl.struct_id == christmas)
+payslips = employee.slip_ids.filtered(lambda sl: sl.state in ("done", "paid") and sl.id != payslip.id and sl.struct_id == christmas and sl.l10n_mx_edi_payment_date.year == payslip.l10n_mx_edi_payment_date.year)
 perceptions = employee.env.ref('l10n_mx_edi_payslip.hr_salary_rule_category_perception_mx_exempt') | employee.env.ref('l10n_mx_edi_payslip.hr_salary_rule_category_perception_mx_taxed')
 if payslips.mapped('line_ids').filtered(lambda l: l.amount and l.salary_rule_id.l10n_mx_edi_code == '002' and l.salary_rule_id.category_id in perceptions):
     result = 0

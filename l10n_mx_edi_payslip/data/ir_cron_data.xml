@@ -112,7 +112,7 @@ payslips_to_send = model.search([
     ('employee_id.work_email', '!=', False),
 ], order='l10n_mx_edi_expedition_date,id', limit=how_many_payslips_will_be_sent)
 
-template = env.ref('l10n_mx_edi_payslip.email_template_edi_payroll', False)
+template = env.ref('hr_payroll.mail_template_new_payslip', False)
 composer_obj = env['mail.compose.message']
 for payslip in payslips_to_send:
     composer = composer_obj.create({
