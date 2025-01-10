@@ -55,7 +55,7 @@ class ResPartner(models.Model):
         string="Collateral tolerance",
         default="0",
         help="""When sales are done with credit this indicates the tolerance
-        regarging having collaterales to cover the debt.\n
+        regarding having collaterales to cover the debt.\n
         -No tolerance: cover the debt in full with collaterals
         -Medium: cover the debt with a payment note
         -No collateral required: The customer have high moral and economical
