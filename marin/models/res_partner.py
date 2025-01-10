@@ -7,6 +7,7 @@ from odoo.tools.misc import formatLang
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
+
     def _prepare_partner_category_domain(self):
         parents = []
         if self.env.user.has_group("account.group_account_basic"):
@@ -20,6 +21,7 @@ class ResPartner(models.Model):
         if not parents:
             return [("id", "=", False)]
         return [("parent_id", "!=", False), ("parent_id", "in", parents)]
+
 
     # Extend core fields
     category_id = fields.Many2many(domain=_prepare_partner_category_domain)
@@ -44,7 +46,22 @@ class ResPartner(models.Model):
         help="Available receivable limit",
     )
     debit_on_hold = fields.Boolean("Debit on hold", company_dependent=True)
-
+    collateral_tolerance = fields.Selection(
+        [
+            ("0", "No tolerance"),
+            ("1", "Medium"),
+            ("2", "No collateral required"),
+        ],
+        string="Collateral tolerance",
+        default="0",
+        help="""When sales are done with credit this indicates the tolerance
+        regarging having collaterales to cover the debt.\n
+        -No tolerance: cover the debt in full with collaterals
+        -Medium: cover the debt with a payment note
+        -No collateral required: The customer have high moral and economical
+        solvency so no collateral needed
+        """
+    )
     # Misc
     customer = fields.Boolean()
     supplier = fields.Boolean()
