@@ -1,56 +1,59 @@
 id,name,color,active,parent_id/id
-marin.partner_category_management,Accounting,5,True,
-marin.partner_category_agronomic,Agronomic,6,True,
-marin.partner_category_commercial,Commercial,1,True,
-marin.partner_category_mrp,MRP,2,True,
-marin.partner_category_operations,Operations,2,True,
-marin.partner_category_purchase,Purchase,10,,
-marin.partner_category_security,Security,10,True,
-marin.partner_category_108,temp3,5,,
-marin.partner_category_109,temp4,5,,
-marin.partner_category_110,Debt quality - High,10,True,marin.partner_category_management
-marin.partner_category_111,Debt quality - Low,1,True,marin.partner_category_management
-marin.partner_category_112,Debt quality - Medium,3,True,marin.partner_category_management
-marin.partner_category_113,Debt quality - Uncollectible,1,True,marin.partner_category_management
-marin.partner_category_114,Fiscal effect - FF,10,True,marin.partner_category_management
-marin.partner_category_115,Fiscal effect - FX,3,True,marin.partner_category_management
-marin.partner_category_116,Fiscal effect - NF,10,True,marin.partner_category_management
-marin.partner_category_117,Supplier - Core business,5,True,marin.partner_category_purchase
-marin.partner_category_118,Supplier - General,10,True,marin.partner_category_purchase
-marin.partner_category_119,Supplier - Xiuman,5,True,marin.partner_category_purchase
-marin.partner_category_120,Crop - Avocado,4,True,marin.partner_category_commercial
-marin.partner_category_121,Crop - Barley,4,True,marin.partner_category_commercial
-marin.partner_category_122,Crop - Bean,4,True,marin.partner_category_commercial
-marin.partner_category_123,Crop - Berry,4,True,marin.partner_category_commercial
-marin.partner_category_124,Crop - Carrot,7,True,marin.partner_category_commercial
-marin.partner_category_125,Crop - Citrus,4,True,marin.partner_category_commercial
-marin.partner_category_126,Crop - Corn,4,True,marin.partner_category_commercial
-marin.partner_category_127,Crop - Cucurbits,4,True,marin.partner_category_commercial
-marin.partner_category_128,Crop - Onion,4,True,marin.partner_category_commercial
-marin.partner_category_129,Crop - Ornamentals,4,True,marin.partner_category_commercial
-marin.partner_category_130,Crop - Pepper,4,True,marin.partner_category_commercial
-marin.partner_category_131,Crop - Potato,10,True,marin.partner_category_commercial
-marin.partner_category_132,Crop - Tomato,4,True,marin.partner_category_commercial
-marin.partner_category_133,Crop - Wheat,4,True,marin.partner_category_commercial
-marin.partner_category_134,Debt collection - Aaron,7,True,marin.partner_category_commercial
-marin.partner_category_135,Debt collection - Alejandro,7,True,marin.partner_category_commercial
-marin.partner_category_136,Debt collection - Axel,7,True,marin.partner_category_commercial
-marin.partner_category_137,Debt collection - BAL,7,True,marin.partner_category_commercial
-marin.partner_category_138,Debt collection - Bryan,7,True,marin.partner_category_commercial
-marin.partner_category_139,Debt collection - Corporativo,7,True,marin.partner_category_commercial
-marin.partner_category_140,Debt collection - Franco,7,True,marin.partner_category_commercial
-marin.partner_category_141,Debt collection - Hugo,7,True,marin.partner_category_commercial
-marin.partner_category_142,Debt collection - Jesus,7,True,marin.partner_category_commercial
-marin.partner_category_143,Debt collection - Juan,7,True,marin.partner_category_commercial
-marin.partner_category_144,Debt collection - Misael,5,,marin.partner_category_commercial
-marin.partner_category_145,Debt collection - Reynaldo,7,True,marin.partner_category_commercial
-marin.partner_category_146,Debt collection - SJN,7,True,marin.partner_category_commercial
-marin.partner_category_147,Growth perspective - Contraction,1,True,marin.partner_category_commercial
-marin.partner_category_148,Growth perspective - Expansion,10,True,marin.partner_category_commercial
-marin.partner_category_149,Growth perspective - Hold,3,True,marin.partner_category_commercial
-marin.partner_category_150,Production size - Big holder (up to 30mdp),10,True,marin.partner_category_commercial
-marin.partner_category_151,Production size - Medium holder (up to 18mdp),3,True,marin.partner_category_commercial
-marin.partner_category_152,Production size - Small holder (up to 10mdp),1,True,marin.partner_category_commercial
-marin.partner_category_153,Production size - Super big holder (more than 30mdp),5,True,marin.partner_category_commercial
-marin.partner_category_154,Production size - Very small holder (up to 3mdp),8,True,marin.partner_category_commercial
-marin.partner_category_155,High Risk,1,True,marin.partner_category_security
+partner_category_management,Accounting,0,True,
+partner_category_agronomic,Agronomic,0,True,
+partner_category_commercial,Commercial,0,True,
+partner_category_mrp,MRP,0,True,
+partner_category_operations,Operations,0,True,
+partner_category_purchase,Purchase,10,,
+partner_category_security,Security,0,True,
+partner_category_1008,temp3,5,,
+partner_category_1009,temp4,5,,
+partner_category_1010,Debt quality - High,10,True,marin.partner_category_management
+partner_category_1011,Debt quality - Low,1,True,marin.partner_category_management
+partner_category_1012,Debt quality - Medium,3,True,marin.partner_category_management
+partner_category_1013,Debt quality - Uncollectible,1,True,marin.partner_category_management
+partner_category_1014,Fiscal effect - FF,4,True,marin.partner_category_management
+partner_category_1015,Fiscal effect - FX,4,True,marin.partner_category_management
+partner_category_1016,Fiscal effect - NF,4,True,marin.partner_category_management
+partner_category_1017,Crop - Avocado,4,True,marin.partner_category_commercial
+partner_category_1018,Crop - Barley,4,True,marin.partner_category_commercial
+partner_category_1019,Crop - Bean,4,True,marin.partner_category_commercial
+partner_category_1020,Crop - Berry,4,True,marin.partner_category_commercial
+partner_category_1021,Crop - Carrot,4,True,marin.partner_category_commercial
+partner_category_1022,Crop - Citrus,4,True,marin.partner_category_commercial
+partner_category_1023,Crop - Corn,4,True,marin.partner_category_commercial
+partner_category_1024,Crop - Cucurbits,4,True,marin.partner_category_commercial
+partner_category_1025,Crop - Onion,4,True,marin.partner_category_commercial
+partner_category_1026,Crop - Ornamentals,4,True,marin.partner_category_commercial
+partner_category_1027,Crop - Pepper,4,True,marin.partner_category_commercial
+partner_category_1028,Crop - Potato,4,True,marin.partner_category_commercial
+partner_category_1029,Crop - Tomato,4,True,marin.partner_category_commercial
+partner_category_1030,Crop - Wheat,4,True,marin.partner_category_commercial
+partner_category_1031,Debt collection - Alejandro,4,True,marin.partner_category_commercial
+partner_category_1032,Debt collection - Axel,4,True,marin.partner_category_commercial
+partner_category_1033,Debt collection - BAL,4,True,marin.partner_category_commercial
+partner_category_1034,Debt collection - Corporativo,4,True,marin.partner_category_commercial
+partner_category_1035,Debt collection - Hugo,4,True,marin.partner_category_commercial
+partner_category_1036,Debt collection - Misael,5,,marin.partner_category_commercial
+partner_category_1037,Debt collection - Reynaldo,4,True,marin.partner_category_commercial
+partner_category_1038,Debt collection - SJN,4,True,marin.partner_category_commercial
+partner_category_1039,Growth perspective - Contraction,1,True,marin.partner_category_commercial
+partner_category_1040,Growth perspective - Expansion,10,True,marin.partner_category_commercial
+partner_category_1041,Growth perspective - Hold,3,True,marin.partner_category_commercial
+partner_category_1042,Production size - Big holder (up to 30mdp),10,True,marin.partner_category_commercial
+partner_category_1043,Production size - Medium holder (up to 18mdp),3,True,marin.partner_category_commercial
+partner_category_1044,Production size - Small holder (up to 10mdp),1,True,marin.partner_category_commercial
+partner_category_1045,Production size - Super big holder (more than 30mdp),10,True,marin.partner_category_commercial
+partner_category_1046,Production size - Very small holder (up to 3mdp),1,True,marin.partner_category_commercial
+partner_category_1047,Debt collection - Nahum,4,True,marin.partner_category_commercial
+partner_category_1048,Debt collection - Daniel,4,True,marin.partner_category_commercial
+partner_category_1049,Debt collection - Carlos,4,True,marin.partner_category_commercial
+partner_category_1050,Debt collection - Angel,4,True,marin.partner_category_commercial
+partner_category_1051,Debt collection - Brandon,4,True,marin.partner_category_commercial
+partner_category_1052,Supplier - Core business,5,True,marin.partner_category_purchase
+partner_category_1053,Supplier - General,5,True,marin.partner_category_purchase
+partner_category_1054,Supplier - Xiuman,5,True,marin.partner_category_purchase
+partner_category_1055,Supplier - Operations,5,True,marin.partner_category_purchase
+partner_category_1056,Supplier - IT,5,True,marin.partner_category_purchase
+partner_category_1057,Supplier - Management,5,True,marin.partner_category_purchase
+partner_category_1058,High Risk,1,True,marin.partner_category_security
