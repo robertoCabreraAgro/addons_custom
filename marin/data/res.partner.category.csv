@@ -2,8 +2,8 @@ id,name,color,active,parent_id/id
 marin.partner_category_management,Accounting,5,True,
 marin.partner_category_agronomic,Agronomic,6,True,
 marin.partner_category_commercial,Commercial,1,True,
-marin.partner_category_104,MRP,2,True,
-marin.partner_category_105,Operations,2,True,
+marin.partner_category_mrp,MRP,2,True,
+marin.partner_category_operations,Operations,2,True,
 marin.partner_category_purchase,Purchase,10,,
 marin.partner_category_security,Security,10,True,
 marin.partner_category_108,temp3,5,,
@@ -15,9 +15,9 @@ marin.partner_category_113,Debt quality - Uncollectible,1,True,marin.partner_cat
 marin.partner_category_114,Fiscal effect - FF,10,True,marin.partner_category_management
 marin.partner_category_115,Fiscal effect - FX,3,True,marin.partner_category_management
 marin.partner_category_116,Fiscal effect - NF,10,True,marin.partner_category_management
-marin.partner_category_supplier_core,Supplier - Core business,5,True,marin.partner_category_purchase
-marin.partner_category_supplier_general,Supplier - General,10,True,marin.partner_category_purchase
-marin.partner_category_supplier_xiuman,Supplier - Xiuman,5,True,marin.partner_category_purchase
+marin.partner_category_117,Supplier - Core business,5,True,marin.partner_category_purchase
+marin.partner_category_118,Supplier - General,10,True,marin.partner_category_purchase
+marin.partner_category_119,Supplier - Xiuman,5,True,marin.partner_category_purchase
 marin.partner_category_120,Crop - Avocado,4,True,marin.partner_category_commercial
 marin.partner_category_121,Crop - Barley,4,True,marin.partner_category_commercial
 marin.partner_category_122,Crop - Bean,4,True,marin.partner_category_commercial
