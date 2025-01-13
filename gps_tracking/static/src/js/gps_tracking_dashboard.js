@@ -345,12 +345,12 @@ class GpsTrackingDashboard extends Component {
             console.error("El mapa no está inicializado.");
             return;
         }
-
+    
         // Eliminar marcadores existentes
         if (this.vectorLayer) {
             this.map.removeLayer(this.vectorLayer);
         }
-
+    
         // Crear marcadores para dispositivos activos
         const features = this.state.devices
             .filter((device) => this.state.activeDevices.includes(device.imei))
@@ -365,23 +365,24 @@ class GpsTrackingDashboard extends Component {
                     });
                 }
             }).filter((feature) => feature);
-
+    
         const vectorSource = new ol.source.Vector({ features });
-
+    
+        // Cambiar el estilo para usar íconos personalizados
         this.vectorLayer = new ol.layer.Vector({
             source: vectorSource,
             style: (feature) => {
                 const isActive = this.state.activeDevice && this.state.activeDevice.imei === feature.get("imei");
                 return new ol.style.Style({
-                    image: new ol.style.Circle({
-                        radius: isActive ? 10 : 6,
-                        fill: new ol.style.Fill({ color: isActive ? "#00FF90" : "#FF0000" }),
-                        stroke: new ol.style.Stroke({ color: "#fff", width: 2 }),
+                    image: new ol.style.Icon({
+                        anchor: [0.5, 1],
+                        src: isActive ? '/gps_tracking/static/src/img/active-icon.png' : '/gps_tracking/static/src/img/default-icon.png', // Rutas de íconos
+                        scale: 0.3,
                     }),
                 });
             },
         });
-
+    
         this.map.addLayer(this.vectorLayer);
     }
 
@@ -587,40 +588,63 @@ class GpsTrackingDashboard extends Component {
     }
 
     // Recorrido por fechas
+    // Recorrido por fechas
     async fetchDevicePath() {
         if (!this.state.startDate || !this.state.endDate) {
             alert("Selecciona un rango de fechas.");
             return;
         }
-    
+
+        // Convertir fechas locales a UTC dentro del contexto de la clase
+        const formattedStartDate = this.localToUTC(this.state.startDate);
+        const formattedEndDate = this.localToUTC(this.state.endDate);
+
+        // Imprimir fechas formateadas
+        console.log("Fecha de inicio (UTC):", formattedStartDate);
+        console.log("Fecha de fin (UTC):", formattedEndDate);
+        console.log("Device ID del dispositivo activo:", this.state.activeDevice.id);
+
         try {
-            // Filtrar los puntos por `device_id` y rango de fechas
+            // Crear el dominio con las fechas en UTC
+            const domain = [
+                ["device_id", "=", this.state.activeDevice.id], // Usamos el ID del dispositivo
+                ["timestamp", ">=", formattedStartDate],
+                ["timestamp", "<=", formattedEndDate],
+            ];
+            console.log("Dominio enviado al backend:", domain);
+
             const points = await this.orm.searchRead(
                 "gps.tracking.point",
-                [
-                    ["device_id", "=", this.state.activeDevice.id],
-                    ["timestamp", ">=", this.state.startDate],
-                    ["timestamp", "<=", this.state.endDate],
-                ],
+                domain,
                 ["latitude", "longitude", "timestamp"]
             );
-        
+
+            // Imprimir resultado de la consulta
+            console.log("Puntos obtenidos del backend:", points);
+
             if (points.length === 0) {
                 alert("No se encontraron puntos en el rango de fechas seleccionado.");
                 return;
             }
-        
-            // Convertir los puntos en un formato adecuado para OpenLayers
+
             this.state.pathPoints = points.map((point) => [
                 point.longitude,
                 point.latitude,
             ]);
-        
-            console.log("Puntos obtenidos para el recorrido:", this.state.pathPoints);
-            this.renderDevicePath(); // Dibujar el recorrido en el mapa
+
+            console.log("Puntos formateados para OpenLayers:", this.state.pathPoints);
+            this.renderDevicePath();
         } catch (error) {
             console.error("Error al obtener el recorrido:", error);
         }
+    }
+
+    // Método para ajustar la fecha local añadiendo 6 horas
+    localToUTC(dateString) {
+        const date = new Date(dateString);
+        return new Date(
+            date.getTime() // Añadir 6 horas en milisegundos
+        ).toISOString().slice(0, 19).replace("T", " ");
     }
     
     renderDevicePath() {
