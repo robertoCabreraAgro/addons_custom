@@ -8,11 +8,11 @@ class PurchaseOrderInherit(models.Model):
     def _domain_partner_id(self):
         categories = []
         if self.env.user.has_group("marin.group_purchase_core_business"):
-            categories.append(self.env.ref("marin.partner_category_117").id)
+            categories.append(self.env.ref("marin.partner_category_supplier_core").id)
         if self.env.user.has_group("marin.partner_category_110"):
             categories.append(self.env.ref("marin.partner_category_110").id)
         if self.env.user.has_group("marin.group_purchase_general"):
-            categories.append(self.env.ref("marin.partner_category_118").id)
+            categories.append(self.env.ref("marin.partner_category_supplier_general").id)
         if not categories:
             return [("id", "=", False)]
         return [

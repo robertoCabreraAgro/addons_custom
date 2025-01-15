@@ -50,10 +50,10 @@ partner_category_1048,Debt collection - Daniel,4,True,marin.partner_category_com
 partner_category_1049,Debt collection - Carlos,4,True,marin.partner_category_commercial
 partner_category_1050,Debt collection - Angel,4,True,marin.partner_category_commercial
 partner_category_1051,Debt collection - Brandon,4,True,marin.partner_category_commercial
-partner_category_1052,Supplier - Core business,5,True,marin.partner_category_purchase
-partner_category_1053,Supplier - General,5,True,marin.partner_category_purchase
-partner_category_1054,Supplier - Xiuman,5,True,marin.partner_category_purchase
-partner_category_1055,Supplier - Operations,5,True,marin.partner_category_purchase
-partner_category_1056,Supplier - IT,5,True,marin.partner_category_purchase
-partner_category_1057,Supplier - Management,5,True,marin.partner_category_purchase
-partner_category_1058,High Risk,1,True,marin.partner_category_security
+partner_category_supplier_core,Supplier - Core business,5,True,marin.partner_category_purchase
+partner_category_supplier_general,Supplier - General,5,True,marin.partner_category_purchase
+partner_category_supplier_xiuman,Supplier - Xiuman,5,True,marin.partner_category_purchase
+partner_category_supplier_operations,Supplier - Operations,5,True,marin.partner_category_purchase
+partner_category_supplier_it,Supplier - IT,5,True,marin.partner_category_purchase
+partner_category_supplier_management,Supplier - Management,5,True,marin.partner_category_purchase
+partner_category_high_risk,High Risk,1,True,marin.partner_category_security

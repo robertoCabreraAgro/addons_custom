@@ -55,7 +55,7 @@ for rec in records.filtered(lambda r: not r.partner_id and not r.is_reconciled):
         <field name="name">Account Purchase</field>
         <field name="model_id" ref="purchase.model_purchase_order" />
         <field name="state">code</field>
-        <field name="code">category = env.ref("marin.partner_category_117")
+        <field name="code">category = env.ref("marin.partner_category_supplier_core")
 partners = env["res.partner"].search([("category_id", "in", category.ids)])
 action = env["ir.actions.act_window"]._for_xml_id("marin.purchase_form_action")
 action["domain"] = ["|", ("partner_id", "in", partners.ids), ("partner_id.commercial_partner_id", "in", partners.ids)]
