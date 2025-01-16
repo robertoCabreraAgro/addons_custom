@@ -117,13 +117,6 @@ class SyngentaSaleReport(models.Model):
         lines = []
         for line in self.report_line_ids:
             lines.append(line._get_json_line())
-        if lines:
-            lines[0].update(
-                {
-                    "rfc": self.partner_id.vat or "",
-                    "numero_Convenio": self[0].agreement_id.number or "",
-                }
-            )
         return {
             "clave_Distribuidor": self.company_id.syngenta_customer_code,
             "nombre_distribuidor": self.company_id.name,

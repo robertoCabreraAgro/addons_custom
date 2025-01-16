@@ -123,7 +123,6 @@ class SyngentaSaleReportLine(models.Model):
         self.ensure_one()
         return {
             "folio": self.report_id.folio or "",
-            "no_convenio": self.report_id.agreement_id.number or "",
             "fecha_Facturacion": self.report_id.date.strftime("%Y-%m-%d") or "",  # YYYY-MM-DD
             "volumen_Facturado": self.product_qty or 0.0,
             "unidad_Medida": "",  # Not required
@@ -137,6 +136,6 @@ class SyngentaSaleReportLine(models.Model):
             "linea_Producto": "",  # Not required
             "marca": "SYNGENTA",  # Not required
             "pais": "Mexico",  # Not required
-            "rfc": "",  # Not required
-            "numero_Convenio": "",  # Not required
+            "rfc": self.report_id.agreement_id.partner_id.vat or "",  # Not required
+            "numero_Convenio": self.report_id.agreement_id.number or "",
         }
