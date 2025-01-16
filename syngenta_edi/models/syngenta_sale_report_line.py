@@ -123,6 +123,7 @@ class SyngentaSaleReportLine(models.Model):
         self.ensure_one()
         return {
             "folio": self.report_id.folio or "",
+            "no_convenio": self.report_id.agreement_id.number or "",
             "fecha_Facturacion": self.report_id.date.strftime("%Y-%m-%d") or "",  # YYYY-MM-DD
             "volumen_Facturado": self.product_qty or 0.0,
             "unidad_Medida": "",  # Not required
