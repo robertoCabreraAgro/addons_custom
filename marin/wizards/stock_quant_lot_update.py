@@ -1,8 +1,5 @@
-import logging
-
-from odoo import api, fields, models
-
-_logger = logging.getLogger(__name__)
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 
 
 class StockQuantLotUpdate(models.TransientModel):
@@ -51,7 +48,7 @@ class StockQuantLotUpdate(models.TransientModel):
         return res
 
     @api.onchange(quantity)
-    def _onchange_transfer_quantit(self):
+    def _onchange_transfer_quantity(self):
         qty = min(self.quantity, self.max_quantity)
         self.quantity = max(qty, 0.0)
 
@@ -65,14 +62,11 @@ class StockQuantLotUpdate(models.TransientModel):
                 ("location_id", "=", quant.location_id.id),
             ]
         )
-        if not dest_quant:
-            dest_quant = quant_obj.create(
-                {
-                    "lot_id": self.dest_lot_id.id,
-                    "product_id": self.product_id.id,
-                    "location_id": quant.location_id.id,
-                }
-            )
-        quant.inventory_quantity = quant.quantity - self.quantity
-        dest_quant.inventory_quantity = dest_quant.quantity + self.quantity
-        (quant | dest_quant).action_apply_inventory()
+        if dest_quant:
+            raise UserError(_(
+                "You are trying to move the location of a product. Use an Internal "
+                "Transfer instead."
+            ))
+        self._cr.execute(
+            f"UPDATE stock_quant SET lot_id={self.dest_lot_id.id} WHERE id={quant.id}"
+        )
