@@ -28,6 +28,9 @@
                     />
                 </div>
             </xpath>
+            <xpath expr="//field[@name='driver_id']" position="after">
+                <field name="department_id" options="{'no_create': True}" />
+            </xpath>
             <xpath expr="//field[@name='location']" position="after">
                 <field name="fuel_card_id" options="{'no_create': True}" />
                 <field name="fuel_card_name" invisible="True" />
@@ -35,6 +38,7 @@
                 <field name="highway_pass_name" invisible="True" />
                 <field name="l10n_mx_vehicle_code" />
                 <field name="engine_sn" />
+                <field name="account_prefix" />
                 <field name="brand_new" />
             </xpath>
             <xpath expr="//field[@name='fuel_type']" position="before">

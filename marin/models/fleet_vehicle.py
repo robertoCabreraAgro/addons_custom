@@ -33,6 +33,10 @@ class FleetVehicleInherit(models.Model):
         readonly=False,
     )
     highway_pass_name = fields.Char(compute="_compute_highway_pass_name", store=True)
+    department_id = fields.Many2one(
+        comodel_name="hr.department",
+        string="Department"
+    )
     vin_sn = fields.Char(
         help='Unique number (VIN/SN number)',
     )
@@ -45,6 +49,11 @@ class FleetVehicleInherit(models.Model):
         string='Engine SN',
         tracking=True,
         help='Unique number that identifies the engine in a vehicle.',
+    )
+    account_prefix = fields.Char(
+        string='Account Prefix',
+        tracking=True,
+        help='This fields is required by Accounting to group according to its needs.',
     )
     brand_new = fields.Boolean(
         string='Brand New',
