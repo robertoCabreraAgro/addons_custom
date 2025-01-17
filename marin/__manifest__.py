@@ -139,7 +139,7 @@
         "wizards/pos_cash_transfer_wizard.xml",
         "wizards/purchase_order_line_price_history.xml",
         "wizards/sale_order_line_price_history.xml",
-        "wizards/stock_quant_lot.xml",
+        "wizards/stock_quant_lot_update.xml",
     ],
     "pre_init_hook": "_pre_init_marin",
     "assets": {

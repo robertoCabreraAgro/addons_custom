@@ -41,11 +41,11 @@ class StockQuant(models.Model):
             return "removal_date, removal_priority ASC, id"
         return super()._get_removal_strategy_order(removal_strategy)
 
-    def action_stock_quant_lot(self):
+    def action_stock_quant_lot_update(self):
         if len(self.company_id) > 1 or any(not q.company_id.id for q in self):
             raise UserError(_("You can only change lots used by a single company."))
         if len(self) > 1:
             raise UserError(_("You can only change lot of one quant at a time."))
-        action = self.env["ir.actions.act_window"]._for_xml_id("marin.stock_quant_lot_wizard")
+        action = self.env["ir.actions.act_window"]._for_xml_id("marin.action_stock_quant_lot_update")
         action["context"] = {"active_model": self._name, "active_ids": self.ids}
         return action

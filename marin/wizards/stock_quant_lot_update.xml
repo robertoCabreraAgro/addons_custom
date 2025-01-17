@@ -1,37 +1,35 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-    <record id="wizard_stock_quant_lot_form_view" model="ir.ui.view">
-        <field name="name">stock.quant.lot.form.view</field>
-        <field name="model">stock.quant.lot</field>
+    <record id="view_stock_quant_lot_update" model="ir.ui.view">
+        <field name="name">stock.quant.lot.update.form.view</field>
+        <field name="model">stock.quant.lot.update</field>
         <field name="arch" type="xml">
             <form>
-                <group string="Origin" name="group_origin">
+                <group name="group_origin" string="Origin">
                     <field name="quant_id" invisible="1" force_save="1" />
                     <field name="product_id" force_save="1" />
                     <field name="lot_id" force_save="1" />
                     <field name="max_quantity" string="Quantity" force_save="1" />
                 </group>
-                <group string="Destination" name="group_destination">
+                <group name="group_destination" string="Destination">
                     <field name="dest_lot_id" />
                     <field name="quantity" string="Transfer quantity" />
                 </group>
                 <footer>
-                    <button
-                        string="Apply"
-                        name="action_apply_inventory"
-                        type="object"
-                        class="oe_highlight"
-                        data-hotkey="q"
-                    />
-                    <button string="Cancel" class="btn btn-secondary" special="cancel" data-hotkey="z" />
+                    <button name="action_apply_inventory" string="Apply"
+                        type="object" class="oe_highlight"
+                        data-hotkey="q" />
+                    <button special="cancel" string="Cancel"
+                        class="btn btn-secondary"
+                        data-hotkey="z" />
                 </footer>
             </form>
         </field>
     </record>
 
-    <record id="stock_quant_lot_wizard" model="ir.actions.act_window">
+    <record id="action_stock_quant_lot_update" model="ir.actions.act_window">
         <field name="name">Quant Transfer Lot</field>
-        <field name="res_model">stock.quant.lot</field>
+        <field name="res_model">stock.quant.lot.update</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
     </record>

@@ -30,7 +30,7 @@ access_res_partner_age_range_user,access.res.partner.age.range.user,marin.model_
 access_sale_order_line_price_history,access.sale.order.line.price.history,marin.model_sale_order_line_price_history,sales_team.group_sale_salesman,1,1,1,1
 access_sale_order_line_price_history_line,access.sale.order.line.price.history.line,marin.model_sale_order_line_price_history_line,sales_team.group_sale_salesman,1,1,1,1
 access_stock_need_report,access.stock.need.report,marin.model_stock_need_report,account.group_account_invoice,1,0,0,0
+access_stock_quant_lot_update,access.stock.quant.lot.update,marin.model_stock_quant_lot_update,marin.group_stock_inventory_adjustment_lot,1,1,1,1
 access_mrp_bom_byproduct_stock_user,mrp.bom.byproduct.stock.user,mrp.model_mrp_bom_byproduct,stock.group_stock_user,1,0,0,0
 access_product_product_account_user_marin,access.product.product.account.user,product.model_product_product,account.group_account_invoice,1,0,0,0
 access_purchase_bill_union_account_bookkeeper,access.purchase.bill.union.account.bookkeeper,purchase.model_purchase_bill_union,account.group_account_user,1,0,0,0
-access_stock_quant_lot_wizard,access.stock.quant.lot.wizard,marin.model_stock_quant_lot,marin.group_stock_inventory_adjustment_lot,1,1,1,1

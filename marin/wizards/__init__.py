@@ -5,4 +5,4 @@ from . import invoice_line_price_history
 from . import pos_cash_transfer_wizard
 from . import purchase_order_line_price_history
 from . import sale_order_line_price_history
-from . import stock_quant_lot
+from . import stock_quant_lot_update

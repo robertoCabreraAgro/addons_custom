@@ -35,7 +35,7 @@
                 <attribute name="groups">marin.group_stock_inventory_adjustment</attribute>
             </xpath>
             <xpath expr="//header" position="inside">
-                <button name="action_stock_quant_lot" string="Change Lot"
+                <button name="action_stock_quant_lot_update" string="Change Lot"
                     type="object"
                     groups="marin.group_stock_inventory_adjustment_lot" />
             </xpath>

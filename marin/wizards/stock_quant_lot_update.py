@@ -5,34 +5,37 @@ from odoo import api, fields, models
 _logger = logging.getLogger(__name__)
 
 
-class StockQuantLotWizard(models.TransientModel):
-    _name = "stock.quant.lot"
+class StockQuantLotUpdate(models.TransientModel):
+    _name = "stock.quant.lot.update"
     _description = "Change Quant Lot Wizard"
 
+
     quant_id = fields.Many2one(
-        "stock.quant",
+        comodel_name="stock.quant",
         required=True,
         readonly=True,
     )
     product_id = fields.Many2one(
-        "product.product",
         related="quant_id.product_id",
-        readonly=True,
         required=True,
+        readonly=True,
     )
     lot_id = fields.Many2one(
-        "stock.lot",
         related="quant_id.lot_id",
         readonly=True,
     )
     dest_lot_id = fields.Many2one(
-        "stock.lot",
+        comodel_name="stock.lot",
         required=True,
         domain="[('product_id', '=', product_id), ('id', '!=', lot_id)]",
         string="Destination Lot",
     )
     max_quantity = fields.Float(related="quant_id.quantity")
-    quantity = fields.Float(required=True, help="Quantity to be transfered to the destintation lot.")
+    quantity = fields.Float(
+        required=True,
+        help="Quantity to be transfered to the destintation lot.",
+    )
+
 
     @api.model
     def default_get(self, list_fields):
