@@ -17,7 +17,6 @@ class FleetVehicleInherit(models.Model):
         "documents.document",
         domain=lambda self: [
             ("tag_ids", "in", self.env.ref("marin.documents_fleet_fuel_card").ids),
-            ("vehicle_id", "in", (self.id, False)),
         ],
         inverse="_inverse_fuel_card_id",
         store=True,
@@ -28,7 +27,6 @@ class FleetVehicleInherit(models.Model):
         "documents.document",
         domain=lambda self: [
             ("tag_ids", "in", self.env.ref("marin.documents_fleet_highway_pass").ids),
-            ("vehicle_id", "in", (self.id, False)),
         ],
         inverse="_inverse_highway_pass_id",
         store=True,
