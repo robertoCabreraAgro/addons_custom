@@ -6,20 +6,16 @@
         <field name="inherit_id" ref="stock.quant_search_view" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='product_id']" position="after">
-                <field
-                    name="product_id"
-                    string="Manufacturer"
-                    filter_domain="[('product_id.product_tmpl_id.manufacturer_id','ilike',self)]"
-                />
-                <field
-                    name="product_id"
-                    string="Tags"
-                    filter_domain="[('product_id.product_tmpl_id.product_tag_ids','ilike',self)]"
-                />
+                <field name="product_id" string="Manufacturer"
+                    filter_domain="[('product_id.product_tmpl_id.manufacturer_id','ilike',self)]" />
+                <field name="product_id" string="Tags"
+                    filter_domain="[('product_id.product_tmpl_id.product_tag_ids','ilike',self)]" />
             </xpath>
             <xpath expr="//filter[@name='productgroup']" position="before">
-                <filter name="warehousegroup" string='Warehouse' context="{'group_by': 'warehouse_id'}" />
-                <filter name="categorygroup" string='Category' context="{'group_by': 'product_categ_id'}" />
+                <filter name="warehousegroup" string='Warehouse'
+                    context="{'group_by': 'warehouse_id'}" />
+                <filter name="categorygroup" string='Category'
+                    context="{'group_by': 'product_categ_id'}" />
             </xpath>
         </field>
     </record>
@@ -39,12 +35,9 @@
                 <attribute name="groups">marin.group_stock_inventory_adjustment</attribute>
             </xpath>
             <xpath expr="//header" position="inside">
-                <button
-                    name="action_stock_quant_lot"
-                    string="Change Lot"
+                <button name="action_stock_quant_lot" string="Change Lot"
                     type="object"
-                    groups="marin.group_stock_inventory_adjustment_lot"
-                />
+                    groups="marin.group_stock_inventory_adjustment_lot" />
             </xpath>
         </field>
     </record>
