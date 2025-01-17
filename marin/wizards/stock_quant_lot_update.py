@@ -1,5 +1,4 @@
-from odoo import _, api, fields, models
-from odoo.exceptions import UserError
+from odoo import api, fields, models
 
 
 class StockQuantLotUpdate(models.TransientModel):
@@ -53,20 +52,22 @@ class StockQuantLotUpdate(models.TransientModel):
         self.quantity = max(qty, 0.0)
 
     def action_apply_inventory(self):
-        quant_obj = self.env["stock.quant"]
-        quant = self.quant_id
-        dest_quant = quant_obj.search(
+        origin_quant = self.quant_id
+        dest_quant = self.env["stock.quant"].search(
             [
                 ("lot_id", "=", self.dest_lot_id.id),
                 ("product_id", "=", self.product_id.id),
-                ("location_id", "=", quant.location_id.id),
+                ("location_id", "=", origin_quant.location_id.id),
             ]
         )
-        if dest_quant:
-            raise UserError(_(
-                "You are trying to move the location of a product. Use an Internal "
-                "Transfer instead."
-            ))
-        self._cr.execute(
-            f"UPDATE stock_quant SET lot_id={self.dest_lot_id.id} WHERE id={quant.id}"
-        )
+        if dest_quant: #En caso de que exista
+            self._cr.execute(
+                f"UPDATE stock_quant SET quantity=quantity + {origin_quant.quantity} WHERE id={dest_quant.id};"
+            )
+            self._cr.execute(
+                f"DELETE FROM stock_quant WHERE id={origin_quant.id};"
+            )
+        else: #De otro modo
+            self._cr.execute(
+                f"UPDATE stock_quant SET lot_id={self.dest_lot_id.id} WHERE id={origin_quant.id}"
+            )
