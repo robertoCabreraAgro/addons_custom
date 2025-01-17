@@ -22,11 +22,13 @@ class StockQuantLotUpdate(models.TransientModel):
     )
     dest_lot_id = fields.Many2one(
         comodel_name="stock.lot",
-        required=True,
-        domain="[('product_id', '=', product_id), ('id', '!=', lot_id)]",
         string="Destination Lot",
+        required=True,
+        domain=[('product_id', '=', product_id), ('id', '!=', lot_id)],
     )
-    max_quantity = fields.Float(related="quant_id.quantity")
+    max_quantity = fields.Float(
+        related="quant_id.quantity",
+    )
     quantity = fields.Float(
         required=True,
         help="Quantity to be transfered to the destintation lot.",
@@ -34,8 +36,8 @@ class StockQuantLotUpdate(models.TransientModel):
 
 
     @api.model
-    def default_get(self, list_fields):
-        res = super().default_get(list_fields)
+    def default_get(self, fields_list):
+        res = super().default_get(fields_list)
         if self._context.get("active_model") == "stock.quant":
             quant = self.env["stock.quant"].browse(self._context.get("active_ids", []))[:1]
             res.update(
@@ -46,7 +48,7 @@ class StockQuantLotUpdate(models.TransientModel):
             )
         return res
 
-    @api.onchange(quantity)
+    @api.onchange("quantity")
     def _onchange_transfer_quantity(self):
         qty = min(self.quantity, self.max_quantity)
         self.quantity = max(qty, 0.0)
@@ -60,14 +62,14 @@ class StockQuantLotUpdate(models.TransientModel):
                 ("location_id", "=", origin_quant.location_id.id),
             ]
         )
-        if dest_quant: #En caso de que exista
+        if dest_quant:
             self._cr.execute(
                 f"UPDATE stock_quant SET quantity=quantity + {origin_quant.quantity} WHERE id={dest_quant.id};"
             )
             self._cr.execute(
                 f"DELETE FROM stock_quant WHERE id={origin_quant.id};"
             )
-        else: #De otro modo
+        else:
             self._cr.execute(
                 f"UPDATE stock_quant SET lot_id={self.dest_lot_id.id} WHERE id={origin_quant.id}"
             )
