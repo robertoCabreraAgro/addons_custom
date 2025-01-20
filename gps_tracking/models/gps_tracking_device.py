@@ -24,6 +24,7 @@ class GpsTrackingDevice(models.Model):
         comodel_name='gps.tracking.log',
         string='Last Tracking Point',
         compute='_compute_last_point',
+        index=True,
     )
     speed = fields.Float(related='last_log_id.speed', string='Speed')
     satellite = fields.Integer(related='last_log_id.satellites', string='Satélites')
@@ -33,9 +34,9 @@ class GpsTrackingDevice(models.Model):
     the_point = fields.GeoPoint(related='last_log_id.the_point', string='Current Position')
 
 
-     _sql_constraints = [
+    _sql_constraints = [
          ('unique_imei', 'UNIQUE(imei)', 'This IMEI already exists')
-     ]
+    ]
 
 
     @api.depends('log_ids.timestamp')

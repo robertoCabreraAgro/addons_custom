@@ -1,19 +1,16 @@
+# import datetime
+import decimal
 import logging
+import struct
+# from datetime import datetime
+from datetime import datetime, timezone
 import requests
 from pyproj import Transformer
-from datetime import datetime
 
 from odoo import fields, models, api
 
 _logger = logging.getLogger(__name__)
-import socket
-import json
-import os
-import datetime
-import struct
-import decimal
-import psycopg2
-import threading  # Importamos threading para manejar múltiples hilos
+
 
 HOST = '0.0.0.0'  # Puede que '0.0.0.0' no funcione en algunos sistemas Linux; cambia a una cadena con la dirección IP, por ejemplo: '192.168.0.1'
 PORT = 5055  # Cambia esto por el puerto que estás utilizando
@@ -42,6 +39,7 @@ class GpsTrackingLog(models.Model):
     longitude = fields.Float(string='Longitude', digits=(16, 7))
     the_point = fields.GeoPoint(string='Position', srid=3857, compute='_compute_the_point', store=True)
     address = fields.Char(string='Address', compute='_compute_address', store=True)
+    raw_data = fields.Text("Raw Data")
     # history_route = fields.GeoLine(string="History Route", compute='_compute_history_route', store=True)
 
 
@@ -57,7 +55,7 @@ class GpsTrackingLog(models.Model):
             else:
                 _logger.warning(f"Faltan latitud o longitud en el registro {rec.id}, no se puede convertir a SRID 3857.")
                 rec.the_point = False
-                
+
 
     @api.depends('latitude', 'longitude')
     def _compute_address(self):
@@ -86,27 +84,21 @@ class GpsTrackingLog(models.Model):
                 rec.address = "Coordinates not set"
                 _logger.warning(f"Coordenadas no establecidas para ID {rec.id}")
 
-    def input_trigger(self):
-        print("Escribe 'SERVER' para iniciar el servidor o:")
-        print("Escribe 'EXIT' para detener el programa")
-        device_imei = "default_IMEI"
-        user_input = input("waiting for input: ")
-        if user_input.upper() == "EXIT":
-            print(f"Saliendo del programa...")
-            exit()
-        elif user_input.upper() == "SERVER":
-            self.start_server_trigger()
-        else:
-            try:
-                if self.codec_8e_checker(user_input.replace(" ", "")) == False:
-                    print("Paquete Codec8 inválido")
-                    self.input_trigger()
-                else:
-                    self.codec_parser_trigger(user_input, device_imei, "USER")
-            except Exception as e:
-                print(f"Error occurred: {e} enter proper Codec8 packet or EXIT!!!")
-                self.input_trigger()
+    def input_trigger(self, payload="", imei=""):
+        device_imei = "default_IMEI" if not imei else imei
+        # imei_checker = self.env["gps.tracking.log"].sudo().imei_checker(hex_imei=payload)
+        # if imei_checker:
+        #     device_imei = self.env["gps.tracking.log"].sudo().ascii_imei_converter(payload)
 
+        try:
+            if self.codec_8e_checker(payload.replace(" ", "")) == False:
+                _logger.warning("Paquete Codec8 inválido")
+                self.input_trigger(payload)
+            else:
+                self.codec_parser_trigger(payload, device_imei, "USER")
+        except Exception as e:
+            _logger.error(f"Error occurred: {e} enter proper Codec8 packet or EXIT!!!")
+            self.input_trigger(payload)
 
     def crc16_arc(self, data):
         data_part_length_crc = int(data[8:16], 16)
@@ -154,9 +146,9 @@ class GpsTrackingLog(models.Model):
             pass
 
         ascii_imei = self.ascii_imei_converter(hex_imei)
-        print(f"IMEI recibido = {ascii_imei}")
+        _logger.info(f"IMEI recibido = {ascii_imei}")
         if not ascii_imei.isnumeric() or len(ascii_imei) != 15:
-            print(f"No es un IMEI válido: no es numérico o tiene longitud incorrecta!")
+            _logger.warning(f"No es un IMEI válido: no es numérico o tiene longitud incorrecta!")
             return False
         else:
             return True
@@ -164,63 +156,7 @@ class GpsTrackingLog(models.Model):
     def ascii_imei_converter(self, hex_imei):
         return bytes.fromhex(hex_imei[4:]).decode()
 
-    def start_server_trigger(self):
-        print("Iniciando servidor!")
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            s.bind((HOST, PORT))
-            s.listen()
-            print(f"// {self.time_stamper()} // escuchando en el puerto: {PORT} // IP: {HOST}")
-            while True:
-                conn, addr = s.accept()
-                conn.settimeout(20)
-                threading.Thread(target=self.handle_client_connection, args=(conn, addr)).start()
-
-    def handle_client_connection(self, conn, addr):
-        with conn:
-            print(f"// {self.time_stamper()} // Conectado por {addr}")
-            device_imei = "default_IMEI"
-            while True:
-                try:
-                    data = conn.recv(1280)
-                    if not data:
-                        break
-                    print(f"// {self.time_stamper()} // datos recibidos = {data.hex()}")
-                    if self.imei_checker(data.hex()) != False:
-                        device_imei = self.ascii_imei_converter(data.hex())
-                        imei_reply = (1).to_bytes(1, byteorder="big")
-                        conn.sendall(imei_reply)
-                        print(f"-- {self.time_stamper()} enviando respuesta = {imei_reply}")
-                    elif self.codec_8e_checker(data.hex().replace(" ", "")) != False:
-                        record_number = self.codec_parser_trigger(data.hex(), device_imei, "SERVER")
-                        print(f"Registros recibidos {record_number}")
-                        print(f"del dispositivo IMEI = {device_imei}")
-                        print()
-                        record_response = (record_number).to_bytes(4, byteorder="big")
-                        conn.sendall(record_response)
-                        print(f"// {self.time_stamper()} // respuesta enviada = {record_response.hex()}")
-                    else:
-                        print(f"// {self.time_stamper()} // Datos no esperados recibidos - cerrando conexión")
-                        break
-                except socket.timeout:
-                    print(f"// {self.time_stamper()} // Tiempo de espera agotado. Cerrando conexión con {addr}")
-                    break
-
     def codec_8e_parser(self, codec_8E_packet, device_imei, props):
-        print()
-        _logger.info("################################################################################################")
-
-        io_dict_raw = {}
-        io_dict_raw["device_IMEI"] = device_imei
-        io_dict_raw["server_time"] = self.time_stamper_for_json()
-        io_dict_raw["data_length"] = "Record length: " + str(int(len(codec_8E_packet))) + " characters" + " // " + str(
-            int(len(codec_8E_packet) // 2)) + " bytes"
-        io_dict_raw["_raw_data__"] = codec_8E_packet
-
-        try:  # Escribir datos RAW en JSON
-            self.json_printer_rawDATA(io_dict_raw, device_imei)
-        except Exception as e:
-            print(f"Error al escribir datos RAW en JSON: {e}")
-
         zero_bytes = codec_8E_packet[:8]
         print()
         print(f"zero bytes = {zero_bytes}")
@@ -245,7 +181,6 @@ class GpsTrackingLog(models.Model):
         for record_number in range(1, number_of_records + 1):
             io_dict = {}
             io_dict["device_IMEI"] = device_imei
-            io_dict["server_time"] = self.time_stamper_for_json()
             print()
             print(f"data from record {record_number}")
             print(f"########################################")
@@ -300,35 +235,6 @@ class GpsTrackingLog(models.Model):
             total_io_elements_parsed = int(total_io_elements, 16)
             print(f"total I/O elements in record {record_number} = {total_io_elements_parsed}")
             data_field_position += len(total_io_elements)
-
-            record_data = {
-                "timestamp": io_dict["timestamp"],
-                "priority": io_dict["priority"],
-                "longitude": io_dict["longitude"],
-                "latitude": io_dict["latitude"],
-                "altitude": io_dict["altitude"],
-                "angle": io_dict["angle"],
-                "satellites": io_dict["satellites"],
-                "speed": io_dict["speed"],
-                "event_id": io_dict["eventID"],
-                "device_imei": device_imei
-            }
-            print(record_data)
-            log_id = {
-                'timestamp': record_data.get("timestamp"),
-                'priority': record_data.get("priority"),
-                'longitude': record_data.get("longitude"),
-                'latitude': record_data.get("latitude"),
-                'altitude': record_data.get("altitude"),
-                'angle': record_data.get("angle"),
-                'satellites': record_data.get("satellites"),
-                'speed': record_data.get("speed"),
-                'event_id': record_data.get("eventID"),
-            }
-            device = self.env['gps.tracking.device'].create({
-                'imei': record_data.get("device_imei"),
-                'log_ids': [(0, 0, log_id)]
-            })
 
             # Procesar IO de 1 byte
             byte1_io_number = avl_data_start[data_field_position:data_field_position + data_step]
@@ -434,26 +340,23 @@ class GpsTrackingLog(models.Model):
                     pass
             else:
                 pass
-
-            try:
-                self.json_printer(io_dict, device_imei)
-                self.insertar_datos_gps(io_dict)
-            except Exception as e:
-                print(f"Error al escribir en JSON o insertar en la base de datos: {e}")
-
-        if props == "SERVER":
-            total_records_parsed = int(avl_data_start[data_field_position:data_field_position + 2], 16)
-            print()
-            print(f"total parsed records = {total_records_parsed}")
-            print()
-            return int(number_of_records)
-
-        else:
-            total_records_parsed = int(avl_data_start[data_field_position:data_field_position + 2], 16)
-            print()
-            print(f"total parsed records = {total_records_parsed}")
-            print()
-            self.input_trigger()
+            record_data = {
+                "timestamp": io_dict["timestamp"],
+                "priority": io_dict["priority"],
+                "longitude": io_dict["longitude"],
+                "latitude": io_dict["latitude"],
+                "altitude": io_dict["altitude"],
+                "angle": io_dict["angle"],
+                "satellites": io_dict["satellites"],
+                "speed": io_dict["speed"],
+                "event_id": io_dict["eventID"],
+                "raw_data": io_dict,
+            }
+            device = self.env['gps.tracking.device'].search([('imei', '=', device_imei)], limit=1)
+            if not device:
+                device = self.env['gps.tracking.device'].create({'imei': device_imei})
+            record_data['device_id'] = device.id
+            self.create(record_data)
 
     def coordinate_formater(self, hex_coordinate):
         coordinate = int(hex_coordinate, 16)
@@ -464,64 +367,24 @@ class GpsTrackingLog(models.Model):
             dec_coordinate = coordinate / 1e7
         return dec_coordinate
 
-    def json_printer(self, io_dict, device_imei):
-        json_data = json.dumps(io_dict, indent=4)
-        data_path = "./data/" + str(device_imei)
-        json_file = str(device_imei) + "_data.json"
-
-        if not os.path.exists(data_path):
-            os.makedirs(data_path)
-        else:
-            pass
-
-        if not os.path.exists(os.path.join(data_path, json_file)):
-            with open(os.path.join(data_path, json_file), "w") as file:
-                file.write(json_data)
-        else:
-            with open(os.path.join(data_path, json_file), "a") as file:
-                file.write(json_data)
-        return
-
-    def json_printer_rawDATA(self, io_dict_raw, device_imei):
-        json_data = json.dumps(io_dict_raw, indent=4)
-        data_path = "./data/" + str(device_imei)
-        json_file = str(device_imei) + "_RAWdata.json"
-
-        if not os.path.exists(data_path):
-            os.makedirs(data_path)
-        else:
-            pass
-
-        if not os.path.exists(os.path.join(data_path, json_file)):
-            with open(os.path.join(data_path, json_file), "w") as file:
-                file.write(json_data)
-        else:
-            with open(os.path.join(data_path, json_file), "a") as file:
-                file.write(json_data)
-        return
-
     def time_stamper(self):
-        current_server_time = datetime.datetime.now()
+        current_server_time = datetime.now()
         server_time_stamp = current_server_time.strftime('%H:%M:%S %d-%m-%Y')
-        return server_time_stamp
-
-    def time_stamper_for_json(self):
-        current_server_time = datetime.datetime.now()
-        timestamp_utc = datetime.datetime.utcnow()
-        server_time_stamp = f"{current_server_time.strftime('%H:%M:%S %d-%m-%Y')} (local) / {timestamp_utc.strftime('%H:%M:%S %d-%m-%Y')} (utc)"
         return server_time_stamp
 
     def device_time_stamper(self, timestamp):
         timestamp_ms = int(timestamp, 16) / 1000
-        timestamp_utc = datetime.datetime.utcfromtimestamp(timestamp_ms)
-        utc_offset = datetime.datetime.fromtimestamp(timestamp_ms) - datetime.datetime.utcfromtimestamp(timestamp_ms)
-        timestamp_local = timestamp_utc + utc_offset
+        timestamp_utc = datetime.fromtimestamp(timestamp_ms, timezone.utc).replace(tzinfo=None)
+
+        # timestamp_utc = datetime.datetime.utcfromtimestamp(timestamp_ms)
+        # utc_offset = datetime.datetime.fromtimestamp(timestamp_ms) - datetime.datetime.utcfromtimestamp(timestamp_ms)
+        # timestamp_local = timestamp_utc + utc_offset
 
         return timestamp_utc
 
     def record_delay_counter(self, timestamp):
         timestamp_ms = int(timestamp, 16) / 1000
-        current_server_time = datetime.datetime.now().timestamp()
+        current_server_time = datetime.now().timestamp()
         return f"{int(current_server_time - timestamp_ms)} seconds"
 
     def parse_data_integer(self, data):
@@ -582,32 +445,7 @@ class GpsTrackingLog(models.Model):
         }
 
         if key in parse_functions_dictionary:
-            parse_function = self.parse_functions_dictionary[key]
+            parse_function = parse_functions_dictionary[key]
             return parse_function(value)
         else:
             return f"0x{value}"
-
-    def fileAccessTest(self):
-        try:
-            testDict = {}
-            testDict["_Writing_Test_"] = "Writing_Test"
-            testDict["Script_Started"] = self.time_stamper_for_json()
-
-            self.json_printer(testDict, "file_Write_Test")
-
-            print(f"---### Prueba de acceso a archivos superada! ###---")
-            self.input_trigger()
-
-        except Exception as e:
-            print()
-            print(f"---### Error de acceso a archivos ###---")
-            print(f"'{e}'")
-            print(f"---### Intenta ejecutar el terminal con derechos de administrador! ###---")
-            print(f"---### Nada será guardado si decides continuar! ###---")
-            print()
-            self.input_trigger()
-
-    def write(self, vals):
-        res = super().write(vals)
-        self.fileAccessTest()
-        return res
