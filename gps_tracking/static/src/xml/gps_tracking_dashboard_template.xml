@@ -56,6 +56,11 @@
                                 }"></i>
                                 <span>Velocidad:</span> <t t-esc="device.speed"/> km/h
                             </div>
+                            <!-- Timestamp -->
+                            <div class="kanban_info">
+                                <i class="fa fa-clock-o"></i>
+                                <span>Actualización:</span> <t t-esc="device.timestamp"/>
+                            </div>
                             <!-- Satélites -->
                             <div class="kanban_info">
                                 <i class="fa fa-globe"></i>

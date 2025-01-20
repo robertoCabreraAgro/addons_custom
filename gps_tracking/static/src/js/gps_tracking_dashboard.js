@@ -81,6 +81,7 @@ class GpsTrackingDashboard extends Component {
                 ["id", "imei", "the_point", "speed", "timestamp", "altitude", "satellite", "address"]
             );
             console.log("Dispositivos cargados:", devices);
+            console.log("Dispositivos cargados:", JSON.stringify(devices, null, 2));
             this.state.devices = devices;
         } catch (error) {
             console.error("Error al cargar los dispositivos:", error);
