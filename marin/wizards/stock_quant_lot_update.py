@@ -24,7 +24,7 @@ class StockQuantLotUpdate(models.TransientModel):
         comodel_name="stock.lot",
         string="Destination Lot",
         required=True,
-        domain=[('product_id', '=', product_id), ('id', '!=', lot_id)],
+        domain="[('product_id', '=', product_id), ('id', '!=', lot_id)]",
     )
     max_quantity = fields.Float(
         related="quant_id.quantity",
