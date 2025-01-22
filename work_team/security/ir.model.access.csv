@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_work_team,work.team,model_work_team,base.group_user,1,0,0,0
+access_work_team_user,work.team.user,model_work_team,work_team.group_sale_salesman,1,0,0,0
+access_work_team_manager,work.team.manager,model_work_team,work_team.group_sale_manager,1,1,1,1
+access_work_team_member_all,access.work.team.member.all,model_work_team_member,,0,0,0,0
+access_work_team_member_user,access.work.team.member.user,model_work_team_member,base.group_user,1,0,0,0
+access_work_team_member_manager,access.work.team.member.manager,model_work_team_member,work_team.group_sale_manager,1,1,1,1
