@@ -124,12 +124,28 @@
                         <page string="Tracking Points">
                             <field name="tracking_points">
                                 <list>
+                                    <field name="device_id"/>
                                     <field name="timestamp"/>
+                                    <field name="priority"/>
                                     <field name="latitude"/>
                                     <field name="longitude"/>
                                     <field name="altitude"/>
                                     <field name="angle"/>
+                                    <field name="satellites"/>
                                     <field name="speed"/>
+                                    <field name="event_id"/>
+                                    <field name="ignition"/>
+                                    <field name="movement"/>
+                                    <field name="gsm_signal"/>
+                                    <field name="sleep_mode"/>
+                                    <field name="gnss_status"/>
+                                    <field name="gnss_pdop"/>
+                                    <field name="gnss_hdop"/>
+                                    <field name="external_voltage"/>
+                                    <field name="battery_voltage"/>
+                                    <field name="battery_current"/>
+                                    <field name="active_gsm_operator"/>
+                                    <field name="total_odometer"/>
                                 </list>
                             </field>
                         </page>

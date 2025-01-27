@@ -19,6 +19,10 @@ class GpsTrackingDevice(models.Model):
     address = fields.Char(string='Altitude', related='last_point_id.address', store=True)
     the_point = fields.GeoPoint(string='Current Position', related='last_point_id.the_point', store=True)
     history_route = fields.GeoLine(string='History Route', compute='_compute_history_route', store=True, srid=3857,)
+    gsm_signal = fields.Integer(string="Gsm Signal", related='last_point_id.gsm_signal', store=True)
+    ignition = fields.Integer(string='Ignition (239)', related='last_point_id.ignition', store=True)
+    movement = fields.Integer(string='Movement (240)', related='last_point_id.movement', store=True)
+    
 
     @api.depends('tracking_points.timestamp')  # Usar el campo correcto
     def _compute_last_point(self):
@@ -67,6 +71,20 @@ class GpsTrackingPoint(models.Model):
     longitude = fields.Float(string='Longitude', digits=(16, 7))
     the_point = fields.GeoPoint(string='Position', srid=3857, compute='_compute_the_point', store=True)
     address = fields.Char(string='Address', compute='_compute_address', store=True)
+    
+    # Nuevos campos para los IO adicionales
+    ignition = fields.Integer(string='Ignition (239)')
+    movement = fields.Integer(string='Movement (240)')
+    gsm_signal = fields.Integer(string='GSM Signal (21)')
+    sleep_mode = fields.Integer(string='Sleep Mode (200)')
+    gnss_status = fields.Integer(string='GNSS Status (69)')
+    gnss_pdop = fields.Float(string='GNSS PDOP (181)', digits=(16, 2))
+    gnss_hdop = fields.Float(string='GNSS HDOP (182)', digits=(16, 2))
+    external_voltage = fields.Float(string='External Voltage (66)', digits=(16, 3))
+    battery_voltage = fields.Float(string='Battery Voltage (67)', digits=(16, 3))
+    battery_current = fields.Float(string='Battery Current (68)', digits=(16, 3))
+    active_gsm_operator = fields.Integer(string='Active GSM Operator (241)')
+    total_odometer = fields.Integer(string='Total Odometer (16)')
     
 
     @api.depends('latitude', 'longitude')

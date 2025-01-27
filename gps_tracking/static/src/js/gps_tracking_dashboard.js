@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { Component, useState, onWillStart, onMounted, useRef } from "@odoo/owl";
+import { Component, useState, onWillStart, onMounted, useRef, onWillUnmount } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { loadJS } from "@web/core/assets";
@@ -39,6 +39,11 @@ class GpsTrackingDashboard extends Component {
         this.mapContainerRef = useRef("mapContainer");
         this.tooltipRef = useRef("tooltip");
 
+        // Llamar a la función de actualización periódicamente (cada 10 segundos)
+        this.refreshInterval = setInterval(() => {
+            this.refreshData();
+        }, 1000); // 10 segundos
+
         onWillStart(async () => {
             // Acceder al contexto correctamente
             const context = this.props.action.context || {};
@@ -71,6 +76,13 @@ class GpsTrackingDashboard extends Component {
                 }, 0);
             }
         });
+
+        onWillUnmount(() => {
+            if (this.refreshInterval) {
+                clearInterval(this.refreshInterval);
+                console.log("Intervalo de actualización limpiado.");
+            }
+        });
     }
 
     async loadDevices() {
@@ -78,7 +90,7 @@ class GpsTrackingDashboard extends Component {
             const devices = await this.orm.searchRead(
                 "gps.tracking.device",
                 [],
-                ["id", "imei", "the_point", "speed", "timestamp", "altitude", "satellite", "address"]
+                ["id", "imei", "the_point", "speed", "timestamp", "altitude", "satellite", "address", "gsm_signal", "ignition", "movement"]
             );
             console.log("Dispositivos cargados:", devices);
             console.log("Dispositivos cargados:", JSON.stringify(devices, null, 2));
@@ -153,16 +165,28 @@ class GpsTrackingDashboard extends Component {
             // Recopilar datos del feature
             const imei = feature.get("imei") || "Desconocido";
             const speed = feature.get("speed") || 0;
+            const ignition = feature.get("ignition") || 0;
+            const movement = feature.get("movement") || 0;
     
             // Contenido base del tooltip
             tooltipElement.innerHTML = `
-                <div style="min-width: 200px;">
-                    <strong>IMEI:</strong> ${imei}<br/>
-                    <strong>Velocidad:</strong> ${speed} km/h<br/>
-                    <button id="btn-street" class="btn btn-sm btn-info" style="margin-top:5px;">
-                        Ver Street View
-                    </button>
-                </div>
+            <div style="min-width: 200px;">
+                <strong>IMEI:</strong> ${imei}<br/>
+                <strong>Velocidad:</strong> ${speed} km/h<br/>
+                <strong>Encendido:</strong>
+                <span style="color: ${ignition == 1 ? 'green' : 'red'};">
+                    <i class="fa fa-power-off" style="margin-right: 5px;"></i>
+                    ${ignition == 1 ? 'Encendido' : 'Apagado'}
+                </span><br/>
+                <strong>Movimiento:</strong>
+                <span style="color: ${movement == 1 ? 'green' : 'red'};">
+                    <i class="fa fa-car" style="margin-right: 5px;"></i>
+                    ${movement == 1 ? 'En movimiento' : 'Estacionado'}
+                </span><br/>
+                <button id="btn-street" class="btn btn-sm btn-info" style="margin-top:5px;">
+                    Ver Street View
+                </button>
+            </div>
             `;
     
             // Asignar listeners tras crear el contenido
@@ -307,6 +331,8 @@ class GpsTrackingDashboard extends Component {
                     geometry: new ol.geom.Point(coords),
                     imei: device.imei,
                     speed: device.speed,
+                    ignition: device.ignition,
+                    movement: device.movement,
                 });
             }
         }).filter((feature) => feature);
@@ -363,6 +389,8 @@ class GpsTrackingDashboard extends Component {
                         geometry: new ol.geom.Point(coords),
                         imei: device.imei,
                         speed: device.speed,
+                        ignition: device.ignition,
+                        movement: device.movement,
                     });
                 }
             }).filter((feature) => feature);
@@ -640,7 +668,7 @@ class GpsTrackingDashboard extends Component {
         }
     }
 
-    // Método para ajustar la fecha local añadiendo 6 horas
+    // Método para ajustar la fecha local 
     localToUTC(dateString) {
         const date = new Date(dateString);
         return new Date(
