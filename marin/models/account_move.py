@@ -242,7 +242,6 @@ class AccountMove(models.Model):
 
         return True
 
-    # Extend original method
     def action_post(self):
         self._pre_post_invoice_edi_amounts_match_validation()
         res = self._pre_post_invoice_credit_limit_validation()
@@ -252,9 +251,14 @@ class AccountMove(models.Model):
         return super().action_post()
 
     def button_draft(self):
+        res = super().button_draft()
         for move in self:
-            move.mapped("line_ids.fleet_vehicle_log_services_ids").unlink()
-        return super().button_draft()
+            lines = move.line_ids.filtered(
+                lambda l: l.vehicle_id
+            ).sudo().vehicle_log_service_ids.with_context(
+                ignore_linked_bill_constraint=True
+            ).unlink()
+        return res
 
     def button_set_stored(self):
         for move in self:

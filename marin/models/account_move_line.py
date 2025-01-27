@@ -11,9 +11,6 @@ class AccountMoveLine(models.Model):
     move_type = fields.Selection(store=True)
 
     # New fields
-    fleet_vehicle_log_services_ids = fields.One2many(
-        "fleet.vehicle.log.services", "move_line_id", "Fleet services logs"
-    )
     allowed_sale_line_ids = fields.Many2many(
         comodel_name="sale.order.line",
         string="Allowed sale lines to be related",
