@@ -59,8 +59,8 @@ analytic_account_1057,Aspid Max 0.250L,True,marin_data.company_lmmr,marin_data.a
 analytic_account_1058,Aspid Max 0.950L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
 analytic_account_1059,Atento 0.250kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
 analytic_account_1060,Atomizador STIHL,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1061,Audi/Q3 2024,True,marin_data.company_lmmr,marin_data.analytic_plan_201
-analytic_account_1062,Audi/Q5/2024/Blanca/WAUCFAF32R1032455,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1061,Audi/Q5,,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1062,Audi/Q3/2024/Blanca/WAUCFAF32R1032455,True,marin_data.company_lmmr,marin_data.analytic_plan_201
 analytic_account_1063,Axe B 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
 analytic_account_1064,Axefol K-45 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
 analytic_account_1065,Axefol plus 16-10-15 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
@@ -882,3 +882,7 @@ analytic_account_1895,Veridia XM 200 WP 0.600kg,True,marin_data.company_lmmg,mar
 analytic_account_1896,Vertimec 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
 analytic_account_1897,Vibrance Beans 0.250L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
 analytic_account_1898,Vibrance Beans 1L,True,marin_data.company_lmmg,marin_data.analytic_plan_201
+analytic_account_1899,Papas Fritas,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1900,Zelen XM Calcio 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1901,Zelen XM Potasio 1L,True,marin_data.company_lmmr,marin_data.analytic_plan_201
+analytic_account_1902,Zelen XM 90 1kg,True,marin_data.company_lmmr,marin_data.analytic_plan_201
