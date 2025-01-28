@@ -58,11 +58,12 @@ class HrPayslipInherit(models.Model):
         payroll.update(self.get_cfdi_other_payments_data())
         payroll["inability_data"] = lambda i, p: p._get_inability_data(i)
         return payroll
-
-    # def _create_account_move(self, values):
-    #     if not values.get("partner_id") and not self.company_id.batch_payroll_move_lines:
-    #         values["partner_id"] = self.employee_id.work_contact_id.id
-    #     return super()._create_account_move(values)
+    
+    def _create_account_move(self, values):
+        for val in values:
+            if not val.get("partner_id") and not self.company_id.batch_payroll_move_lines:
+                val["partner_id"] = self.employee_id.work_contact_id.id
+        return super()._create_account_move(values)
 
     def _prepare_line_values(self, line, account_id, date, debit, credit):
         res = super()._prepare_line_values(line, account_id, date, debit, credit)
