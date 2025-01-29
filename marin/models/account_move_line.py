@@ -226,9 +226,3 @@ class AccountMoveLine(models.Model):
             }
         )
         return res
-
-    # Extend original method
-    def _prepare_fleet_log_service(self):
-        res = super()._prepare_fleet_log_service()
-        res.update({"move_line_id": self.id})
-        return res
