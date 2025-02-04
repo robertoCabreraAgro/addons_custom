@@ -14,7 +14,11 @@ class ResCompany(models.Model):
         help="Accounting journal used to create pos cash withdraw.",
     )
 
-    _sql_constraints = [("code_uniq", "unique (code)", "The company's code must be unique")]
+    _code_uniq = models.Constraint(
+        "UNIQUE(code)",
+        "The company's code must be unique"
+    )
+
 
     @api.depends("code", "name")
     def _compute_complete_name(self):

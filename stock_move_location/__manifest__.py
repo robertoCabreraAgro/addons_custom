@@ -1,6 +1,6 @@
 {
     "name": "Stock Quant Relocate",
-    "version": "18.0.1.0.0",
+    "version": "saas~18.1.1.0.0",
     "author": "Julius Network Solutions, "
         "BCIM,"
         "Camptocamp,"

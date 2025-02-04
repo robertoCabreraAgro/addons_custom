@@ -68,9 +68,7 @@ def _post_init_marin(env):
     tools.convert.convert_file(env, "marin_data", "data/product.tag.csv", None, mode="init", kind="data")
 
     model = "stock.warehouse"
-    warehouses = env[model].sudo().search(
-        [("active", "in", [True, False])], order="id ASC"
-    )
+    warehouses = env[model].sudo().search([("active", "in", [True, False])], order="id ASC")
     for wh in warehouses:
         exist = env["ir.model.data"].sudo().search([("model", "=", model), ("res_id", "=", wh.id)])
         if not exist:
@@ -86,11 +84,7 @@ def _post_init_marin(env):
     tools.convert.convert_file(env, "marin_data", "data/stock.warehouse.csv", None, mode="init", kind="data")
 
     model = "stock.location"
-    locations = (
-        env[model]
-        .sudo()
-        .search([("active", "in", [True, False])], order="id ASC")
-    )
+    locations = env[model].sudo().search([("active", "in", [True, False])], order="id ASC")
     for ln in locations:
         exist = env["ir.model.data"].sudo().search([("model", "=", model), ("res_id", "=", ln.id)])
         if not exist:
@@ -103,13 +97,18 @@ def _post_init_marin(env):
                     "noupdate": True,
                 }
             )
+    env["stock.warehouse"].sudo().browse(2).write({"name": "LMMR", "code": "LMMR"})
+    env["stock.warehouse"].sudo().browse(3).write({"name": "TJGL", "code": "TJGL"})
+    env["stock.warehouse"].sudo().browse(4).write({"name": "LMMG", "code": "LMMG"})
+    env["stock.warehouse"].sudo().browse(5).write({"name": "AMMG", "code": "AMMG"})
+    env["stock.warehouse"].sudo().browse(6).write({"name": "CFMG", "code": "CFMG"})
+    env["stock.warehouse"].sudo().browse(7).write({"name": "XM", "code": "XM"})
+
     env.cr.execute("""SELECT setval('"public"."stock_location_id_seq"', 5000, true);""")
     tools.convert.convert_file(env, "marin_data", "data/stock.location.csv", None, mode="init", kind="data")
 
     model = "stock.picking.type"
-    types = env[model].sudo().search(
-        [("active", "in", [True, False])], order="id ASC"
-    )
+    types = env[model].sudo().search([("active", "in", [True, False])], order="id ASC")
     for spt in types:
         exist = env["ir.model.data"].sudo().search([("model", "=", model), ("res_id", "=", spt.id)])
         if not exist:
@@ -144,35 +143,100 @@ def _post_init_marin(env):
     tools.convert.convert_file(env, "marin_data", "data/stock.picking.type.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin_data", "data/stock.route.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin_data", "data/stock.rule.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin_data", "data/stock.picking.type-2.csv", None, mode="init", kind="data")
-    queries = [
-        """UPDATE stock_picking_type SET sequence=100  WHERE name->>'en_US' = 'Delivery Orders'""",
-        """UPDATE stock_picking_type SET sequence=150  WHERE name->>'en_US' = 'Ship orders'""",
-        """UPDATE stock_picking_type SET sequence=150  WHERE name->>'en_US' = 'Ship orders 3P'""",
-        """UPDATE stock_picking_type SET sequence=200  WHERE name->>'en_US' = 'PoS Orders'""",
-        """UPDATE stock_picking_type SET sequence=300  WHERE name->>'en_US' ilike 'receipts'""",
-        """UPDATE stock_picking_type SET sequence=350  WHERE name->>'en_US' ilike 'internal transfers'""",
-        """UPDATE stock_picking_type SET sequence=400  WHERE name->>'en_US' ilike 'interwarehouse%'""",
-        """UPDATE stock_picking_type SET sequence=500  WHERE name->>'en_US' ilike 'Returns from customers'""",
-        """UPDATE stock_picking_type SET sequence=550  WHERE name->>'en_US' ilike 'Returns to suppliers'""",
-        """UPDATE stock_picking_type SET sequence=600  WHERE name->>'en_US' ilike 'manufacturing'""",
-        """UPDATE stock_picking_type SET sequence=700  WHERE name->>'en_US' ilike 'pick'""",
-        """UPDATE stock_picking_type SET sequence=800  WHERE name->>'en_US' ilike 'pick components'""",
-        """UPDATE stock_picking_type SET sequence=900  WHERE name->>'en_US' ilike 'pack'""",
-        """UPDATE stock_picking_type SET sequence=1000 WHERE name->>'en_US' ilike 'store finished product'""",
-        """UPDATE stock_picking_type SET sequence=1100 WHERE name->>'en_US' ilike 'subcontracting'""",
-        """UPDATE stock_picking_type SET sequence=1200 WHERE name->>'en_US' ilike 'resupply subcontractor'""",
-        """UPDATE stock_picking_type SET sequence=1300 WHERE name->>'en_US' ilike 'dropship'""",
-        """UPDATE stock_picking_type SET sequence=1400 WHERE name->>'en_US' ilike 'dropship subcontractor'""",
-        """UPDATE stock_picking_type SET sequence=1500 WHERE name->>'en_US' ilike 'intercompany%'""",
-        """UPDATE stock_picking_type SET sequence=1600 WHERE name->>'en_US' ilike 'Quality Control'""",
-        """UPDATE stock_picking_type SET sequence=1700 WHERE name->>'en_US' ilike 'Storage'""",
-        """UPDATE stock_picking_type SET sequence=1800 WHERE name->>'en_US' ilike 'Cross Dock'""",
-    ]
-    for q in queries:
-        env.cr.execute(q)
+    # tools.convert.convert_file(env, "marin_data", "data/stock.picking.type-2.csv", None, mode="init", kind="data")
+    env.cr.execute(
+        """
+        UPDATE stock_picking_type SET sequence=100  WHERE name->>'en_US' = 'Delivery Orders';
+        UPDATE stock_picking_type SET sequence=150  WHERE name->>'en_US' = 'Ship orders';
+        UPDATE stock_picking_type SET sequence=150  WHERE name->>'en_US' = 'Ship orders 3P';
+        UPDATE stock_picking_type SET sequence=200  WHERE name->>'en_US' = 'PoS Orders';
+        UPDATE stock_picking_type SET sequence=300  WHERE name->>'en_US' ilike 'receipts';
+        UPDATE stock_picking_type SET sequence=350  WHERE name->>'en_US' ilike 'internal transfers';
+        UPDATE stock_picking_type SET sequence=400  WHERE name->>'en_US' ilike 'interwarehouse%';
+        UPDATE stock_picking_type SET sequence=500  WHERE name->>'en_US' ilike 'Returns from customers';
+        UPDATE stock_picking_type SET sequence=550  WHERE name->>'en_US' ilike 'Returns to suppliers';
+        UPDATE stock_picking_type SET sequence=600  WHERE name->>'en_US' ilike 'manufacturing';
+        UPDATE stock_picking_type SET sequence=700  WHERE name->>'en_US' ilike 'pick';
+        UPDATE stock_picking_type SET sequence=800  WHERE name->>'en_US' ilike 'pick components';
+        UPDATE stock_picking_type SET sequence=900  WHERE name->>'en_US' ilike 'pack';
+        UPDATE stock_picking_type SET sequence=1000 WHERE name->>'en_US' ilike 'store finished product';
+        UPDATE stock_picking_type SET sequence=1100 WHERE name->>'en_US' ilike 'subcontracting';
+        UPDATE stock_picking_type SET sequence=1200 WHERE name->>'en_US' ilike 'resupply subcontractor';
+        UPDATE stock_picking_type SET sequence=1300 WHERE name->>'en_US' ilike 'dropship';
+        UPDATE stock_picking_type SET sequence=1400 WHERE name->>'en_US' ilike 'dropship subcontractor';
+        UPDATE stock_picking_type SET sequence=1500 WHERE name->>'en_US' ilike 'intercompany%';
+        UPDATE stock_picking_type SET sequence=1600 WHERE name->>'en_US' ilike 'Quality Control';
+        UPDATE stock_picking_type SET sequence=1700 WHERE name->>'en_US' ilike 'Storage';
+        UPDATE stock_picking_type SET sequence=1800 WHERE name->>'en_US' ilike 'Cross Dock';
+        """
+    )
 
     tools.convert.convert_file(env, "marin_data", "data/account.account.csv", None, mode="init", kind="data")
+    lmmr = env["res.company"].sudo().browse(2)
+    tjgl = env["res.company"].sudo().browse(3)
+    lmmg = env["res.company"].sudo().browse(4)
+    xm   = env["res.company"].sudo().browse(7)
+    records = [
+        (lmmr, "Cash main",                                   False, "101.01.001", "asset_cash"            ),
+        (lmmr, "Cash USD",                                    (1),   "101.01.003", "asset_cash"            ),
+        (lmmr, "Cash BAL",                                    False, "101.01.005", "asset_cash"            ),
+        (lmmr, "Cash SJN",                                    False, "101.01.007", "asset_cash"            ),
+        (lmmr, "Bank BBVA 0194254961",                        False, "102.01.001", "asset_cash"            ),
+        (lmmr, "Bank Banorte 0313328770",                     False, "102.01.002", "asset_cash"            ),
+        (lmmr, "Bank Efectivale - Expenses",                  False, "102.01.003", "asset_cash"            ),
+        (lmmr, "Bank BanBajio 0038383478",                    False, "102.01.004", "asset_cash"            ),
+        (lmmr, "Bank BBVA meta segura",                       False, "102.01.020", "asset_cash"            ),
+        (lmmr, "Bank BBVA CC 4406",                           False, "202.03.002", "liability_credit_card" ),
+        (lmmr, "Bank BBVA revolving business credit",         False, "202.03.003", "liability_credit_card" ),
+        (lmmr, "Bank BBVA TN 5064",                           False, "202.03.004", "liability_credit_card" ),
+        (lmmr, "Bank BBVA 1007025823",                        False, "202.03.005", "liability_credit_card" ),
+        (lmmr, "Bank American Express Gold",                  False, "202.03.006", "liability_credit_card" ),
+        (lmmr, "Bank American Express Platinum",              False, "202.03.007", "liability_credit_card" ),
+        (lmmr, "Discounts on purchases from payment in LMMG", False, "503.01.007", "income_other"          ),
+        (tjgl, "Cash main",                                   False, "101.01.001", "asset_cash"            ),
+        (tjgl, "Cash USD",                                    (1),   "101.01.003", "asset_cash"            ),
+        (tjgl, "Bank BBVA1",                                  False, "102.01.001", "asset_cash"            ),
+        (tjgl, "Bank Banamex",                                False, "102.01.003", "asset_cash"            ),
+        (tjgl, "Bank BBVA Payroll",                           False, "102.01.010", "asset_cash"            ),
+        (lmmg, "Cash main",                                   False, "101.01.001", "asset_cash"            ),
+        (lmmg, "Cash USD",                                    (1),   "101.01.003", "asset_cash"            ),
+        (lmmg, "Bank BBVA 0478986592",                        False, "102.01.001", "asset_cash"            ),
+        (lmmg, "Bank BBVA 0110152269",                        False, "102.01.002", "asset_cash"            ),
+        (lmmg, "Bank Efectivale - Expenses",                  False, "102.01.003", "asset_cash"            ),
+        (lmmg, "Bank BanBajio 0038383038",                    False, "102.01.004", "asset_cash"            ),
+        (lmmg, "Bank BBVA Payroll",                           False, "102.01.010", "asset_cash"            ),
+        (lmmg, "Bank BBVA CC 5435",                           False, "202.03.002", "liability_credit_card" ),
+        (lmmg, "Discounts on purchases from payment in LMMR", False, "503.01.006", "income_other"          ),
+        (xm,   "Cash main",                                   False, "101.01.001", "asset_cash"            ),
+        (xm,   "Cash USD",                                    (1),   "101.01.003", "asset_cash"            ),
+        (xm,   "Bank BBVA main",                              False, "102.01.002", "asset_cash"            ),
+    ]
+    for r in records:
+        env['account.account'].with_company(r[0]).create([
+            {"name": r[1], "currency_id": r[2], "code": r[3], "account_type": r[4], "create_asset": "no", "company_ids": r[0]},
+        ])
+    model = "account.account"
+    records = env[model].sudo().search([("id", ">=", "1000")], order="id ASC")
+    for r in records:
+        exist = env["ir.model.data"].sudo().search([("model", "=", model), ("res_id", "=", r.id)])
+        if not exist:
+            code_store = r.with_company(lmmr).code_store or r.with_company(lmmg).code_store or r.with_company(tjgl).code_store or r.with_company(xm).code_store
+            name = "account_%s" % (code_store.replace(".","_"))
+            if len(r.company_ids) == 1:
+                name += "_%s" % r.company_ids.code.lower()
+            try:
+                env["ir.model.data"].create(
+                    {
+                        "module": "marin_data",
+                        "model": model,
+                        "name": name,
+                        "res_id": r.id,
+                        "noupdate": True,
+                    }
+                )
+            except:
+                raise UserError(r.id)
+
     tools.convert.convert_file(env, "marin_data", "data/account.analytic.plan.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin_data", "data/account.journal.group.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin_data", "data/account.journal.csv", None, mode="init", kind="data")
@@ -236,7 +300,6 @@ def _post_init_marin(env):
 
     env.cr.execute(
         """
-        SELECT setval('"public"."product_packaging_id_seq"', 1000, true);
         SELECT setval('"public"."product_product_id_seq"', 1000, true);
         SELECT setval('"public"."product_template_id_seq"', 1000, true);
 
@@ -252,7 +315,7 @@ def _post_init_marin(env):
         SELECT setval('"public"."pos_payment_method_id_seq"', 100, true);
 
         SELECT setval('"public"."fleet_vehicle_model_brand_id_seq"', 100, true);
-        SELECT setval('"public"."fleet_vehicle_model_id_seq"', 100, true);
+        SELECT setval('"public"."fleet_vehicle_model_id_seq"', 1000, true);
         SELECT setval('"public"."account_analytic_account_id_seq"', 999, true);
         SELECT setval('"public"."account_analytic_distribution_model_id_seq"', 1000, true);
         """
@@ -279,7 +342,6 @@ def _post_init_marin(env):
                     "noupdate": True,
                 }
             )
-    tools.convert.convert_file(env, "marin_data", "data/product.packaging.csv", None, mode="init", kind="data")
 
     tools.convert.convert_file(env, "marin_data", "data/mrp.bom.csv", None, mode="init", kind="data")
 

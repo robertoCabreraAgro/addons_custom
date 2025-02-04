@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="name" />
-                <field name="product_uom" groups="uom.group_uom" />
+                <field name="product_uom_id" groups="uom.group_uom" />
                 <separator />
                 <filter
                     name="not_invoice_related"
@@ -21,7 +21,7 @@
                 />
             </xpath>
             <xpath expr="//filter[@name='groupby_product']/.." position="inside">
-                <filter name="uom_filter" string="UoM" context="{'group_by': 'product_uom'}" groups="uom.group_uom" />
+                <filter name="uom_filter" string="UoM" context="{'group_by': 'product_uom_id'}" groups="uom.group_uom" />
             </xpath>
         </field>
     </record>
@@ -94,7 +94,7 @@
                     optional="show"
                 />
                 <field
-                    name="product_uom"
+                    name="product_uom_id"
                     string="UoM"
                     readonly="state in ('purchase','done', 'cancel')"
                     context="{'company_id': company_id}"
@@ -102,7 +102,6 @@
                     optional="hide"
                     groups="uom.group_uom"
                 />
-                <field name="product_uom_category_id" column_invisible="1" />
                 <field name="price_unit" readonly="qty_invoiced &gt; 0" optional="show" />
                 <field
                     name="taxes_id"

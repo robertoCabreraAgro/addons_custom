@@ -33,10 +33,10 @@ class GpsTrackingDevice(models.Model):
     address = fields.Char(related='last_log_id.address', string='Altitude')
     the_point = fields.GeoPoint(related='last_log_id.the_point', string='Current Position')
 
-
-    _sql_constraints = [
-         ('unique_imei', 'UNIQUE(imei)', 'This IMEI already exists')
-    ]
+    _imei_uniq = models.Constraint(
+        'UNIQUE(imei)',
+        'This IMEI already exists'
+    )
 
 
     @api.depends('log_ids.timestamp')

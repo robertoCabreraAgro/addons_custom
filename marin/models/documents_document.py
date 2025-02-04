@@ -28,7 +28,6 @@ class Documents(models.Model):
                     doc.display_name, doc.legal_number
                 ))
 
-    @api.returns("self", lambda value: value.id)
     def copy(self, default=None):
         self.ensure_one()
         default = dict(default or {}, legal_number=_("%s (copy)", self.legal_number))

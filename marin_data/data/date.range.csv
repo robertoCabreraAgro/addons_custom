@@ -29,3 +29,8 @@ date_range_27,,marin_data.date_range_type_ag,East valleys Spring - Summer 2024,2
 date_range_28,,marin_data.date_range_type_ag,High central valleys Spring - Summer 2024,2024-03-01,2024-10-31,True
 date_range_29,,marin_data.date_range_type_ag,Mid valleys Spring - Summer 2024,2024-05-01,2024-11-30,True
 date_range_30,,marin_data.date_range_type_ag,Northwest Autum - Winter 2024,2024-11-01,2025-03-31,True
+date_range_31,,marin_data.date_range_type_ag,East valleys Spring - Summer 2024,2025-02-15,2025-08-31,True
+date_range_32,,marin_data.date_range_type_ag,High central valleys Spring - Summer 2024,2025-03-01,2025-10-31,True
+date_range_33,,marin_data.date_range_type_ag,Mid valleys Spring - Summer 2024,2025-05-01,2025-11-30,True
+date_range_34,,marin_data.date_range_type_ag,Northwest Autum - Winter 2024,2025-11-01,2026-03-31,True
+date_range_35,,marin_data.date_range_type_ag,Northeast Spring - Summer 2025,2025-03-01,2025-10-31,True

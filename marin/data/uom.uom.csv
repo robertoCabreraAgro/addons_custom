@@ -1,92 +1,94 @@
-"id","category_id/id","unspsc_code_id/id","active","factor","rounding","uom_type","name"
-"uom_uom_101","uom.product_uom_categ_unit","product_unspsc.unspsc_code_ZZ","True","1.0","0.01","Smaller than the reference Unit of measure","Mutuamente definido"
-"uom_uom_102","l10n_mx.product_uom_categ_service","product_unspsc.unspsc_code_E48","True","1.0","0.01","Smaller than the reference Unit of measure","Service unit"
-"uom_uom_103","uom.product_uom_categ_unit","product_unspsc.unspsc_code_SX","True","1.0","0.01","Smaller than the reference Unit of measure","Shipment"
-"uom_uom_104","l10n_mx.product_uom_categ_service","product_unspsc.unspsc_code_ACT","True","1.0","0.01","Smaller than the reference Unit of measure","Activity"
-"uom_uom_105","uom.product_uom_categ_unit","product_unspsc.unspsc_code_XBX","True","1.0","0.01","Smaller than the reference Unit of measure","Box"
-"uom_uom_106","uom.product_uom_categ_unit","product_unspsc.unspsc_code_XNA","True","1.0","0.01","Smaller than the reference Unit of measure","Not available"
-"uom_uom_107","uom.product_uom_categ_kgm","product_unspsc.unspsc_code_H87","True","1.25","0.01","Smaller than the reference Unit of measure","0.800kg"
-"uom_uom_108","uom.product_uom_categ_kgm","product_unspsc.unspsc_code_H87","True","1.356852","0.01","Smaller than the reference Unit of measure","0.737kg"
-"uom_uom_109","uom.product_uom_categ_kgm","product_unspsc.unspsc_code_H87","True","1.666667","0.01","Smaller than the reference Unit of measure","0.600kg"
-"uom_uom_110","uom.product_uom_categ_kgm","product_unspsc.unspsc_code_H87","True","2.0","0.01","Smaller than the reference Unit of measure","0.500kg"
-"uom_uom_111","uom.product_uom_categ_kgm","product_unspsc.unspsc_code_H87","True","3.333333","0.01","Smaller than the reference Unit of measure","0.300kg"
-"uom_uom_112","uom.product_uom_categ_kgm","product_unspsc.unspsc_code_H87","True","4.0","0.01","Smaller than the reference Unit of measure","0.250kg"
-"uom_uom_113","uom.product_uom_categ_kgm","product_unspsc.unspsc_code_H87","True","4.716981","0.01","Smaller than the reference Unit of measure","0.212kg"
-"uom_uom_114","uom.product_uom_categ_kgm","product_unspsc.unspsc_code_H87","True","5.0","0.01","Smaller than the reference Unit of measure","0.200kg"
-"uom_uom_115","uom.product_uom_categ_kgm","product_unspsc.unspsc_code_H87","True","6.25","0.01","Smaller than the reference Unit of measure","0.160kg"
-"uom_uom_116","uom.product_uom_categ_kgm","product_unspsc.unspsc_code_H87","True","6.666667","0.01","Smaller than the reference Unit of measure","0.150kg"
-"uom_uom_117","uom.product_uom_categ_kgm","product_unspsc.unspsc_code_H87","True","10.0","0.01","Smaller than the reference Unit of measure","0.100kg"
-"uom_uom_118","uom.product_uom_categ_kgm","product_unspsc.unspsc_code_H87","True","66.666667","0.01","Smaller than the reference Unit of measure","0.015kg"
-"uom_uom_119","uom.product_uom_categ_kgm","product_unspsc.unspsc_code_H87","True","100.0","0.01","Smaller than the reference Unit of measure","0.010kg"
-"uom_uom_120","uom.product_uom_categ_kgm","product_unspsc.unspsc_code_H87","True","0.005","0.01","Bigger than the reference Unit of measure","200kg"
-"uom_uom_121","uom.product_uom_categ_kgm","product_unspsc.unspsc_code_H87","True","0.02","0.01","Bigger than the reference Unit of measure","50kg"
-"uom_uom_122","uom.product_uom_categ_kgm","product_unspsc.unspsc_code_H87","True","0.033333","0.01","Bigger than the reference Unit of measure","30kg"
-"uom_uom_123","uom.product_uom_categ_kgm","product_unspsc.unspsc_code_H87","True","0.04","0.01","Bigger than the reference Unit of measure","25kg"
-"uom_uom_124","uom.product_uom_categ_kgm","product_unspsc.unspsc_code_H87","True","0.05","0.01","Bigger than the reference Unit of measure","20kg"
-"uom_uom_125","uom.product_uom_categ_kgm","product_unspsc.unspsc_code_H87","True","0.066667","0.01","Bigger than the reference Unit of measure","15kg"
-"uom_uom_126","uom.product_uom_categ_kgm","product_unspsc.unspsc_code_H87","True","0.083333","0.01","Bigger than the reference Unit of measure","12kg"
-"uom_uom_127","uom.product_uom_categ_kgm","product_unspsc.unspsc_code_H87","True","0.1","0.01","Bigger than the reference Unit of measure","10kg"
-"uom_uom_128","uom.product_uom_categ_kgm","product_unspsc.unspsc_code_H87","True","0.111111","0.01","Bigger than the reference Unit of measure","9kg"
-"uom_uom_129","uom.product_uom_categ_kgm","product_unspsc.unspsc_code_H87","True","0.133333","0.01","Bigger than the reference Unit of measure","7.5kg"
-"uom_uom_130","uom.product_uom_categ_kgm","product_unspsc.unspsc_code_H87","True","0.142857","0.01","Bigger than the reference Unit of measure","7kg"
-"uom_uom_131","uom.product_uom_categ_kgm","product_unspsc.unspsc_code_H87","True","0.2","0.01","Bigger than the reference Unit of measure","5kg"
-"uom_uom_132","uom.product_uom_categ_kgm","product_unspsc.unspsc_code_H87","True","0.3125","0.01","Bigger than the reference Unit of measure","3.2kg"
-"uom_uom_133","uom.product_uom_categ_kgm","product_unspsc.unspsc_code_H87","True","0.5","0.01","Bigger than the reference Unit of measure","2kg"
-"uom_uom_134","uom.product_uom_categ_vol","product_unspsc.unspsc_code_H87","True","1.025641","0.01","Smaller than the reference Unit of measure","0.975L"
-"uom_uom_135","uom.product_uom_categ_vol","product_unspsc.unspsc_code_H87","True","1.030928","0.01","Smaller than the reference Unit of measure","0.970L"
-"uom_uom_136","uom.product_uom_categ_vol","product_unspsc.unspsc_code_H87","True","1.041667","0.01","Smaller than the reference Unit of measure","0.960L"
-"uom_uom_137","uom.product_uom_categ_vol","product_unspsc.unspsc_code_H87","True","1.052632","0.01","Smaller than the reference Unit of measure","0.950L"
-"uom_uom_138","uom.product_uom_categ_vol","product_unspsc.unspsc_code_H87","True","1.111111","0.01","Smaller than the reference Unit of measure","0.900L"
-"uom_uom_139","uom.product_uom_categ_vol","product_unspsc.unspsc_code_H87","True","1.666667","0.01","Smaller than the reference Unit of measure","0.600L"
-"uom_uom_140","uom.product_uom_categ_vol","product_unspsc.unspsc_code_H87","True","2.0","0.01","Smaller than the reference Unit of measure","0.500L"
-"uom_uom_141","uom.product_uom_categ_vol","product_unspsc.unspsc_code_H87","True","2.222222","0.01","Smaller than the reference Unit of measure","0.450L"
-"uom_uom_142","uom.product_uom_categ_vol","product_unspsc.unspsc_code_H87","True","3.333333","0.01","Smaller than the reference Unit of measure","0.300L"
-"uom_uom_143","uom.product_uom_categ_vol","product_unspsc.unspsc_code_H87","True","4.0","0.01","Smaller than the reference Unit of measure","0.250L"
-"uom_uom_144","uom.product_uom_categ_vol","product_unspsc.unspsc_code_H87","True","5.0","0.01","Smaller than the reference Unit of measure","0.200L"
-"uom_uom_145","uom.product_uom_categ_vol","product_unspsc.unspsc_code_H87","True","6.666667","0.01","Smaller than the reference Unit of measure","0.150L"
-"uom_uom_146","uom.product_uom_categ_vol","product_unspsc.unspsc_code_H87","True","8.0","0.01","Smaller than the reference Unit of measure","0.125L"
-"uom_uom_147","uom.product_uom_categ_vol","product_unspsc.unspsc_code_H87","True","10.0","0.01","Smaller than the reference Unit of measure","0.100L"
-"uom_uom_148","uom.product_uom_categ_vol","product_unspsc.unspsc_code_MLT","True","1000.0","0.01","Smaller than the reference Unit of measure","mililiter (ml)"
-"uom_uom_149","uom.product_uom_categ_vol","product_unspsc.unspsc_code_D40","True","0.001","0.01","Bigger than the reference Unit of measure","1000L"
-"uom_uom_150","uom.product_uom_categ_vol","product_unspsc.unspsc_code_H87","True","0.005","0.01","Bigger than the reference Unit of measure","200L"
-"uom_uom_151","uom.product_uom_categ_vol","product_unspsc.unspsc_code_H87","True","0.05","0.01","Bigger than the reference Unit of measure","20L"
-"uom_uom_152","uom.product_uom_categ_vol","product_unspsc.unspsc_code_H87","True","0.055556","0.01","Bigger than the reference Unit of measure","18L"
-"uom_uom_153","uom.product_uom_categ_vol","product_unspsc.unspsc_code_H87","True","0.1","0.01","Bigger than the reference Unit of measure","10L"
-"uom_uom_154","uom.product_uom_categ_vol","product_unspsc.unspsc_code_H87","True","0.105263","0.01","Bigger than the reference Unit of measure","9.5L"
-"uom_uom_155","uom.product_uom_categ_vol","product_unspsc.unspsc_code_H87","True","0.2","0.01","Bigger than the reference Unit of measure","5L"
-"uom_uom_156","uom.product_uom_categ_vol","product_unspsc.unspsc_code_H87","True","0.25","0.01","Bigger than the reference Unit of measure","4L"
-"uom_uom_157","uom.product_uom_categ_vol","product_unspsc.unspsc_code_H87","True","0.625","0.01","Bigger than the reference Unit of measure","1.6L"
-"uom_uom_158","marin.uom_category_101","","True","1.0","0.01","Reference Unit of measure for this category","Kilowatt hora"
-"uom_uom_159","marin.uom_category_101","","True","1.0","0.01","Smaller than the reference Unit of measure","Julio"
-"uom_uom_160","uom.product_uom_categ_vol","product_unspsc.unspsc_code_H87","True","0.052631","0.01","Bigger than the reference Unit of measure","19L"
-"uom_uom_161","uom.product_uom_categ_kgm","product_unspsc.unspsc_code_H87","True","1.333333","0.01","Smaller than the reference Unit of measure","0.750kg"
-"uom_uom_162","uom.product_uom_categ_vol","product_unspsc.unspsc_code_H87","True","2.857142","0.01","Smaller than the reference Unit of measure","0.350L"
-"uom_uom_163","uom.product_uom_categ_unit","product_unspsc.unspsc_code_C62","True","2.857142","0.01","Smaller than the reference Unit of measure","One"
-"uom_uom_164","uom.product_uom_categ_kgm","product_unspsc.unspsc_code_H87","True","7.692307","0.01","Smaller than the reference Unit of measure","0.130kg"
-"uom_uom_165","uom.product_uom_categ_vol","product_unspsc.unspsc_code_H87","True","3.030303","0.01","Smaller than the reference Unit of measure","0.330L"
-"uom.uom_square_foot","uom.uom_categ_surface","product_unspsc.unspsc_code_FTK","True","10.76391","0.01","Smaller than the reference Unit of measure","ft²"
-"uom.uom_square_meter","uom.uom_categ_surface","product_unspsc.unspsc_code_MTK","True","1.0","0.01","Reference Unit of measure for this category","m²"
-"uom.product_uom_cm","uom.uom_categ_length","product_unspsc.unspsc_code_CMT","True","100.0","0.01","Smaller than the reference Unit of measure","cm"
-"uom.product_uom_cubic_foot","uom.product_uom_categ_vol","","True","0.035314724827664144","0.01","Bigger than the reference Unit of measure","ft³"
-"uom.product_uom_cubic_inch","uom.product_uom_categ_vol","","True","61.0237","0.01","Smaller than the reference Unit of measure","in³"
-"uom.product_uom_cubic_meter","uom.product_uom_categ_vol","product_unspsc.unspsc_code_MTQ","True","0.001","0.01","Bigger than the reference Unit of measure","m³"
-"uom.product_uom_day","uom.uom_categ_wtime","product_unspsc.unspsc_code_E49","True","1.0","0.01","Reference Unit of measure for this category","Days"
-"uom.product_uom_dozen","uom.product_uom_categ_unit","product_unspsc.unspsc_code_DPC","True","0.08333333333333333","0.01","Bigger than the reference Unit of measure","Dozens"
-"uom.product_uom_floz","uom.product_uom_categ_vol","product_unspsc.unspsc_code_OZA","True","33.814","0.01","Smaller than the reference Unit of measure","fl oz (US)"
-"uom.product_uom_foot","uom.uom_categ_length","product_unspsc.unspsc_code_FOT","True","3.28084","0.01","Smaller than the reference Unit of measure","ft"
-"uom.product_uom_gal","uom.product_uom_categ_vol","product_unspsc.unspsc_code_A76","True","0.26417217685798894","0.01","Bigger than the reference Unit of measure","gal (US)"
-"uom.product_uom_gram","uom.product_uom_categ_kgm","product_unspsc.unspsc_code_GRM","True","1000.0","0.01","Smaller than the reference Unit of measure","gram"
-"uom.product_uom_hour","uom.uom_categ_wtime","product_unspsc.unspsc_code_LH","True","8.0","0.01","Smaller than the reference Unit of measure","Hours"
-"uom.product_uom_inch","uom.uom_categ_length","product_unspsc.unspsc_code_INH","True","39.3701","0.01","Smaller than the reference Unit of measure","in"
-"uom.product_uom_kgm","uom.product_uom_categ_kgm","product_unspsc.unspsc_code_KGM","True","1.0","0.01","Reference Unit of measure for this category","kilo"
-"uom.product_uom_km","uom.uom_categ_length","product_unspsc.unspsc_code_KMT","True","0.001","0.01","Bigger than the reference Unit of measure","km"
-"uom.product_uom_litre","uom.product_uom_categ_vol","product_unspsc.unspsc_code_LTR","True","1.0","0.01","Reference Unit of measure for this category","L"
-"uom.product_uom_lb","uom.product_uom_categ_kgm","product_unspsc.unspsc_code_LBR","True","2.20462","0.01","Smaller than the reference Unit of measure","lb"
-"uom.product_uom_meter","uom.uom_categ_length","product_unspsc.unspsc_code_MTR","True","1.0","0.01","Reference Unit of measure for this category","m"
-"uom.product_uom_mile","uom.uom_categ_length","product_unspsc.unspsc_code_M52","True","0.0006213727366498068","0.01","Bigger than the reference Unit of measure","mi"
-"uom.product_uom_millimeter","uom.uom_categ_length","product_unspsc.unspsc_code_MMT","True","1000.0","0.01","Smaller than the reference Unit of measure","mm"
-"uom.product_uom_oz","uom.product_uom_categ_kgm","product_unspsc.unspsc_code_ONZ","True","35.274","0.01","Smaller than the reference Unit of measure","oz"
-"uom.product_uom_qt","uom.product_uom_categ_vol","product_unspsc.unspsc_code_QTR","True","1.05669","0.01","Smaller than the reference Unit of measure","qt (US)"
-"uom.product_uom_ton","uom.product_uom_categ_kgm","product_unspsc.unspsc_code_TNE","True","0.001","0.01","Bigger than the reference Unit of measure","t"
-"uom.product_uom_unit","uom.product_uom_categ_unit","product_unspsc.unspsc_code_H87","True","1.0","0.01","Reference Unit of measure for this category","Units"
-"uom.product_uom_yard","uom.uom_categ_length","product_unspsc.unspsc_code_YRD","True","1.09361","0.01","Smaller than the reference Unit of measure","yd"
+id,name,relative_uom_id/id,unspsc_code_id/id,package_type_id/id,relative_factor,active
+uom_uom_101,Mutuamente definido,uom.product_uom_unit,,,1.0,True
+uom_uom_102,Shipment,l10n_mx.product_uom_service_unit,product_unspsc.unspsc_code_SX,,1.0,True
+uom_uom_103,Box,uom.product_uom_unit,product_unspsc.unspsc_code_XBX,,1.0,True
+uom_uom_104,Not available,uom.product_uom_unit,product_unspsc.unspsc_code_XNA,,1.0,True
+uom_uom_105,One,uom.product_uom_unit,product_unspsc.unspsc_code_C62,,1.0,True
+uom_uom_106,0.010kg,uom.product_uom_gram,,,10.0,True
+uom_uom_107,0.015kg,uom.product_uom_gram,,,15.0,True
+uom_uom_108,0.100kg,uom.product_uom_gram,,,100.0,True
+uom_uom_109,0.130kg,uom.product_uom_gram,,,130.0,True
+uom_uom_110,0.150kg,uom.product_uom_gram,,,150.0,True
+uom_uom_111,0.160kg,uom.product_uom_gram,,,160.0,True
+uom_uom_112,0.200kg,uom.product_uom_gram,,,200.0,True
+uom_uom_113,0.212kg,uom.product_uom_gram,,,212.0,True
+uom_uom_114,0.250kg,uom.product_uom_gram,,,250.0,True
+uom_uom_115,0.300kg,uom.product_uom_gram,,,300.0,True
+uom_uom_116,0.500kg,uom.product_uom_gram,,,500.0,True
+uom_uom_117,0.600kg,uom.product_uom_gram,,,600.0,True
+uom_uom_118,0.737kg,uom.product_uom_gram,,,737.0,True
+uom_uom_119,0.750kg,uom.product_uom_gram,,,750.0,True
+uom_uom_120,0.800kg,uom.product_uom_gram,,,800.0,True
+uom_uom_121,2kg,uom.product_uom_kgm,,,2.0,True
+uom_uom_122,3.2kg,uom.product_uom_kgm,,,3.2,True
+uom_uom_123,5kg,uom.product_uom_kgm,,,5.0,True
+uom_uom_124,7kg,uom.product_uom_kgm,,,7.0,True
+uom_uom_125,7.5kg,uom.product_uom_kgm,,,7.5,True
+uom_uom_126,9kg,uom.product_uom_kgm,,,9.0,True
+uom_uom_127,10kg,uom.product_uom_kgm,,,10.0,True
+uom_uom_128,12kg,uom.product_uom_kgm,,,12.0,True
+uom_uom_129,15kg,uom.product_uom_kgm,,,15.0,True
+uom_uom_130,20kg,uom.product_uom_kgm,,,20.0,True
+uom_uom_131,25kg,uom.product_uom_kgm,,,25.0,True
+uom_uom_132,30kg,uom.product_uom_kgm,,,30.0,True
+uom_uom_133,50kg,uom.product_uom_kgm,,,50.0,True
+uom_uom_134,200kg,uom.product_uom_kgm,,,200.0,True
+uom_uom_135,cm³,,product_unspsc.unspsc_code_CMQ,,1.0,True
+uom_uom_136,0.100L,uom_uom_135,,,100.0,True
+uom_uom_137,0.125L,uom_uom_135,,,125.0,True
+uom_uom_138,0.150L,uom_uom_135,,,150.0,True
+uom_uom_139,0.200L,uom_uom_135,,,200.0,True
+uom_uom_140,0.250L,uom_uom_135,,,250.0,True
+uom_uom_141,0.300L,uom_uom_135,,,300.0,True
+uom_uom_142,0.330L,uom_uom_135,,,330.0,True
+uom_uom_143,0.350L,uom_uom_135,,,350.0,True
+uom_uom_144,0.450L,uom_uom_135,,,450.0,True
+uom_uom_145,0.500L,uom_uom_135,,,500.0,True
+uom_uom_146,0.600L,uom_uom_135,,,600.0,True
+uom_uom_147,0.900L,uom_uom_135,,,900.0,True
+uom_uom_148,0.950L,uom_uom_135,,,950.0,True
+uom_uom_149,0.960L,uom_uom_135,,,960.0,True
+uom_uom_150,0.970L,uom_uom_135,,,970.0,True
+uom_uom_151,0.975L,uom_uom_135,,,975.0,True
+uom_uom_152,1.6L,uom.product_uom_litre,,,1.6,True
+uom_uom_153,4L,uom.product_uom_litre,,,4.0,True
+uom_uom_154,5L,uom.product_uom_litre,,,5.0,True
+uom_uom_155,9.5L,uom.product_uom_litre,,,9.5,True
+uom_uom_156,10L,uom.product_uom_litre,,,10.0,True
+uom_uom_157,18L,uom.product_uom_litre,,,18.0,True
+uom_uom_158,19L,uom.product_uom_litre,,,19.0,True
+uom_uom_159,20L,uom.product_uom_litre,,,20.0,True
+uom_uom_160,200L,uom.product_uom_litre,,,200.0,True
+uom_uom_161,1000L,uom.product_uom_cubic_meter,,,1.0,True
+uom_uom_162,Service unit,l10n_mx.product_uom_service_unit,product_unspsc.unspsc_code_E48,,1.0,True
+uom_uom_163,Activity,l10n_mx.product_uom_activity,product_unspsc.unspsc_code_ACT,,1.0,True
+l10n_mx.product_uom_activity,Activity,,product_unspsc.unspsc_code_ACT,,1.0,True
+l10n_mx.product_uom_job,Job,,product_unspsc.unspsc_code_E51,,1.0,True
+l10n_mx.product_uom_service_unit,Service Unit,,product_unspsc.unspsc_code_E48,,1.0,True
+uom.product_uom_cm,cm,uom.product_uom_millimeter,product_unspsc.unspsc_code_CMT,,10.0,True
+uom.product_uom_cubic_foot,ft³,uom.product_uom_cubic_inch,,,1728.0,
+uom.product_uom_cubic_inch,in³,uom.product_uom_litre,,,0.0163871,
+uom.product_uom_cubic_meter,m³,uom.product_uom_litre,product_unspsc.unspsc_code_D90,,1000.0,True
+uom.product_uom_day,Days,uom.product_uom_hour,product_unspsc.unspsc_code_E49,,8.0,True
+uom.product_uom_dozen,Dozens,uom.product_uom_unit,product_unspsc.unspsc_code_DPC,,12.0,True
+uom.product_uom_floz,fl oz (US),uom.product_uom_litre,product_unspsc.unspsc_code_OZA,,0.0295735,
+uom.product_uom_foot,ft,uom.product_uom_inch,product_unspsc.unspsc_code_FOT,,12.0,True
+uom.product_uom_gal,gal (US),uom.product_uom_qt,product_unspsc.unspsc_code_A76,,4.0,True
+uom.product_uom_gram,Gram(s),,product_unspsc.unspsc_code_GRM,,1.0,True
+uom.product_uom_hour,Hours,,product_unspsc.unspsc_code_LH,,1.0,True
+uom.product_uom_inch,in,uom.product_uom_cm,product_unspsc.unspsc_code_INH,,2.54,True
+uom.product_uom_kgm,kilogram(s),uom.product_uom_gram,product_unspsc.unspsc_code_KGM,,1000.0,True
+uom.product_uom_km,km,uom.product_uom_meter,product_unspsc.unspsc_code_KMT,,1000.0,True
+uom.product_uom_lb,lb,uom.product_uom_oz,product_unspsc.unspsc_code_LBR,,16.0,True
+uom.product_uom_litre,Liter(s),,product_unspsc.unspsc_code_LTR,,1.0,True
+uom.product_uom_meter,m,uom.product_uom_cm,product_unspsc.unspsc_code_MTR,,100.0,True
+uom.product_uom_mile,mi,uom.product_uom_yard,product_unspsc.unspsc_code_M52,,1760.0,True
+uom.product_uom_millimeter,mm,,product_unspsc.unspsc_code_MMT,,1.0,True
+uom.product_uom_oz,oz,uom.product_uom_gram,product_unspsc.unspsc_code_ONZ,,28.3495,
+uom.product_uom_pack_6,Pack of 6,uom.product_uom_unit,product_unspsc.unspsc_code_XPA,,6.0,True
+uom.product_uom_qt,qt (US),uom.product_uom_floz,product_unspsc.unspsc_code_QTR,,32.0,True
+uom.product_uom_square_foot,ft²,uom.product_uom_square_meter,product_unspsc.unspsc_code_FTK,,0.092903,
+uom.product_uom_square_meter,m²,,product_unspsc.unspsc_code_MTK,,1.0,True
+uom.product_uom_ton,Ton,uom.product_uom_kgm,product_unspsc.unspsc_code_NT,,1000.0,True
+uom.product_uom_unit,Units,,product_unspsc.unspsc_code_EA,,1.0,True
+uom.product_uom_yard,yd,uom.product_uom_foot,,,3.0,

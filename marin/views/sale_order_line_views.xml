@@ -91,9 +91,8 @@
                 <field name="invoice_status" column_invisible="1" />
                 <field name="delivery_status" column_invisible="1" />
                 <field name="qty_delivered_method" column_invisible="1" />
-                <field name="product_uom_category_id" column_invisible="1" />
                 <field name="product_uom_readonly" column_invisible="1" />
-                <field name="product_uom" column_invisible="1" />
+                <field name="product_uom_id" column_invisible="1" />
                 <field name="product_updatable" column_invisible="1" />
                 <field
                     name="product_template_id"
@@ -105,7 +104,7 @@
                         'default_description_sale': name,
                         'default_list_price': price_unit,
                         'quantity': product_uom_qty,
-                        'uom': product_uom,
+                        'uom': product_uom_id,
                     }"
                     column_invisible="1"
                 />
@@ -131,7 +130,7 @@
                 <field
                     name="product_id"
                     readonly="not product_updatable"
-                    context="{'partner_id': order_partner_id, 'quantity': product_uom_qty, 'uom': product_uom, 'company_id': company_id}"
+                    context="{'partner_id': order_partner_id, 'quantity': product_uom_qty, 'uom': product_uom_id, 'company_id': company_id}"
                     force_save="1"
                 />
                 <field name="name" optional="show"/>
@@ -140,13 +139,13 @@
                     string="Ordered Qty"
                     sum="Ordered"
                     readonly="state in ['done', 'cancel']"
-                    context="{'partner_id': order_partner_id, 'quantity': product_uom_qty, 'uom': product_uom, 'company_id': company_id}"
+                    context="{'partner_id': order_partner_id, 'quantity': product_uom_qty, 'uom': product_uom_id, 'company_id': company_id}"
                     decoration-info="(not display_type and invoice_status == 'to invoice')"
                     decoration-bf="(not display_type and invoice_status == 'to invoice')"
                     optional="show"
                 />
                 <field
-                    name="product_uom"
+                    name="product_uom_id"
                     string="UoM"
                     readonly="state in ['sale','done', 'cancel']"
                     context="{'company_id': company_id}"
@@ -159,7 +158,7 @@
                 <field name="margin" optional="hide" />
                 <field name="margin_percent" widget="percentage" invisible="not price_subtotal" optional="hide" />
                 <field
-                    name="tax_id"
+                    name="tax_ids"
                     widget="many2many_tags"
                     readonly="state in ['sale', 'done', 'cancel']"
                     domain="[('type_tax_use','=','sale'),('company_id', '=', parent.company_id)]"

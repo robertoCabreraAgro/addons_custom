@@ -16,10 +16,6 @@
         <field name="digits">6</field>
     </record>
 
-    <record id="product.decimal_product_uom" model="decimal.precision">
-        <field name="digits" eval="6"/>
-    </record>
-
     <record id="analytic.decimal_percentage_analytic" model="decimal.precision">
         <field name="digits" eval="6"/>
     </record>

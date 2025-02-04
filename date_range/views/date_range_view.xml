@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <record id="view_date_range_list" model="ir.ui.view">
         <field name="name">date.range.list</field>
@@ -9,6 +9,7 @@
                 <field name="type_id" />
                 <field name="date_start" />
                 <field name="date_end" />
+                <!-- pylint : oca-disable=duplicate-xml-fields -->
                 <field name="company_id" column_invisible="1" />
                 <field
                     name="company_id"
@@ -130,10 +131,7 @@
                             >
                                 <label for="duration_count" />
                                 <div>
-                                    <field
-                                        class="oe_inline"
-                                        name="duration_count"
-                                    />&amp;nbsp;
+                                    <field name="duration_count" class="oe_inline" />
                                     <field class="oe_inline" name="unit_of_time" />
                                 </div>
                                 <label for="name_prefix" />
@@ -142,8 +140,8 @@
                                         name="name_prefix"
                                         class="oe_inline"
                                         required="unit_of_time and not name_expr"
-                                    /> or enter a complex expression below
-                                </div>
+                                    /> or enter a complex
+                                    expression below </div>
                                 <field
                                     name="name_expr"
                                     required="unit_of_time and not name_prefix"
@@ -158,15 +156,12 @@
                                 />
                                 <label for="autogeneration_count" string="Create" />
                                 <div>
-                                    <field
-                                        class="oe_inline"
-                                        name="autogeneration_count"
-                                    />&amp;nbsp;
+                                    <field name="autogeneration_count"
+                                        class="oe_inline" />
                                     <field
                                         class="oe_inline"
                                         name="autogeneration_unit"
-                                    /> in advance
-                                </div>
+                                    /> in advance </div>
                             </group>
                         </group>
                     </page>
@@ -214,6 +209,7 @@
         parent="base.menu_custom"
         sequence="1"
     />
+
     <menuitem
         action="date_range_action"
         id="menu_date_range_action"

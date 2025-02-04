@@ -3,7 +3,7 @@
 {
     "name": "Date Range",
     "summary": "Manage all kind of date range",
-    "version": "18.0.1.2.0",
+    "version": "saas~18.1.1.0.0",
     "category": "Uncategorized",
     "website": "https://github.com/OCA/server-ux",
     "author": "ACSONE SA/NV, Odoo Community Association (OCA)",
@@ -17,11 +17,11 @@
         "views/date_range_view.xml",
         "wizard/date_range_generator.xml",
     ],
-    # "assets": {
-    #     "web.assets_backend": [
-    #         "date_range/static/src/js/*",
-    #     ],
-    # },
+    "assets": {
+        "web.assets_backend": [
+            "date_range/static/src/js/*",
+        ],
+    },
     "development_status": "Mature",
     "maintainers": ["lmignon"],
 }

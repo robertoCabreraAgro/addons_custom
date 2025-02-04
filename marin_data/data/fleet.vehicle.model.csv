@@ -53,4 +53,6 @@ vehicle_model_151,Wrangler,Car,Automatic,Gasoline,0,,0,True,marin_data.vehicle_m
 vehicle_model_152,X5,Car,Automatic,Gasoline,4,,0,True,marin_data.vehicle_model_category_8,fleet.brand_bmw
 vehicle_model_153,Colorado,Car,Automatic,Gasoline,4,,0,True,marin_data.vehicle_model_category_4,fleet.brand_chevrolet
 vehicle_model_154,Kia,Car,Automatic,Gasoline,5,,0,True,marin_data.vehicle_model_category_7,fleet.brand_kia
-vehicle_model_155,GLC,Car,Automatic,Gasoline,4,,0,True,marin_data.vehicle_model_category_8,fleet.brand_mercedes
+vehicle_model_155,Class GLE,Car,Automatic,Gasoline,4,,0,True,marin_data.vehicle_model_category_8,fleet.brand_mercedes
+vehicle_model_156,Q3,Car,Automatic,Gasoline,4,,0,True,marin_data.vehicle_model_category_8,fleet.brand_audi
+vehicle_model_157,Bus,Car,Manual,Diesel,2,,0,True,marin_data.vehicle_model_category_6,marin_data.vehicle_brand_thomas

@@ -1,7 +1,7 @@
 
 {
     "name": "Account Move Template",
-    "version": "18.0.1.0.0",
+    "version": "saas~18.1.1.0.0",
     "category": "Accounting/Accounting",
     "summary": "Templates for recurring Journal Entries",
     "author": "Agile Business Group, Aurium Technologies, Vauxoo, ForgeFlow, "

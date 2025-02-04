@@ -88,22 +88,7 @@
                 id="menu_configuration_logistics"
                 name="Logistics"
                 sequence="30"
-                groups="uom.group_uom,product.group_stock_packaging"
-            >
-                <menuitem
-                    id="menu_product_packaging"
-                    name="Product Packagings"
-                    action="product.action_packaging_view"
-                    sequence="20"
-                    groups="product.group_stock_packaging"
-                />
-                <menuitem
-                    id="menu_uom_category"
-                    name="Units of measure categories"
-                    action="uom.product_uom_categ_form_action"
-                    sequence="50"
-                    groups="uom.group_uom"
-                />
+                groups="uom.group_uom">
                 <menuitem
                     id="menu_uom_uom"
                     name="Units of measure"

@@ -139,7 +139,7 @@
             <xpath expr="//field[@name='property_account_expense_id']" position="after">
                 <field name="property_account_expense_refund_id" />
             </xpath>
-            <xpath expr="//field[@name='uom_po_id']" position="after">
+            <xpath expr="//field[@name='uom_id']" position="after">
                 <field name="x_dose_x_ha" />
             </xpath>
         </field>

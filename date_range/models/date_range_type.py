@@ -1,12 +1,9 @@
-# Copyright 2016 ACSONE SA/NV (<http://acsone.eu>)
-# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
-
 import logging
 
 from dateutil.relativedelta import relativedelta
 from dateutil.rrule import DAILY, MONTHLY, WEEKLY, YEARLY
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -15,9 +12,11 @@ class DateRangeType(models.Model):
     _description = "Date Range Type"
     _order = "name,id"
 
+
     @api.model
     def _default_company(self):
         return self.env.company
+
 
     name = fields.Char(required=True, translate=True)
     allow_overlap = fields.Boolean(
@@ -69,13 +68,11 @@ class DateRangeType(models.Model):
         ]
     )
 
-    _sql_constraints = [
-        (
-            "date_range_type_uniq",
-            "unique (name,company_id)",
-            "A date range type must be unique per company !",
-        )
-    ]
+    _date_range_type_uniq = models.Constraint(
+        "UNIQUE(name, company_id)",
+        "A date range type must be unique per Company",
+    )
+
 
     @api.constrains("company_id")
     def _check_company_id(self):
@@ -90,7 +87,7 @@ class DateRangeType(models.Model):
                     )
                 ):
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "You cannot change the company, as this "
                             "Date Range Type is assigned to Date Range '%s'."
                         )
@@ -146,6 +143,6 @@ class DateRangeType(models.Model):
                     wizard.action_apply(batch=True)
             except Exception as e:
                 logger.warning(
-                    "Error autogenerating ranges for date range type "
+                    f"Error autogenerating ranges for date range type "
                     f"{dr_type.name}: {e}"
                 )

@@ -150,7 +150,7 @@
             <xpath expr="//page/field[@name='order_line']/list/field[@name='product_id']" position="attributes">
                 <attribute name="options">{'no_create': True}</attribute>
             </xpath>
-            <xpath expr="//page/field[@name='order_line']/list/field[@name='product_uom'][2]" position="attributes">
+            <xpath expr="//page/field[@name='order_line']/list/field[@name='product_uom_id'][2]" position="attributes">
                 <attribute name="options">{'no_create': True}</attribute>
             </xpath>
             <xpath

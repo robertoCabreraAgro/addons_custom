@@ -152,7 +152,7 @@
             <xpath expr="//page[@name='order_lines']//form//field[@name='product_id']" position="attributes">
                 <attribute name="options">{'no_create': True}</attribute>
             </xpath>
-            <xpath expr="//page[@name='order_lines']//form//field[@name='product_uom'][2]" position="attributes">
+            <xpath expr="//page[@name='order_lines']//form//field[@name='product_uom_id'][2]" position="attributes">
                 <attribute name="options">{'no_create': True}</attribute>
             </xpath>
             <xpath expr="//page[@name='order_lines']//list/field[@name='product_id']" position="attributes">
@@ -161,7 +161,7 @@
             <xpath expr="//page[@name='order_lines']//list/field[@name='product_template_id']" position="attributes">
                 <attribute name="options">{'no_open': True, 'no_create': True}</attribute>
             </xpath>
-            <xpath expr="//page[@name='order_lines']//list/field[@name='product_uom'][2]" position="attributes">
+            <xpath expr="//page[@name='order_lines']//list/field[@name='product_uom_id'][2]" position="attributes">
                 <attribute name="options">{'no_open': True, 'no_create': True}</attribute>
             </xpath>
             <xpath expr="//field[@name='journal_id']" position="attributes">
@@ -212,13 +212,7 @@
                     required="state == 'draft'"
                 />
             </xpath>
-            <xpath
-                expr="//page/field[@name='order_line']/list/field[@name='product_packaging_id']"
-                position="attributes"
-            >
-                <attribute name="optional">hide</attribute>
-            </xpath>
-            <xpath expr="//page/field[@name='order_line']/list/field[@name='tax_id']" position="attributes">
+            <xpath expr="//page/field[@name='order_line']/list/field[@name='tax_ids']" position="attributes">
                 <attribute name="optional">hide</attribute>
             </xpath>
             <xpath expr="//page/field[@name='order_line']/list/field[@name='discount']" position="attributes">

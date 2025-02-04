@@ -8,18 +8,17 @@ class AccountMove(models.Model):
     name = fields.Char(compute="_compute_name_by_sequence")
     highest_name = fields.Char(compute=False)
     made_sequence_gap = fields.Boolean(compute=False)
+    show_name_warning = fields.Boolean(default=False)
     sequence_prefix = fields.Char(compute=False)
     sequence_number = fields.Integer(compute=False)
 
 
-    _sql_constraints = [
-        (
-            "name_state_diagonal",
-            "CHECK(COALESCE(name, '') NOT IN ('/', '') OR state!='posted')",
-            'A move can not be posted with name "/" or empty value\n'
-            "Check the journal sequence",
-        ),
-    ]
+    _name_state_diagonal = models.Constraint(
+        "CHECK(COALESCE(name, '') NOT IN ('/', '') OR state <> 'posted')",
+        "A move can not be posted with name \"/\" or empty value.\n"
+        "Check the journal sequence",
+    ),
+    
 
 
     @api.depends("state", "journal_id", "date")
@@ -51,6 +50,29 @@ class AccountMove(models.Model):
             move.name = name
         self._inverse_name()
 
+    def _compute_name(self):
+        """
+        Overwrite account module method in order to
+        avoid side effect if legacy code call it directly
+        like when creating entry from email.
+        """
+        return self._compute_name_by_sequence()
+
+    # Override core method
+    @api.onchange('name', 'highest_name')
+    def _onchange_name_warning(self):
+        pass
+
+    @api.onchange("journal_id")
+    def _onchange_journal_id(self):
+        if not self.quick_edit_mode:
+            self.name = "/"
+            self._compute_name_by_sequence()
+
+    def _post(self, soft=True):
+        self.flush_recordset()
+        return super()._post(soft=soft)
+
     # We must by-pass this constraint of sequence.mixin
     def _constrains_date_sequence(self):
         return True
@@ -72,20 +94,3 @@ class AccountMove(models.Model):
 
     def _get_last_sequence(self, relaxed=False, with_prefix=None):
         return super()._get_last_sequence(relaxed, None)
-
-    @api.onchange("journal_id")
-    def _onchange_journal_id(self):
-        if not self.quick_edit_mode:
-            self.name = "/"
-            self._compute_name_by_sequence()
-
-    def _post(self, soft=True):
-        self.flush_recordset()
-        return super()._post(soft=soft)
-
-    def _compute_name(self):
-        """Overwrite account module method in order to
-        avoid side effect if legacy code call it directly
-        like when creating entry from email.
-        """
-        return self._compute_name_by_sequence()

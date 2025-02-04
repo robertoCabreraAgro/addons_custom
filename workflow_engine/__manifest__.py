@@ -1,8 +1,8 @@
 {
     "name": "Workflow Engine",
-    "version": "18.0.0.0.0",
     "category": "Accounting",
     "summary": "Templates for recurring operations",
+    "version": "saas~18.1.0.0.1",
     "author": "Vauxoo",
     "license": "AGPL-3",
     "depends": [

@@ -8,7 +8,6 @@
         <field name="group_project_recurring_tasks">True</field>
         <field name="group_project_task_dependencies">True</field>
         <field name="group_uom">True</field>
-        <field name="group_stock_packaging">True</field>
         <field name="group_stock_production_lot">True</field>
         <field name="group_lot_on_delivery_slip">True</field>
         <field name="group_stock_tracking_lot">True</field>

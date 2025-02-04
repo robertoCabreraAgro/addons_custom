@@ -1,6 +1,6 @@
 {
     "name": "Payroll Dual Period",
-    "version": "18.0.1.0.0",
+    "version": "saas~18.1.1.0.0",
     "summary": "Adds dual period functionality for payroll processing.",
     "license": "OPL-1",
     "category": "Human Resources/Payroll",

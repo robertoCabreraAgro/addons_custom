@@ -130,9 +130,6 @@
             <xpath expr="//group[@name='credit_limits']/div" position="after">
                 <field name="credit_on_hold" />
             </xpath>
-            <xpath expr="//group[@name='accounting_entries']" position="after">
-                <xpath expr="//group[@name='fiscal_information']" position="move" />
-            </xpath>
         </field>
     </record>
 </odoo>

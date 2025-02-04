@@ -9,6 +9,7 @@ _logger = logging.getLogger(__name__)
 class AccountJournal(models.Model):
     _inherit = "account.journal"
 
+
     sequence_id = fields.Many2one(
         comodel_name="ir.sequence",
         string="Entry Sequence",
@@ -25,8 +26,6 @@ class AccountJournal(models.Model):
         copy=False,
         help="This sequence will be used to generate the journal entry number for refunds.",
     )
-    # has_sequence_holes is not relevant anymore (since based on sequence_prefix/number)
-    # -> compute=False to improve perf and to avoid displaying warning
     has_sequence_holes = fields.Boolean(compute=False)
 
 
