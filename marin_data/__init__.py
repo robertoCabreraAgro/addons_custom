@@ -1,4 +1,5 @@
 from odoo import tools
+from odoo.exceptions import UserError
 
 
 def _post_init_marin(env):
@@ -10,7 +11,6 @@ def _post_init_marin(env):
         """
     )
     tools.convert.convert_file(env, "marin_data", "data/res_company_data.xml", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin_data", "data/resource_calendar_data.xml", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin_data", "data/date.range.type.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin_data", "data/date.range.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin_data", "data/room.office.csv", None, mode="init", kind="data")
@@ -33,8 +33,15 @@ def _post_init_marin(env):
                 }
             )
 
-    env.cr.execute("""SELECT setval('"public"."res_partner_id_seq"', 200, true);""")
-    env.cr.execute("""SELECT setval('"public"."res_users_id_seq"', 200, true);""")
+    env.cr.execute(
+        """
+        SELECT setval('"public"."res_partner_id_seq"', 200, true);
+        SELECT setval('"public"."res_users_id_seq"', 200, true);
+        SELECT setval('"public"."resource_calendar_id_seq"', 200, true);
+        SELECT setval('"public"."resource_calendar_attendance_id_seq"', 2000, true);
+        """
+    )
+    tools.convert.convert_file(env, "marin_data", "data/resource_calendar_data.xml", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin_data", "data/website_data.xml", None, mode="init", kind="data")
 
     env.cr.execute("""SELECT setval('"public"."res_partner_id_seq"', 1000, true);""")
@@ -236,6 +243,17 @@ def _post_init_marin(env):
                 )
             except:
                 raise UserError(r.id)
+
+    accounts = env["account.account"].sudo().search([("id", ">=", 1000)])
+    for account in accounts:
+        if len(account.company_ids) > 1:
+            code = False
+            for company in account.company_ids:
+                code = account.with_company(company).code_store
+                if code:
+                    break
+            for company in account.company_ids:
+                account.with_company(company).code_store = code
 
     tools.convert.convert_file(env, "marin_data", "data/account.analytic.plan.csv", None, mode="init", kind="data")
     tools.convert.convert_file(env, "marin_data", "data/account.journal.group.csv", None, mode="init", kind="data")

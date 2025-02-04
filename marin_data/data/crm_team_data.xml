@@ -1,127 +1,82 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo noupdate="1">
-    <record id="team_lmmr" model="crm.team">
-        <field name="name">Direct sale LMMR</field>
-        <field name="company_id" ref="marin_data.company_lmmr" />
-    </record>
-
-    <record id="team_lmmr_website" model="crm.team">
-        <field name="name">Website LMMR</field>
-        <field name="company_id" ref="marin_data.company_lmmr" />
-    </record>
-
-    <record id="team_lmmr_sub" model="crm.team">
-        <field name="name">Subdistribution LMMR</field>
-        <field name="company_id" ref="marin_data.company_lmmr" />
-    </record>
-
-    <record id="team_tjgl" model="crm.team">
-        <field name="name">Direct sale TJGL</field>
-        <field name="company_id" ref="marin_data.company_tjgl" />
-    </record>
-
-    <record id="team_tjgl_website" model="crm.team">
-        <field name="name">Website TJGL</field>
-        <field name="company_id" ref="marin_data.company_tjgl" />
-    </record>
-
-    <record id="team_lmmg" model="crm.team">
-        <field name="name">Direct sale LMMG</field>
-        <field name="company_id" ref="marin_data.company_lmmg" />
-    </record>
-
-    <record id="team_lmmg_website" model="crm.team">
-        <field name="name">Website LMMG</field>
-        <field name="company_id" ref="marin_data.company_lmmg" />
-    </record>
-
-    <record id="team_lmmg_sub" model="crm.team">
-        <field name="name">Subdistribution LMMG</field>
-        <field name="company_id" ref="marin_data.company_lmmg" />
-    </record>
-
-    <record id="team_society" model="crm.team">
-        <field name="name">Direct sale XM</field>
-        <field name="company_id" ref="marin_data.company_society" />
-    </record>
-
-    <record id="team_society_website" model="crm.team">
-        <field name="name">Website XM</field>
-        <field name="company_id" ref="marin_data.company_society" />
-    </record>
-
-    <record id="team_society_sub" model="crm.team">
-        <field name="name">Subdistribution XM</field>
-        <field name="company_id" ref="marin_data.company_society" />
-    </record>
-
-    <record id="team_lmmr_0" model="crm.team">
+    <record id="team_101" model="crm.team">
         <field name="name">Automatic</field>
         <field name="company_id" ref="marin_data.company_lmmr" />
     </record>
 
-    <record id="team_lmmr_1" model="crm.team">
+    <record id="team_102" model="crm.team">
         <field name="name">Corporativo</field>
         <field name="company_id" ref="marin_data.company_lmmr" />
     </record>
 
-    <record id="team_lmmr_2" model="crm.team">
+    <record id="team_103" model="crm.team">
         <field name="name">POS SJN</field>
         <field name="company_id" ref="marin_data.company_lmmr" />
     </record>
 
-    <record id="team_lmmr_3" model="crm.team">
+    <record id="team_104" model="crm.team">
         <field name="name">POS BAL</field>
         <field name="company_id" ref="marin_data.company_lmmr" />
     </record>
 
-    <record id="team_lmmr_4" model="crm.team">
+    <record id="team_105" model="crm.team">
         <field name="name">POS PROVI</field>
         <field name="company_id" ref="marin_data.company_lmmr" />
     </record>
 
-    <record id="team_lmmr_5" model="crm.team">
+    <record id="team_106" model="crm.team">
         <field name="name">Tenango</field>
         <field name="company_id" ref="marin_data.company_lmmr" />
     </record>
 
-    <record id="team_lmmr_6" model="crm.team">
+    <record id="team_107" model="crm.team">
         <field name="name">Villa Victoria</field>
         <field name="company_id" ref="marin_data.company_lmmr" />
     </record>
 
-    <record id="team_lmmr_7" model="crm.team">
+    <record id="team_108" model="crm.team">
         <field name="name">Perote</field>
         <field name="company_id" ref="marin_data.company_lmmr" />
     </record>
 
-    <record id="team_lmmr_8" model="crm.team">
+    <record id="team_109" model="crm.team">
         <field name="name">Zinacantepec</field>
         <field name="company_id" ref="marin_data.company_lmmr" />
     </record>
 
-    <record id="team_lmmr_9" model="crm.team">
+    <record id="team_110" model="crm.team">
         <field name="name">Sonora</field>
         <field name="company_id" ref="marin_data.company_lmmr" />
     </record>
 
-    <record id="team_lmmr_10" model="crm.team">
+    <record id="team_111" model="crm.team">
         <field name="name">Sinaloa</field>
         <field name="company_id" ref="marin_data.company_lmmr" />
     </record>
 
-    <record id="team_lmmr_11" model="crm.team">
+    <record id="team_112" model="crm.team">
         <field name="name">Michoacan</field>
         <field name="company_id" ref="marin_data.company_lmmr" />
     </record>
 
-    <record id="team_lmmr_12" model="crm.team">
+    <record id="team_113" model="crm.team">
         <field name="name">Morelos</field>
         <field name="company_id" ref="marin_data.company_lmmr" />
     </record>
 
-    <record id="team_lmmr_13" model="crm.team">
+    <record id="team_114" model="crm.team">
         <field name="name">Puebla</field>
+        <field name="company_id" ref="marin_data.company_lmmr" />
+    </record>
+
+    <record id="team_115" model="crm.team">
+        <field name="name">Guerrero</field>
+        <field name="company_id" ref="marin_data.company_lmmr" />
+    </record>
+
+    <record id="team_116" model="crm.team">
+        <field name="name">Saltillo</field>
         <field name="company_id" ref="marin_data.company_lmmr" />
     </record>
 </odoo>
