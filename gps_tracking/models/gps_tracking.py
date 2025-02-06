@@ -100,7 +100,7 @@ class GpsTrackingPoint(models.Model):
                     
 
     # def _compute_address(self):
-    #     api_key = ''  #Sustituye por tu clave de API
+    #     api_key = 'AIzaSyABRnjE6R9eY-5RvAoc2_jHvtcRPvnh7D4'  #Sustituye por tu clave de API
     #     for rec in self:
     #         _logger.info(f"Ejecutando _compute_address para ID {rec.id} con latitude={rec.latitude}, longitude={rec.longitude}")
     #         if rec.latitude and rec.longitude:

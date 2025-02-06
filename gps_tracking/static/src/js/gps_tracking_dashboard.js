@@ -1,14 +1,15 @@
 /** @odoo-module **/
 
-import { Component, useState, onWillStart, onMounted, useRef, onWillUnmount } from "@odoo/owl";
+import { Component, useState, onWillStart, onMounted, useRef, onWillUnmount, onWillUpdateProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { loadJS } from "@web/core/assets";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
+import { SearchBar } from "@web/search/search_bar/search_bar";
 import { SearchModel } from "@web/search/search_model";
 import { GpsSearchbar } from "../components/searchbar/gps_searchbar";
 
-class GpsTrackingDashboard extends Component {
+export class GpsTrackingDashboard extends Component {
     static props = {
         action: { type: Object, optional: true },
         actionId: { type: [String, Number], optional: true },
@@ -38,6 +39,14 @@ class GpsTrackingDashboard extends Component {
 
         this.mapContainerRef = useRef("mapContainer");
         this.tooltipRef = useRef("tooltip");
+
+        // Cada vez que cambie searchDomain, recarga o filtra
+        onWillUpdateProps((nextProps) => {
+            if (nextProps.searchDomain !== this.props.searchDomain) {
+                // Se ha actualizado el dominio => recargamos
+                this._reloadDevicesWithDomain(nextProps.searchDomain);
+            }
+        });
 
         // Llamar a la función de actualización periódicamente (cada 10 segundos)
         this.refreshInterval = setInterval(() => {
@@ -85,6 +94,23 @@ class GpsTrackingDashboard extends Component {
         });
     }
 
+    async _reloadDevicesWithDomain(domain) {
+        console.log("Recargando con domain:", domain);
+        // Llama a searchRead en gps.tracking.device con ese domain
+        try {
+            const devices = await this.orm.searchRead(
+                "gps.tracking.device",
+                domain || [],
+                ["id", "imei", "the_point", "speed", "timestamp", "altitude", "satellite", "address", "gsm_signal", "ignition", "movement"]
+            );
+            this.state.devices = devices;
+            this.state.filteredDevices = devices;
+            // Actualizar marcadores si lo deseas, etc.
+        } catch (error) {
+            console.error("Error al recargar dispositivos:", error);
+        }
+    }
+
     async loadDevices() {
         try {
             const devices = await this.orm.searchRead(
@@ -114,8 +140,9 @@ class GpsTrackingDashboard extends Component {
     // Método para refrescar los datos
     async refreshData() {
         console.log("Actualizando datos...");
-        await this.loadDevices(); // Recargar dispositivos
-        this.state.filteredDevices = [...this.state.devices];
+        // llamamos a _reloadDevicesWithDomain() usando el dominio actual de las props.
+        await this._reloadDevicesWithDomain(this.props.searchDomain || []);
+        // Ajustamos los marcadores
         this.updateDeviceMarkers(); 
         console.log("Datos actualizados.");
     }
@@ -219,7 +246,7 @@ class GpsTrackingDashboard extends Component {
         const lng = coords4326[0];
     
         // 2. Generar la URL embed con tu API Key
-        const apiKey = "";  // <-- pon tu clave real
+        const apiKey = "AIzaSyABRnjE6R9eY-5RvAoc2_jHvtcRPvnh7D4";  // <-- pon tu clave real
         const embedUrl = this._generateStreetViewEmbedUrl(lat, lng, apiKey);
     
         // 3. Guardar contenido anterior del tooltip
@@ -716,7 +743,7 @@ class GpsTrackingDashboard extends Component {
 }
 
 // Acciones y componentes
-GpsTrackingDashboard.components = { ControlPanel, GpsSearchbar };
+GpsTrackingDashboard.components = { ControlPanel, GpsSearchbar, SearchBar };
 GpsTrackingDashboard.template = "gps_tracking.gps_tracking_dashboard_template";
 
 GpsTrackingDashboard.prototype.onSearch = async function (query) {

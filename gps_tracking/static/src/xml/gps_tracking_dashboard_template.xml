@@ -6,8 +6,7 @@
                     <div class="control-panel-container">
                         <!-- Barra de búsqueda -->
                         <div class="search-bar">
-                            <GpsSearchbar
-                                t-props="{ initialQuery: '', onSearch: this.onSearch.bind(this) }"/>
+                            <SearchBar/>
                         </div>
             
                         <!-- Dropdown de acciones -->

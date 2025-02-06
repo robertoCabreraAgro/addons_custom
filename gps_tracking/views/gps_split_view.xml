@@ -4,8 +4,11 @@
         <field name="name">gps.tracking.device.search</field>
         <field name="model">gps.tracking.device</field>
         <field name="arch" type="xml">
-            <search>
-                <field name="imei" string="IMEI"/>
+            <search string="Buscar Dispositivo">
+                <field name="imei"/>
+                <field name="address"/>
+                <field name="satellite"/>
+                <field name="speed"/>
             </search>
         </field>
     </record>
@@ -21,6 +24,22 @@
     </record>  
 
     <menuitem id="menu_gps_tracking_dashboard" name="GPS Tracking Dashboard" action="action_gps_tracking_dashboard" parent="menu_gps_tracking_device"/>
+
+    <record id="action_gps_tracking_client_action" model="ir.actions.client">
+        <field name="name">GPS Tracking Dashboard</field>
+        <field name="tag">gps_tracking_client_action</field>
+        <field name="target">current</field>
+        <field name="params" eval="{
+            'searchViewId': ref('gps_tracking.view_gps_tracking_device_search'),
+            'context': {},
+        }"/>
+    </record>
+
+    <menuitem id="menu_gps_tracking_dashboard_action"
+          name="GPS Dashboard"
+          parent="menu_gps_tracking_device"
+          action="action_gps_tracking_client_action"/>
+          
 
     <!-- Plantilla QWeb -->
     <template id="gps_tracking_dashboard_template">
