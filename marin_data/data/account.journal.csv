@@ -62,7 +62,7 @@ journal_pnx_tjgl,Suppliers NX,Purchase,PNX,75,0,True,True,True,,Not Fiscal simul
 journal_px_tjgl,Suppliers FX,Purchase,PX,65,0,True,True,True,,Fiscal simulated,marin_data.company_tjgl,,marin_data.account_501_01_003,marin_data.account_201_01_001,,,,,,,,
 journal_cf_tjgl,Customers FF,Sales,CF,41,0,True,True,True,,Fiscal real,marin_data.company_tjgl,,marin_data.account_401_04_001,marin_data.account_105_01_001,marin_data.account_105_01_001,,,,,,,
 journal_cn_tjgl,Customers NF,Sales,CN,43,0,True,True,True,,Not Fiscal real,marin_data.company_tjgl,,marin_data.account_401_04_002,marin_data.account_105_01_002,marin_data.account_105_01_002,,,,,,,
-journal_cx_tjgl,Customers FX,Sales,CX,52,0,True,True,True,,Not Fiscal real,marin_data.company_tjgl,,marin_data.account_401_04_013,marin_data.account_105_01_001,marin_data.account_105_01_001,,,,,,,
+journal_cx_tjgl,Customers FX,Sales,CX,52,0,True,True,True,,Not Fiscal real,marin_data.company_tjgl,,marin_data.account_401_04_003,marin_data.account_105_01_001,marin_data.account_105_01_001,,,,,,,
 journal_caba1_tjgl,Tax declarations FF,Miscellaneous,CABA1,117,0,True,True,,,Fiscal real,marin_data.company_tjgl,,,,,,,,,,,
 journal_cbmx1_tjgl,Effectively paid FF,Miscellaneous,CBMX1,112,0,True,True,,,Not Fiscal real,marin_data.company_tjgl,,,,,,,,,,,
 journal_exc01_tjgl,Exchange difference FF,Miscellaneous,EXC01,122,0,True,True,,,Fiscal real,marin_data.company_tjgl,,,,,,,,,,,
