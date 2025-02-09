@@ -223,7 +223,7 @@ def _post_init_marin(env):
             {"name": r[1], "currency_id": r[2], "code": r[3], "account_type": r[4], "create_asset": "no", "company_ids": r[0]},
         ])
     model = "account.account"
-    records = env[model].sudo().search([("id", ">=", "1000")], order="id ASC")
+    records = env[model].sudo().search([("id", ">=", 1000)], order="id ASC")
     for r in records:
         exist = env["ir.model.data"].sudo().search([("model", "=", model), ("res_id", "=", r.id)])
         if not exist:
