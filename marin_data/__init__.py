@@ -217,6 +217,7 @@ def _post_init_marin(env):
         (xm,   "Cash main",                                   False, "101.01.001", "asset_cash"            ),
         (xm,   "Cash USD",                                    (1),   "101.01.003", "asset_cash"            ),
         (xm,   "Bank BBVA main",                              False, "102.01.002", "asset_cash"            ),
+        (xm,   "Cash Vehicle 1",                              False, "101.01.004", "asset_cash"            ),
     ]
     for r in records:
         env['account.account'].with_company(r[0]).create([
