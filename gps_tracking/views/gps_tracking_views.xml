@@ -85,9 +85,6 @@
         <field name="view_mode">list,form,geoengine</field> <!-- Permite ver en los modos list, form y geoengine -->
     </record>
 
-    <!-- Menú para acceder al historial de rastreo GPS -->
-    <menuitem id="menu_gps_tracking" name="GPS Tracking" action="action_gps_tracking_history"/>
-
     <!-- Capa vectorial para 'the_point' -->
     <record id="geoengine_vector_layer_the_point" model="geoengine.vector.layer">
         <field name="name">GPS Positions</field>

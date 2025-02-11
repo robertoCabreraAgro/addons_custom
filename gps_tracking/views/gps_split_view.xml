@@ -23,7 +23,7 @@
             }"/>
     </record>  
 
-    <menuitem id="menu_gps_tracking_dashboard" name="GPS Tracking Dashboard" action="action_gps_tracking_dashboard" parent="menu_gps_tracking_device"/>
+    <menuitem id="menu_gps_tracking_dashboard" name="GPS Tracking Device" action="action_gps_tracking_device" parent="menu_gps_tracking_device"/>
 
     <record id="action_gps_tracking_client_action" model="ir.actions.client">
         <field name="name">GPS Tracking Dashboard</field>
@@ -36,10 +36,26 @@
     </record>
 
     <menuitem id="menu_gps_tracking_dashboard_action"
-          name="GPS Dashboard"
-          parent="menu_gps_tracking_device"
-          action="action_gps_tracking_client_action"/>
-          
+        name="GPS Dashboard"
+        parent="menu_gps_tracking_device"
+        action="action_gps_tracking_client_action"/>
+
+    <!-- Plantilla Timeline-->
+
+    <record id="action_gps_tracking_client_action_timeline" model="ir.actions.client">
+        <field name="name">GPS Tracking Timeline</field>
+        <field name="tag">gps_tracking_client_action_timeline</field>
+        <field name="target">current</field>
+        <field name="params" eval="{
+            'searchViewId': ref('gps_tracking.view_gps_tracking_device_search'),
+            'context': {},
+        }"/>
+    </record>
+    
+    <menuitem id="menu_gps_tracking_dashboard_action_timeline"
+        name="GPS Timeline"
+        parent="menu_gps_tracking_device"
+        action="action_gps_tracking_client_action_timeline"/>
 
     <!-- Plantilla QWeb -->
     <template id="gps_tracking_dashboard_template">

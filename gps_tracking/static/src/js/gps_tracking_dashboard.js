@@ -101,7 +101,7 @@ export class GpsTrackingDashboard extends Component {
             const devices = await this.orm.searchRead(
                 "gps.tracking.device",
                 domain || [],
-                ["id", "imei", "the_point", "speed", "timestamp", "altitude", "satellite", "address", "gsm_signal", "ignition", "movement"]
+                ["id", "imei", "the_point", "speed", "timestamp", "altitude", "satellite", "address", "gsm_signal", "ignition", "movement", "color"]
             );
             this.state.devices = devices;
             this.state.filteredDevices = devices;
@@ -116,7 +116,7 @@ export class GpsTrackingDashboard extends Component {
             const devices = await this.orm.searchRead(
                 "gps.tracking.device",
                 [],
-                ["id", "imei", "the_point", "speed", "timestamp", "altitude", "satellite", "address", "gsm_signal", "ignition", "movement"]
+                ["id", "imei", "the_point", "speed", "timestamp", "altitude", "satellite", "address", "gsm_signal", "ignition", "movement", "color"]
             );
             console.log("Dispositivos cargados:", devices);
             console.log("Dispositivos cargados:", JSON.stringify(devices, null, 2));

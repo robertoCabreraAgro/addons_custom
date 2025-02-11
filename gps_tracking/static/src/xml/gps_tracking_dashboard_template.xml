@@ -31,32 +31,6 @@
                                 </li>
                             </ul>
                         </div>
-            
-                        <!-- Dropdown de rango de fechas -->
-                        <div class="dropdown ms-3">
-                            <button
-                                class="btn btn-primary dropdown-toggle"
-                                type="button"
-                                data-bs-toggle="dropdown"
-                                aria-expanded="false">
-                                Rango de Fechas
-                            </button>
-                            <div class="dropdown-menu p-3">
-                                <div class="date-picker">
-                                    <label for="start-date" class="form-label">Fecha Inicio:</label>
-                                    <input type="datetime-local" id="start-date" t-model="state.startDate" class="form-control" />
-                                </div>
-                                <div class="date-picker mt-3">
-                                    <label for="end-date" class="form-label">Fecha Fin:</label>
-                                    <input type="datetime-local" id="end-date" t-model="state.endDate" class="form-control" />
-                                </div>
-                                <div class="date-action mt-3">
-                                    <button type="button" class="btn btn-primary" t-on-click="fetchDevicePath">
-                                        Consultar Recorrido
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </t>
             </ControlPanel>

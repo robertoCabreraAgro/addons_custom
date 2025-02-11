@@ -22,6 +22,18 @@ class GpsTrackingDevice(models.Model):
     gsm_signal = fields.Integer(string="Gsm Signal", related='last_point_id.gsm_signal', store=True)
     ignition = fields.Integer(string='Ignition (239)', related='last_point_id.ignition', store=True)
     movement = fields.Integer(string='Movement (240)', related='last_point_id.movement', store=True)
+    color = fields.Selection(
+        selection=[
+            ('#FF0000', 'Rojo'),
+            ('#0000FF', 'Azul'),
+            ('#008000', 'Verde'),
+            ('#FFA500', 'Naranja'),
+            ('#800080', 'Morado'),
+            ('#000000', 'Negro'),
+        ],
+        string="Color de Recorrido",
+        default='#FF0000'
+    )
     
 
     @api.depends('tracking_points.timestamp')  # Usar el campo correcto
