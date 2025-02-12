@@ -313,4 +313,4 @@ account_704_22_001,Gain from cash discounts,704.22.001,Other Income,,No,,,l10n_m
 account_704_23_001,Other products FF,704.23.001,Other Income,,No,,,l10n_mx.tag_credit_balance_account,"marin_data.company_lmmg,marin_data.company_lmmr,marin_data.company_tjgl,marin_data.company_society"
 account_704_23_002,Gain from cash discrepancy,704.23.002,Other Income,,No,,,l10n_mx.tag_credit_balance_account,"marin_data.company_lmmg,marin_data.company_lmmr,marin_data.company_tjgl,marin_data.company_society"
 account_704_23_003,Indemnities FF,704.23.003,Other Income,,No,,,l10n_mx.tag_credit_balance_account,"marin_data.company_lmmg,marin_data.company_lmmr,marin_data.company_tjgl,marin_data.company_society"
-account_899_01_099,Cash flow basis for taxation,899.01.099,Expenses,,No,,,l10n_mx.tag_debit_balance_account,"marin_data.company_lmmg,marin_data.company_lmmr,marin_data.company_tjgl"
+account_899_01_099,Cash flow basis for taxation,899.01.099,Expenses,,No,,,l10n_mx.tag_debit_balance_account,"marin_data.company_lmmg,marin_data.company_lmmr,marin_data.company_tjgl,marin_data.company_society"

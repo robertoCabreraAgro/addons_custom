@@ -1936,7 +1936,7 @@ msgid "Bank BBVA TN 5073"
 msgstr "Banco BBVA TN 5073"
 
 #. module: marin_data
-#: model:account.account,name:marin_data.account_102_01_002_society
+#: model:account.account,name:marin_data.account_102_01_002_xm
 #: model:account.journal,name:marin_data.journal_bnc01_society
 msgid "Bank BBVA main"
 msgstr "Banco BBVA principal"
@@ -3101,7 +3101,7 @@ msgstr "Efectivo SJN"
 #. module: marin_data
 #: model:account.account,name:marin_data.account_101_01_003_lmmg
 #: model:account.account,name:marin_data.account_101_01_003_lmmr
-#: model:account.account,name:marin_data.account_101_01_003_society
+#: model:account.account,name:marin_data.account_101_01_003_xm
 #: model:account.account,name:marin_data.account_101_01_003_tjgl
 #: model:account.journal,name:marin_data.journal_efc02_lmmg
 #: model:account.journal,name:marin_data.journal_efc02_lmmr
