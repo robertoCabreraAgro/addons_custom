@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_approval_request_form_inherit" model="ir.ui.view">
+        <field name="name">approval.request.form.inherit</field>
+        <field name="model">approval.request</field>
+        <field name="inherit_id" ref="approvals.approval_request_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='request_main']" position="inside">
+                <field name="vehicle_id"
+                    invisible="has_vehicle == 'no'"
+                    readonly="request_status != 'new'" />
+                <field name="license_plate"
+                    invisible="has_license_plate == 'no'"
+                    readonly="1" />
+                <field name="fuel_type"
+                    invisible="has_fuel_type == 'no'"
+                    readonly="1" />
+                <field name="odometer"
+                    invisible="has_odometer == 'no'"
+                    readonly="request_status != 'new'" />
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="view_approval_request_tree_inherit" model="ir.ui.view">
+        <field name="name">approval.request.tree.inherit</field>
+        <field name="model">approval.request</field>
+        <field name="inherit_id" ref="approvals.approval_request_view_tree" />
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="inside">
+                <field name="vehicle_id"
+                    domain="[['driver_id', '=', request_owner_id and request_owner_id.partner_id.id or False]]"
+                    optional="hide" />
+                <field name="license_plate" string="License Plate" optional="hide" />
+                <field name="fuel_type" string="Fuel Type" optional="hide" />
+                <field name="odometer" string="Odometer" optional="hide" />
+            </xpath>
+        </field>
+    </record>
+</odoo>

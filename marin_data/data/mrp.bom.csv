@@ -41,7 +41,7 @@ mrp_bom_1003,Formulate Alfaspray XM 12x1L Batch 500L,Manufacture this product,50
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1040,marin_data.product_product_2114,uom.product_uom_unit,542.0,,13
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1041,marin_data.product_product_1501,uom.product_uom_unit,42.0,,14
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1042,marin_data.product_product_2329,uom.product_uom_unit,1.0,,15
-mrp_bom_1004,Formulate Alfaspray XM 1x10L Batch 1000L,Manufacture this product,100.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1202,marin.uom_uom_156,,marin_data.company_lmmr,marin_data.mrp_bom_line_1043,marin_data.product_product_1765,uom.product_uom_kgm,604.12,,2
+mrp_bom_1004,Formulate Alfaspray XM 1x10L Batch 1000L,Manufacture this product,100.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1202,marin.uom_156,,marin_data.company_lmmr,marin_data.mrp_bom_line_1043,marin_data.product_product_1765,uom.product_uom_kgm,604.12,,2
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1044,marin_data.product_product_1728,uom.product_uom_kgm,34.41,True,3
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1045,marin_data.product_product_1725,uom.product_uom_kgm,229.4,True,4
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1046,marin_data.product_product_2080,uom.product_uom_kgm,0.34,True,5
@@ -54,7 +54,7 @@ mrp_bom_1004,Formulate Alfaspray XM 1x10L Batch 1000L,Manufacture this product,1
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1053,marin_data.product_product_2113,uom.product_uom_unit,150.0,,12
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1054,marin_data.product_product_1502,uom.product_uom_unit,50.0,,13
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1055,marin_data.product_product_2329,uom.product_uom_unit,1.0,,14
-mrp_bom_1005,Formulate Alfaspray XM 1x10L Batch 200L,Manufacture this product,20.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1202,marin.uom_uom_156,,marin_data.company_lmmr,marin_data.mrp_bom_line_1056,marin_data.product_product_1765,uom.product_uom_kgm,120.82,,2
+mrp_bom_1005,Formulate Alfaspray XM 1x10L Batch 200L,Manufacture this product,20.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1202,marin.uom_156,,marin_data.company_lmmr,marin_data.mrp_bom_line_1056,marin_data.product_product_1765,uom.product_uom_kgm,120.82,,2
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1057,marin_data.product_product_1728,uom.product_uom_kgm,6.88,True,3
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1058,marin_data.product_product_1725,uom.product_uom_kgm,45.88,True,4
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1059,marin_data.product_product_2080,uom.product_uom_kgm,0.07,True,5
@@ -67,7 +67,7 @@ mrp_bom_1005,Formulate Alfaspray XM 1x10L Batch 200L,Manufacture this product,20
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1066,marin_data.product_product_2113,uom.product_uom_unit,30.0,,12
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1067,marin_data.product_product_1502,uom.product_uom_unit,10.0,,13
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1068,marin_data.product_product_2329,uom.product_uom_unit,1.0,,14
-mrp_bom_1006,Formulate Alfaspray XM 1x10L Batch 500L,Manufacture this product,50.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1202,marin.uom_uom_156,,marin_data.company_lmmr,marin_data.mrp_bom_line_1069,marin_data.product_product_1765,uom.product_uom_kgm,302.06,,2
+mrp_bom_1006,Formulate Alfaspray XM 1x10L Batch 500L,Manufacture this product,50.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1202,marin.uom_156,,marin_data.company_lmmr,marin_data.mrp_bom_line_1069,marin_data.product_product_1765,uom.product_uom_kgm,302.06,,2
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1070,marin_data.product_product_1728,uom.product_uom_kgm,17.21,True,3
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1071,marin_data.product_product_1725,uom.product_uom_kgm,114.7,True,4
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1072,marin_data.product_product_2080,uom.product_uom_kgm,0.17,True,5
@@ -95,11 +95,11 @@ mrp_bom_1009,Refill Asanit XM 500 WDG 8x1Kg Batch 500Kg,Manufacture this product
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1094,marin_data.product_product_1501,uom.product_uom_unit,63.0,,3
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1095,marin_data.product_product_2111,uom.product_uom_unit,63.0,,4
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1096,marin_data.product_product_2329,uom.product_uom_unit,1.0,,6
-mrp_bom_1010,Refill Breisse XM  0.130Kg Batch 1000,Manufacture this product,1000.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1344,marin.uom_uom_109,,marin_data.company_lmmr,marin_data.mrp_bom_line_1097,marin_data.product_product_1339,uom.product_uom_kgm,130.0,,1
+mrp_bom_1010,Refill Breisse XM  0.130Kg Batch 1000,Manufacture this product,1000.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1344,marin.uom_109,,marin_data.company_lmmr,marin_data.mrp_bom_line_1097,marin_data.product_product_1339,uom.product_uom_kgm,130.0,,1
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1098,marin_data.product_product_1730,uom.product_uom_unit,1000.0,,2
-mrp_bom_1011,Refill Breisse XM  0.130Kg Batch 200,Manufacture this product,200.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1344,marin.uom_uom_109,,marin_data.company_lmmr,marin_data.mrp_bom_line_1099,marin_data.product_product_1339,uom.product_uom_kgm,26.0,,1
+mrp_bom_1011,Refill Breisse XM  0.130Kg Batch 200,Manufacture this product,200.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1344,marin.uom_109,,marin_data.company_lmmr,marin_data.mrp_bom_line_1099,marin_data.product_product_1339,uom.product_uom_kgm,26.0,,1
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1100,marin_data.product_product_1730,uom.product_uom_unit,200.0,,2
-mrp_bom_1012,Refill Breisse XM  0.130Kg Batch 500,Manufacture this product,500.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1344,marin.uom_uom_109,,marin_data.company_lmmr,marin_data.mrp_bom_line_1101,marin_data.product_product_1339,uom.product_uom_kgm,65.0,,1
+mrp_bom_1012,Refill Breisse XM  0.130Kg Batch 500,Manufacture this product,500.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1344,marin.uom_109,,marin_data.company_lmmr,marin_data.mrp_bom_line_1101,marin_data.product_product_1339,uom.product_uom_kgm,65.0,,1
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1102,marin_data.product_product_1730,uom.product_uom_unit,500.0,,2
 mrp_bom_1013,Refill Deprebac XM 46.6+139.8 SL 12x1L Batch 1000L,Manufacture this product,1000.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1492,uom.product_uom_litre,,marin_data.company_lmmr,marin_data.mrp_bom_line_1103,marin_data.product_product_1912,uom.product_uom_litre,1000.0,True,1
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1104,marin_data.product_product_1663,uom.product_uom_unit,1000.0,,4
@@ -165,7 +165,7 @@ mrp_bom_1021,Refill Draisig XM 50+250 SC 12x1L Batch 500L,Manufacture this produ
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1164,marin_data.product_product_2105,uom.product_uom_unit,42.0,,8
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1165,marin_data.product_product_2329,uom.product_uom_unit,1.0,,9
 mrp_bom_1022,Formulate Estelis XM 12x1L Batch 1000L,Manufacture this product,1000.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1527,uom.product_uom_litre,,marin_data.company_lmmr,marin_data.mrp_bom_line_1166,marin_data.product_product_1765,uom.product_uom_kgm,822.92,,1
-,,,,,,,,,,,,marin_data.mrp_bom_line_1167,marin_data.product_product_1338,marin.uom_uom_130,284.0,,2
+,,,,,,,,,,,,marin_data.mrp_bom_line_1167,marin_data.product_product_1338,marin.uom_130,284.0,,2
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1168,marin_data.product_product_1784,uom.product_uom_kgm,4.54,,3
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1169,marin_data.product_product_2121,uom.product_uom_kgm,1.82,,4
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1170,marin_data.product_product_1167,uom.product_uom_kgm,11.36,,5
@@ -177,7 +177,7 @@ mrp_bom_1022,Formulate Estelis XM 12x1L Batch 1000L,Manufacture this product,100
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1176,marin_data.product_product_1129,uom.product_uom_unit,84.0,,11
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1177,marin_data.product_product_2329,uom.product_uom_unit,1.0,,12
 mrp_bom_1023,Formulate Estelis XM 12x1L Batch 200L,Manufacture this product,200.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1527,uom.product_uom_litre,,marin_data.company_lmmr,marin_data.mrp_bom_line_1178,marin_data.product_product_1765,uom.product_uom_kgm,164.58,,1
-,,,,,,,,,,,,marin_data.mrp_bom_line_1179,marin_data.product_product_1338,marin.uom_uom_130,56.8,,2
+,,,,,,,,,,,,marin_data.mrp_bom_line_1179,marin_data.product_product_1338,marin.uom_130,56.8,,2
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1180,marin_data.product_product_1784,uom.product_uom_kgm,0.91,,3
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1181,marin_data.product_product_2121,uom.product_uom_kgm,0.36,,4
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1182,marin_data.product_product_1167,uom.product_uom_kgm,2.272,,5
@@ -189,7 +189,7 @@ mrp_bom_1023,Formulate Estelis XM 12x1L Batch 200L,Manufacture this product,200.
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1188,marin_data.product_product_1129,uom.product_uom_unit,17.0,,11
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1189,marin_data.product_product_2329,uom.product_uom_unit,1.0,,12
 mrp_bom_1024,Formulate Estelis XM 12x1L Batch 500L,Manufacture this product,500.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1527,uom.product_uom_litre,,marin_data.company_lmmr,marin_data.mrp_bom_line_1190,marin_data.product_product_1765,uom.product_uom_kgm,411.46,,1
-,,,,,,,,,,,,marin_data.mrp_bom_line_1191,marin_data.product_product_1338,marin.uom_uom_130,142.0,,2
+,,,,,,,,,,,,marin_data.mrp_bom_line_1191,marin_data.product_product_1338,marin.uom_130,142.0,,2
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1192,marin_data.product_product_1784,uom.product_uom_kgm,2.27,,3
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1193,marin_data.product_product_2121,uom.product_uom_kgm,0.91,,4
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1194,marin_data.product_product_1167,uom.product_uom_kgm,5.68,,5
@@ -257,16 +257,16 @@ mrp_bom_1030,Refill Eterbel XM 41.11 SL 12x1L Batch 500L,Manufacture this produc
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1256,marin_data.product_product_1501,uom.product_uom_unit,42.0,,7
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1257,marin_data.product_product_1130,uom.product_uom_unit,42.0,,8
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1258,marin_data.product_product_2329,uom.product_uom_unit,1.0,,9
-mrp_bom_1031,Refill Ferti Beet XM 6x2Kg Batch 1000,Manufacture this product,1000.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1543,marin.uom_uom_121,,marin_data.company_lmmr,marin_data.mrp_bom_line_1259,marin_data.product_product_1309,uom.product_uom_kgm,2000.0,,1
+mrp_bom_1031,Refill Ferti Beet XM 6x2Kg Batch 1000,Manufacture this product,1000.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1543,marin.uom_121,,marin_data.company_lmmr,marin_data.mrp_bom_line_1259,marin_data.product_product_1309,uom.product_uom_kgm,2000.0,,1
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1260,marin_data.product_product_1731,uom.product_uom_unit,1000.0,,2
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1261,marin_data.product_product_1501,uom.product_uom_unit,167.0,,3
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1262,marin_data.product_product_2329,uom.product_uom_unit,1.0,,4
-mrp_bom_1032,Refill Ferti Beet XM 6x2Kg Batch 200,Manufacture this product,200.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1543,marin.uom_uom_121,,marin_data.company_lmmr,marin_data.mrp_bom_line_1263,marin_data.product_product_1309,uom.product_uom_kgm,400.0,,3
+mrp_bom_1032,Refill Ferti Beet XM 6x2Kg Batch 200,Manufacture this product,200.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1543,marin.uom_121,,marin_data.company_lmmr,marin_data.mrp_bom_line_1263,marin_data.product_product_1309,uom.product_uom_kgm,400.0,,3
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1264,marin_data.product_product_1731,uom.product_uom_unit,200.0,,5
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1265,marin_data.product_product_1131,uom.product_uom_unit,34.0,,6
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1266,marin_data.product_product_1501,uom.product_uom_unit,34.0,,7
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1267,marin_data.product_product_2329,uom.product_uom_unit,1.0,,8
-mrp_bom_1033,Refill Ferti Beet XM 6x2Kg Batch 500,Manufacture this product,500.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1543,marin.uom_uom_121,,marin_data.company_lmmr,marin_data.mrp_bom_line_1268,marin_data.product_product_1309,uom.product_uom_kgm,1000.0,,3
+mrp_bom_1033,Refill Ferti Beet XM 6x2Kg Batch 500,Manufacture this product,500.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1543,marin.uom_121,,marin_data.company_lmmr,marin_data.mrp_bom_line_1268,marin_data.product_product_1309,uom.product_uom_kgm,1000.0,,3
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1269,marin_data.product_product_1731,uom.product_uom_unit,500.0,,5
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1270,marin_data.product_product_1131,uom.product_uom_unit,84.0,,6
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1271,marin_data.product_product_1501,uom.product_uom_unit,84.0,,7
@@ -491,17 +491,17 @@ mrp_bom_1054,Refill Omipro XM 12x1L Batch 200L,Manufacture this product,200.0,Tr
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1490,marin_data.product_product_1501,uom.product_uom_unit,17.0,,5
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1491,marin_data.product_product_2110,uom.product_uom_unit,17.0,,6
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1492,marin_data.product_product_2329,uom.product_uom_unit,1.0,,7
-mrp_bom_1055,Refill Veridia XM XM 8x0.600 Batch 1000Kg,Manufacture this product,1000.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_2302,marin.uom_uom_117,,marin_data.company_lmmr,marin_data.mrp_bom_line_1493,marin_data.product_product_1605,uom.product_uom_kgm,600.0,,5
+mrp_bom_1055,Refill Veridia XM XM 8x0.600 Batch 1000Kg,Manufacture this product,1000.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_2302,marin.uom_117,,marin_data.company_lmmr,marin_data.mrp_bom_line_1493,marin_data.product_product_1605,uom.product_uom_kgm,600.0,,5
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1494,marin_data.product_product_1733,uom.product_uom_unit,1000.0,,8
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1495,marin_data.product_product_1133,uom.product_uom_unit,125.0,,10
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1496,marin_data.product_product_1502,uom.product_uom_unit,125.0,,11
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1497,marin_data.product_product_2329,uom.product_uom_unit,1.0,,12
-mrp_bom_1056,Refill Veridia XM XM 8x0.600 Batch 200Kg,Manufacture this product,200.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_2302,marin.uom_uom_117,,marin_data.company_lmmr,marin_data.mrp_bom_line_1498,marin_data.product_product_1605,uom.product_uom_kgm,120.0,,5
+mrp_bom_1056,Refill Veridia XM XM 8x0.600 Batch 200Kg,Manufacture this product,200.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_2302,marin.uom_117,,marin_data.company_lmmr,marin_data.mrp_bom_line_1498,marin_data.product_product_1605,uom.product_uom_kgm,120.0,,5
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1499,marin_data.product_product_1733,uom.product_uom_unit,200.0,,8
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1500,marin_data.product_product_1133,uom.product_uom_unit,25.0,,10
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1501,marin_data.product_product_1502,uom.product_uom_unit,25.0,,11
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1502,marin_data.product_product_2329,uom.product_uom_unit,1.0,,12
-mrp_bom_1057,Refill Veridia XM XM 8x0.600 Batch 500Kg,Manufacture this product,500.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_2302,marin.uom_uom_117,,marin_data.company_lmmr,marin_data.mrp_bom_line_1503,marin_data.product_product_1605,uom.product_uom_kgm,300.0,,5
+mrp_bom_1057,Refill Veridia XM XM 8x0.600 Batch 500Kg,Manufacture this product,500.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_2302,marin.uom_117,,marin_data.company_lmmr,marin_data.mrp_bom_line_1503,marin_data.product_product_1605,uom.product_uom_kgm,300.0,,5
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1504,marin_data.product_product_1733,uom.product_uom_unit,500.0,,8
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1505,marin_data.product_product_1133,uom.product_uom_unit,63.0,,10
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1506,marin_data.product_product_1502,uom.product_uom_unit,63.0,,11
@@ -591,7 +591,7 @@ mrp_bom_1068,Formulate Alfaspray XM 12x1L Batch 200L,Manufacture this product,20
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1590,marin_data.product_product_1839,uom.product_uom_unit,17.0,,12
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1591,marin_data.product_product_2114,uom.product_uom_unit,217.0,,13
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1592,marin_data.product_product_2329,uom.product_uom_unit,1.0,,14
-mrp_bom_1069,Formulate Alfaspray XM 1x10L Batch 1000L,Manufacture this product,100.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1202,marin.uom_uom_156,,marin_data.company_lmmg,marin_data.mrp_bom_line_1593,marin_data.product_product_1728,uom.product_uom_kgm,34.41,True,2
+mrp_bom_1069,Formulate Alfaspray XM 1x10L Batch 1000L,Manufacture this product,100.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1202,marin.uom_156,,marin_data.company_lmmg,marin_data.mrp_bom_line_1593,marin_data.product_product_1728,uom.product_uom_kgm,34.41,True,2
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1594,marin_data.product_product_1725,uom.product_uom_kgm,229.4,True,3
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1595,marin_data.product_product_1727,uom.product_uom_kgm,114.7,True,4
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1596,marin_data.product_product_1726,uom.product_uom_kgm,51.62,True,5
@@ -602,7 +602,7 @@ mrp_bom_1069,Formulate Alfaspray XM 1x10L Batch 1000L,Manufacture this product,1
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1601,marin_data.product_product_2113,uom.product_uom_unit,150.0,,10
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1602,marin_data.product_product_1520,uom.product_uom_unit,100.0,,11
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1603,marin_data.product_product_2329,uom.product_uom_unit,1.0,,13
-mrp_bom_1070,Formulate Alfaspray XM 1x10L Batch 200L,Manufacture this product,20.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1202,marin.uom_uom_156,,marin_data.company_lmmg,marin_data.mrp_bom_line_1604,marin_data.product_product_1728,uom.product_uom_kgm,6.88,True,2
+mrp_bom_1070,Formulate Alfaspray XM 1x10L Batch 200L,Manufacture this product,20.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1202,marin.uom_156,,marin_data.company_lmmg,marin_data.mrp_bom_line_1604,marin_data.product_product_1728,uom.product_uom_kgm,6.88,True,2
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1605,marin_data.product_product_1725,uom.product_uom_kgm,45.88,True,3
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1606,marin_data.product_product_1727,uom.product_uom_kgm,22.94,True,4
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1607,marin_data.product_product_1726,uom.product_uom_kgm,10.32,True,5
@@ -613,12 +613,12 @@ mrp_bom_1070,Formulate Alfaspray XM 1x10L Batch 200L,Manufacture this product,20
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1612,marin_data.product_product_2113,uom.product_uom_unit,30.0,,10
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1613,marin_data.product_product_1520,uom.product_uom_unit,20.0,,11
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1614,marin_data.product_product_2329,uom.product_uom_unit,1.0,,13
-mrp_bom_1071,Refill Asanit 50 XM 8x1Kg 1200,Manufacture this product,1000.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1239,uom.product_uom_kgm,,marin_data.company_lmmg,marin_data.mrp_bom_line_1615,marin_data.product_product_2028,marin.uom_uom_131,48.0,True,1
+mrp_bom_1071,Refill Asanit 50 XM 8x1Kg 1200,Manufacture this product,1000.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1239,uom.product_uom_kgm,,marin_data.company_lmmg,marin_data.mrp_bom_line_1615,marin_data.product_product_2028,marin.uom_131,48.0,True,1
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1616,marin_data.product_product_1729,uom.product_uom_unit,1200.0,,2
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1617,marin_data.product_product_1501,uom.product_uom_unit,100.0,,3
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1618,marin_data.product_product_2111,uom.product_uom_unit,100.0,,4
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1619,marin_data.product_product_2329,uom.product_uom_unit,2.0,,6
-mrp_bom_1072,Refill Breisse XM 100,Manufacture this product,100.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1344,marin.uom_uom_109,,marin_data.company_lmmg,marin_data.mrp_bom_line_1620,marin_data.product_product_1339,marin.uom_uom_131,0.52,,1
+mrp_bom_1072,Refill Breisse XM 100,Manufacture this product,100.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1344,marin.uom_109,,marin_data.company_lmmg,marin_data.mrp_bom_line_1620,marin_data.product_product_1339,marin.uom_131,0.52,,1
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1621,marin_data.product_product_1730,uom.product_uom_unit,100.0,,2
 mrp_bom_1073,Refill Deprebac XM 12x1L 1000,Manufacture this product,1000.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1492,uom.product_uom_litre,,marin_data.company_lmmg,marin_data.mrp_bom_line_1622,marin_data.product_product_1912,uom.product_uom_litre,1000.0,True,1
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1623,marin_data.product_product_1663,uom.product_uom_unit,1000.0,,4
@@ -672,12 +672,12 @@ mrp_bom_1078,Refill Eterbel XM 12x1L 1000,Manufacture this product,1000.0,True, 
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1671,marin_data.product_product_1501,uom.product_uom_unit,83.33,,7
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1672,marin_data.product_product_1130,uom.product_uom_unit,83.33,,8
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1673,marin_data.product_product_2329,uom.product_uom_unit,2.0,,9
-mrp_bom_1079,Refill Ferti Beet XM 6x2Kg 1000,Manufacture this product,500.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1543,marin.uom_uom_121,,marin_data.company_lmmg,marin_data.mrp_bom_line_1674,marin_data.product_product_1309,uom.product_uom_kgm,1000.0,,3
+mrp_bom_1079,Refill Ferti Beet XM 6x2Kg 1000,Manufacture this product,500.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1543,marin.uom_121,,marin_data.company_lmmg,marin_data.mrp_bom_line_1674,marin_data.product_product_1309,uom.product_uom_kgm,1000.0,,3
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1675,marin_data.product_product_1731,uom.product_uom_unit,500.0,,5
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1676,marin_data.product_product_1131,uom.product_uom_unit,83.0,,6
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1677,marin_data.product_product_1501,uom.product_uom_unit,83.0,,7
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1678,marin_data.product_product_2329,uom.product_uom_unit,1.5,,8
-mrp_bom_1080,Refill Ferti Beet XM 6x2Kg 200,Manufacture this product,100.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1543,marin.uom_uom_121,,marin_data.company_lmmg,marin_data.mrp_bom_line_1679,marin_data.product_product_1309,uom.product_uom_kgm,200.0,,5
+mrp_bom_1080,Refill Ferti Beet XM 6x2Kg 200,Manufacture this product,100.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1543,marin.uom_121,,marin_data.company_lmmg,marin_data.mrp_bom_line_1679,marin_data.product_product_1309,uom.product_uom_kgm,200.0,,5
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1680,marin_data.product_product_1542,uom.product_uom_kgm,0.0,True,6
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1681,marin_data.product_product_1731,uom.product_uom_unit,100.0,,7
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1682,marin_data.product_product_1131,uom.product_uom_unit,17.0,,8
@@ -834,14 +834,14 @@ mrp_bom_1092,Formulate Omipro XM 12x1L Batch 200,Manufacture this product,200.0,
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1833,marin_data.product_product_2009,uom.product_uom_kgm,148.52,True,1
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1834,marin_data.product_product_2102,uom.product_uom_unit,200.0,,1
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1835,marin_data.product_product_2110,uom.product_uom_unit,17.0,,1
-mrp_bom_1093,Refill Omipro XM 12x1L 1000,Manufacture this product,1000.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1893,uom.product_uom_litre,,marin_data.company_lmmg,marin_data.mrp_bom_line_1836,marin_data.product_product_2008,marin.uom_uom_160,5.0,,1
+mrp_bom_1093,Refill Omipro XM 12x1L 1000,Manufacture this product,1000.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_1893,uom.product_uom_litre,,marin_data.company_lmmg,marin_data.mrp_bom_line_1836,marin_data.product_product_2008,marin.uom_160,5.0,,1
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1837,marin_data.product_product_1868,uom.product_uom_unit,1000.0,,2
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1838,marin_data.product_product_1870,uom.product_uom_unit,1000.0,,3
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1839,marin_data.product_product_2102,uom.product_uom_unit,1000.0,,4
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1840,marin_data.product_product_1501,uom.product_uom_unit,83.33,,5
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1841,marin_data.product_product_2110,uom.product_uom_unit,83.33,,6
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1842,marin_data.product_product_2329,uom.product_uom_unit,2.0,,8
-mrp_bom_1094,Refill Veridia XM XM 6x2Kg 100,Manufacture this product,120.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_2302,marin.uom_uom_117,,marin_data.company_lmmg,marin_data.mrp_bom_line_1843,marin_data.product_product_1605,uom.product_uom_kgm,72.0,,5
+mrp_bom_1094,Refill Veridia XM XM 6x2Kg 100,Manufacture this product,120.0,True, When all components are available,Allowed with warning,10,marin_data.product_template_2302,marin.uom_117,,marin_data.company_lmmg,marin_data.mrp_bom_line_1843,marin_data.product_product_1605,uom.product_uom_kgm,72.0,,5
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1844,marin_data.product_product_1733,uom.product_uom_unit,120.0,,8
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1845,marin_data.product_product_1133,uom.product_uom_unit,15.0,,10
 ,,,,,,,,,,,,marin_data.mrp_bom_line_1846,marin_data.product_product_1502,uom.product_uom_unit,15.0,,11
