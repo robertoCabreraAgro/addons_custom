@@ -336,7 +336,7 @@ def _post_init_marin(env):
         SELECT setval('"public"."fleet_vehicle_model_brand_id_seq"', 100, true);
         SELECT setval('"public"."fleet_vehicle_model_id_seq"', 1000, true);
         SELECT setval('"public"."fleet_vehicle_id_seq"', 1000, true);
-        SELECT setval('"public"."account_analytic_account_id_seq"', 999, true);
+        SELECT setval('"public"."account_analytic_account_id_seq"', 1000, true);
         SELECT setval('"public"."account_analytic_distribution_model_id_seq"', 1000, true);
         """
     )
