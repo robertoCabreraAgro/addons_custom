@@ -46,4 +46,8 @@
             </xpath>
         </field>
     </record>
+
+    <record id="account.action_account_moves_all" model="ir.actions.act_window">
+        <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
+    </record>
 </odoo>
