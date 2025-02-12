@@ -62,6 +62,8 @@ uom_160,200L,uom.product_uom_litre,,,200.0,True
 uom_161,1000L,uom.product_uom_cubic_meter,,,1.0,True
 uom_162,Service unit,l10n_mx.product_uom_service_unit,product_unspsc.unspsc_code_E48,,1.0,True
 uom_163,Activity,l10n_mx.product_uom_activity,product_unspsc.unspsc_code_ACT,,1.0,True
+uom_164,0.130kg,uom.product_uom_gram,,,130.0,True
+uom_165,0.060kg,uom.product_uom_gram,,,60.0,True
 l10n_mx.product_uom_activity,Activity,,product_unspsc.unspsc_code_ACT,,1.0,True
 l10n_mx.product_uom_job,Job,,product_unspsc.unspsc_code_E51,,1.0,True
 l10n_mx.product_uom_service_unit,Service Unit,,product_unspsc.unspsc_code_E48,,1.0,True
