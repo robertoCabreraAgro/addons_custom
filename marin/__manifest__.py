@@ -22,6 +22,7 @@
         "hr_recruitment_survey",
         "hr_appraisal_survey",
         "hr_attendance",
+        "approvals",
         "project_forecast",
         "room",
         "stock_fleet",
