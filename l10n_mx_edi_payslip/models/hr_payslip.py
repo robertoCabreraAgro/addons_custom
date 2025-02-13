@@ -1189,7 +1189,7 @@ class HrPayslip(models.Model):
             "customer_rfc": customer_rfc,
         }
 
-        values.update(self._l10n_mx_get_serie_and_folio(self.number))
+        # values.update(self._l10n_mx_get_serie_and_folio(self.number))
 
         values.update(payroll)
         return values

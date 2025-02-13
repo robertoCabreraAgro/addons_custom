@@ -513,16 +513,17 @@ class L10nMxEdiDocument(models.Model):
             partner.message_post(body=msg)
         return partner
 
-    def prepare_move(self, cfdi_etree):
+    def prepare_move(self, cfdi_etree, journal=False):
         move_obj = self.env["account.move"]
         import_type, move_type = self.get_import_type(cfdi_etree)
-        journal_types = ["general"]
-        if move_type in move_obj.get_sale_types():
-            journal_types = ["sale"]
-        elif move_type in move_obj.get_purchase_types():
-            journal_types = ["purchase"]
-        domain = [("company_id", "=", self.env.company.id), ("type", "in", journal_types)]
-        journal_exist = self.env["account.journal"].search(domain, limit=1, order="id asc")
+        if not journal:
+            journal_types = ["general"]
+            if move_type in move_obj.get_sale_types():
+                journal_types = ["sale"]
+            elif move_type in move_obj.get_purchase_types():
+                journal_types = ["purchase"]
+            domain = [("company_id", "=", self.env.company.id), ("type", "in", journal_types)]
+            journal = self.env["account.journal"].search(domain, limit=1, order="id asc")        currency_exist = self.env["res.currency"].search([("name", "=", self.get_currency(cfdi_etree))], limit=1)
         currency_exist = self.env["res.currency"].search([("name", "=", self.get_currency(cfdi_etree))], limit=1)
         payment_form = self.env["l10n_mx_edi.payment.method"].search(
             [("code", "=", cfdi_etree.get("FormaDePago", cfdi_etree.get("FormaPago")))], limit=1
@@ -568,7 +569,7 @@ class L10nMxEdiDocument(models.Model):
                 invoice_lines.extend(local_taxes_lines)
         vals = {
             "move_type": move_type,
-            "journal_id": journal_exist.id,
+            "journal_id": journal.id,
             "currency_id": currency_exist.id,
             "invoice_date": self.get_datetime(cfdi_etree),
             "invoice_payment_term_id": payment_term.id if payment_term else 1,
@@ -623,10 +624,10 @@ class L10nMxEdiDocument(models.Model):
             exact_move_exist = fuzzy_move_exist
         return exact_move_exist
 
-    def xml2record(self, cfdi_etree):
+    def xml2record(self, cfdi_etree, journal=False):
         validation = self.check_cfdi_dupli(cfdi_etree)
         if not validation:
-            vals = self.prepare_move(cfdi_etree)
+            vals = self.prepare_move(cfdi_etree, journal)
             validation = (
                 self.env["account.move"].with_context(default_move_type=vals["move_type"]).create(vals)
             )

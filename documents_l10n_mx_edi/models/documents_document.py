@@ -35,7 +35,7 @@ class Document(models.Model):
             ("cancelled", "Cancelled"),
             ("valid", "Valid")
         ],
-        "SAT Status",
+        string="SAT Status",
         default="none",
         tracking=True,
         readonly=True,
@@ -65,7 +65,7 @@ class Document(models.Model):
             ("cancelled_timeout", "Cancelled because timeout"),
             ("rejected", "Cancellation Rejected"),
         ],
-        "Cancellation Status",
+        string="Cancellation Status",
         default="none",
         tracking=True,
         readonly=True,
@@ -73,21 +73,21 @@ class Document(models.Model):
         help="Refers to the status of the cancellation in the SAT system.",
     )
     l10n_mx_edi_stamp_date = fields.Datetime(
-        "CFDI stamp date",
+        string="CFDI stamp date",
         compute="_compute_l10n_mx_edi_common_fields", store=True
     )
     l10n_mx_edi_cfdi_total_amount = fields.Float(
-        "Total Amount",
+        string="Total Amount",
         compute="_compute_l10n_mx_edi_common_fields", store=True,
         help='In case this is a CFDI file, stores invoice"s total amount.',
     )
     l10n_mx_edi_related_cfdi = fields.Text(
-        "Related CFDI",
+        string="Related CFDI",
         compute="_compute_l10n_mx_edi_common_fields", store=True,
         help="Related CFDI of the XML file"
     )
     l10n_mx_edi_product_list = fields.Text(
-        "Products",
+        string="Products",
         compute="_compute_l10n_mx_edi_common_fields", store=True,
         help='In case this is a CFDI file, show invoice"s product list',
     )
@@ -176,7 +176,9 @@ class Document(models.Model):
                 cfdi_etree.get("Total", "0.00"),
                 uuid,
             )
-            rec.l10n_mx_edi_sat_state = STATUS.get(sat_status["status"] if sat_status else "none", "none")
+            rec.l10n_mx_edi_sat_state = STATUS.get(
+                sat_status["status"] if sat_status else "none", "none"
+            )
             rec.l10n_mx_edi_sat_cancellable = CANCELLABLE.get(
                 sat_status["is_cancellable"] if sat_status else "", "none"
             )

@@ -250,16 +250,6 @@ class AccountMove(models.Model):
 
         return super().action_post()
 
-    def button_draft(self):
-        res = super().button_draft()
-        for move in self:
-            lines = move.line_ids.filtered(
-                lambda l: l.vehicle_id
-            ).sudo().vehicle_log_service_ids.with_context(
-                ignore_linked_bill_constraint=True
-            ).unlink()
-        return res
-
     def button_set_stored(self):
         for move in self:
             move.x_stored = True

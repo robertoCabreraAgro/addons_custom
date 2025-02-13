@@ -5,16 +5,12 @@ class FleetVehicleInherit(models.Model):
     _inherit = "fleet.vehicle"
 
 
-    fuel_tank_capacity = fields.Integer(
-        string="Tank capacity",
-        help="Fuel tank capacity in liters",
-    )
-    cilinders = fields.Integer(string="Cilinders Number")
-    fuel_efficiency = fields.Float(
-        help="Fuel efficiency in kilometers per liter (km/L)"
+    department_id = fields.Many2one(
+        comodel_name="hr.department",
+        string="Department"
     )
     fuel_card_id = fields.Many2one(
-        "documents.document",
+        comodel_name="documents.document",
         domain=lambda self: [
             ("tag_ids", "in", self.env.ref("marin.documents_fleet_fuel_card").ids),
         ],
@@ -24,7 +20,7 @@ class FleetVehicleInherit(models.Model):
     )
     fuel_card_name = fields.Char(compute="_compute_fuel_card_name", store=True)
     highway_pass_id = fields.Many2one(
-        "documents.document",
+        comodel_name="documents.document",
         domain=lambda self: [
             ("tag_ids", "in", self.env.ref("marin.documents_fleet_highway_pass").ids),
         ],
@@ -37,18 +33,10 @@ class FleetVehicleInherit(models.Model):
         comodel_name="hr.department",
         string="Department"
     )
-    vin_sn = fields.Char(
-        help='Unique number (VIN/SN number)',
-    )
     l10n_mx_vehicle_code = fields.Char(
         string='Vehicle Code',
         tracking=True,
         help='In Mexico the tax authority assign a 7 character code to identify its characteristics.',
-    )
-    engine_sn = fields.Char(
-        string='Engine SN',
-        tracking=True,
-        help='Unique number that identifies the engine in a vehicle.',
     )
     account_prefix = fields.Char(
         string='Account Prefix',

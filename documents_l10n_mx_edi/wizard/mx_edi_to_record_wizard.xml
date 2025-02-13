@@ -5,6 +5,7 @@
         <field name="model">documents.mx_edi_to_record_wizard</field>
         <field name="arch" type="xml">
             <form string="Mx Edi create records">
+                <field name="journal_id" />
                 <footer>
                     <button name="create_records" string="Create records" type="object" class="oe_highlight" />
                     <button special="cancel" string="Cancel" class="oe_link" />

@@ -6,16 +6,24 @@ from odoo.tools.float_utils import float_round
 class AccountMove(models.Model):
     _inherit = "account.move"
 
+
     x_check_tax = fields.Monetary(
-        "Verification tax",
+        string="Verification tax",
         copy=False,
     )
     x_check_total = fields.Monetary(
-        "Verification total",
+        string="Verification total",
         copy=False,
     )
-    x_tax_difference = fields.Monetary("Tax difference", compute="_compute_x_difference")
-    x_total_difference = fields.Monetary("Total difference", compute="_compute_x_difference")
+    x_tax_difference = fields.Monetary(
+        string="Tax difference",
+        compute="_compute_x_difference",
+    )
+    x_total_difference = fields.Monetary(
+        string="Total difference",
+        compute="_compute_x_difference",
+    )
+
 
     @api.constrains("state", "l10n_mx_edi_document_ids")
     def _check_uuid_duplicated(self):
@@ -29,9 +37,12 @@ class AccountMove(models.Model):
                     ]
                 )
                 if dupli:
-                    msg = _("UUID duplicated %s for following invoices:\n", move.l10n_mx_edi_cfdi_uuid)
+                    msg = _(
+                        "UUID duplicated %s for following invoices:\n",
+                        move.l10n_mx_edi_cfdi_uuid
+                    )
                     for rec in dupli:
-                        msg += "-(%s) %s\n" % (rec.id, rec.name)
+                        msg += f"-({rec.id}) {rec.name}\n"
                         raise ValidationError(msg)
 
 
@@ -42,9 +53,11 @@ class AccountMove(models.Model):
             move.x_total_difference = 0.0
             if move.x_check_tax:
                 move.x_tax_difference = float_round(
-                    move.x_check_tax - move.amount_tax, precision_rounding=move.currency_id.rounding
+                    move.x_check_tax - move.amount_tax,
+                    precision_rounding=move.currency_id.rounding
                 )
             if move.x_check_total:
                 move.x_total_difference = float_round(
-                    move.x_check_total - move.amount_total, precision_rounding=move.currency_id.rounding
+                    move.x_check_total - move.amount_total,
+                    precision_rounding=move.currency_id.rounding
                 )
