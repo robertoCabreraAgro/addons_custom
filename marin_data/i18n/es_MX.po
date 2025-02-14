@@ -1819,7 +1819,7 @@ msgid "Baciver 1kg"
 msgstr ""
 
 #. module: marin_data
-#: model:pos.category,name:marin_data.pos_category_1
+#: model:pos.category,name:marin_data.pos_category_101
 msgid "Bactericidas"
 msgstr ""
 
@@ -3487,7 +3487,7 @@ msgid "Clothianidin"
 msgstr ""
 
 #. module: marin_data
-#: model:pos.category,name:marin_data.pos_category_2
+#: model:pos.category,name:marin_data.pos_category_102
 msgid "Coadyuvantes"
 msgstr ""
 
@@ -5678,7 +5678,7 @@ msgid "Fullpest 0.500kg"
 msgstr ""
 
 #. module: marin_data
-#: model:pos.category,name:marin_data.pos_category_3
+#: model:pos.category,name:marin_data.pos_category_103
 msgid "Fungicidas"
 msgstr ""
 
@@ -6281,7 +6281,7 @@ msgid "Herald 0.250L"
 msgstr ""
 
 #. module: marin_data
-#: model:pos.category,name:marin_data.pos_category_4
+#: model:pos.category,name:marin_data.pos_category_104
 msgid "Herbicidas"
 msgstr ""
 
@@ -6939,7 +6939,7 @@ msgid "Inoquos cap R.50 Bca C/Ln liner with valve"
 msgstr ""
 
 #. module: marin_data
-#: model:pos.category,name:marin_data.pos_category_5
+#: model:pos.category,name:marin_data.pos_category_105
 msgid "Insecticidas"
 msgstr ""
 
@@ -8373,7 +8373,7 @@ msgid "Maquicide IZ CG 1.5"
 msgstr ""
 
 #. module: marin_data
-#: model:pos.category,name:marin_data.pos_category_6
+#: model:pos.category,name:marin_data.pos_category_106
 msgid "Maquinaria"
 msgstr ""
 
@@ -9499,7 +9499,7 @@ msgid "Nutri Phite Soil Hi Grade 1x5L"
 msgstr ""
 
 #. module: marin_data
-#: model:pos.category,name:marin_data.pos_category_7
+#: model:pos.category,name:marin_data.pos_category_107
 msgid "Nutricion"
 msgstr ""
 
@@ -12544,7 +12544,7 @@ msgid "Sico 1L"
 msgstr ""
 
 #. module: marin_data
-#: model:pos.category,name:marin_data.pos_category_8
+#: model:pos.category,name:marin_data.pos_category_108
 msgid "Siembra"
 msgstr ""
 
@@ -13480,7 +13480,7 @@ msgid "Titus 0.050kg"
 msgstr ""
 
 #. module: marin_data
-#: model:pos.category,name:marin_data.pos_category_9
+#: model:pos.category,name:marin_data.pos_category_109
 msgid "Tizon"
 msgstr ""
 
