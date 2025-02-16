@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <record id="view_approval_category_form_inherit" model="ir.ui.view">
+    <record id="approval_category_view_form" model="ir.ui.view">
         <field name="name">approval.category.form.inherit</field>
         <field name="model">approval.category</field>
         <field name="inherit_id" ref="approvals.approval_category_view_form" />
@@ -8,11 +8,7 @@
             <xpath expr="//group[@name='option_settings']" position="inside">
                 <field name="has_vehicle" string="Vehicle" widget="radio"
                     options="{'horizontal': true}" />
-                <field name="has_license_plate" string="License Plate" widget="radio"
-                    options="{'horizontal': true}" />
                 <field name="has_odometer" string="Odometer" widget="radio"
-                    options="{'horizontal': true}" />
-                <field name="has_fuel_type" string="Fuel Type" widget="radio"
                     options="{'horizontal': true}" />
             </xpath>
         </field>

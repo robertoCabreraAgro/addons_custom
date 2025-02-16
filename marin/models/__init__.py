@@ -11,6 +11,7 @@ from . import account_payment_term
 from . import documents_document
 from . import documents_tag
 from . import fleet_vehicle
+from . import fleet_vehicle_log
 from . import hr_contract
 from . import hr_payslip
 from . import hr_payslip_run

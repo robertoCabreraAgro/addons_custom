@@ -5,24 +5,24 @@ from odoo.exceptions import AccessError, UserError
 class PosSession(models.Model):
     _inherit = "pos.session"
 
+
     cash_original_ending_balance = fields.Monetary(
         string="Original Ending Balance",
-        readonly=True,
         currency_field="currency_id",
-        store=True,
-        compute="_compute_cash_transfer",
+        compute="_compute_cash_transfer", store=True,
+        readonly=True,
     )
     cash_transfered = fields.Monetary(
         string="Transfered",
+        currency_field="currency_id",
+        compute="_compute_cash_transfer", store=True,
         readonly=True,
         tracking=True,
-        currency_field="currency_id",
-        store=True,
-        compute="_compute_cash_transfer",
     )
     cash_register_balance_end_real = fields.Monetary(tracking=True)
     cash_transfer_payment_ids = fields.One2many("account.payment", "cash_transfer_pos_id")
     cash_transfer_payment_count = fields.Integer(compute="_compute_cash_transfer_payment_count")
+
 
     @api.depends(
         "cash_transfer_payment_ids", "cash_transfer_payment_ids.state", "cash_transfer_payment_ids.payment_type"
@@ -42,17 +42,16 @@ class PosSession(models.Model):
         self.ensure_one()
         self._is_last_closed_session()
         cash_journal = self.config_id.payment_method_ids.journal_id.filtered(lambda j: j.type == "cash")[:1]
-
         if not cash_journal:
-            raise UserError(
-                _("The used POS has no CASH Payment method or journal correctly configured, please check for them.")
-            )
+            raise UserError(_(
+                "The used POS has no CASH Payment method or journal correctly configured."
+            ))
 
         action = {
             "name": "POS Cash Transfer",
-            "view_mode": "form",
-            "res_model": "pos.cash.transfer.wizard",
             "type": "ir.actions.act_window",
+            "res_model": "pos.cash.transfer.wizard",
+            "view_mode": "form",
             "view_id": self.env.ref("marin.wizard_pos_cash_transfer_form_view").id,
             "target": "new",
             "context": {
@@ -85,9 +84,9 @@ class PosSession(models.Model):
 
     def _cash_transfer_sufficient_funds(self, cash_amount):
         if not cash_amount <= self.cash_register_balance_end_real:
-            raise UserError(
-                _("Insufficient cash amount. Cash transfer is trying to use more cash than available on Pos Session.")
-            )
+            raise UserError(_(
+                "Insufficient cash amount. Cash transfer is trying to use more cash than available on Pos Session."
+            ))
 
     # Cash Transfer smart button methods
     def _compute_cash_transfer_payment_count(self):
@@ -99,10 +98,10 @@ class PosSession(models.Model):
     def get_cash_transfer_payments(self):
         self.ensure_one()
         return {
-            "type": "ir.actions.act_window",
             "name": "Cash Transfer Payments",
-            "view_mode": "list,form",
+            "type": "ir.actions.act_window",
             "res_model": "account.payment",
+            "view_mode": "list,form",
             "domain": [("id", "in", self.cash_transfer_payment_ids.ids)],
         }
 

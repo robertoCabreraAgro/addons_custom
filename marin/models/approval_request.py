@@ -1,5 +1,6 @@
-from odoo import api, fields, models
-
+from odoo import api, _, fields, models
+from odoo.exceptions import UserError
+from odoo.tools.misc import clean_context
 
 class ApprovalRequest(models.Model):
     _inherit = "approval.request"
@@ -7,12 +8,6 @@ class ApprovalRequest(models.Model):
 
     has_vehicle = fields.Selection(
         related="category_id.has_vehicle", store=True,
-    )
-    has_license_plate = fields.Selection(
-        related="category_id.has_license_plate", store=True,
-    )
-    has_fuel_type = fields.Selection(
-        related="category_id.has_fuel_type", store=True,
     )
     has_odometer = fields.Selection(
         related="category_id.has_odometer", store=True,
@@ -31,9 +26,14 @@ class ApprovalRequest(models.Model):
         string="Fuel Type",
         compute="_compute_vehicle_info", store=True,
     )
-    odometer = fields.Float(
+    odometer = fields.Integer(
         string="Odometer",
         help="Enter the vehicle's current odometer reading.",
+    )
+    log_ids = fields.One2many(
+        comodel_name="fleet.vehicle.log",
+        inverse_name="approval_request_id",
+        string="Log",
     )
 
 
@@ -57,3 +57,37 @@ class ApprovalRequest(models.Model):
             else:
                 record.license_plate = False
                 record.fuel_type = False
+
+    def action_confirm(self):
+        for request in self:
+            if request.approval_type == 'fleet_vehicle_log' and not request.odometer:
+                raise UserError(_("You cannot create a log without odometer value."))
+        return super().action_confirm()
+
+    def action_create_fleet_vehicle_log(self):
+        self.ensure_one()
+        self.env["fleet.vehicle.log"].create(
+            {
+                "approval_request_id": self.id,
+                "vehicle_id": self.vehicle_id.id,
+                "odometer": self.odometer,
+                "state": "done",
+                "date": self.date, #TODO ROberto implement logic for date when all approvers have finished
+                # "product_id": self.product_line_ids[0].product_id.id,
+            }
+        )
+
+    def action_open_fleet_vehicle_log(self):
+        self.ensure_one()
+        log_ids = self.log_ids.ids
+        domain = [('id', 'in', log_ids)]
+        action = {
+            'name': _('Logss'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'fleet.vehicle.log',
+            'view_type': 'list',
+            'view_mode': 'list,form',
+            'context': clean_context(self.env.context),
+            'domain': domain,
+        }
+        return action

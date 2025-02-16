@@ -1,29 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <record id="view_approval_request_form_inherit" model="ir.ui.view">
-        <field name="name">approval.request.form.inherit</field>
-        <field name="model">approval.request</field>
-        <field name="inherit_id" ref="approvals.approval_request_view_form" />
-        <field name="arch" type="xml">
-            <xpath expr="//group[@name='request_main']" position="inside">
-                <field name="vehicle_id"
-                    invisible="has_vehicle == 'no'"
-                    readonly="request_status != 'new'" />
-                <field name="license_plate"
-                    invisible="has_license_plate == 'no'"
-                    readonly="1" />
-                <field name="fuel_type"
-                    invisible="has_fuel_type == 'no'"
-                    readonly="1" />
-                <field name="odometer"
-                    invisible="has_odometer == 'no'"
-                    readonly="request_status != 'new'" />
-            </xpath>
-
-        </field>
-    </record>
-
-    <record id="view_approval_request_tree_inherit" model="ir.ui.view">
+    <record id="approval_request_view_tree" model="ir.ui.view">
         <field name="name">approval.request.tree.inherit</field>
         <field name="model">approval.request</field>
         <field name="inherit_id" ref="approvals.approval_request_view_tree" />
@@ -35,6 +12,42 @@
                 <field name="license_plate" string="License Plate" optional="hide" />
                 <field name="fuel_type" string="Fuel Type" optional="hide" />
                 <field name="odometer" string="Odometer" optional="hide" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="approval_request_view_form" model="ir.ui.view">
+        <field name="name">approval.request.form.inherit</field>
+        <field name="model">approval.request</field>
+        <field name="inherit_id" ref="approvals.approval_request_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='change_request_owner']" position="after">
+                    <field name="has_vehicle" invisible="1"/>
+                    <field name="has_odometer" invisible="1"/>
+            </xpath>
+            <xpath expr="//button[@name='action_get_attachment_view']" position="after">
+                <button name="action_open_fleet_vehicle_log" string="Logs"
+                    type="object" class="oe_stat_button"
+                    icon="fa-credit-card"
+                    invisible="not log_ids">
+                </button>
+            </xpath>
+            <xpath expr="//button[@name='action_confirm']" position="after">
+                <button name="action_create_fleet_vehicle_log" string="Create Log"
+                    type="object" class="btn-primary"
+                    data-hotkey="g"
+                    invisible="approval_type != 'fleet_vehicle_log' or request_status != 'approved' or log_ids"
+                    groups="purchase.group_purchase_user" />
+            </xpath>
+            <xpath expr="//group[@name='request_main']" position="inside">
+                <field name="vehicle_id"
+                    readonly="request_status != 'new'"
+                    required="has_vehicle == 'required'"
+                    invisible="has_vehicle == 'no'" />
+                <field name="odometer"
+                    readonly="request_status != 'new'"
+                    required="has_odometer == 'required'"
+                    invisible="has_odometer == 'no'" />
             </xpath>
         </field>
     </record>

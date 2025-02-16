@@ -155,7 +155,8 @@ class AccountMoveLine(models.Model):
             )
             lines = orders.order_line | move.line_ids.mapped("sale_line_ids")
             rec.allowed_sale_line_ids = (
-                lines if not rec.product_id else lines.filtered(lambda line: line.product_id == rec.product_id)
+                lines if not rec.product_id
+                else lines.filtered(lambda line: line.product_id == rec.product_id)
             )
 
     @api.onchange("purchase_line_id")
@@ -192,8 +193,8 @@ class AccountMoveLine(models.Model):
             # Change made in the line below
             if account.allowed_journal_ids and journal not in account.allowed_journal_ids and parent_state == "posted":
                 raise UserError(_(
-                    'You cannot use the account (%s) in the journal (%s), check the field "Allowed Journals" '
-                    "on the related account.",
+                    'You cannot use the account (%s) in the journal (%s), '
+                    'check the field "Allowed Journals" on the related account.',
                     account.display_name,
                     journal.name,
                 ))
@@ -215,8 +216,12 @@ class AccountMoveLine(models.Model):
                 ))
 
     # Extend original method
-    def _prepare_analytic_distribution_line(self, distribution, account_id, distribution_on_each_plan):
-        res = super()._prepare_analytic_distribution_line(distribution, account_id, distribution_on_each_plan)
+    def _prepare_analytic_distribution_line(
+        self, distribution, account_id, distribution_on_each_plan
+    ):
+        res = super()._prepare_analytic_distribution_line(
+            distribution, account_id, distribution_on_each_plan
+        )
         sign = -1 if res["amount"] < 0 else 1
         res.update(
             {

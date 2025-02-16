@@ -4,6 +4,7 @@ from odoo import api, fields, models
 class ProductCategoryInherit(models.Model):
     _inherit = "product.category"
 
+
     property_account_income_refund_id = fields.Many2one(
         "account.account",
         "Income Refund Account",
@@ -45,6 +46,7 @@ class ProductCategoryInherit(models.Model):
         "product.category", string="Root Category",
         compute="_compute_root_category", store=True,
         recursive=True, index=True)
+
 
     @api.depends("parent_id.root_categ_id")
     def _compute_root_category(self):

@@ -4,13 +4,21 @@ from odoo import api, fields, models
 class PosOrderLine(models.Model):
     _inherit = "pos.order.line"
 
+
     # New fields
     price_cost = fields.Float(
         "Cost",
         "Product Price",
     )
-    margin = fields.Monetary(compute="_compute_margin", store=True)
-    margin_percent = fields.Float(string="Margin (%)", compute="_compute_margin", digits=(12, 4), store=True)
+    margin = fields.Monetary(
+        compute="_compute_margin", store=True,
+    )
+    margin_percent = fields.Float(
+        string="Margin (%)",
+        digits=(12, 4),
+        compute="_compute_margin", store=True,
+    )
+
 
     # Override original method
     def _compute_total_cost(self, stock_moves):

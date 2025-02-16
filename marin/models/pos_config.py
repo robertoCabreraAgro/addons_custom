@@ -4,7 +4,9 @@ from odoo import _, fields, models
 class PosConfig(models.Model):
     _inherit = "pos.config"
 
+
     active = fields.Boolean(default=True)
+
 
     def validate_stock_on_pos_order(self, order_lines_data):
         """Meant to be called from the POS UI. Checks if the stock is available for the order.

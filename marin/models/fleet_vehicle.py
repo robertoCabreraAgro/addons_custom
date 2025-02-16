@@ -29,10 +29,6 @@ class FleetVehicleInherit(models.Model):
         readonly=False,
     )
     highway_pass_name = fields.Char(compute="_compute_highway_pass_name", store=True)
-    department_id = fields.Many2one(
-        comodel_name="hr.department",
-        string="Department"
-    )
     l10n_mx_vehicle_code = fields.Char(
         string='Vehicle Code',
         tracking=True,

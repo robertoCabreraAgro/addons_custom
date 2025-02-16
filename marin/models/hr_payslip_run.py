@@ -6,6 +6,7 @@ from odoo.tools import float_compare, float_is_zero
 class HrPayslipRun(models.Model):
     _inherit = "hr.payslip.run"
 
+
     def create_payslip_moves(self):
         """Prepare the creation of journal entries (account.move) by creating a list of python dictionary to be passed
         to the "create" method.
