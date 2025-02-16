@@ -523,8 +523,10 @@ class L10nMxEdiDocument(models.Model):
             elif move_type in move_obj.get_purchase_types():
                 journal_types = ["purchase"]
             domain = [("company_id", "=", self.env.company.id), ("type", "in", journal_types)]
-            journal = self.env["account.journal"].search(domain, limit=1, order="id asc")        currency_exist = self.env["res.currency"].search([("name", "=", self.get_currency(cfdi_etree))], limit=1)
-        currency_exist = self.env["res.currency"].search([("name", "=", self.get_currency(cfdi_etree))], limit=1)
+            journal = self.env["account.journal"].search(domain, limit=1, order="id asc")
+        currency_exist = self.env["res.currency"].search(
+            [("name", "=", self.get_currency(cfdi_etree))], limit=1
+        )
         payment_form = self.env["l10n_mx_edi.payment.method"].search(
             [("code", "=", cfdi_etree.get("FormaDePago", cfdi_etree.get("FormaPago")))], limit=1
         )
