@@ -1,6 +1,6 @@
 {
     "name": "Mexican Payroll",
-    "version": "saas~18.1.1.0.0",
+    "version": "saas~18.2.1.0.0",
     "author": "Vauxoo",
     "category": "Localization",
     "website": "http://vauxoo.com",
