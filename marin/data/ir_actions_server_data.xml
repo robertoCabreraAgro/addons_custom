@@ -17,7 +17,7 @@ for rec in records.filtered(lambda r: not r.partner_id and not r.is_reconciled):
         <field name="model_id" ref="account.model_account_move" />
         <field name="binding_model_id" ref="account.model_account_move" />
         <field name="binding_view_types">list</field>
-        <field name="groups_id" eval="[
+        <field name="group_ids" eval="[
             Command.link(ref('group_account_move_draft')),
         ]" />
         <field name="state">code</field>
@@ -30,7 +30,7 @@ for rec in records.filtered(lambda r: not r.partner_id and not r.is_reconciled):
         <field name="model_id" ref="account.model_account_move" />
         <field name="binding_model_id" ref="account.model_account_move" />
         <field name="binding_view_types">list</field>
-        <field name="groups_id" eval="[
+        <field name="group_ids" eval="[
             Command.link(ref('group_account_debt_manager')),
         ]" />
         <field name="state">code</field>
@@ -43,7 +43,7 @@ for rec in records.filtered(lambda r: not r.partner_id and not r.is_reconciled):
         <field name="model_id" ref="account.model_account_move" />
         <field name="binding_model_id" ref="account.model_account_move" />
         <field name="binding_view_types">list</field>
-        <field name="groups_id" eval="[
+        <field name="group_ids" eval="[
             Command.link(ref('group_account_move_cash_discount')),
         ]" />
         <field name="state">code</field>
@@ -68,7 +68,7 @@ action["domain"] = ["|", ("partner_id", "in", partners.ids), ("partner_id.commer
         <field name="binding_model_id" ref="stock.model_stock_picking" />
         <field name="binding_view_types">list,form</field>
         <field name="binding_type">report</field>
-        <field name="groups_id" eval="[Command.link(ref('group_print_delivery_slip'))]" />
+        <field name="group_ids" eval="[Command.link(ref('group_print_delivery_slip'))]" />
         <field name="state">code</field>
         <field name="code">action = records._print_deliveryslip()</field>
     </record>
@@ -79,7 +79,7 @@ action["domain"] = ["|", ("partner_id", "in", partners.ids), ("partner_id.commer
         <field name="binding_model_id" ref="stock.model_stock_picking" />
         <field name="binding_view_types">list,form</field>
         <field name="binding_type">report</field>
-        <field name="groups_id" eval="[Command.link(ref('group_print_picking_operation'))]" />
+        <field name="group_ids" eval="[Command.link(ref('group_print_picking_operation'))]" />
         <field name="state">code</field>
         <field name="code">action = records._print_picking_operation()</field>
     </record>

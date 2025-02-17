@@ -7,7 +7,7 @@
         <field name="view_mode">form</field>
         <field name="context" eval="{'location_origin_readonly': True}" />
         <field name="target">new</field>
-        <field name="groups_id" eval="[(4, ref('stock.group_stock_user'))]" />
+        <field name="group_ids" eval="[(4, ref('stock.group_stock_user'))]" />
     </record>
 
 <!--     <record id="view_stock_quant_tree_editable" model="ir.ui.view">

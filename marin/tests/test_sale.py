@@ -128,13 +128,13 @@ class TestSale(TestSaleCommon):
         order.order_line.price_unit = 10.0
         order._compute_partner_credit_warning()
         partner.credit_on_hold = True
-        self.env.user.groups_id = [(3, self.env.ref("marin.group_account_debt_manager").id)]
+        self.env.user.group_ids = [(3, self.env.ref("marin.group_account_debt_manager").id)]
         with self.assertRaisesRegex(UserError, "The partner's credit line has been held. Contact the Credit Manager."):
             order.action_confirm()
         partner.credit_on_hold = False
         with self.assertRaises(UserError):
             order.action_confirm()
-        self.env.user.groups_id = [(4, self.env.ref("marin.group_account_debt_manager").id)]
+        self.env.user.group_ids = [(4, self.env.ref("marin.group_account_debt_manager").id)]
         res = order.action_confirm()
         self.assertEqual(order.state, "draft")
         self.assertEqual(res.get("res_model"), "authorize.debt.wizard")
@@ -171,7 +171,7 @@ class TestSale(TestSaleCommon):
             picking2._validate_picking()
 
     def test_04_sale_order_authorize_debt_multi(self):
-        self.env.user.groups_id = [(4, self.env.ref("marin.group_account_debt_manager").id)]
+        self.env.user.group_ids = [(4, self.env.ref("marin.group_account_debt_manager").id)]
         order = self.sale_order
         order.payment_term_id = self.pay_term_net_30_days
         partner = order.commercial_partner_id
@@ -195,7 +195,7 @@ class TestSale(TestSaleCommon):
         self.assertEqual(partner.credit_limit, 100)
 
     def test_05_sale_order_authorize_errors(self):
-        self.env.user.groups_id = [(4, self.env.ref("marin.group_account_debt_manager").id)]
+        self.env.user.group_ids = [(4, self.env.ref("marin.group_account_debt_manager").id)]
         ctx = {"active_model": "sale.order", "active_ids": []}
         with self.assertRaisesRegex(
             UserError, "You can't authorize debt because the records dont match the criteria."

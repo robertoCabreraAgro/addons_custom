@@ -8,8 +8,6 @@ access_account_report_external_value_invoice,account.report.external.value.reado
 access_account_report_line_invoice,account.report.line.readonly,account.model_account_report_line,account.group_account_invoice,1,0,0,0
 access_account_fiscal_year_invoice,access.account.fiscal.year.invoice,account_accountant.model_account_fiscal_year,account.group_account_invoice,1,0,0,0
 access_fleet_vehicle_account_invoice,access.fleet.vehicle.account.invoice,fleet.model_fleet_vehicle,account.group_account_invoice,1,0,0,0
-access_fleet_vehicle_log_services_account_invoice,access.fleet.vehicle.log.services.account.invoice,fleet.model_fleet_vehicle_log_services,account.group_account_invoice,1,0,0,0
-access_fleet_vehicle_log_services_account_user,access.fleet.vehicle.log.services.account.user,fleet.model_fleet_vehicle_log_services,account.group_account_invoice,1,1,1,1
 access_account_move_cash_discount_wizard,access.account.move.cash.discount.wizard,marin.model_account_invoice_cash_discount,group_account_move_cash_discount,1,1,1,1
 access_account_authorize_debt_wizard,access.account.authorize.debt.wizard,marin.model_authorize_debt_wizard,group_account_debt_manager,1,1,1,1
 access_invoice_line_in_report,access.invoice.line.in.report,marin.model_invoice_line_in_report,account.group_account_invoice,1,0,0,0

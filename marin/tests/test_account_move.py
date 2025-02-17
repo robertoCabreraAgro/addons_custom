@@ -37,13 +37,13 @@ class TestInvoicing(AccountTestInvoicingCommon):
         invoice.invoice_line_ids.price_unit = 10.0
         invoice._compute_partner_credit_warning()
         partner.credit_on_hold = True
-        self.env.user.groups_id = [(3, self.env.ref("marin.group_account_debt_manager").id)]
+        self.env.user.group_ids = [(3, self.env.ref("marin.group_account_debt_manager").id)]
         with self.assertRaises(UserError):
             invoice.action_post()
         partner.credit_on_hold = False
         with self.assertRaises(UserError):
             invoice.action_post()
-        self.env.user.groups_id = [(4, self.env.ref("marin.group_account_debt_manager").id)]
+        self.env.user.group_ids = [(4, self.env.ref("marin.group_account_debt_manager").id)]
         res = invoice.action_post()
         self.assertEqual(invoice.state, "draft")
         self.assertEqual(res.get("res_model"), "authorize.debt.wizard")
@@ -57,7 +57,7 @@ class TestInvoicing(AccountTestInvoicingCommon):
         self.assertEqual(partner.credit_limit, 11.5)
 
     def test_02_invoice_authorize_debt_multi(self):
-        self.env.user.groups_id = [(4, self.env.ref("marin.group_account_debt_manager").id)]
+        self.env.user.group_ids = [(4, self.env.ref("marin.group_account_debt_manager").id)]
         invoice = self.invoice
         invoice.invoice_payment_term_id = self.pay_term_net_30_days
         partner = invoice.commercial_partner_id
@@ -81,7 +81,7 @@ class TestInvoicing(AccountTestInvoicingCommon):
         self.assertEqual(partner.credit_limit, 23)
 
     def test_03_invoice_authorize_errors(self):
-        self.env.user.groups_id = [(4, self.env.ref("marin.group_account_debt_manager").id)]
+        self.env.user.group_ids = [(4, self.env.ref("marin.group_account_debt_manager").id)]
         ctx = {"active_model": "account.move", "active_ids": []}
         with self.assertRaisesRegex(
             UserError, "You can't authorize debt because the records dont match the criteria."
@@ -162,7 +162,7 @@ class TestInvoicing(AccountTestInvoicingCommon):
         invoice.invoice_line_ids.price_unit = 10.00
         invoice.invoice_line_ids.quantity = 100.00
         action = invoice.action_cash_discount_wizard()
-        self.env.user.groups_id = [(4, self.env.ref("marin.group_account_move_cash_discount").id)]
+        self.env.user.group_ids = [(4, self.env.ref("marin.group_account_move_cash_discount").id)]
         with self.assertRaisesRegex(UserError, "You can only register cash discounts on posted moves."):
             self.env["account.invoice.cash.discount"].with_context(action.get("context", {})).create({})
         invoice.action_post()

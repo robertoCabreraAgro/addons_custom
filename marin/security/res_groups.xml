@@ -51,25 +51,25 @@
     <record id="group_account_debt_manager" model="res.groups">
         <field name="name">Debt manager</field>
         <field name="category_id" ref="base.module_category_usability" />
-        <field name="users" eval="[Command.link(ref('base.user_admin'))]" />
+        <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]" />
     </record>
 
     <record id="group_account_move_draft" model="res.groups">
         <field name="name">Allow to draft journal entries</field>
         <field name="category_id" ref="base.module_category_usability" />
-        <field name="users" eval="[Command.link(ref('base.user_admin'))]" />
+        <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]" />
     </record>
 
     <record id="group_account_move_cancel" model="res.groups">
         <field name="name">Allow to cancel journal entries</field>
         <field name="category_id" ref="base.module_category_usability" />
-        <field name="users" eval="[Command.link(ref('base.user_admin'))]" />
+        <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]" />
     </record>
 
     <record id="group_account_move_force_removal" model="res.groups">
         <field name="name">Allow to delete journal entries</field>
         <field name="category_id" ref="base.module_category_usability" />
-        <field name="users" eval="[Command.link(ref('base.user_admin'))]" />
+        <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]" />
     </record>
 
     <record id="group_account_move_cash_discount" model="res.groups">

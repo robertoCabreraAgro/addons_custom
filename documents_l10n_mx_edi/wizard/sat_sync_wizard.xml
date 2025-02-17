@@ -38,7 +38,7 @@
         <field name="view_id" ref="sat_sync_wizard_view_form" />
         <field name="target">new</field>
         <field
-            name="groups_id"
+            name="group_ids"
             eval="[
             (6, 0, [ref('documents_l10n_mx_edi.group_documents_l10n_mx_edi')])
         ]"

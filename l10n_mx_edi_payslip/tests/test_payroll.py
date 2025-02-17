@@ -739,7 +739,7 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         self.remove_leaves()
 
         # Create an allocation for the last year
-        self.env.user.groups_id += self.env.ref("hr_holidays.group_hr_holidays_user")
+        self.env.user.group_ids += self.env.ref("hr_holidays.group_hr_holidays_user")
         allocation_form = Form(self.env["hr.leave.allocation"].with_context(**{"is_employee_allocation": True}))
         allocation_form.number_of_days_display = 6
         allocation_form.holiday_status_id = holiday
@@ -1511,7 +1511,7 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         """Ensure that leave for 'Falta Justificada Sin Goce de Salario' is created"""
         holiday = self.env.ref("l10n_mx_edi_payslip.mexican_falta_justificada")
         self.employee.parent_id = False
-        self.env.user.groups_id += self.env.ref("hr_holidays.group_hr_holidays_user")
+        self.env.user.group_ids += self.env.ref("hr_holidays.group_hr_holidays_user")
         allocation_form = Form(self.env["hr.leave.allocation"].with_context(**{"is_employee_allocation": True}))
         allocation_form.holiday_status_id = holiday
         allocation_form.number_of_days_display = 10

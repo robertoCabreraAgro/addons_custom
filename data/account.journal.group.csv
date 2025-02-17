@@ -1,0 +1,9 @@
+id,name,company_id/id,sequence
+journal_group_1,Not simulated,marin_data.company_lmmr,10
+journal_group_2,Not fiscal,marin_data.company_lmmr,11
+journal_group_3,Not simulated,marin_data.company_tjgl,10
+journal_group_4,Not fiscal,marin_data.company_tjgl,11
+journal_group_5,Not simulated,marin_data.company_lmmg,10
+journal_group_6,Not fiscal,marin_data.company_lmmg,11
+journal_group_7,Not simulated,marin_data.company_society,10
+journal_group_8,Not fiscal,marin_data.company_society,11

@@ -1,0 +1,6 @@
+id,name,sequence,auto_validation_state,fold,active,project_ids/id
+project_task_type_01,1,1,,,True,marin_data.project_17
+project_task_type_02,2,2,,,True,marin_data.project_17
+project_task_type_03,3,3,,,True,marin_data.project_17
+project_task_type_04,4,4,,,True,marin_data.project_17
+project_task_type_05,5,5,,,True,marin_data.project_17

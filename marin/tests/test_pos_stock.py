@@ -22,7 +22,7 @@ class TestPoSStock(TestPoSCommon):
                 "company_id": cls.company.id,
             }
         )
-        cls.env.user.groups_id = [(4, cls.env.ref("marin.group_stock_inventory_adjustment").id)]
+        cls.env.user.group_ids = [(4, cls.env.ref("marin.group_stock_inventory_adjustment").id)]
         cls.quant_p_a = cls.StockQuantObj.create(
             {
                 "product_id": cls.product_a.id,
@@ -64,7 +64,7 @@ class TestPoSStock(TestPoSCommon):
         self.assertFalse(reverse)
 
     def test_03_error_validate_quant(self):
-        self.env.user.groups_id = [(3, self.env.ref("marin.group_stock_inventory_adjustment").id)]
+        self.env.user.group_ids = [(3, self.env.ref("marin.group_stock_inventory_adjustment").id)]
         quant = self.StockQuantObj.create(
             {
                 "product_id": self.product_a.id,
@@ -75,17 +75,17 @@ class TestPoSStock(TestPoSCommon):
         )
         with self.assertRaisesRegex(UserError, "Only a Inventory manager can validate an inventory adjustment."):
             quant.action_apply_inventory()
-        self.env.user.groups_id = [(4, self.env.ref("marin.group_stock_inventory_adjustment").id)]
+        self.env.user.group_ids = [(4, self.env.ref("marin.group_stock_inventory_adjustment").id)]
         quant.action_apply_inventory()
 
     def test_04_view_inventory(self):
-        self.env.user.groups_id = [(3, self.env.ref("marin.group_stock_inventory_adjustment").id)]
-        self.env.user.groups_id = [(3, self.env.ref("stock.group_stock_manager").id)]
-        self.env.user.groups_id = [(4, self.env.ref("stock.group_stock_user").id)]
+        self.env.user.group_ids = [(3, self.env.ref("marin.group_stock_inventory_adjustment").id)]
+        self.env.user.group_ids = [(3, self.env.ref("stock.group_stock_manager").id)]
+        self.env.user.group_ids = [(4, self.env.ref("stock.group_stock_user").id)]
         action = self.quant_p_a.action_view_inventory()
         self.assertTrue(action.get("search_default_my_count"))
-        self.env.user.groups_id = [(4, self.env.ref("stock.group_stock_manager").id)]
-        self.env.user.groups_id = [(4, self.env.ref("marin.group_stock_inventory_adjustment").id)]
+        self.env.user.group_ids = [(4, self.env.ref("stock.group_stock_manager").id)]
+        self.env.user.group_ids = [(4, self.env.ref("marin.group_stock_inventory_adjustment").id)]
         quant = self.StockQuantObj.create(
             {
                 "product_id": self.product_a.id,

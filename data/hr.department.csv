@@ -1,0 +1,9 @@
+id,name,company_id/id,color,active
+hr_department_2,Commercial,marin_data.company_lmmg,0,True
+hr_department_3,Direction,marin_data.company_lmmr,0,True
+hr_department_4,Commercial,marin_data.company_lmmr,0,True
+hr_department_5,Business services,marin_data.company_lmmr,0,True
+hr_department_6,Auditing,marin_data.company_lmmr,0,True
+hr_department_7,Operations,marin_data.company_lmmr,0,True
+hr_department_8,Administration,marin_data.company_lmmr,0,True
+hr_department_9,Human resources,marin_data.company_lmmr,0,True

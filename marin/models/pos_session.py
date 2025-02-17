@@ -108,10 +108,10 @@ class PosSession(models.Model):
     def _get_pos_ui_res_users(self, params):
         user = self.env["res.users"].search_read(**params["search_params"])[0]
         user["role"] = (
-            "manager" if any(id == self.config_id.group_pos_manager_id.id for id in user["groups_id"]) else "cashier"
+            "manager" if any(id == self.config_id.group_pos_manager_id.id for id in user["group_ids"]) else "cashier"
         )
         user["cost_access"] = any(
-            id == self.env.ref("marin.group_product_cost_readonly").id for id in user["groups_id"]
+            id == self.env.ref("marin.group_product_cost_readonly").id for id in user["group_ids"]
         )
-        del user["groups_id"]
+        del user["group_ids"]
         return user

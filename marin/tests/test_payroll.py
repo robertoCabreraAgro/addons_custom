@@ -75,12 +75,12 @@ class TestHRPayroll(L10nMxEdiPayslipTransactionCase):
     def test_05_payroll_action_payslip_move_post(self):
         payroll = self.create_payroll()
         payroll.compute_sheet()
-        self.env.user.groups_id = [(3, self.env.ref("l10n_mx_edi_payslip.allow_validate_payslip").id)]
+        self.env.user.group_ids = [(3, self.env.ref("l10n_mx_edi_payslip.allow_validate_payslip").id)]
         with self.assertRaisesRegex(
             UserError, "Only Managers who are allow to validate payslip can perform this operation"
         ):
             payroll.action_payslip_move_post()
-        self.env.user.groups_id = [(4, self.env.ref("l10n_mx_edi_payslip.allow_validate_payslip").id)]
+        self.env.user.group_ids = [(4, self.env.ref("l10n_mx_edi_payslip.allow_validate_payslip").id)]
         with self.assertRaisesRegex(UserError, "Cannot post a payslip's account move that is not done."):
             payroll.action_payslip_move_post()
         self.assertFalse(payroll.move_id)

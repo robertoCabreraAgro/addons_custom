@@ -89,7 +89,7 @@ for employee in model.search([('user_id', '=', False)]):
         'login': employee.work_email or employee.private_email,
         'company_id': employee.company_id.id,
         'active': False,
-        'groups_id': [Command.set(env.ref('base.group_portal').ids)],
+        'group_ids': [Command.set(env.ref('base.group_portal').ids)],
     })
     employee.write({'user_id': user.id})
         </field>

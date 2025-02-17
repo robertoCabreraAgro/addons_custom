@@ -58,7 +58,7 @@ class TestUsers(TransactionCase):
                 }
             ],
         )
-        self.user.groups_id |= (
+        self.user.group_ids |= (
             | self.env.ref("marin.group_account_debt_manager")
         )
         partner._compute_group()

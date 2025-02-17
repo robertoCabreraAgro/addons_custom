@@ -58,7 +58,7 @@ class TestAccountMoveTemplate(TransactionCase):
                     "name": "Test User",
                     "login": "test_user",
                     "email": "test@oca.com",
-                    "groups_id": [
+                    "group_ids": [
                         (
                             6,
                             0,

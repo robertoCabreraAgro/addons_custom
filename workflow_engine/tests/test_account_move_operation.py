@@ -63,7 +63,7 @@ class TestAccountMoveTemplate(TestBankRecWidgetCommon):
     def test_01_create_operation(self):
         group = self.env.ref("marin.group_account_debt_manager", False)
         if group:
-            self.env.user.groups_id = [(4, group.id)]
+            self.env.user.group_ids = [(4, group.id)]
         operation = self.operation_obj.create(
             {
                 "workflow_template_id": self.operation_type.id,
@@ -578,7 +578,7 @@ class TestAccountMoveTemplate(TestBankRecWidgetCommon):
     def test_06_create_operation_manual(self):
         group = self.env.ref("marin.group_account_debt_manager", False)
         if group:
-            self.env.user.groups_id = [(4, group.id)]
+            self.env.user.group_ids = [(4, group.id)]
         operation = self.operation_obj.create(
             {
                 "workflow_template_id": self.operation_type_3.id,

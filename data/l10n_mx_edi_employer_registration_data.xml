@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo noupdate="1">
+    <record id="l10n_mx_edi_employer_registration_1" model="l10n_mx_edi.employer.registration">
+        <field name="name">C6812280132</field>
+        <field name="company_id" ref="marin_data.company_lmmr" />
+        <field name="job_risk_id" ref="l10n_mx_edi_payslip.class_job_risk_3" />
+        <field name="minimum_wage">248.93</field>
+    </record>
+</odoo>

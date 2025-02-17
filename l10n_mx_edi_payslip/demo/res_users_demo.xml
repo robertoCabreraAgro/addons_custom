@@ -10,7 +10,7 @@
         <field name="company_ids" eval="[Command.link(ref('base.demo_company_mx'))]" />
         <field name="tz">America/Mexico_City</field>
         <field
-            name="groups_id"
+            name="group_ids"
             eval="[Command.set([ref('base.group_user'),
             ref('base.group_partner_manager'),
             ref('hr_payroll.group_hr_payroll_manager'),
@@ -23,7 +23,7 @@
 
     <record id="base.user_admin" model="res.users" context="{'no_reset_password': True}">
         <field
-            name="groups_id"
+            name="group_ids"
             eval="[Command.link(ref('l10n_mx_edi_payslip.allow_validate_payslip')), Command.link(ref('hr_bank_dispersion.allow_print_payslip_dispersion'))]"
         />
     </record>
