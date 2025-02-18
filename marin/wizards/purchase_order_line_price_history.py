@@ -57,7 +57,7 @@ class PurchaseOrderLinePriceHistoryLine(models.TransientModel):
     )
     qty = fields.Float(related="line_id.product_qty")
     price_unit = fields.Float(related="line_id.price_unit")
-    tax_ids = fields.Many2many(related="line_id.taxes_id")
+    tax_ids = fields.Many2many(related="line_id.tax_ids")
 
     def _prepare_vals(self):
         return {"price_unit": self.price_unit}

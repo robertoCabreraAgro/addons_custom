@@ -154,8 +154,8 @@
                 <attribute name="options">{'no_create': True}</attribute>
             </xpath>
             <xpath
-                expr="//page/field[@name='order_line']/list/button[@name='action_purchase_history']"
-                position="replace"
+                expr="//page/field[@name='order_line']/list/field[@name='price_unit']"
+                position="after"
             >
                 <field name="partner_id" column_invisible="1" />
                 <widget name="purchase_line_price_history_widget" width="20px" />
@@ -176,7 +176,7 @@
                 <attribute name="decoration-success">not display_type and reception_status == 'full'</attribute>
             </xpath>
             <!-- This is a fix, delete when Odoo fix it in core -->
-            <xpath expr="//field[@name='taxes_id']" position="attributes">
+            <xpath expr="//field[@name='tax_ids']" position="attributes">
                 <attribute
                     name="domain"
                 >[('type_tax_use', '=', 'purchase'), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id), ('active', '=', True)]</attribute>

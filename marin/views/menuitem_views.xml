@@ -7,7 +7,7 @@
 
 <!--     <record id="contacts.res_partner_menu_config" model="ir.ui.menu">
         <field name="sequence" eval="100" />
-        <field name="groups_id" eval="[
+        <field name="group_ids" eval="[
                 Command.link(ref('group_account_user'))
             ]" />
     </record> -->
@@ -105,7 +105,7 @@
     <record id="account.menu_action_move_out_invoice_type" model="ir.ui.menu">
         <field name="sequence" eval="10" />
         <field
-            name="groups_id"
+            name="group_ids"
             eval="[
                 Command.link(ref('account.group_account_readonly')),
                 Command.link(ref('account.group_account_user')),
@@ -117,7 +117,7 @@
     <record id="account.menu_action_move_out_refund_type" model="ir.ui.menu">
         <field name="sequence" eval="20" />
         <field
-            name="groups_id"
+            name="group_ids"
             eval="[
                 Command.link(ref('account.group_account_readonly')),
                 Command.link(ref('account.group_account_user')),
@@ -129,7 +129,7 @@
     <record id="account.menu_action_account_payments_receivable" model="ir.ui.menu">
         <field name="sequence" eval="50" />
         <field
-            name="groups_id"
+            name="group_ids"
             eval="[
                 Command.link(ref('account.group_account_readonly')),
                 Command.link(ref('account.group_account_user')),
@@ -150,7 +150,7 @@
     <record id="account.menu_action_move_in_invoice_type" model="ir.ui.menu">
         <field name="sequence" eval="10" />
         <field
-            name="groups_id"
+            name="group_ids"
             eval="[
                 Command.link(ref('account.group_account_readonly')),
                 Command.link(ref('account.group_account_user')),
@@ -162,7 +162,7 @@
     <record id="account.menu_action_move_in_refund_type" model="ir.ui.menu">
         <field name="sequence" eval="20" />
         <field
-            name="groups_id"
+            name="group_ids"
             eval="[
                 Command.link(ref('account.group_account_readonly')),
                 Command.link(ref('account.group_account_user')),
@@ -174,7 +174,7 @@
     <record id="account.menu_action_account_payments_payable" model="ir.ui.menu">
         <field name="sequence" eval="50" />
         <field
-            name="groups_id"
+            name="group_ids"
             eval="[
                 Command.link(ref('account.group_account_readonly')),
                 Command.link(ref('account.group_account_user')),
@@ -186,7 +186,7 @@
     <record id="hr_expense.menu_hr_expense_account_employee_expenses" model="ir.ui.menu">
         <field name="sequence" eval="70" />
         <field
-            name="groups_id"
+            name="group_ids"
             eval="[
                 Command.link(ref('marin.group_hr_expense_menu'))
             ]"
@@ -209,7 +209,7 @@
     <record id="account.menu_finance_entries" model="ir.ui.menu">
         <field name="sequence" eval="10" />
         <field
-            name="groups_id"
+            name="group_ids"
             eval="[
                 Command.link(ref('account.group_account_readonly')),
                 Command.link(ref('account.group_account_user')),
@@ -219,7 +219,7 @@
 
     <record id="account.menu_action_account_moves_all" model="ir.ui.menu">
         <field
-            name="groups_id"
+            name="group_ids"
             eval="[
                 Command.link(ref('account.group_account_readonly')),
                 Command.link(ref('account.group_account_user')),
@@ -229,7 +229,7 @@
 
     <record id="account.menu_action_move_journal_line_form" model="ir.ui.menu">
         <field
-            name="groups_id"
+            name="group_ids"
             eval="[
                 Command.link(ref('account.group_account_readonly')),
                 Command.link(ref('account.group_account_user')),
@@ -256,7 +256,7 @@
 
     <record id="account_asset.menu_action_account_asset_form" model="ir.ui.menu">
         <field
-            name="groups_id"
+            name="group_ids"
             eval="[
                 Command.link(ref('account.group_account_readonly')),
                 Command.link(ref('account.group_account_user')),
@@ -267,7 +267,7 @@
     <!-- Reporting -->
     <record id="account.account_reports_legal_statements_menu" model="ir.ui.menu">
         <field
-            name="groups_id"
+            name="group_ids"
             eval="[
                 Command.link(ref('account.group_account_readonly')),
                 Command.link(ref('account.group_account_user')),
@@ -277,7 +277,7 @@
 
     <record id="account_reports.menu_action_account_report_balance_sheet" model="ir.ui.menu">
         <field
-            name="groups_id"
+            name="group_ids"
             eval="[
                 Command.link(ref('account.group_account_readonly')),
                 Command.link(ref('account.group_account_user')),
@@ -287,7 +287,7 @@
 
     <record id="account_reports.menu_action_account_report_profit_and_loss" model="ir.ui.menu">
         <field
-            name="groups_id"
+            name="group_ids"
             eval="[
                 Command.link(ref('account.group_account_readonly')),
                 Command.link(ref('account.group_account_user')),
@@ -297,7 +297,7 @@
 
     <record id="account_reports.menu_action_account_report_cash_flow" model="ir.ui.menu">
         <field
-            name="groups_id"
+            name="group_ids"
             eval="[
                 Command.link(ref('account.group_account_readonly')),
                 Command.link(ref('account.group_account_user')),
@@ -307,7 +307,7 @@
 
     <record id="account_reports.menu_action_account_report_exec_summary" model="ir.ui.menu">
         <field
-            name="groups_id"
+            name="group_ids"
             eval="[
                 Command.link(ref('account.group_account_readonly')),
                 Command.link(ref('account.group_account_user')),
@@ -317,7 +317,7 @@
 
     <record id="account_reports.menu_action_account_report_gt" model="ir.ui.menu">
         <field
-            name="groups_id"
+            name="group_ids"
             eval="[
                 Command.link(ref('account.group_account_readonly')),
                 Command.link(ref('account.group_account_user')),
@@ -327,7 +327,7 @@
 
     <record id="account_reports.menu_action_account_report_general_ledger" model="ir.ui.menu">
         <field
-            name="groups_id"
+            name="group_ids"
             eval="[
                 Command.link(ref('account.group_account_readonly')),
                 Command.link(ref('account.group_account_user')),
@@ -337,7 +337,7 @@
 
     <record id="account_reports.menu_action_account_report_coa" model="ir.ui.menu">
         <field
-            name="groups_id"
+            name="group_ids"
             eval="[
                 Command.link(ref('account.group_account_readonly')),
                 Command.link(ref('account.group_account_user')),
@@ -347,7 +347,7 @@
 
     <record id="account_reports.menu_action_account_report_ja" model="ir.ui.menu">
         <field
-            name="groups_id"
+            name="group_ids"
             eval="[
                 Command.link(ref('account.group_account_readonly')),
                 Command.link(ref('account.group_account_user')),
@@ -357,7 +357,7 @@
 
     <record id="account_reports.menu_action_account_report_partner_ledger" model="ir.ui.menu">
         <field
-            name="groups_id"
+            name="group_ids"
             eval="[
                 Command.link(ref('account.group_account_readonly')),
                 Command.link(ref('account.group_account_user')),
@@ -367,7 +367,7 @@
 
     <record id="account_reports.menu_action_account_report_aged_payable" model="ir.ui.menu">
         <field
-            name="groups_id"
+            name="group_ids"
             eval="[
                 Command.link(ref('account.group_account_readonly')),
                 Command.link(ref('account.group_account_user')),
@@ -378,7 +378,7 @@
 
     <record id="account_reports.menu_action_account_report_aged_receivable" model="ir.ui.menu">
         <field
-            name="groups_id"
+            name="group_ids"
             eval="[
                 Command.link(ref('account.group_account_readonly')),
                 Command.link(ref('account.group_account_user')),
@@ -389,7 +389,7 @@
 
     <record id="account.menu_action_account_invoice_report_all" model="ir.ui.menu">
         <field
-            name="groups_id"
+            name="group_ids"
             eval="[
                 Command.link(ref('account.group_account_readonly')),
                 Command.link(ref('account.group_account_user')),
@@ -399,7 +399,7 @@
 
     <record id="account_reports.menu_action_account_report_deferred_expense" model="ir.ui.menu">
         <field
-            name="groups_id"
+            name="group_ids"
             eval="[
                 Command.link(ref('account.group_account_readonly')),
                 Command.link(ref('account.group_account_user')),
@@ -409,7 +409,7 @@
 
     <record id="account_reports.menu_action_account_report_deferred_revenue" model="ir.ui.menu">
         <field
-            name="groups_id"
+            name="group_ids"
             eval="[
                 Command.link(ref('account.group_account_readonly')),
                 Command.link(ref('account.group_account_user')),
@@ -419,7 +419,7 @@
 
     <record id="account_asset.menu_action_account_report_assets" model="ir.ui.menu">
         <field
-            name="groups_id"
+            name="group_ids"
             eval="[
                 Command.link(ref('account.group_account_readonly')),
                 Command.link(ref('account.group_account_user')),
@@ -429,7 +429,7 @@
 
     <record id="account_disallowed_expenses.menu_action_account_report_de" model="ir.ui.menu">
         <field
-            name="groups_id"
+            name="group_ids"
             eval="[
                 Command.link(ref('account.group_account_readonly')),
                 Command.link(ref('account.group_account_user')),
@@ -439,7 +439,7 @@
 
     <record id="product_margin.menu_action_product_margin" model="ir.ui.menu">
         <field
-            name="groups_id"
+            name="group_ids"
             eval="[
                 Command.link(ref('account.group_account_readonly')),
                 Command.link(ref('account.group_account_user')),
@@ -450,7 +450,7 @@
     <!-- Configuration -->
     <record id="account.menu_finance_configuration" model="ir.ui.menu">
         <field
-            name="groups_id"
+            name="group_ids"
             eval="[
                 Command.link(ref('account.group_account_manager')),
             ]"
@@ -461,7 +461,7 @@
     <record id="account.menu_action_incoterm_open" model="ir.ui.menu">
         <field name="sequence" eval="10" />
         <field
-            name="groups_id"
+            name="group_ids"
             eval="[
                 Command.link(ref('account.group_account_manager')),
             ]"
@@ -471,7 +471,7 @@
     <!-- menu configuration accounting -->
     <record id="account.menu_action_account_form" model="ir.ui.menu">
         <field
-            name="groups_id"
+            name="group_ids"
             eval="[
                 Command.link(ref('account.group_account_readonly')),
                 Command.link(ref('account.group_account_manager')),
@@ -525,11 +525,6 @@
 
     <record id="account_accountant.menu_account_fiscal_year" model="ir.ui.menu">
         <field name="sequence" eval="61" />
-    </record>
-
-    <record id="account_reports.menu_action_account_report_horizontal_groups" model="ir.ui.menu">
-        <field name="sequence" eval="70" />
-        <field name="parent_id" ref="account.account_management_menu" />
     </record>
 
     <!-- Purchase -->
@@ -600,14 +595,14 @@
     </record>
 
     <record id="sale.menu_sale_report" model="ir.ui.menu">
-        <field name="groups_id" eval="[
+        <field name="group_ids" eval="[
             Command.link(ref('sales_team.group_sale_salesman'))]" />
     </record>
 
     <!-- Expenses -->
     <record id="hr_expense.menu_hr_expense_root" model="ir.ui.menu">
         <field
-            name="groups_id"
+            name="group_ids"
             eval="[
                 Command.link(ref('hr_expense.group_hr_expense_team_approver')),
                 Command.link(ref('marin.group_hr_expense_menu'))

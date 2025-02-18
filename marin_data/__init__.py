@@ -331,7 +331,7 @@ def _post_init_marin(env):
         SELECT setval('"public"."hr_salary_rule_id_seq"', 1000, true);
 
         SELECT setval('"public"."pos_category_id_seq"', 100, true);
-        SELECT setval('"public"."pos_config_id_seq"', 97, true);
+        SELECT setval('"public"."pos_config_id_seq"', 96, true);
         SELECT setval('"public"."pos_payment_method_id_seq"', 100, true);
 
         SELECT setval('"public"."fleet_vehicle_model_brand_id_seq"', 100, true);

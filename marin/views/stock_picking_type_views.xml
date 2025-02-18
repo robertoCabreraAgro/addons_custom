@@ -20,7 +20,7 @@
         <field name="arch" type="xml">
             <xpath expr="//group[2]//group[3]" position="after">
                 <group string="Security">
-                    <field name="can_access_user_ids" widget="many2many_tags" options="{'no_create': True}" />
+                    <field name="user_can_access_ids" widget="many2many_tags" options="{'no_create': True}" />
                     <field name="can_todo_user_ids" widget="many2many_tags" options="{'no_create': True}" />
                     <field name="can_validate_user_ids" widget="many2many_tags" options="{'no_create': True}" />
                 </group>
@@ -37,10 +37,10 @@
     </record>
 
     <record id="stock.stock_picking_type_action" model="ir.actions.act_window">
-        <field name="domain">[('can_access_user_ids', '=', uid)]</field>
+        <field name="domain">[('user_can_access_ids', '=', uid)]</field>
     </record>
 
     <record id="stock.action_picking_tree_all" model="ir.actions.act_window">
-        <field name="domain">[('picking_type_id.can_access_user_ids', '=', uid)]</field>
+        <field name="domain">[('picking_type_id.user_can_access_ids', '=', uid)]</field>
     </record>
 </odoo>

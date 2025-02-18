@@ -53,7 +53,16 @@ class AccountJournalInherit(models.Model):
         default="not_fiscal_real",
         help="Technical field used to group journal and journal moves according to fiscal logic.",
     )
-    can_access_user_ids = fields.Many2many(
+    account_control_ids = fields.Many2many(
+        'account.account',
+        'account_journal_account_account_control_rel',
+        'journal_id',
+        'account_id',
+        string='Allowed accounts',
+        check_company=True,
+        domain="[('deprecated', '=', False), ('account_type', '!=', 'off_balance')]",
+    )
+    user_can_access_ids = fields.Many2many(
         "res.users",
         "account_journal_res_users_can_access_rel",
         "journal_id",

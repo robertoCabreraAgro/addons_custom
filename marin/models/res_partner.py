@@ -28,6 +28,7 @@ class ResPartner(models.Model):
     credit_limit = fields.Float(tracking=True, help="Receivable limit specific to this partner.")
 
     # New fields
+    mobile = fields.Char()
     # Security
     user_account_user = fields.Boolean(compute="_compute_group")
     user_debt_manager = fields.Boolean(compute="_compute_group")

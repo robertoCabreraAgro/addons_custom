@@ -28,7 +28,7 @@ class StockPickingTypeInherit(models.Model):
     )
 
     # Security
-    can_access_user_ids = fields.Many2many(
+    user_can_access_ids = fields.Many2many(
         "res.users",
         "stock_picking_type_res_users_can_access_rel",
         "picking_type_id",

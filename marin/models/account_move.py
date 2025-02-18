@@ -315,7 +315,7 @@ class AccountMove(models.Model):
         purchase_line_vals = {}
         fpos = purchase.fiscal_position_id
         for line in move.invoice_line_ids.filtered(lambda ln: ln.display_type == "product"):
-            taxes = fpos.map_tax(line.product_id.supplier_taxes_id)
+            taxes = fpos.map_tax(line.product_id.supplier_tax_ids)
             if taxes:
                 taxes = taxes.filtered(lambda t: t.company_id.id == self.company_id.id)
             purchase_line_vals[line.id] = {
@@ -328,7 +328,7 @@ class AccountMove(models.Model):
                 "product_uom": line.product_uom_id.id,
                 "price_unit": line.price_unit,
                 "date_planned": fields.Date.from_string(purchase.date_order),
-                "taxes_id": [Command.set(taxes.ids)],
+                "tax_ids": [Command.set(taxes.ids)],
                 "analytic_distribution": line.analytic_distribution,
             }
         return purchase_line_vals

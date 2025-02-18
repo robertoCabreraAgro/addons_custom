@@ -28,13 +28,18 @@
             <xpath expr="//field[@name='code']" position="after">
                 <field name="x_treatment" />
             </xpath>
-            <xpath expr="//field[@name='account_control_ids']" position="after">
-                <field name="can_access_user_ids" widget="many2many_tags" options="{'no_create': True}" />
+            <xpath expr="//group[@name='group_edi_config']" position="after">
+                <group name="security" string="Security">
+                    <field name="account_control_ids" widget="many2many_tags"
+                        options="{'no_create': True}" />
+                    <field name="user_can_access_ids" widget="many2many_tags"
+                        options="{'no_create': True}" />
+                </group>
             </xpath>
         </field>
     </record>
 
 <!--     <record id="account.action_account_journal_form" model="ir.actions.act_window">
-        <field name="domain">[('can_access_user_ids', '=', uid)]</field>
+        <field name="domain">[('user_can_access_ids', '=', uid)]</field>
     </record>
  --></odoo>
