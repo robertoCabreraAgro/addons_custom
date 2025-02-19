@@ -10,11 +10,11 @@ def _post_init_marin(env):
         SELECT setval('"public"."resource_calendar_attendance_id_seq"', 1000, true);
         """
     )
-    tools.convert.convert_file(env, "marin_data", "data/res_company_data.xml", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin_data", "data/date.range.type.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin_data", "data/date.range.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin_data", "data/room.office.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin_data", "data/room.room.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/res_company_data.xml", None, mode="init", noupdate=True, kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/date.range.type.csv", None, mode="init", noupdate=True, kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/date.range.csv", None, mode="init", noupdate=True, kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/room.office.csv", None, mode="init", noupdate=True, kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/room.room.csv", None, mode="init", noupdate=True, kind="data")
 
     model = "resource.calendar"
     calendars = env[model].sudo().search(
@@ -41,12 +41,12 @@ def _post_init_marin(env):
         SELECT setval('"public"."resource_calendar_attendance_id_seq"', 2000, true);
         """
     )
-    tools.convert.convert_file(env, "marin_data", "data/resource_calendar_data.xml", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin_data", "data/website_data.xml", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/resource_calendar_data.xml", None, mode="init", noupdate=True, kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/website_data.xml", None, mode="init", noupdate=True, kind="data")
 
     env.cr.execute("""SELECT setval('"public"."res_partner_id_seq"', 1000, true);""")
     env.cr.execute("""SELECT setval('"public"."res_users_id_seq"', 999, true);""")
-    tools.convert.convert_file(env, "marin_data", "data/res.partner.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/res.partner.csv", None, mode="init", noupdate=True, kind="data")
 
     env.cr.execute(
         """
@@ -63,16 +63,16 @@ def _post_init_marin(env):
         SELECT setval('"public"."stock_warehouse_id_seq"', 100, true);
         """
     )
-    tools.convert.convert_file(env, "marin_data", "data/crm_team_data.xml", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin_data", "data/res.partner-2.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin_data", "data/res.partner.bank.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin_data", "data/mrp.workcenter.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin_data", "data/res.users.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin_data", "data/stock.package.type.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin_data", "data/stock.storage.category.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin_data", "data/product.category.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin_data", "data/product_pricelist_data.xml", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin_data", "data/product.tag.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/crm_team_data.xml", None, mode="init", noupdate=True, kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/res.partner-2.csv", None, mode="init", noupdate=True, kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/res.partner.bank.csv", None, mode="init", noupdate=True, kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/mrp.workcenter.csv", None, mode="init", noupdate=True, kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/res.users.csv", None, mode="init", noupdate=True, kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/stock.package.type.csv", None, mode="init", noupdate=True, kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/stock.storage.category.csv", None, mode="init", noupdate=True, kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/product.category.csv", None, mode="init", noupdate=True, kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/product_pricelist_data.xml", None, mode="init", noupdate=True, kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/product.tag.csv", None, mode="init", noupdate=True, kind="data")
 
     model = "stock.warehouse"
     warehouses = env[model].sudo().search([("active", "in", [True, False])], order="id ASC")
@@ -88,7 +88,7 @@ def _post_init_marin(env):
                     "noupdate": True,
                 }
             )
-    tools.convert.convert_file(env, "marin_data", "data/stock.warehouse.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/stock.warehouse.csv", None, mode="init", noupdate=True, kind="data")
 
     model = "stock.location"
     locations = env[model].sudo().search([("active", "in", [True, False])], order="id ASC")
@@ -112,7 +112,7 @@ def _post_init_marin(env):
     env["stock.warehouse"].sudo().browse(7).write({"name": "XM", "code": "XM"})
 
     env.cr.execute("""SELECT setval('"public"."stock_location_id_seq"', 5000, true);""")
-    tools.convert.convert_file(env, "marin_data", "data/stock.location.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/stock.location.csv", None, mode="init", noupdate=True, kind="data")
 
     model = "stock.picking.type"
     types = env[model].sudo().search([("active", "in", [True, False])], order="id ASC")
@@ -147,10 +147,10 @@ def _post_init_marin(env):
         """
     )
 
-    tools.convert.convert_file(env, "marin_data", "data/stock.picking.type.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin_data", "data/stock.route.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin_data", "data/stock.rule.csv", None, mode="init", kind="data")
-    # tools.convert.convert_file(env, "marin_data", "data/stock.picking.type-2.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/stock.picking.type.csv", None, mode="init", noupdate=True, kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/stock.route.csv", None, mode="init", noupdate=True, kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/stock.rule.csv", None, mode="init", noupdate=True, kind="data")
+    # tools.convert.convert_file(env, "marin_data", "data/stock.picking.type-2.csv", None, mode="init", noupdate=True, kind="data")
     env.cr.execute(
         """
         UPDATE stock_picking_type SET sequence=100  WHERE name->>'en_US' = 'Delivery Orders';
@@ -178,7 +178,7 @@ def _post_init_marin(env):
         """
     )
 
-    tools.convert.convert_file(env, "marin_data", "data/account.account.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/account.account.csv", None, mode="init", noupdate=True, kind="data")
     lmmr = env["res.company"].sudo().browse(2)
     tjgl = env["res.company"].sudo().browse(3)
     lmmg = env["res.company"].sudo().browse(4)
@@ -256,13 +256,13 @@ def _post_init_marin(env):
             for company in account.company_ids:
                 account.with_company(company).code_store = code
 
-    tools.convert.convert_file(env, "marin_data", "data/account.analytic.plan.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin_data", "data/account.journal.group.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin_data", "data/account.journal.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin_data", "data/account.asset.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin_data", "data/account.payment.term.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin_data", "data/account.tax.group.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin_data", "data/account.tax.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/account.analytic.plan.csv", None, mode="init", noupdate=True, kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/account.journal.group.csv", None, mode="init", noupdate=True, kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/account.journal.csv", None, mode="init", noupdate=True, kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/account.asset.csv", None, mode="init", noupdate=True, kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/account.payment.term.csv", None, mode="init", noupdate=True, kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/account.tax.group.csv", None, mode="init", noupdate=True, kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/account.tax.csv", None, mode="init", noupdate=True, kind="data")
 
     env.cr.execute("""UPDATE account_payment_method_line SET id=id+10000 WHERE id>=1000""")
     env.cr.execute("""SELECT id FROM account_payment_method_line WHERE id>=10000 ORDER BY journal_id, payment_method_id""")
@@ -314,8 +314,8 @@ def _post_init_marin(env):
                 }
             )
 
-    tools.convert.convert_file(env, "marin_data", "data/account.account.tag.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin_data", "data/account.tax.repartition.line.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/account.account.tag.csv", None, mode="init", noupdate=True, kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/account.tax.repartition.line.csv", None, mode="init", noupdate=True, kind="data")
 
     env.cr.execute(
         """
@@ -342,10 +342,10 @@ def _post_init_marin(env):
         """
     )
 
-    tools.convert.convert_file(env, "marin_data", "data/pos.category.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin_data", "data/pos.payment.method.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin_data", "data/pos.config.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin_data", "data/product.template.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/pos.category.csv", None, mode="init", noupdate=True, kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/pos.payment.method.csv", None, mode="init", noupdate=True, kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/pos.config.csv", None, mode="init", noupdate=True, kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/product.template.csv", None, mode="init", noupdate=True, kind="data")
 
     model = "product.product"
     products = env[model].sudo().search(
@@ -364,33 +364,33 @@ def _post_init_marin(env):
                 }
             )
 
-    tools.convert.convert_file(env, "marin_data", "data/mrp.bom.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/mrp.bom.csv", None, mode="init", noupdate=True, kind="data")
 
-    tools.convert.convert_file(env, "marin_data", "data/hr.department.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin_data", "data/hr.job.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin_data", "data/l10n_mx_edi_employer_registration_data.xml", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin_data", "data/hr.employee.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin_data", "data/hr_payroll_structure_type_data.xml", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin_data", "data/hr_payroll_structure_nomina_data.xml", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin_data", "data/hr_payroll_structure_nomina_christmas_bonus_data.xml", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin_data", "data/hr_payroll_structure_nomina_finiquito_data.xml", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin_data", "data/hr_payroll_structure_misc_data.xml", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin_data", "data/hr.contract.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/hr.department.csv", None, mode="init", noupdate=True, kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/hr.job.csv", None, mode="init", noupdate=True, kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/l10n_mx_edi_employer_registration_data.xml", None, mode="init", noupdate=True, kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/hr.employee.csv", None, mode="init", noupdate=True, kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/hr_payroll_structure_type_data.xml", None, mode="init", noupdate=True, kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/hr_payroll_structure_nomina_data.xml", None, mode="init", noupdate=True, kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/hr_payroll_structure_nomina_christmas_bonus_data.xml", None, mode="init", noupdate=True, kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/hr_payroll_structure_nomina_finiquito_data.xml", None, mode="init", noupdate=True, kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/hr_payroll_structure_misc_data.xml", None, mode="init", noupdate=True, kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/hr.contract.csv", None, mode="init", noupdate=True, kind="data")
 
-    tools.convert.convert_file(env, "marin_data", "data/documents_document_data.xml", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/documents_document_data.xml", None, mode="init", noupdate=True, kind="data")
 
-    tools.convert.convert_file(env, "marin_data", "data/fleet.vehicle.model.brand.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin_data", "data/fleet.vehicle.model.category.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin_data", "data/fleet.vehicle.model.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin_data", "data/fleet.vehicle.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/fleet.vehicle.model.brand.csv", None, mode="init", noupdate=True, kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/fleet.vehicle.model.category.csv", None, mode="init", noupdate=True, kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/fleet.vehicle.model.csv", None, mode="init", noupdate=True, kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/fleet.vehicle.csv", None, mode="init", noupdate=True, kind="data")
 
-    tools.convert.convert_file(env, "marin_data", "data/account.analytic.account.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin_data", "data/account.analytic.distribution.model.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/account.analytic.account.csv", None, mode="init", noupdate=True, kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/account.analytic.distribution.model.csv", None, mode="init", noupdate=True, kind="data")
 
-    tools.convert.convert_file(env, "marin_data", "data/project.project.csv", None, mode="init", kind="data")
-    tools.convert.convert_file(env, "marin_data", "data/project.task.type.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/project.project.csv", None, mode="init", noupdate=True, kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/project.task.type.csv", None, mode="init", noupdate=True, kind="data")
 
-    tools.convert.convert_file(env, "marin_data", "data/res.company.csv", None, mode="init", kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/res.company.csv", None, mode="init", noupdate=True, kind="data")
 
     env.cr.execute(
         """

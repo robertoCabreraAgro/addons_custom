@@ -36,6 +36,7 @@
         # "account_move_operation",
         "account_invoice_extract",
         "account_reports_cash_basis",
+        "account_asset",
         "l10n_mx_edi_extended",
         "l10n_mx_avoid_reversal_entry",
         "l10n_mx_partner_blocklist",
