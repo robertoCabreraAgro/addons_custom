@@ -7,31 +7,24 @@
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='starred']" position="after">
                 <separator />
-                <filter string="To receive" name="to_receive" domain="[('receipt_status', '=', 'pending')]" />
-                <filter
-                    string="Partially received"
-                    name="partially_received"
-                    domain="[('receipt_status', '=', 'partial')]"
-                />
-                <filter string="Received" name="received" domain="[('receipt_status', '=', 'full')]" />
-                <filter string="Over Received" name="over_received" domain="[('receipt_status', '=', 'over full')]" />
+                <filter name="to_receive" string="To receive"
+                    domain="[('receipt_status', '=', 'pending')]" />
+                <filter name="partially_received" string="Partially received"
+                    domain="[('receipt_status', '=', 'partial')]" />
+                <filter name="received" string="Received"
+                    domain="[('receipt_status', '=', 'full')]" />
+                <filter name="over_received" string="Over Received"
+                    domain="[('receipt_status', '=', 'over full')]" />
                 <separator />
             </xpath>
             <xpath expr="//group/filter[@name='order_date']" position="after">
                 <separator />
-                <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}" />
-                <filter
-                    string="Billing Status"
-                    name="invoice_status"
-                    domain="[]"
-                    context="{'group_by': 'invoice_status'}"
-                />
-                <filter
-                    string="Reception Status"
-                    name="reception_status"
-                    domain="[]"
-                    context="{'group_by': 'receipt_status'}"
-                />
+                <filter name="status" string="Status"
+                    domain="[]" context="{'group_by': 'state'}" />
+                <filter name="invoice_status" string="Billing Status"
+                    domain="[]" context="{'group_by': 'invoice_status'}" />
+                <filter name="reception_status" string="Reception Status"
+                    domain="[]" context="{'group_by': 'receipt_status'}" />
             </xpath>
         </field>
     </record>
@@ -147,29 +140,29 @@
                 <attribute name="readonly">not is_user_id_editable</attribute>
                 <attribute name="force_save">1</attribute>
             </xpath>
-            <xpath expr="//page/field[@name='order_line']/list/field[@name='product_id']" position="attributes">
+            <xpath expr="//page/field[@name='order_line_ids']/list/field[@name='product_id']" position="attributes">
                 <attribute name="options">{'no_create': True}</attribute>
             </xpath>
-            <xpath expr="//page/field[@name='order_line']/list/field[@name='product_uom_id'][2]" position="attributes">
+            <xpath expr="//page/field[@name='order_line_ids']/list/field[@name='product_uom_id'][2]" position="attributes">
                 <attribute name="options">{'no_create': True}</attribute>
             </xpath>
             <xpath
-                expr="//page/field[@name='order_line']/list/field[@name='price_unit']"
+                expr="//page/field[@name='order_line_ids']/list/field[@name='price_unit']"
                 position="after"
             >
                 <field name="partner_id" column_invisible="1" />
                 <widget name="purchase_line_price_history_widget" width="20px" />
             </xpath>
-            <xpath expr="//page/field[@name='order_line']/list/field[@name='qty_invoiced']" position="after">
+            <xpath expr="//page/field[@name='order_line_ids']/list/field[@name='qty_invoiced']" position="after">
                 <field name="reception_status" column_invisible="1" />
                 <field name="invoice_status" column_invisible="1" />
             </xpath>
-            <xpath expr="//page/field[@name='order_line']/list/field[@name='qty_invoiced']" position="attributes">
+            <xpath expr="//page/field[@name='order_line_ids']/list/field[@name='qty_invoiced']" position="attributes">
                 <attribute name="decoration-danger">not display_type and invoice_status == 'over invoiced'</attribute>
                 <attribute name="decoration-warning">not display_type and invoice_status == 'to invoice'</attribute>
                 <attribute name="decoration-success">not display_type and invoice_status == 'invoiced'</attribute>
             </xpath>
-            <xpath expr="//page/field[@name='order_line']/list/field[@name='qty_received']" position="attributes">
+            <xpath expr="//page/field[@name='order_line_ids']/list/field[@name='qty_received']" position="attributes">
                 <attribute name="decoration-danger">not display_type and reception_status == 'pending'</attribute>
                 <attribute name="decoration-warning">not display_type and reception_status == 'partial'</attribute>
                 <attribute name="decoration-info">not display_type and reception_status == 'over full'</attribute>
