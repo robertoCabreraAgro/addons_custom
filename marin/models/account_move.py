@@ -360,5 +360,4 @@ class AccountMove(models.Model):
                     move_line = self.env["account.move.line"].browse(int(line))
                     po_line = self.env["purchase.order.line"].create(vals)
                     move_line.purchase_line_id = po_line.id
-            move._compute_origin_po_count()
         return True

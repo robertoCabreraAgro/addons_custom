@@ -11,12 +11,12 @@
                 <filter
                     name="not_invoice_related"
                     string="Not Invoice Related"
-                    domain="[('invoice_lines', '=', False)]"
+                    domain="[('invoice_line_ids', '=', False)]"
                 />
                 <filter
                     name="invoice_related"
                     string="Invoice Related"
-                    domain="[('invoice_lines', '!=', False)]"
+                    domain="[('invoice_line_ids', '!=', False)]"
                     context="{'tax_hide': True}"
                 />
             </xpath>

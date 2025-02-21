@@ -91,7 +91,7 @@ class TestPurchase(ValuationReconciliationTestCommon):
 
         move_form = Form(self.env["account.move"].with_context(default_move_type="in_invoice"))
         move_form.partner_id = self.partner_a
-        move_form.purchase_vendor_bill_id = self.env["purchase.bill.union"].browse(-purchase_order.id)
+        move_form.purchase_bill_union_id = self.env["purchase.bill.union"].browse(-purchase_order.id)
         self.invoice = move_form.save()
         self.assertEqual(purchase_order.order_line.mapped("qty_invoiced"), [5.0, 5.0])
         self.assertEqual(purchase_order.invoice_status, "invoiced")

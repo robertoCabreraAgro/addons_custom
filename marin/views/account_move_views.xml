@@ -154,7 +154,7 @@
                 />
             </xpath>
             <xpath expr="//header" position="inside">
-                <field name="purchase_order_count" invisible="1" />
+                <field name="count_purchase_order" invisible="1" />
                 <button
                     name="action_cash_discount_wizard"
                     string="Cash Discount"
@@ -168,7 +168,7 @@
                     string="Create Purchase"
                     type="object"
                     class="oe_highlight"
-                    invisible="move_type != 'in_invoice' or state != 'posted' or purchase_order_count != 0"
+                    invisible="move_type != 'in_invoice' or state != 'posted' or count_purchase_order != 0"
                 />
             </xpath>
             <xpath expr="//div[@name='button_box']" position="inside">
