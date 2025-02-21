@@ -17,6 +17,9 @@
                 <filter name="categorygroup" string='Category'
                     context="{'group_by': 'product_categ_id'}" />
             </xpath>
+            <xpath expr="//button[@name='action_stock_inventory_adjustement_name']" position="attributes">
+                <attribute name="groups">marin.group_stock_inventory_adjustment</attribute>
+            </xpath>
         </field>
     </record>
 
