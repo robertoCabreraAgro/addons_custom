@@ -376,7 +376,6 @@ class L10nMxEdiDocument(models.Model):
                         "quantity": float(line.get("Cantidad", 0.0)),
                         "price_unit": price / float(line.get("Cantidad", 0.0)),
                         "tax_ids": [Command.set(tax_ids)] if tax_ids else False,
-                        "l10n_mx_edi_is_ecc": True,
                         "partner_id": partner.id,
                     },
                 )
@@ -391,7 +390,6 @@ class L10nMxEdiDocument(models.Model):
                             (float(line.get("Importe", 0.0)) - price)
                             + float(ieps[0].get("amount", 0) if ieps else 0),
                         "tax_ids": [Command.set([tax_exempt.id])],
-                        "l10n_mx_edi_is_ecc": True,
                         "partner_id": partner.id,
                     },
                 )
