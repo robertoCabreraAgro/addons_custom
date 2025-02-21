@@ -5,25 +5,19 @@
         <field name="model">account.journal</field>
         <field name="inherit_id" ref="account.view_account_journal_form" />
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='default_account_id']" position="after">
-                <field
-                    name="default_refund_account_id"
+            <xpath expr="//field[@name='default_account_id'][2]" position="after">
+                <field name="default_refund_account_id"
+                    options="{'no_create': True}"
                     invisible="type not in ['sale', 'purchase']"
+                    groups="account.group_account_user" />
+                <field name="default_receivable_account_id"
                     options="{'no_create': True}"
-                    groups="account.group_account_user"
-                />
-                <field
-                    name="default_receivable_account_id"
                     invisible="type not in ['sale', 'bank', 'cash']"
+                    groups="account.group_account_user" />
+                <field name="default_payable_account_id"
                     options="{'no_create': True}"
-                    groups="account.group_account_user"
-                />
-                <field
-                    name="default_payable_account_id"
                     invisible="type not in ['purchase', 'bank', 'cash']"
-                    options="{'no_create': True}"
-                    groups="account.group_account_user"
-                />
+                    groups="account.group_account_user" />
             </xpath>
             <xpath expr="//field[@name='code']" position="after">
                 <field name="x_treatment" />
