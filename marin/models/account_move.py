@@ -7,10 +7,22 @@ from odoo.tools.misc import formatLang
 class AccountMove(models.Model):
     _inherit = "account.move"
 
+    @api.depends("move_type")
+    def _compute_invoice_date(self):
+        for move in self:
+            invoice_date = fields.Date.today()
+            if move.move_type == "entry":
+                invoice_date = False
+            move.invoice_date = invoice_date
 
     # Extended fields
     date = fields.Date(copy=True)
-    invoice_date = fields.Date(default=fields.Date.today(), copy=True)
+    invoice_date = fields.Date(
+        compute="_compute_invoice_date",
+        copy=True,
+        store=True,
+        readonly=False
+    )
     invoice_origin = fields.Char(readonly=False)
     l10n_mx_edi_payment_policy = fields.Selection(
         store=True,
