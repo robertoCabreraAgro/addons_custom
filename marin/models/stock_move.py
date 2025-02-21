@@ -25,7 +25,7 @@ class StockMoveInherit(models.Model):
         for rec in self:
             group = rec.picking_id.group_id
             orders = purchase_obj.search([("group_id", "=", group.id)])
-            lines = orders.order_line.filtered(lambda line: line.product_id == rec.product_id)
+            lines = orders.order_line_ids.filtered(lambda line: line.product_id == rec.product_id)
             rec.allowed_purchase_line_ids = lines
 
     @api.depends("picking_id.sale_id", "product_id")
