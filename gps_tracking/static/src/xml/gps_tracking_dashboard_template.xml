@@ -3,13 +3,36 @@
     <t t-name="gps_tracking.gps_tracking_dashboard_template">
             <ControlPanel>
                 <t t-set-slot="layout-actions">
-                <GpsSearchbar
-                    t-props="{ initialQuery: '', onSearch: this.onSearch.bind(this) }"/>
-                <!-- Botón de Actualizar -->
-                <button type="button" class="btn btn-primary" t-on-click="refreshData">
-                    Actualizar
-                </button>
-            </t>
+                    <div class="control-panel-container">
+                        <!-- Barra de búsqueda -->
+                        <div class="search-bar">
+                            <SearchBar/>
+                        </div>
+            
+                        <!-- Dropdown de acciones -->
+                        <div class="dropdown ms-3">
+                            <button
+                                class="btn btn-primary dropdown-toggle"
+                                type="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                Acciones
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <button class="dropdown-item" type="button" t-on-click="refreshData">
+                                        Actualizar
+                                    </button>
+                                </li>
+                                <li>
+                                    <button class="dropdown-item" type="button" t-on-click="addGeofenceDrawingTool">
+                                        Dibujar Geocerca
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </t>
             </ControlPanel>
         <div class="o_gps_tracking_dashboard">
             <div class="o_gps_tracking_kanban">
@@ -38,6 +61,40 @@
                                 }"></i>
                                 <span>Velocidad:</span> <t t-esc="device.speed"/> km/h
                             </div>
+                            <!-- Timestamp -->
+                            <div class="kanban_info">
+                                <i class="fa fa-clock-o"></i>
+                                <span>Actualización:</span> <t t-esc="device.timestamp"/>
+                            </div>
+                            <!-- GSM signal -->
+                            <div class="kanban_info">
+                                <i class="fa fa-signal"></i>
+                                <span>Señal Celular:</span> <t t-esc="device.gsm_signal"/>
+                            </div>
+                            <!-- Ignition -->
+                            <div class="kanban_info">
+                                <i t-att-class="{
+                                    'fa fa-power-off': true,
+                                    'text-success': device.ignition == 1,
+                                    'text-danger': device.ignition == 0
+                                }"></i>
+                                <span>
+                                    <t t-if="device.ignition == 1">Encendido</t>
+                                    <t t-if="device.ignition == 0">Apagado</t>
+                                </span>
+                            </div>
+                            <!-- Movement -->
+                            <div class="kanban_info">
+                                <i t-att-class="{
+                                    'fa fa-car': true,
+                                    'text-success': device.movement == 1,
+                                    'text-danger': device.movement == 0
+                                }"></i>
+                                <span>
+                                    <t t-if="device.movement == 1">En movimiento</t>
+                                    <t t-if="device.movement == 0">Estacionado</t>
+                                </span>
+                            </div>
                             <!-- Satélites -->
                             <div class="kanban_info">
                                 <i class="fa fa-globe"></i>
@@ -53,8 +110,10 @@
                     </div>
                 </t>
             </div>
-            <div class="o_gps_tracking_map" t-ref="mapContainer">
+                <!-- Contenedor para el tooltip -->
+            <div class="o_gps_tracking_map" t-ref="mapContainer" id="map">
                 <!-- El mapa se renderiza aquí -->
+                <div t-ref="tooltip" id="info" style="position:absolute; visibility: hidden; pointer-events: auto;"></div>
             </div>
         </div>
     </t>

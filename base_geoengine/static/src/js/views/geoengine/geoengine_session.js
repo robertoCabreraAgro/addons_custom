@@ -6,6 +6,6 @@ import { session } from '@web/session';
 session.view_info['geoengine'] = {
     label: 'GeoEngine',
     multi_record: true,
-    icon: 'fa-map',
+    icon: 'fa fa-map',
     searchable: true,
 };

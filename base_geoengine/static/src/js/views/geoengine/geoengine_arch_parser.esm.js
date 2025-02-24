@@ -7,7 +7,7 @@
 import {Field} from "@web/views/fields/field";
 import {Widget} from "@web/views/widgets/widget";
 import {visitXML} from "@web/core/utils/xml";
-import {_lt} from "@web/core/l10n/translation";
+import {_t} from "@web/core/l10n/translation";
 import {getActiveActions, processButton} from "@web/views/utils";
 import { exprToBoolean } from "@web/core/utils/strings";
 
@@ -81,7 +81,7 @@ export class GeoengineArchParser {
         });
         const infoBox = templateDocs[INFO_BOX_ATTRIBUTE];
         if (!infoBox) {
-            throw new Error(_lt(`Missing ${INFO_BOX_ATTRIBUTE} template.`));
+            throw new Error(_t(`Missing ${INFO_BOX_ATTRIBUTE} template.`));
         }
 
         for (const [key, field] of Object.entries(fieldNodes)) {
