@@ -101,7 +101,7 @@ export class GpsTrackingDashboard extends Component {
             const devices = await this.orm.searchRead(
                 "gps.tracking.device",
                 domain || [],
-                ["id", "imei", "the_point", "speed", "timestamp", "altitude", "satellite", "address", "gsm_signal", "ignition", "movement", "color"]
+                ["id", "imei", "the_point", "speed", "timestamp", "altitude", "satellite", "address", "gsm_signal", "ignition", "movement", "color", "vehicle_id"]
             );
             this.state.devices = devices;
             this.state.filteredDevices = devices;
@@ -116,7 +116,7 @@ export class GpsTrackingDashboard extends Component {
             const devices = await this.orm.searchRead(
                 "gps.tracking.device",
                 [],
-                ["id", "imei", "the_point", "speed", "timestamp", "altitude", "satellite", "address", "gsm_signal", "ignition", "movement", "color"]
+                ["id", "imei", "the_point", "speed", "timestamp", "altitude", "satellite", "address", "gsm_signal", "ignition", "movement", "color", "vehicle_id"]
             );
             console.log("Dispositivos cargados:", devices);
             console.log("Dispositivos cargados:", JSON.stringify(devices, null, 2));
@@ -246,7 +246,7 @@ export class GpsTrackingDashboard extends Component {
         const lng = coords4326[0];
     
         // 2. Generar la URL embed con tu API Key
-        const apiKey = "AIzaSyABRnjE6R9eY-5RvAoc2_jHvtcRPvnh7D4";  // <-- pon tu clave real
+        const apiKey = "";  // <-- pon tu clave real
         const embedUrl = this._generateStreetViewEmbedUrl(lat, lng, apiKey);
     
         // 3. Guardar contenido anterior del tooltip

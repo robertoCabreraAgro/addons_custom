@@ -10,6 +10,10 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
         super.setup();
         this.state.liveMode = false;
         this.state.pathPoints = [];
+        this.state.deviceLayers = {};
+
+        // 🟢 NUEVO: Estado separado para el dispositivo seleccionado en el Kanban
+        this.state.selectedDevice = null;
 
         // 🔴 Definir fecha actual con hora 00:00
         const today = new Date();
@@ -35,26 +39,65 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
 
     // ✅ Método para seleccionar un dispositivo desde el Kanban
     onCardClick(device) {
-        this.state.activeDevice = device;  // 🔴 Asignamos el dispositivo activo
-        console.log("Dispositivo seleccionado:", device);
+        this.state.selectedDevice = device;  // 🟢 Asigna solo al dispositivo seleccionado
+        console.log("Dispositivo seleccionado en el Kanban:", device);
     
-        // 🔴 Verificamos que el mapa y el dispositivo tengan coordenadas válidas
+        // 🔴 Hacer zoom al dispositivo seleccionado sin afectar los checkboxes
         if (this.map && device.latitude && device.longitude) {
             this.map.getView().animate({
                 center: [device.longitude, device.latitude],
-                zoom: 15,  // Ajusta el zoom según prefieras
-                duration: 1000  // Suaviza la animación en 1 segundo
+                zoom: 15, 
+                duration: 1000 
             });
         }
     }
 
-    async fetchDevicePath() {
-        if (!this.state.activeDevice) {
-            alert("Selecciona un dispositivo antes de buscar.");
+    toggleDeviceVisibility(device) {
+        if (!device || !device.imei) {
+            console.warn("Dispositivo inválido o nulo:", device);
             return;
         }
+
+        const deviceIndex = this.state.activeDevices.indexOf(device.imei);
+
+        if (deviceIndex > -1) {
+            // Eliminar el dispositivo de la lista activa si se desmarca
+            this.state.activeDevices.splice(deviceIndex, 1);
+            console.log("Checkbox desmarcado. Dispositivo ocultado:", device.imei);
+        } else {
+            // Añadir el dispositivo a la lista activa si se marca
+            this.state.activeDevices.push(device.imei);
+            console.log("Checkbox marcado. Dispositivo mostrado:", device.imei);
+        }
+
+        // Renderizar solo las rutas con checkbox activo
+        this.fetchDevicePaths();
+    }
+
+    async fetchDevicePaths() {
         if (!this.state.startDate || !this.state.endDate) {
             alert("Selecciona un rango de fechas.");
+            return;
+        }
+
+        // Eliminar todas las capas actuales del mapa antes de redibujar
+        this.map.getLayers().getArray().forEach(layer => {
+            if (layer instanceof ol.layer.Vector) {
+                this.map.removeLayer(layer);
+            }
+        });
+
+        // Vaciar completamente `deviceLayers` para evitar referencias residuales
+        this.state.deviceLayers = {};
+
+        // Obtener la lista de dispositivos activos (solo los con checkbox marcado)
+        const activeDevices = this.state.activeDevices.slice();
+
+        // Si no hay dispositivos activos, limpiar el mapa y salir
+        if (activeDevices.length === 0) {
+            console.log("No hay dispositivos activos. Mapa en blanco.");
+            this.map.renderSync();
+            setTimeout(() => this.map.renderSync(), 100);
             return;
         }
 
@@ -62,65 +105,66 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
         const formattedEndDate = new Date(this.state.endDate).toISOString();
 
         try {
-            const domain = [
-                ["device_id", "=", this.state.activeDevice.id],
-                ["timestamp", ">=", formattedStartDate],
-                ["timestamp", "<=", formattedEndDate],
-            ];
+            for (const imei of activeDevices) {
+                const device = this.state.devices.find(d => d.imei === imei);
+                if (!device) continue;
 
-            const points = await this.orm.searchRead("gps.tracking.point", domain, ["latitude", "longitude"]);
+                const domain = [
+                    ["device_id", "=", device.id],
+                    ["timestamp", ">=", formattedStartDate],
+                    ["timestamp", "<=", formattedEndDate],
+                ];
 
-            if (points.length === 0) {
-                alert("No se encontraron puntos en el rango seleccionado.");
-                return;
+                const points = await this.orm.searchRead("gps.tracking.point", domain, ["latitude", "longitude"]);
+
+                if (points.length === 0) {
+                    console.log("No se encontraron puntos para el dispositivo:", device.imei);
+                    continue;
+                }
+
+                const coordinates = points.map((point) => 
+                    ol.proj.transform([point.longitude, point.latitude], "EPSG:4326", "EPSG:3857")
+                );
+
+                this.renderDevicePath(device, coordinates);
             }
 
-            this.state.pathPoints = points.map((point) => [point.longitude, point.latitude]);
+            this.map.renderSync();
+            setTimeout(() => this.map.renderSync(), 100);
 
-            // 🔴 Obtener el color del dispositivo
-            this.state.routeColor = this.state.activeDevice.color || "#FF0000";  // Rojo si no tiene color asignado
-
-            this.zoomToRoute();
-            this.renderDevicePath();
         } catch (error) {
-            console.error("Error al obtener recorrido:", error);
+            console.error("Error al obtener recorridos:", error);
         }
     }
+    
+    renderDevicePath(device, coordinates) {
+        if (!this.map || !device || !coordinates.length) {
+            console.warn("Datos inválidos para renderizar la ruta del dispositivo:", device?.imei);
+            return;
+        }
 
-    renderDevicePath() {
-        if (!this.map || this.state.pathPoints.length === 0) return;
-    
-        // 🔴 Transformar coordenadas de EPSG:4326 a EPSG:3857
-        const coordinates = this.state.pathPoints.map((coord) =>
-            ol.proj.transform(coord, "EPSG:4326", "EPSG:3857")
-        );
-    
-        // 🔴 Crear la línea con el color seleccionado
         const lineFeature = new ol.Feature({
             geometry: new ol.geom.LineString(coordinates),
         });
-    
+
         const lineLayer = new ol.layer.Vector({
             source: new ol.source.Vector({
                 features: [lineFeature],
             }),
             style: new ol.style.Style({
                 stroke: new ol.style.Stroke({
-                    color: this.state.routeColor,  // 🔴 Usamos el color del dispositivo
+                    color: device.color || "#FF0000",
                     width: 3,
                 }),
             }),
         });
-    
-        // 🔴 Remover la capa anterior si ya existía
-        if (this.state.pathLayer) {
-            this.map.removeLayer(this.state.pathLayer);
-        }
-    
-        this.state.pathLayer = lineLayer;
+
         this.map.addLayer(lineLayer);
-    
-        console.log("Recorrido renderizado con color:", this.state.routeColor);
+
+        // Guardar la capa para poder eliminarla después
+        this.state.deviceLayers[device.imei] = lineLayer;
+
+        console.log("Línea del dispositivo renderizada:", device.imei);
     }
 
     zoomToRoute() {
@@ -150,6 +194,33 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
         });
 
         console.log("Mapa ajustado a la ruta.");
+    }
+        // ✅ Método para Reiniciar Todo
+    resetAll() {
+        console.log("Reiniciando todo...");
+
+        // 🧹 Eliminar todas las capas vectoriales de forma segura
+        const layersToRemove = this.map.getLayers().getArray().filter(layer => layer instanceof ol.layer.Vector);
+
+        layersToRemove.forEach(layer => {
+            this.map.removeLayer(layer);
+        });
+
+        // 🧹 Vaciar el estado de las capas para evitar residuos
+        this.state.deviceLayers = {};
+        this.state.activeDevices = [];
+        this.state.selectedDevice = null;
+
+        // 🔲 Desmarcar todos los checkboxes en la interfaz
+        document.querySelectorAll(".kanban_toggle_view input[type='checkbox']").forEach(checkbox => {
+            checkbox.checked = false;
+        });
+
+        // 🔄 Llamar dos veces a renderSync para asegurar el reinicio completo
+        this.map.renderSync();
+        setTimeout(() => this.map.renderSync(), 100);
+
+        console.log("Mapa y estado reiniciados completamente.");
     }
 }
 

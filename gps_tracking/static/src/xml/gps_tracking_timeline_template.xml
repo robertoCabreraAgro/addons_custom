@@ -8,6 +8,9 @@
                         <SearchBar/>
                     </div>
 
+                    <button type="button" class="btn btn-danger" t-on-click="resetAll">
+                        Reiniciar Todo
+                    </button>
                     <!-- Dropdown de rango de fechas -->
                     <div class="dropdown ms-3">
                         <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -23,7 +26,7 @@
                                 <input type="datetime-local" id="end-date" t-model="state.endDate" class="form-control" />
                             </div>
                             <div class="date-action mt-3">
-                                <button type="button" class="btn btn-primary" t-on-click="fetchDevicePath">
+                                <button type="button" class="btn btn-primary" t-on-click="fetchDevicePaths">
                                     Consultar Recorrido
                                 </button>
                             </div>
@@ -58,6 +61,9 @@
                         
                         <div t-if="state.expandedDevices.has(device.imei)" class="card_body">
                             <!-- Información del dispositivo -->
+                            <div t-if="device.vehicle_id">
+                                <span>Vehículo: <t t-esc="device.vehicle_id[1]"/></span> <!-- Mostrar el nombre del vehículo -->
+                            </div>
                             <div class="kanban_info">
                                 <i class="fa fa-clock-o"></i>
                                 <span>Última actualización:</span> <t t-esc="device.timestamp"/>

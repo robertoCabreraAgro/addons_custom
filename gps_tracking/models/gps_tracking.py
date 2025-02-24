@@ -22,6 +22,7 @@ class GpsTrackingDevice(models.Model):
     gsm_signal = fields.Integer(string="Gsm Signal", related='last_point_id.gsm_signal', store=True)
     ignition = fields.Integer(string='Ignition (239)', related='last_point_id.ignition', store=True)
     movement = fields.Integer(string='Movement (240)', related='last_point_id.movement', store=True)
+    vehicle_id = fields.Many2one('fleet.vehicle', string='Vehículo', help='Vehículo asociado al dispositivo GPS')
     color = fields.Selection(
         selection=[
             ('#FF0000', 'Rojo'),
@@ -112,7 +113,7 @@ class GpsTrackingPoint(models.Model):
                     
 
     # def _compute_address(self):
-    #     api_key = 'AIzaSyABRnjE6R9eY-5RvAoc2_jHvtcRPvnh7D4'  #Sustituye por tu clave de API
+    #     api_key = ''  #Sustituye por tu clave de API
     #     for rec in self:
     #         _logger.info(f"Ejecutando _compute_address para ID {rec.id} con latitude={rec.latitude}, longitude={rec.longitude}")
     #         if rec.latitude and rec.longitude:
