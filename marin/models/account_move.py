@@ -7,21 +7,14 @@ from odoo.tools.misc import formatLang
 class AccountMove(models.Model):
     _inherit = "account.move"
 
-    @api.depends("move_type")
-    def _compute_invoice_date(self):
-        for move in self:
-            invoice_date = fields.Date.today()
-            if move.move_type == "entry":
-                invoice_date = False
-            move.invoice_date = invoice_date
+
 
     # Extended fields
     date = fields.Date(copy=True)
     invoice_date = fields.Date(
-        compute="_compute_invoice_date",
+        compute="_compute_invoice_date", store=True, precompute=True,
+        readonly=False,
         copy=True,
-        store=True,
-        readonly=False
     )
     invoice_origin = fields.Char(readonly=False)
     l10n_mx_edi_payment_policy = fields.Selection(
@@ -90,6 +83,15 @@ class AccountMove(models.Model):
                 invoice.partner_credit_warning = invoice.commercial_partner_id._build_credit_warning_message(
                     future_credit, invoice.company_id.currency_id
                 )
+
+    @api.depends("move_type")
+    def _compute_invoice_date(self):
+        for move in self:
+            invoice_date = fields.Date.today()
+            if move.move_type == "entry":
+                invoice_date = False
+            move.invoice_date = invoice_date
+
     # Exxtend original method
     @api.depends('needed_terms')
     def _compute_invoice_date_due(self):
