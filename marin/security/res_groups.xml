@@ -117,8 +117,13 @@
         <field name="category_id" ref="base.module_category_usability" />
     </record>
 
-    <record id="group_purchase_special_projects" model="res.groups">
-        <field name="name">Purchase special projects</field>
+    <record id="group_purchase_xiuman" model="res.groups">
+        <field name="name">Xiuman</field>
+        <field name="category_id" ref="base.module_category_usability" />
+    </record>
+
+    <record id="group_purchase_potatoes" model="res.groups">
+        <field name="name">Potatoes</field>
         <field name="category_id" ref="base.module_category_usability" />
     </record>
 

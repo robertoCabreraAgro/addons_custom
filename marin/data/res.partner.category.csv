@@ -57,3 +57,4 @@ partner_category_supplier_operations,Supplier - Operations,5,True,partner_catego
 partner_category_supplier_it,Supplier - IT,5,True,partner_category_purchase
 partner_category_supplier_management,Supplier - Management,5,True,partner_category_purchase
 partner_category_high_risk,High Risk,1,True,partner_category_security
+partner_category_supplier_potatoes,Supplier - Potatoes,5,True,partner_category_purchase
