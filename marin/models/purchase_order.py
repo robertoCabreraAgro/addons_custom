@@ -9,12 +9,19 @@ class PurchaseOrderInherit(models.Model):
         categories = []
         if self.env.user.has_group("marin.group_purchase_core_business"):
             categories.append(self.env.ref("marin.partner_category_supplier_core").id)
-        if self.env.user.has_group("marin.partner_category_110"):
-            categories.append(self.env.ref("marin.partner_category_110").id)
+
         if self.env.user.has_group("marin.group_purchase_general"):
             categories.append(self.env.ref("marin.partner_category_supplier_general").id)
+
+        if self.env.user.has_group("marin.group_purchase_xiuman"):
+            categories.append(self.env.ref("marin.partner_category_supplier_xiuman").id)
+
+        if self.env.user.has_group("marin.group_purchase_potatoes"):
+            categories.append(self.env.ref("marin.partner_category_supplier_potatoes").id)
+
         if not categories:
             return [("id", "=", False)]
+
         return [
             ("category_id", "in", categories),
             ("company_id", "in", (False, self.env.company.id)),
