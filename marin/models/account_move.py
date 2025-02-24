@@ -10,7 +10,6 @@ class AccountMove(models.Model):
 
 
     # Extended fields
-    date = fields.Date(copy=True)
     invoice_date = fields.Date(
         compute="_compute_invoice_date", store=True, precompute=True,
         readonly=False,
