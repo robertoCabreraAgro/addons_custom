@@ -129,4 +129,39 @@
         <field name="name">Employee</field>
         <field name="sequence">3</field>
     </record>
+
+    <record id="documents_asset_property_identification" model="documents.tag" forcecreate="0">
+        <field name="name">Property identification</field>
+        <field name="sequence">3</field>
+    </record>
+
+    <record id="documents_asset_electronic_device" model="documents.tag" forcecreate="0">
+        <field name="name">Electronic device</field>
+        <field name="sequence">3</field>
+    </record>
+
+    <record id="documents_asset_imei" model="documents.tag" forcecreate="0">
+        <field name="name">Device IMEI</field>
+        <field name="sequence">3</field>
+    </record>
+
+    <record id="documents_service_identification_cellphone" model="documents.tag" forcecreate="0">
+        <field name="name">Cellphone number</field>
+        <field name="sequence">3</field>
+    </record>
+
+    <record id="documents_service_electric_power" model="documents.tag" forcecreate="0">
+        <field name="name">Electric power contract</field>
+        <field name="sequence">3</field>
+    </record>
+
+    <record id="documents_service_internet" model="documents.tag" forcecreate="0">
+        <field name="name">Internet contract</field>
+        <field name="sequence">3</field>
+    </record>
+
+    <record id="documents_service_water" model="documents.tag" forcecreate="0">
+        <field name="name">Water contract</field>
+        <field name="sequence">3</field>
+    </record>
 </odoo>
