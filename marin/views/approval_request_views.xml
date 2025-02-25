@@ -7,11 +7,9 @@
         <field name="arch" type="xml">
             <xpath expr="//list" position="inside">
                 <field name="vehicle_id"
-                    domain="[['driver_id', '=', request_owner_id and request_owner_id.partner_id.id or False]]"
                     optional="hide" />
-                <field name="license_plate" string="License Plate" optional="hide" />
-                <field name="fuel_type" string="Fuel Type" optional="hide" />
-                <field name="odometer" string="Odometer" optional="hide" />
+                <field name="odometer" string="Odometer"
+                    optional="hide" />
             </xpath>
         </field>
     </record>
@@ -22,15 +20,14 @@
         <field name="inherit_id" ref="approvals.approval_request_view_form" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='change_request_owner']" position="after">
-                    <field name="has_vehicle" invisible="1"/>
-                    <field name="has_odometer" invisible="1"/>
+                <field name="has_vehicle" invisible="1" />
+                <field name="has_odometer" invisible="1" />
             </xpath>
             <xpath expr="//button[@name='action_get_attachment_view']" position="after">
                 <button name="action_open_fleet_vehicle_log" string="Logs"
                     type="object" class="oe_stat_button"
                     icon="fa-credit-card"
-                    invisible="not log_ids">
-                </button>
+                    invisible="not log_ids" />
             </xpath>
             <xpath expr="//button[@name='action_confirm']" position="after">
                 <button name="action_create_fleet_vehicle_log" string="Create Log"
@@ -41,12 +38,12 @@
             </xpath>
             <xpath expr="//group[@name='request_main']" position="inside">
                 <field name="vehicle_id"
-                    readonly="request_status != 'new'"
                     required="has_vehicle == 'required'"
+                    readonly="request_status != 'new'"
                     invisible="has_vehicle == 'no'" />
                 <field name="odometer"
-                    readonly="request_status != 'new'"
                     required="has_odometer == 'required'"
+                    readonly="request_status != 'new'"
                     invisible="has_odometer == 'no'" />
             </xpath>
         </field>
