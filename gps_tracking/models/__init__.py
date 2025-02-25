@@ -1,2 +1,2 @@
-from . import gps_tracking_history
-from . import gps_tracking
+from . import gps_tracking_device
+from . import gps_tracking_point

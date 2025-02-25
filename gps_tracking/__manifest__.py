@@ -8,15 +8,18 @@
     'depends': ['base_geoengine', 'fleet'], 
     'data': [
         'security/ir.model.access.csv',
-        'views/gps_tracking_views.xml',
-        'views/gps_views.xml',
-        'views/gps_split_view.xml',
+        'views/gps_tracking_device_views.xml',
+        'views/gps_tracking_menus.xml', # Last because referencing actions defined in previous files
     ], 
-    'assets': {
-        'web.assets_backend': [
-        'gps_tracking/static/src/**/*'
-        ],
-    },
+    'demo': [
+        'demo/gps_tracking_device_data.xml',
+        'demo/gps_tracking_point_data.xml',
+    ],
+    #'assets': {
+    #    'web.assets_backend': [
+    #    'gps_tracking/static/src/**/*'
+    #    ],
+    #},
     'installable': True,
     'application': True,
 }
