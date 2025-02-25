@@ -4,8 +4,8 @@
  * Copyright 2023 ACSONE SA/NV
  */
 
-import { loadBundle, loadJS, loadCSS } from "@web/core/assets";
-import { templates } from "@web/core/templates";
+import { loadBundle, loadJS, templates } from "@web/core/assets";
+// import { getTemplate } from "@web/core/templates";
 import { user } from "@web/core/user";
 import {GeoengineRecord} from "../geoengine_record/geoengine_record.esm";
 import {LayersPanel} from "../layers_panel/layers_panel.esm";
@@ -43,7 +43,6 @@ const DEFAULT_NUM_CLASSES = 5;
 const LEGEND_MAX_ITEMS = 10;
 
 export class GeoengineRenderer extends Component {
-    static template = "base_geoengine.GeoengineRenderer"
     setup() {
         
         this.state = useState({selectedFeatures: [], isModified: false, isFit: false});
@@ -74,7 +73,7 @@ export class GeoengineRenderer extends Component {
             await loadBundle("web.assets_backend");
             await loadJS('/base_geoengine/static/lib/ol-10.1.0/ol.js');
             await loadJS('/base_geoengine/static/lib/chromajs-2.4.2/chroma.js');
-            await loadJS('/base_geoengine/static/lib/geostats-2.0.0/geostats.js');
+            await loadJS('/base_geoengine/static/lib/geostats-2.0.0/geostats.min.js');
             await this.loadVectorModel();
             this.isGeoengineAdmin = user.hasGroup("base_geoengine.group_geoengine_admin");
         });
@@ -187,6 +186,17 @@ export class GeoengineRenderer extends Component {
                             attributions: null  // Desactivamos las atribuciones si no son necesarias
                         }),
                     });
+                case "xyz":
+                return new ol.layer.Tile({
+                    title: background.name,
+                    visible: !background.overlay,
+                    type: "base",
+                    opacity: background.opacity,
+                    source: new ol.source.XYZ({
+                        url: background.url,
+                        crossOrigin: 'anonymous',
+                    }),
+                });
                 case "wmts":
                     const {source_opt, tilegrid_opt, layer_opt} =
                         this.createOptions(background);
@@ -558,83 +568,19 @@ export class GeoengineRenderer extends Component {
      * @param {*} record
      */
     mountGeoengineRecord({popup, archInfo, templateDocs, model, attributes, record}) {
-        try {
-            console.log("GeoengineRenderer: mountGeoengineRecord llamado con parámetros:", {
-                popup,
+        this.record =
+            record === undefined
+                ? model.records.find((element) => element._values.id === attributes.id)
+                : record;
+        mount(GeoengineRecord, popup, {
+            env: this.env,
+            props: {
                 archInfo,
-                templateDocs,
-                model,
-                attributes,
-                record
-            });
-        
-            // Determinar el registro a utilizar
-            this.record =
-                record === undefined
-                    ? model.records.find((rec) => rec._values.id === attributes.id)
-                    : record;
-            console.log("GeoengineRenderer: Registro seleccionado:", this.record);
-        
-            // Verificar si 'popup' es un elemento válido
-            if (!popup) {
-                console.error("GeoengineRenderer: 'popup' no es un elemento válido.");
-                return;
-            } else {
-                console.log("GeoengineRenderer: 'popup' es válido:", popup);
-            }
-        
-            // Verificar si 'archInfo' está definido
-            if (!archInfo) {
-                console.error("GeoengineRenderer: 'archInfo' no está definido.");
-                return;
-            } else {
-                console.log("GeoengineRenderer: 'archInfo' está definido:", archInfo);
-            }
-        
-            // Verificar si 'templateDocs' está definido y contiene la plantilla necesaria
-            if (!templateDocs) {
-                console.error("GeoengineRenderer: 'templateDocs' no está definido.");
-                return;
-            } else {
-                console.log("GeoengineRenderer: 'templateDocs' está definido:", templateDocs);
-                if (!templateDocs.info_box) {
-                    console.error("GeoengineRenderer: 'templateDocs' no contiene 'info_box'.");
-                    return;
-                } else {
-                    console.log("GeoengineRenderer: 'templateDocs' contiene 'info_box'.");
-                }
-            }
-        
-            // Verificar si 'GeoengineRecord' está correctamente importado
-            if (typeof GeoengineRecord !== 'function') {
-                console.error("GeoengineRenderer: 'GeoengineRecord' no está correctamente importado o no es una función.");
-                return;
-            } else {
-                console.log("GeoengineRenderer: 'GeoengineRecord' está correctamente importado.");
-            }
-        
-            // Verificar si 'templates' está definido en este contexto
-            if (typeof templates === 'undefined') {
-                console.error("GeoengineRenderer: 'templates' no está definido en este contexto.");
-                return;
-            } else {
-                console.log("GeoengineRenderer: 'templates' está definido:", templates);
-            }
-        
-            // Montar el componente GeoengineRecord
-            mount(GeoengineRecord, popup, {
-                env: this.env,
-                props: {
-                    archInfo,
-                    record: this.record,
-                    templates: templateDocs,
-                },
-                 // Asegúrate de que 'templates' está definido
-            });
-            console.log("GeoengineRenderer: GeoengineRecord montado exitosamente en 'popup'.");
-        } catch (error) {
-            console.error("GeoengineRenderer: Error en mountGeoengineRecord:", error);
-        }
+                record: this.record,
+                templates: templateDocs,
+            },
+            templates,
+        });
     }
     
     /**
@@ -1555,6 +1501,7 @@ export class GeoengineRenderer extends Component {
     }
 }
 
+GeoengineRenderer.template = "base_geoengine.GeoengineRenderer";
 GeoengineRenderer.props = {
     isSavedOrDiscarded: {type: Boolean},
     archInfo: {type: Object},
