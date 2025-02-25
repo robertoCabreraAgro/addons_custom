@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <templates xml:space="preserve">
     <t t-name="base_geoengine.FieldGeoEngineEditMap">
+        <script type="text/javascript" src="/base_geoengine/static/lib/ol-10.1.0/ol.js"></script>
+        <script type="text/javascript" src="/base_geoengine/static/lib/chromajs-2.4.2/chroma.js"></script>
         <div class="ol_map" t-att-id="id" />
     </t>
 </templates>
