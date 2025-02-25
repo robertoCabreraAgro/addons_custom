@@ -19,6 +19,11 @@ class AccountAsset(models.Model):
         string="Has property ID",
         default="no",
     )
+    has_property_area = fields.Selection(
+        CATEGORY_SELECTION,
+        string="Has property area",
+        default="no",
+    )
     has_sn = fields.Selection(
         CATEGORY_SELECTION,
         string="Has SN",
@@ -43,6 +48,9 @@ class AccountAsset(models.Model):
     model_id_has_property_identification = fields.Selection(
         related="model_id.has_property_identification",
     )
+    model_id_has_property_area = fields.Selection(
+        related="model_id.has_property_area",
+    )
     model_id_has_sn = fields.Selection(
         related="model_id.has_sn",
     )
@@ -57,6 +65,7 @@ class AccountAsset(models.Model):
     )
 
     property_identification = fields.Char(string="Property identification")
+    property_area = fields.Integer(string="Property area", help="Area in square meters")
     sn = fields.Char(string="SN")
     imei = fields.Char(string="IMEI")
     electric_power_contract = fields.Char(string="Electric power contract")

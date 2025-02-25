@@ -9,6 +9,8 @@
                 <group name="extra_info" string="Extra Information">
                     <field name="has_property_identification"
                         widget="radio" options="{'horizontal': true}" />
+                    <field name="has_property_area"
+                        widget="radio" options="{'horizontal': true}" />
                     <field name="has_sn"
                         widget="radio" options="{'horizontal': true}" />
                     <field name="has_imei"
@@ -22,6 +24,8 @@
             <xpath expr="//page[@name='related_items']" position="after">
                 <page name="extra_info" string="Extra Information" invisible="state == 'model'">
                     <field name="model_id_has_property_identification"
+                        invisible="1" />
+                    <field name="model_id_has_property_area"
                         invisible="1" />
                     <field name="model_id_has_sn"
                         invisible="1" />
@@ -37,6 +41,10 @@
                                 placeholder="e.g. Catastral key 123"
                                 required="model_id_has_property_identification == 'required'"
                                 invisible="model_id_has_property_identification == 'no'" />
+                            <field name="property_area"
+                                placeholder="e.g. Catastral key 123"
+                                required="model_id_has_property_area == 'required'"
+                                invisible="model_id_has_property_area == 'no'" />
                             <field name="sn"
                                 required="model_id_has_sn == 'required'"
                                 invisible="model_id_has_sn == 'no'" />
