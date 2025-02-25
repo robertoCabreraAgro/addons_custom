@@ -94,6 +94,7 @@
         "views/account_account_views.xml",
         "views/account_analytic_distribution_model_views.xml",
         "views/account_analytic_line_views.xml",
+        "views/account_asset_views.xml",
         "views/account_bank_statement_views.xml",
         "views/account_journal_views.xml",
         "views/account_move_views.xml",

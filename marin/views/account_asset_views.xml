@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_account_asset_form" model="ir.ui.view">
+        <field name="name">account.asset.form</field>
+        <field name="model">account.asset</field>
+        <field name="inherit_id" ref="account_asset.view_account_asset_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//group/group[2]" position="after">
+                <group name="extra_info" string="Extra Information">
+                    <field name="has_property_identification"
+                        widget="radio" options="{'horizontal': true}" />
+                    <field name="has_sn"
+                        widget="radio" options="{'horizontal': true}" />
+                    <field name="has_imei"
+                        widget="radio" options="{'horizontal': true}" />
+                    <field name="has_electric_power_contract"
+                        widget="radio" options="{'horizontal': true}" />
+                    <field name="has_telephone_contract"
+                        widget="radio" options="{'horizontal': true}" />
+                </group>
+            </xpath>
+            <xpath expr="//page[@name='related_items']" position="after">
+                <page name="extra_info" string="Extra Information" invisible="state == 'model'">
+                    <field name="model_id_has_property_identification"
+                        invisible="1" />
+                    <field name="model_id_has_sn"
+                        invisible="1" />
+                    <field name="model_id_has_imei"
+                        invisible="1" />
+                    <field name="model_id_has_electric_power_contract"
+                        invisible="1" />
+                    <field name="model_id_has_telephone_contract"
+                        invisible="1" />
+                    <group name="extra_info">
+                        <group name="group_left">
+                            <field name="property_identification"
+                                placeholder="e.g. Catastral key 123"
+                                required="model_id_has_property_identification == 'required'"
+                                invisible="model_id_has_property_identification == 'no'" />
+                            <field name="sn"
+                                required="model_id_has_sn == 'required'"
+                                invisible="model_id_has_sn == 'no'" />
+                            <field name="imei"
+                                required="model_id_has_imei == 'required'"
+                                invisible="model_id_has_imei == 'no'" />
+                        </group>
+                        <group name="group_right">
+                            <field name="location" />
+                            <field name="electric_power_contract"
+                                required="model_id_has_electric_power_contract == 'required'"
+                                invisible="model_id_has_electric_power_contract == 'no'" />
+                            <field name="telephone_contract"
+                                required="model_id_has_telephone_contract == 'required'"
+                                invisible="model_id_has_telephone_contract == 'no'" />
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
