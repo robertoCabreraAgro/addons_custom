@@ -26,7 +26,7 @@ class TestPOSCashTransferWizard(TestPoSCommon):
         Case 03: Create a cash transfer with amount 0
         """
         # Case 01
-        cash_transfer_wizard = self.session.open_pos_cash_transfer_wizard()
+        cash_transfer_wizard = self.session.action_pos_cash_transfer_wizard()
         self.assertEqual(cash_transfer_wizard["name"], "POS Cash Transfer")
         # Case 02
         currency_id = (
@@ -68,7 +68,7 @@ class TestPOSCashTransferWizard(TestPoSCommon):
         """Testing case of creating a cash transfer without activity type"""
         wizard = self.env["pos.cash.transfer.wizard"]
         wizard._get_activity_type_for_cash_transfer().unlink()
-        cash_transfer_wizard = self.session.open_pos_cash_transfer_wizard()
+        cash_transfer_wizard = self.session.action_pos_cash_transfer_wizard()
         currency_id = (
             self.env["account.journal"]
             .browse(cash_transfer_wizard["context"]["default_journal_id"])

@@ -44,6 +44,10 @@ class AccountMove(models.Model):
         string="Has Journal Changed",
         store=False
     )
+    pos_session_origin_id = fields.Many2one(
+        comodel_name="pos.session",
+        string="POS session",
+    )
 
 
     # Extend original method

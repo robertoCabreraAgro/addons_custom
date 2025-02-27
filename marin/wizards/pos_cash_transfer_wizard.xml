@@ -5,23 +5,22 @@
         <field name="model">pos.cash.transfer.wizard</field>
         <field name="arch" type="xml">
             <form>
-                <group string="Cash Transfer Data" name="group_origin">
-                    <field name="journal_id" force_save="1" />
-                    <field name="amount" />
+                <field name="session_id" />
+                <field name="currency_id" />
+                <group>
+                    <group name="group_origin" string="Origin">
+                        <field name="journal_id" force_save="1" nolabel="1"/>
+                    </group>
+                    <group name="group_destination" string="Destination">
+                        <field name="destination_journal_id" nolabel="1" />
+                    </group>
                 </group>
-                <group string="Cash Transfer Destination" name="group_destination">
-                    <field name="destination_journal_id" />
-                    <field name="destination_account_id" force_save="1" invisible="1" />
-                </group>
+                <field name="amount" />
                 <footer>
-                    <button
-                        string="Generate Cash Transfer"
-                        name="action_create_cash_transfer"
-                        type="object"
-                        class="oe_highlight"
-                        data-hotkey="q"
-                    />
-                    <button string="Cancel" class="btn btn-secondary" special="cancel" data-hotkey="z" />
+                    <button name="action_create_cash_transfer" string="Generate Cash Transfer"
+                        type="object" class="oe_highlight"
+                        data-hotkey="q" />
+                    <button special="cancel" string="Cancel" class="btn btn-secondary" data-hotkey="z" />
                 </footer>
             </form>
         </field>

@@ -32,7 +32,6 @@ from . import purchase_order_line
 from . import project_task_lost_reason
 from . import project_task
 from . import res_company
-from . import res_config_settings
 from . import res_partner_age_range
 from . import res_partner
 from . import res_users

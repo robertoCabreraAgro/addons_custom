@@ -7,7 +7,7 @@
             <xpath expr="//t[@t-name='menu']/div/div" position="after">
                 <div class="o_kanban_card_manage_settings row">
                     <div role="menuitem" class="col-12">
-                        <a name="open_pos_cash_transfer_wizard" type="object">Cash Transfer</a>
+                        <a name="action_liquidity_transfer" type="object">Liquidity transfer</a>
                     </div>
                 </div>
             </xpath>

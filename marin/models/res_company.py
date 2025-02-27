@@ -5,14 +5,10 @@ from odoo.osv import expression
 class ResCompany(models.Model):
     _inherit = "res.company"
 
+
     code = fields.Char(string="Short Code", size=6)
     complete_name = fields.Char(compute="_compute_complete_name", store=True)
-    pos_cash_transfer_journal_id = fields.Many2one(
-        "account.journal",
-        string="PoS Cash Transfer Journal",
-        domain=[("type", "in", ["cash", "bank"])],
-        help="Accounting journal used to create pos cash withdraw.",
-    )
+
 
     _code_uniq = models.Constraint(
         "UNIQUE(code)",
@@ -26,7 +22,7 @@ class ResCompany(models.Model):
             if not company.code:
                 company.complete_name = company.name
             else:
-                company.complete_name = "{} - {}".format(company.code, company.name)
+                company.complete_name = f"{company.code} - {company.name}"
 
     # @api.model
     # def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):

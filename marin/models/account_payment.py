@@ -4,20 +4,14 @@ from odoo import _, api, fields, models
 class AccountPayment(models.Model):
     _inherit = "account.payment"
 
-    journal_type = fields.Selection(
-        related="journal_id.type", string="Journal type", store=True, readonly=True,
-    )
-    cash_transfer_pos_id = fields.Many2one("pos.session")
 
-    def _get_destination_accounts(self):
-        return {
-            "customer": 
-                self.partner_id.with_company(self.company_id).property_account_receivable_id
-                or self.journal_id.default_receivable_account_id,
-            "supplier":
-                self.partner_id.with_company(self.company_id).property_account_payable_id
-                or self.journal_id.default_payable_account_id,
-        }
+    journal_type = fields.Selection(
+        related="journal_id.type",
+        string="Journal type",
+        store=True,
+        readonly=True,
+    )
+
 
     @api.depends("company_id", "journal_id", "partner_id", "partner_type")
     def _compute_destination_account_id(self):
@@ -48,3 +42,13 @@ class AccountPayment(models.Model):
                         limit=1
                     )
                 )
+
+    def _get_destination_accounts(self):
+        return {
+            "customer": 
+                self.partner_id.with_company(self.company_id).property_account_receivable_id
+                or self.journal_id.default_receivable_account_id,
+            "supplier":
+                self.partner_id.with_company(self.company_id).property_account_payable_id
+                or self.journal_id.default_payable_account_id,
+        }
