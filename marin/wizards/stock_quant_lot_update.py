@@ -63,13 +63,19 @@ class StockQuantLotUpdate(models.TransientModel):
             ]
         )
         if dest_quant:
-            self._cr.execute(
-                f"UPDATE stock_quant SET quantity=quantity + {origin_quant.quantity} WHERE id={dest_quant.id};"
-            )
-            self._cr.execute(
-                f"DELETE FROM stock_quant WHERE id={origin_quant.id};"
-            )
+            dest_quant.write({
+                "quantity": dest_quant.quantity + self.quantity,
+            })
         else:
-            self._cr.execute(
-                f"UPDATE stock_quant SET lot_id={self.dest_lot_id.id} WHERE id={origin_quant.id}"
-            )
+            dest_quant = self.env["stock.quant"].create({
+                "location_id": origin_quant.location_id.id,
+                "product_id": self.product_id.id,
+                "lot_id": self.dest_lot_id.id,
+                "quantity": self.quantity,
+                
+            })
+        
+        origin_quant.write({
+            "quantity": origin_quant.quantity - self.quantity,
+        })
+
