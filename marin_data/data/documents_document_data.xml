@@ -1,5 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
+    <!-- Sub Folders -->
+    <record id="documents_control_folder" model="documents.document" forcecreate="0">
+        <field name="name">Control</field>
+        <field name="type">folder</field>
+        <field name="folder_id" ref="documents.document_internal_folder" />
+    </record>
+
+    <record id="documents_credentials_folder" model="documents.document" forcecreate="0">
+        <field name="name">Credentials and passwords</field>
+        <field name="type">folder</field>
+        <field name="folder_id" ref="documents.document_internal_folder" />
+    </record>
+
+    <!-- Folders -->
+    <record id="documents_commercial_folder" model="documents.document" forcecreate="0">
+        <field name="name">Commercial</field>
+        <field name="description" type="html">
+            <center>
+                <p>Categorize, share and keep track of all commercial documents.</p>
+                <p>Incoming letters sent to <span
+                        class="o_folder_description_alias"
+                    >inbox email alias</span> will be added to your inbox automatically.</p>
+            </center>
+        </field>
+        <field name="type">folder</field>
+    </record>
+
+    <record id="documents_wh_folder" model="documents.document" forcecreate="0">
+        <field name="name">Stock</field>
+        <field name="description" type="html">
+            <center>
+                <p>Categorize, share and keep track of all your Stock documents.</p>
+                <p>Incoming letters sent to <span
+                        class="o_folder_description_alias"
+                    >inbox email alias</span> will be added to your inbox automatically.</p>
+            </center>
+        </field>
+        <field name="type">folder</field>
+    </record>
+
+    <record id="documents_knowledge_folder" model="documents.document" forcecreate="0">
+        <field name="name">Knowledge</field>
+        <field name="description" type="html">
+            <center>
+                <p>Categorize, share and keep track of all your knowledge documents.</p>
+                <p>Incoming letters sent to <span
+                        class="o_folder_description_alias"
+                    >inbox email alias</span> will be added to your inbox automatically.</p>
+            </center>
+        </field>
+        <field name="type">folder</field>
+    </record>
+
+    <record id="documents_bank_statements_folder" model="documents.document" forcecreate="0">
+        <field name="name">Bank Statements</field>
+        <field name="type">folder</field>
+        <field name="folder_id" ref="documents.document_finance_folder" />
+    </record>
+
+    <record id="documents_payment_receipts_folder" model="documents.document" forcecreate="0">
+        <field name="name">Payment Receipts</field>
+        <field name="type">folder</field>
+        <field name="folder_id" ref="documents.document_finance_folder" />
+    </record>
+
+    <record id="documents_sat_folder" model="documents.document" forcecreate="0">
+        <field name="name">SAT</field>
+        <field name="type">folder</field>
+        <field name="folder_id" ref="documents.document_finance_folder" />
+    </record>
+
+    <record id="documents_edomex_folder" model="documents.document" forcecreate="0">
+        <field name="name">EdoMex</field>
+        <field name="type">folder</field>
+        <field name="folder_id" ref="documents.document_finance_folder" />
+    </record>
+
+    <record id="documents_partners_ledger_folder" model="documents.document" forcecreate="0">
+        <field name="name">Partner Ledger</field>
+        <field name="type">folder</field>
+        <field name="folder_id" ref="documents.document_finance_folder" />
+    </record>
+
+    <record id="documents_assets_folder" model="documents.document" forcecreate="0">
+        <field name="name">Assets</field>
+        <field name="type">folder</field>
+        <field name="folder_id" ref="documents.document_finance_folder" />
+    </record>
+
+    <record id="documents_partner_folder" model="documents.document" forcecreate="0">
+        <field name="name">Partners</field>
+        <field name="type">folder</field>
+    </record>
+
     <record id="document_imdm_22611415_6" model="documents.document">
         <field name="name">IMDM 22611415-6</field>
         <field name="datas" type="base64" file="marin_data/data/files/IMDM 22611415-6.txt" />

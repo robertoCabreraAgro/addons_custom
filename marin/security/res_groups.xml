@@ -211,7 +211,7 @@
         <field name="name">HR user</field>
         <field name="category_id" ref="base.module_category_usability" />
         <field name="implied_ids" eval="[
-        Command.link(ref('group_hr_readonly'))
+            Command.link(ref('group_hr_readonly'))
         ]" />
     </record>
 
@@ -219,7 +219,7 @@
         <field name="name">HR manager</field>
         <field name="category_id" ref="base.module_category_usability" />
         <field name="implied_ids" eval="[
-        Command.link(ref('group_hr_user')),
+            Command.link(ref('group_hr_user')),
         ]" />
     </record>
 

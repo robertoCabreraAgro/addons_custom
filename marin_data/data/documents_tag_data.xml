@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<odoo>
+<odoo noupdate="1">
     <record id="documents_commercial_documents_bi" model="documents.tag" forcecreate="0">
         <field name="name">BI</field>
         <field name="sequence">6</field>
