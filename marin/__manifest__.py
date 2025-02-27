@@ -86,7 +86,6 @@
         "data/documents_tag_data.xml",
         "data/product_removal_data.xml",
         "data/res.partner.category.csv",
-        "data/uom.uom.csv",
         # "report/report_deliveryslip.xml",
         # "report/report_stock_picking_operations.xml",
         # "report/report_invoice.xml",

@@ -70,6 +70,7 @@ def _post_init_marin(env):
     tools.convert.convert_file(env, "marin_data", "data/res.users.csv", None, mode="init", noupdate=True, kind="data")
     tools.convert.convert_file(env, "marin_data", "data/stock.package.type.csv", None, mode="init", noupdate=True, kind="data")
     tools.convert.convert_file(env, "marin_data", "data/stock.storage.category.csv", None, mode="init", noupdate=True, kind="data")
+    tools.convert.convert_file(env, "marin_data", "data/uom.uom.csv", None, mode="init", noupdate=True, kind="data")
     tools.convert.convert_file(env, "marin_data", "data/product.category.csv", None, mode="init", noupdate=True, kind="data")
     tools.convert.convert_file(env, "marin_data", "data/product_pricelist_data.xml", None, mode="init", noupdate=True, kind="data")
     tools.convert.convert_file(env, "marin_data", "data/product.tag.csv", None, mode="init", noupdate=True, kind="data")
