@@ -36,7 +36,7 @@ class GpsTrackingPoint(models.Model):
     battery_voltage = fields.Float(string='Battery Voltage (67)', digits=(16, 3))
     battery_current = fields.Float(string='Battery Current (68)', digits=(16, 3))
     active_gsm_operator = fields.Integer(string='Active GSM Operator (241)')
-    total_odometer = fields.Integer(string='Total Odometer (16)')
+    odometer = fields.Integer(string='Total Odometer (16)')
     
 
     #@api.depends('latitude', 'longitude')

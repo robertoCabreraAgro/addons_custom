@@ -18,7 +18,10 @@
         <field name="model">gps.tracking.device</field>
         <field name="arch" type="xml">
             <list string="GPS Tracking Devices">
+                <field name="license_plate" />
                 <field name="imei" />
+                <field name="driver_name" />
+                <field name="model_id" />
             </list>
         </field>
     </record>
@@ -39,30 +42,30 @@
                     </group>
                     <notebook>
                         <page string="Tracking Points">
-                            <field name="tracking_points">
+                            <field name="tracking_points" default_order="timestamp desc">
                                 <list>
-                                    <field name="device_id"/>
+                                    <field name="device_id" optional="hide"/>
                                     <field name="timestamp"/>
-                                    <field name="priority"/>
+                                    <field name="priority" optional="hide"/>
                                     <field name="latitude"/>
                                     <field name="longitude"/>
                                     <field name="altitude"/>
-                                    <field name="angle"/>
-                                    <field name="satellites"/>
+                                    <field name="angle" optional="hide"/>
+                                    <field name="satellites" optional="hide"/>
                                     <field name="speed"/>
-                                    <field name="event_id"/>
+                                    <field name="odometer"/>
+                                    <field name="event_id" optional="hide"/>
                                     <field name="ignition"/>
                                     <field name="movement"/>
-                                    <field name="gsm_signal"/>
-                                    <field name="sleep_mode"/>
-                                    <field name="gnss_status"/>
-                                    <field name="gnss_pdop"/>
-                                    <field name="gnss_hdop"/>
-                                    <field name="external_voltage"/>
-                                    <field name="battery_voltage"/>
-                                    <field name="battery_current"/>
-                                    <field name="active_gsm_operator"/>
-                                    <field name="total_odometer"/>
+                                    <field name="gsm_signal" optional="hide"/>
+                                    <field name="sleep_mode" optional="hide"/>
+                                    <field name="gnss_status" optional="hide"/>
+                                    <field name="gnss_pdop" optional="hide"/>
+                                    <field name="gnss_hdop" optional="hide"/>
+                                    <field name="external_voltage" optional="hide"/>
+                                    <field name="battery_voltage" optional="hide"/>
+                                    <field name="battery_current" optional="hide"/>
+                                    <field name="active_gsm_operator" optional="hide"/>
                                 </list>
                             </field>
                         </page>
