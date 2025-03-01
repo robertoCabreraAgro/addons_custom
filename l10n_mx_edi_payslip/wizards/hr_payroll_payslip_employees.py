@@ -16,7 +16,7 @@ class HrPayslipEmployees(models.TransientModel):
         payslips.write(
             {
                 "l10n_mx_edi_payment_date": run_data.get("l10n_mx_edi_payment_date", False),
-                "number": payslips[0].payslip_run_id.name if payslips else "",
+                #"number": payslips[0].payslip_run_id.name if payslips else "",
             }
         )
 

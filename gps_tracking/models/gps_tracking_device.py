@@ -23,6 +23,10 @@ class GpsTrackingDevice(models.Model):
     ignition = fields.Integer(string='Ignition (239)', related='last_point_id.ignition', store=True)
     movement = fields.Integer(string='Movement (240)', related='last_point_id.movement', store=True)
     vehicle_id = fields.Many2one('fleet.vehicle', string='Vehículo', help='Vehículo asociado al dispositivo GPS')
+    license_plate = fields.Char(string='Placas', related='vehicle_id.license_plate', store=True)
+    driver_name = fields.Char(string="Conductor", compute="_compute_driver_name", store=True)
+    model_id = fields.Many2one('fleet.vehicle.model', string='Modelo', related='vehicle_id.model_id', store=True)
+
     color = fields.Selection(
         selection=[
             ('#FF0000', 'Rojo'),
@@ -36,6 +40,10 @@ class GpsTrackingDevice(models.Model):
         default='#FF0000'
     )
     
+    @api.depends('vehicle_id.driver_id')
+    def _compute_driver_name(self):
+        for record in self:
+            record.driver_name = record.vehicle_id.driver_id.name if record.vehicle_id.driver_id else ""
     #@api.depends('tracking_points.timestamp')  # Usar el campo correcto
     #def _compute_last_point(self):
     #    for rec in self:
