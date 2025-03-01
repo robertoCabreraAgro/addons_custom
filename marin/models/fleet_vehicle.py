@@ -12,7 +12,7 @@ class FleetVehicleInherit(models.Model):
     fuel_card_id = fields.Many2one(
         comodel_name="documents.document",
         domain=lambda self: [
-            ("tag_ids", "in", self.env.ref("marin.documents_fleet_fuel_card").ids),
+            ("tag_ids", "in", self.env.ref("marin_data.documents_fleet_fuel_card").ids),
         ],
         inverse="_inverse_fuel_card_id",
         store=True,
@@ -22,7 +22,7 @@ class FleetVehicleInherit(models.Model):
     highway_pass_id = fields.Many2one(
         comodel_name="documents.document",
         domain=lambda self: [
-            ("tag_ids", "in", self.env.ref("marin.documents_fleet_highway_pass").ids),
+            ("tag_ids", "in", self.env.ref("marin_data.documents_fleet_highway_pass").ids),
         ],
         inverse="_inverse_highway_pass_id",
         store=True,
@@ -81,7 +81,7 @@ class FleetVehicleInherit(models.Model):
         Set the vehicle on the corresponding document, and unset the vehicle on 
         previously related documents
         """
-        tag = self.env.ref("marin.documents_fleet_fuel_card", False)
+        tag = self.env.ref("marin_data.documents_fleet_fuel_card", False)
         for vehicle in self:
             doc = vehicle.fuel_card_id
             other_docs = doc.search(
@@ -110,7 +110,7 @@ class FleetVehicleInherit(models.Model):
         Set the vehicle on the corresponding document, and unset the vehicle on
         previously related documents
         """
-        tag = self.env.ref("marin.documents_fleet_highway_pass", False)
+        tag = self.env.ref("marin_data.documents_fleet_highway_pass", False)
         for vehicle in self:
             doc = vehicle.highway_pass_id
             other_docs = doc.search(

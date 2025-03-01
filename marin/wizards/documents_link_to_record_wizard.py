@@ -6,8 +6,8 @@ class LinkToRecordWizard(models.TransientModel):
 
     def link_to(self):
         res = super().link_to()
-        fc_tag = self.env.ref("marin.documents_fleet_fuel_card", False)
-        hp_tag = self.env.ref("marin.documents_fleet_highway_pass", False)
+        fc_tag = self.env.ref("marin_data.documents_fleet_fuel_card", False)
+        hp_tag = self.env.ref("marin_data.documents_fleet_highway_pass", False)
         if self.resource_ref._name == "fleet.vehicle":
             for doc in self.document_ids:
                 if fc_tag and fc_tag in self.document_ids.tag_ids:
