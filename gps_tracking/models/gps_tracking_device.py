@@ -8,8 +8,9 @@ _logger = logging.getLogger(__name__)
 class GpsTrackingDevice(models.Model):
     _name = 'gps.tracking.device'
     _description = 'GPS Tracking Device'
-    
-    imei = fields.Char(string='IMEI', required=True, unique=True)
+
+
+    imei = fields.Char(string='IMEI', required=True)
     tracking_points = fields.One2many('gps.tracking.point', 'device_id', string='Tracking Points')
     last_point_id = fields.Many2one('gps.tracking.point', string='Last Tracking Point')
     speed = fields.Float(string='Speed', related='last_point_id.speed', store=True)
@@ -26,7 +27,6 @@ class GpsTrackingDevice(models.Model):
     license_plate = fields.Char(string='Placas', related='vehicle_id.license_plate', store=True)
     driver_name = fields.Char(string="Conductor", compute="_compute_driver_name", store=True)
     model_id = fields.Many2one('fleet.vehicle.model', string='Modelo', related='vehicle_id.model_id', store=True)
-
     color = fields.Selection(
         selection=[
             ('#FF0000', 'Rojo'),
@@ -39,7 +39,12 @@ class GpsTrackingDevice(models.Model):
         string="Color de Recorrido",
         default='#FF0000'
     )
-    
+
+    _unique_code = models.Constraint(
+        'unique (imei)',
+        'This IMEI already exists',
+    )
+
     @api.depends('vehicle_id.driver_id')
     def _compute_driver_name(self):
         for record in self:
