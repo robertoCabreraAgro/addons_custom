@@ -25,7 +25,7 @@ class AccountMove(models.Model):
     )
 
 
-    @api.constrains("state", "l10n_mx_edi_document_ids")
+    @api.constrains("state", "l10n_mx_edi_cfdi_uuid")
     def _check_uuid_duplicated(self):
         for move in self:
             if move.l10n_mx_edi_cfdi_uuid:

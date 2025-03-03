@@ -76,7 +76,7 @@ class PosSession(models.Model):
             not self.env.user.has_group("marin.group_pos_cash_transfer")
             and self.cash_transfered != cash_amount
         ):
-            raise AccessError(_("Permission needed"))
+            raise AccessError(_('You are not allowed to do Cash Transfers. Please contact an administrator.'))
 
         if not self.original_cash_register_balance_end_real:
             self.original_cash_register_balance_end_real = self.cash_register_balance_end_real
