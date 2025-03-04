@@ -19,7 +19,7 @@ from . import hr_payslip_run
 from . import mrp_bom
 from . import approval_category
 from . import approval_request
-# from . import mrp_production
+from . import mrp_production
 from . import pos_config
 from . import pos_order
 from . import pos_order_line
