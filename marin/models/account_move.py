@@ -58,6 +58,29 @@ class AccountMove(models.Model):
             super(AccountMove, cancelled_moves.with_context(force_delete=True)).unlink()
         return super(AccountMove, self - cancelled_moves).unlink()
 
+    # -------------------------------------------------------------------------
+    # COMPUTE METHODS
+    # -------------------------------------------------------------------------
+
+    # Override original method
+    @api.depends("line_ids.purchase_line_id", "line_ids.product_id")
+    def _compute_hide_purchase_matching(self):
+        """OVERRIDE to add condition that check if product_id is defined.
+        More context: Task #5643
+        https://agromarin.mx/odoo/all-tasks/5643
+        """
+        for move in self:
+            if any(
+                il.display_type == "product"
+                and not bool(il.purchase_line_id)
+                and bool(il.product_id)
+                for il in move.invoice_line_ids
+            ):
+                move.hide_purchase_matching = False
+                continue
+
+            move.hide_purchase_matching = True
+
     # Override original method
     @api.depends("company_id", "currency_id", "partner_id", "amount_total")
     def _compute_partner_credit_warning(self):
