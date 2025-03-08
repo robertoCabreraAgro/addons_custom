@@ -6,69 +6,69 @@
         <field name="priority" eval="15" />
         <field name="arch" type="xml">
             <search string="Search Sale Orders">
-                <field
-                    name="name"
-                    string="Order"
+                <field name="name" string="Order"
                     filter_domain="['|', '|', ('name', 'ilike', self), ('client_order_ref', 'ilike', self), ('partner_id', 'child_of', self)]"
                 />
                 <field name="partner_id" operator="child_of" />
-                <field name="order_line" string="Product" filter_domain="[('order_line.product_id', 'ilike', self)]" />
+                <field name="order_line_ids" string="Product"
+                    filter_domain="[('order_line_ids.product_id', 'ilike', self)]" />
                 <field name="tag_ids" string="Tag" />
                 <field name="team_id" string="Sales Team" />
                 <field name="user_id" />
                 <field name="campaign_id" />
-                <filter name="my_orders_filter" string="My Orders" domain="[('user_id', '=', uid)]" />
+                <filter name="my_orders_filter" string="My Orders"
+                    domain="[('user_id', '=', uid)]" />
                 <separator />
-                <filter string="Quotations" name="draft" domain="[('state', 'in', ('draft', 'sent'))]" />
-                <filter string="Sale orders" name="sale" domain="[('state', 'in', ('sale', 'done'))]" />
+                <filter string="Quotations" name="draft" 
+                    domain="[('state', 'in', ('draft', 'sent'))]" />
+                <filter string="Sale orders" name="sale" 
+                    domain="[('state', 'in', ('sale', 'done'))]" />
                 <separator />
-                <filter name="to_invoice" string="To invoice" domain="[('invoice_status', '=', 'to invoice')]" />
-                <filter name="invoiced" string="Invoiced" domain="[('invoice_status', '=', 'invoiced')]" />
-                <filter name="upselling" string="To upsell" domain="[('invoice_status', '=', 'upselling')]" />
+                <filter name="to_invoice" string="To invoice"
+                    domain="[('invoice_status', '=', 'to invoice')]" />
+                <filter name="invoiced" string="Invoiced"
+                    domain="[('invoice_status', '=', 'invoiced')]" />
+                <filter name="upselling" string="To upsell"
+                    domain="[('invoice_status', '=', 'upselling')]" />
                 <separator />
-                <filter name="pending" string="To deliver" domain="[('delivery_status', '=', 'pending')]" />
-                <filter
-                    name="partially_delivered"
-                    string="Partially delivered"
-                    domain="[('delivery_status', '=', 'partial')]"
-                />
-                <filter name="full" string="Delivered" domain="[('delivery_status', '=', 'full')]" />
-                <filter name="over_full" string="Over Delivered" domain="[('delivery_status', '=', 'over full')]" />
+                <filter name="pending" string="To deliver"
+                    domain="[('delivery_status', '=', 'pending')]" />
+                <filter name="partially_delivered" string="Partially delivered"
+                    domain="[('delivery_status', '=', 'partial')]" />
+                <filter name="full" string="Delivered"
+                    domain="[('delivery_status', '=', 'full')]" />
+                <filter name="over_full" string="Over Delivered"
+                    domain="[('delivery_status', '=', 'over full')]" />
                 <separator />
-                <filter
-                    name="activities_overdue"
-                    string="Late Activities"
+                <filter name="activities_overdue" string="Late Activities"
                     domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
-                    help="Show all records which has next action date is before today"
-                />
-                <filter
-                    name="activities_today"
-                    string="Today Activities"
-                    domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"
-                />
-                <filter
-                    name="activities_upcoming_all"
-                    string="Future Activities"
-                    domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"
-                />
+                    help="Show all records which has next action date is before today" />
+                <filter name="activities_today" string="Today Activities"
+                    domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]" />
+                <filter name="activities_upcoming_all" string="Future Activities"
+                    domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]" />
                 <group string="Group By" expand="0">
-                    <filter name="commercial_partner_groupby" string="Customer Entity" domain="[]" context="{'group_by': 'commercial_partner_id'}" />
-                    <filter name="customer" string="Customer" domain="[]" context="{'group_by': 'partner_id'}" />
-                    <filter name="salesteam" string="Team" domain="[]" context="{'group_by': 'team_id'}" />
-                    <filter name="salesperson" string="Salesperson" domain="[]" context="{'group_by': 'user_id'}" />
-                    <filter name="order_date" string="Order Date" domain="[]" context="{'group_by': 'date_order'}" />
-                    <filter
-                        name="invoice_status"
-                        string="Invoice status"
+                    <filter name="commercial_partner_groupby" string="Customer Entity"
                         domain="[]"
-                        context="{'group_by': 'invoice_status'}"
-                    />
-                    <filter
-                        name="delivery_status"
-                        string="Delivery Status"
+                        context="{'group_by': 'commercial_partner_id'}" />
+                    <filter name="customer" string="Customer"
                         domain="[]"
-                        context="{'group_by': 'delivery_status'}"
-                    />
+                        context="{'group_by': 'partner_id'}" />
+                    <filter name="salesteam" string="Team"
+                        domain="[]"
+                        context="{'group_by': 'team_id'}" />
+                    <filter name="salesperson" string="Salesperson"
+                        domain="[]"
+                        context="{'group_by': 'user_id'}" />
+                    <filter name="order_date" string="Order Date"
+                        domain="[]"
+                        context="{'group_by': 'date_order'}" />
+                    <filter name="invoice_status" string="Invoice status"
+                        domain="[]"
+                        context="{'group_by': 'invoice_status'}" />
+                    <filter name="delivery_status" string="Delivery Status"
+                        domain="[]"
+                        context="{'group_by': 'delivery_status'}" />
                 </group>
             </search>
         </field>
@@ -212,24 +212,24 @@
                     required="state == 'draft'"
                 />
             </xpath>
-            <xpath expr="//page/field[@name='order_line']/list/field[@name='tax_ids']" position="attributes">
+            <xpath expr="//page/field[@name='order_line_ids']/list/field[@name='tax_ids']" position="attributes">
                 <attribute name="optional">hide</attribute>
             </xpath>
-            <xpath expr="//page/field[@name='order_line']/list/field[@name='discount']" position="attributes">
+            <xpath expr="//page/field[@name='order_line_ids']/list/field[@name='discount']" position="attributes">
                 <attribute name="optional">hide</attribute>
             </xpath>
-            <xpath expr="//page/field[@name='order_line']/list/field[@name='qty_delivered']" position="attributes">
+            <xpath expr="//page/field[@name='order_line_ids']/list/field[@name='qty_delivered']" position="attributes">
                 <attribute name="decoration-danger">not display_type and delivery_status == 'over full'</attribute>
                 <attribute name="decoration-warning">not display_type and delivery_status == 'partial'</attribute>
                 <attribute name="decoration-info">not display_type and delivery_status == 'pending'</attribute>
                 <attribute name="decoration-success">not display_type and delivery_status == 'full'</attribute>
             </xpath>
-            <xpath expr="//page/field[@name='order_line']/list/field[@name='qty_invoiced']" position="attributes">
+            <xpath expr="//page/field[@name='order_line_ids']/list/field[@name='qty_invoiced']" position="attributes">
                 <attribute name="decoration-danger">not display_type and invoice_status == 'to invoice'</attribute>
                 <attribute name="decoration-info">not display_type and invoice_status == 'upselling'</attribute>
                 <attribute name="decoration-success">not display_type and invoice_status == 'invoiced'</attribute>
             </xpath>
-            <xpath expr="//page/field[@name='order_line']/list/field[@name='price_unit']" position="after">
+            <xpath expr="//page/field[@name='order_line_ids']/list/field[@name='price_unit']" position="after">
                 <field name="order_partner_id" column_invisible="1" />
                 <field name="delivery_status" column_invisible="1" />
                 <widget name="sale_line_price_history_widget" width="20px" />

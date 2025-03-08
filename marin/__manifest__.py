@@ -20,6 +20,7 @@
         "product_manufacturer",
         "hr_skills_survey",
         "hr_recruitment_survey",
+        "documents_hr_recruitment",
         "hr_appraisal_survey",
         "hr_attendance",
         "approvals",

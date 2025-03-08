@@ -73,7 +73,7 @@ class SaleOrder(models.Model):
                 )
 
     # Override original method
-    @api.depends("state", "order_line.qty_to_deliver", "order_line.product_uom_qty")
+    @api.depends("state", "order_line_ids.qty_to_deliver", "order_line_ids.product_uom_qty")
     def _compute_delivery_status(self):
         precision = self.env["decimal.precision"].precision_get("Product Unit of measure")
         for order in self:
@@ -83,7 +83,7 @@ class SaleOrder(models.Model):
 
             qty1 = 0
             to_deliver = 0
-            for line in order.order_line.filtered(lambda ln: not ln.display_type):
+            for line in order.order_line_ids.filtered(lambda ln: not ln.display_type):
                 qty1 += line.product_uom_qty
                 to_deliver += line.qty_to_deliver
 
@@ -101,7 +101,7 @@ class SaleOrder(models.Model):
                 order.delivery_status = "no"
 
     # Extend original method
-    @api.depends("state", "order_line.invoice_status")
+    @api.depends("state", "order_line_ids.invoice_status")
     def _compute_invoice_status(self):
         forced = self.filtered("force_fully_invoiced")
         forced.invoice_status = "invoiced"
@@ -112,7 +112,7 @@ class SaleOrder(models.Model):
         """We could do sale order line route_id field compute store writable.
         But this field is created by Odoo so I prefer not modify it.
         """
-        self.order_line.route_id = self.route_id
+        self.order_line_ids.route_id = self.route_id
 
     def action_sale_authorize_debt(self):
         view = self.env.ref("marin.view_authorize_debt_wizard_form")
@@ -134,7 +134,7 @@ class SaleOrder(models.Model):
         self._compute_delivery_status()
 
     def action_recompute_invoice_status(self):
-        self.order_line._compute_invoice_status()
+        self.order_line_ids._compute_invoice_status()
         self._compute_invoice_status()
 
     def action_force_invoice_status(self):
@@ -147,7 +147,7 @@ class SaleOrder(models.Model):
 
     def action_open_order_lines(self):
         action = self.env["ir.actions.act_window"]._for_xml_id("marin.action_sale_order_line")
-        action["domain"] = [("id", "in", self.order_line.ids)]
+        action["domain"] = [("id", "in", self.order_line_ids.ids)]
         return action
 
     def validate_credit_limit(self):
@@ -179,7 +179,7 @@ class SaleOrder(models.Model):
     def action_clean_3_0(self):
         orders = self.filtered(lambda order: order.state == "sale")
         precision = self.env["decimal.precision"].precision_get("Product Unit of measure")
-        lines = orders.mapped("order_line").filtered(
+        lines = orders.mapped("order_line_ids").filtered(
             lambda line: float_is_zero(line.product_uom_qty, precision_digits=precision)
             and float_is_zero(line.qty_delivered, precision_digits=precision)
             and float_is_zero(line.qty_invoiced, precision_digits=precision)
@@ -193,7 +193,7 @@ class SaleOrder(models.Model):
     def write(self, vals):
         res = super().write(vals)
         if "route_id" in vals:
-            lines = self.mapped("order_line").filtered(
+            lines = self.mapped("order_line_ids").filtered(
                 lambda line: line.route_id.id != vals["route_id"]
             )
             lines.write({"route_id": vals["route_id"]})
