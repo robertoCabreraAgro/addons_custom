@@ -28,7 +28,7 @@ class TestSale(TestSaleCommon):
                     "partner_invoice_id": cls.partner_a.id,
                     "partner_shipping_id": cls.partner_a.id,
                     "pricelist_id": cls.company_data["default_pricelist"].id,
-                    "order_line": [
+                    "order_line_ids": [
                         Command.create(
                             {
                                 "product_id": cls.company_data["product_order_no"].id,
@@ -103,7 +103,7 @@ class TestSale(TestSaleCommon):
         self.assertFalse(order.journal_id)
         order._compute_journal_id()
         self.assertEqual(order.journal_id.id, self.default_journal_id)
-        self.assertTrue(order.order_line.product_updatable)
+        self.assertTrue(order.order_line_ids.product_updatable)
 
         # partner_credit_warning
         order._compute_partner_credit_warning()
@@ -117,7 +117,7 @@ class TestSale(TestSaleCommon):
         self.assertEqual(order.delivery_status, "no")
         order.action_confirm()
         self.assertEqual(order.delivery_status, "pending")
-        self.assertFalse(order.order_line.product_updatable)
+        self.assertFalse(order.order_line_ids.product_updatable)
 
     def test_02_sale_order_authorize_debt(self):
         order = self.sale_order
@@ -125,7 +125,7 @@ class TestSale(TestSaleCommon):
         partner = order.commercial_partner_id
         order.company_id.account_use_credit_limit = True
         partner.credit_limit = 10
-        order.order_line.price_unit = 10.0
+        order.order_line_ids.price_unit = 10.0
         order._compute_partner_credit_warning()
         partner.credit_on_hold = True
         self.env.user.group_ids = [(3, self.env.ref("marin.group_account_debt_manager").id)]
@@ -177,7 +177,7 @@ class TestSale(TestSaleCommon):
         partner = order.commercial_partner_id
         order.company_id.account_use_credit_limit = True
         partner.credit_limit = 10
-        order.order_line.price_unit = 10.0
+        order.order_line_ids.price_unit = 10.0
         order._compute_partner_credit_warning()
         order2 = order.copy()
         res = order.action_confirm()
@@ -211,13 +211,13 @@ class TestSale(TestSaleCommon):
         # with self.assertRaisesRegex(
         #     UserError, "You cant authorize debt for records belonging to different companies."):
         #     self.env["authorize.debt.wizard"].with_context(**ctx).create([{}])
-        order.order_line.price_unit = 0.0
+        order.order_line_ids.price_unit = 0.0
         ctx["active_ids"] = order.ids
         with self.assertRaisesRegex(
             UserError, "You can't authorize debt because the records dont match the criteria."
         ):
             self.env["authorize.debt.wizard"].with_context(**ctx).create([{}])
-        order.order_line.price_unit = 10.0
+        order.order_line_ids.price_unit = 10.0
         order.action_confirm()
         with self.assertRaisesRegex(UserError, "You can only authorize debt for quotations."):
             self.env["authorize.debt.wizard"].with_context(**ctx).create([{}])
@@ -230,8 +230,8 @@ class TestSale(TestSaleCommon):
         self.assertFalse(wizard.debt_request)
         self.assertFalse(wizard.amount_authorize)
 
-    def test_06_sale_order_line_order_view(self):
-        sale_line = self.sale_order.order_line
+    def test_06_sale_order_line_ids_order_view(self):
+        sale_line = self.sale_order.order_line_ids
         action = sale_line.action_sale_order_form()
         self.assertEqual(action["res_id"], sale_line.order_id.id)
         self.assertEqual(action["res_model"], "sale.order")
@@ -257,11 +257,11 @@ class TestSale(TestSaleCommon):
         order2 = self.sale_order.copy()
         order3 = self.sale_order.copy()
         order.action_confirm()
-        order2.order_line.price_unit = 7.50
+        order2.order_line_ids.price_unit = 7.50
         order2.action_confirm()
-        order3.order_line.price_unit = 10.00
+        order3.order_line_ids.price_unit = 10.00
         with Form(self.env["sale.order.line.price.history"]) as form_wiz:
-            form_wiz.product_id = order.order_line.product_id
+            form_wiz.product_id = order.order_line_ids.product_id
             form_wiz.partner_id = order.partner_id
         wiz = form_wiz.save()
         wiz._onchange_partner_id()
@@ -269,11 +269,11 @@ class TestSale(TestSaleCommon):
             wiz.line_ids,
             [
                 {
-                    "line_id": order2.order_line.id,
+                    "line_id": order2.order_line_ids.id,
                     "price_unit": 7.5,
                 },
                 {
-                    "line_id": order.order_line.id,
+                    "line_id": order.order_line_ids.id,
                     "price_unit": 5.0,
                 },
             ],
@@ -286,15 +286,15 @@ class TestSale(TestSaleCommon):
             wiz.line_ids,
             [
                 {
-                    "line_id": order3.order_line.id,
+                    "line_id": order3.order_line_ids.id,
                     "price_unit": 10.0,
                 },
                 {
-                    "line_id": order2.order_line.id,
+                    "line_id": order2.order_line_ids.id,
                     "price_unit": 7.5,
                 },
                 {
-                    "line_id": order.order_line.id,
+                    "line_id": order.order_line_ids.id,
                     "price_unit": 5.0,
                 },
             ],

@@ -31,7 +31,7 @@ class StockMoveInherit(models.Model):
     @api.depends("picking_id.sale_id", "product_id")
     def _compute_allowed_sale_line_ids(self):
         for rec in self:
-            lines = rec.picking_id.sale_id.order_line.filtered(lambda line: line.product_id == rec.product_id)
+            lines = rec.picking_id.sale_id.order_line_ids.filtered(lambda line: line.product_id == rec.product_id)
             rec.allowed_sale_line_ids = lines
 
     def _action_confirm(self, merge=True, merge_into=False):

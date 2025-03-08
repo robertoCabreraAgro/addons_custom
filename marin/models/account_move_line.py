@@ -153,7 +153,7 @@ class AccountMoveLine(models.Model):
                     ("partner_id", "=", move.partner_id.commercial_partner_id.id),
                 ]
             )
-            lines = orders.order_line | move.line_ids.mapped("sale_line_ids")
+            lines = orders.order_line_ids | move.line_ids.mapped("sale_line_ids")
             rec.allowed_sale_line_ids = (
                 lines if not rec.product_id
                 else lines.filtered(lambda line: line.product_id == rec.product_id)
