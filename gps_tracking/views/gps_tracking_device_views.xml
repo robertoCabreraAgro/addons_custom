@@ -54,6 +54,7 @@
                                     <field name="satellites" optional="hide"/>
                                     <field name="speed"/>
                                     <field name="odometer"/>
+                                    <field name="fuel_level"/>
                                     <field name="event_id" optional="hide"/>
                                     <field name="ignition"/>
                                     <field name="movement"/>

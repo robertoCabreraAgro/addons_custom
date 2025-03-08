@@ -25,20 +25,20 @@ class GpsTrackingPoint(models.Model):
     address = fields.Char(string='Address', compute='_compute_address', store=True)
     
     # Nuevos campos para los IO adicionales
-    ignition = fields.Integer(string='Ignition (239)')
-    movement = fields.Integer(string='Movement (240)')
-    gsm_signal = fields.Integer(string='GSM Signal (21)')
-    sleep_mode = fields.Integer(string='Sleep Mode (200)')
-    gnss_status = fields.Integer(string='GNSS Status (69)')
-    gnss_pdop = fields.Float(string='GNSS PDOP (181)', digits=(16, 2))
-    gnss_hdop = fields.Float(string='GNSS HDOP (182)', digits=(16, 2))
-    external_voltage = fields.Float(string='External Voltage (66)', digits=(16, 3))
-    battery_voltage = fields.Float(string='Battery Voltage (67)', digits=(16, 3))
-    battery_current = fields.Float(string='Battery Current (68)', digits=(16, 3))
-    active_gsm_operator = fields.Integer(string='Active GSM Operator (241)')
-    odometer = fields.Integer(string='Total Odometer (16)')
+    ignition = fields.Integer(string='Ignition')
+    movement = fields.Integer(string='Movement')
+    gsm_signal = fields.Integer(string='GSM Signal')
+    sleep_mode = fields.Integer(string='Sleep Mode')
+    gnss_status = fields.Integer(string='GNSS Status')
+    gnss_pdop = fields.Float(string='GNSS PDOP', digits=(16, 2))
+    gnss_hdop = fields.Float(string='GNSS HDOP', digits=(16, 2))
+    external_voltage = fields.Float(string='External Voltage', digits=(16, 3))
+    battery_voltage = fields.Float(string='Battery Voltage', digits=(16, 3))
+    battery_current = fields.Float(string='Battery Current', digits=(16, 3))
+    active_gsm_operator = fields.Integer(string='Active GSM Operator')
+    odometer = fields.Integer(string='Total Odometer')
+    fuel_level = fields.Integer(string="Fuel Level")
     
-
     #@api.depends('latitude', 'longitude')
     #def _compute_the_point(self):
     #    transformer = Transformer.from_crs(4326, 3857, always_xy=True)
