@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0+e\n"
+"Project-Id-Version: Odoo Server saas~18.2+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-26 08:37+0000\n"
-"PO-Revision-Date: 2024-12-26 08:37+0000\n"
+"POT-Creation-Date: 2025-03-08 16:21+0000\n"
+"PO-Revision-Date: 2025-03-08 16:21+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -47,276 +47,6 @@ msgid "%s (copy)"
 msgstr "%s (copia)"
 
 #. module: marin
-#: model:uom.uom,name:marin.uom_119
-msgid "0.010kg"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_118
-msgid "0.015kg"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_147
-msgid "0.100L"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_117
-msgid "0.100kg"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_146
-msgid "0.125L"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_164
-msgid "0.130kg"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_145
-msgid "0.150L"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_116
-msgid "0.150kg"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_115
-msgid "0.160kg"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_144
-msgid "0.200L"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_114
-msgid "0.200kg"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_113
-msgid "0.212kg"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_143
-msgid "0.250L"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_112
-msgid "0.250kg"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_142
-msgid "0.300L"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_111
-msgid "0.300kg"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_162
-msgid "0.350L"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_141
-msgid "0.450L"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_140
-msgid "0.500L"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_110
-msgid "0.500kg"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_139
-msgid "0.600L"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_109
-msgid "0.600kg"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_108
-msgid "0.737kg"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_161
-msgid "0.750kg"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_107
-msgid "0.800kg"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_138
-msgid "0.900L"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_137
-msgid "0.950L"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_136
-msgid "0.960L"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_135
-msgid "0.970L"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_134
-msgid "0.975L"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_157
-msgid "1.6L"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_149
-msgid "1000L"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_153
-msgid "10L"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_127
-msgid "10kg"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_126
-msgid "12kg"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_125
-msgid "15kg"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_152
-msgid "18L"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_160
-msgid "19L"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_150
-msgid "200L"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_120
-msgid "200kg"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_151
-msgid "20L"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_124
-msgid "20kg"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_123
-msgid "25kg"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_133
-msgid "2kg"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_132
-msgid "3.2kg"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_122
-msgid "30kg"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_156
-msgid "4L"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_121
-msgid "50kg"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_155
-msgid "5L"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_131
-msgid "5kg"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_129
-msgid "7.5kg"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_130
-msgid "7kg"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_154
-msgid "9.5L"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_128
-msgid "9kg"
-msgstr ""
-
-#. module: marin
 #: model_terms:ir.ui.view,arch_db:marin.view_account_invoice_discount_form
 msgid "<span class=\"o_form_label oe_inline\">%</span>"
 msgstr ""
@@ -324,6 +54,11 @@ msgstr ""
 #. module: marin
 #: model_terms:ir.ui.view,arch_db:marin.view_task_form2
 msgid "<span class=\"oe_grey p-2\"> Ha</span>"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.stock_picking_batch_form_inherit_fleet_route
+msgid "<span> % </span>"
 msgstr ""
 
 #. module: marin
@@ -337,14 +72,9 @@ msgid "<span> days before expiration date</span>"
 msgstr "<span> dias antes de fecha de caducidad</span>"
 
 #. module: marin
-#: model_terms:ir.ui.view,arch_db:marin.fleet_vehicle_view_form_marin
-msgid "<span>L</span>"
-msgstr ""
-
-#. module: marin
-#: model_terms:ir.ui.view,arch_db:marin.fleet_vehicle_view_form_marin
-msgid "<span>km/L</span>"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:marin.stock_picking_batch_form_inherit_fleet_route
+msgid "<span> in </span>"
+msgstr "<span> en </span>"
 
 #. module: marin
 #: model:ir.model.fields,help:marin.field_project_task__referer_partner_id
@@ -359,7 +89,7 @@ msgstr ""
 
 #. module: marin
 #: model:ir.model.constraint,message:marin.constraint_res_partner_age_range_name_uniq
-msgid "A name must be unique !"
+msgid "A name must be unique"
 msgstr ""
 
 #. module: marin
@@ -382,6 +112,11 @@ msgid "Account"
 msgstr "Cuenta"
 
 #. module: marin
+#: model:ir.model.fields,field_description:marin.field_fleet_vehicle__account_prefix
+msgid "Account Prefix"
+msgstr ""
+
+#. module: marin
 #: model:ir.actions.server,name:marin.action_account_purchase_orders
 msgid "Account Purchase"
 msgstr ""
@@ -392,23 +127,12 @@ msgid "Accounting"
 msgstr ""
 
 #. module: marin
-#: model:ir.model.fields,help:marin.field_res_company__pos_cash_transfer_journal_id
-#: model:ir.model.fields,help:marin.field_res_config_settings__pos_cash_transfer_journal_id
-msgid "Accounting journal used to create pos cash withdraw."
-msgstr ""
-
-#. module: marin
 #: model:ir.model.fields,field_description:marin.field_documents_tag__active
 #: model:ir.model.fields,field_description:marin.field_pos_config__active
 #: model:ir.model.fields,field_description:marin.field_project_task_lost_reason__active
 #: model:ir.model.fields,field_description:marin.field_stock_lot__active
 msgid "Active"
 msgstr "Activo"
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_104
-msgid "Activity"
-msgstr ""
 
 #. module: marin
 #. odoo-javascript
@@ -450,11 +174,6 @@ msgid "All Orders"
 msgstr ""
 
 #. module: marin
-#: model:ir.model.fields,field_description:marin.field_stock_picking__all_product_ids
-msgid "All Product"
-msgstr ""
-
-#. module: marin
 #. odoo-python
 #: code:addons/marin/models/stock_picking.py:0
 msgid ""
@@ -488,7 +207,11 @@ msgid "Allow to use Expense module"
 msgstr ""
 
 #. module: marin
-#: model:ir.model.fields,field_description:marin.field_account_move_line__allowed_purchase_line_ids
+#: model:ir.model.fields,field_description:marin.field_account_journal__account_control_ids
+msgid "Allowed accounts"
+msgstr ""
+
+#. module: marin
 #: model:ir.model.fields,field_description:marin.field_stock_move__allowed_purchase_line_ids
 msgid "Allowed purchase lines to be related"
 msgstr ""
@@ -500,8 +223,8 @@ msgid "Allowed sale lines to be related"
 msgstr ""
 
 #. module: marin
-#: model:ir.model.fields,field_description:marin.field_account_journal__can_access_user_ids
-#: model:ir.model.fields,field_description:marin.field_stock_picking_type__can_access_user_ids
+#: model:ir.model.fields,field_description:marin.field_account_journal__user_can_access_ids
+#: model:ir.model.fields,field_description:marin.field_stock_picking_type__user_can_access_ids
 msgid "Allowed users"
 msgstr ""
 
@@ -512,6 +235,15 @@ msgid ""
 "computed"
 msgstr ""
 "Permite saber si ya se calculó el costo total de las líneas de la orden"
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_approval_category__approval_type
+msgid ""
+"Allows you to define which documents you would like to create once the "
+"request has been approved"
+msgstr ""
+"Te permite definir que documentos te gustaría crear una vez que la solicitud"
+" se apruebe"
 
 #. module: marin
 #: model:ir.model.fields,field_description:marin.field_invoice_line_in_report__aml_id
@@ -549,7 +281,7 @@ msgid "Analytic Line"
 msgstr "Línea analítica"
 
 #. module: marin
-#: model_terms:ir.ui.view,arch_db:marin.wizard_stock_quant_lot_form_view
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_quant_lot_update
 msgid "Apply"
 msgstr ""
 
@@ -565,11 +297,37 @@ msgid "Apply changes"
 msgstr ""
 
 #. module: marin
+#: model:ir.model,name:marin.model_approval_category
+msgid "Approval Category"
+msgstr "Categoría de aprobación"
+
+#. module: marin
+#: model:ir.model,name:marin.model_approval_request
+#: model:ir.model.fields,field_description:marin.field_fleet_vehicle_log__approval_request_id
+msgid "Approval Request"
+msgstr "Solicitud de aprobación"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_approval_category__approval_type
+msgid "Approval Type"
+msgstr "Tipo de aprobación"
+
+#. module: marin
 #: model_terms:ir.ui.view,arch_db:marin.search_product_lot_filter_marin
 #: model_terms:ir.ui.view,arch_db:marin.view_production_lot_form_marin
 #: model_terms:ir.ui.view,arch_db:marin.view_res_company_search
 msgid "Archived"
 msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_account_asset__property_area
+msgid "Area in square meters"
+msgstr ""
+
+#. module: marin
+#: model:ir.model,name:marin.model_account_asset
+msgid "Asset/Revenue Recognition"
+msgstr "Reconocimiento de pagos/ingresos"
 
 #. module: marin
 #. odoo-python
@@ -662,11 +420,6 @@ msgid "B2X"
 msgstr ""
 
 #. module: marin
-#: model:documents.tag,name:marin.documents_commercial_documents_bi
-msgid "BI"
-msgstr ""
-
-#. module: marin
 #: model_terms:ir.ui.view,arch_db:marin.view_account_payment_search_marin
 msgid "Bank"
 msgstr "Banco"
@@ -687,9 +440,9 @@ msgid "Bank statements"
 msgstr "Estado de cuenta bancario"
 
 #. module: marin
-#: model:ir.ui.menu,name:marin.menu_finance_bank
-msgid "Banks"
-msgstr "Bancos"
+#: model:ir.model,name:marin.model_stock_picking_batch
+msgid "Batch Transfer"
+msgstr "Transferencias por lotes"
 
 #. module: marin
 #: model:ir.model.fields,field_description:marin.field_product_category__use_time
@@ -697,15 +450,15 @@ msgid "Best Before Date"
 msgstr ""
 
 #. module: marin
+#: model:ir.model,name:marin.model_mrp_bom
+msgid "Bill of Material"
+msgstr "Lista de materiales"
+
+#. module: marin
 #: model:ir.model.fields,field_description:marin.field_purchase_order__invoice_status
 #: model_terms:ir.ui.view,arch_db:marin.purchase_order_view_search_marin
 msgid "Billing Status"
 msgstr "Estado de facturación"
-
-#. module: marin
-#: model:documents.tag,name:marin.documents_partner_documents_birth_registration
-msgid "Birth registration"
-msgstr ""
 
 #. module: marin
 #: model:ir.model.fields,field_description:marin.field_res_partner__birthdate
@@ -731,9 +484,9 @@ msgstr ""
 "            Verde: Entregado"
 
 #. module: marin
-#: model:uom.uom,name:marin.uom_105
-msgid "Box"
-msgstr "Caja"
+#: model:ir.model.fields,field_description:marin.field_fleet_vehicle__brand_new
+msgid "Brand New"
+msgstr ""
 
 #. module: marin
 #: model:ir.model.fields.selection,name:marin.selection__res_partner__b2x__both
@@ -751,32 +504,14 @@ msgid "Business to consumer"
 msgstr ""
 
 #. module: marin
-#: model:ir.model.fields,help:marin.field_stock_picking__all_product_ids
-msgid ""
-"By default Odoo let the user choose over every product available in the "
-"catalogue but Main required that only the ones available in the location "
-"being displayed. This button enables dynamicly this feature."
-msgstr ""
-
-#. module: marin
-#: model:documents.tag,name:marin.documents_commercial_documents_crm
-msgid "CRM"
-msgstr ""
-
-#. module: marin
-#: model:documents.tag,name:marin.documents_knowledge_documents_cs
-msgid "CS"
-msgstr ""
-
-#. module: marin
 #: model:ir.model.fields,field_description:marin.field_purchase_order_line__product_updatable
 msgid "Can Edit Product"
 msgstr ""
 
 #. module: marin
 #: model_terms:ir.ui.view,arch_db:marin.view_account_invoice_discount_form
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_quant_lot_update
 #: model_terms:ir.ui.view,arch_db:marin.wizard_pos_cash_transfer_form_view
-#: model_terms:ir.ui.view,arch_db:marin.wizard_stock_quant_lot_form_view
 msgid "Cancel"
 msgstr ""
 
@@ -829,38 +564,8 @@ msgid "Cash Discount"
 msgstr ""
 
 #. module: marin
-#. odoo-python
-#: code:addons/marin/wizards/pos_cash_transfer_wizard.py:0
 #: model:mail.activity.type,summary:marin.cash_transfer_activity
-#: model_terms:ir.ui.view,arch_db:marin.pos_session_view_form
-#: model_terms:ir.ui.view,arch_db:marin.res_config_settings_view_form
-#: model_terms:ir.ui.view,arch_db:marin.view_pos_config_kanban
 msgid "Cash Transfer"
-msgstr ""
-
-#. module: marin
-#: model_terms:ir.ui.view,arch_db:marin.wizard_pos_cash_transfer_form_view
-msgid "Cash Transfer Data"
-msgstr ""
-
-#. module: marin
-#: model_terms:ir.ui.view,arch_db:marin.wizard_pos_cash_transfer_form_view
-msgid "Cash Transfer Destination"
-msgstr ""
-
-#. module: marin
-#: model:ir.model.fields,field_description:marin.field_pos_session__cash_transfer_payment_ids
-msgid "Cash Transfer Payment"
-msgstr ""
-
-#. module: marin
-#: model:ir.model.fields,field_description:marin.field_pos_session__cash_transfer_payment_count
-msgid "Cash Transfer Payment Count"
-msgstr ""
-
-#. module: marin
-#: model:ir.model.fields,field_description:marin.field_account_payment__cash_transfer_pos_id
-msgid "Cash Transfer Pos"
 msgstr ""
 
 #. module: marin
@@ -874,19 +579,8 @@ msgid "Cash discounts"
 msgstr ""
 
 #. module: marin
-#. odoo-python
-#: code:addons/marin/models/pos_session.py:0
-msgid "Cash transfer is only allowed for the last closed POs Session."
-msgstr ""
-
-#. module: marin
 #: model_terms:ir.ui.view,arch_db:marin.quant_search_view_marin
 msgid "Category"
-msgstr ""
-
-#. module: marin
-#: model:documents.tag,name:marin.documents_partner_documents_cerification
-msgid "Certification"
 msgstr ""
 
 #. module: marin
@@ -901,7 +595,7 @@ msgid "Change Lot"
 msgstr ""
 
 #. module: marin
-#: model:ir.model,name:marin.model_stock_quant_lot
+#: model:ir.model,name:marin.model_stock_quant_lot_update
 msgid "Change Quant Lot Wizard"
 msgstr ""
 
@@ -911,11 +605,6 @@ msgstr ""
 #: code:addons/marin/static/src/pos/app/store/order.js:0
 #: code:addons/marin/static/src/pos/app/store/orderline.js:0
 msgid "Choose a lot for this orderline"
-msgstr ""
-
-#. module: marin
-#: model:ir.model.fields,field_description:marin.field_fleet_vehicle__cilinders
-msgid "Cilinders Number"
 msgstr ""
 
 #. module: marin
@@ -942,8 +631,9 @@ msgid "Closest Location + Priority"
 msgstr ""
 
 #. module: marin
-#: model:documents.tag,name:marin.documents_partner_documents_collateral
-msgid "Collateral"
+#: model:ir.model.fields,field_description:marin.field_res_partner__collateral_tolerance
+#: model:ir.model.fields,field_description:marin.field_res_users__collateral_tolerance
+msgid "Collateral tolerance"
 msgstr ""
 
 #. module: marin
@@ -975,12 +665,13 @@ msgid "Companies"
 msgstr "Empresas"
 
 #. module: marin
+#: model:ir.model.fields,field_description:marin.field_approval_category__company_id
 #: model:ir.model.fields,field_description:marin.field_authorize_debt_wizard__company_id
 #: model:ir.model.fields,field_description:marin.field_invoice_line_in_report__company_id
 #: model:ir.model.fields,field_description:marin.field_invoice_line_out_report__company_id
 #: model:ir.model.fields,field_description:marin.field_pos_line_report__company_id
 msgid "Company"
-msgstr ""
+msgstr "Compañía"
 
 #. module: marin
 #: model:ir.model.fields,field_description:marin.field_res_partner__competitor
@@ -1002,11 +693,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:marin.field_pos_line_report__config_id
 msgid "Config"
 msgstr ""
-
-#. module: marin
-#: model:ir.model,name:marin.model_res_config_settings
-msgid "Config Settings"
-msgstr "Ajustes de configuración"
 
 #. module: marin
 #: model:ir.ui.menu,name:marin.menu_configuration
@@ -1057,6 +743,11 @@ msgid "Costo promedio real"
 msgstr ""
 
 #. module: marin
+#: model:ir.model.fields,field_description:marin.field_pos_session__count_liquidity_transfer_payment
+msgid "Count Liquidity Transfer Payment"
+msgstr ""
+
+#. module: marin
 #: model:ir.model.fields,field_description:marin.field_authorize_debt_wizard__count_move
 msgid "Count Move"
 msgstr ""
@@ -1087,13 +778,33 @@ msgid "Create Bills"
 msgstr ""
 
 #. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.approval_request_view_form
+msgid "Create Log"
+msgstr ""
+
+#. module: marin
 #: model_terms:ir.ui.view,arch_db:marin.view_move_form
 msgid "Create Purchase"
 msgstr ""
 
 #. module: marin
+#: model:ir.model,website_form_label:marin.model_res_partner
+msgid "Create a Customer"
+msgstr "Crear un cliente"
+
+#. module: marin
+#: model:ir.model,website_form_label:marin.model_project_task
+msgid "Create a Task"
+msgstr "Crear una tarea"
+
+#. module: marin
 #: model_terms:ir.actions.act_window,help:marin.action_orders_marin
 msgid "Create a new quotation, the first step of a new sale!"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__approval_category__approval_type__fleet_vehicle_log
+msgid "Create fleet log"
 msgstr ""
 
 #. module: marin
@@ -1113,7 +824,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:marin.field_res_partner_age_range__create_uid
 #: model:ir.model.fields,field_description:marin.field_sale_order_line_price_history__create_uid
 #: model:ir.model.fields,field_description:marin.field_sale_order_line_price_history_line__create_uid
-#: model:ir.model.fields,field_description:marin.field_stock_quant_lot__create_uid
+#: model:ir.model.fields,field_description:marin.field_stock_quant_lot_update__create_uid
 msgid "Created by"
 msgstr ""
 
@@ -1129,7 +840,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:marin.field_res_partner_age_range__create_date
 #: model:ir.model.fields,field_description:marin.field_sale_order_line_price_history__create_date
 #: model:ir.model.fields,field_description:marin.field_sale_order_line_price_history_line__create_date
-#: model:ir.model.fields,field_description:marin.field_stock_quant_lot__create_date
+#: model:ir.model.fields,field_description:marin.field_stock_quant_lot_update__create_date
 msgid "Created on"
 msgstr ""
 
@@ -1181,72 +892,72 @@ msgid "Credit on hold"
 msgstr ""
 
 #. module: marin
-#: model:res.partner.category,name:marin.partner_category_120
+#: model:res.partner.category,name:marin.partner_category_1017
 msgid "Crop - Avocado"
 msgstr ""
 
 #. module: marin
-#: model:res.partner.category,name:marin.partner_category_121
+#: model:res.partner.category,name:marin.partner_category_1018
 msgid "Crop - Barley"
 msgstr ""
 
 #. module: marin
-#: model:res.partner.category,name:marin.partner_category_122
+#: model:res.partner.category,name:marin.partner_category_1019
 msgid "Crop - Bean"
 msgstr ""
 
 #. module: marin
-#: model:res.partner.category,name:marin.partner_category_123
+#: model:res.partner.category,name:marin.partner_category_1020
 msgid "Crop - Berry"
 msgstr ""
 
 #. module: marin
-#: model:res.partner.category,name:marin.partner_category_124
+#: model:res.partner.category,name:marin.partner_category_1021
 msgid "Crop - Carrot"
 msgstr ""
 
 #. module: marin
-#: model:res.partner.category,name:marin.partner_category_125
+#: model:res.partner.category,name:marin.partner_category_1022
 msgid "Crop - Citrus"
 msgstr ""
 
 #. module: marin
-#: model:res.partner.category,name:marin.partner_category_126
+#: model:res.partner.category,name:marin.partner_category_1023
 msgid "Crop - Corn"
 msgstr ""
 
 #. module: marin
-#: model:res.partner.category,name:marin.partner_category_127
+#: model:res.partner.category,name:marin.partner_category_1024
 msgid "Crop - Cucurbits"
 msgstr ""
 
 #. module: marin
-#: model:res.partner.category,name:marin.partner_category_128
+#: model:res.partner.category,name:marin.partner_category_1025
 msgid "Crop - Onion"
 msgstr ""
 
 #. module: marin
-#: model:res.partner.category,name:marin.partner_category_129
+#: model:res.partner.category,name:marin.partner_category_1026
 msgid "Crop - Ornamentals"
 msgstr ""
 
 #. module: marin
-#: model:res.partner.category,name:marin.partner_category_130
+#: model:res.partner.category,name:marin.partner_category_1027
 msgid "Crop - Pepper"
 msgstr ""
 
 #. module: marin
-#: model:res.partner.category,name:marin.partner_category_131
+#: model:res.partner.category,name:marin.partner_category_1028
 msgid "Crop - Potato"
 msgstr ""
 
 #. module: marin
-#: model:res.partner.category,name:marin.partner_category_132
+#: model:res.partner.category,name:marin.partner_category_1029
 msgid "Crop - Tomato"
 msgstr ""
 
 #. module: marin
-#: model:res.partner.category,name:marin.partner_category_133
+#: model:res.partner.category,name:marin.partner_category_1030
 msgid "Crop - Wheat"
 msgstr ""
 
@@ -1269,7 +980,6 @@ msgid "Current lines"
 msgstr ""
 
 #. module: marin
-#: model:documents.tag,name:marin.documents_partner_type_customer
 #: model:ir.model.fields,field_description:marin.field_res_partner__customer
 #: model:ir.model.fields,field_description:marin.field_res_users__customer
 #: model:ir.model.fields,field_description:marin.field_sale_order_line__order_partner_id
@@ -1312,8 +1022,6 @@ msgid "Customer refunds"
 msgstr ""
 
 #. module: marin
-#: model:ir.model.fields,field_description:marin.field_account_bank_statement_line__date
-#: model:ir.model.fields,field_description:marin.field_account_move__date
 #: model:ir.model.fields,field_description:marin.field_invoice_line_in_report__date
 #: model:ir.model.fields,field_description:marin.field_invoice_line_out_report__date
 #: model:ir.model.fields,field_description:marin.field_invoice_line_price_history_line__date
@@ -1362,67 +1070,67 @@ msgid "Debt Management"
 msgstr ""
 
 #. module: marin
-#: model:res.partner.category,name:marin.partner_category_134
-msgid "Debt collection - Aaron"
-msgstr ""
-
-#. module: marin
-#: model:res.partner.category,name:marin.partner_category_135
+#: model:res.partner.category,name:marin.partner_category_1031
 msgid "Debt collection - Alejandro"
 msgstr ""
 
 #. module: marin
-#: model:res.partner.category,name:marin.partner_category_136
+#: model:res.partner.category,name:marin.partner_category_1050
+msgid "Debt collection - Angel"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_1032
 msgid "Debt collection - Axel"
 msgstr ""
 
 #. module: marin
-#: model:res.partner.category,name:marin.partner_category_137
+#: model:res.partner.category,name:marin.partner_category_1033
 msgid "Debt collection - BAL"
 msgstr ""
 
 #. module: marin
-#: model:res.partner.category,name:marin.partner_category_138
-msgid "Debt collection - Bryan"
+#: model:res.partner.category,name:marin.partner_category_1051
+msgid "Debt collection - Brandon"
 msgstr ""
 
 #. module: marin
-#: model:res.partner.category,name:marin.partner_category_139
+#: model:res.partner.category,name:marin.partner_category_1049
+msgid "Debt collection - Carlos"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_1034
 msgid "Debt collection - Corporativo"
 msgstr ""
 
 #. module: marin
-#: model:res.partner.category,name:marin.partner_category_140
-msgid "Debt collection - Franco"
+#: model:res.partner.category,name:marin.partner_category_1048
+msgid "Debt collection - Daniel"
 msgstr ""
 
 #. module: marin
-#: model:res.partner.category,name:marin.partner_category_141
+#: model:res.partner.category,name:marin.partner_category_1035
 msgid "Debt collection - Hugo"
 msgstr ""
 
 #. module: marin
-#: model:res.partner.category,name:marin.partner_category_142
-msgid "Debt collection - Jesus"
-msgstr ""
-
-#. module: marin
-#: model:res.partner.category,name:marin.partner_category_143
-msgid "Debt collection - Juan"
-msgstr ""
-
-#. module: marin
-#: model:res.partner.category,name:marin.partner_category_144
+#: model:res.partner.category,name:marin.partner_category_1036
 msgid "Debt collection - Misael"
 msgstr ""
 
 #. module: marin
-#: model:res.partner.category,name:marin.partner_category_145
+#: model:res.partner.category,name:marin.partner_category_1047
+msgid "Debt collection - Nahum"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_1037
 msgid "Debt collection - Reynaldo"
 msgstr ""
 
 #. module: marin
-#: model:res.partner.category,name:marin.partner_category_146
+#: model:res.partner.category,name:marin.partner_category_1038
 msgid "Debt collection - SJN"
 msgstr ""
 
@@ -1432,22 +1140,22 @@ msgid "Debt manager"
 msgstr ""
 
 #. module: marin
-#: model:res.partner.category,name:marin.partner_category_110
+#: model:res.partner.category,name:marin.partner_category_1010
 msgid "Debt quality - High"
 msgstr ""
 
 #. module: marin
-#: model:res.partner.category,name:marin.partner_category_111
+#: model:res.partner.category,name:marin.partner_category_1011
 msgid "Debt quality - Low"
 msgstr ""
 
 #. module: marin
-#: model:res.partner.category,name:marin.partner_category_112
+#: model:res.partner.category,name:marin.partner_category_1012
 msgid "Debt quality - Medium"
 msgstr ""
 
 #. module: marin
-#: model:res.partner.category,name:marin.partner_category_113
+#: model:res.partner.category,name:marin.partner_category_1013
 msgid "Debt quality - Uncollectible"
 msgstr ""
 
@@ -1519,6 +1227,11 @@ msgid "Delivery status"
 msgstr ""
 
 #. module: marin
+#: model:ir.model.fields,field_description:marin.field_fleet_vehicle__department_id
+msgid "Department"
+msgstr ""
+
+#. module: marin
 #: model:ir.model.fields,help:marin.field_purchase_order_line_price_history_line__date
 msgid ""
 "Depicts the date within which the Quotation should be confirmed and "
@@ -1531,13 +1244,9 @@ msgid "Description"
 msgstr ""
 
 #. module: marin
-#: model_terms:ir.ui.view,arch_db:marin.wizard_stock_quant_lot_form_view
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_quant_lot_update
+#: model_terms:ir.ui.view,arch_db:marin.wizard_pos_cash_transfer_form_view
 msgid "Destination"
-msgstr ""
-
-#. module: marin
-#: model:ir.model.fields,field_description:marin.field_pos_cash_transfer_wizard__destination_account_id
-msgid "Destination Account"
 msgstr ""
 
 #. module: marin
@@ -1546,9 +1255,19 @@ msgid "Destination Journal"
 msgstr ""
 
 #. module: marin
-#: model:ir.model.fields,field_description:marin.field_stock_quant_lot__dest_lot_id
+#: model:ir.model.fields,field_description:marin.field_stock_picking_type__default_location_dest_id
+msgid "Destination Location"
+msgstr "Ubicación destino"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_quant_lot_update__dest_lot_id
 msgid "Destination Lot"
 msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_stock_picking_batch__odometer_difference
+msgid "Difference between end and start odometer values."
+msgstr "Diferencia entre los valores finales e iniciales del odómetro."
 
 #. module: marin
 #: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_report_tree
@@ -1575,32 +1294,94 @@ msgid "Discount (%)"
 msgstr ""
 
 #. module: marin
+#: model:ir.model.fields,field_description:marin.field_account_account__display_name
+#: model:ir.model.fields,field_description:marin.field_account_analytic_distribution_model__display_name
+#: model:ir.model.fields,field_description:marin.field_account_analytic_line__display_name
+#: model:ir.model.fields,field_description:marin.field_account_asset__display_name
+#: model:ir.model.fields,field_description:marin.field_account_bank_statement_line__display_name
 #: model:ir.model.fields,field_description:marin.field_account_invoice_cash_discount__display_name
+#: model:ir.model.fields,field_description:marin.field_account_journal__display_name
+#: model:ir.model.fields,field_description:marin.field_account_move__display_name
+#: model:ir.model.fields,field_description:marin.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:marin.field_account_payment__display_name
+#: model:ir.model.fields,field_description:marin.field_account_payment_term__display_name
+#: model:ir.model.fields,field_description:marin.field_approval_category__display_name
+#: model:ir.model.fields,field_description:marin.field_approval_request__display_name
 #: model:ir.model.fields,field_description:marin.field_authorize_debt_wizard__display_name
+#: model:ir.model.fields,field_description:marin.field_documents_document__display_name
+#: model:ir.model.fields,field_description:marin.field_documents_link_to_record_wizard__display_name
+#: model:ir.model.fields,field_description:marin.field_documents_tag__display_name
+#: model:ir.model.fields,field_description:marin.field_fleet_vehicle__display_name
+#: model:ir.model.fields,field_description:marin.field_fleet_vehicle_log__display_name
+#: model:ir.model.fields,field_description:marin.field_hr_contract__display_name
+#: model:ir.model.fields,field_description:marin.field_hr_payslip__display_name
+#: model:ir.model.fields,field_description:marin.field_hr_payslip_run__display_name
 #: model:ir.model.fields,field_description:marin.field_invoice_line_in_report__display_name
 #: model:ir.model.fields,field_description:marin.field_invoice_line_out_report__display_name
 #: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_report__display_name
 #: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_yearly_report__display_name
 #: model:ir.model.fields,field_description:marin.field_invoice_line_price_history__display_name
 #: model:ir.model.fields,field_description:marin.field_invoice_line_price_history_line__display_name
+#: model:ir.model.fields,field_description:marin.field_mrp_bom__display_name
+#: model:ir.model.fields,field_description:marin.field_mrp_production__display_name
 #: model:ir.model.fields,field_description:marin.field_pos_cash_transfer_wizard__display_name
+#: model:ir.model.fields,field_description:marin.field_pos_config__display_name
 #: model:ir.model.fields,field_description:marin.field_pos_line_product_report__display_name
 #: model:ir.model.fields,field_description:marin.field_pos_line_report__display_name
+#: model:ir.model.fields,field_description:marin.field_pos_order__display_name
+#: model:ir.model.fields,field_description:marin.field_pos_order_line__display_name
+#: model:ir.model.fields,field_description:marin.field_pos_session__display_name
+#: model:ir.model.fields,field_description:marin.field_product_category__display_name
+#: model:ir.model.fields,field_description:marin.field_product_template__display_name
+#: model:ir.model.fields,field_description:marin.field_project_task__display_name
 #: model:ir.model.fields,field_description:marin.field_project_task_lost_reason__display_name
+#: model:ir.model.fields,field_description:marin.field_purchase_bill_line_match__display_name
+#: model:ir.model.fields,field_description:marin.field_purchase_bill_union__display_name
+#: model:ir.model.fields,field_description:marin.field_purchase_order__display_name
+#: model:ir.model.fields,field_description:marin.field_purchase_order_line__display_name
 #: model:ir.model.fields,field_description:marin.field_purchase_order_line_price_history__display_name
 #: model:ir.model.fields,field_description:marin.field_purchase_order_line_price_history_line__display_name
+#: model:ir.model.fields,field_description:marin.field_res_company__display_name
+#: model:ir.model.fields,field_description:marin.field_res_partner__display_name
 #: model:ir.model.fields,field_description:marin.field_res_partner_age_range__display_name
+#: model:ir.model.fields,field_description:marin.field_res_users__display_name
+#: model:ir.model.fields,field_description:marin.field_sale_order__display_name
+#: model:ir.model.fields,field_description:marin.field_sale_order_line__display_name
 #: model:ir.model.fields,field_description:marin.field_sale_order_line_price_history__display_name
 #: model:ir.model.fields,field_description:marin.field_sale_order_line_price_history_line__display_name
+#: model:ir.model.fields,field_description:marin.field_stock_location__display_name
+#: model:ir.model.fields,field_description:marin.field_stock_lot__display_name
+#: model:ir.model.fields,field_description:marin.field_stock_move__display_name
+#: model:ir.model.fields,field_description:marin.field_stock_move_line__display_name
 #: model:ir.model.fields,field_description:marin.field_stock_need_report__display_name
-#: model:ir.model.fields,field_description:marin.field_stock_quant_lot__display_name
+#: model:ir.model.fields,field_description:marin.field_stock_picking__display_name
+#: model:ir.model.fields,field_description:marin.field_stock_picking_batch__display_name
+#: model:ir.model.fields,field_description:marin.field_stock_picking_type__display_name
+#: model:ir.model.fields,field_description:marin.field_stock_quant__display_name
+#: model:ir.model.fields,field_description:marin.field_stock_quant_lot_update__display_name
+#: model:ir.model.fields,field_description:marin.field_stock_scrap__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Mostrar nombre"
 
 #. module: marin
 #: model:ir.model.fields,field_description:marin.field_invoice_line_in_report__display_type
 msgid "Display Type"
 msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.stock_picking_batch_form_inherit_fleet_route
+msgid "Distance Coverage"
+msgstr "Distancia recorrida"
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.stock_picking_batch_tree_inherit_fleet_route
+msgid "Distance coverage"
+msgstr "Distancia recorrida"
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_stock_picking_batch__empty_distance
+msgid "Distance traveled without carrying goods"
+msgstr "Distancia recorrida sin transportar mercancías"
 
 #. module: marin
 #: model_terms:ir.ui.view,arch_db:marin.view_account_analytic_distribution_model_search_marin
@@ -1651,8 +1432,13 @@ msgid "Draft Invoices"
 msgstr ""
 
 #. module: marin
-#: model:documents.tag,name:marin.documents_partner_documents_drivers_licence
-msgid "Driver Licence"
+#: model:ir.model.fields,field_description:marin.field_stock_picking_batch__driver_department_id
+msgid "Driver Department"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_batch__driver_is_commercial
+msgid "Driver Is Commercial"
 msgstr ""
 
 #. module: marin
@@ -1677,8 +1463,13 @@ msgid "Edit Lot/Serial Number"
 msgstr ""
 
 #. module: marin
-#: model:documents.tag,name:marin.documents_partner_type_employee
-msgid "Employee"
+#: model_terms:ir.ui.view,arch_db:marin.stock_picking_batch_form_inherit_fleet_route
+msgid "Efficiency"
+msgstr "Rendimiento"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_account_asset__electric_power_contract
+msgid "Electric power contract"
 msgstr ""
 
 #. module: marin
@@ -1693,28 +1484,40 @@ msgid "Employee has not a contract and is required"
 msgstr ""
 
 #. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_batch__empty_distance
+#: model_terms:ir.ui.view,arch_db:marin.stock_picking_batch_tree_inherit_fleet_route
+msgid "Empty Distance"
+msgstr "Distancia en vacío"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_batch__empty_fuel
+msgid "Empty Fuel Consumption"
+msgstr "Combustible en vacío"
+
+#. module: marin
 #: model:ir.model.fields,field_description:marin.field_pos_session__cash_register_balance_end_real
 msgid "Ending Balance"
 msgstr "Saldo final"
 
 #. module: marin
-#: model:uom.category,name:marin.uom_category_101
-msgid "Energy"
-msgstr ""
+#: model:ir.model.fields,field_description:marin.field_stock_picking_batch__fuel_end
+msgid "Ending Fuel"
+msgstr "Combustible final"
 
 #. module: marin
-#: model:documents.tag,name:marin.documents_fleet_environmental_verification
-msgid "Environmental verification"
-msgstr ""
+#: model:ir.model.fields,field_description:marin.field_stock_picking_batch__odometer_end
+#: model_terms:ir.ui.view,arch_db:marin.stock_picking_batch_form_inherit_fleet_route
+msgid "Ending Odometer"
+msgstr "Odómetro final"
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_approval_request__odometer
+msgid "Enter the vehicle's current odometer reading."
+msgstr "Introduzca la lectura actual del odómetro del vehículo."
 
 #. module: marin
 #: model:ir.model.fields,field_description:marin.field_authorize_debt_wizard__debt_request
 msgid "Exceeded debit amount"
-msgstr ""
-
-#. module: marin
-#: model:documents.tag,name:marin.documents_knowledge_documents_excel
-msgid "Excel and Power BI"
 msgstr ""
 
 #. module: marin
@@ -1753,6 +1556,11 @@ msgid "Expiration Date"
 msgstr ""
 
 #. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_account_asset_form
+msgid "Extra Information"
+msgstr ""
+
+#. module: marin
 #: model:ir.model.fields.selection,name:marin.selection__res_partner__gender__female
 msgid "Female"
 msgstr ""
@@ -1786,17 +1594,17 @@ msgid "Fiscal"
 msgstr ""
 
 #. module: marin
-#: model:res.partner.category,name:marin.partner_category_114
+#: model:res.partner.category,name:marin.partner_category_1014
 msgid "Fiscal effect - FF"
 msgstr ""
 
 #. module: marin
-#: model:res.partner.category,name:marin.partner_category_115
+#: model:res.partner.category,name:marin.partner_category_1015
 msgid "Fiscal effect - FX"
 msgstr ""
 
 #. module: marin
-#: model:res.partner.category,name:marin.partner_category_116
+#: model:res.partner.category,name:marin.partner_category_1016
 msgid "Fiscal effect - NF"
 msgstr ""
 
@@ -1817,11 +1625,6 @@ msgstr ""
 #. module: marin
 #: model:ir.model.fields,field_description:marin.field_authorize_debt_wizard__flag
 msgid "Flag"
-msgstr ""
-
-#. module: marin
-#: model:ir.model.fields,field_description:marin.field_account_move_line__fleet_vehicle_log_services_ids
-msgid "Fleet services logs"
 msgstr ""
 
 #. module: marin
@@ -1902,6 +1705,12 @@ msgid "Forced company"
 msgstr ""
 
 #. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__mrp_bom__x_type__formulate
+#: model_terms:ir.ui.view,arch_db:marin.view_mrp_bom_filter
+msgid "Formulate"
+msgstr ""
+
+#. module: marin
 #: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_team_report_search_view
 msgid "Fourth Quarter"
 msgstr ""
@@ -1929,7 +1738,6 @@ msgid "From availability"
 msgstr ""
 
 #. module: marin
-#: model:documents.tag,name:marin.documents_fleet_fuel_card
 #: model:ir.model.fields,field_description:marin.field_fleet_vehicle__fuel_card_id
 msgid "Fuel Card"
 msgstr ""
@@ -1940,19 +1748,49 @@ msgid "Fuel Card Name"
 msgstr ""
 
 #. module: marin
-#: model:ir.model.fields,field_description:marin.field_fleet_vehicle__fuel_efficiency
+#: model:ir.model.fields,field_description:marin.field_stock_picking_batch__fuel_consumption
+msgid "Fuel Consumption"
+msgstr "Consumo de combustible"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking__fuel_done
+msgid "Fuel Done"
+msgstr "Combustible final"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_batch__fuel_efficiency
 msgid "Fuel Efficiency"
-msgstr ""
+msgstr "Rendimiento combustible"
 
 #. module: marin
-#: model:ir.model.fields,help:marin.field_fleet_vehicle__fuel_efficiency
-msgid "Fuel efficiency in kilometers per liter (km/L)"
-msgstr ""
+#: model:ir.model.fields,field_description:marin.field_stock_picking_batch__fuel_efficiency_uom_id
+msgid "Fuel Efficiency Unit"
+msgstr "UdM Rendimiento combustible"
 
 #. module: marin
-#: model:ir.model.fields,help:marin.field_fleet_vehicle__fuel_tank_capacity
-msgid "Fuel tank capacity in liters"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:marin.stock_picking_batch_form_inherit_fleet_route
+msgid "Fuel Level"
+msgstr "Nivel de combustible"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_batch__fuel_uom_id
+msgid "Fuel Unit"
+msgstr "UdM Combustible"
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_stock_picking_batch__empty_fuel
+msgid "Fuel consumed while traveling without goods"
+msgstr "Combustible consumido al viajar sin mercancías"
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_stock_picking_batch__fuel_efficiency
+msgid "Fuel efficiency calculated as distance per fuel unit."
+msgstr "Eficiencia del combustible calculada como distancia por unidad de combustible."
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_stock_picking__fuel_done
+msgid "Fuel level which the transfer has been processed."
+msgstr "Nivel de combustible al que se ha procesado la transferencia."
 
 #. module: marin
 #: model:ir.model.fields.selection,name:marin.selection__purchase_order_line__invoice_status__invoiced
@@ -1965,11 +1803,6 @@ msgid "Future Activities"
 msgstr ""
 
 #. module: marin
-#: model:documents.tag,name:marin.documents_fleet_gps
-msgid "GPS"
-msgstr ""
-
-#. module: marin
 #: model:ir.model.fields,field_description:marin.field_res_partner__gender
 msgid "Gender"
 msgstr ""
@@ -1978,6 +1811,16 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:marin.wizard_pos_cash_transfer_form_view
 msgid "Generate Cash Transfer"
 msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.stock_picking_batch_form_inherit_fleet_route
+msgid "Get Fuel Level"
+msgstr "Obtener nivel de combustible"
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.stock_picking_batch_form_inherit_fleet_route
+msgid "Get Odometer"
+msgstr "Obtener odómetro"
 
 #. module: marin
 #: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_in_report_search_view
@@ -1993,17 +1836,17 @@ msgid "Group By"
 msgstr ""
 
 #. module: marin
-#: model:res.partner.category,name:marin.partner_category_147
+#: model:res.partner.category,name:marin.partner_category_1039
 msgid "Growth perspective - Contraction"
 msgstr ""
 
 #. module: marin
-#: model:res.partner.category,name:marin.partner_category_148
+#: model:res.partner.category,name:marin.partner_category_1040
 msgid "Growth perspective - Expansion"
 msgstr ""
 
 #. module: marin
-#: model:res.partner.category,name:marin.partner_category_149
+#: model:res.partner.category,name:marin.partner_category_1041
 msgid "Growth perspective - Hold"
 msgstr ""
 
@@ -2023,12 +1866,65 @@ msgid "HR user"
 msgstr ""
 
 #. module: marin
-#: model:res.partner.category,name:marin.partner_category_155
+#: model:ir.model.fields,field_description:marin.field_account_asset__has_imei
+#: model:ir.model.fields,field_description:marin.field_account_asset__model_id_has_imei
+msgid "Has IMEI"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_account_bank_statement_line__show_update_line_account
+#: model:ir.model.fields,field_description:marin.field_account_move__show_update_line_account
+msgid "Has Journal Changed"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_approval_category__has_odometer
+#: model:ir.model.fields,field_description:marin.field_approval_request__has_odometer
+msgid "Has Odometer"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_account_asset__has_sn
+#: model:ir.model.fields,field_description:marin.field_account_asset__model_id_has_sn
+msgid "Has SN"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_approval_category__has_vehicle
+#: model:ir.model.fields,field_description:marin.field_approval_request__has_vehicle
+msgid "Has Vehicle"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_account_asset__has_electric_power_contract
+#: model:ir.model.fields,field_description:marin.field_account_asset__model_id_has_electric_power_contract
+msgid "Has electric power contract"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_account_asset__has_property_identification
+#: model:ir.model.fields,field_description:marin.field_account_asset__model_id_has_property_identification
+msgid "Has property ID"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_account_asset__has_property_area
+#: model:ir.model.fields,field_description:marin.field_account_asset__model_id_has_property_area
+msgid "Has property area"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_account_asset__has_telephone_contract
+#: model:ir.model.fields,field_description:marin.field_account_asset__model_id_has_telephone_contract
+msgid "Has telephone contract"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_high_risk
 msgid "High Risk"
 msgstr ""
 
 #. module: marin
-#: model:documents.tag,name:marin.documents_fleet_highway_pass
 #: model:ir.model.fields,field_description:marin.field_fleet_vehicle__highway_pass_id
 msgid "Highway Pass"
 msgstr ""
@@ -2046,26 +1942,78 @@ msgid "Historical lines"
 msgstr ""
 
 #. module: marin
+#: model:ir.model.fields,field_description:marin.field_account_account__id
+#: model:ir.model.fields,field_description:marin.field_account_analytic_distribution_model__id
+#: model:ir.model.fields,field_description:marin.field_account_analytic_line__id
+#: model:ir.model.fields,field_description:marin.field_account_asset__id
+#: model:ir.model.fields,field_description:marin.field_account_bank_statement_line__id
 #: model:ir.model.fields,field_description:marin.field_account_invoice_cash_discount__id
+#: model:ir.model.fields,field_description:marin.field_account_journal__id
+#: model:ir.model.fields,field_description:marin.field_account_move__id
+#: model:ir.model.fields,field_description:marin.field_account_move_line__id
+#: model:ir.model.fields,field_description:marin.field_account_payment__id
+#: model:ir.model.fields,field_description:marin.field_account_payment_term__id
+#: model:ir.model.fields,field_description:marin.field_approval_category__id
+#: model:ir.model.fields,field_description:marin.field_approval_request__id
 #: model:ir.model.fields,field_description:marin.field_authorize_debt_wizard__id
+#: model:ir.model.fields,field_description:marin.field_documents_document__id
+#: model:ir.model.fields,field_description:marin.field_documents_link_to_record_wizard__id
+#: model:ir.model.fields,field_description:marin.field_documents_tag__id
+#: model:ir.model.fields,field_description:marin.field_fleet_vehicle__id
+#: model:ir.model.fields,field_description:marin.field_fleet_vehicle_log__id
+#: model:ir.model.fields,field_description:marin.field_hr_contract__id
+#: model:ir.model.fields,field_description:marin.field_hr_payslip__id
+#: model:ir.model.fields,field_description:marin.field_hr_payslip_run__id
 #: model:ir.model.fields,field_description:marin.field_invoice_line_in_report__id
 #: model:ir.model.fields,field_description:marin.field_invoice_line_out_report__id
 #: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_report__id
 #: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_yearly_report__id
 #: model:ir.model.fields,field_description:marin.field_invoice_line_price_history__id
 #: model:ir.model.fields,field_description:marin.field_invoice_line_price_history_line__id
+#: model:ir.model.fields,field_description:marin.field_mrp_bom__id
+#: model:ir.model.fields,field_description:marin.field_mrp_production__id
 #: model:ir.model.fields,field_description:marin.field_pos_cash_transfer_wizard__id
+#: model:ir.model.fields,field_description:marin.field_pos_config__id
 #: model:ir.model.fields,field_description:marin.field_pos_line_product_report__id
 #: model:ir.model.fields,field_description:marin.field_pos_line_report__id
+#: model:ir.model.fields,field_description:marin.field_pos_order__id
+#: model:ir.model.fields,field_description:marin.field_pos_order_line__id
+#: model:ir.model.fields,field_description:marin.field_pos_session__id
+#: model:ir.model.fields,field_description:marin.field_product_category__id
+#: model:ir.model.fields,field_description:marin.field_product_template__id
+#: model:ir.model.fields,field_description:marin.field_project_task__id
 #: model:ir.model.fields,field_description:marin.field_project_task_lost_reason__id
+#: model:ir.model.fields,field_description:marin.field_purchase_bill_line_match__id
+#: model:ir.model.fields,field_description:marin.field_purchase_bill_union__id
+#: model:ir.model.fields,field_description:marin.field_purchase_order__id
+#: model:ir.model.fields,field_description:marin.field_purchase_order_line__id
 #: model:ir.model.fields,field_description:marin.field_purchase_order_line_price_history__id
 #: model:ir.model.fields,field_description:marin.field_purchase_order_line_price_history_line__id
+#: model:ir.model.fields,field_description:marin.field_res_company__id
+#: model:ir.model.fields,field_description:marin.field_res_partner__id
 #: model:ir.model.fields,field_description:marin.field_res_partner_age_range__id
+#: model:ir.model.fields,field_description:marin.field_res_users__id
+#: model:ir.model.fields,field_description:marin.field_sale_order__id
+#: model:ir.model.fields,field_description:marin.field_sale_order_line__id
 #: model:ir.model.fields,field_description:marin.field_sale_order_line_price_history__id
 #: model:ir.model.fields,field_description:marin.field_sale_order_line_price_history_line__id
+#: model:ir.model.fields,field_description:marin.field_stock_location__id
+#: model:ir.model.fields,field_description:marin.field_stock_lot__id
+#: model:ir.model.fields,field_description:marin.field_stock_move__id
+#: model:ir.model.fields,field_description:marin.field_stock_move_line__id
 #: model:ir.model.fields,field_description:marin.field_stock_need_report__id
-#: model:ir.model.fields,field_description:marin.field_stock_quant_lot__id
+#: model:ir.model.fields,field_description:marin.field_stock_picking__id
+#: model:ir.model.fields,field_description:marin.field_stock_picking_batch__id
+#: model:ir.model.fields,field_description:marin.field_stock_picking_type__id
+#: model:ir.model.fields,field_description:marin.field_stock_quant__id
+#: model:ir.model.fields,field_description:marin.field_stock_quant_lot_update__id
+#: model:ir.model.fields,field_description:marin.field_stock_scrap__id
 msgid "ID"
+msgstr "Identificación"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_account_asset__imei
+msgid "IMEI"
 msgstr ""
 
 #. module: marin
@@ -2079,6 +2027,13 @@ msgstr ""
 #. module: marin
 #: model:ir.model.fields,field_description:marin.field_account_payment_term__is_immediate
 msgid "Immediate payment term"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_fleet_vehicle__l10n_mx_vehicle_code
+msgid ""
+"In Mexico the tax authority assign a 7 character code to identify its "
+"characteristics."
 msgstr ""
 
 #. module: marin
@@ -2144,12 +2099,7 @@ msgid ""
 msgstr ""
 
 #. module: marin
-#: model:documents.tag,name:marin.documents_fleet_insurance_policy
-msgid "Insurance policy"
-msgstr ""
-
-#. module: marin
-#: model_terms:ir.ui.view,arch_db:marin.view_pickingtype_filter_marin
+#: model_terms:ir.ui.view,arch_db:marin.view_pickingtype_filter
 msgid "Internal"
 msgstr ""
 
@@ -2397,13 +2347,8 @@ msgid "Journal type"
 msgstr ""
 
 #. module: marin
-#: model:uom.uom,name:marin.uom_159
-msgid "Julio"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_158
-msgid "Kilowatt hora"
+#: model:uom.uom,name:marin.uom_km_per_liter
+msgid "Km/L"
 msgstr ""
 
 #. module: marin
@@ -2423,7 +2368,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:marin.field_res_partner_age_range__write_uid
 #: model:ir.model.fields,field_description:marin.field_sale_order_line_price_history__write_uid
 #: model:ir.model.fields,field_description:marin.field_sale_order_line_price_history_line__write_uid
-#: model:ir.model.fields,field_description:marin.field_stock_quant_lot__write_uid
+#: model:ir.model.fields,field_description:marin.field_stock_quant_lot_update__write_uid
 msgid "Last Updated by"
 msgstr ""
 
@@ -2439,7 +2384,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:marin.field_res_partner_age_range__write_date
 #: model:ir.model.fields,field_description:marin.field_sale_order_line_price_history__write_date
 #: model:ir.model.fields,field_description:marin.field_sale_order_line_price_history_line__write_date
-#: model:ir.model.fields,field_description:marin.field_stock_quant_lot__write_date
+#: model:ir.model.fields,field_description:marin.field_stock_quant_lot_update__write_date
 msgid "Last Updated on"
 msgstr ""
 
@@ -2464,14 +2409,60 @@ msgid "Line"
 msgstr ""
 
 #. module: marin
+#. odoo-python
+#: code:addons/marin/wizards/pos_cash_transfer_wizard.py:0
+#: model_terms:ir.ui.view,arch_db:marin.view_pos_config_kanban
+msgid "Liquidity transfer"
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/pos_config.py:0
+msgid "Liquidity transfer is only allowed when there is no active session."
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/pos_session.py:0
+#: code:addons/marin/wizards/pos_cash_transfer_wizard.py:0
+msgid "Liquidity transfers"
+msgstr ""
+
+#. module: marin
 #. odoo-javascript
 #: code:addons/marin/static/src/pos/app/screens/receipt_screen/receipt_screen.xml:0
 msgid "Loading delivery info..."
 msgstr ""
 
 #. module: marin
+#: model:ir.model.fields,field_description:marin.field_account_asset__location
+msgid "Location"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_approval_request__log_ids
+msgid "Log"
+msgstr ""
+
+#. module: marin
 #: model:ir.ui.menu,name:marin.menu_configuration_logistics
 msgid "Logistics"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.approval_request_view_form
+msgid "Logs"
+msgstr ""
+
+#. module: marin
+#: model:ir.model,name:marin.model_fleet_vehicle_log
+msgid "Logs for vehicles"
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/approval_request.py:0
+msgid "Logss"
 msgstr ""
 
 #. module: marin
@@ -2504,12 +2495,12 @@ msgid "Lot/Serial"
 msgstr "Número de serie/lote"
 
 #. module: marin
-#: model:ir.model.fields,field_description:marin.field_stock_quant_lot__lot_id
+#: model:ir.model.fields,field_description:marin.field_stock_quant_lot_update__lot_id
 msgid "Lot/Serial Number"
 msgstr ""
 
 #. module: marin
-#: model:res.partner.category,name:marin.partner_category_104
+#: model:res.partner.category,name:marin.partner_category_mrp
 msgid "MRP"
 msgstr ""
 
@@ -2519,14 +2510,14 @@ msgid "Male"
 msgstr ""
 
 #. module: marin
-#: model:documents.tag,name:marin.documents_knowledge_documents_mgm_acc
-msgid "Management and accounting"
-msgstr ""
-
-#. module: marin
 #: model_terms:ir.ui.view,arch_db:marin.quant_search_view_marin
 msgid "Manufacturer"
 msgstr ""
+
+#. module: marin
+#: model:ir.model,name:marin.model_mrp_production
+msgid "Manufacturing Order"
+msgstr "Orden de fabricación"
 
 #. module: marin
 #: model:ir.model.fields,field_description:marin.field_invoice_line_out_report__margin
@@ -2552,10 +2543,36 @@ msgid "Margin Percent"
 msgstr ""
 
 #. module: marin
+#: model:ir.model.fields,field_description:marin.field_mrp_bom__x_type
+msgid "Marin Type"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_mrp_bom_filter
+msgid "Marin type"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_fleet_vehicle__brand_new
+msgid "Mark as True if this vehicle was acquired as brand new."
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__res_partner__collateral_tolerance__1
+msgid "Medium"
+msgstr ""
+
+#. module: marin
 #. odoo-javascript
 #: code:addons/marin/static/src/pos/app/screens/payment_screen/payment_screen.js:0
 #: code:addons/marin/static/src/pos/app/store/order.js:0
 msgid "Missing inventory for these serials number"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_res_partner__mobile
+#: model:ir.model.fields,field_description:marin.field_res_users__mobile
+msgid "Mobile"
 msgstr ""
 
 #. module: marin
@@ -2587,8 +2604,8 @@ msgid "Move"
 msgstr ""
 
 #. module: marin
-#: model:ir.model.fields,field_description:marin.field_fleet_vehicle_log_services__move_line_id
-msgid "Move Line"
+#: model:ir.model.fields,field_description:marin.field_pos_session__move_cash_transfer_ids
+msgid "Move Cash Transfer"
 msgstr ""
 
 #. module: marin
@@ -2596,11 +2613,6 @@ msgstr ""
 #: code:addons/marin/models/account_move.py:0
 #: model_terms:ir.ui.view,arch_db:marin.view_move_form
 msgid "Move Lines"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_101
-msgid "Mutuamente definido"
 msgstr ""
 
 #. module: marin
@@ -2630,11 +2642,6 @@ msgid "Name"
 msgstr ""
 
 #. module: marin
-#: model:documents.tag,name:marin.documents_partner_documents_national_identification
-msgid "National Identification"
-msgstr ""
-
-#. module: marin
 #: model:ir.model.fields.selection,name:marin.selection__pos_line_report__parent_state__draft
 #: model_terms:ir.ui.view,arch_db:marin.view_purchase_order_line_list
 #: model_terms:ir.ui.view,arch_db:marin.view_sale_order_line_list
@@ -2659,6 +2666,11 @@ msgid "No Plate"
 msgstr ""
 
 #. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__res_partner__collateral_tolerance__2
+msgid "No collateral required"
+msgstr ""
+
+#. module: marin
 #. odoo-javascript
 #: code:addons/marin/static/src/pos/app/screens/receipt_screen/receipt_screen.xml:0
 msgid "No delivery info found for this order."
@@ -2667,6 +2679,23 @@ msgstr ""
 #. module: marin
 #: model_terms:ir.actions.act_window,help:marin.purchase_form_action
 msgid "No purchase order found. Let's create one!"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__res_partner__collateral_tolerance__0
+msgid "No tolerance"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__account_asset__has_electric_power_contract__no
+#: model:ir.model.fields.selection,name:marin.selection__account_asset__has_imei__no
+#: model:ir.model.fields.selection,name:marin.selection__account_asset__has_property_area__no
+#: model:ir.model.fields.selection,name:marin.selection__account_asset__has_property_identification__no
+#: model:ir.model.fields.selection,name:marin.selection__account_asset__has_sn__no
+#: model:ir.model.fields.selection,name:marin.selection__account_asset__has_telephone_contract__no
+#: model:ir.model.fields.selection,name:marin.selection__approval_category__has_odometer__no
+#: model:ir.model.fields.selection,name:marin.selection__approval_category__has_vehicle__no
+msgid "None"
 msgstr ""
 
 #. module: marin
@@ -2704,11 +2733,6 @@ msgstr ""
 #. module: marin
 #: model_terms:ir.ui.view,arch_db:marin.view_account_payment_search_marin
 msgid "Not Reconciled"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_106
-msgid "Not available"
 msgstr ""
 
 #. module: marin
@@ -2769,9 +2793,32 @@ msgid ""
 msgstr ""
 
 #. module: marin
-#: model:documents.tag,name:marin.documents_knowledge_documents_odoo
-msgid "Odoo"
-msgstr ""
+#: model:ir.model.fields,field_description:marin.field_approval_request__odometer
+#: model_terms:ir.ui.view,arch_db:marin.approval_category_view_form
+#: model_terms:ir.ui.view,arch_db:marin.approval_request_view_tree
+#: model_terms:ir.ui.view,arch_db:marin.stock_picking_batch_form_inherit_fleet_route
+msgid "Odometer"
+msgstr "Odómetro"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_batch__odometer_difference
+msgid "Odometer Difference"
+msgstr "Distancia recorrida"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking__odometer_done
+msgid "Odometer Done"
+msgstr "Odómetro final"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_batch__odometer_uom_id
+msgid "Odometer Unit"
+msgstr "UdM odómetro"
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_stock_picking__odometer_done
+msgid "Odometer which the transfer has been processed."
+msgstr "Odómetro que se ha procesado la transferencia."
 
 #. module: marin
 #. odoo-javascript
@@ -2791,11 +2838,6 @@ msgstr ""
 msgid ""
 "Once you ordered your products to your supplier, confirm your request for "
 "quotation and it will turn into a purchase order."
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_163
-msgid "One"
 msgstr ""
 
 #. module: marin
@@ -2828,8 +2870,20 @@ msgid "Operation not supported"
 msgstr ""
 
 #. module: marin
-#: model:res.partner.category,name:marin.partner_category_105
+#: model:res.partner.category,name:marin.partner_category_operations
 msgid "Operations"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__account_asset__has_electric_power_contract__optional
+#: model:ir.model.fields.selection,name:marin.selection__account_asset__has_imei__optional
+#: model:ir.model.fields.selection,name:marin.selection__account_asset__has_property_area__optional
+#: model:ir.model.fields.selection,name:marin.selection__account_asset__has_property_identification__optional
+#: model:ir.model.fields.selection,name:marin.selection__account_asset__has_sn__optional
+#: model:ir.model.fields.selection,name:marin.selection__account_asset__has_telephone_contract__optional
+#: model:ir.model.fields.selection,name:marin.selection__approval_category__has_odometer__optional
+#: model:ir.model.fields.selection,name:marin.selection__approval_category__has_vehicle__optional
+msgid "Optional"
 msgstr ""
 
 #. module: marin
@@ -2893,12 +2947,13 @@ msgstr ""
 #. module: marin
 #: model:ir.model.fields,field_description:marin.field_account_bank_statement_line__invoice_origin
 #: model:ir.model.fields,field_description:marin.field_account_move__invoice_origin
-#: model_terms:ir.ui.view,arch_db:marin.wizard_stock_quant_lot_form_view
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_quant_lot_update
+#: model_terms:ir.ui.view,arch_db:marin.wizard_pos_cash_transfer_form_view
 msgid "Origin"
 msgstr "Origen"
 
 #. module: marin
-#: model:ir.model.fields,field_description:marin.field_pos_session__cash_original_ending_balance
+#: model:ir.model.fields,field_description:marin.field_pos_session__original_cash_register_balance_end_real
 msgid "Original Ending Balance"
 msgstr ""
 
@@ -2936,8 +2991,15 @@ msgid "Over received"
 msgstr ""
 
 #. module: marin
-#: model:documents.tag,name:marin.documents_fleet_l10n_mx_ownership_tax
-msgid "Ownership Tax"
+#. odoo-python
+#: code:addons/marin/models/pos_config.py:0
+msgid "POS Cash Transfer"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_account_bank_statement_line__pos_session_origin_id
+#: model:ir.model.fields,field_description:marin.field_account_move__pos_session_origin_id
+msgid "POS session"
 msgstr ""
 
 #. module: marin
@@ -2999,7 +3061,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_yearly_report__partner_id
 #: model:ir.model.fields,field_description:marin.field_invoice_line_price_history__partner_id
 #: model:ir.model.fields,field_description:marin.field_invoice_line_price_history_line__partner_id
-#: model:ir.model.fields,field_description:marin.field_pos_cash_transfer_wizard__partner_id
 #: model:ir.model.fields,field_description:marin.field_pos_line_report__partner_id
 #: model:ir.model.fields,field_description:marin.field_purchase_order_line__partner_id
 #: model:ir.model.fields,field_description:marin.field_purchase_order_line_price_history_line__partner_id
@@ -3027,11 +3088,6 @@ msgstr ""
 #. module: marin
 #: model:ir.model,name:marin.model_authorize_debt_wizard
 msgid "Partner authorize debt wizard"
-msgstr ""
-
-#. module: marin
-#: model:documents.tag,name:marin.documents_partner_documents_passport
-msgid "Passport"
 msgstr ""
 
 #. module: marin
@@ -3073,9 +3129,6 @@ msgid "Payment Terms"
 msgstr "Términos de pago"
 
 #. module: marin
-#. odoo-python
-#: code:addons/marin/models/pos_config.py:0
-#: code:addons/marin/wizards/pos_cash_transfer_wizard.py:0
 #: model:ir.model,name:marin.model_account_payment
 #: model:ir.model.fields.selection,name:marin.selection__account_move__l10n_mx_edi_usage__cp01
 msgid "Payments"
@@ -3092,10 +3145,14 @@ msgid "Percentage"
 msgstr ""
 
 #. module: marin
-#. odoo-python
-#: code:addons/marin/models/pos_session.py:0
-msgid "Permission needed"
-msgstr ""
+#: model:ir.model.fields,help:marin.field_stock_picking_batch__fuel_start
+msgid "Percentage (%) of fuel level at the beginning of the route"
+msgstr "Porcentaje (%) del nivel de combustible al inicio de la ruta"
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_stock_picking_batch__fuel_end
+msgid "Percentage (%) of fuel level at the end of the route"
+msgstr "Porcentaje (%) del nivel de combustible al final de la ruta"
 
 #. module: marin
 #: model:ir.actions.server,name:marin.action_print_picking_operation
@@ -3108,11 +3165,6 @@ msgid "Picking Type"
 msgstr "Tipo de recolección"
 
 #. module: marin
-#: model:documents.tag,name:marin.documents_fleet_l10n_mx_plate
-msgid "Plate"
-msgstr ""
-
-#. module: marin
 #. odoo-python
 #: code:addons/marin/wizards/pos_cash_transfer_wizard.py:0
 msgid "Please specify an amount for the cash transfer different of 0.0"
@@ -3121,12 +3173,6 @@ msgstr ""
 #. module: marin
 #: model:ir.actions.act_window,name:marin.pos_cash_transfer_wizard
 msgid "PoS Cash Transfer"
-msgstr ""
-
-#. module: marin
-#: model:ir.model.fields,field_description:marin.field_res_company__pos_cash_transfer_journal_id
-#: model:ir.model.fields,field_description:marin.field_res_config_settings__pos_cash_transfer_journal_id
-msgid "PoS Cash Transfer Journal"
 msgstr ""
 
 #. module: marin
@@ -3177,11 +3223,6 @@ msgid "Point of Sale Session"
 msgstr "Sesión del punto de venta"
 
 #. module: marin
-#: model:ir.model.fields,field_description:marin.field_pos_cash_transfer_wizard__pos_session_id
-msgid "Pos Session"
-msgstr ""
-
-#. module: marin
 #: model:mail.activity.type,name:marin.cash_transfer_activity
 msgid "Pos Session Cash transfer"
 msgstr ""
@@ -3195,6 +3236,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:marin.selection__invoice_line_in_report__parent_state__posted
 #: model:ir.model.fields.selection,name:marin.selection__pos_line_report__parent_state__done
 msgid "Posted"
+msgstr ""
+
+#. module: marin
+#: model:res.groups,name:marin.group_purchase_potatoes
+msgid "Potatoes"
 msgstr ""
 
 #. module: marin
@@ -3280,7 +3326,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:marin.field_purchase_order_line_price_history__product_id
 #: model:ir.model.fields,field_description:marin.field_sale_order_line_price_history__product_id
 #: model:ir.model.fields,field_description:marin.field_stock_need_report__product_id
-#: model:ir.model.fields,field_description:marin.field_stock_quant_lot__product_id
+#: model:ir.model.fields,field_description:marin.field_stock_quant_lot_update__product_id
 #: model:ir.model.fields.selection,name:marin.selection__invoice_line_in_report__display_type__product
 #: model_terms:ir.ui.view,arch_db:marin.view_account_analytic_distribution_model_search_marin
 #: model_terms:ir.ui.view,arch_db:marin.view_account_invoice_filter
@@ -3344,11 +3390,6 @@ msgid "Product Moves (Stock Move Line)"
 msgstr "Movimientos de producto (línea de movimiento de stock)"
 
 #. module: marin
-#: model:ir.ui.menu,name:marin.menu_product_packaging
-msgid "Product Packagings"
-msgstr ""
-
-#. module: marin
 #: model:ir.ui.menu,name:marin.menu_product_tag
 msgid "Product Tags"
 msgstr ""
@@ -3369,27 +3410,27 @@ msgid "Product standar price"
 msgstr ""
 
 #. module: marin
-#: model:res.partner.category,name:marin.partner_category_150
+#: model:res.partner.category,name:marin.partner_category_1042
 msgid "Production size - Big holder (up to 30mdp)"
 msgstr ""
 
 #. module: marin
-#: model:res.partner.category,name:marin.partner_category_151
+#: model:res.partner.category,name:marin.partner_category_1043
 msgid "Production size - Medium holder (up to 18mdp)"
 msgstr ""
 
 #. module: marin
-#: model:res.partner.category,name:marin.partner_category_152
+#: model:res.partner.category,name:marin.partner_category_1044
 msgid "Production size - Small holder (up to 10mdp)"
 msgstr ""
 
 #. module: marin
-#: model:res.partner.category,name:marin.partner_category_153
+#: model:res.partner.category,name:marin.partner_category_1045
 msgid "Production size - Super big holder (more than 30mdp)"
 msgstr ""
 
 #. module: marin
-#: model:res.partner.category,name:marin.partner_category_154
+#: model:res.partner.category,name:marin.partner_category_1046
 msgid "Production size - Very small holder (up to 3mdp)"
 msgstr ""
 
@@ -3406,8 +3447,23 @@ msgid "Project Task Lost Reason"
 msgstr ""
 
 #. module: marin
+#: model:ir.model.fields,field_description:marin.field_account_asset__property_area
+msgid "Property area"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_account_asset__property_identification
+msgid "Property identification"
+msgstr ""
+
+#. module: marin
 #: model:res.partner.category,name:marin.partner_category_purchase
 msgid "Purchase"
+msgstr ""
+
+#. module: marin
+#: model:ir.model,name:marin.model_purchase_bill_line_match
+msgid "Purchase Line and Vendor Bill line matching view"
 msgstr ""
 
 #. module: marin
@@ -3457,6 +3513,16 @@ msgid "Purchase general"
 msgstr ""
 
 #. module: marin
+#. odoo-python
+#: code:addons/marin/report/purchase_bill_line_match.py:0
+msgid ""
+"Purchase matching is disabled for this invoice. Please check the following:\n"
+"\n"
+"- All invoice lines might already be linked to purchase orders.\n"
+"- Invoice lines may not contain any products that can be matched."
+msgstr ""
+
+#. module: marin
 #: model:ir.model.fields,field_description:marin.field_purchase_order_line_price_history__line_id
 #: model:ir.model.fields,field_description:marin.field_purchase_order_line_price_history_line__line_id
 msgid "Purchase order line"
@@ -3478,11 +3544,6 @@ msgid "Purchase readonly"
 msgstr ""
 
 #. module: marin
-#: model:res.groups,name:marin.group_purchase_special_projects
-msgid "Purchase special projects"
-msgstr ""
-
-#. module: marin
 #: model:ir.model,name:marin.model_purchase_bill_union
 msgid "Purchases & Bills Union"
 msgstr "Unión de compras y facturas"
@@ -3494,12 +3555,12 @@ msgid "Quanity to take from the selected line."
 msgstr ""
 
 #. module: marin
-#: model:ir.model.fields,field_description:marin.field_stock_quant_lot__quant_id
+#: model:ir.model.fields,field_description:marin.field_stock_quant_lot_update__quant_id
 msgid "Quant"
 msgstr ""
 
 #. module: marin
-#: model:ir.actions.act_window,name:marin.stock_quant_lot_wizard
+#: model:ir.actions.act_window,name:marin.action_stock_quant_lot_update
 msgid "Quant Transfer Lot"
 msgstr ""
 
@@ -3510,21 +3571,21 @@ msgstr ""
 #: model:ir.model.fields,field_description:marin.field_pos_line_report__quantity
 #: model:ir.model.fields,field_description:marin.field_purchase_order_line_price_history_line__qty
 #: model:ir.model.fields,field_description:marin.field_sale_order_line_price_history_line__qty
-#: model:ir.model.fields,field_description:marin.field_stock_quant_lot__max_quantity
-#: model:ir.model.fields,field_description:marin.field_stock_quant_lot__quantity
-#: model_terms:ir.ui.view,arch_db:marin.wizard_stock_quant_lot_form_view
+#: model:ir.model.fields,field_description:marin.field_stock_quant_lot_update__max_quantity
+#: model:ir.model.fields,field_description:marin.field_stock_quant_lot_update__quantity
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_quant_lot_update
 msgid "Quantity"
 msgstr ""
 
 #. module: marin
-#: model:ir.model.fields,help:marin.field_stock_quant_lot__max_quantity
+#: model:ir.model.fields,help:marin.field_stock_quant_lot_update__max_quantity
 msgid ""
 "Quantity of products in this quant, in the default unit of measure of the "
 "product"
 msgstr ""
 
 #. module: marin
-#: model:ir.model.fields,help:marin.field_stock_quant_lot__quantity
+#: model:ir.model.fields,help:marin.field_stock_quant_lot_update__quantity
 msgid "Quantity to be transfered to the destintation lot."
 msgstr ""
 
@@ -3564,7 +3625,7 @@ msgid "Quotations"
 msgstr ""
 
 #. module: marin
-#: model_terms:ir.ui.view,arch_db:marin.view_pickingtype_filter_marin
+#: model_terms:ir.ui.view,arch_db:marin.view_pickingtype_filter
 msgid "Ready"
 msgstr ""
 
@@ -3629,6 +3690,11 @@ msgid "Reception Status"
 msgstr ""
 
 #. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_move_form
+msgid "Recompute all accounts based on this journal"
+msgstr ""
+
+#. module: marin
 #: model:ir.model.fields,help:marin.field_purchase_order__receipt_status
 msgid ""
 "Red: Late\n"
@@ -3656,6 +3722,17 @@ msgid "Referred By"
 msgstr ""
 
 #. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__mrp_bom__x_type__refill
+#: model_terms:ir.ui.view,arch_db:marin.view_mrp_bom_filter
+msgid "Refill"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__mrp_bom__x_type__reformulate
+msgid "Reformulate"
+msgstr ""
+
+#. module: marin
 #: model_terms:ir.ui.view,arch_db:marin.view_account_invoice_discount_form
 msgid "Register Cash Discount"
 msgstr ""
@@ -3668,18 +3745,6 @@ msgid "Register cash discount"
 msgstr ""
 
 #. module: marin
-#: model:ir.model.fields,field_description:marin.field_account_bank_statement_line__relate_purchase_order
-#: model:ir.model.fields,field_description:marin.field_account_move__relate_purchase_order
-msgid "Relate Purchase Order"
-msgstr ""
-
-#. module: marin
-#: model:ir.model.fields,field_description:marin.field_account_bank_statement_line__related_purchase_order_id
-#: model:ir.model.fields,field_description:marin.field_account_move__related_purchase_order_id
-msgid "Related Purchase Order"
-msgstr ""
-
-#. module: marin
 #: model:ir.model.fields,field_description:marin.field_product_category__removal_time
 msgid "Removal Date"
 msgstr ""
@@ -3688,6 +3753,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:marin.field_stock_location__removal_priority
 #: model:ir.model.fields,field_description:marin.field_stock_quant__removal_priority
 msgid "Removal Priority"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__account_asset__has_electric_power_contract__required
+#: model:ir.model.fields.selection,name:marin.selection__account_asset__has_imei__required
+#: model:ir.model.fields.selection,name:marin.selection__account_asset__has_property_area__required
+#: model:ir.model.fields.selection,name:marin.selection__account_asset__has_property_identification__required
+#: model:ir.model.fields.selection,name:marin.selection__account_asset__has_sn__required
+#: model:ir.model.fields.selection,name:marin.selection__account_asset__has_telephone_contract__required
+#: model:ir.model.fields.selection,name:marin.selection__approval_category__has_odometer__required
+#: model:ir.model.fields.selection,name:marin.selection__approval_category__has_vehicle__required
+msgid "Required"
 msgstr ""
 
 #. module: marin
@@ -3732,18 +3809,34 @@ msgid "Route"
 msgstr ""
 
 #. module: marin
-#: model_terms:ir.ui.view,arch_db:marin.view_picking_type_form_marin
-msgid "Routes"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:marin.stock_picking_batch_form_inherit_fleet_route
+msgid "Route Analysis"
+msgstr "Análisis de rutas"
 
 #. module: marin
-#: model:documents.tag,name:marin.documents_knowledge_documents_sat
-msgid "SAT"
+#: model:ir.model.fields,field_description:marin.field_stock_picking_batch__date_end
+msgid "Route End"
+msgstr "Inicio de la ruta"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_batch__date_start
+msgid "Route Start"
+msgstr "Fin de la ruta"
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.stock_picking_batch_form_inherit_fleet_route
+msgid "Route Timing"
+msgstr "Duración de ruta"
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_picking_type_form
+msgid "Routes"
 msgstr ""
 
 #. module: marin
 #. odoo-javascript
 #: code:addons/marin/static/src/pos/app/popups/missing_stock_popup/missing_stock_popup.xml:0
+#: model:ir.model.fields,field_description:marin.field_account_asset__sn
 msgid "SN"
 msgstr ""
 
@@ -3868,7 +3961,8 @@ msgstr ""
 
 #. module: marin
 #: model:res.partner.category,name:marin.partner_category_security
-#: model_terms:ir.ui.view,arch_db:marin.view_picking_type_form_marin
+#: model_terms:ir.ui.view,arch_db:marin.view_account_journal_form
+#: model_terms:ir.ui.view,arch_db:marin.view_picking_type_form
 msgid "Security"
 msgstr ""
 
@@ -3903,14 +3997,9 @@ msgid "Sequence"
 msgstr ""
 
 #. module: marin
-#: model:uom.uom,name:marin.uom_102
-msgid "Service unit"
+#: model:ir.model.fields,field_description:marin.field_pos_cash_transfer_wizard__session_id
+msgid "Session"
 msgstr ""
-
-#. module: marin
-#: model:ir.model,name:marin.model_fleet_vehicle_log_services
-msgid "Services for vehicles"
-msgstr "Servicios para los vehículos"
 
 #. module: marin
 #: model_terms:ir.ui.view,arch_db:marin.invoice_line_price_history_view_form
@@ -3922,11 +4011,6 @@ msgstr ""
 #. module: marin
 #: model:ir.ui.menu,name:marin.menu_configuration_settings
 msgid "Settings"
-msgstr ""
-
-#. module: marin
-#: model:uom.uom,name:marin.uom_103
-msgid "Shipment"
 msgstr ""
 
 #. module: marin
@@ -3960,16 +4044,22 @@ msgid "Show all records which has next action date is before today"
 msgstr ""
 
 #. module: marin
+#: model:ir.model.fields,help:marin.field_stock_picking_batch__fuel_consumption
+msgid ""
+"Since each vehicle has a different fuel tank capacity, A rule of three is "
+"applied to convert the consumed fuel into liters or the default volume unit "
+"defined in the global parameters."
+msgstr ""
+"Dado que cada vehículo tiene una capacidad de depósito de combustible diferente, se "
+"aplica una regla de tres para convertir el combustible consumido en litros o en la unidad "
+"de volumen por defecto «definida en los parámetros globales."
+
+#. module: marin
 #: model:ir.model.fields,help:marin.field_project_task__season_id
 #: model:ir.model.fields,help:marin.field_sale_order__season_id
 msgid ""
 "Since every farmer can have several growing seasons the specific one can be "
 "selected."
-msgstr ""
-
-#. module: marin
-#: model:documents.tag,name:marin.documents_partner_documents_social_security_identification
-msgid "Social Security Identification"
 msgstr ""
 
 #. module: marin
@@ -3983,6 +4073,22 @@ msgstr ""
 #: code:addons/marin/models/account_move.py:0
 msgid "Some move lines does not have a product set. Please review"
 msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_type__default_location_src_id
+msgid "Source Location"
+msgstr "Ubicación de origen"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_batch__fuel_start
+msgid "Starting Fuel"
+msgstr "Combustible inicial"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_batch__odometer_start
+#: model_terms:ir.ui.view,arch_db:marin.stock_picking_batch_form_inherit_fleet_route
+msgid "Starting Odometer"
+msgstr "Odómetro inicial"
 
 #. module: marin
 #: model:ir.model.fields,field_description:marin.field_invoice_line_in_report__parent_state
@@ -4088,6 +4194,16 @@ msgid "Subtotal"
 msgstr ""
 
 #. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking__suitable_location_ids
+msgid "Suitable Location"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking__suitable_location_dest_ids
+msgid "Suitable Location Dest"
+msgstr ""
+
+#. module: marin
 #: model:ir.model.fields,field_description:marin.field_stock_picking__suitable_product_ids
 msgid "Suitable Product"
 msgstr ""
@@ -4103,7 +4219,6 @@ msgid "Suma de Valor stock disponible a precio de lista"
 msgstr ""
 
 #. module: marin
-#: model:documents.tag,name:marin.documents_partner_type_supplier
 #: model:ir.model.fields,field_description:marin.field_purchase_order_line_price_history__partner_id
 #: model:ir.model.fields,field_description:marin.field_res_partner__supplier
 #: model:ir.model.fields,field_description:marin.field_res_users__supplier
@@ -4118,6 +4233,26 @@ msgstr ""
 #. module: marin
 #: model:res.partner.category,name:marin.partner_category_supplier_general
 msgid "Supplier - General"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_supplier_it
+msgid "Supplier - IT"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_supplier_management
+msgid "Supplier - Management"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_supplier_operations
+msgid "Supplier - Operations"
+msgstr ""
+
+#. module: marin
+#: model:res.partner.category,name:marin.partner_category_supplier_potatoes
+msgid "Supplier - Potatoes"
 msgstr ""
 
 #. module: marin
@@ -4142,11 +4277,6 @@ msgstr "Etiqueta"
 #: model_terms:ir.ui.view,arch_db:marin.quant_search_view_marin
 msgid "Tags"
 msgstr "Etiquetas"
-
-#. module: marin
-#: model:ir.model.fields,field_description:marin.field_fleet_vehicle__fuel_tank_capacity
-msgid "Tank capacity"
-msgstr ""
 
 #. module: marin
 #: model:ir.model,name:marin.model_project_task
@@ -4207,8 +4337,8 @@ msgid ""
 msgstr ""
 
 #. module: marin
-#: model:uom.category,name:marin.uom_category_102
-msgid "Temperature"
+#: model:ir.model.fields,field_description:marin.field_account_asset__telephone_contract
+msgid "Telephone contract"
 msgstr ""
 
 #. module: marin
@@ -4309,16 +4439,29 @@ msgid ""
 msgstr ""
 
 #. module: marin
-#. odoo-python
-#: code:addons/marin/models/pos_session.py:0
-msgid ""
-"The used POS has no CASH Payment method or journal correctly configured, "
-"please check for them."
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_team_report_search_view
+msgid "Third Quarter"
 msgstr ""
 
 #. module: marin
-#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_team_report_search_view
-msgid "Third Quarter"
+#: model:ir.model.fields,help:marin.field_fleet_vehicle__account_prefix
+msgid "This fields is required by Accounting to group according to its needs."
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_stock_picking_type__default_location_dest_id
+msgid ""
+"This is the default destination location when this operation is manually "
+"created. However, it is possible to change it afterwards or that the routes "
+"use another one by default."
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_stock_picking_type__default_location_src_id
+msgid ""
+"This is the default source location when this operation is manually created."
+" However, it is possible to change it afterwards or that the routes use "
+"another one by default."
 msgstr ""
 
 #. module: marin
@@ -4326,6 +4469,11 @@ msgstr ""
 #: model:ir.model.fields,help:marin.field_stock_quant__removal_priority
 msgid ""
 "This priority applies when removing stock and incoming dates are equal."
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_move_form
+msgid "This will update the accounts of all lines based on the new journal."
 msgstr ""
 
 #. module: marin
@@ -4481,18 +4629,13 @@ msgid "Transfer"
 msgstr "Transferir "
 
 #. module: marin
-#: model_terms:ir.ui.view,arch_db:marin.wizard_stock_quant_lot_form_view
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_quant_lot_update
 msgid "Transfer quantity"
 msgstr ""
 
 #. module: marin
 #: model:ir.model.fields,field_description:marin.field_pos_session__cash_transfered
 msgid "Transfered"
-msgstr ""
-
-#. module: marin
-#: model:documents.tag,name:marin.documents_fleet_l10n_mx_transit_permit
-msgid "Transit permit"
 msgstr ""
 
 #. module: marin
@@ -4529,13 +4672,20 @@ msgid "Unit Price"
 msgstr ""
 
 #. module: marin
-#: model:ir.ui.menu,name:marin.menu_uom_uom
-msgid "Units of measure"
+#: model:ir.model.fields,help:marin.field_stock_picking_batch__fuel_uom_id
+msgid "Unit of measurement for fuel, coming from the company or vehicle."
 msgstr ""
 
 #. module: marin
-#: model:ir.ui.menu,name:marin.menu_uom_category
-msgid "Units of measure categories"
+#: model:ir.model.fields,help:marin.field_stock_picking_batch__odometer_uom_id
+msgid ""
+"Unit of measurement for the odometer, coming from the company or vehicle."
+msgstr ""
+"Unidad de medida del odómetro, procedente de la empresa o del vehículo"
+
+#. module: marin
+#: model:ir.ui.menu,name:marin.menu_uom_uom
+msgid "Units of measure"
 msgstr ""
 
 #. module: marin
@@ -4567,6 +4717,11 @@ msgid "Update"
 msgstr ""
 
 #. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_move_form
+msgid "Update Lines"
+msgstr ""
+
+#. module: marin
 #: model:ir.model.fields,field_description:marin.field_account_bank_statement_line__l10n_mx_edi_usage
 #: model:ir.model.fields,field_description:marin.field_account_move__l10n_mx_edi_usage
 msgid "Usage"
@@ -4583,6 +4738,26 @@ msgstr ""
 #: model:ir.model.fields,field_description:marin.field_product_template__use_expiration_date
 msgid "Use Expiration Date"
 msgstr "Usar fecha de caducidad"
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_project_task__display_name
+msgid ""
+"Use these keywords in the title to set new tasks:\n"
+"\n"
+"            #tags Set tags on the task\n"
+"            @user Assign the task to a user\n"
+"            ! Set the task a high priority\n"
+"\n"
+"            Make sure to use the right format and order e.g. Improve the configuration screen #feature #v16 @Mitchell !"
+msgstr ""
+"Utilice estas palabras clave en el título para configurar nuevas tareas:\n"
+"\n"
+"        30h asigna 30 horas a la tarea\n"
+"        #etiquetas asigna etiquetas a la tarea\n"
+"        @usuario asigna la tarea a un usuario\n"
+"        ! asigna mayor prioridad a la tarea\n"
+"\n"
+"        Asegúrese de utilizar el formato y orden correcto. Por ejemplo: Mejorar la pantalla de configuración 5h #función #v16 @Mitchell !"
 
 #. module: marin
 #: model:ir.model.fields,help:marin.field_product_product__property_account_income_refund_id
@@ -4739,12 +4914,12 @@ msgid "Users that can validate pickings of this type of operation."
 msgstr ""
 
 #. module: marin
-#: model:ir.model.fields,help:marin.field_account_journal__can_access_user_ids
+#: model:ir.model.fields,help:marin.field_account_journal__user_can_access_ids
 msgid "Users that can visualize entries of this journal."
 msgstr ""
 
 #. module: marin
-#: model:ir.model.fields,help:marin.field_stock_picking_type__can_access_user_ids
+#: model:ir.model.fields,help:marin.field_stock_picking_type__user_can_access_ids
 msgid "Users that can visualize pickings of this type of operation."
 msgstr ""
 
@@ -4826,11 +5001,19 @@ msgstr ""
 #: model:ir.model,name:marin.model_fleet_vehicle
 #: model:ir.model.fields,field_description:marin.field_account_analytic_distribution_model__vehicle_id
 #: model:ir.model.fields,field_description:marin.field_account_analytic_line__vehicle_id
+#: model:ir.model.fields,field_description:marin.field_approval_request__vehicle_id
 #: model:ir.model.fields,field_description:marin.field_documents_document__vehicle_id
+#: model:ir.model.fields,field_description:marin.field_stock_picking__vehicle_id
+#: model_terms:ir.ui.view,arch_db:marin.approval_category_view_form
 #: model_terms:ir.ui.view,arch_db:marin.view_account_analytic_distribution_model_search_marin
 #: model_terms:ir.ui.view,arch_db:marin.view_account_analytic_line_filter_marin
 msgid "Vehicle"
 msgstr "Vehículo"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_fleet_vehicle__l10n_mx_vehicle_code
+msgid "Vehicle Code"
+msgstr ""
 
 #. module: marin
 #: model:ir.model.fields,field_description:marin.field_purchase_order__partner_id
@@ -4875,12 +5058,7 @@ msgid "View Moves"
 msgstr ""
 
 #. module: marin
-#: model:documents.tag,name:marin.documents_partner_documents_visa
-msgid "Visa"
-msgstr ""
-
-#. module: marin
-#: model_terms:ir.ui.view,arch_db:marin.view_pickingtype_filter_marin
+#: model_terms:ir.ui.view,arch_db:marin.view_pickingtype_filter
 msgid "Waiting"
 msgstr ""
 
@@ -4899,6 +5077,20 @@ msgstr "Almacén"
 #: model:ir.model.fields,field_description:marin.field_invoice_line_out_report__week_of_year
 #: model:ir.model.fields,field_description:marin.field_pos_line_report__week_of_year
 msgid "Week Of Year"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_res_partner__collateral_tolerance
+#: model:ir.model.fields,help:marin.field_res_users__collateral_tolerance
+msgid ""
+"When sales are done with credit this indicates the tolerance\n"
+"        regarding having collaterales to cover the debt.\n"
+"\n"
+"        -No tolerance: cover the debt in full with collaterals\n"
+"        -Medium: cover the debt with a payment note\n"
+"        -No collateral required: The customer have high moral and economical\n"
+"        solvency so no collateral needed\n"
+"        "
 msgstr ""
 
 #. module: marin
@@ -4933,9 +5125,21 @@ msgid "X Sequence"
 msgstr ""
 
 #. module: marin
+#: model:res.groups,name:marin.group_purchase_xiuman
+msgid "Xiuman"
+msgstr ""
+
+#. module: marin
 #: model:ir.model.fields,field_description:marin.field_invoice_line_out_report__year
 #: model:ir.model.fields,field_description:marin.field_pos_line_report__year
 msgid "Year"
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/pos_session.py:0
+msgid ""
+"You are not allowed to do Cash Transfers. Please contact an administrator."
 msgstr ""
 
 #. module: marin
@@ -5007,6 +5211,51 @@ msgstr ""
 
 #. module: marin
 #. odoo-python
+#: code:addons/marin/models/approval_request.py:0
+msgid "You cannot create a log without odometer value."
+msgstr ""
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/stock_picking_batch.py:0
+msgid ""
+"You cannot mark as confirmed this batch because the starting fuel value is "
+"not set."
+msgstr ""
+"No puede marcar como confirmado este lote porque el valor inicial del combustible no está "
+"establecido."
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/stock_picking_batch.py:0
+msgid ""
+"You cannot mark as confirmed this batch because the starting odometer value "
+"is not set."
+msgstr ""
+"No puede marcar como confirmado este lote porque el valor inicial del odómetro no está "
+"establecido."
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/stock_picking_batch.py:0
+msgid ""
+"You cannot mark as done this batch because the ending fuel value is not set."
+msgstr ""
+"No puede marcar como realizado este lote porque el valor final del combustible no está "
+"establecido."
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/stock_picking_batch.py:0
+msgid ""
+"You cannot mark as done this batch because the ending odometer value is not "
+"set."
+msgstr ""
+"No puede marcar como realizado este lote porque el valor final del odómetro no está "
+"establecido."
+
+#. module: marin
+#. odoo-python
 #: code:addons/marin/models/account_move_line.py:0
 msgid ""
 "You cannot use the account (%s) in the journal (%s), check the field "
@@ -5044,13 +5293,8 @@ msgid "closest + priority"
 msgstr ""
 
 #. module: marin
-#: model_terms:ir.ui.view,arch_db:marin.fleet_vehicle_view_form_marin
-msgid "e.g. Model S"
-msgstr ""
-
-#. module: marin
-#: model_terms:ir.ui.view,arch_db:marin.fleet_vehicle_view_form_marin
-msgid "e.g. PAE 326"
+#: model_terms:ir.ui.view,arch_db:marin.view_account_asset_form
+msgid "e.g. Catastral key 123"
 msgstr ""
 
 #. module: marin
@@ -5066,7 +5310,7 @@ msgstr ""
 #. module: marin
 #: model:ir.model.fields.selection,name:marin.selection__res_partner__social_style_color__green
 msgid "green"
-msgstr ""
+msgstr "verde"
 
 #. module: marin
 #: model:product.removal,method:marin.removal_lifo_priority
@@ -5074,8 +5318,9 @@ msgid "lifo + priority"
 msgstr ""
 
 #. module: marin
-#: model:uom.uom,name:marin.uom_148
-msgid "mililiter (ml)"
+#. odoo-python
+#: code:addons/marin/models/project_task_lost_reason.py:0
+msgid "lost_reason_id"
 msgstr ""
 
 #. module: marin
@@ -5084,12 +5329,12 @@ msgid "red"
 msgstr ""
 
 #. module: marin
-#: model:res.partner.category,name:marin.partner_category_108
+#: model:res.partner.category,name:marin.partner_category_1008
 msgid "temp3"
 msgstr ""
 
 #. module: marin
-#: model:res.partner.category,name:marin.partner_category_109
+#: model:res.partner.category,name:marin.partner_category_1009
 msgid "temp4"
 msgstr ""
 
@@ -5103,4 +5348,4 @@ msgstr ""
 #. module: marin
 #: model:ir.model.fields.selection,name:marin.selection__res_partner__social_style_color__yellow
 msgid "yellow"
-msgstr ""
+msgstr "amarillo"

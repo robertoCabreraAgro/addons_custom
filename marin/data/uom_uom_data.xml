@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+    <!-- Unit of measure for fuel effincency (km/L) -->
+    <record id="uom_km_per_liter" model="uom.uom">
+        <field name="name">Km/L</field>
+        <field name="relative_factor">1</field>
+    </record>
+</odoo>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form View for stock.picking.batch -->
+    <record id="stock_picking_batch_form_inherit_fleet_route" model="ir.ui.view">
+        <field name="name">stock.picking.batch.form.inherit.fleet.route</field>
+        <field name="model">stock.picking.batch</field>
+        <field name="inherit_id" ref="stock_picking_batch.stock_picking_batch_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Route Analysis" name="route_analysis" invisible="vehicle_id == False">
+                    <field name="driver_department_id" invisible="1" />
+                    <field name="driver_is_commercial" invisible="1" />
+                    <group>
+                        <group string="Route Timing">
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                        </group>
+                        <group string="Odometer">
+                            <label for="odometer_start" string="Starting Odometer"/>
+                            <div>
+                                <field name="odometer_start" class="oe_inline" />
+                                <span> in </span>
+                                <field name="odometer_uom_id" class="oe_inline" />
+                                <button name="action_update_odometer_start" string="Get Odometer" type="object" class="oe_link oe_inline ms-2" icon="fa-refresh" invisible="state!= 'draft'" />
+                            </div>
+                            <label for="odometer_end" string="Ending Odometer" readonly="driver_is_commercial" />
+                            <div>
+                                <field name="odometer_end" class="oe_inline" />
+                                <span> in </span>
+                                <field name="odometer_uom_id" class="oe_inline" />
+                                <button name="action_update_odometer_end" string="Get Odometer" type="object" class="oe_link oe_inline ms-2" icon="fa-refresh" invisible="state!= 'in_progress' or driver_is_commercial" />
+                            </div>
+                            <label for="odometer_difference" string="Distance Coverage"/>
+                            <div>
+                                <field name="odometer_difference" class="oe_inline" />
+                                <span> in </span>
+                                <field name="odometer_uom_id" class="oe_inline" />
+                            </div>
+                        </group>
+                        <group string="Fuel Level">
+                            <label for="fuel_start"/>
+                            <div>
+                                <field name="fuel_start" class="oe_inline"/>
+                                <span> % </span>
+                                <button name="action_update_fuel_start" string="Get Fuel Level" type="object" class="oe_link oe_inline ms-2" icon="fa-refresh" invisible="state!= 'draft'" />
+                            </div>
+                            <label for="fuel_end"/>
+                            <div>
+                                <field name="fuel_end" class="oe_inline" readonly="driver_is_commercial" />
+                                <span> % </span>
+                                <button name="action_update_fuel_end" string="Get Fuel Level" type="object" class="oe_link oe_inline ms-2" icon="fa-refresh" invisible="state!= 'in_progress' or driver_is_commercial" />
+                            </div>
+                            <label for="fuel_consumption" />
+                            <div>
+                                <field name="fuel_consumption" class="oe_inline" />
+                                <span> in </span>
+                                <field name="fuel_uom_id" class="oe_inline" />
+                            </div>
+                        </group>
+                        <group string="Efficiency">
+                            <label for="fuel_efficiency" />
+                            <div>
+                                <field name="fuel_efficiency" class="oe_inline" />
+                                <span> in </span>
+                                <field name="fuel_efficiency_uom_id" class="oe_inline" />
+                            </div>
+                            <label for="empty_distance" />
+                            <div>
+                                <field name="empty_distance" class="oe_inline" />
+                                <span> in </span>
+                                <field name="odometer_uom_id" class="oe_inline" />
+                            </div>
+                            <label for="empty_fuel" />
+                            <div>
+                                <field name="empty_fuel" class="oe_inline" />
+                                <span> in </span>
+                                <field name="fuel_uom_id" class="oe_inline" />
+                            </div>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+    
+    <!-- List View for stock.picking.batch -->
+    <record id="stock_picking_batch_tree_inherit_fleet_route" model="ir.ui.view">
+        <field name="name">stock.picking.batch.tree.inherit.fleet.route</field>
+        <field name="model">stock.picking.batch</field>
+        <field name="inherit_id" ref="stock_picking_batch.stock_picking_batch_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='scheduled_date']" position="after">
+                <field name="vehicle_id" optional="show"/>
+                <field name="odometer_difference" string="Distance coverage" optional="hide"/>
+                <field name="empty_distance" string="Empty Distance" optional="hide"/>
+                <field name="fuel_consumption" optional="hide"/>
+                <field name="fuel_efficiency" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

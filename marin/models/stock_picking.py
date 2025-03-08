@@ -27,6 +27,19 @@ class Picking(models.Model):
         comodel_name="stock.location",
         compute="_compute_suitable_location_ids",
     )
+    odometer_done = fields.Float(
+        string="Odometer Done",
+        help="Odometer which the transfer has been processed."
+    )
+    fuel_done = fields.Float(
+        string="Fuel Done",
+        help="Fuel level which the transfer has been processed."
+    )
+    vehicle_id = fields.Many2one(
+        related="batch_id.vehicle_id",
+        store=True,
+        readonly=True,
+    )
 
     @api.depends("picking_type_id", "location_id")
     def _compute_suitable_product_ids(self):
@@ -206,3 +219,9 @@ class Picking(models.Model):
     def _print_picking_operation(self):
         self._validate_picking_operation()
         return self.env.ref("stock.action_report_picking").report_action(self)
+    
+    def _action_done(self):
+        res = super()._action_done()
+        for picking in self.filtered(lambda p: p.picking_type_id.code == "outgoing" and p.vehicle_id):
+            picking.write({"odometer_done": picking.vehicle_id._get_gps_odometer(), "fuel_done": picking.vehicle_id._get_gps_fuel_level()})
+        return res

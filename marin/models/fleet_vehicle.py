@@ -133,3 +133,32 @@ class FleetVehicleInherit(models.Model):
                         "vehicle_id": False,
                     }
                 )
+
+    def _get_gps_tracking_device(self):
+        self.ensure_one()
+        return self.env['gps.tracking.device'].search([
+            ('vehicle_id', '=', self.id)],
+            order='id desc',
+            limit=1
+        )
+
+    def _get_gps_odometer(self):
+        """Get odometer reading from GPS"""
+        self.ensure_one()
+        gps_device = self._get_gps_tracking_device()
+        return round(gps_device.last_point_id.odometer / 100, 2)
+
+    def _get_gps_fuel_level(self):
+        """Get fuel level reading from GPS"""
+        self.ensure_one()
+        gps_device = self._get_gps_tracking_device()
+        return round(gps_device.last_point_id.fuel_level, 2)
+
+
+    def _compute_odometer(self):
+        gps_vehicles = self.env["fleet.vehicle"]
+        for vehicle in self:
+            vehicle.odometer = vehicle._get_gps_odometer()
+            if vehicle.odometer:
+                gps_vehicles |= vehicle
+        return super(FleetVehicleInherit, self - gps_vehicles)._compute_odometer()
