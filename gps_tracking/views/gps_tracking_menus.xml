@@ -1,10 +1,14 @@
 <odoo>
 
-    <menuitem id="gps_tracking_menu_root"
+    <menuitem
+        id="gps_tracking_menu_root"
         name="GPS Tracking"
-	sequence="130">
+	    sequence="130">
 
-    	<menuitem id="menu_gps_tracking_device" name="GPS Tracking Devices" action="action_gps_tracking_device" />
+    	<menuitem
+            id="menu_gps_tracking_device"
+            name="GPS Tracking Devices"
+            action="action_gps_tracking_device" />
 
     </menuitem>
 
