@@ -3816,12 +3816,12 @@ msgstr "Análisis de rutas"
 #. module: marin
 #: model:ir.model.fields,field_description:marin.field_stock_picking_batch__date_end
 msgid "Route End"
-msgstr "Inicio de la ruta"
+msgstr "Fin de la ruta"
 
 #. module: marin
 #: model:ir.model.fields,field_description:marin.field_stock_picking_batch__date_start
 msgid "Route Start"
-msgstr "Fin de la ruta"
+msgstr "Inicio de la ruta"
 
 #. module: marin
 #: model_terms:ir.ui.view,arch_db:marin.stock_picking_batch_form_inherit_fleet_route

@@ -98,9 +98,9 @@
                     optional="hide"
                     groups="stock.group_stock_manager" />
             </xpath>
-            <xpath expr="//group[@name='other_infos']" position="inside">
-                <field name="odometer_done" invisible="state != 'done'" />
-                <field name="fuel_done" invisible="state != 'done'" />
+            <xpath expr="//field[@name='batch_id']" position="after">
+                <field name="odometer_done" invisible="batch_id == False or state != 'done'" />
+                <field name="fuel_done" invisible="batch_id == False or state != 'done'" />
             </xpath>
         </field>
     </record>

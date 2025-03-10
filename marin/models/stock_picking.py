@@ -27,18 +27,28 @@ class Picking(models.Model):
         comodel_name="stock.location",
         compute="_compute_suitable_location_ids",
     )
-    odometer_done = fields.Float(
-        string="Odometer Done",
-        help="Odometer which the transfer has been processed."
-    )
-    fuel_done = fields.Float(
-        string="Fuel Done",
-        help="Fuel level which the transfer has been processed."
-    )
     vehicle_id = fields.Many2one(
         related="batch_id.vehicle_id",
         store=True,
         readonly=True,
+    )
+    odometer_done = fields.Float(
+        string="Odometer Done",
+        tracking=True,
+        help="Odometer which the transfer has been processed.",
+    )
+    odometer_done_uom_id = fields.Many2one(
+        "uom.uom",
+        string="Odometer Unit",
+        related="vehicle_id.odometer_uom_id",
+        readonly=True,
+        store=True,
+        help="Unit of measurement for the odometer, coming from the company or vehicle.",
+    )
+    fuel_done = fields.Float(
+        string="Fuel Done",
+        tracking=True,
+        help="Fuel level which the transfer has been processed.",
     )
 
     @api.depends("picking_type_id", "location_id")
@@ -47,63 +57,54 @@ class Picking(models.Model):
             [("type", "=", "consu")]
         )
         for picking in self.filtered(
-            lambda p:
-                p.state not in ('cancel', 'done')
-                and p.picking_type_id.code in ("internal", "outgoing")
+            lambda p: p.state not in ("cancel", "done")
+            and p.picking_type_id.code in ("internal", "outgoing")
         ):
             code = picking.picking_type_id.code
             if code == "internal":
                 suitable_product_ids = suitable_product_ids.filtered(
-                    lambda product:
-                        product.stock_quant_ids.filtered(
-                            lambda quant:
-                                quant.location_id.usage == 'internal'
-                                and quant.location_id == picking.location_id
-                        )
+                    lambda product: product.stock_quant_ids.filtered(
+                        lambda quant: quant.location_id.usage == "internal"
+                        and quant.location_id == picking.location_id
+                    )
                 )
 
             elif code == "outgoing":
                 suitable_product_ids = suitable_product_ids.filtered(
-                    lambda product:
-                        product.stock_quant_ids.filtered(
-                            lambda quant:
-                                quant.location_id.usage == 'internal'
-                                and quant.warehouse_id == picking.picking_type_id.warehouse_id
-                        )
+                    lambda product: product.stock_quant_ids.filtered(
+                        lambda quant: quant.location_id.usage == "internal"
+                        and quant.warehouse_id == picking.picking_type_id.warehouse_id
+                    )
                 )
         self.suitable_product_ids = suitable_product_ids
 
     @api.depends("picking_type_id.code", "state")
     def _compute_suitable_location_dest_ids(self):
         self.suitable_location_dest_ids = self.env["stock.location"].search(
-            [("usage","=","internal")]
+            [("usage", "=", "internal")]
         )
         for picking in self.filtered(
-            lambda p: 
-                p.state not in ('cancel', 'done') 
-                and p.picking_type_id.code in ("internal", "incoming")
+            lambda p: p.state not in ("cancel", "done")
+            and p.picking_type_id.code in ("internal", "incoming")
         ):
             self.suitable_location_dest_ids = self.suitable_location_dest_ids.filtered(
-                lambda location:
-                    location.warehouse_id == picking.picking_type_id.warehouse_id
+                lambda location: location.warehouse_id
+                == picking.picking_type_id.warehouse_id
             )
-            
 
     @api.depends("picking_type_id.code", "state")
     def _compute_suitable_location_ids(self):
         self.suitable_location_ids = self.env["stock.location"].search(
-            [("usage","=","internal")]
+            [("usage", "=", "internal")]
         )
         for picking in self.filtered(
-            lambda p: 
-                p.state not in ('cancel', 'done') 
-                and p.picking_type_id.code in ("internal", "outgoing")
+            lambda p: p.state not in ("cancel", "done")
+            and p.picking_type_id.code in ("internal", "outgoing")
         ):
             self.suitable_location_ids = self.suitable_location_ids.filtered(
-                lambda location:
-                    location.warehouse_id == picking.picking_type_id.warehouse_id
+                lambda location: location.warehouse_id
+                == picking.picking_type_id.warehouse_id
             )
-        
 
     def _prepare_compute_custom_permissions(self):
         mark_as_todo = (
@@ -127,14 +128,22 @@ class Picking(models.Model):
     @api.depends("group_id")
     def _compute_show_purchase_lines(self):
         for rec in self:
-            order = rec.env["purchase.order"].search([("group_id", "=", rec.group_id.id)])
-            to_from_supplier = rec.location_id.usage == "supplier" or rec.location_dest_id.usage == "supplier"
+            order = rec.env["purchase.order"].search(
+                [("group_id", "=", rec.group_id.id)]
+            )
+            to_from_supplier = (
+                rec.location_id.usage == "supplier"
+                or rec.location_dest_id.usage == "supplier"
+            )
             rec.show_purchase_lines = bool(order and to_from_supplier)
 
     @api.depends("sale_id")
     def _compute_show_sale_lines(self):
         for rec in self:
-            to_from_customer = rec.location_dest_id.usage == "customer" or rec.location_id.usage == "customer"
+            to_from_customer = (
+                rec.location_dest_id.usage == "customer"
+                or rec.location_id.usage == "customer"
+            )
             rec.show_sale_lines = bool(rec.sale_id and to_from_customer)
 
     @api.depends("state")
@@ -174,7 +183,9 @@ class Picking(models.Model):
         picking_to_reset.move_ids.move_line_ids.unlink()
 
     def action_view_moves(self):
-        action = self.env["ir.actions.act_window"]._for_xml_id("stock.stock_move_action")
+        action = self.env["ir.actions.act_window"]._for_xml_id(
+            "stock.stock_move_action"
+        )
         action["domain"] = [("id", "in", self.move_ids.ids)]
         action["context"] = {
             "search_default_future": 1,
@@ -189,7 +200,10 @@ class Picking(models.Model):
         if invalid_pickings:
             picking_names = "\n".join(picking.name for picking in invalid_pickings)
             raise UserError(
-                _("Following pickings are not valid to print their delivery slip: \n%s", picking_names)
+                _(
+                    "Following pickings are not valid to print their delivery slip: \n%s",
+                    picking_names,
+                )
             )
         return True
 
@@ -211,7 +225,10 @@ class Picking(models.Model):
         if invalid_pickings:
             picking_names = "\n".join(picking.name for picking in invalid_pickings)
             raise UserError(
-                _("Following pickings are not valid to print their picking operation: \n%s", picking_names)
+                _(
+                    "Following pickings are not valid to print their picking operation: \n%s",
+                    picking_names,
+                )
             )
         return True
 
@@ -219,9 +236,21 @@ class Picking(models.Model):
     def _print_picking_operation(self):
         self._validate_picking_operation()
         return self.env.ref("stock.action_report_picking").report_action(self)
-    
+
+    def _update_gps_tracking_information(self, date=False):
+        for picking in self:
+            picking.write(
+                {
+                    "odometer_done": picking.vehicle_id._get_gps_odometer(date=date),
+                    "fuel_done": picking.vehicle_id._get_gps_fuel_level(date=date),
+                }
+            )
+
     def _action_done(self):
         res = super()._action_done()
-        for picking in self.filtered(lambda p: p.picking_type_id.code == "outgoing" and p.vehicle_id):
-            picking.write({"odometer_done": picking.vehicle_id._get_gps_odometer(), "fuel_done": picking.vehicle_id._get_gps_fuel_level()})
+        for picking in self.filtered(
+            lambda p: p.picking_type_id.code == "outgoing"
+            and p.vehicle_id
+        ):
+            picking._update_gps_tracking_information()
         return res

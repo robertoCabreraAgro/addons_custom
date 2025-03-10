@@ -213,7 +213,7 @@ class StockPickingBatch(models.Model):
         if not fuel_start:
             raise UserError(_("You cannot mark as confirmed this batch because the starting fuel value is not set."))
 
-        return self.write({"date_start": self.date_start or fields.Datetime.now(), "odometer_end": odometer_end})
+        return self.write({"date_start": self.date_start or fields.Datetime.now(), "odometer_start": odometer_start})
 
     def action_done(self):
         """Extend the action_done method to validate odometer and fuel before end route"""
