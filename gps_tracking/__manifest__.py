@@ -10,7 +10,7 @@
     "data": [
         "security/ir.model.access.csv",
         "views/gps_tracking_device_views.xml",
-        "views/gps_tracking_menus.xml", # Last because referencing actions defined in previous files
+        "views/gps_tracking_menus.xml",
     ], 
     "demo": [
         "demo/gps_tracking_device_data.xml",
@@ -21,6 +21,7 @@
     #    "gps_tracking/static/src/**/*"
     #    ],
     #},
+    "license": "OPL-1",
     "installable": True,
     "application": True,
 }

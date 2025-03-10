@@ -18,7 +18,7 @@ class GpsTrackingDevice(models.Model):
 
     vehicle_id = fields.Many2one(
         comodel_name="fleet.vehicle",
-        string="Vehícle,
+        string="Vehícle",
         help="Vehículo asociado al dispositivo GPS",
     )
     license_plate = fields.Char(
@@ -62,7 +62,7 @@ class GpsTrackingDevice(models.Model):
     )
     address = fields.Char(
         related="last_point_id.address", store=True,
-        string="Altitude",
+        string="Address",
     )
     # the_point = fields.GeoPoint(
     #   string='Current Position',
