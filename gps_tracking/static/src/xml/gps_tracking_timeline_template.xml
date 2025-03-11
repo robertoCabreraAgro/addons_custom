@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="gps_tracking.gps_tracking_timeline_template">
+        <ControlPanel>
+            <t t-set-slot="layout-actions">
+                <div class="control-panel-container">
+                    <div class="search-bar">
+                        <SearchBar/>
+                    </div>
+
+                    <button type="button" class="btn btn-danger" t-on-click="resetAll">
+                        Reiniciar Todo
+                    </button>
+                    <!-- Dropdown de rango de fechas -->
+                    <div class="dropdown ms-3">
+                        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Rango de Fechas
+                        </button>
+                        <div class="dropdown-menu p-3">
+                            <div class="date-picker">
+                                <label for="start-date" class="form-label">Fecha Inicio:</label>
+                                <input type="datetime-local" id="start-date" t-model="state.startDate" class="form-control" />
+                            </div>
+                            <div class="date-picker mt-3">
+                                <label for="end-date" class="form-label">Fecha Fin:</label>
+                                <input type="datetime-local" id="end-date" t-model="state.endDate" class="form-control" />
+                            </div>
+                            <div class="date-action mt-3">
+                                <button type="button" class="btn btn-primary" t-on-click="fetchDevicePaths">
+                                    Consultar Recorrido
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </ControlPanel>
+
+        <div class="o_gps_tracking_dashboard">
+            <!-- Kanban de dispositivos -->
+            <div class="o_gps_tracking_kanban">
+                <t t-foreach="state.filteredDevices" t-as="device" t-key="device.imei">
+                    <div class="o_gps_tracking_card" 
+                         t-att-class="{'active': state.activeDevice === device}" 
+                         t-on-click.prevent="() => this.onCardClick(device)">
+                        
+                        <!-- Checkbox para activar/desactivar la vista -->
+                        <div class="kanban_toggle_view">
+                            <input type="checkbox" t-att-checked="state.activeDevices.includes(device.imei)" 
+                                t-on-click.prevent="() => this.toggleDeviceVisibility(device)"/>
+                        </div>
+                        
+                        <div class="card_header">
+                            <strong><t t-esc="device.imei"/></strong>
+                            <!-- Botón de flecha para expandir -->
+                            <button class="expand_button" 
+                                    t-on-click.prevent="() => this.toggleExpand(device)">
+                                <i t-att-class="state.expandedDevices.has(device.imei) ? 'fa fa-chevron-up' : 'fa fa-chevron-down'"></i>
+                            </button>
+                        </div>
+                        
+                        <div t-if="state.expandedDevices.has(device.imei)" class="card_body">
+                            <!-- Información del dispositivo -->
+                            <div t-if="device.vehicle_id">
+                                <span>Vehículo: <t t-esc="device.vehicle_id[1]"/></span> <!-- Mostrar el nombre del vehículo -->
+                            </div>
+                            <div class="kanban_info">
+                                <i class="fa fa-clock-o"></i>
+                                <span>Última actualización:</span> <t t-esc="device.timestamp"/>
+                            </div>
+                            <div class="kanban_info">
+                                <i class="fa fa-map"></i>
+                                <span>Dirección:</span> <t t-esc="device.address"/>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </div>
+
+            <!-- Contenedor del mapa -->
+            <div class="o_gps_tracking_map" t-ref="mapContainer" id="map">
+                <div t-ref="tooltip" id="info" style="position:absolute; visibility: hidden; pointer-events: auto;"></div>
+            </div>
+        </div>
+    </t>
+</templates>

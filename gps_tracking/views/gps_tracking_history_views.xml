@@ -1,0 +1,191 @@
+<odoo>
+    <!-- Vista en lista para historial de posiciones GPS -->
+    <record id="view_gps_tracking_data_history_list" model="ir.ui.view">
+        <field name="name">gps.tracking.data.history.list</field>
+        <field name="model">gps.tracking.data.history</field>
+        <field name="arch" type="xml">
+            <list string="GPS Tracking Data History">
+                <field name="imei"/>
+                <field name="timestamp"/>
+                <field name="speed"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Vista en formulario para historial de posiciones GPS -->
+    <record id="view_gps_tracking_data_history_form" model="ir.ui.view">
+        <field name="name">gps.tracking.data.history.form</field>
+        <field name="model">gps.tracking.data.history</field>
+        <field name="arch" type="xml">
+            <form string="GPS Tracking Data History">
+                <sheet>
+                    <group>
+                        <field name="imei"/>
+                        <field name="timestamp"/>
+                        <field name="altitude"/>
+                        <field name="longitude"/>
+                        <field name="latitude"/>
+                        <field name="angle"/>
+                        <field name="speed"/>
+                        <field name="the_point" widget="geo_point" options='{"color": "#00FF00"}'/>
+                        <field name="history_route" geo_style='{"strokeColor": "#0000FF", "strokeWidth": 4}'/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_gps_tracking_geoengine" model="ir.ui.view">
+        <field name="name">gps.tracking.geoengine</field>
+        <field name="model">gps.tracking.data.history</field>
+        <field name="arch" type="xml">
+            <geoengine editable="1">
+                <field name="id" invisible="1" />
+                <!-- Campos mostrados en la vista de GeoEngine -->
+                <field name="imei" />
+                <field name="timestamp" />
+                <field name="speed" />
+                <field name="the_point" 
+                       string="Position" 
+                       geo_type="geo_point" 
+                       geo_style='{"fillColor": "#00FF00", "strokeColor": "#FF0000", "pointRadius": 8}'/>
+                <field name="history_route" 
+                       string="History Route" 
+                       geo_type="geo_line" 
+                       geo_style='{"strokeColor": "#0000FF", "strokeWidth": 4}'/>
+
+                <!-- Templates de información para el popup en el mapa -->
+                <templates>
+                    <t t-name="info_box">
+                        <b>IMEI: <field name="imei" /></b>
+                        <ul>
+                            <li>Timestamp: <field name="timestamp" /></li>
+                            <li>Speed: <field name="speed" /></li>
+                            <li>Altitude: <field name="altitude" /></li>
+                        </ul>
+                    </t>
+                </templates>
+            </geoengine>
+        </field>
+    </record>
+
+    <!-- Capa raster para Google Maps utilizando 'xyz' -->
+    <record id="geoengine_raster_layer_google_maps" model="geoengine.raster.layer">
+        <field name="name">Google Maps Layer</field>
+        <field name="view_id" ref="view_gps_tracking_geoengine" />
+        <field name="raster_type">xyz</field>
+        <field name="url">https://mt0.google.com/vt/lyrs=m&amp;x={x}&amp;y={y}&amp;z={z}&amp;key=TU_CLAVE_API</field>        
+        <field eval="0" name="overlay" />
+    </record>
+
+    <!-- Acción para mostrar el historial de GPS en vistas list, form, geoengine -->
+    <record id="action_gps_tracking_history" model="ir.actions.act_window">
+        <field name="name">GPS Tracking History</field>
+        <field name="res_model">gps.tracking.data.history</field>
+        <field name="view_mode">list,form,geoengine</field> <!-- Permite ver en los modos list, form y geoengine -->
+    </record>
+
+    <!-- Capa vectorial para 'the_point' -->
+    <record id="geoengine_vector_layer_the_point" model="geoengine.vector.layer">
+        <field name="name">GPS Positions</field>
+        <field name="model_id" ref="model_gps_tracking_data_history" />
+        <field name="geo_field_id" ref="field_gps_tracking_data_history__the_point" />
+        <field name="attribute_field_id" ref="field_gps_tracking_data_history__imei" />
+        <field name="view_id" ref="view_gps_tracking_geoengine" />
+        <field name="geo_repr">basic</field>
+        <field name="active_on_startup">True</field>
+        <field eval="1" name="sequence" />
+        <field name="layer_opacity">0.8</field>
+        <field name="begin_color">#00FF00</field>
+        <field name="end_color">#00FF00</field>
+    </record>
+
+    <!-- Capa vectorial para 'history_route' -->
+    <record id="geoengine_vector_layer_history_route" model="geoengine.vector.layer">
+        <field name="name">GPS History Routes</field>
+        <field name="model_id" ref="model_gps_tracking_data_history" />
+        <field name="geo_field_id" ref="field_gps_tracking_data_history__history_route" />
+        <field name="attribute_field_id" ref="field_gps_tracking_data_history__imei" />
+        <field name="view_id" ref="view_gps_tracking_geoengine" />
+        <field name="geo_repr">basic</field>
+        <field name="active_on_startup">True</field>
+        <field eval="2" name="sequence" />
+        <field name="layer_opacity">0.8</field>
+        <field name="begin_color">#0000FF</field>
+        <field name="end_color">#0000FF</field>
+    </record>
+
+    <!-- Registro de prueba -->
+    <!-- Ejemplo de registros históricos de posiciones GPS -->
+    <record id="gps_tracking_data_history_test1" model="gps.tracking.data.history">
+        <field name="imei">867060038729378</field>
+        <field name="timestamp">2024-10-12 22:55:41</field>
+        <field name="latitude">20.565625</field>
+        <field name="longitude">-100.4210966</field>
+        <field name="altitude">1805</field>
+        <field name="angle">4</field>
+        <field name="satellites">11</field>
+        <field name="speed">20</field>
+        <field name="event_id">0</field>
+    </record>
+
+    <record id="gps_tracking_data_history_test2" model="gps.tracking.data.history">
+        <field name="imei">867060038729378</field>
+        <field name="timestamp">2024-10-12 22:55:51</field>
+        <field name="latitude">20.5661016</field>
+        <field name="longitude">-100.42108</field>
+        <field name="altitude">1808</field>
+        <field name="angle">359</field>
+        <field name="satellites">11</field>
+        <field name="speed">9</field>
+        <field name="event_id">0</field>
+    </record>
+
+    <record id="gps_tracking_data_history_test3" model="gps.tracking.data.history">
+        <field name="imei">867060038729378</field>
+        <field name="timestamp">2024-10-12 22:55:55</field>
+        <field name="latitude">20.5662266</field>
+        <field name="longitude">-100.4210999</field>
+        <field name="altitude">1808</field>
+        <field name="angle">3</field>
+        <field name="satellites">11</field>
+        <field name="speed">19</field>
+        <field name="event_id">0</field>
+    </record>
+
+    <record id="gps_tracking_data_history_test4" model="gps.tracking.data.history">
+        <field name="imei">867060038729378</field>
+        <field name="timestamp">2024-10-12 22:56:11</field>
+        <field name="latitude">20.567165</field>
+        <field name="longitude">-100.4210749</field>
+        <field name="altitude">1811</field>
+        <field name="angle">3</field>
+        <field name="satellites">11</field>
+        <field name="speed">25</field>
+        <field name="event_id">0</field>
+    </record>
+
+    <record id="gps_tracking_data_history_test5" model="gps.tracking.data.history">
+        <field name="imei">867060038729378</field>
+        <field name="timestamp">2024-10-12 22:56:19</field>
+        <field name="latitude">20.5676083</field>
+        <field name="longitude">-100.4210516</field>
+        <field name="altitude">1811</field>
+        <field name="angle">4</field>
+        <field name="satellites">11</field>
+        <field name="speed">12</field>
+        <field name="event_id">0</field>
+    </record>
+
+    <record id="gps_tracking_data_history_test6" model="gps.tracking.data.history">
+        <field name="imei">867060038729378</field>
+        <field name="timestamp">2024-10-12 22:56:23</field>
+        <field name="latitude">20.56769</field>
+        <field name="longitude">-100.4210383</field>
+        <field name="altitude">1811</field>
+        <field name="angle">22</field>
+        <field name="satellites">11</field>
+        <field name="speed">10</field>
+        <field name="event_id">0</field>
+    </record>
+</odoo>

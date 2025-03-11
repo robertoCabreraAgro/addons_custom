@@ -1,7 +1,9 @@
-from odoo import fields, models, api
-from pyproj import Transformer
 import logging
+
 import requests
+from pyproj import Transformer
+
+from odoo import api, fields, models
 
 _logger = logging.getLogger(__name__)
 
@@ -9,13 +11,10 @@ _logger = logging.getLogger(__name__)
 class GpsTrackingPoint(models.Model):
     _name = "gps.tracking.point"
     _description = "GPS Tracking Point"
-
+    _order = "timestamp desc"
 
     device_id = fields.Many2one(
-        comodel_name="gps.tracking.device",
-        string="Device",
-        required=True,
-        ondelete="cascade",
+        "gps.tracking.device", string="Device", required=True, ondelete="cascade"
     )
     timestamp = fields.Datetime(string="Timestamp", required=True)
     priority = fields.Integer(string="Priority")
@@ -27,38 +26,44 @@ class GpsTrackingPoint(models.Model):
 
     latitude = fields.Float(string="Latitude", digits=(16, 7))
     longitude = fields.Float(string="Longitude", digits=(16, 7))
-    # the_point = fields.GeoPoint(string='Position', srid=3857, compute='_compute_the_point', store=True)
+    the_point = fields.GeoPoint(
+        string="Position", srid=3857, compute="_compute_the_point", store=True
+    )
     address = fields.Char(string="Address", compute="_compute_address", store=True)
 
     # Nuevos campos para los IO adicionales
-    ignition = fields.Integer(string="Ignition")
-    movement = fields.Integer(string="Movement")
-    gsm_signal = fields.Integer(string="GSM Signal")
-    sleep_mode = fields.Integer(string="Sleep Mode")
-    gnss_status = fields.Integer(string="GNSS Status")
-    gnss_pdop = fields.Float(string="GNSS PDOP", digits=(16, 2))
-    gnss_hdop = fields.Float(string="GNSS HDOP", digits=(16, 2))
-    external_voltage = fields.Float(string="External Voltage", digits=(16, 3))
-    battery_voltage = fields.Float(string="Battery Voltage", digits=(16, 3))
-    battery_current = fields.Float(string="Battery Current", digits=(16, 3))
-    active_gsm_operator = fields.Integer(string="Active GSM Operator")
-    odometer = fields.Integer(string="Total Odometer")
+    ignition = fields.Integer(string='Ignition')
+    movement = fields.Integer(string='Movement')
+    gsm_signal = fields.Integer(string='GSM Signal')
+    sleep_mode = fields.Integer(string='Sleep Mode')
+    gnss_status = fields.Integer(string='GNSS Status')
+    gnss_pdop = fields.Float(string='GNSS PDOP', digits=(16, 2))
+    gnss_hdop = fields.Float(string='GNSS HDOP', digits=(16, 2))
+    external_voltage = fields.Float(string='External Voltage', digits=(16, 3))
+    battery_voltage = fields.Float(string='Battery Voltage', digits=(16, 3))
+    battery_current = fields.Float(string='Battery Current', digits=(16, 3))
+    active_gsm_operator = fields.Integer(string='Active GSM Operator')
+    odometer = fields.Integer(string='Total Odometer')
     fuel_level = fields.Integer(string="Fuel Level")
 
-    # @api.depends('latitude', 'longitude')
-    # def _compute_the_point(self):
-    #    transformer = Transformer.from_crs(4326, 3857, always_xy=True)
-    #    for rec in self:
-    #        if rec.latitude and rec.longitude and not rec.the_point:
-    #            _logger.info(f"Transformando latitud {rec.latitude} y longitud {rec.longitude} de SRID 4326 a SRID 3857.")
-    #            x, y = transformer.transform(rec.longitude, rec.latitude)
-    #            rec.the_point = f'POINT({x} {y})'
-    #        elif rec.the_point:
-    #            _logger.info(f"Punto ya calculado: {rec.the_point}")
+    @api.depends("latitude", "longitude")
+    def _compute_the_point(self):
+        transformer = Transformer.from_crs(4326, 3857, always_xy=True)
+        for rec in self:
+            if rec.latitude and rec.longitude and not rec.the_point:
+                _logger.info(
+                    f"Transformando latitud {rec.latitude} y longitud {rec.longitude} de SRID 4326 a SRID 3857."
+                )
+                x, y = transformer.transform(rec.longitude, rec.latitude)
+                rec.the_point = f"POINT({x} {y})"
+            elif rec.the_point:
+                _logger.info(f"Punto ya calculado: {rec.the_point}")
 
-    # def _compute_address(self):
-    #     api_key = ''  #Sustituye por tu clave de API
-    #     for rec in self:
+    def _compute_address(self):
+        #     api_key = ''  #Sustituye por tu clave de API
+        for rec in self:
+            rec.address = ""
+
     #         _logger.info(f"Ejecutando _compute_address para ID {rec.id} con latitude={rec.latitude}, longitude={rec.longitude}")
     #         if rec.latitude and rec.longitude:
     #             url = f"https://maps.googleapis.com/maps/api/geocode/json?latlng={rec.latitude},{rec.longitude}&key={api_key}"

@@ -1,0 +1,21 @@
+<odoo>
+
+    <!-- Capa raster para Google Maps utilizando 'xyz' -->
+    <record id="geoengine_raster_layer_google_maps" model="geoengine.raster.layer">
+        <field name="name">Google Maps Layer</field>
+        <field name="view_id" ref="view_gps_tracking_device_geoengine" />
+        <field name="raster_type">xyz</field>
+        <field name="url">https://mt0.google.com/vt/lyrs=m&amp;x={x}&amp;y={y}&amp;z={z}&amp;key=TU_CLAVE_API_REAL</field>        
+        <field eval="0" name="overlay" />
+    </record>
+
+    <!-- Capa raster para la vista geoengine de puntos de seguimiento -->
+    <record id="geoengine_raster_layer_google_maps_point" model="geoengine.raster.layer">
+        <field name="name">Google Maps Layer for Tracking Points</field>
+        <field name="view_id" ref="view_tracking_point_geoengine" />
+        <field name="raster_type">xyz</field>
+        <field name="url">https://mt0.google.com/vt/lyrs=m&amp;x={x}&amp;y={y}&amp;z={z}&amp;key=TU_CLAVE_API_REAL</field>        
+        <field eval="0" name="overlay" />
+    </record>
+
+</odoo>

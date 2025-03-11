@@ -13,6 +13,7 @@
         </field>
     </record>
 
+    <!-- Vista en lista para dispositivos de GPS -->
     <record id="view_gps_tracking_device_list" model="ir.ui.view">
         <field name="name">gps.tracking.device.list</field>
         <field name="model">gps.tracking.device</field>
@@ -26,6 +27,41 @@
         </field>
     </record>
 
+    <!-- Vista Geoengine para dispositivos GPS -->
+    <record id="view_gps_tracking_device_geoengine" model="ir.ui.view">
+        <field name="name">gps.tracking.device.geoengine</field>
+        <field name="model">gps.tracking.device</field>
+        <field name="type">geoengine</field>
+        <field name="arch" type="xml">
+            <geoengine editable="1">
+                <field name="imei" invisible="1"></field>
+                <field name="speed" invisible="1"></field>
+                <field name="altitude" invisible="1"></field>
+                <field name="timestamp" invisible="1"></field>
+                <!-- Plantillas para info_box -->
+                <templates>
+                    <t t-name="info_box">
+                        <b>IMEI: <t t-esc="record.imei.value"/></b>
+                        <ul>
+                            <li>Timestamp: <t t-esc="record.timestamp.value"/></li>
+                            <li>Speed: <t t-esc="record.speed.value"/></li>
+                            <li>Altitude: <t t-esc="record.altitude.value"/></li>
+                        </ul>
+                    </t>
+                </templates>
+                <!-- Mostrar la ruta histórica -->
+                <field name="history_route"
+                        string="History Route"
+                        options='{"color": "#0000FF", "strokeWidth": 4}'/>
+                <!-- Mostrar los puntos de seguimiento -->
+                <field name="the_point" 
+                        string="Current Position" 
+                        options='{"fillColor": "#00FF00", "strokeColor": "#FF0000", "pointRadius": 8}'/>
+            </geoengine>
+        </field>
+    </record>
+
+    <!-- Vista en formulario para dispositivos de GPS -->
     <record id="view_gps_tracking_device_form" model="ir.ui.view">
         <field name="name">gps.tracking.device.form</field>
         <field name="model">gps.tracking.device</field>
@@ -72,8 +108,8 @@
                         <!-- Pestaña History Route
                         <page string="History Route">
                             <geoengine>
-                                <field name="history_route"
-                                        string="History Route"
+                                <field name="history_route" 
+                                        string="History Route" 
                                         options='{"color": "#0000FF", "strokeWidth": 4}'/>
                             </geoengine>
                         </page> -->
@@ -83,10 +119,22 @@
         </field>
     </record>
 
+
+    <!-- Acción para mostrar los dispositivos GPS en vistas list y form -->
     <record id="action_gps_tracking_device" model="ir.actions.act_window">
         <field name="name">GPS Tracking Devices</field>
         <field name="res_model">gps.tracking.device</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">list,form,geoengine</field>
+    </record>
+
+    <!-- Registro del dispositivo GPS -->
+    <record id="gps_tracking_device_test1" model="gps.tracking.device">
+        <field name="imei">867060038729378</field>
+    </record>
+
+        <!-- Registro del dispositivo GPS -->
+    <record id="gps_tracking_device_test2" model="gps.tracking.device">
+        <field name="imei">867060038729377</field>
     </record>
 
 </odoo>

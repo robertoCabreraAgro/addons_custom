@@ -1,0 +1,33 @@
+<odoo>
+
+    <!-- Capa vectorial para 'the_point' -->
+    <record id="geoengine_vector_layer_device" model="geoengine.vector.layer">
+        <field name="name">Device Positions</field>
+        <field name="model_id" ref="model_gps_tracking_device"/>
+        <field name="geo_field_id" ref="field_gps_tracking_device__the_point"/>
+        <field name="attribute_field_id" ref="field_gps_tracking_device__imei"/>
+        <field name="view_id" ref="view_gps_tracking_device_geoengine"/>
+        <field name="geo_repr">basic</field>
+        <field name="active_on_startup">True</field>
+        <field eval="1" name="sequence"/>
+        <field name="layer_opacity">0.8</field>
+        <field name="begin_color">#00FF00</field>
+        <field name="end_color">#00FF00</field>
+    </record>
+
+    <!-- Capa vectorial para 'history_route' -->
+    <record id="geoengine_vector_layer_history_route" model="geoengine.vector.layer">
+        <field name="name">History Route Layer</field>
+        <field name="model_id" ref="model_gps_tracking_device"/>
+        <field name="geo_field_id" ref="field_gps_tracking_device__history_route"/>
+        <field name="attribute_field_id" ref="field_gps_tracking_device__imei"/>
+        <field name="view_id" ref="view_gps_tracking_device_geoengine"/>
+        <field name="geo_repr">basic</field>
+        <field name="active_on_startup">False</field>
+        <field eval="2" name="sequence"/>
+        <field name="layer_opacity">0.8</field>
+        <field name="begin_color">#FF0000</field>
+        <field name="end_color">#FF0000</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="gps_tracking.gps_tracking_action_timeline">
+        <!-- Este t-name coincide con GpsTrackingAction.template arriba -->
+        <WithSearch t-props="withSearchProps" t-slot-scope="search">
+            <GpsTrackingTimeline
+                action="props.action"
+                searchDomain="search.domain" />
+        </WithSearch>
+    </t>
+</templates>

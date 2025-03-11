@@ -102,7 +102,15 @@ class GeoField(fields.Field):
 
     def entry_to_shape(self, value, same_type=False):
         """Transform input into an object"""
-        shape = convert.value_to_shape(value)
+        use_wkb = True
+        if isinstance(value, (bytes, str)):
+            try:
+                int(value, 16)
+            except Exception:
+                # not an hex value -> try to load from a sting
+                # representation of a geometry
+                use_wkb = False
+        shape = convert.value_to_shape(value, use_wkb)
         if same_type and not shape.is_empty:
             if shape.geom_type.lower() != self.geo_type.lower():
                 msg = _(

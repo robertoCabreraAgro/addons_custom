@@ -1,0 +1,16 @@
+<templates xml:space="preserve">
+    <t t-name="gps_tracking.GpsSearchbar">
+        <div class="o_searchview form-control d-flex align-items-center py-1 w-auto">
+            <i class="o_searchview_icon oi oi-search me-2" role="img" aria-label="Search" title="Search"></i>
+            <div class="o_searchview_input_container flex-grow-1">
+                <input
+                    type="text"
+                    class="o_searchview_input o_input border-0"
+                    placeholder="Buscar IMEI..."
+                    t-ref="searchInput"
+                    t-on-input="triggerSearch"
+                />
+            </div>
+        </div>
+    </t>
+</templates>

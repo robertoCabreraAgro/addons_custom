@@ -1,14 +1,24 @@
 <odoo>
+    <!-- Menú para acceder a los dispositivos de rastreo GPS -->
+    <menuitem id="gps_tracking_menu_root" name="GPS Tracking Devices" action="action_gps_tracking_device" sequence="130" >
 
-    <menuitem
-        id="gps_tracking_menu_root"
-        name="GPS Tracking"
-	    sequence="130">
+        <menuitem id="menu_gps_tracking_device" name="GPS Tracking Device" action="action_gps_tracking_device" sequence="10" />
 
-    	<menuitem
-            id="menu_gps_tracking_device"
-            name="GPS Tracking Devices"
-            action="action_gps_tracking_device" />
+        <menuitem id="menu_gps_tracking_dashboard"
+            name="GPS Dashboard"
+            action="action_gps_tracking_client_action"
+            sequence="20" />
+
+        <menuitem id="menu_gps_tracking_timeline"
+            name="GPS Timeline"
+            action="action_gps_tracking_client_action_timeline"
+            sequence="30" />
+
+
+        <menuitem id="menu_gps_geofence"
+            name="Geocercas"
+            action="action_gps_geofence"
+            sequence="40" />
 
     </menuitem>
 
