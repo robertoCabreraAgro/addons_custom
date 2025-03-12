@@ -79,29 +79,45 @@
                         <page string="Tracking Points">
                             <field name="tracking_points" default_order="timestamp desc">
                                 <list>
-                                    <field name="device_id" optional="hide"/>
-                                    <field name="timestamp"/>
-                                    <field name="priority" optional="hide"/>
-                                    <field name="latitude"/>
-                                    <field name="longitude"/>
-                                    <field name="altitude"/>
-                                    <field name="angle" optional="hide"/>
-                                    <field name="satellites" optional="hide"/>
-                                    <field name="speed"/>
-                                    <field name="odometer"/>
-                                    <field name="fuel_level"/>
-                                    <field name="event_id" optional="hide"/>
-                                    <field name="ignition"/>
-                                    <field name="movement"/>
-                                    <field name="gsm_signal" optional="hide"/>
-                                    <field name="sleep_mode" optional="hide"/>
-                                    <field name="gnss_status" optional="hide"/>
-                                    <field name="gnss_pdop" optional="hide"/>
-                                    <field name="gnss_hdop" optional="hide"/>
-                                    <field name="external_voltage" optional="hide"/>
-                                    <field name="battery_voltage" optional="hide"/>
-                                    <field name="battery_current" optional="hide"/>
-                                    <field name="active_gsm_operator" optional="hide"/>
+				    <field name="device_id" invisible="1"/>
+				    <field name="timestamp" />
+				    <field name="latitude" />
+				    <field name="longitude" />
+				    <field name="altitude" />
+				    <field name="angle" optional="hide" />
+				    <field name="satellites" optional="hide" />
+				    <field name="speed" />
+				    <field name="wheel_speed" />
+				    <field name="engine_speed_rpm" />
+				    <field name="odometer" />
+				    <field name="total_odometer" optional="hide" />
+				    <field name="fuel_level" widget="progressbar" />
+				    <field name="fuel_level_l" optional="hide" />
+				    <field name="ignition" />
+				    <field name="engine_temperature" optional="hide" />
+				    <field name="engine_total_hours" optional="hide" />
+				    <field name="engine_total_hours_counted" optional="hide" />
+				    <field name="fuel_consumed_counted" optional="hide" />
+				    <field name="movement" optional="hide" />
+				    <field name="parking_brake_state" optional="hide" />
+				    <field name="central_lock" optional="hide" />
+				    <field name="isf_check_engine_indicator" optional="hide" />
+				    <field name="gsm_signal" optional="hide" />
+				    <field name="active_gsm_operator" optional="hide" />
+				    <field name="sleep_mode" optional="hide" />
+				    <field name="gnss_status" optional="hide" />
+				    <field name="gnss_pdop" optional="hide" />
+				    <field name="gnss_hdop" optional="hide" />
+				    <field name="external_voltage" optional="hide" />
+				    <field name="battery_voltage" optional="hide" />
+				    <field name="battery_current" optional="hide" />
+				    <field name="auto_geofence" optional="hide" />
+				    <field name="control_state_flags" optional="hide" />
+				    <field name="iccid1" optional="hide" />
+				    <field name="event_id" optional="hide" />
+				    <field name="event_type" optional="hide" />
+				    <field name="priority" optional="hide" />
+				    <field name="address" optional="hide" />
                                 </list>
                             </field>
                         </page>

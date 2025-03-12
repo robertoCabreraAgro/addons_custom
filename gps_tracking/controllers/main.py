@@ -1,4 +1,6 @@
 import logging
+import pytz
+
 from odoo import http
 from odoo.http import request
 
@@ -28,21 +30,42 @@ class GPSWebhook(http.Controller):
         "alt": "altitude",
         "ang": "angle",
         "sp": "speed",
+        "11": "iccid1",
+        "16": "total_odometer",
+        "21": "gsm_signal",
+        "66": "external_voltage",
+        "67": "battery_voltage",
+        "68": "battery_current",
+        "69": "gnss_status",
+        "84": "fuel_level_l",
+        "102": "engine_total_hours",
+        "107": "fuel_consumed_counted",
+        "123": "control_state_flags",
+        "175": "auto_geofence",
+        "181": "gnss_pdop",
+        "182": "gnss_hdop",
+        "200": "sleep_mode",
+        "241": "active_gsm_operator",
+        "pr": "priority",
+        "evt": "event_type",
+        "sat": "satellites",
     }
 
     @http.route(
         "/gps/webhook", type="jsonrpc", auth="public", methods=["POST"], csrf=False
     )
     def gps_webhook(self, **kwargs):
+        gps_tracking_point = request.env["gps.tracking.point"].sudo()
         _logger.info(
             "Iniciando procesamiento del webhook GPS."
         )  # TODO: cambiar a debug luego de estabilizacion
         try:
-            json_data = request.jsonrequest or {}
-            payload = json_data["state"]["reported"]
+            json_data = request.get_json_data() or {}
             _logger.info(
                 f"Payload recibido: {json_data}"
             )  # TODO: cambiar a debug luego de estabilizacion
+
+            payload = json_data["state"]["reported"]
         except Exception as e:
             _logger.error(f"Error al procesar el JSON del payload: {e}")
             return b"\x00"
@@ -68,13 +91,17 @@ class GPSWebhook(http.Controller):
 
                 _logger.info(f"Dispositivo encontrado: {device.id} (IMEI: {imei})")
                 vals = {"device_id": device.id}
-
+                tracking_point_fields = gps_tracking_point._fields
                 for gps_field, model_field in self.field_mapping.items():
                     if gps_field in payload:
                         value = payload[gps_field]
+                        if model_field not in tracking_point_fields:
+                            continue
                         if model_field == "timestamp":
                             try:
-                                vals[field] = datetime.utcfromtimestamp(value / 1000)
+                                vals[model_field] = datetime.fromtimestamp(
+                                    value / 1000, pytz.UTC
+                                )
                             except Exception as e:
                                 _logger.error(
                                     f"Error converting timestamp: {value} - {e}"
@@ -85,14 +112,14 @@ class GPSWebhook(http.Controller):
                             vals["latitude"] = float(lat)
                             vals["longitude"] = float(lng)
                         elif model_field == "odometer":
-                            vals[field] = value / 1000
+                            vals[model_field] = value / 1000
                         else:
-                            vals[field] = value
+                            vals[model_field] = value
 
                 _logger.info(
-                    "Creando nuevo punto de seguimiento GPS."
+                    f"Creando nuevo punto de seguimiento GPS: {vals}"
                 )  # TODO: cambiar a debug luego de estabilizacion
-                new_point = request.env["gps.tracking.point"].sudo().create(vals)
+                new_point = gps_tracking_point.create(vals)
                 _logger.info(
                     f"Punto de seguimiento creado exitosamente: ID {new_point.id}"
                 )  # TODO: cambiar a debug luego de estabilizacion

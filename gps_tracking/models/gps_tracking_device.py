@@ -77,9 +77,9 @@ class GpsTrackingDevice(models.Model):
     )
     history_route = fields.GeoLine(
         string="History Route",
-        compute="_compute_history_route",
-        store=True,
-        srid=3857,
+        # compute="_compute_history_route",
+        # store=True,
+        # srid=3857,
     )
     gsm_signal = fields.Integer(
         related="last_point_id.gsm_signal",
