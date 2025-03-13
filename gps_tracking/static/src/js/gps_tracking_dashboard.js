@@ -101,7 +101,7 @@ export class GpsTrackingDashboard extends Component {
             const devices = await this.orm.searchRead(
                 "gps.tracking.device",
                 domain || [],
-                ["id", "imei", "the_point", "speed", "timestamp", "altitude", "satellite", "address", "gsm_signal", "ignition", "movement", "color", "vehicle_id"]
+                ["id", "imei", "the_point", "speed", "timestamp", "altitude", "satellite", "address", "gsm_signal", "ignition", "movement", "color", "vehicle_id", "license_plate", "driver_name", "total_odometer"]
             );
             this.state.devices = devices;
             this.state.filteredDevices = devices;
@@ -116,7 +116,7 @@ export class GpsTrackingDashboard extends Component {
             const devices = await this.orm.searchRead(
                 "gps.tracking.device",
                 [],
-                ["id", "imei", "the_point", "speed", "timestamp", "altitude", "satellite", "address", "gsm_signal", "ignition", "movement", "color", "vehicle_id"]
+                ["id", "imei", "the_point", "speed", "timestamp", "altitude", "satellite", "address", "gsm_signal", "ignition", "movement", "color", "vehicle_id", "license_plate", "driver_name", "total_odometer"]
             );
             console.log("Dispositivos cargados:", devices);
             console.log("Dispositivos cargados:", JSON.stringify(devices, null, 2));
@@ -143,7 +143,7 @@ export class GpsTrackingDashboard extends Component {
         // llamamos a _reloadDevicesWithDomain() usando el dominio actual de las props.
         await this._reloadDevicesWithDomain(this.props.searchDomain || []);
         // Ajustamos los marcadores
-        this.updateDeviceMarkers(); 
+        this.updateDeviceMarkers();
         console.log("Datos actualizados.");
     }
 
@@ -178,23 +178,23 @@ export class GpsTrackingDashboard extends Component {
 
         const tooltipElement = this.tooltipRef.el;
         if (!tooltipElement) return;
-    
+
         // Verificar si el cursor está sobre un control OL
         const feature = target.closest(".ol-control")
             ? undefined
             : this.map.forEachFeatureAtPixel(pixel, (f) => f);
-    
+
         if (feature) {
             tooltipElement.style.visibility = "visible";
             tooltipElement.style.left = pixel[0] + "px";
             tooltipElement.style.top = pixel[1] + "px";
-    
+
             // Recopilar datos del feature
             const imei = feature.get("imei") || "Desconocido";
             const speed = feature.get("speed") || 0;
             const ignition = feature.get("ignition") || 0;
             const movement = feature.get("movement") || 0;
-    
+
             // Contenido base del tooltip
             tooltipElement.innerHTML = `
             <div style="min-width: 200px;">
@@ -215,7 +215,7 @@ export class GpsTrackingDashboard extends Component {
                 </button>
             </div>
             `;
-    
+
             // Asignar listeners tras crear el contenido
             setTimeout(() => {
                 // Botón StreetView
@@ -227,33 +227,33 @@ export class GpsTrackingDashboard extends Component {
                     });
                 }
             }, 0);
-    
+
         } else {
             this._hideTooltip();
         }
     }
-    
+
     _generateStreetViewEmbedUrl(lat, lng, apiKey) {
         const baseUrl = "https://www.google.com/maps/embed/v1/streetview";
         return `${baseUrl}?key=${apiKey}&location=${lat},${lng}`;
     }
-    
+
     _showStreetViewInsideTooltip(tooltipElement, feature) {
         // 1. Obtener coords EPSG:3857 => EPSG:4326
         const coords3857 = feature.getGeometry().getCoordinates();
         const coords4326 = ol.proj.transform(coords3857, 'EPSG:3857', 'EPSG:4326');
         const lat = coords4326[1];
         const lng = coords4326[0];
-    
+
         // 2. Generar la URL embed con tu API Key
         const apiKey = "";  // <-- pon tu clave real
         const embedUrl = this._generateStreetViewEmbedUrl(lat, lng, apiKey);
-    
+
         // 3. Guardar contenido anterior del tooltip
         const oldContent = tooltipElement.innerHTML;
 
         console.log(embedUrl)
-    
+
         // 4. Renderizar el iFrame con la URL embed
         tooltipElement.innerHTML = `
             <div style="position: relative; width: 400px; height: 300px;">
@@ -270,7 +270,7 @@ export class GpsTrackingDashboard extends Component {
                 </iframe>
             </div>
         `;
-    
+
         // 5. Manejar el botón “Cerrar”
         setTimeout(() => {
             const btnClose = document.getElementById("close-streetview");
@@ -319,10 +319,10 @@ export class GpsTrackingDashboard extends Component {
             // Evitar tooltip si se está arrastrando el mapa
             if (evt.dragging) {
                 this._hideTooltip();
-                this.state.tooltipLocked = false; 
+                this.state.tooltipLocked = false;
                 return;
             }
-        
+
             // Si el tooltip está bloqueado, no queremos ocultarlo ni moverlo.
             if (this.state.tooltipLocked) {
                 return;
@@ -399,12 +399,12 @@ export class GpsTrackingDashboard extends Component {
             console.error("El mapa no está inicializado.");
             return;
         }
-    
+
         // Eliminar marcadores existentes
         if (this.vectorLayer) {
             this.map.removeLayer(this.vectorLayer);
         }
-    
+
         // Crear marcadores para dispositivos activos
         const features = this.state.devices
             .filter((device) => this.state.activeDevices.includes(device.imei))
@@ -421,9 +421,9 @@ export class GpsTrackingDashboard extends Component {
                     });
                 }
             }).filter((feature) => feature);
-    
+
         const vectorSource = new ol.source.Vector({ features });
-    
+
         // Cambiar el estilo para usar íconos personalizados
         this.vectorLayer = new ol.layer.Vector({
             source: vectorSource,
@@ -438,7 +438,7 @@ export class GpsTrackingDashboard extends Component {
                 });
             },
         });
-    
+
         this.map.addLayer(this.vectorLayer);
     }
 
@@ -520,16 +520,16 @@ export class GpsTrackingDashboard extends Component {
                 ["id", "name", "geometry", "color"]
             );
             console.log("Geocercas cargadas:", geofences);
-    
+
             const features = geofences.map((geofence) => {
                 const geom = JSON.parse(geofence.geometry); // Validar que el JSON sea válido
                 const color = geofence.color || "#FF0000";
-    
+
                 // Convertir coordenadas de EPSG:4326 a EPSG:3857
                 const transformedCoords = geom.coordinates.map((ring) =>
                     ring.map((coord) => ol.proj.transform(coord, "EPSG:4326", "EPSG:3857"))
                 );
-    
+
                 // Crear la feature usando las coordenadas transformadas
                 return new ol.Feature({
                     geometry: new ol.geom.Polygon(transformedCoords),
@@ -537,11 +537,11 @@ export class GpsTrackingDashboard extends Component {
                     color: color,
                 });
             });
-    
+
             const vectorSource = new ol.source.Vector({
                 features: features,
             });
-    
+
             this.geofenceLayer = new ol.layer.Vector({
                 source: vectorSource,
                 style: (feature) => {
@@ -556,7 +556,7 @@ export class GpsTrackingDashboard extends Component {
                     });
                 },
             });
-    
+
             this.map.addLayer(this.geofenceLayer);
             console.log("Geocercas añadidas al mapa.");
         } catch (error) {
@@ -567,14 +567,14 @@ export class GpsTrackingDashboard extends Component {
     checkDeviceInGeofence(device) {
         const point = new ol.geom.Point([device.longitude, device.latitude]);
         let inside = false;
-    
+
         this.geofenceLayer.getSource().getFeatures().forEach((feature) => {
             if (feature.getGeometry().intersectsCoordinate(point.getCoordinates())) {
                 inside = true;
                 console.log(`${device.imei} está dentro de la geocerca: ${feature.get("name")}`);
             }
         });
-    
+
         if (!inside) {
             console.log(`${device.imei} está fuera de todas las geocercas.`);
         }
@@ -586,7 +586,7 @@ export class GpsTrackingDashboard extends Component {
             console.error("La capa de geocercas no está inicializada.");
             return;
         }
-    
+
         // Alternar la herramienta de dibujo
         if (this.state.drawingToolActive) {
             this.map.removeInteraction(this.state.drawingInteraction);
@@ -596,22 +596,22 @@ export class GpsTrackingDashboard extends Component {
             alert("La herramienta de dibujo se ha desactivado.");
             return;
         }
-    
+
         // Crear una nueva interacción de dibujo
         const draw = new ol.interaction.Draw({
             source: this.geofenceLayer.getSource(),
             type: "Polygon", // Cambia a 'Circle' si deseas geocercas circulares
         });
-    
+
         draw.on("drawend", async (event) => {
             const geometry = event.feature.getGeometry().clone().transform('EPSG:3857', 'EPSG:4326'); // Convertir a EPSG:4326
             const geoJson = new ol.format.GeoJSON().writeGeometry(geometry);
-    
+
             console.log("Nueva Geocerca creada (GeoJSON):", geoJson);
-    
+
             const name = prompt("Ingrese un nombre para la geocerca:");
             const color = prompt("Ingrese un color para la geocerca (ej. #FF0000):", "#FF0000");
-    
+
             try {
                 const newGeofence = {
                     name: name || "Geocerca sin nombre",
@@ -619,7 +619,7 @@ export class GpsTrackingDashboard extends Component {
                     color: color || "#FF0000",
                     active: true,
                 };
-    
+
                 // Guardar la geocerca en Odoo
                 const result = await this.orm.create("gps.geofence", [newGeofence]);
                 console.log("Geocerca guardada en Odoo:", result);
@@ -628,13 +628,13 @@ export class GpsTrackingDashboard extends Component {
                 console.error("Error al guardar la geocerca en Odoo:", error);
                 alert("Hubo un error al guardar la geocerca.");
             }
-    
+
             // Desactivar la herramienta de dibujo después de guardar
             this.map.removeInteraction(draw);
             this.state.drawingToolActive = false;
             console.log("Herramienta de dibujo desactivada automáticamente.");
         });
-    
+
         // Agregar interacción al mapa
         this.map.addInteraction(draw);
         this.state.drawingInteraction = draw;
@@ -702,20 +702,20 @@ export class GpsTrackingDashboard extends Component {
             date.getTime() // Añadir 6 horas en milisegundos
         ).toISOString().slice(0, 19).replace("T", " ");
     }
-    
+
     renderDevicePath() {
         if (!this.map || this.state.pathPoints.length === 0) return;
-    
+
         // Transformar las coordenadas a EPSG:3857 para OpenLayers
         const coordinates = this.state.pathPoints.map((coord) =>
             ol.proj.transform(coord, "EPSG:4326", "EPSG:3857")
         );
-    
+
         // Crear la geometría de línea con los puntos
         const lineFeature = new ol.Feature({
             geometry: new ol.geom.LineString(coordinates),
         });
-    
+
         // Crear la capa de línea y agregarla al mapa
         const lineLayer = new ol.layer.Vector({
             source: new ol.source.Vector({
@@ -728,15 +728,15 @@ export class GpsTrackingDashboard extends Component {
                 }),
             }),
         });
-    
+
         // Eliminar cualquier capa anterior de recorrido
         if (this.state.pathLayer) {
             this.map.removeLayer(this.state.pathLayer);
         }
-    
+
         this.state.pathLayer = lineLayer; // Guardar referencia a la capa de recorrido
         this.map.addLayer(lineLayer);
-    
+
         console.log("Recorrido renderizado en el mapa.");
     }
 

@@ -38,17 +38,31 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
     }
 
     // ✅ Método para seleccionar un dispositivo desde el Kanban
-    onCardClick(device) {
-        this.state.selectedDevice = device;  // 🟢 Asigna solo al dispositivo seleccionado
-        console.log("Dispositivo seleccionado en el Kanban:", device);
     
-        // 🔴 Hacer zoom al dispositivo seleccionado sin afectar los checkboxes
-        if (this.map && device.latitude && device.longitude) {
-            this.map.getView().animate({
-                center: [device.longitude, device.latitude],
-                zoom: 15, 
-                duration: 1000 
-            });
+    onCardClick(device) {
+        if (device.the_point) {
+            try {
+                this.state.selectedDevice = device;  // 🟢 Asigna solo al dispositivo seleccionado
+                console.log("Dispositivo seleccionado en el Kanban:", device);
+                
+                this.state.activeDevice = device;
+                this.updateDeviceMarkers();
+
+                const point = JSON.parse(device.the_point);
+                const coords = [point.coordinates[0], point.coordinates[1]];
+
+                // 🔴 Hacer zoom al dispositivo seleccionado sin afectar los checkboxes
+                setTimeout(() => {
+                    console.log("Iniciando animación del mapa...");
+                    this.map.getView().animate({
+                        center: coords,
+                        zoom: 10,
+                        duration: 500,
+                    });
+                }, 200);
+            } catch (error) {
+                console.error("Error al procesar device.the_point:", error);
+            }
         }
     }
 
