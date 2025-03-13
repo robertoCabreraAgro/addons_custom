@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-08 16:21+0000\n"
-"PO-Revision-Date: 2025-03-08 16:21+0000\n"
+"POT-Creation-Date: 2025-03-14 21:17+0000\n"
+"PO-Revision-Date: 2025-03-14 21:17+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -57,11 +57,6 @@ msgid "<span class=\"oe_grey p-2\"> Ha</span>"
 msgstr ""
 
 #. module: marin
-#: model_terms:ir.ui.view,arch_db:marin.stock_picking_batch_form_inherit_fleet_route
-msgid "<span> % </span>"
-msgstr ""
-
-#. module: marin
 #: model_terms:ir.ui.view,arch_db:marin.product_category_form_view
 msgid "<span> days after receipt</span>"
 msgstr "<span> dias despues de recibido</span>"
@@ -72,9 +67,10 @@ msgid "<span> days before expiration date</span>"
 msgstr "<span> dias antes de fecha de caducidad</span>"
 
 #. module: marin
-#: model_terms:ir.ui.view,arch_db:marin.stock_picking_batch_form_inherit_fleet_route
-msgid "<span> in </span>"
-msgstr "<span> en </span>"
+#: model_terms:ir.ui.view,arch_db:marin.view_picking_form
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_picking_tracker_form
+msgid "<span>%</span>"
+msgstr ""
 
 #. module: marin
 #: model:ir.model.fields,help:marin.field_project_task__referer_partner_id
@@ -127,6 +123,11 @@ msgid "Accounting"
 msgstr ""
 
 #. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__message_needaction
+msgid "Action Needed"
+msgstr ""
+
+#. module: marin
 #: model:ir.model.fields,field_description:marin.field_documents_tag__active
 #: model:ir.model.fields,field_description:marin.field_pos_config__active
 #: model:ir.model.fields,field_description:marin.field_project_task_lost_reason__active
@@ -135,10 +136,35 @@ msgid "Active"
 msgstr "Activo"
 
 #. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__activity_ids
+msgid "Activities"
+msgstr "Actividades"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__activity_state
+msgid "Activity State"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__activity_type_icon
+msgid "Activity Type Icon"
+msgstr ""
+
+#. module: marin
 #. odoo-javascript
 #: code:addons/marin/static/src/pos/app/popups/missing_stock_popup/missing_stock_popup.xml:0
 msgid "Add new line"
 msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_picking_tracker_form
+msgid "Add notes here..."
+msgstr "Añade notas aquí..."
 
 #. module: marin
 #. odoo-python
@@ -204,6 +230,11 @@ msgstr ""
 #. module: marin
 #: model:res.groups,name:marin.group_hr_expense_menu
 msgid "Allow to use Expense module"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__allowed_picking_ids
+msgid "Allowed Picking"
 msgstr ""
 
 #. module: marin
@@ -281,6 +312,11 @@ msgid "Analytic Line"
 msgstr "Línea analítica"
 
 #. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_picking_tracker_form
+msgid "Analytics"
+msgstr "Análisis"
+
+#. module: marin
 #: model_terms:ir.ui.view,arch_db:marin.view_stock_quant_lot_update
 msgid "Apply"
 msgstr ""
@@ -327,7 +363,12 @@ msgstr ""
 #. module: marin
 #: model:ir.model,name:marin.model_account_asset
 msgid "Asset/Revenue Recognition"
-msgstr "Reconocimiento de pagos/ingresos"
+msgstr "Reconocimiento de activos e ingresos"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__message_attachment_count
+msgid "Attachment Count"
+msgstr ""
 
 #. module: marin
 #. odoo-python
@@ -427,7 +468,7 @@ msgstr "Banco"
 #. module: marin
 #: model:ir.model,name:marin.model_account_bank_statement_line
 msgid "Bank Statement Line"
-msgstr "Línea de estado de cuenta bancario"
+msgstr "Línea de un estado de cuenta bancario"
 
 #. module: marin
 #: model:ir.ui.menu,name:marin.menu_finance_bank_statement
@@ -438,11 +479,6 @@ msgstr "Estado de cuenta bancario"
 #: model:res.groups,name:marin.group_account_bank_statement
 msgid "Bank statements"
 msgstr "Estado de cuenta bancario"
-
-#. module: marin
-#: model:ir.model,name:marin.model_stock_picking_batch
-msgid "Batch Transfer"
-msgstr "Transferencias por lotes"
 
 #. module: marin
 #: model:ir.model.fields,field_description:marin.field_product_category__use_time
@@ -510,154 +546,172 @@ msgstr ""
 
 #. module: marin
 #: model_terms:ir.ui.view,arch_db:marin.view_account_invoice_discount_form
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_picking_tracker_form
 #: model_terms:ir.ui.view,arch_db:marin.view_stock_quant_lot_update
 #: model_terms:ir.ui.view,arch_db:marin.wizard_pos_cash_transfer_form_view
 msgid "Cancel"
-msgstr ""
+msgstr "Cancelar"
 
 #. module: marin
 #: model:ir.model.fields.selection,name:marin.selection__invoice_line_in_report__parent_state__cancel
 #: model:ir.model.fields.selection,name:marin.selection__pos_line_report__parent_state__cancel
+#: model:ir.model.fields.selection,name:marin.selection__stock_picking_tracker__state__cancel
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_picking_tracker_search
 msgid "Cancelled"
-msgstr ""
+msgstr "Cancelado"
 
-#. module: marin
-#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_in_report_search_view
-msgid "Cancelled Invoices"
-msgstr ""
+#. module: marin  
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_in_report_search_view  
+msgid "Cancelled Invoices"  
+msgstr "Facturas Canceladas"  
 
-#. module: marin
-#. odoo-python
-#: code:addons/marin/models/hr_payslip.py:0
-msgid "Cannot post a payslip's account move that is not done."
-msgstr ""
+#. module: marin  
+#. odoo-python  
+#: code:addons/marin/models/stock_picking_tracker.py:0  
+msgid ""  
+"Cannot mark as done because the following pickings don't have fuel values: %s"  
+msgstr "No se puede marcar como completado porque los siguientes traslados no tienen valores de combustible: %s"  
 
-#. module: marin
-#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_report__total_qty_current_year
-#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_yearly_report__total_qty_current_year
-msgid "Cantidad venta real"
-msgstr ""
+#. module: marin  
+#. odoo-python  
+#: code:addons/marin/models/stock_picking_tracker.py:0  
+msgid ""  
+"Cannot mark as done because the following pickings don't have odometer values: %s"  
+msgstr "No se puede marcar como completado porque los siguientes traslados no tienen valores de odómetro: %s"  
 
-#. module: marin
-#: model:ir.model.fields,field_description:marin.field_stock_need_report__current_year_qty_sold
-msgid "Cantidad venta real año actual LMMR"
-msgstr ""
+#. module: marin  
+#. odoo-python  
+#: code:addons/marin/models/hr_payslip.py:0  
+msgid "Cannot post a payslip's account move that is not done."  
+msgstr "No se puede registrar un asiento contable de nómina que no esté completado."  
 
-#. module: marin
-#: model:ir.model.fields,field_description:marin.field_stock_need_report__last_year_qty_sold
-msgid "Cantidad venta real año pasado LMMR"
-msgstr ""
+#. module: marin  
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_report__total_qty_current_year  
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_yearly_report__total_qty_current_year  
+msgid "Cantidad venta real"  
+msgstr "Cantidad de venta real"  
 
-#. module: marin
-#: model:ir.model.fields,field_description:marin.field_pos_line_product_report__total_qty
-msgid "Cantidad venta tpv"
-msgstr ""
+#. module: marin  
+#: model:ir.model.fields,field_description:marin.field_stock_need_report__current_year_qty_sold  
+msgid "Cantidad venta real año actual LMMR"  
+msgstr "Cantidad de venta real año actual LMMR"  
 
-#. module: marin
-#: model_terms:ir.ui.view,arch_db:marin.view_account_payment_search_marin
-msgid "Cash"
-msgstr ""
+#. module: marin  
+#: model:ir.model.fields,field_description:marin.field_stock_need_report__last_year_qty_sold  
+msgid "Cantidad venta real año pasado LMMR"  
+msgstr "Cantidad de venta real año pasado LMMR"  
 
-#. module: marin
-#: model_terms:ir.ui.view,arch_db:marin.view_move_form
-msgid "Cash Discount"
-msgstr ""
+#. module: marin  
+#: model:ir.model.fields,field_description:marin.field_pos_line_product_report__total_qty  
+msgid "Cantidad venta tpv"  
+msgstr "Cantidad de venta TPV"  
 
-#. module: marin
-#: model:mail.activity.type,summary:marin.cash_transfer_activity
-msgid "Cash Transfer"
-msgstr ""
+#. module: marin  
+#: model_terms:ir.ui.view,arch_db:marin.view_account_payment_search_marin  
+msgid "Cash"  
+msgstr "Efectivo"  
 
-#. module: marin
-#: model_terms:ir.ui.view,arch_db:marin.pos_session_view_form
-msgid "Cash Transfers"
-msgstr ""
+#. module: marin  
+#: model_terms:ir.ui.view,arch_db:marin.view_move_form  
+msgid "Cash Discount"  
+msgstr "Descuento en efectivo"  
 
-#. module: marin
-#: model:res.groups,name:marin.group_account_move_cash_discount
-msgid "Cash discounts"
-msgstr ""
+#. module: marin  
+#: model:mail.activity.type,summary:marin.cash_transfer_activity  
+msgid "Cash Transfer"  
+msgstr "Transferencia de efectivo"  
 
-#. module: marin
-#: model_terms:ir.ui.view,arch_db:marin.quant_search_view_marin
-msgid "Category"
-msgstr ""
+#. module: marin  
+#: model_terms:ir.ui.view,arch_db:marin.pos_session_view_form  
+msgid "Cash Transfers"  
+msgstr "Transferencias de efectivo"  
 
-#. module: marin
-#. odoo-javascript
-#: code:addons/marin/static/src/pos/app/popups/missing_stock_popup/missing_stock_popup.xml:0
-msgid "Change"
-msgstr ""
+#. module: marin  
+#: model:res.groups,name:marin.group_account_move_cash_discount  
+msgid "Cash discounts"  
+msgstr "Descuentos en efectivo"  
 
-#. module: marin
-#: model_terms:ir.ui.view,arch_db:marin.view_stock_quant_tree_inventory_editable_marin
-msgid "Change Lot"
-msgstr ""
+#. module: marin  
+#: model_terms:ir.ui.view,arch_db:marin.quant_search_view_marin  
+msgid "Category"  
+msgstr "Categoría"  
 
-#. module: marin
-#: model:ir.model,name:marin.model_stock_quant_lot_update
-msgid "Change Quant Lot Wizard"
-msgstr ""
+#. module: marin  
+#. odoo-javascript  
+#: code:addons/marin/static/src/pos/app/popups/missing_stock_popup/missing_stock_popup.xml:0  
+msgid "Change"  
+msgstr "Cambiar"  
 
-#. module: marin
-#. odoo-javascript
-#: code:addons/marin/static/src/pos/app/screens/payment_screen/payment_screen.js:0
-#: code:addons/marin/static/src/pos/app/store/order.js:0
-#: code:addons/marin/static/src/pos/app/store/orderline.js:0
-msgid "Choose a lot for this orderline"
-msgstr ""
+#. module: marin  
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_quant_tree_inventory_editable_marin  
+msgid "Change Lot"  
+msgstr "Cambiar lote"  
 
-#. module: marin
-#: model_terms:ir.ui.view,arch_db:marin.view_order_form_marin
-msgid "Clean 3-0"
-msgstr ""
+#. module: marin  
+#: model:ir.model,name:marin.model_stock_quant_lot_update  
+msgid "Change Quant Lot Wizard"  
+msgstr "Asistente para cambiar lote de cantidades"  
 
-#. module: marin
-#: model_terms:ir.ui.view,arch_db:marin.view_order_form_marin
-msgid "Clean Up"
-msgstr ""
+#. module: marin  
+#. odoo-javascript  
+#: code:addons/marin/static/src/pos/app/screens/payment_screen/payment_screen.js:0  
+#: code:addons/marin/static/src/pos/app/store/order.js:0  
+#: code:addons/marin/static/src/pos/app/store/orderline.js:0  
+msgid "Choose a lot for this orderline"  
+msgstr "Elija un lote para esta línea de pedido"  
 
-#. module: marin
-#: model_terms:ir.ui.view,arch_db:marin.invoice_line_price_history_view_form
-#: model_terms:ir.ui.view,arch_db:marin.purchase_order_line_price_history_view_form
-#: model_terms:ir.ui.view,arch_db:marin.sale_order_line_price_history_view_form
-#: model_terms:ir.ui.view,arch_db:marin.view_authorize_debt_wizard_form
-msgid "Close"
-msgstr ""
+#. module: marin  
+#: model_terms:ir.ui.view,arch_db:marin.view_order_form_marin  
+msgid "Clean 3-0"  
+msgstr "Limpio 3-0"  
 
-#. module: marin
-#: model:product.removal,name:marin.removal_closest_priority
-msgid "Closest Location + Priority"
-msgstr ""
+#. module: marin  
+#: model_terms:ir.ui.view,arch_db:marin.view_order_form_marin  
+msgid "Clean Up"  
+msgstr "Limpiar"  
 
-#. module: marin
-#: model:ir.model.fields,field_description:marin.field_res_partner__collateral_tolerance
-#: model:ir.model.fields,field_description:marin.field_res_users__collateral_tolerance
-msgid "Collateral tolerance"
-msgstr ""
+#. module: marin  
+#: model_terms:ir.ui.view,arch_db:marin.invoice_line_price_history_view_form  
+#: model_terms:ir.ui.view,arch_db:marin.purchase_order_line_price_history_view_form  
+#: model_terms:ir.ui.view,arch_db:marin.sale_order_line_price_history_view_form  
+#: model_terms:ir.ui.view,arch_db:marin.view_authorize_debt_wizard_form  
+msgid "Close"  
+msgstr "Cerrar"  
 
-#. module: marin
-#: model:res.partner.category,name:marin.partner_category_commercial
-msgid "Commercial"
-msgstr ""
+#. module: marin  
+#: model:product.removal,name:marin.removal_closest_priority  
+msgid "Closest Location + Priority"  
+msgstr "Ubicación más cercana + Prioridad"  
 
-#. module: marin
-#: model:ir.model.fields,field_description:marin.field_sale_order__commercial_partner_id
-msgid "Commercial Entity"
-msgstr ""
+#. module: marin  
+#: model:ir.model.fields,field_description:marin.field_res_partner__collateral_tolerance  
+#: model:ir.model.fields,field_description:marin.field_res_users__collateral_tolerance  
+msgid "Collateral tolerance"  
+msgstr "Tolerancia de colateral"  
 
-#. module: marin
-#: model:ir.model.fields,field_description:marin.field_invoice_line_out_report__commercial_partner_id
-#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_report__commercial_partner_id
-#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_yearly_report__commercial_partner_id
-#: model:ir.model.fields,field_description:marin.field_pos_line_report__commercial_partner_id
-#: model_terms:ir.ui.view,arch_db:marin.view_account_invoice_filter
-#: model_terms:ir.ui.view,arch_db:marin.view_account_move_filter
-#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_report_search_view
-#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_team_report_search_view
-#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_team_yearly_report_search_view
-msgid "Commercial Partner"
-msgstr ""
+#. module: marin  
+#: model:res.partner.category,name:marin.partner_category_commercial  
+msgid "Commercial"  
+msgstr "Comercial"  
+
+#. module: marin  
+#: model:ir.model.fields,field_description:marin.field_sale_order__commercial_partner_id  
+msgid "Commercial Entity"  
+msgstr "Entidad comercial"  
+
+#. module: marin  
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_report__commercial_partner_id  
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_report__commercial_partner_id  
+#: model:ir.model.fields,field_description:marin.field_invoice_line_out_team_yearly_report__commercial_partner_id  
+#: model:ir.model.fields,field_description:marin.field_pos_line_report__commercial_partner_id  
+#: model_terms:ir.ui.view,arch_db:marin.view_account_invoice_filter  
+#: model_terms:ir.ui.view,arch_db:marin.view_account_move_filter  
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_report_search_view  
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_team_report_search_view  
+#: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_team_yearly_report_search_view  
+msgid "Commercial Partner"  
+msgstr "Socio comercial"  
+
 
 #. module: marin
 #: model:ir.model,name:marin.model_res_company
@@ -670,6 +724,7 @@ msgstr "Empresas"
 #: model:ir.model.fields,field_description:marin.field_invoice_line_in_report__company_id
 #: model:ir.model.fields,field_description:marin.field_invoice_line_out_report__company_id
 #: model:ir.model.fields,field_description:marin.field_pos_line_report__company_id
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__company_id
 msgid "Company"
 msgstr "Compañía"
 
@@ -697,7 +752,12 @@ msgstr ""
 #. module: marin
 #: model:ir.ui.menu,name:marin.menu_configuration
 msgid "Configuration"
-msgstr ""
+msgstr "Configuración"
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_picking_tracker_form
+msgid "Confirm"
+msgstr "Confirmar"
 
 #. module: marin
 #: model:ir.model,name:marin.model_res_partner
@@ -798,6 +858,11 @@ msgid "Create a Task"
 msgstr "Crear una tarea"
 
 #. module: marin
+#: model_terms:ir.actions.act_window,help:marin.action_stock_picking_tracker
+msgid "Create a new picking route tracker"
+msgstr "Crear un nuevo seguimiento de ruta"
+
+#. module: marin
 #: model_terms:ir.actions.act_window,help:marin.action_orders_marin
 msgid "Create a new quotation, the first step of a new sale!"
 msgstr ""
@@ -824,9 +889,10 @@ msgstr ""
 #: model:ir.model.fields,field_description:marin.field_res_partner_age_range__create_uid
 #: model:ir.model.fields,field_description:marin.field_sale_order_line_price_history__create_uid
 #: model:ir.model.fields,field_description:marin.field_sale_order_line_price_history_line__create_uid
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__create_uid
 #: model:ir.model.fields,field_description:marin.field_stock_quant_lot_update__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Creado por"
 
 #. module: marin
 #: model:ir.model.fields,field_description:marin.field_account_invoice_cash_discount__create_date
@@ -840,14 +906,15 @@ msgstr ""
 #: model:ir.model.fields,field_description:marin.field_res_partner_age_range__create_date
 #: model:ir.model.fields,field_description:marin.field_sale_order_line_price_history__create_date
 #: model:ir.model.fields,field_description:marin.field_sale_order_line_price_history_line__create_date
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__create_date
 #: model:ir.model.fields,field_description:marin.field_stock_quant_lot_update__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Creado en"
 
 #. module: marin
 #: model_terms:ir.ui.view,arch_db:marin.view_sale_order_tree_marin
 msgid "Creation Date"
-msgstr ""
+msgstr "Fecha de creación"
 
 #. module: marin
 #: model:ir.model.fields,help:marin.field_sale_order_line__date_order
@@ -856,6 +923,8 @@ msgid ""
 "Creation date of draft/sent orders,\n"
 "Confirmation date of confirmed orders."
 msgstr ""
+"Fecha de creación de órdenes giradas/enviadas,\n"
+"Fecha de confirmación de órdenes confirmadas."
 
 #. module: marin
 #: model:ir.model.fields,field_description:marin.field_res_partner__credit_limit
@@ -1027,6 +1096,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:marin.field_invoice_line_price_history_line__date
 #: model:ir.model.fields,field_description:marin.field_pos_line_report__date
 #: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_report_search_view
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_picking_tracker_search
 msgid "Date"
 msgstr "Fecha"
 
@@ -1265,7 +1335,7 @@ msgid "Destination Lot"
 msgstr ""
 
 #. module: marin
-#: model:ir.model.fields,help:marin.field_stock_picking_batch__odometer_difference
+#: model:ir.model.fields,help:marin.field_stock_picking_tracker__odometer_difference
 msgid "Difference between end and start odometer values."
 msgstr "Diferencia entre los valores finales e iniciales del odómetro."
 
@@ -1355,7 +1425,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:marin.field_stock_move_line__display_name
 #: model:ir.model.fields,field_description:marin.field_stock_need_report__display_name
 #: model:ir.model.fields,field_description:marin.field_stock_picking__display_name
-#: model:ir.model.fields,field_description:marin.field_stock_picking_batch__display_name
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__display_name
 #: model:ir.model.fields,field_description:marin.field_stock_picking_type__display_name
 #: model:ir.model.fields,field_description:marin.field_stock_quant__display_name
 #: model:ir.model.fields,field_description:marin.field_stock_quant_lot_update__display_name
@@ -1369,17 +1439,17 @@ msgid "Display Type"
 msgstr ""
 
 #. module: marin
-#: model_terms:ir.ui.view,arch_db:marin.stock_picking_batch_form_inherit_fleet_route
-msgid "Distance Coverage"
-msgstr "Distancia recorrida"
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_picking_tracker_form
+msgid "Distance"
+msgstr "Distancia"
 
 #. module: marin
-#: model_terms:ir.ui.view,arch_db:marin.stock_picking_batch_tree_inherit_fleet_route
-msgid "Distance coverage"
-msgstr "Distancia recorrida"
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__odometer_difference
+msgid "Distance Traveled"
+msgstr "Diferencia de odómetro"
 
 #. module: marin
-#: model:ir.model.fields,help:marin.field_stock_picking_batch__empty_distance
+#: model:ir.model.fields,help:marin.field_stock_picking_tracker__empty_distance
 msgid "Distance traveled without carrying goods"
 msgstr "Distancia recorrida sin transportar mercancías"
 
@@ -1411,8 +1481,11 @@ msgstr ""
 #. module: marin
 #. odoo-javascript
 #: code:addons/marin/static/src/pos/app/screens/receipt_screen/receipt_screen.xml:0
+#: model:ir.model.fields.selection,name:marin.selection__stock_picking_tracker__state__done
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_picking_tracker_form
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_picking_tracker_search
 msgid "Done"
-msgstr ""
+msgstr "Finalizado"
 
 #. module: marin
 #: model:ir.model.fields,field_description:marin.field_product_product__x_dose_x_ha
@@ -1422,9 +1495,11 @@ msgstr ""
 
 #. module: marin
 #: model:ir.model.fields.selection,name:marin.selection__invoice_line_in_report__parent_state__draft
+#: model:ir.model.fields.selection,name:marin.selection__stock_picking_tracker__state__draft
 #: model_terms:ir.ui.view,arch_db:marin.view_picking_form
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_picking_tracker_search
 msgid "Draft"
-msgstr ""
+msgstr "Borrador"
 
 #. module: marin
 #: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_in_report_search_view
@@ -1432,14 +1507,20 @@ msgid "Draft Invoices"
 msgstr ""
 
 #. module: marin
-#: model:ir.model.fields,field_description:marin.field_stock_picking_batch__driver_department_id
-msgid "Driver Department"
-msgstr ""
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__driver_id
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_picking_tracker_search
+msgid "Driver"
+msgstr "Conductor"
 
 #. module: marin
-#: model:ir.model.fields,field_description:marin.field_stock_picking_batch__driver_is_commercial
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__driver_department_id
+msgid "Driver Department"
+msgstr "Departamento conductor"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__driver_is_commercial
 msgid "Driver Is Commercial"
-msgstr ""
+msgstr "Conductor es comercial?"
 
 #. module: marin
 #. odoo-python
@@ -1463,11 +1544,6 @@ msgid "Edit Lot/Serial Number"
 msgstr ""
 
 #. module: marin
-#: model_terms:ir.ui.view,arch_db:marin.stock_picking_batch_form_inherit_fleet_route
-msgid "Efficiency"
-msgstr "Rendimiento"
-
-#. module: marin
 #: model:ir.model.fields,field_description:marin.field_account_asset__electric_power_contract
 msgid "Electric power contract"
 msgstr ""
@@ -1484,15 +1560,19 @@ msgid "Employee has not a contract and is required"
 msgstr ""
 
 #. module: marin
-#: model:ir.model.fields,field_description:marin.field_stock_picking_batch__empty_distance
-#: model_terms:ir.ui.view,arch_db:marin.stock_picking_batch_tree_inherit_fleet_route
-msgid "Empty Distance"
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__empty_distance
+msgid "Empty Distance Traveled"
 msgstr "Distancia en vacío"
 
 #. module: marin
-#: model:ir.model.fields,field_description:marin.field_stock_picking_batch__empty_fuel
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__empty_fuel
 msgid "Empty Fuel Consumption"
-msgstr "Combustible en vacío"
+msgstr "Consumo de combustible en vacío"
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_picking_tracker_form
+msgid "End Data"
+msgstr "Fecha de finalización"
 
 #. module: marin
 #: model:ir.model.fields,field_description:marin.field_pos_session__cash_register_balance_end_real
@@ -1500,13 +1580,12 @@ msgid "Ending Balance"
 msgstr "Saldo final"
 
 #. module: marin
-#: model:ir.model.fields,field_description:marin.field_stock_picking_batch__fuel_end
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__fuel_end
 msgid "Ending Fuel"
 msgstr "Combustible final"
 
 #. module: marin
-#: model:ir.model.fields,field_description:marin.field_stock_picking_batch__odometer_end
-#: model_terms:ir.ui.view,arch_db:marin.stock_picking_batch_form_inherit_fleet_route
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__odometer_end
 msgid "Ending Odometer"
 msgstr "Odómetro final"
 
@@ -1628,12 +1707,24 @@ msgid "Flag"
 msgstr ""
 
 #. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__message_follower_ids
+msgid "Followers"
+msgstr "Seguidores"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Seguidores (Socios)"
+
+#. module: marin
 #. odoo-python
 #: code:addons/marin/models/stock_picking.py:0
 msgid ""
 "Following pickings are not valid to print their delivery slip: \n"
 "%s"
 msgstr ""
+"Los albaranes siguientes no son válidos para imprimir su comprobante de entrega: \n"
+"%s"
 
 #. module: marin
 #. odoo-python
@@ -1642,6 +1733,13 @@ msgid ""
 "Following pickings are not valid to print their picking operation: \n"
 "%s"
 msgstr ""
+"Los albaranes siguientes no son válidos para imprimir su operación de recolección: \n"
+"%s"
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_stock_picking_tracker__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Icono de Font Awesome, por ejemplo, fa-tasks"
 
 #. module: marin
 #: model:ir.model.fields,field_description:marin.field_sale_order__force_fully_delivered
@@ -1738,6 +1836,11 @@ msgid "From availability"
 msgstr ""
 
 #. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_picking_tracker_form
+msgid "Fuel"
+msgstr "Combustible"
+
+#. module: marin
 #: model:ir.model.fields,field_description:marin.field_fleet_vehicle__fuel_card_id
 msgid "Fuel Card"
 msgstr ""
@@ -1748,7 +1851,7 @@ msgid "Fuel Card Name"
 msgstr ""
 
 #. module: marin
-#: model:ir.model.fields,field_description:marin.field_stock_picking_batch__fuel_consumption
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__fuel_consumption
 msgid "Fuel Consumption"
 msgstr "Consumo de combustible"
 
@@ -1758,38 +1861,35 @@ msgid "Fuel Done"
 msgstr "Combustible final"
 
 #. module: marin
-#: model:ir.model.fields,field_description:marin.field_stock_picking_batch__fuel_efficiency
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__fuel_efficiency
 msgid "Fuel Efficiency"
-msgstr "Rendimiento combustible"
+msgstr "Eficiencia de combustible"
 
 #. module: marin
-#: model:ir.model.fields,field_description:marin.field_stock_picking_batch__fuel_efficiency_uom_id
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__fuel_efficiency_uom_id
 msgid "Fuel Efficiency Unit"
-msgstr "UdM Rendimiento combustible"
+msgstr "Unidad de eficiencia de combustible"
 
 #. module: marin
-#: model_terms:ir.ui.view,arch_db:marin.stock_picking_batch_form_inherit_fleet_route
-msgid "Fuel Level"
-msgstr "Nivel de combustible"
-
-#. module: marin
-#: model:ir.model.fields,field_description:marin.field_stock_picking_batch__fuel_uom_id
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__fuel_uom_id
 msgid "Fuel Unit"
-msgstr "UdM Combustible"
+msgstr "Unidad de combustible"
 
 #. module: marin
-#: model:ir.model.fields,help:marin.field_stock_picking_batch__empty_fuel
+#: model:ir.model.fields,help:marin.field_stock_picking_tracker__empty_fuel
 msgid "Fuel consumed while traveling without goods"
-msgstr "Combustible consumido al viajar sin mercancías"
+msgstr "Combustible consumido al viajar sin mercancía"
 
 #. module: marin
-#: model:ir.model.fields,help:marin.field_stock_picking_batch__fuel_efficiency
+#: model:ir.model.fields,help:marin.field_stock_picking_tracker__fuel_efficiency
 msgid "Fuel efficiency calculated as distance per fuel unit."
-msgstr "Eficiencia del combustible calculada como distancia por unidad de combustible."
+msgstr ""
+"Rendimiento de combustible calculada como distancia por unidad de "
+"combustible."
 
 #. module: marin
 #: model:ir.model.fields,help:marin.field_stock_picking__fuel_done
-msgid "Fuel level which the transfer has been processed."
+msgid "Fuel level percentage which the transfer has been processed."
 msgstr "Nivel de combustible al que se ha procesado la transferencia."
 
 #. module: marin
@@ -1813,16 +1913,6 @@ msgid "Generate Cash Transfer"
 msgstr ""
 
 #. module: marin
-#: model_terms:ir.ui.view,arch_db:marin.stock_picking_batch_form_inherit_fleet_route
-msgid "Get Fuel Level"
-msgstr "Obtener nivel de combustible"
-
-#. module: marin
-#: model_terms:ir.ui.view,arch_db:marin.stock_picking_batch_form_inherit_fleet_route
-msgid "Get Odometer"
-msgstr "Obtener odómetro"
-
-#. module: marin
 #: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_in_report_search_view
 #: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_report_search_view
 #: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_team_report_search_view
@@ -1832,8 +1922,9 @@ msgstr "Obtener odómetro"
 #: model_terms:ir.ui.view,arch_db:marin.view_sales_order_filter_marin
 #: model_terms:ir.ui.view,arch_db:marin.view_sales_order_line_filter
 #: model_terms:ir.ui.view,arch_db:marin.view_stock_need_report_search_view
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_picking_tracker_search
 msgid "Group By"
-msgstr ""
+msgstr "Agrupar por"
 
 #. module: marin
 #: model:res.partner.category,name:marin.partner_category_1039
@@ -1876,6 +1967,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:marin.field_account_move__show_update_line_account
 msgid "Has Journal Changed"
 msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__has_message
+msgid "Has Message"
+msgstr "Tiene mensaje"
 
 #. module: marin
 #: model:ir.model.fields,field_description:marin.field_approval_category__has_odometer
@@ -2003,7 +2099,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:marin.field_stock_move_line__id
 #: model:ir.model.fields,field_description:marin.field_stock_need_report__id
 #: model:ir.model.fields,field_description:marin.field_stock_picking__id
-#: model:ir.model.fields,field_description:marin.field_stock_picking_batch__id
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__id
 #: model:ir.model.fields,field_description:marin.field_stock_picking_type__id
 #: model:ir.model.fields,field_description:marin.field_stock_quant__id
 #: model:ir.model.fields,field_description:marin.field_stock_quant_lot_update__id
@@ -2015,6 +2111,27 @@ msgstr "Identificación"
 #: model:ir.model.fields,field_description:marin.field_account_asset__imei
 msgid "IMEI"
 msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__activity_exception_icon
+msgid "Icon"
+msgstr "Ícono"
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_stock_picking_tracker__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Ícono para indicar una actividad de excepción."
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_stock_picking_tracker__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Si está marcado, hay nuevos mensajes que requieren tu atención."
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_stock_picking_tracker__message_has_error
+#: model:ir.model.fields,help:marin.field_stock_picking_tracker__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Si está marcado, algunos mensajes tienen un error de entrega."
 
 #. module: marin
 #: model:ir.model.fields,help:marin.field_account_bank_statement_line__x_stored
@@ -2047,6 +2164,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_report_search_view
 msgid "In Payment Invoices"
 msgstr ""
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__stock_picking_tracker__state__in_progress
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_picking_tracker_search
+msgid "In Progress"
+msgstr "En progreso"
 
 #. module: marin
 #: model:ir.model.fields,field_description:marin.field_invoice_line_price_history__include_draft
@@ -2102,6 +2225,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:marin.view_pickingtype_filter
 msgid "Internal"
 msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__note
+msgid "Internal Note"
+msgstr "Nota interna"
 
 #. module: marin
 #: model:ir.ui.menu,name:marin.menu_action_account_payments_transfer
@@ -2284,6 +2412,11 @@ msgid "Invoicing App Legacy"
 msgstr ""
 
 #. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__message_is_follower
+msgid "Is Follower"
+msgstr "Es seguidor"
+
+#. module: marin
 #: model:ir.model.fields,field_description:marin.field_pos_order__is_total_cost_computed
 msgid "Is Total Cost Computed"
 msgstr "Costo total calculado"
@@ -2368,9 +2501,10 @@ msgstr ""
 #: model:ir.model.fields,field_description:marin.field_res_partner_age_range__write_uid
 #: model:ir.model.fields,field_description:marin.field_sale_order_line_price_history__write_uid
 #: model:ir.model.fields,field_description:marin.field_sale_order_line_price_history_line__write_uid
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__write_uid
 #: model:ir.model.fields,field_description:marin.field_stock_quant_lot_update__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Última actualización por"
 
 #. module: marin
 #: model:ir.model.fields,field_description:marin.field_account_invoice_cash_discount__write_date
@@ -2384,9 +2518,10 @@ msgstr ""
 #: model:ir.model.fields,field_description:marin.field_res_partner_age_range__write_date
 #: model:ir.model.fields,field_description:marin.field_sale_order_line_price_history__write_date
 #: model:ir.model.fields,field_description:marin.field_sale_order_line_price_history_line__write_date
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__write_date
 #: model:ir.model.fields,field_description:marin.field_stock_quant_lot_update__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Última actualización el"
 
 #. module: marin
 #: model_terms:ir.ui.view,arch_db:marin.view_stock_need_report_form
@@ -2427,6 +2562,11 @@ msgstr ""
 #: code:addons/marin/wizards/pos_cash_transfer_wizard.py:0
 msgid "Liquidity transfers"
 msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_stock_picking_tracker__picking_ids
+msgid "List of transfers associated to this tracker"
+msgstr "Lista de transferencias asociadas a este rastreador de ruta"
 
 #. module: marin
 #. odoo-javascript
@@ -2563,6 +2703,16 @@ msgid "Medium"
 msgstr ""
 
 #. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__message_has_error
+msgid "Message Delivery error"
+msgstr "Error en la entrega del mensaje"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__message_ids
+msgid "Messages"
+msgstr "Mensajes"
+
+#. module: marin
 #. odoo-javascript
 #: code:addons/marin/static/src/pos/app/screens/payment_screen/payment_screen.js:0
 #: code:addons/marin/static/src/pos/app/store/order.js:0
@@ -2601,29 +2751,34 @@ msgstr ""
 #: model:ir.model.fields,field_description:marin.field_invoice_line_in_report__move_id
 #: model:ir.model.fields,field_description:marin.field_invoice_line_out_report__move_id
 msgid "Move"
-msgstr ""
+msgstr "Asiento contable"
 
 #. module: marin
 #: model:ir.model.fields,field_description:marin.field_pos_session__move_cash_transfer_ids
 msgid "Move Cash Transfer"
-msgstr ""
+msgstr "Asiento de transferencia de efectivo"
 
 #. module: marin
 #. odoo-python
 #: code:addons/marin/models/account_move.py:0
 #: model_terms:ir.ui.view,arch_db:marin.view_move_form
 msgid "Move Lines"
-msgstr ""
+msgstr "Apuntes contables"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Fecha límite de mi actividad"
 
 #. module: marin
 #: model_terms:ir.ui.view,arch_db:marin.view_sales_order_filter_marin
 msgid "My Orders"
-msgstr ""
+msgstr "Mis pedidos"
 
 #. module: marin
 #: model_terms:ir.ui.view,arch_db:marin.view_sales_order_line_filter
 msgid "My Sale order lines"
-msgstr ""
+msgstr "Mis líneas de pedido de venta"
 
 #. module: marin
 #: model:ir.model.fields,field_description:marin.field_invoice_line_in_report__move_name
@@ -2639,25 +2794,47 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_team_yearly_report_form
 #: model_terms:ir.ui.view,arch_db:marin.view_stock_need_report_form
 msgid "Name"
-msgstr ""
+msgstr "Nombre"
 
 #. module: marin
+#. odoo-python
+#: code:addons/marin/models/stock_picking_tracker.py:0
 #: model:ir.model.fields.selection,name:marin.selection__pos_line_report__parent_state__draft
 #: model_terms:ir.ui.view,arch_db:marin.view_purchase_order_line_list
 #: model_terms:ir.ui.view,arch_db:marin.view_sale_order_line_list
 msgid "New"
-msgstr ""
+msgstr "Nuevo"
 
 #. module: marin
 #. odoo-javascript
 #: code:addons/marin/static/src/pos/app/popups/missing_stock_popup/missing_stock_popup.xml:0
 msgid "New Lines"
-msgstr ""
+msgstr "Nuevas líneas"
 
 #. module: marin
 #: model_terms:ir.ui.view,arch_db:marin.view_task_form2
 msgid "New Quotation"
-msgstr ""
+msgstr "Nueva cotización"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Próximo evento del calendario de actividad"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Fecha límite de la próxima actividad"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__activity_summary
+msgid "Next Activity Summary"
+msgstr "Resumen de la próxima actividad"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__activity_type_id
+msgid "Next Activity Type"
+msgstr "Tipo de próxima actividad"
 
 #. module: marin
 #. odoo-python
@@ -2741,6 +2918,11 @@ msgid "Note"
 msgstr ""
 
 #. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_picking_tracker_form
+msgid "Notes"
+msgstr "Notas"
+
+#. module: marin
 #: model:ir.model.fields.selection,name:marin.selection__sale_order__delivery_status__no
 #: model:ir.model.fields.selection,name:marin.selection__sale_order_line__delivery_status__no
 msgid "Nothing to deliver"
@@ -2761,6 +2943,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:marin.view_sale_order_tree_marin
 msgid "Number"
 msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Número de acciones"
 
 #. module: marin
 #: model:ir.model.fields,help:marin.field_product_category__expiration_time
@@ -2793,17 +2980,26 @@ msgid ""
 msgstr ""
 
 #. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__message_has_error_counter
+msgid "Number of errors"
+msgstr "Número de errores"
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_stock_picking_tracker__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Número de mensajes que requieren acción"
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_stock_picking_tracker__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Número de mensajes con error de entrega"
+
+#. module: marin
 #: model:ir.model.fields,field_description:marin.field_approval_request__odometer
 #: model_terms:ir.ui.view,arch_db:marin.approval_category_view_form
 #: model_terms:ir.ui.view,arch_db:marin.approval_request_view_tree
-#: model_terms:ir.ui.view,arch_db:marin.stock_picking_batch_form_inherit_fleet_route
 msgid "Odometer"
 msgstr "Odómetro"
-
-#. module: marin
-#: model:ir.model.fields,field_description:marin.field_stock_picking_batch__odometer_difference
-msgid "Odometer Difference"
-msgstr "Distancia recorrida"
 
 #. module: marin
 #: model:ir.model.fields,field_description:marin.field_stock_picking__odometer_done
@@ -2811,9 +3007,10 @@ msgid "Odometer Done"
 msgstr "Odómetro final"
 
 #. module: marin
-#: model:ir.model.fields,field_description:marin.field_stock_picking_batch__odometer_uom_id
+#: model:ir.model.fields,field_description:marin.field_stock_picking__odometer_done_uom_id
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__odometer_uom_id
 msgid "Odometer Unit"
-msgstr "UdM odómetro"
+msgstr "Unidad de odómetro"
 
 #. module: marin
 #: model:ir.model.fields,help:marin.field_stock_picking__odometer_done
@@ -2862,6 +3059,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:marin.view_purchase_order_line_list
 msgid "Open Order"
 msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__picking_type_id
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_picking_tracker_search
+msgid "Operation Type"
+msgstr "Tipo de operación"
 
 #. module: marin
 #. odoo-python
@@ -3142,22 +3345,33 @@ msgstr "Lotes de recibos de nómina"
 #. module: marin
 #: model:ir.model.fields,field_description:marin.field_account_invoice_cash_discount__amount
 msgid "Percentage"
-msgstr ""
+msgstr "Porcentaje"
 
 #. module: marin
-#: model:ir.model.fields,help:marin.field_stock_picking_batch__fuel_start
+#: model:ir.model.fields,help:marin.field_stock_picking_tracker__fuel_start
 msgid "Percentage (%) of fuel level at the beginning of the route"
 msgstr "Porcentaje (%) del nivel de combustible al inicio de la ruta"
 
 #. module: marin
-#: model:ir.model.fields,help:marin.field_stock_picking_batch__fuel_end
+#: model:ir.model.fields,help:marin.field_stock_picking_tracker__fuel_end
 msgid "Percentage (%) of fuel level at the end of the route"
 msgstr "Porcentaje (%) del nivel de combustible al final de la ruta"
 
 #. module: marin
 #: model:ir.actions.server,name:marin.action_print_picking_operation
 msgid "Picking Operations"
-msgstr ""
+msgstr "Operaciones de traslado"
+
+#. module: marin
+#: model:ir.model,name:marin.model_stock_picking_tracker
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_picking_tracker_form
+msgid "Picking Route Tracker"
+msgstr "Seguimiento de ruta"
+
+#. module: marin
+#: model:ir.actions.act_window,name:marin.action_stock_picking_tracker
+msgid "Picking Route Trackers"
+msgstr "Seguimientos de rutas"
 
 #. module: marin
 #: model:ir.model,name:marin.model_stock_picking_type
@@ -3465,6 +3679,8 @@ msgstr ""
 #: model:ir.model,name:marin.model_purchase_bill_line_match
 msgid "Purchase Line and Vendor Bill line matching view"
 msgstr ""
+"Vista de conciliación entre líneas de compra y líneas de factura del "
+"proveedor"
 
 #. module: marin
 #: model:ir.model,name:marin.model_purchase_order
@@ -3597,7 +3813,7 @@ msgstr ""
 #. module: marin
 #: model:ir.model,name:marin.model_stock_quant
 msgid "Quants"
-msgstr ""
+msgstr "Cantidades"
 
 #. module: marin
 #: model:ir.model.fields,field_description:marin.field_invoice_line_out_report__quarter
@@ -3622,6 +3838,11 @@ msgstr ""
 #. module: marin
 #: model_terms:ir.ui.view,arch_db:marin.view_sales_order_filter_marin
 msgid "Quotations"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__rating_ids
+msgid "Ratings"
 msgstr ""
 
 #. module: marin
@@ -3712,9 +3933,10 @@ msgid "Ref"
 msgstr ""
 
 #. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__name
 #: model_terms:ir.ui.view,arch_db:marin.purchase_order_view_list
 msgid "Reference"
-msgstr ""
+msgstr "Referencia"
 
 #. module: marin
 #: model:ir.model.fields,field_description:marin.field_project_task__referer_partner_id
@@ -3773,6 +3995,16 @@ msgid "Reset to draft"
 msgstr ""
 
 #. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__user_id
+msgid "Responsible"
+msgstr "Responsable"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__activity_user_id
+msgid "Responsible User"
+msgstr "Usuario responsable"
+
+#. module: marin
 #: model_terms:ir.ui.view,arch_db:marin.view_order_form_marin
 msgid "Restore invoice status"
 msgstr ""
@@ -3796,7 +4028,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_team_yearly_report_search_view
 #: model_terms:ir.ui.view,arch_db:marin.view_stock_need_report_search_view
 msgid "Root Category"
-msgstr ""
+msgstr "Categoría raíz"
 
 #. module: marin
 #: model:ir.model.fields.selection,name:marin.selection__invoice_line_in_report__display_type__rounding
@@ -3806,32 +4038,46 @@ msgstr ""
 #. module: marin
 #: model:ir.model.fields,field_description:marin.field_sale_order__route_id
 msgid "Route"
-msgstr ""
+msgstr "Ruta"
 
 #. module: marin
-#: model_terms:ir.ui.view,arch_db:marin.stock_picking_batch_form_inherit_fleet_route
-msgid "Route Analysis"
-msgstr "Análisis de rutas"
-
-#. module: marin
-#: model:ir.model.fields,field_description:marin.field_stock_picking_batch__date_end
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__date_end
 msgid "Route End"
 msgstr "Fin de la ruta"
 
 #. module: marin
-#: model:ir.model.fields,field_description:marin.field_stock_picking_batch__date_start
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_picking_tracker_form
+msgid "Route Information"
+msgstr "Información de la ruta"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__date_start
 msgid "Route Start"
 msgstr "Inicio de la ruta"
 
 #. module: marin
-#: model_terms:ir.ui.view,arch_db:marin.stock_picking_batch_form_inherit_fleet_route
-msgid "Route Timing"
-msgstr "Duración de ruta"
+#: model:ir.ui.menu,name:marin.menu_stock_picking_tracker
+#: model:res.groups,name:marin.group_stock_picking_tracker_manager
+msgid "Route Tracking"
+msgstr "Seguimiento de rutas"
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_stock_picking__tracker_id
+msgid ""
+"Route tracker record that manages this transfer as part of a delivery route."
+msgstr ""
+"Registro de seguimiento de ruta que gestiona esta transferencia como parte "
+"de una ruta de entrega."
 
 #. module: marin
 #: model_terms:ir.ui.view,arch_db:marin.view_picking_type_form
 msgid "Routes"
-msgstr ""
+msgstr "Rutas"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Error de entrega de SMS"
 
 #. module: marin
 #. odoo-javascript
@@ -3935,9 +4181,19 @@ msgid "Salesperson"
 msgstr ""
 
 #. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__scheduled_date
+msgid "Scheduled Date"
+msgstr "Fecha programada"
+
+#. module: marin
 #: model:ir.model,name:marin.model_stock_scrap
 msgid "Scrap"
 msgstr "Desechar"
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_picking_tracker_search
+msgid "Search Route Trackers"
+msgstr ""
 
 #. module: marin
 #: model_terms:ir.ui.view,arch_db:marin.view_sales_order_filter_marin
@@ -4009,6 +4265,11 @@ msgid "Set price"
 msgstr ""
 
 #. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_picking_tracker_form
+msgid "Set to Draft"
+msgstr "Devolver a borrador"
+
+#. module: marin
 #: model:ir.ui.menu,name:marin.menu_configuration_settings
 msgid "Settings"
 msgstr ""
@@ -4044,15 +4305,16 @@ msgid "Show all records which has next action date is before today"
 msgstr ""
 
 #. module: marin
-#: model:ir.model.fields,help:marin.field_stock_picking_batch__fuel_consumption
+#: model:ir.model.fields,help:marin.field_stock_picking_tracker__fuel_consumption
 msgid ""
-"Since each vehicle has a different fuel tank capacity, A rule of three is "
+"Since each vehicle has a different fuel tank capacity, a rule of three is "
 "applied to convert the consumed fuel into liters or the default volume unit "
 "defined in the global parameters."
 msgstr ""
-"Dado que cada vehículo tiene una capacidad de depósito de combustible diferente, se "
-"aplica una regla de tres para convertir el combustible consumido en litros o en la unidad "
-"de volumen por defecto «definida en los parámetros globales."
+"Dado que cada vehículo tiene una capacidad de tanque de combustible "
+"diferente, se aplica una regla de tres para convertir el combustible "
+"consumido a litros o a la unidad de volumen predeterminada definida en los "
+"parámetros globales."
 
 #. module: marin
 #: model:ir.model.fields,help:marin.field_project_task__season_id
@@ -4061,18 +4323,22 @@ msgid ""
 "Since every farmer can have several growing seasons the specific one can be "
 "selected."
 msgstr ""
+"Dado que cada agricultor puede tener varias temporadas de cultivo, se puede "
+"seleccionar la específica."
 
 #. module: marin
 #: model:ir.model.fields,field_description:marin.field_res_partner__social_style_color
 #: model:ir.model.fields,field_description:marin.field_res_users__social_style_color
 msgid "Social style color"
-msgstr ""
+msgstr "Color de estilo social"
 
 #. module: marin
 #. odoo-python
 #: code:addons/marin/models/account_move.py:0
 msgid "Some move lines does not have a product set. Please review"
 msgstr ""
+"Algunas líneas de movimiento no tienen un producto configurado. Por favor, "
+"revise."
 
 #. module: marin
 #: model:ir.model.fields,field_description:marin.field_stock_picking_type__default_location_src_id
@@ -4080,13 +4346,17 @@ msgid "Source Location"
 msgstr "Ubicación de origen"
 
 #. module: marin
-#: model:ir.model.fields,field_description:marin.field_stock_picking_batch__fuel_start
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_picking_tracker_form
+msgid "Start Data"
+msgstr "Datos de inicio"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__fuel_start
 msgid "Starting Fuel"
 msgstr "Combustible inicial"
 
 #. module: marin
-#: model:ir.model.fields,field_description:marin.field_stock_picking_batch__odometer_start
-#: model_terms:ir.ui.view,arch_db:marin.stock_picking_batch_form_inherit_fleet_route
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__odometer_start
 msgid "Starting Odometer"
 msgstr "Odómetro inicial"
 
@@ -4095,12 +4365,27 @@ msgstr "Odómetro inicial"
 #: model:ir.model.fields,field_description:marin.field_pos_line_report__parent_state
 #: model_terms:ir.ui.view,arch_db:marin.view_sales_order_line_filter
 msgid "State"
-msgstr ""
+msgstr "Estado"
 
 #. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__state
 #: model_terms:ir.ui.view,arch_db:marin.purchase_order_view_search_marin
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_picking_tracker_search
 msgid "Status"
+msgstr "Estado"
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_stock_picking_tracker__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
 msgstr ""
+"Estado basado en actividades\n"
+"Vencido: La fecha de vencimiento ya ha pasado\n"
+"Hoy: La fecha de actividad es hoy\n"
+"Planificado: Actividades futuras."
 
 #. module: marin
 #: model_terms:ir.ui.view,arch_db:marin.view_stock_need_report_form
@@ -4444,6 +4729,16 @@ msgid "Third Quarter"
 msgstr ""
 
 #. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_picking_tracker_search
+msgid "This Month"
+msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_picking_tracker_search
+msgid "This Week"
+msgstr ""
+
+#. module: marin
 #: model:ir.model.fields,help:marin.field_fleet_vehicle__account_prefix
 msgid "This fields is required by Accounting to group according to its needs."
 msgstr ""
@@ -4455,6 +4750,9 @@ msgid ""
 "created. However, it is possible to change it afterwards or that the routes "
 "use another one by default."
 msgstr ""
+"Esta es la ubicación de destino predeterminada al crear la operación "
+"manualmente. Puede cambiarla después o las rutas también pueden usar otra de"
+" manera predeterminada."
 
 #. module: marin
 #: model:ir.model.fields,help:marin.field_stock_picking_type__default_location_src_id
@@ -4463,6 +4761,9 @@ msgid ""
 " However, it is possible to change it afterwards or that the routes use "
 "another one by default."
 msgstr ""
+"Esta es la ubicación de origen predeterminada al crear la operación "
+"manualmente. Puede cambiarla después o las rutas también pueden usar otra de"
+" manera predeterminada."
 
 #. module: marin
 #: model:ir.model.fields,help:marin.field_stock_location__removal_priority
@@ -4526,6 +4827,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:marin.view_sales_order_filter_marin
 msgid "To upsell"
 msgstr ""
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_picking_tracker_search
+msgid "Today"
+msgstr "Hoy"
 
 #. module: marin
 #: model_terms:ir.ui.view,arch_db:marin.view_sales_order_filter_marin
@@ -4623,6 +4929,19 @@ msgid "Totals Last Year"
 msgstr ""
 
 #. module: marin
+#: model_terms:ir.actions.act_window,help:marin.action_stock_picking_tracker
+msgid ""
+"Track your routes, analyze fuel efficiency, and optimize delivery paths."
+msgstr ""
+"Rastrea tus rutas, analiza la eficiencia del combustible y optimiza las "
+"rutas de entrega."
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking__tracker_id
+msgid "Tracker"
+msgstr "Rastreador de ruta"
+
+#. module: marin
 #: model:ir.model,name:marin.model_stock_picking
 #: model:ir.model.fields,field_description:marin.field_stock_move__picking_id
 msgid "Transfer"
@@ -4631,12 +4950,18 @@ msgstr "Transferir "
 #. module: marin
 #: model_terms:ir.ui.view,arch_db:marin.view_stock_quant_lot_update
 msgid "Transfer quantity"
-msgstr ""
+msgstr "Cantidad a transferir"
 
 #. module: marin
 #: model:ir.model.fields,field_description:marin.field_pos_session__cash_transfered
 msgid "Transfered"
-msgstr ""
+msgstr "Transferido"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__picking_ids
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_picking_tracker_form
+msgid "Transfers"
+msgstr "Transferencias"
 
 #. module: marin
 #: model:ir.model.fields,field_description:marin.field_account_journal__x_treatment
@@ -4645,7 +4970,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_in_report_search_view
 #: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_report_search_view
 msgid "Treatment"
-msgstr ""
+msgstr "Tratamiento"
 
 #. module: marin
 #: model:ir.model.fields,field_description:marin.field_account_move_line__move_type
@@ -4655,33 +4980,37 @@ msgid "Type"
 msgstr "Tipo"
 
 #. module: marin
+#: model:ir.model.fields,help:marin.field_stock_picking_tracker__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Tipo de la actividad de excepción en el registro."
+
+#. module: marin
 #: model_terms:ir.ui.view,arch_db:marin.view_order_form_inherit_sale_stock_marin
 msgid "Unforce delivery done"
-msgstr ""
+msgstr "Desforzar entrega completada"
 
 #. module: marin
 #: model_terms:ir.ui.view,arch_db:marin.purchase_order_view_form_inherit_marin
 msgid "Unforce reception done"
-msgstr ""
+msgstr "Desforzar recepción completada"
 
 #. module: marin
 #: model:ir.model.fields,field_description:marin.field_invoice_line_price_history_line__price_unit
 #: model:ir.model.fields,field_description:marin.field_purchase_order_line_price_history_line__price_unit
 #: model:ir.model.fields,field_description:marin.field_sale_order_line_price_history_line__price_unit
 msgid "Unit Price"
-msgstr ""
+msgstr "Precio unitario"
 
 #. module: marin
-#: model:ir.model.fields,help:marin.field_stock_picking_batch__fuel_uom_id
-msgid "Unit of measurement for fuel, coming from the company or vehicle."
-msgstr ""
+#: model:ir.model.fields,help:marin.field_stock_picking_tracker__fuel_uom_id
+msgid "Unit of measurement for fuel, coming from the vehicle."
+msgstr "Unidad de medida para el combustible, proveniente del vehículo."
 
 #. module: marin
-#: model:ir.model.fields,help:marin.field_stock_picking_batch__odometer_uom_id
-msgid ""
-"Unit of measurement for the odometer, coming from the company or vehicle."
-msgstr ""
-"Unidad de medida del odómetro, procedente de la empresa o del vehículo"
+#: model:ir.model.fields,help:marin.field_stock_picking__odometer_done_uom_id
+#: model:ir.model.fields,help:marin.field_stock_picking_tracker__odometer_uom_id
+msgid "Unit of measurement for the odometer, coming from the vehicle."
+msgstr "Unidad de medida para el odómetro, proveniente del vehículo."
 
 #. module: marin
 #: model:ir.ui.menu,name:marin.menu_uom_uom
@@ -5004,9 +5333,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:marin.field_approval_request__vehicle_id
 #: model:ir.model.fields,field_description:marin.field_documents_document__vehicle_id
 #: model:ir.model.fields,field_description:marin.field_stock_picking__vehicle_id
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__vehicle_id
 #: model_terms:ir.ui.view,arch_db:marin.approval_category_view_form
 #: model_terms:ir.ui.view,arch_db:marin.view_account_analytic_distribution_model_search_marin
 #: model_terms:ir.ui.view,arch_db:marin.view_account_analytic_line_filter_marin
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_picking_tracker_search
 msgid "Vehicle"
 msgstr "Vehículo"
 
@@ -5072,6 +5403,16 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:marin.quant_search_view_marin
 msgid "Warehouse"
 msgstr "Almacén"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_stock_picking_tracker__website_message_ids
+msgid "Website Messages"
+msgstr ""
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_stock_picking_tracker__website_message_ids
+msgid "Website communication history"
+msgstr ""
 
 #. module: marin
 #: model:ir.model.fields,field_description:marin.field_invoice_line_out_report__week_of_year
@@ -5141,6 +5482,8 @@ msgstr ""
 msgid ""
 "You are not allowed to do Cash Transfers. Please contact an administrator."
 msgstr ""
+"No tienes permiso para realizar transferencias de efectivo. Por favor, "
+"contacta con un administrador."
 
 #. module: marin
 #: model:ir.model.fields,help:marin.field_purchase_order__partner_id
@@ -5158,42 +5501,47 @@ msgid ""
 "You can not delete product moves if the picking is done. You can only "
 "correct the done quantities."
 msgstr ""
+"No puedes eliminar movimientos de productos si el albarán está completado. "
+"Solo puedes corregir las cantidades completadas."
 
 #. module: marin
 #. odoo-python
 #: code:addons/marin/wizards/authorize_debt.py:0
 msgid "You can only authorize debt for draft journal entries."
-msgstr ""
+msgstr "Solo puedes autorizar deudas para asientos en borrador."
 
 #. module: marin
 #. odoo-python
 #: code:addons/marin/wizards/authorize_debt.py:0
 msgid "You can only authorize debt for quotations."
-msgstr ""
+msgstr "Solo puedes autorizar deudas para presupuestos."
 
 #. module: marin
 #. odoo-python
 #: code:addons/marin/models/stock_quant.py:0
 msgid "You can only change lot of one quant at a time."
-msgstr ""
+msgstr "Solo puedes cambiar el lote de una cantidad a la vez."
 
 #. module: marin
 #. odoo-python
 #: code:addons/marin/models/stock_quant.py:0
 msgid "You can only change lots used by a single company."
-msgstr ""
+msgstr "Solo puedes cambiar lotes utilizados por una sola empresa."
 
 #. module: marin
 #. odoo-python
 #: code:addons/marin/wizards/invoice_cash_discount.py:0
 msgid "You can only register cash discounts on posted moves."
 msgstr ""
+"Solo puedes registrar descuentos en efectivo en movimientos contabilizados."
 
 #. module: marin
 #. odoo-python
 #: code:addons/marin/wizards/authorize_debt.py:0
 msgid "You can't authorize debt because the records dont match the criteria."
 msgstr ""
+"No puedes autorizar la deuda porque los registros no coinciden con los "
+"criterios."
 
 #. module: marin
 #. odoo-python
@@ -5202,57 +5550,77 @@ msgid ""
 "You can't authorize debt for records being either all inbound, either all "
 "outbound."
 msgstr ""
+"No puedes autorizar la deuda para registros que sean todos de entrada o "
+"todos de salida."
 
 #. module: marin
 #. odoo-python
 #: code:addons/marin/models/stock_picking_type.py:0
 msgid "You cannot archive '%s' as it is used by a POS configuration '%s'."
 msgstr ""
+"No puedes archivar '%s' porque está siendo utilizado por una configuración "
+"de POS '%s'."
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/stock_picking_tracker.py:0
+msgid ""
+"You cannot confirm this tracker because the starting fuel value is not set."
+msgstr ""
+"No puedes confirmar esta ruta porque el valor de combustible inicial "
+"no está definido."
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/stock_picking_tracker.py:0
+msgid ""
+"You cannot confirm this tracker because the starting odometer value is not "
+"set."
+msgstr ""
+"No puedes confirmar esta ruta porque el valor inicial del odómetro no "
+"está definido."
 
 #. module: marin
 #. odoo-python
 #: code:addons/marin/models/approval_request.py:0
 msgid "You cannot create a log without odometer value."
-msgstr ""
+msgstr "No puedes crear un registro sin un valor de odómetro."
 
 #. module: marin
 #. odoo-python
-#: code:addons/marin/models/stock_picking_batch.py:0
+#: code:addons/marin/models/stock_picking_tracker.py:0
 msgid ""
-"You cannot mark as confirmed this batch because the starting fuel value is "
-"not set."
-msgstr ""
-"No puede marcar como confirmado este lote porque el valor inicial del combustible no está "
-"establecido."
+"You cannot mark as done this tracker because all pickings are cancelled"
+msgstr "No puedes marcar esta ruta como completado porque todos los albaranes están cancelados."  
 
 #. module: marin
 #. odoo-python
-#: code:addons/marin/models/stock_picking_batch.py:0
+#: code:addons/marin/models/stock_picking_tracker.py:0
 msgid ""
-"You cannot mark as confirmed this batch because the starting odometer value "
-"is not set."
-msgstr ""
-"No puede marcar como confirmado este lote porque el valor inicial del odómetro no está "
-"establecido."
-
-#. module: marin
-#. odoo-python
-#: code:addons/marin/models/stock_picking_batch.py:0
-msgid ""
-"You cannot mark as done this batch because the ending fuel value is not set."
-msgstr ""
-"No puede marcar como realizado este lote porque el valor final del combustible no está "
-"establecido."
-
-#. module: marin
-#. odoo-python
-#: code:addons/marin/models/stock_picking_batch.py:0
-msgid ""
-"You cannot mark as done this batch because the ending odometer value is not "
+"You cannot mark as done this tracker because the ending fuel value is not "
 "set."
 msgstr ""
-"No puede marcar como realizado este lote porque el valor final del odómetro no está "
-"establecido."
+"No puedes marcar esta ruta como completado porque el valor final de "
+"combustible no está definido."
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/stock_picking_tracker.py:0
+msgid ""
+"You cannot mark as done this tracker because the ending odometer value is "
+"not set."
+msgstr ""
+"No puedes marcar esta ruta como completado porque el valor final del "
+"odómetro no está definido."
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/stock_picking_tracker.py:0
+msgid ""
+"You cannot mark as done this tracker because the following pickings are not "
+"done or cancelled: %s"
+msgstr "No puedes marcar esta ruta como completado porque los siguientes albaranes no "
+"están terminados o cancelados: %s"  
 
 #. module: marin
 #. odoo-python
@@ -5261,6 +5629,8 @@ msgid ""
 "You cannot use the account (%s) in the journal (%s), check the field "
 "\"Allowed Journals\" on the related account."
 msgstr ""
+"No puedes usar la cuenta (%s) en el diario (%s), verifica el campo \"Diarios"
+" Permitidos\" en la cuenta relacionada."
 
 #. module: marin
 #. odoo-python
@@ -5269,23 +5639,35 @@ msgid ""
 "You cannot use the account (%s) in the journal (%s), check the section "
 "\"Control-Access\" under tab \"Advanced Settings\" on the related journal."
 msgstr ""
+"No puedes usar la cuenta (%s) en el diario (%s), verifica la sección "
+"\"Control de acceso\" en la pestaña \"Configuración avanzada\" del diario "
+"relacionado."
 
 #. module: marin
 #. odoo-python
 #: code:addons/marin/wizards/authorize_debt.py:0
 msgid "You cant authorize debt for records belonging to different companies."
 msgstr ""
+"No puedes autorizar deuda para registros pertenecientes a diferentes "
+"empresas."
 
 #. module: marin
 #. odoo-python
 #: code:addons/marin/wizards/authorize_debt.py:0
 msgid "You cant authorize debt for records belonging to different partners."
 msgstr ""
+"No puedes autorizar deuda para registros pertenecientes a diferentes socios."
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/stock_picking_tracker.py:0
+msgid "You have to set some pickings to this tracker."
+msgstr "Tienes que establecer algunos pickings a esta ruta."
 
 #. module: marin
 #: model:ir.model.fields.selection,name:marin.selection__res_partner__social_style_color__blue
 msgid "blue"
-msgstr ""
+msgstr "azul"
 
 #. module: marin
 #: model:product.removal,method:marin.removal_closest_priority
@@ -5349,3 +5731,8 @@ msgstr ""
 #: model:ir.model.fields.selection,name:marin.selection__res_partner__social_style_color__yellow
 msgid "yellow"
 msgstr "amarillo"
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_picking_tracker_form
+msgid "⟳ Update"
+msgstr "⟳ Actualizar"

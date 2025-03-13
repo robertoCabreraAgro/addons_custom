@@ -201,6 +201,11 @@
         <field name="implied_ids" eval="[Command.link(ref('group_print_picking_operation'))]" />
     </record>
 
+    <record id="group_stock_picking_tracker_manager" model="res.groups">
+        <field name="name">Route Tracking</field>
+        <field name="category_id" ref="base.module_category_usability" />
+    </record>
+
     <!-- HR -->
     <record id="group_hr_readonly" model="res.groups">
         <field name="name">HR readonly</field>

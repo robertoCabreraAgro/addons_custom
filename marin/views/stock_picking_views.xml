@@ -98,15 +98,18 @@
                     optional="hide"
                     groups="stock.group_stock_manager" />
             </xpath>
-            <xpath expr="//field[@name='batch_id']" position="after">
-                <div>
-                    <field name="odometer_done" class="oe_inline" invisible="batch_id == False or state != 'done'" />
-                    <span> in </span>
-                    <field name="odometer_done_uom_id" class="oe_inline" />
+            <xpath expr="//group[@name='carrier_data']" position="inside">
+                <field name="tracker_id" readonly="1" />
+                <field name="vehicle_id" />
+                <label for="odometer_done" invisible="tracker_id == False or state != 'done'" />
+                <div class="o_row" invisible="tracker_id == False or state != 'done'">
+                    <field name="odometer_done" />
+                    <field name="odometer_done_uom_id" readonly="1" />
                 </div>
-                <div>
-                    <field name="fuel_done" class="oe_inline" invisible="batch_id == False or state != 'done'" />
-                    <span> % </span>
+                <label for="fuel_done" invisible="tracker_id == False or state != 'done'" />
+                <div class="o_row" invisible="tracker_id == False or state != 'done'">
+                    <field name="fuel_done" />
+                    <span>%</span>
                 </div>
             </xpath>
         </field>
