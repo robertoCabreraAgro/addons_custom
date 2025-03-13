@@ -11,6 +11,9 @@
                     <button type="button" class="btn btn-danger" t-on-click="resetAll">
                         Reiniciar Todo
                     </button>
+                    <button type="button" class="btn btn-primary" t-on-click="fetchDevicePaths">
+                        Consultar Recorrido
+                    </button>
                     <!-- Dropdown de rango de fechas -->
                     <div class="dropdown ms-3">
                         <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -24,11 +27,6 @@
                             <div class="date-picker mt-3">
                                 <label for="end-date" class="form-label">Fecha Fin:</label>
                                 <input type="datetime-local" id="end-date" t-model="state.endDate" class="form-control" />
-                            </div>
-                            <div class="date-action mt-3">
-                                <button type="button" class="btn btn-primary" t-on-click="fetchDevicePaths">
-                                    Consultar Recorrido
-                                </button>
                             </div>
                         </div>
                     </div>
@@ -45,13 +43,12 @@
                          t-on-click.prevent="() => this.onCardClick(device)">
                         
                         <!-- Checkbox para activar/desactivar la vista -->
-                        <div class="kanban_toggle_view">
+                        <div class="kanban_header_container">
                             <input type="checkbox" t-att-checked="state.activeDevices.includes(device.imei)" 
                                 t-on-click.prevent="() => this.toggleDeviceVisibility(device)"/>
-                        </div>
-                        
-                        <div class="card_header">
-                            <strong><t t-esc="device.imei"/></strong>
+                            <div class="card_header">
+                                <strong><t t-esc="device.license_plate"/></strong>
+                            </div>
                             <!-- Botón de flecha para expandir -->
                             <button class="expand_button" 
                                     t-on-click.prevent="() => this.toggleExpand(device)">
@@ -64,14 +61,16 @@
                             <div t-if="device.vehicle_id">
                                 <span>Vehículo: <t t-esc="device.vehicle_id[1]"/></span> <!-- Mostrar el nombre del vehículo -->
                             </div>
-                            <div class="kanban_info">
-                                <i class="fa fa-clock-o"></i>
-                                <span>Última actualización:</span> <t t-esc="device.timestamp"/>
+                            <div t-if="device.vehicle_id">
+                                <span>Conductor: <t t-esc="device.driver_name"/></span>
                             </div>
                             <div class="kanban_info">
+                                <span>Odometro:</span> <t t-esc="device.total_odometer"/>
+                            </div>
+                            <!-- <div class="kanban_info">
                                 <i class="fa fa-map"></i>
                                 <span>Dirección:</span> <t t-esc="device.address"/>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </t>

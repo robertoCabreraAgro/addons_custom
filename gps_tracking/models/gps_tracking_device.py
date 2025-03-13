@@ -96,6 +96,9 @@ class GpsTrackingDevice(models.Model):
         store=True,
         string="Movement",
     )
+    total_odometer = fields.Integer(
+        related="last_point_id.total_odometer", store=True, string="Total Odometer"
+    )
     color = fields.Selection(
         selection=[
             ("#FF0000", "Rojo"),

@@ -6,9 +6,9 @@
         <field name="arch" type="xml">
             <search string="Buscar Dispositivo">
                 <field name="imei"/>
-                <field name="address"/>
-                <field name="satellite"/>
-                <field name="speed"/>
+                <field name="license_plate" />
+                <field name="driver_name" />
+                <field name="model_id" />
             </search>
         </field>
     </record>
@@ -79,7 +79,6 @@
                         <page string="Tracking Points">
                             <field name="tracking_points" default_order="timestamp desc">
                                 <list>
-				    <field name="device_id" invisible="1"/>
 				    <field name="timestamp" />
 				    <field name="latitude" />
 				    <field name="longitude" />

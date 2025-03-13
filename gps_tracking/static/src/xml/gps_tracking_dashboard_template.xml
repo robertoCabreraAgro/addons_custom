@@ -39,12 +39,12 @@
                 <t t-foreach="state.filteredDevices" t-as="device" t-key="device.imei">
                     <div class="o_gps_tracking_card" t-att-class="{'active': state.activeDevice === device}" t-on-click.prevent="() => this.onCardClick(device)">
                         <!-- Checkbox para activar/desactivar la vista -->
-                        <div class="kanban_toggle_view">
+                        <div class="kanban_header_container">
                             <input type="checkbox" t-att-checked="state.activeDevices.includes(device.imei)" 
                                 t-on-click.prevent="() => this.toggleDeviceVisibility(device)"/>
-                        </div>
-                        <div class="card_header">
-                            <strong><t t-esc="device.imei"/></strong>
+                            <div class="card_header">
+                                <strong><t t-esc="device.license_plate"/></strong>
+                            </div>
                             <!-- Botón de flecha para expandir -->
                             <button class="expand_button" 
                                     t-on-click.prevent="() => this.toggleExpand(device)">
@@ -52,6 +52,12 @@
                             </button>
                         </div>
                         <div t-if="state.expandedDevices.has(device.imei)" class="card_body">
+                            <div t-if="device.vehicle_id">
+                                <span>Vehículo: <t t-esc="device.vehicle_id[1]"/></span> <!-- Mostrar el nombre del vehículo -->
+                            </div>
+                            <div t-if="device.vehicle_id">
+                                <span>Conductor: <t t-esc="device.driver_name"/></span>
+                            </div>
                             <!-- Velocidad -->
                             <div class="kanban_info">
                                 <i t-att-class="{
@@ -61,27 +67,13 @@
                                 }"></i>
                                 <span>Velocidad:</span> <t t-esc="device.speed"/> km/h
                             </div>
+                            <div class="kanban_info">
+                                <span>Odometro:</span> <t t-esc="device.total_odometer"/>
+                            </div>
                             <!-- Timestamp -->
                             <div class="kanban_info">
                                 <i class="fa fa-clock-o"></i>
                                 <span>Actualización:</span> <t t-esc="device.timestamp"/>
-                            </div>
-                            <!-- GSM signal -->
-                            <div class="kanban_info">
-                                <i class="fa fa-signal"></i>
-                                <span>Señal Celular:</span> <t t-esc="device.gsm_signal"/>
-                            </div>
-                            <!-- Ignition -->
-                            <div class="kanban_info">
-                                <i t-att-class="{
-                                    'fa fa-power-off': true,
-                                    'text-success': device.ignition == 1,
-                                    'text-danger': device.ignition == 0
-                                }"></i>
-                                <span>
-                                    <t t-if="device.ignition == 1">Encendido</t>
-                                    <t t-if="device.ignition == 0">Apagado</t>
-                                </span>
                             </div>
                             <!-- Movement -->
                             <div class="kanban_info">
@@ -94,11 +86,6 @@
                                     <t t-if="device.movement == 1">En movimiento</t>
                                     <t t-if="device.movement == 0">Estacionado</t>
                                 </span>
-                            </div>
-                            <!-- Satélites -->
-                            <div class="kanban_info">
-                                <i class="fa fa-globe"></i>
-                                <span>Satélites:</span> <t t-esc="device.satellite"/>
                             </div>
                             <!-- Coordenadas -->
                             <div class="kanban_info">

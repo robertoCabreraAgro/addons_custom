@@ -56,7 +56,10 @@ class GpsTrackingPoint(models.Model):
     fuel_level_l = fields.Float(string="Fuel Level (L)", digits=(16, 2))
     engine_total_hours = fields.Float(string="Engine Total Hours", digits=(16, 2))
     fuel_consumed_counted = fields.Float(string="Fuel Consumed Counted", digits=(16, 2))
-    control_state_flags = fields.Integer(string="Control State Flags")
+    control_state_flags = fields.Char(
+        string="Control State Flags",
+        help="This is an hexadecimal flag to check vehicle state",
+    )
     auto_geofence = fields.Integer(string="Auto Geofence")
     event_type = fields.Char(string="Event Type")
 
