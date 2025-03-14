@@ -1,7 +1,7 @@
 import logging
 
 from pyproj import Transformer
-
+from datetime import datetime, timedelta
 from odoo import api, fields, models
 
 _logger = logging.getLogger(__name__)
@@ -35,6 +35,11 @@ class GpsTrackingDevice(models.Model):
         store=True,
         comodel_name="fleet.vehicle.model",
         string="Model",
+    )
+    allowed_tracking_point = fields.One2many(
+        comodel_name="gps.tracking.point",
+        compute="_compute_allowed_tracking_point",
+        string="Allowed Tracking Points"
     )
     tracking_points = fields.One2many(
         comodel_name="gps.tracking.point",
@@ -116,6 +121,17 @@ class GpsTrackingDevice(models.Model):
         "unique (imei)",
         "This IMEI already exists",
     )
+
+    @api.depends("tracking_points")
+    def _compute_allowed_tracking_point(self):
+        now = datetime.now()
+        last_week = now - timedelta(days=7)
+
+        for device in self:
+            device.allowed_tracking_point = self.env["gps.tracking.point"].search(
+                [("device_id", "=", device.id), ("timestamp", ">=", last_week)],  
+                order="timestamp desc"
+            )
 
     @api.depends("vehicle_id.driver_id")
     def _compute_driver_name(self):

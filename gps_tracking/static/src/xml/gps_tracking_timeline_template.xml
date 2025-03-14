@@ -45,7 +45,7 @@
                         <!-- Checkbox para activar/desactivar la vista -->
                         <div class="kanban_header_container">
                             <input type="checkbox" t-att-checked="state.activeDevices.includes(device.imei)" 
-                                t-on-click.prevent="() => this.toggleDeviceVisibility(device)"/>
+                                t-on-click.prevent="() => this.toggleDeviceRouteVisibility(device)"/>
                             <div class="card_header">
                                 <strong><t t-esc="device.license_plate"/></strong>
                             </div>

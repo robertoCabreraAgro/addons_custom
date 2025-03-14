@@ -17,6 +17,7 @@ export class GpsTrackingDashboard extends Component {
         className: { type: String, optional: true },
         searchViewId: { type: Number, optional: true },
         context: { type: Object, optional: true },
+        searchDomain: { type: Array, optional: true },
     };
 
     setup() {

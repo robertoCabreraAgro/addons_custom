@@ -7,6 +7,7 @@
     "website": "https://raulalejandro.com.mx",
     "depends": ["base_geoengine", "fleet"],
     "data": [
+        "security/res_group_security.xml",
         "security/ir.model.access.csv",
         "views/gps_geofence_views.xml",
         "views/gps_tracking_history_views.xml",
