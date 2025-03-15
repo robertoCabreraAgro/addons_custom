@@ -1,16 +1,17 @@
-from odoo import api, _, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools.misc import clean_context
+from odoo.tools.translate import _
 
 class ApprovalRequest(models.Model):
     _inherit = "approval.request"
 
 
     has_vehicle = fields.Selection(
-        related="category_id.has_vehicle", store=True,
+        related="category_id.has_vehicle",
     )
     has_odometer = fields.Selection(
-        related="category_id.has_odometer", store=True,
+        related="category_id.has_odometer",
     )
     vehicle_id = fields.Many2one(
         comodel_name="fleet.vehicle",
@@ -31,14 +32,14 @@ class ApprovalRequest(models.Model):
 
     @api.depends("request_owner_id")
     def _compute_vehicle_id(self):
-        for record in self:
-            if record.request_owner_id:
+        for request in self:
+            if request.request_owner_id:
                 vehicle = self.env["fleet.vehicle"].search(
-                    [("driver_id", "=", record.request_owner_id.partner_id.id)], limit=1
+                    [("driver_id", "=", request.request_owner_id.partner_id.id)], limit=1
                 )
-                record.vehicle_id = vehicle if vehicle else False
+                request.vehicle_id = vehicle if vehicle else False
             else:
-                record.vehicle_id = False
+                request.vehicle_id = False
 
     def action_confirm(self):
         for request in self:
