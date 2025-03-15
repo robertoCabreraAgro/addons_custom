@@ -9,6 +9,9 @@
             <xpath expr="//field[@name='price']" position="attributes">
                 <attribute name="groups">marin.group_product_cost_readonly</attribute>
             </xpath>
+            <xpath expr="//field[@name='product_uom_id']" position="attributes">
+                <attribute name="widget" />
+            </xpath>
         </field>
     </record>
 
@@ -33,6 +36,9 @@
             </xpath>
             <xpath expr="//label[@for='price']/following-sibling::div[1]" position="attributes">
                 <attribute name="groups">marin.group_product_cost_readonly</attribute>
+            </xpath>
+            <xpath expr="//field[@name='product_uom_id']" position="attributes">
+                <attribute name="widget" />
             </xpath>
         </field>
     </record>
