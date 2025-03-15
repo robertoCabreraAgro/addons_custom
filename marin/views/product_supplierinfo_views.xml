@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="product_supplierinfo_tree_view_inherit" model="ir.ui.view">
+        <field name="name">product.supplierinfo.list.view.inherit</field>
+        <field name="model">product.supplierinfo</field>
+        <field name="inherit_id" ref="product.product_supplierinfo_tree_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='price']" position="attributes">
+                <attribute name="groups">marin.group_product_cost_readonly</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_supplierinfo_view_kanban_inherit" model="ir.ui.view">
+        <field name="name">product.supplierinfo.kanban.inherit</field>
+        <field name="model">product.supplierinfo</field>
+        <field name="inherit_id" ref="product.product_supplierinfo_view_kanban" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='price']" position="attributes">
+                <attribute name="groups">marin.group_product_cost_readonly</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_supplierinfo_form_view_inherit" model="ir.ui.view">
+        <field name="name">product.supplierinfo.form.view.inherit</field>
+        <field name="model">product.supplierinfo</field>
+        <field name="inherit_id" ref="product.product_supplierinfo_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//label[@for='price']" position="attributes">
+                <attribute name="groups">marin.group_product_cost_readonly</attribute>
+            </xpath>
+            <xpath expr="//label[@for='price']/following-sibling::div[1]" position="attributes">
+                <attribute name="groups">marin.group_product_cost_readonly</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
