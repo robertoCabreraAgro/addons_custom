@@ -143,6 +143,10 @@
             <xpath expr="//field[@name='uom_id']" position="after">
                 <field name="x_dose_x_ha" />
             </xpath>
+            <xpath expr="//field[@name='seller_ids']" position="attributes">
+                <!-- removed standard_price from context since it's in marin.group_product_cost_readonly causing 'Access Rights Inconsistency' (Task #5664) -->
+                <attribute name="context">{'default_product_tmpl_id': id, 'product_template_invisible_variant': True, 'list_view_ref':'purchase.product_supplierinfo_tree_view2'}</attribute>
+            </xpath>
         </field>
     </record>
 </odoo>
