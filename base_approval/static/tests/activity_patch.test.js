@@ -1,7 +1,7 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { Deferred } from "@odoo/hoot-mock";
 
-import { defineApprovalsModels } from "@approvals/../tests/approvals_test_helpers";
+import { defineApprovalsModels } from "@base_approval/../tests/approvals_test_helpers";
 import {
     click,
     contains,

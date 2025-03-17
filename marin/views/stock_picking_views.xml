@@ -98,7 +98,7 @@
                     optional="hide"
                     groups="stock.group_stock_manager" />
             </xpath>
-            <xpath expr="//group[@name='carrier_data']" position="inside">
+<!--             <xpath expr="//group[@name='carrier_data']" position="inside">
                 <field name="tracker_id" readonly="1" />
                 <field name="vehicle_id" />
                 <label for="odometer_done" invisible="tracker_id == False or state != 'done'" />
@@ -111,7 +111,7 @@
                     <field name="fuel_done" />
                     <span>%</span>
                 </div>
-            </xpath>
+            </xpath> -->
         </field>
     </record>
 

@@ -1,6 +1,6 @@
 
 {
-    "name": "Approvals",
+    "name": "Base Approval",
     "version": "1.0",
     "category": "Human Resources/Approvals",
     "sequence": 190,
@@ -40,14 +40,14 @@
     "installable": True,
     "assets": {
         "web.assets_backend": [
-            "approvals/static/src/**",
+            "base_approval/static/src/**",
         ],
         "web.assets_tests": [
-            "approvals/static/tests/tours/**/*",
+            "base_approval/static/tests/tours/**/*",
         ],
         "web.assets_unit_tests": [
-            "approvals/static/tests/**/*",
-            ("remove", "approvals/static/tests/tours/**/*"),
+            "base_approval/static/tests/**/*",
+            ("remove", "base_approval/static/tests/tours/**/*"),
         ],
     },
     "license": "OEEL-1",

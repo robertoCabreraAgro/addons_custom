@@ -3,7 +3,7 @@
     <record id="approval_request_view_tree" model="ir.ui.view">
         <field name="name">approval.request.tree.inherit</field>
         <field name="model">approval.request</field>
-        <field name="inherit_id" ref="approvals.approval_request_view_tree" />
+        <field name="inherit_id" ref="base_approval.approval_request_view_tree" />
         <field name="arch" type="xml">
             <xpath expr="//list" position="inside">
                 <field name="vehicle_id"
@@ -17,7 +17,7 @@
     <record id="approval_request_view_form" model="ir.ui.view">
         <field name="name">approval.request.form.inherit</field>
         <field name="model">approval.request</field>
-        <field name="inherit_id" ref="approvals.approval_request_view_form" />
+        <field name="inherit_id" ref="base_approval.approval_request_view_form" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='can_change_request_owner']" position="after">
                 <field name="has_vehicle" invisible="1" />

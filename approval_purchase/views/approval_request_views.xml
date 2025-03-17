@@ -4,7 +4,7 @@
     <record id="approval_purchase_request_view_form_inherit" model="ir.ui.view">
         <field name="name">approval.purchase.request.view.form.inherit</field>
         <field name="model">approval.request</field>
-        <field name="inherit_id" ref="approvals.approval_request_view_form" />
+        <field name="inherit_id" ref="base_approval.approval_request_view_form" />
         <field name="arch" type="xml">
             <xpath expr="//button[@name='action_get_attachment_view']" position="after">
                 <button name="action_view_purchase_order"

@@ -11,9 +11,9 @@
                     class="oe_stat_button"
                     icon="fa-credit-card"
                     invisible="count_approval == 0"
-                    groups="approvals.group_approval_user">
+                    groups="base_approval.group_approval_user">
                     <field name="count_approval" string="Approval"
-                        groups="approvals.group_approval_user" widget="statinfo" />
+                        groups="base_approval.group_approval_user" widget="statinfo" />
                 </button>
             </xpath>
         </field>

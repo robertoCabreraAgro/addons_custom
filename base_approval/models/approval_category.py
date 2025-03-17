@@ -281,5 +281,5 @@ class ApprovalCategory(models.Model):
         }
 
     def _get_default_image(self):
-        default_image_path = "approvals/static/src/img/Folder.png"
+        default_image_path = "base_approval/static/src/img/Folder.png"
         return base64.b64encode(tools.misc.file_open(default_image_path, "rb").read())

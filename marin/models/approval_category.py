@@ -1,6 +1,6 @@
 from odoo import api, fields, models
 
-from odoo.addons.approvals.models.approval_category import CATEGORY_SELECTION
+from odoo.addons.base_approval.models.approval_category import CATEGORY_SELECTION
 
 
 class ApprovalCategory(models.Model):

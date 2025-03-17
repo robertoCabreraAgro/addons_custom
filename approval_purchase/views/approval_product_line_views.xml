@@ -3,7 +3,7 @@
     <record id="approval_purchase_product_line_view_tree_inherit" model="ir.ui.view">
         <field name="name">approval.purchase.product.line.view.list.inherit</field>
         <field name="model">approval.product.line</field>
-        <field name="inherit_id" ref="approvals.approval_product_line_view_tree" />
+        <field name="inherit_id" ref="base_approval.approval_product_line_view_tree" />
         <field name="arch" type="xml">
             <xpath expr="//list" position="attributes">
                 <attribute name="decoration-danger">not partner_id</attribute>
