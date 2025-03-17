@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="hr.res_users_view_form_profile" />
         <field name="arch" type="xml">
             <header position="inside">
-                <button name="%(approvals.approval_category_action_new_request)d"
+                <button name="%(base_approval.approval_category_action_new_request)d"
                     string="Request Approval"
                     type="action" class="btn btn-primary" />
             </header>

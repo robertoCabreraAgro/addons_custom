@@ -8,7 +8,7 @@ from odoo.exceptions import UserError
 
 class TestRequest(common.TransactionCase):
     def test_compute_request_status(self):
-        category_test = self.env.ref("approvals.approval_category_data_business_trip")
+        category_test = self.env.ref("base_approval.approval_category_data_business_trip")
         requester_user = self.env.ref("base.user_admin")
         record = self.env["approval.request"].create(
             {
@@ -76,7 +76,7 @@ class TestRequest(common.TransactionCase):
         self.assertEqual(record.request_status, "new")
 
     def test_compute_request_status_with_required(self):
-        category_test = self.env.ref("approvals.approval_category_data_business_trip")
+        category_test = self.env.ref("base_approval.approval_category_data_business_trip")
         requester_user = self.env.ref("base.user_admin")
         record = self.env["approval.request"].create(
             {
@@ -120,7 +120,7 @@ class TestRequest(common.TransactionCase):
         self.assertEqual(record.request_status, "approved")
 
     def test_product_line_compute_uom(self):
-        category_test = self.env.ref("approvals.approval_category_data_business_trip")
+        category_test = self.env.ref("base_approval.approval_category_data_business_trip")
         uom = self.env.ref("uom.product_uom_dozen")
         product = self.env["product.product"].create(
             {
@@ -146,7 +146,7 @@ class TestRequest(common.TransactionCase):
             {
                 "name": "test request",
                 "category_id": self.env.ref(
-                    "approvals.approval_category_data_business_trip"
+                    "base_approval.approval_category_data_business_trip"
                 ).id,
                 "date_start": fields.Datetime.now(),
                 "date_end": fields.Datetime.now(),
@@ -164,7 +164,7 @@ class TestRequest(common.TransactionCase):
         self.env["ir.model.fields"].create(
             {
                 "name": "x_test_field",
-                "model_id": self.env.ref("approvals.model_approval_request").id,
+                "model_id": self.env.ref("base_approval.model_approval_request").id,
                 "ttype": "binary",
             }
         )
@@ -181,7 +181,7 @@ class TestRequest(common.TransactionCase):
                 {
                     "name": "Approval Request 1",
                     "category_id": self.env.ref(
-                        "approvals.approval_category_data_borrow_items"
+                        "base_approval.approval_category_data_borrow_items"
                     ).id,
                     "date_start": fields.Datetime.now(),
                     "date_end": fields.Datetime.now(),
@@ -190,7 +190,7 @@ class TestRequest(common.TransactionCase):
                 {
                     "name": "Approval Request 1",
                     "category_id": self.env.ref(
-                        "approvals.approval_category_data_borrow_items"
+                        "base_approval.approval_category_data_borrow_items"
                     ).id,
                     "date_start": fields.Datetime.now(),
                     "date_end": fields.Datetime.now(),
@@ -205,9 +205,9 @@ class TestRequest(common.TransactionCase):
             }
         )
 
-        approvals.unlink()
+        base_approval.unlink()
         self.assertFalse(product_line.exists())
-        self.assertFalse(approvals.exists())
+        self.assertFalse(base_approval.exists())
 
     def test_request_with_automated_sequence(self):
         approval_category = self.env["approval.category"].create(

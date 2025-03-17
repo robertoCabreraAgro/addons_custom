@@ -4,7 +4,7 @@ registry.category("web_tour.tours").add("approvals_tour", {
     url: "/odoo",
     steps: () => [
         {
-            trigger: '.o_app[data-menu-xmlid="approvals.approvals_menu_root"]',
+            trigger: '.o_app[data-menu-xmlid="base_approval.approvals_menu_root"]',
             content: "open approvals app",
             run: "click",
         },

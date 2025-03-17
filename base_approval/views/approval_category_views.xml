@@ -68,11 +68,11 @@ action = {
                 js_class="approvals_category_kanban">
                 <field name="active" />
                 <templates>
-                    <t t-name="menu" groups="approvals.group_approval_user">
+                    <t t-name="menu" groups="base_approval.group_approval_user">
                         <a t-if="widget.editable"
                             role="menuitem"
                             type="action"
-                            name="%(approvals.action_open_approval_category)d"
+                            name="%(base_approval.action_open_approval_category)d"
                             class="dropdown-item">Edit</a>
                         <a t-if="record.active.raw_value"
                             role="menuitem"
@@ -96,9 +96,9 @@ action = {
                                 <button name="create_request"
                                     type="object" class="btn btn-primary btn-sm"
                                     context="{'category_id':id}">New Request</button>
-                                <button name="%(approvals.approval_request_action_to_review_category)d"
+                                <button name="%(base_approval.approval_request_action_to_review_category)d"
                                     type="action" class="btn btn-sm btn-secondary ms-auto"
-                                    groups="approvals.group_approval_user">To Review: <field
+                                    groups="base_approval.group_approval_user">To Review: <field
                                         name="count_request_to_validate" /></button>
                             </footer>
                         </main>

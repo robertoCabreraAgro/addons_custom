@@ -22,7 +22,7 @@
 
     <data noupdate="1">
         <record id="base.default_user" model="res.users">
-            <field name="group_ids" eval="[(4, ref('approvals.group_approval_manager'))]" />
+            <field name="group_ids" eval="[(4, ref('base_approval.group_approval_manager'))]" />
         </record>
 
         <!-- Multi-company rules -->
@@ -235,7 +235,7 @@
     </data>
 
     <function model="ir.rule" name="write">
-        <value eval="[ref('approvals.approval_request_unlink_request_owner_rule')]" />
+        <value eval="[ref('base_approval.approval_request_unlink_request_owner_rule')]" />
         <value eval="{'domain_force': '[(\'request_owner_id.id\', \'=\', user.id), (\'request_status\', \'in\', (\'new\', \'cancel\'))]'}" />
     </function>
 </odoo>

@@ -2,7 +2,7 @@
 <odoo noupdate="1">
 
     <record id="base.user_admin" model="res.users">
-        <field eval="[(4, ref('approvals.group_approval_manager'))]" name="group_ids" />
+        <field eval="[(4, ref('base_approval.group_approval_manager'))]" name="group_ids" />
     </record>
 
     <record id="approval_category_data_business_trip" model="approval.category">

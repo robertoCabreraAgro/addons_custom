@@ -76,7 +76,7 @@ class ApprovalApprover(models.Model):
     @api.depends_context("uid")
     @api.depends("user_id", "category_approver")
     def _compute_can_edit(self):
-        is_user = self.env.user.has_group("approvals.group_approval_user")
+        is_user = self.env.user.has_group("base_approval.group_approval_user")
         for approval in self:
             approval.can_edit = (
                 not approval.user_id or not approval.category_approver or is_user
@@ -96,5 +96,5 @@ class ApprovalApprover(models.Model):
     def _create_activity(self):
         for approver in self:
             approver.request_id.activity_schedule(
-                "approvals.mail_activity_data_approval", user_id=approver.user_id.id
+                "base_approval.mail_activity_data_approval", user_id=approver.user_id.id
             )

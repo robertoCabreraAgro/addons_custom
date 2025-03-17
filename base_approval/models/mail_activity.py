@@ -14,7 +14,7 @@ class MailActivity(models.Model):
             return
 
         activity_type_approval_id = self.env.ref(
-            "approvals.mail_activity_data_approval"
+            "base_approval.mail_activity_data_approval"
         )
         for activity in self.filtered(
             lambda activity: activity["res_model"] == "approval.request"

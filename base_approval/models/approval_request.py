@@ -227,7 +227,7 @@ class ApprovalRequest(models.Model):
     def _track_subtype(self, init_values):
         self.ensure_one()
         if "request_status" in init_values:
-            return self.env.ref("approvals.mt_approval_request_status")
+            return self.env.ref("base_approval.mt_approval_request_status")
 
         return super()._track_subtype(init_values)
 
@@ -243,7 +243,7 @@ class ApprovalRequest(models.Model):
     @api.depends_context("uid")
     @api.depends("request_owner_id")
     def _compute_has_access_to_request(self):
-        is_approval_user = self.env.user.has_group("approvals.group_approval_user")
+        is_approval_user = self.env.user.has_group("base_approval.group_approval_user")
         self.can_change_request_owner = is_approval_user
         for request in self:
             request.has_access_to_request = (
@@ -467,7 +467,7 @@ class ApprovalRequest(models.Model):
             (
                 "activity_type_id",
                 "=",
-                self.env.ref("approvals.mail_activity_data_approval").id,
+                self.env.ref("base_approval.mail_activity_data_approval").id,
             ),
             ("user_id", "=", user.id),
         ]
@@ -475,7 +475,7 @@ class ApprovalRequest(models.Model):
         return activities
 
     def _cancel_activities(self):
-        approval_activity = self.env.ref("approvals.mail_activity_data_approval")
+        approval_activity = self.env.ref("base_approval.mail_activity_data_approval")
         activities = self.activity_ids.filtered(
             lambda a: a.activity_type_id == approval_activity
         )

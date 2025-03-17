@@ -14,7 +14,7 @@ class TestUi(HttpCaseWithUserDemo):
                 "email": "mitchell.admin@example.com",
             }
         )
-        self.env.ref("approvals.approval_category_data_business_trip").write(
+        self.env.ref("base_approval.approval_category_data_business_trip").write(
             {
                 "approver_ids": [
                     (5, 0, 0),
