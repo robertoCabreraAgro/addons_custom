@@ -19,7 +19,7 @@
         <field name="model">approval.request</field>
         <field name="inherit_id" ref="approvals.approval_request_view_form" />
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='change_request_owner']" position="after">
+            <xpath expr="//field[@name='can_change_request_owner']" position="after">
                 <field name="has_vehicle" invisible="1" />
                 <field name="has_odometer" invisible="1" />
             </xpath>

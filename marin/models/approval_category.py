@@ -1,6 +1,6 @@
 from odoo import api, fields, models
-from odoo.addons.approvals.models.approval_category import CATEGORY_SELECTION
 
+from odoo.addons.approvals.models.approval_category import CATEGORY_SELECTION
 
 
 class ApprovalCategory(models.Model):
@@ -8,7 +8,6 @@ class ApprovalCategory(models.Model):
 
 
     # Inherited fields
-    company_id = fields.Many2one(required=False)
     approval_type = fields.Selection(
         selection_add=[('fleet_vehicle_log', 'Create fleet log')]
     )
