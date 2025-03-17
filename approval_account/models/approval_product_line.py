@@ -23,6 +23,7 @@ class ApprovalProductLine(models.Model):
         }
         vals = {
             "company_id": self.company_id.id,
+            "journal_id": self.approval_request_id.journal_id.id,
             "partner_id": self.approval_request_id.partner_id.id,
             "invoice_payment_term_id": self.approval_request_id.partner_id.property_supplier_payment_term_id.id,
             "move_type": self.approval_request_id.approval_type,

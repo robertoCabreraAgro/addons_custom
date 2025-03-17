@@ -9,6 +9,10 @@ from odoo.tools.translate import _
 class ApprovalRequest(models.Model):
     _inherit = "approval.request"
 
+    journal_id = fields.Many2one(
+        comodel_name="account.journal",
+        string="Journal",
+    )
     count_account_move = fields.Integer(
         compute="_compute_count_account_move"
     )

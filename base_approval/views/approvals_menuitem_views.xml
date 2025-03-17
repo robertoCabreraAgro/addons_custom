@@ -1,0 +1,81 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+    <menuitem
+        id="approvals_menu_root"
+        name="Approvals"
+        web_icon="approvals,static/description/icon.png"
+        action="approval_category_action_new_request"
+        sequence="255"/>
+
+    <menuitem
+        id="approvals_category_menu_new"
+        name="Dashboard"
+        parent="approvals_menu_root"
+        sequence="1"
+        action="approval_category_action_new_request" />
+
+    <menuitem
+        id="approvals_approval_menu"
+        name="My Approvals"
+        parent="approvals_menu_root"
+        sequence="10" />
+
+    <menuitem
+        id="approvals_request_menu_my"
+        name="My Requests"
+        parent="approvals_approval_menu"
+        sequence="20"
+        action="approval_request_action" />
+
+    <menuitem
+        id="approvals_menu_manager"
+        name="Manager"
+        parent="approvals_menu_root"
+        sequence="20" />
+
+    <menuitem
+        id="approvals_approval_menu_to_review"
+        name="Approvals to Review"
+        parent="approvals_menu_manager"
+        sequence="10"
+        action="approval_request_action_to_review" />
+
+    <menuitem
+        id="approvals_approval_menu_all"
+        name="All Approvals"
+        parent="approvals_menu_manager"
+        sequence="20"
+        action="approval_request_action_all" />
+
+    <menuitem
+        id="approvals_menu_config"
+        name="Configuration"
+        parent="approvals_menu_root"
+        sequence="40"
+        groups="group_approval_manager" />
+
+    <menuitem
+        id="approvals_category_menu_config"
+        name="Approval Categories"
+        parent="approvals_menu_config"
+        sequence="10"
+        action="approval_category_action"
+        groups="group_approval_manager" />
+
+    <menuitem
+        id="approvals_menu_product_template"
+        name="Products"
+        parent="approvals_menu_config"
+        sequence="30"
+        action="product_template_action" />
+
+    <menuitem
+        id="approvals_menu_product_variant"
+        name="Product Variants"
+        parent="approvals_menu_config"
+        sequence="40"
+        action="product_product_action"
+        groups="product.group_product_variant" />
+
+</odoo>

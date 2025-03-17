@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="approval_search_view_search" model="ir.ui.view">
+        <field name="name">approval.request.search</field>
+        <field name="model">approval.request</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+                <field name="request_owner_id" />
+                <field name="partner_id" />
+                <filter name="filter_my_request" string="My Request"
+                    domain="[('request_owner_id', '=', uid)]" />
+                <filter name="filter_approvals_to_review" string="My Approvals to Review"
+                    domain="[('approver_ids.user_id', '=', uid), ('request_status', '=', 'pending')]" />
+                <separator />
+                <filter name="filter_approved_requests" string="Approved"
+                    domain="[('request_status', '=', 'approved')]" />
+                <filter name="filter_refused_requests" string="Refused"
+                    domain="[('request_status', '=', 'refused')]" />
+                <separator />
+                <filter name="filter_canceled_requests" string="Canceled"
+                    domain="[('request_status', '=', 'cancel')]" />
+                <group string="Group By">
+                    <filter name="groupby_request_owner" string="Request Owner"
+                        context="{'group_by': 'request_owner_id'}" />
+                    <filter name="groupby_category_id" string="Category"
+                        context="{'group_by': 'category_id'}" />
+                    <filter name="groupby_date" string="Date"
+                        context="{'group_by': 'date'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="approval_request_view_tree" model="ir.ui.view">
+        <field name="name">approval.request.view.list</field>
+        <field name="model">approval.request</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <list sample="1" decoration-info="request_status == 'new'">
+                <field name="category_id" optional="show" />
+                <field name="name" />
+                <field name="request_owner_id" widget="many2one_avatar_user" />
+                <field name="date" string="Date" optional="show" />
+                <field name="date_start" string="Request Start" optional="hide" />
+                <field name="date_end" string="Request To" optional="hide" />
+                <field name="date_confirmed" string="Confirm Date" optional="hide" />
+                <field name="location" string="Location" optional="hide" />
+                <field name="amount" string="Location" optional="show" />
+                <field name="activity_ids" widget="list_activity" optional="hide" />
+                <field name="user_ids" string="Approvers" widget="many2many_avatar_user"
+                    optional="hide" />
+                <field name="request_status" widget="badge"
+                    decoration-info="request_status == 'new'"
+                    decoration-warning="request_status == 'pending'"
+                    decoration-success="request_status == 'approved'"
+                    decoration-danger="request_status == 'refused'" />
+                <field name="company_id" readonly="True"
+                    optional="hide"
+                    groups="base.group_multi_company" />
+            </list>
+        </field>
+    </record>
+
+    <record id="approval_request_view_kanban" model="ir.ui.view">
+        <field name="name">approval.request.view.kanban</field>
+        <field name="model">approval.request</field>
+        <field name="arch" type="xml">
+            <kanban create="false" class="o_modules_kanban" default_group_by="request_status"
+                default_order="create_date desc"
+                group_create="false" group_edit="false" group_delete="false" sample="1">
+                <field name="request_status" />
+                <field name="user_status" />
+                <templates>
+                    <t t-name="menu">
+                        <a t-if="widget.editable" role="menuitem" type="open" class="dropdown-item"
+                            >Edit Request</a>
+                        <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item"
+                           >Delete</a>
+                        <a name="action_approve" role="menuitem" type="object" class="dropdown-item"
+                            invisible="user_status != 'pending'"
+                            >Approve</a>
+                        <a name="action_refuse" role="menuitem" type="object" class="dropdown-item"
+                            invisible="user_status != 'pending'"
+                            >Refuse</a>
+                        <a name="action_withdraw" role="menuitem" type="object" class="dropdown-item"
+                            invisible="request_status == 'new' or user_status in ['waiting', 'pending', 'cancel']"
+                           >Withdraw</a>
+                    </t>
+                    <t t-name="card">
+                        <div class="ribbon ribbon-top-right"
+                            invisible="user_status not in ['pending', 'approved', 'refused', 'cancel']">
+                            <field name="user_status"
+                                t-if="record.user_status.raw_value == 'pending'"
+                                class="text-bg-info" />
+                            <field name="user_status"
+                                t-if="record.user_status.raw_value == 'approved'"
+                                class="text-bg-success" />
+                            <field name="user_status"
+                                t-if="record.user_status.raw_value == 'refused'"
+                                class="text-bg-danger" />
+                            <field name="user_status"
+                                t-if="record.user_status.raw_value == 'cancel'"
+                                class="text-bg-warning" />
+                        </div>
+                        <field name="name" class="fw-bolder fs-5" />
+                        <field name="category_id" class="text-muted" />
+                        <div class="d-flex text-muted">
+                            <field name="date_start" options="{'show_time': false}" class="me-1" />-<field
+                                name="date_end" options="{'show_time': false}" class="ms-1" />
+                        </div>
+                        <footer class="pt-0">
+                            <field name="activity_ids" widget="kanban_activity" />
+                            <field name="request_owner_id" widget="many2one_avatar_user"
+                                class="ms-auto" />
+                        </footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="approval_request_view_form" model="ir.ui.view">
+        <field name="name">approval.request.view.form</field>
+        <field name="model">approval.request</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <form string="Request">
+                <header>
+                    <field name="user_status"
+                        invisible="1" />
+                    <field name="has_access_to_request"
+                        invisible="1" />
+                    <widget name="attach_document" string="Attach Document"
+                        action="message_post"
+                        highlight="1"
+                        invisible="(attachment_number &gt;= 1 and request_owner_id == uid) or request_owner_id != uid" />
+                    <button name="action_confirm" string="Submit"
+                        type="object" class="btn-primary"
+                        data-hotkey="q"
+                        invisible="attachment_number &lt; 1 or not approver_ids or request_status != 'new'" />
+                    <button name="action_confirm" string="Submit"
+                        type="object"
+                        data-hotkey="q"
+                        invisible="attachment_number &gt;= 1 or not approver_ids or request_status != 'new'" />
+                    <button name="action_approve" string="Approve"
+                        type="object" class="btn-primary"
+                        data-hotkey="v"
+                        invisible="(attachment_number &lt; 1 and request_owner_id == uid) or request_status in ['approved', 'refused', 'cancel'] or user_status != 'pending'" />
+                    <button name="action_approve" string="Approve"
+                        type="object" class="btn-primary"
+                        data-hotkey="v"
+                        invisible="attachment_number &gt;= 1 or request_owner_id != uid or request_status in ['approved', 'refused', 'cancel'] or user_status != 'pending'" />
+                    <button name="action_refuse" string="Refuse"
+                        type="object"
+                        data-hotkey="z"
+                        invisible="request_status in ['approved', 'refused', 'cancel'] or user_status != 'pending'" />
+                    <button name="action_withdraw" string="Withdraw"
+                        type="object"
+                        data-hotkey="y"
+                        invisible="request_status == 'new' or user_status in ['waiting', 'pending', 'cancel'] or not user_status" />
+                    <button name="action_draft" string="Back To Draft"
+                        type="object"
+                        data-hotkey="w"
+                        invisible="request_status != 'cancel' or not user_status and not has_access_to_request" />
+                    <button name="action_cancel" string="Cancel"
+                        type="object"
+                        data-hotkey="x"
+                        invisible="request_status in ['new', 'cancel'] or not user_status and not has_access_to_request or request_owner_id != uid" />
+                    <widget name="attach_document" string="Attach Document"
+                        action="message_post"
+                        invisible="(attachment_number &lt; 1 and request_owner_id == uid)" />
+                    <button name="%(action_report_approval_request)d" string="Print"
+                        type="action"
+                        invisible="request_status != 'approved' or approval_type !='purchase'" />
+                    <field name="request_status" widget="statusbar"
+                        statusbar_visible="new,pending,approved,refused" />
+                </header>
+                <sheet>
+                    <field name="has_date" invisible="1" />
+                    <field name="has_date_deadline" invisible="1" />
+                    <field name="has_period" invisible="1" />
+                    <field name="has_quantity" invisible="1" />
+                    <field name="has_amount" invisible="1" />
+                    <field name="has_reference" invisible="1" />
+                    <field name="has_partner" invisible="1" />
+                    <field name="has_payment_method" invisible="1" />
+                    <field name="has_location" invisible="1" />
+                    <field name="has_product" invisible="1" />
+                    <field name="requirer_document" invisible="1" />
+                    <field name="approval_minimum" invisible="1" />
+                    <field name="approval_type" invisible="1" />
+                    <field name="can_change_request_owner" invisible="1" />
+                    <div name="button_box" class="o_not_full oe_button_box">
+                        <button name="action_get_attachment_view"
+                            type="object" class="oe_stat_button"
+                            icon="fa-book"
+                            invisible="attachment_number == 0">
+                            <field name="attachment_number" string="Documents" widget="statinfo"
+                                options="{'reload_on_button': true}" />
+                        </button>
+                    </div>
+                    <div class="oe_avatar">
+                        <field name="category_image" widget="image"
+                            class="bg-view"
+                            options="{'preview_image': 'category_image', 'size': [80, 80]}" />
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" />
+                        <h1>
+                            <field name="automated_sequence" invisible="1" />
+                            <field name="name" placeholder="E.g: Expenses Paris business trip"
+                                required="not automated_sequence"
+                                readonly="automated_sequence" />
+                        </h1>
+                    </div>
+                    <group name="group_main">
+                        <group name="request_main">
+                            <field name="category_id" readonly="request_status != 'new'"
+                                force_save="1" />
+                            <field name="partner_id"
+                                required="has_partner == 'required'"
+                                readonly="request_status != 'new'"
+                                context="{'category_id': ''}"
+                                invisible="has_partner == 'no'" />
+                            <field name="request_owner_id" widget="many2one_avatar_user"
+                                domain="[('share', '=', False), ('company_ids', 'in', company_id)]"
+                                readonly="not can_change_request_owner or request_status != 'new'" />
+                            <field name="reference"
+                                required="has_reference == 'required'"
+                                invisible="has_reference == 'no'" />
+                            <field name="location"
+                                required="has_location == 'required'"
+                                placeholder="e.g. Brussels"
+                                readonly="request_status != 'new'"
+                                invisible="has_location == 'no'" />
+                        </group>
+                        <group name="request_details">
+                            <label for="date" string="Date" invisible="has_date == 'no'" />
+                            <div invisible="has_date == 'no'">
+                                <div>
+                                    <field name="date" class="oe_inline"
+                                        required="has_date == 'required'"
+                                        readonly="request_status != 'new'" />
+                                </div>
+                            </div>
+                            <label for="date_deadline" string="Date Deadline" invisible="has_date_deadline == 'no'" />
+                            <div invisible="has_date_deadline == 'no'">
+                                <div>
+                                    <field name="date_deadline" class="oe_inline"
+                                        required="has_date_deadline == 'required'"
+                                        readonly="request_status != 'new'" />
+                                </div>
+                            </div>
+                            <label for="date_start" string="Period" invisible="has_period == 'no'" />
+                            <div invisible="has_period == 'no'">
+                                <div>
+                                    <label for="date_start" class="col-lg-2" string="From:" />
+                                    <field name="date_start" required="has_period == 'required'"
+                                        readonly="request_status != 'new'"
+                                        class="oe_inline" />
+                                </div>
+                                <div>
+                                    <label for="date_end" class="col-lg-2" string="to:" />
+                                    <field name="date_end"
+                                        required="has_period == 'required'"
+                                        readonly="request_status != 'new'"
+                                        class="oe_inline" />
+                                </div>
+                            </div>
+                            <field name="date_confirmed" readonly="1" groups="base.group_no_one" />
+                            <field name="quantity"
+                                required="has_quantity == 'required' and has_product == 'no'"
+                                readonly="request_status != 'new'"
+                                invisible="has_quantity == 'no' or has_product != 'no'" />
+                            <field name="amount" invisible="has_amount == 'no'"
+                                required="has_amount == 'required'"
+                                readonly="request_status != 'new'"/>
+                            <field name="company_id" invisible="1" />
+                            <field name="company_id" groups="base.group_multi_company" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="products" string="Products"
+                            invisible="has_product == 'no'">
+                            <field name="product_line_ids"
+                                readonly="request_status != 'new'"
+                                context="{
+                                    'list_view_ref': 'approvals.approval_product_line_view_tree',
+                                    'kanban_view_ref': 'approvals.approval_product_kanban_mobile_view'
+                                }" />
+                        </page>
+                        <page name="approvers" string="Approver(s)">
+                            <field name="approver_ids" mode="list,kanban"
+                                readonly="request_status != 'new'">
+                                <list
+                                    editable="bottom"
+                                    no_open="1"
+                                    decoration-success="status=='approved'"
+                                    decoration-warning="status in ['pending', 'waiting']"
+                                    decoration-danger="status=='refused'">
+                                    <field name="can_edit" column_invisible="True" />
+                                    <field name="can_edit_user_id" column_invisible="True" />
+                                    <field name="company_id" column_invisible="True" />
+                                    <field name="existing_request_user_ids" column_invisible="True" />
+                                    <field name="sequence" column_invisible="True" />
+                                    <field name="user_id" string="Approver"
+                                        readonly="not can_edit_user_id or status != 'new'"
+                                        force_save="1" />
+                                    <field name="required" readonly="not can_edit" force_save="1" />
+                                    <field name="status" />
+                                </list>
+                                <kanban class="o_kanban_mobile">
+                                    <templates>
+                                        <t t-name="card" class="flex-row">
+                                            <field name="user_id" />
+                                            <t t-if="record.status.raw_value">
+                                                <t t-set="classname"
+                                                    t-value="{'approved': 'text-bg-success', 'pending': 'text-bg-warning', 'refused': 'text-bg-danger'}[record.status.raw_value] || 'text-bg-light'" />
+                                                <span
+                                                    t-attf-class="ms-auto rounded-pill {{ classname }}">
+                                                    <field name="status" />
+                                                </span>
+                                            </t>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                                <form>
+                                    <group>
+                                        <field name="company_id" invisible="1" />
+                                        <field name="existing_request_user_ids" invisible="1" />
+                                        <field name="user_id" />
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                        <page name="description" string="Description">
+                            <field name="reason" readonly="request_status != 'new'" />
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="o_attachment_preview" />
+                <chatter />
+            </form>
+        </field>
+    </record>
+
+    <record id="approval_request_action" model="ir.actions.act_window">
+        <field name="name">My Requests</field>
+        <field name="res_model">approval.request</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('request_owner_id','=',uid)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Approvals Requests
+            </p>
+            <p> Let's go to the <a type="action" class="text-primary"
+                    name="%(approvals.approval_category_action_new_request)d">new request</a> menu </p>
+        </field>
+    </record>
+
+    <record id="approval_request_action_to_review" model="ir.actions.act_window">
+        <field name="name">Approvals to Review</field>
+        <field name="res_model">approval.request</field>
+        <field name="view_mode">list,form,kanban</field>
+        <field name="domain">['&amp;',('approver_ids.user_id','=',uid),('request_status','=','pending')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No new approvals to review
+            </p>
+        </field>
+    </record>
+
+    <record id="approval_request_action_all" model="ir.actions.act_window">
+        <field name="name">All Approvals</field>
+        <field name="res_model">approval.request</field>
+        <field name="view_mode">list,form,kanban</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Approvals
+            </p>
+            <p> Let's go to the <a type="action" class="text-primary"
+                    name="%(approvals.approval_category_action_new_request)d">new request</a> menu </p>
+        </field>
+    </record>
+
+</odoo>

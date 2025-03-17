@@ -1,15 +1,17 @@
 import base64
 import hashlib
 import logging
-from datetime import datetime, timedelta
-
 import requests
+
+from datetime import datetime, timedelta
 from lxml import etree, objectify
 from OpenSSL import crypto
 
-from odoo import Command, _, models, tools
+from odoo import models, tools
 from odoo.exceptions import ValidationError
+from odoo.fields import Command
 from odoo.tools.float_utils import float_round
+from odoo.tools.translate import _
 
 TYPE_CFDI22_TO_CFDI33 = {
     "ingreso": "I",
