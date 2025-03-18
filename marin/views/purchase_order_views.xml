@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
+
     <record id="purchase_order_view_search_marin" model="ir.ui.view">
         <field name="name">purchase.order.select.inherit</field>
         <field name="model">purchase.order</field>
@@ -129,6 +130,16 @@
         <field name="inherit_id" ref="purchase.purchase_order_form" />
         <field name="priority" eval="100" />
         <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_view_invoice']" position="after">
+                <button name="action_view_approval"
+                    type="object" class="oe_stat_button"
+                    icon="fa-credit-card"
+                    invisible="count_approval == 0"
+                    groups="base_approval.group_approval_user">
+                    <field name="count_approval" string="Approval"
+                        groups="base_approval.group_approval_user" widget="statinfo" />
+                </button>
+            </xpath>
             <xpath expr="//button[@name='action_view_picking']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>

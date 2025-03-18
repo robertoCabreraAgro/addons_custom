@@ -1,7 +1,9 @@
-from odoo import Command, _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
+from odoo.fields import Command
 from odoo.tools.float_utils import float_compare
 from odoo.tools.misc import formatLang
+from odoo.tools.translate import _
 
 
 class AccountMove(models.Model):
@@ -47,6 +49,9 @@ class AccountMove(models.Model):
     pos_session_origin_id = fields.Many2one(
         comodel_name="pos.session",
         string="POS session",
+    )
+    count_approval = fields.Integer(
+        compute="_compute_count_approval",
     )
 
 
@@ -118,7 +123,7 @@ class AccountMove(models.Model):
             move.invoice_date = invoice_date
 
     # Exxtend original method
-    @api.depends('needed_terms')
+    @api.depends("needed_terms")
     def _compute_invoice_date_due(self):
         for move in self:
             if (
@@ -159,17 +164,17 @@ class AccountMove(models.Model):
 
     # Override original method
     @api.depends(
-        'partner_id',
-        'l10n_mx_edi_is_cfdi_needed',
-        'l10n_mx_edi_cfdi_origin',
+        "partner_id",
+        "l10n_mx_edi_is_cfdi_needed",
+        "l10n_mx_edi_cfdi_origin",
     )
     def _compute_l10n_mx_edi_cfdi_to_public(self):
         for move in self:
             if (
-                move.move_type == 'out_refund'
-                and 'global_sent' in set(
+                move.move_type == "out_refund"
+                and "global_sent" in set(
                     move._l10n_mx_edi_get_refund_original_invoices()\
-                    .mapped('l10n_mx_edi_cfdi_state')
+                    .mapped("l10n_mx_edi_cfdi_state")
                 )
             ):
                 move.l10n_mx_edi_cfdi_to_public = True
@@ -178,12 +183,12 @@ class AccountMove(models.Model):
                 and move.l10n_mx_edi_is_cfdi_needed
                 and not move.l10n_mx_edi_cfdi_to_public
             ):
-                cfdi_values = self.env['l10n_mx_edi.document']._get_company_cfdi_values(move.company_id)
-                self.env['l10n_mx_edi.document']._add_customer_cfdi_values(
+                cfdi_values = self.env["l10n_mx_edi.document"]._get_company_cfdi_values(move.company_id)
+                self.env["l10n_mx_edi.document"]._add_customer_cfdi_values(
                     cfdi_values,
                     customer=move.partner_id,
                 )
-                move.l10n_mx_edi_cfdi_to_public = cfdi_values['receptor']['rfc'] == 'XAXX010101000'
+                move.l10n_mx_edi_cfdi_to_public = cfdi_values["receptor"]["rfc"] == "XAXX010101000"
             else:
                 move.l10n_mx_edi_cfdi_to_public = False
 
@@ -218,6 +223,13 @@ class AccountMove(models.Model):
                     move.l10n_mx_edi_payment_policy = "PPD"
                     if move.force_payment_policy_pue:
                         move.l10n_mx_edi_payment_policy = "PUE"
+
+    def _compute_count_approval(self):
+        for move in self:
+            approvals = self.env["approval.product.line"].search(
+                [("account_move_id", "=", move.id)]
+            ).mapped("approval_request_id")
+            move.count_approval = len(approvals)
 
     @api.onchange("journal_id")
     def _onchange_journal_id_show_update_lines(self):
@@ -298,7 +310,7 @@ class AccountMove(models.Model):
         self.line_ids._compute_account_id()
         self.show_update_line_account = False
 
-    def action_open_move_lines(self):
+    def action_view_move_lines(self):
         return {
             "name": _("Move Lines"),
             "type": "ir.actions.act_window",
@@ -331,6 +343,25 @@ class AccountMove(models.Model):
             "target": "new",
             "context": {"active_model": "account.move", "active_ids": self.ids},
         }
+
+    def action_view_approval(self):
+        self.ensure_one()
+        approvals_ids = self.env["approval.product.line"].search(
+            [("account_move_id", "=", self.id)]
+        ).mapped("approval_request_id").ids
+        domain = [("id", "in", approvals_ids)]
+        action = {
+            "name": _("Approvals"),
+            "type": "ir.actions.act_window",
+            "res_model": "approval.request",
+            "view_mode": "list,form",
+            "view_type": "list",
+            "context": clean_context(
+                self.env.context
+            ),  # avoid 'default_name' context key propagation
+            "domain": domain,
+        }
+        return action
 
     def _prepare_purchase_order_vals(self):
         self.ensure_one()

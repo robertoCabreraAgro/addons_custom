@@ -12,13 +12,14 @@ from . import account_payment_term
 from . import documents_document
 from . import documents_tag
 from . import fleet_vehicle
-# from . import fleet_vehicle_log
+from . import fleet_vehicle_log
 from . import hr_contract
 from . import hr_payslip
 from . import hr_payslip_run
 from . import mrp_bom
-# from . import approval_category
-# from . import approval_request
+from . import approval_category
+from . import approval_request
+from . import approval_product_line
 from . import mrp_production
 from . import pos_config
 from . import pos_order

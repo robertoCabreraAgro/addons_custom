@@ -127,7 +127,7 @@ action = {
                     </div>
                     <group name="group_one">
                         <group name="left_group" string="Type">
-                            <field name="approval_type" invisible="1" />
+                            <field name="approval_type" />
                         </group>
                         <group name="right_group" string="Sequence">
                             <field name="automated_sequence" />
@@ -159,9 +159,11 @@ action = {
                                         options="{'horizontal': true}" />
                                     <field name="has_period" string="Period" widget="radio"
                                         options="{'horizontal': true}" />
-                                    <field name="has_product" string="Product" force_save="1"
-                                        widget="radio" options="{'horizontal': true}" />
+                                    <field name="has_product" string="Product" widget="radio"
+                                        force_save="1"
+                                        options="{'horizontal': true}" />
                                     <field name="has_quantity" string="Quantity" widget="radio"
+                                        force_save="1"
                                         options="{'horizontal': true}" />
                                     <field name="has_amount" string="Amount" widget="radio"
                                         options="{'horizontal': true}" />

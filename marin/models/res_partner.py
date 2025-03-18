@@ -1,7 +1,8 @@
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.tools.misc import formatLang
+from odoo.tools.translate import _
 
 
 class ResPartner(models.Model):
@@ -93,11 +94,11 @@ class ResPartner(models.Model):
         "Social style color"
     )
     team_id = fields.Many2one(
-        'crm.team',
-        'Sales Team',
-        compute='_compute_team_id', store=True, precompute=True,  # avoid queries post-create
+        "crm.team",
+        "Sales Team",
+        compute="_compute_team_id", store=True, precompute=True,  # avoid queries post-create
         readonly=False,
-        ondelete='set null',
+        ondelete="set null",
     )
 
     def _prepare_compute_group(self):
@@ -117,12 +118,12 @@ class ResPartner(models.Model):
             vals = self._prepare_compute_group()
             partner.update(vals)
 
-    @api.depends('parent_id')
+    @api.depends("parent_id")
     def _compute_team_id(self):
         for partner in self.filtered(
             lambda partner: 
                 not partner.team_id
-                and partner.company_type == 'person'
+                and partner.company_type == "person"
                 and partner.parent_id.team_id
         ):
             partner.team_id = partner.parent_id.team_id

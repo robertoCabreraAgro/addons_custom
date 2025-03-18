@@ -78,7 +78,6 @@ class ApprovalRequest(models.Model):
         self._create_purchase_orders()
         self._log_po_creation_to_chatter()
 
-
     def _create_purchase_orders(self):
         for line in self.product_line_ids:
             #pol_domain = line._get_purchase_order_line_for_approval_matching_domain()
