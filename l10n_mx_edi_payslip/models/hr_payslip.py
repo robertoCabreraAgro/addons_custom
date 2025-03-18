@@ -477,7 +477,7 @@ class HrPayslip(models.Model):
             ).write({"payslip_id": record.id})
             record._l10n_mx_edi_update_expedition_date()
             record.l10n_mx_edi_cfdi_name = "%s-MX-Payroll-%s.xml" % (
-                (record.number).replace("/", ""),
+                (record.name).replace("/", ""),
                 version,
             )
             # Prepare to send sign
