@@ -15,24 +15,34 @@ class TestRayaListReport(L10nMxEdiPayslipTransactionCase):
                 "date_end": "2024-01-31",
             }
         )
-        self.payslip_record = self.create_payroll(date_from="2024-01-01", date_to="2024-01-31")
+        self.payslip_record = self.create_payroll(
+            date_from="2024-01-01", date_to="2024-01-31"
+        )
         self.payslip_record.payslip_run_id = self.payslip_run_record.id
 
     def test_001_department_defined(self):
         """Ensure that when the department is defined directly in the payslip record,
         the report includes this department in the batch values."""
         self.payslip_record.write({"department_id": self.employee.department_id.id})
-        report_values = self.raya_list_report._get_report_values(docids=[self.payslip_run_record.id])
+        report_values = self.raya_list_report._get_report_values(
+            docids=[self.payslip_run_record.id]
+        )
         batches = report_values.get("batches")
         self.assertIn(self.payslip_run_record, batches)
-        self.assertIn(self.employee.department_id.name, batches[self.payslip_run_record])
-        self.assertTrue(batches[self.payslip_run_record][self.employee.department_id.name])
+        self.assertIn(
+            self.employee.department_id.name, batches[self.payslip_run_record]
+        )
+        self.assertTrue(
+            batches[self.payslip_run_record][self.employee.department_id.name]
+        )
 
     def test_002_without_department(self):
         """Ensure that when the department is not defined in the payslip,
         the report includes the department "Without Department" in the batch values."""
         self.payslip_record.write({"department_id": False})
-        report_values = self.raya_list_report._get_report_values(docids=[self.payslip_run_record.id])
+        report_values = self.raya_list_report._get_report_values(
+            docids=[self.payslip_run_record.id]
+        )
         batches = report_values.get("batches")
         self.assertIn(self.payslip_run_record, batches)
         self.assertIn("Without Department", batches[self.payslip_run_record])

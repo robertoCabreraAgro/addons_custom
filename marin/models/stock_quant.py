@@ -11,12 +11,15 @@ class StockQuant(models.Model):
     warehouse_id = fields.Many2one(store=True, readonly=True)
 
     # New fields
-    removal_priority = fields.Integer(related="location_id.removal_priority", store=True)
-
+    removal_priority = fields.Integer(
+        related="location_id.removal_priority", store=True
+    )
 
     def _apply_inventory_group_validate(self):
         if not self.env.user.has_group("marin.group_stock_inventory_adjustment"):
-            raise UserError(_("Only a inventory manager can validate an inventory adjustment."))
+            raise UserError(
+                _("Only a inventory manager can validate an inventory adjustment.")
+            )
 
     # Extend original method
     def _apply_inventory(self):
@@ -26,7 +29,10 @@ class StockQuant(models.Model):
     # Extend original method
     @api.model
     def _get_removal_strategy(self, product_id, location_id):
-        if not product_id.categ_id.removal_strategy_id and not location_id.removal_strategy_id:
+        if (
+            not product_id.categ_id.removal_strategy_id
+            and not location_id.removal_strategy_id
+        ):
             return "fefo + priority"
         return super()._get_removal_strategy(product_id, location_id)
 
@@ -46,6 +52,8 @@ class StockQuant(models.Model):
             raise UserError(_("You can only change lots used by a single company."))
         if len(self) > 1:
             raise UserError(_("You can only change lot of one quant at a time."))
-        action = self.env["ir.actions.act_window"]._for_xml_id("marin.action_stock_quant_lot_update")
+        action = self.env["ir.actions.act_window"]._for_xml_id(
+            "marin.action_stock_quant_lot_update"
+        )
         action["context"] = {"active_model": self._name, "active_ids": self.ids}
         return action

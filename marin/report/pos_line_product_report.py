@@ -8,20 +8,24 @@ class PosLineProductReport(models.Model):
     _description = "PoS Report by Product"
     _auto = False
 
-
     config_id = fields.Many2one("pos.config", string="Terminal", readonly=True)
     product_id = fields.Many2one("product.product", readonly=True)
     product_categ_id = fields.Many2one("product.category", readonly=True)
     quarter = fields.Integer(readonly=True)
-    quarter_str = fields.Selection([("1", "1"), ("2", "2"), ("3", "3"), ("4", "4")], readonly=True)
+    quarter_str = fields.Selection(
+        [("1", "1"), ("2", "2"), ("3", "3"), ("4", "4")], readonly=True
+    )
     name = fields.Char(readonly=True)
     total_qty = fields.Float("Cantidad venta tpv", readonly=True)  # Field 1
     cost_purchase_total = fields.Float(readonly=True)
-    average_real_cost = fields.Float("Precio compra promedio tpv", readonly=True, aggregator="avg")  # Field 2
-    average_sale_price = fields.Float("Precio venta promedio tpv", readonly=True, aggregator="avg")  # Field 3
+    average_real_cost = fields.Float(
+        "Precio compra promedio tpv", readonly=True, aggregator="avg"
+    )  # Field 2
+    average_sale_price = fields.Float(
+        "Precio venta promedio tpv", readonly=True, aggregator="avg"
+    )  # Field 3
     sale_price_total = fields.Float("Valor ventas tpv", readonly=True)  # Field 4
     real_margin_value = fields.Float("Valor margen real", readonly=True)  # Field 5
-
 
     def _query(self):
         return """
@@ -101,9 +105,7 @@ class PosLineProductReport(models.Model):
         self._cr.execute(f"DROP MATERIALIZED view IF EXISTS {table} CASCADE")
         if self._context.get("with_data"):
             # When calling with that context it will create the view and populate it
-            self._cr.execute(
-                f"CREATE MATERIALIZED VIEW {table} AS ({query})"
-            )
+            self._cr.execute(f"CREATE MATERIALIZED VIEW {table} AS ({query})")
         else:
             # To avoid long time to update the module we create the view without data
             # and later be populated by the cron that executes the method refresh_concurrently()

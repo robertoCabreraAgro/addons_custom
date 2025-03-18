@@ -5,7 +5,11 @@ class AccountAnalyticLine(models.Model):
     _inherit = "account.analytic.line"
 
     vehicle_id = fields.Many2one(
-        "fleet.vehicle", "Vehicle", compute="_compute_vehicle_id", store=True, check_company=True
+        "fleet.vehicle",
+        "Vehicle",
+        compute="_compute_vehicle_id",
+        store=True,
+        check_company=True,
     )
 
     @api.depends("move_line_id.vehicle_id")

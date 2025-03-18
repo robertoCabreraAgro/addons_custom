@@ -4,7 +4,6 @@ from odoo import models
 class StockMoveLine(models.Model):
     _inherit = "stock.move.line"
 
-
     def _reservation_is_updatable(self, quantity, reserved_quant):
         res = super()._reservation_is_updatable(quantity, reserved_quant)
         if (

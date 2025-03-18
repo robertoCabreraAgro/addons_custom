@@ -6,7 +6,6 @@ class SyngentaStockReportLine(models.Model):
     _order = "sequence, id"
     _description = "Inventory report line send to Syngenta"
 
-
     company_id = fields.Many2one(
         "res.company",
         required=True,
@@ -25,10 +24,11 @@ class SyngentaStockReportLine(models.Model):
     date_inventory = fields.Date("Inventory Date")
     sequence = fields.Integer(default=10)
 
-
     def _get_json_line(self):
         self.ensure_one()
-        inventory_date = (self.date_inventory or self.env.context.get("inventory_date")).strftime("%Y-%m-%d") or ""
+        inventory_date = (
+            self.date_inventory or self.env.context.get("inventory_date")
+        ).strftime("%Y-%m-%d") or ""
         return {
             "fecha_Inventario": inventory_date,  # YYYY-MM-DD
             "linea_Negocio": "",  # Not required

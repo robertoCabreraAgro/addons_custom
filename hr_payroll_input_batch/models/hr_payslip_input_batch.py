@@ -41,7 +41,12 @@ class HrPayslipInputBatch(models.Model):
         tracking=True,
     )
     lines_count = fields.Integer(compute="_compute_lines_count")
-    company_id = fields.Many2one("res.company", required=True, readonly=True, default=lambda self: self.env.company)
+    company_id = fields.Many2one(
+        "res.company",
+        required=True,
+        readonly=True,
+        default=lambda self: self.env.company,
+    )
 
     @api.depends("detail_ids")
     def _compute_lines_count(self):

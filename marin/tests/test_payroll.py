@@ -18,8 +18,8 @@ class TestHRPayroll(L10nMxEdiPayslipTransactionCase):
                 "date_end": cls.date,
             }
         )
-        cls.env.ref("l10n_mx_edi_payslip.mx_employee_qdp").work_contact_id = cls.env.ref(
-            "l10n_mx_edi_payslip.res_partner_address_mx_qdp"
+        cls.env.ref("l10n_mx_edi_payslip.mx_employee_qdp").work_contact_id = (
+            cls.env.ref("l10n_mx_edi_payslip.res_partner_address_mx_qdp")
         )
 
     def test_01_payroll_l10n_mx_edi_is_required(self):
@@ -64,7 +64,10 @@ class TestHRPayroll(L10nMxEdiPayslipTransactionCase):
         payroll.compute_sheet()
         payroll.action_payslip_done()
         values = payroll._l10n_mx_edi_create_cfdi_values()
-        self.assertEqual(sum(payroll.worked_days_line_ids.mapped("number_of_days")), values["number_of_days"])
+        self.assertEqual(
+            sum(payroll.worked_days_line_ids.mapped("number_of_days")),
+            values["number_of_days"],
+        )
 
     def test_04_payroll_run_create_moves(self):
         payroll = self.create_payroll()
@@ -75,13 +78,20 @@ class TestHRPayroll(L10nMxEdiPayslipTransactionCase):
     def test_05_payroll_action_payslip_move_post(self):
         payroll = self.create_payroll()
         payroll.compute_sheet()
-        self.env.user.group_ids = [(3, self.env.ref("l10n_mx_edi_payslip.allow_validate_payslip").id)]
+        self.env.user.group_ids = [
+            (3, self.env.ref("l10n_mx_edi_payslip.allow_validate_payslip").id)
+        ]
         with self.assertRaisesRegex(
-            UserError, "Only Managers who are allow to validate payslip can perform this operation"
+            UserError,
+            "Only Managers who are allow to validate payslip can perform this operation",
         ):
             payroll.action_payslip_move_post()
-        self.env.user.group_ids = [(4, self.env.ref("l10n_mx_edi_payslip.allow_validate_payslip").id)]
-        with self.assertRaisesRegex(UserError, "Cannot post a payslip's account move that is not done."):
+        self.env.user.group_ids = [
+            (4, self.env.ref("l10n_mx_edi_payslip.allow_validate_payslip").id)
+        ]
+        with self.assertRaisesRegex(
+            UserError, "Cannot post a payslip's account move that is not done."
+        ):
             payroll.action_payslip_move_post()
         self.assertFalse(payroll.move_id)
         payroll.action_payslip_done()

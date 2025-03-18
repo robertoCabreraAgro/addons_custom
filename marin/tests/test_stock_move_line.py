@@ -57,7 +57,9 @@ class TestStockMoveLine(TestStockCommon):
                 "owner_id": cls.partner.id,
             }
         )
-        cls.picking_type_internal = cls.env["ir.model.data"]._xmlid_to_res_id("stock.picking_type_internal")
+        cls.picking_type_internal = cls.env["ir.model.data"]._xmlid_to_res_id(
+            "stock.picking_type_internal"
+        )
         cls.shelf2 = cls.env["stock.location"].create(
             {
                 "name": "Shelf 2",

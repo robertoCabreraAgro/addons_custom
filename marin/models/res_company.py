@@ -5,16 +5,10 @@ from odoo.osv import expression
 class ResCompany(models.Model):
     _inherit = "res.company"
 
-
     code = fields.Char(string="Short Code", size=6)
     complete_name = fields.Char(compute="_compute_complete_name", store=True)
 
-
-    _code_uniq = models.Constraint(
-        "UNIQUE(code)",
-        "The company's code must be unique"
-    )
-
+    _code_uniq = models.Constraint("UNIQUE(code)", "The company's code must be unique")
 
     @api.depends("code", "name")
     def _compute_complete_name(self):

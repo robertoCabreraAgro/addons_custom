@@ -7,7 +7,6 @@ class WorkflowTemplateAction(models.Model):
     _order = "sequence, id"
     _check_company_auto = True
 
-
     @api.model
     def default_get(self, fields_list):
         res = super().default_get(fields_list)
@@ -15,13 +14,12 @@ class WorkflowTemplateAction(models.Model):
             res["company_id"] = self.env.company.id
         return res
 
-
     workflow_template_id = fields.Many2one(
         comodel_name="workflow.template",
         string="Route",
         required=True,
         ondelete="cascade",
-        index=True
+        index=True,
     )
     company_ids = fields.Many2many(
         related="workflow_template_id.company_ids",
@@ -30,7 +28,7 @@ class WorkflowTemplateAction(models.Model):
     name = fields.Char(required=True, translate=True)
     active = fields.Boolean(
         default=True,
-        help="If unchecked, it will allow you to hide the action without removing it."
+        help="If unchecked, it will allow you to hide the action without removing it.",
     )
     sequence = fields.Integer(default=10)
     action = fields.Selection(

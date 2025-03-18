@@ -5,9 +5,9 @@ from odoo.exceptions import UserError
 from odoo.tools.misc import clean_context
 from odoo.tools.translate import _
 
+
 class ApprovalRequest(models.Model):
     _inherit = "approval.request"
-
 
     has_vehicle = fields.Selection(
         related="category_id.has_vehicle",
@@ -20,16 +20,15 @@ class ApprovalRequest(models.Model):
         comodel_name="account.journal",
         string="Journal",
     )
-    count_account_move = fields.Integer(
-        compute="_compute_count_account_move"
-    )
+    count_account_move = fields.Integer(compute="_compute_count_account_move")
     count_purchase_order = fields.Integer(
         compute="_compute_count_purchase_order",
     )
     vehicle_id = fields.Many2one(
         comodel_name="fleet.vehicle",
         string="Vehicle",
-        compute="_compute_vehicle_id", store=True,
+        compute="_compute_vehicle_id",
+        store=True,
         readonly=False,
     )
     odometer = fields.Integer(
@@ -42,13 +41,13 @@ class ApprovalRequest(models.Model):
         string="Log",
     )
 
-
     @api.depends("request_owner_id")
     def _compute_vehicle_id(self):
         for request in self:
             if request.request_owner_id:
                 vehicle = self.env["fleet.vehicle"].search(
-                    [("driver_id", "=", request.request_owner_id.partner_id.id)], limit=1
+                    [("driver_id", "=", request.request_owner_id.partner_id.id)],
+                    limit=1,
                 )
                 request.vehicle_id = vehicle if vehicle else False
             else:
@@ -102,12 +101,11 @@ class ApprovalRequest(models.Model):
         self._create_purchase_orders()
         self._log_po_creation_to_chatter()
 
-
     def _create_purchase_orders(self):
         for line in self.product_line_ids:
-            #pol_domain = line._get_purchase_order_line_for_approval_matching_domain()
-            #purchase_lines = self.env["purchase.order.lne"].search(pol_domain)
-            #if purchase_lines:
+            # pol_domain = line._get_purchase_order_line_for_approval_matching_domain()
+            # purchase_lines = self.env["purchase.order.lne"].search(pol_domain)
+            # if purchase_lines:
             #    # Existing RFQ found: check if we must modify an existing
             #    # purchase order line or create a new one.
             #    purchase_line = purchase_lines[0]
@@ -141,7 +139,7 @@ class ApprovalRequest(models.Model):
             #            )
             #    else:
             #        purchase_order.write({"origin": ", ".join(new_origin)})
-                # No RFQ found: create a new one.
+            # No RFQ found: create a new one.
             new_purchase_order = self.env["purchase.order"].create(
                 line._prepare_purchase_order_values_from_approval()
             )
@@ -155,7 +153,7 @@ class ApprovalRequest(models.Model):
                 "vehicle_id": self.vehicle_id.id,
                 "odometer": self.odometer,
                 "state": "done",
-                "date": self.date, #TODO ROberto implement logic for date when all approvers have finished
+                "date": self.date,  # TODO ROberto implement logic for date when all approvers have finished
                 # "product_id": self.product_line_ids[0].product_id.id,
             }
         )
@@ -341,13 +339,14 @@ class ApprovalRequest(models.Model):
 
     def _check_accounting_type_has_product(self):
         if (
-            self.approval_type in (
+            self.approval_type
+            in (
                 "entry",
                 "in_invoice",
                 "in_refund",
                 "out_invoice",
                 "out_refund",
-            ) 
+            )
             and not self.product_line_ids
         ):
             raise UserError(

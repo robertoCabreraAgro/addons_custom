@@ -48,12 +48,16 @@ class HrLeave(models.Model):
             local_tz = timezone(user_tz)
 
             check_in_local = UTC.localize(attendance.check_in).astimezone(local_tz)
-            check_out_local = UTC.localize(attendance.check_out).astimezone(local_tz) if attendance.check_out else None
+            check_out_local = (
+                UTC.localize(attendance.check_out).astimezone(local_tz)
+                if attendance.check_out
+                else None
+            )
 
             absence_from = check_in_local.replace(tzinfo=None)
-            absence_to = check_out_local.replace(tzinfo=None) or (check_in_local + timedelta(hours=8)).replace(
-                tzinfo=None
-            )
+            absence_to = check_out_local.replace(tzinfo=None) or (
+                check_in_local + timedelta(hours=8)
+            ).replace(tzinfo=None)
 
             leave = self.env["hr.leave"].create(
                 {

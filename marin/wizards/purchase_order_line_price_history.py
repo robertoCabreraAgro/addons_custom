@@ -29,7 +29,9 @@ class PurchaseOrderLinePriceHistory(models.TransientModel):
 
     def _set_line_ids(self, domain):
         vals = []
-        lines = self.env["purchase.order.line"].search(domain, order="id desc", limit=10)
+        lines = self.env["purchase.order.line"].search(
+            domain, order="id desc", limit=10
+        )
         lines -= self.line_id
         for line in lines:
             vals.append(Command.create({"line_id": line.id}))

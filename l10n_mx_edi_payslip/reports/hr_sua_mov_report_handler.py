@@ -14,7 +14,9 @@ class HrSuaMovReportHandler(models.AbstractModel):
     filter_hierarchy = None
 
     def _custom_options_initializer(self, report, options, previous_options=None):
-        super()._custom_options_initializer(report, options, previous_options=previous_options)
+        super()._custom_options_initializer(
+            report, options, previous_options=previous_options
+        )
         options["columns"] = list(options["columns"])
         options.setdefault("buttons", []).extend(
             (
@@ -29,11 +31,25 @@ class HrSuaMovReportHandler(models.AbstractModel):
         )
 
     def _report_custom_engine_sua_report(
-        self, expressions, options, date_scope, current_groupby, next_groupby, offset=0, limit=None, warnings=None
+        self,
+        expressions,
+        options,
+        date_scope,
+        current_groupby,
+        next_groupby,
+        offset=0,
+        limit=None,
+        warnings=None,
     ):
         def build_dict(report, current_groupby, query_res):
             if not current_groupby:
-                return query_res[0] if query_res else {k: None for k in report.mapped("line_ids.expression_ids.label")}
+                return (
+                    query_res[0]
+                    if query_res
+                    else {
+                        k: None for k in report.mapped("line_ids.expression_ids.label")
+                    }
+                )
             return [(group_res["grouping_key"], group_res) for group_res in query_res]
 
         report = self.env["account.report"].browse(options["report_id"])
@@ -55,10 +71,18 @@ class HrSuaMovReportHandler(models.AbstractModel):
             }
         ]
         employees = self.env["hr.employee"].search([("active", "in", [False, True])])
-        date_from = fields.datetime.strptime(options["date"]["date_from"], DEFAULT_SERVER_DATE_FORMAT).date()
-        date_to = fields.datetime.strptime(options["date"]["date_to"], DEFAULT_SERVER_DATE_FORMAT).date()
+        date_from = fields.datetime.strptime(
+            options["date"]["date_from"], DEFAULT_SERVER_DATE_FORMAT
+        ).date()
+        date_to = fields.datetime.strptime(
+            options["date"]["date_to"], DEFAULT_SERVER_DATE_FORMAT
+        ).date()
         for employee in employees:
-            if not employee.active and employee.departure_date >= date_from and employee.departure_date <= date_to:
+            if (
+                not employee.active
+                and employee.departure_date >= date_from
+                and employee.departure_date <= date_to
+            ):
                 lines.append(
                     {
                         "counter": 1,
@@ -67,7 +91,9 @@ class HrSuaMovReportHandler(models.AbstractModel):
                         "nss": employee.ssnid,
                         "movement_type": "Baja",
                         "movement_type_value": "02",
-                        "date": fields.datetime.strftime(employee.departure_date, "%d-%m-%Y"),
+                        "date": fields.datetime.strftime(
+                            employee.departure_date, "%d-%m-%Y"
+                        ),
                         "inability_number": employee.l10n_mx_edi_employer_registration_id.guide,
                         "days": employee.barcode or employee.id,
                         "sdi": employee.contract_id.l10n_mx_edi_sdi_total,
@@ -79,7 +105,9 @@ class HrSuaMovReportHandler(models.AbstractModel):
                 continue
             show = False
             messages = contract.message_ids.filtered(
-                lambda m: m.date.date() >= date_from and m.date.date() <= date_to and m.message_type == "notification"
+                lambda m: m.date.date() >= date_from
+                and m.date.date() <= date_to
+                and m.message_type == "notification"
             )
             if messages:
                 tracking = (
@@ -97,7 +125,8 @@ class HrSuaMovReportHandler(models.AbstractModel):
                             "movement_type": "Wage Update",
                             "movement_type_value": "07",
                             "date": fields.datetime.strftime(
-                                tracking.sorted("create_date")[-1].create_date.date(), "%d-%m-%Y"
+                                tracking.sorted("create_date")[-1].create_date.date(),
+                                "%d-%m-%Y",
                             ),
                             "inability_number": "",
                             "days": "",
@@ -117,7 +146,9 @@ class HrSuaMovReportHandler(models.AbstractModel):
             if leaves:
                 leaves = self.env["hr.leave"]
                 work_entry = self.env["hr.work.entry"].search(
-                    contract._get_work_hours_domain(date_from, date_to, domain=domain, inside=True)
+                    contract._get_work_hours_domain(
+                        date_from, date_to, domain=domain, inside=True
+                    )
                 )
                 for entry in work_entry:
                     if entry.leave_id in leaves:
@@ -130,7 +161,9 @@ class HrSuaMovReportHandler(models.AbstractModel):
                             "nss": employee.ssnid,
                             "movement_type": "Leaves",
                             "movement_type_value": "11",
-                            "date": fields.datetime.strftime(entry.leave_id.date_from.date(), "%d-%m-%Y"),
+                            "date": fields.datetime.strftime(
+                                entry.leave_id.date_from.date(), "%d-%m-%Y"
+                            ),
                             "inability_number": "",
                             "days": int(entry.leave_id.number_of_days),
                             "sdi": employee.contract_id.l10n_mx_edi_sdi_total,
@@ -149,7 +182,9 @@ class HrSuaMovReportHandler(models.AbstractModel):
             if leaves:
                 leaves = self.env["hr.leave"]
                 work_entry = self.env["hr.work.entry"].search(
-                    contract._get_work_hours_domain(date_from, date_to, domain=domain, inside=True)
+                    contract._get_work_hours_domain(
+                        date_from, date_to, domain=domain, inside=True
+                    )
                 )
                 for entry in work_entry:
                     if entry.leave_id in leaves:
@@ -162,7 +197,9 @@ class HrSuaMovReportHandler(models.AbstractModel):
                             "nss": employee.ssnid,
                             "movement_type": "Inability",
                             "movement_type_value": "12",
-                            "date": fields.datetime.strftime(entry.leave_id.date_from.date(), "%d-%m-%Y"),
+                            "date": fields.datetime.strftime(
+                                entry.leave_id.date_from.date(), "%d-%m-%Y"
+                            ),
                             "inability_number": entry.leave_id.name,
                             "days": int(entry.leave_id.number_of_days),
                             "sdi": employee.contract_id.l10n_mx_edi_sdi_total,
@@ -175,7 +212,9 @@ class HrSuaMovReportHandler(models.AbstractModel):
         return lines
 
     def action_get_imss_txt(self, options):
-        return self.with_context(**{"no_format": True, "print_mode": True, "raise": True})._l10n_mx_txt_export(options)
+        return self.with_context(
+            **{"no_format": True, "print_mode": True, "raise": True}
+        )._l10n_mx_txt_export(options)
 
     def _l10n_mx_txt_export(self, options):
         lines = ""

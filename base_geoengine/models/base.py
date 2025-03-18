@@ -153,20 +153,24 @@ class Base(models.AbstractModel):
          * geo_within
          * geo_contains
          * geo_intersect"""
-        _logger.info("Ejecutando geo_search con dominio: %s y geo_dominio: %s", domain, geo_domain)
-        
+        _logger.info(
+            "Ejecutando geo_search con dominio: %s y geo_dominio: %s",
+            domain,
+            geo_domain,
+        )
+
         domain = domain or []
         geo_domain = geo_domain or []
         search_domain = domain or []
-        
+
         if domain and geo_domain:
             search_domain = AND([domain, geo_domain])
         elif geo_domain:
             search_domain = geo_domain
-        
+
         if not search_domain:
             raise ValueError(_("You must at least provide one of domain or geo_domain"))
-        
+
         _logger.info("Dominio final de búsqueda: %s", search_domain)
-        
+
         return self.search(search_domain, limit=limit, offset=offset, order=order)

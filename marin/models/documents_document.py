@@ -6,7 +6,6 @@ from odoo.osv import expression
 class Documents(models.Model):
     _inherit = "documents.document"
 
-
     legal_number = fields.Char("Legal number")
     vehicle_id = fields.Many2one(
         comodel_name="fleet.vehicle",
@@ -15,7 +14,6 @@ class Documents(models.Model):
         search="_search_vehicle_id",
     )
 
-
     @api.constrains("legal_number")
     def _check_duplicated_legal_number(self):
         for doc in self:
@@ -23,10 +21,13 @@ class Documents(models.Model):
                 [("id", "!=", doc.id), ("legal_number", "=", doc.legal_number)]
             )
             if overlap >= 1:
-                raise UserError(_(
-                    'A document with legal number "%s - %s" already exists.',
-                    doc.display_name, doc.legal_number
-                ))
+                raise UserError(
+                    _(
+                        'A document with legal number "%s - %s" already exists.',
+                        doc.display_name,
+                        doc.legal_number,
+                    )
+                )
 
     def copy(self, default=None):
         self.ensure_one()
@@ -44,29 +45,29 @@ class Documents(models.Model):
 
     @api.model
     def _search_related_vehicle_field(self, operator, value, Model):
-        if operator in ('=', '!=') and isinstance(value, bool):
+        if operator in ("=", "!=") and isinstance(value, bool):
             if not value:
                 operator = expression.TERM_OPERATORS_NEGATION[operator]
             return [("res_model", operator, Model._name)]
 
-        elif operator in ('=', '!=', "in", "not in") and isinstance(value, (int, list)):
+        elif operator in ("=", "!=", "in", "not in") and isinstance(value, (int, list)):
             return expression.AND(
                 [[("res_model", "=", Model._name)], [("res_id", operator, value)]]
             )
 
         elif operator in ("ilike", "not ilike", "=", "!=") and isinstance(value, str):
             query_model = Model._search([(Model._rec_name, operator, value)])
-            query_doc = self._search([
-                ('res_model', '=', Model._name),
-                ('res_id', 'in', query_model)
-            ])
+            query_doc = self._search(
+                [("res_model", "=", Model._name), ("res_id", "in", query_model)]
+            )
             return [("id", "in", query_doc)]
 
-        raise ValidationError(_(
-            "Invalid %s search",
-            self.env['ir.model']._get(Model._name).name
-        ))
+        raise ValidationError(
+            _("Invalid %s search", self.env["ir.model"]._get(Model._name).name)
+        )
 
     @api.model
     def _search_vehicle_id(self, operator, value):
-        return self._search_related_vehicle_field(operator, value, self.env["fleet.vehicle"])
+        return self._search_related_vehicle_field(
+            operator, value, self.env["fleet.vehicle"]
+        )

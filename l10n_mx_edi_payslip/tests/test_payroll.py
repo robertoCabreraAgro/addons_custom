@@ -32,13 +32,17 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         payroll.action_payslip_done()
         with self.with_mocked_mx_payslip_pac_sucess():
             payroll.l10n_mx_edi_update_pac_status()
-        self.assertEqual(payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)
+        self.assertEqual(
+            payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error
+        )
         xml = payroll.l10n_mx_edi_get_xml_etree()
         node_payroll = payroll.l10n_mx_edi_get_payroll_etree(xml)
         self.assertTrue(node_payroll is not None, "Complement to payroll not added.")
         self.assertXmlTreeEqual(xml, self.xml_expected)
         with self.with_mocked_mx_payslip_sat_status_sucess():
-            self.env.ref("l10n_mx_edi_payslip.ir_cron_update_sat_status_payroll").sudo().method_direct_trigger()
+            self.env.ref(
+                "l10n_mx_edi_payslip.ir_cron_update_sat_status_payroll"
+            ).sudo().method_direct_trigger()
         self.assertEqual(payroll.l10n_mx_edi_sat_status, "not_found")
 
     def test_002_perception_022(self):
@@ -55,7 +59,9 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         payroll.action_payslip_done()
         with self.with_mocked_mx_payslip_pac_sucess():
             payroll.l10n_mx_edi_update_pac_status()
-        self.assertEqual(payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)
+        self.assertEqual(
+            payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error
+        )
 
     def test_003_perception_039(self):
         """When perception code have 039, the payroll have node
@@ -82,7 +88,9 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         payroll.action_payslip_done()
         with self.with_mocked_mx_payslip_pac_sucess():
             payroll.l10n_mx_edi_update_pac_status()
-        self.assertEqual(payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)
+        self.assertEqual(
+            payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error
+        )
 
     def test_004_other_payment_004(self):
         """When other payment have the code 004, this must have node
@@ -112,7 +120,9 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         payroll.action_payslip_done()
         with self.with_mocked_mx_payslip_pac_sucess():
             payroll.l10n_mx_edi_update_pac_status()
-        self.assertEqual(payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)
+        self.assertEqual(
+            payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error
+        )
 
     def test_005_perception_045(self):
         """When one perception have the code 045, this must have node
@@ -148,7 +158,9 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         payroll.action_payslip_done()
         with self.with_mocked_mx_payslip_pac_sucess():
             payroll.l10n_mx_edi_update_pac_status()
-        self.assertEqual(payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)
+        self.assertEqual(
+            payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error
+        )
 
     @unittest.skip("Review this test to print pdf")
     def test_006_print_pdf(self):
@@ -157,7 +169,9 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         payroll.compute_sheet()
         payroll.action_payslip_done()
         payroll.l10n_mx_edi_update_pac_status()
-        self.assertEqual(payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)
+        self.assertEqual(
+            payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error
+        )
         report = self.env.ref("hr_payroll.action_report_payslip", False)
         pdf_content, _content_type = report._render_qweb_pdf(payroll.id)
         self.assertTrue(pdf_content, "Report not generated.")
@@ -173,13 +187,19 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         payroll.action_payslip_done()
         # It is just created and confirmed, not signed should can be cancelled without problems
         payroll.action_payslip_cancel()
-        self.assertEqual(payroll.l10n_mx_edi_pac_status, "cancelled", payroll.l10n_mx_edi_error)
+        self.assertEqual(
+            payroll.l10n_mx_edi_pac_status, "cancelled", payroll.l10n_mx_edi_error
+        )
         payroll.action_payslip_draft()
         payroll.compute_sheet()
         payroll.action_payslip_done()
-        self.assertEqual(payroll.l10n_mx_edi_pac_status, "to_sign", payroll.l10n_mx_edi_error)
+        self.assertEqual(
+            payroll.l10n_mx_edi_pac_status, "to_sign", payroll.l10n_mx_edi_error
+        )
         payroll.l10n_mx_edi_update_pac_status()
-        self.assertEqual(payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)
+        self.assertEqual(
+            payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error
+        )
         payroll._compute_cfdi_values()
         with self.assertRaises(
             UserError,
@@ -187,39 +207,56 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
             "Cancellation instead directly cancelling the payslip",
         ):
             payroll.action_payslip_cancel()
-        with self.assertRaises(UserError, msg="In order to allow cancel, please define the cancellation case."):
+        with self.assertRaises(
+            UserError,
+            msg="In order to allow cancel, please define the cancellation case.",
+        ):
             payroll.l10n_mx_edi_action_request_edi_cancel()
         # Cancel with the reason 03 should be cancelled just than before.
         payroll.l10n_mx_edi_cancellation = "03"
         payroll.l10n_mx_edi_action_request_edi_cancel()
         payroll.l10n_mx_edi_update_pac_status()
-        self.assertTrue(payroll.l10n_mx_edi_pac_status in ("to_cancel", "cancelled"), payroll.l10n_mx_edi_error)
+        self.assertTrue(
+            payroll.l10n_mx_edi_pac_status in ("to_cancel", "cancelled"),
+            payroll.l10n_mx_edi_error,
+        )
 
         # Test cancelation case 01
         payroll = self.create_payroll()
         payroll.compute_sheet()
         payroll.action_payslip_done()
         payroll.l10n_mx_edi_update_pac_status()
-        self.assertEqual(payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)
+        self.assertEqual(
+            payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error
+        )
         payroll._compute_cfdi_values()
         payroll.l10n_mx_edi_cancellation = "01"
         payroll.l10n_mx_edi_action_request_edi_cancel()
         self.assertEqual(payroll.state, "cancel")
-        self.assertEqual(payroll.l10n_mx_edi_pac_status, "to_cancel", payroll.l10n_mx_edi_error)
+        self.assertEqual(
+            payroll.l10n_mx_edi_pac_status, "to_cancel", payroll.l10n_mx_edi_error
+        )
         # Create substitute payslip
         substitute_payroll = self.create_payroll()
         substitute_payroll.compute_sheet()
         substitute_payroll.l10n_mx_edi_origin = "04|%s" % payroll.l10n_mx_edi_cfdi_uuid
         substitute_payroll.action_payslip_done()
         substitute_payroll.l10n_mx_edi_update_pac_status()
-        self.assertEqual(substitute_payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)
+        self.assertEqual(
+            substitute_payroll.l10n_mx_edi_pac_status,
+            "signed",
+            payroll.l10n_mx_edi_error,
+        )
         self.assertEqual(
             payroll.l10n_mx_edi_cancel_payslip_id,
             substitute_payroll,
             "The substitute pay slip should be auto assigned to the first payslip",
         )
         payroll.l10n_mx_edi_update_pac_status()
-        self.assertTrue(payroll.l10n_mx_edi_pac_status in ("to_cancel", "cancelled"), payroll.l10n_mx_edi_error)
+        self.assertTrue(
+            payroll.l10n_mx_edi_pac_status in ("to_cancel", "cancelled"),
+            payroll.l10n_mx_edi_error,
+        )
 
     def test_008_send_payroll_mail(self):
         """Verify that XML is attach on wizard that send mail"""
@@ -301,19 +338,29 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         with self.with_mocked_mx_payslip_pac_sucess():
             payslip_run.action_payslips_done()
         for slip in payslip_run.slip_ids:
-            self.assertEqual(slip.l10n_mx_edi_pac_status, "signed", slip.l10n_mx_edi_error)
+            self.assertEqual(
+                slip.l10n_mx_edi_pac_status, "signed", slip.l10n_mx_edi_error
+            )
         # Test lines generated in account move
         move_id = payslip_run.slip_ids.mapped("move_id")
         salary_lines = move_id.mapped("line_ids").filtered(
             lambda line: line.name == "Sueldos, Salarios Rayas y Jornales"
         )
-        self.assertEqual(len(salary_lines), 2, "There should be 2 lines for sueldos, salarios... in the account move")
+        self.assertEqual(
+            len(salary_lines),
+            2,
+            "There should be 2 lines for sueldos, salarios... in the account move",
+        )
         accounts = salary_lines.account_id
         account1 = self.env.ref("l10n_mx_edi_payslip.cuenta601_08").id
         account1 = accounts.filtered(lambda a, account1=account1: a.id == account1)
-        self.assertTrue(account1, "In the account move, should be a line for the account")
+        self.assertTrue(
+            account1, "In the account move, should be a line for the account"
+        )
         account2 = accounts.filtered(lambda a: "602.08.01" in a.code)
-        self.assertTrue(account2, "In the account move, should be a line for the account")
+        self.assertTrue(
+            account2, "In the account move, should be a line for the account"
+        )
 
         # Ensure that dispersions action works correctly
         self.env.ref("hr_bank_dispersion.allow_print_payslip_dispersion").sudo().write(
@@ -323,14 +370,18 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
 
         # Ensure that sent action works correctly
         # TODO: Remove this group assignation
-        self.env.ref("hr.group_hr_manager", False).sudo().write({"users": [Command.link(self.env.user.id)]})
+        self.env.ref("hr.group_hr_manager", False).sudo().write(
+            {"users": [Command.link(self.env.user.id)]}
+        )
         payslip_run.sudo().action_payroll_sent()
         self.assertTrue(
             all(payslip_run.slip_ids.mapped("sent")),
             "At least one of the sent fields in the slip list was not marked as true.",
         )
 
-        report = self.env["ir.actions.report"]._get_report_from_name("l10n_mx_edi_payslip.raya_list_report")
+        report = self.env["ir.actions.report"]._get_report_from_name(
+            "l10n_mx_edi_payslip.raya_list_report"
+        )
         self.assertEqual(len(report._render(report.id, payslip_run.id)), 2)
 
     def test_010_aguinaldo(self):
@@ -347,7 +398,9 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         payroll.action_payslip_done()
         with self.with_mocked_mx_payslip_pac_sucess():
             payroll.l10n_mx_edi_update_pac_status()
-        self.assertEqual(payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)
+        self.assertEqual(
+            payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error
+        )
         xml = payroll.l10n_mx_edi_get_xml_etree()
         node_payroll = payroll.l10n_mx_edi_get_payroll_etree(xml)
         self.assertEqual("11000.00", node_payroll.get("TotalPercepciones", ""))
@@ -359,7 +412,9 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         payroll.action_payslip_done()
         with self.with_mocked_mx_payslip_pac_sucess():
             payroll.l10n_mx_edi_update_pac_status()
-        self.assertEqual(payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)
+        self.assertEqual(
+            payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error
+        )
         xml_attachs = payroll.l10n_mx_edi_retrieve_attachments()
         self.assertEqual(len(xml_attachs), 1)
         xml_1 = objectify.fromstring(base64.b64decode(xml_attachs[0].datas))
@@ -371,7 +426,9 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
             payroll.l10n_mx_edi_retrieve_last_attachment().unlink()
             with self.with_mocked_mx_payslip_pac_sucess():
                 payroll.l10n_mx_edi_update_pac_status()
-        self.assertEqual(payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)
+        self.assertEqual(
+            payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error
+        )
         xml_attachs = payroll.l10n_mx_edi_retrieve_attachments()
         self.assertEqual(len(xml_attachs), 1, "There should be just one xml")
         xml_2 = objectify.fromstring(base64.b64decode(xml_attachs[0].datas))
@@ -382,12 +439,16 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         payroll = self.create_payroll()
         payroll.employee_id.sudo().l10n_mx_edi_is_assimilated = True
         payroll.employee_id.sudo().l10n_mx_edi_contract_regime_type = "09"
-        payroll.contract_id.sudo().contract_type_id = self.env.ref("l10n_mx_edi_payslip.hr_contract_type_99")
+        payroll.contract_id.sudo().contract_type_id = self.env.ref(
+            "l10n_mx_edi_payslip.hr_contract_type_99"
+        )
         payroll.compute_sheet()
         payroll.action_payslip_done()
         with self.with_mocked_mx_payslip_pac_sucess():
             payroll.l10n_mx_edi_update_pac_status()
-        self.assertEqual(payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)
+        self.assertEqual(
+            payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error
+        )
 
     def test_014_allow_validate_payslip(self):
         """Test case when an employee"""
@@ -397,7 +458,8 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         group_e = self.env.ref("l10n_mx_edi_payslip.allow_validate_payslip", False)
         group_e.sudo().write({"users": [(3, self.env.user.id)]})
         with self.assertRaises(
-            UserError, msg="Only Managers who are allow to validate payslip can perform this operation"
+            UserError,
+            msg="Only Managers who are allow to validate payslip can perform this operation",
         ):
             payroll.action_payslip_done()
         # Get back permission group and finish to test normal flow
@@ -405,7 +467,9 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         payroll.action_payslip_done()
         with self.with_mocked_mx_payslip_pac_sucess():
             payroll.l10n_mx_edi_update_pac_status()
-        self.assertEqual(payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)
+        self.assertEqual(
+            payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error
+        )
 
     def test_015_alimony(self):
         """Test case with alimony in the employee. Also test the report
@@ -422,7 +486,8 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
                     "number": "1",
                     "discount_type": "percentage_wage",
                     "discount_amount": 1,
-                    "date_from": "%s-%s-01" % (time.strftime("%Y"), time.strftime("%m")),
+                    "date_from": "%s-%s-01"
+                    % (time.strftime("%Y"), time.strftime("%m")),
                 },
             ),
             Command.create(
@@ -431,7 +496,8 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
                     "number": "2",
                     "discount_type": "percentage_perceptions_ISR",
                     "discount_amount": 1,
-                    "date_from": "%s-%s-01" % (time.strftime("%Y"), time.strftime("%m")),
+                    "date_from": "%s-%s-01"
+                    % (time.strftime("%Y"), time.strftime("%m")),
                 },
             ),
             Command.create(
@@ -440,7 +506,8 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
                     "number": "3",
                     "discount_type": "amount_fixed",
                     "discount_amount": 100,
-                    "date_from": "%s-%s-01" % (time.strftime("%Y"), time.strftime("%m")),
+                    "date_from": "%s-%s-01"
+                    % (time.strftime("%Y"), time.strftime("%m")),
                 },
             ),
             Command.create(
@@ -449,7 +516,8 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
                     "number": "4",
                     "discount_type": "percentage_over_net",
                     "discount_amount": 1,
-                    "date_from": "%s-%s-01" % (time.strftime("%Y"), time.strftime("%m")),
+                    "date_from": "%s-%s-01"
+                    % (time.strftime("%Y"), time.strftime("%m")),
                 },
             ),
             Command.create(
@@ -458,7 +526,8 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
                     "number": "5",
                     "discount_type": "percentage_perceptions",
                     "discount_amount": 1,
-                    "date_from": "%s-%s-01" % (time.strftime("%Y"), time.strftime("%m")),
+                    "date_from": "%s-%s-01"
+                    % (time.strftime("%Y"), time.strftime("%m")),
                 },
             ),
             Command.create(
@@ -467,7 +536,8 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
                     "number": "6",
                     "discount_type": "percentage_perceptions_ISR_mortgages",
                     "discount_amount": 1,
-                    "date_from": "%s-%s-01" % (time.strftime("%Y"), time.strftime("%m")),
+                    "date_from": "%s-%s-01"
+                    % (time.strftime("%Y"), time.strftime("%m")),
                 },
             ),
             Command.create(
@@ -476,7 +546,8 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
                     "number": "7",
                     "discount_type": "percentage_perceptions_ISR_mortgages_ss",
                     "discount_amount": 1,
-                    "date_from": "%s-%s-01" % (time.strftime("%Y"), time.strftime("%m")),
+                    "date_from": "%s-%s-01"
+                    % (time.strftime("%Y"), time.strftime("%m")),
                 },
             ),
         ]
@@ -485,7 +556,9 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         payroll.action_payslip_done()
         with self.with_mocked_mx_payslip_pac_sucess():
             payroll.l10n_mx_edi_update_pac_status()
-        self.assertEqual(payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)
+        self.assertEqual(
+            payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error
+        )
         # Test Report
         # TODO: Enable
         # report = self.env["hr.alimony.report"]
@@ -519,17 +592,28 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         date_mx = datetime.now(timezone("America/Mexico_City"))
         self.contract.date_start = date_mx.replace(year=date_mx.year - 1)
         self.contract.state = "open"
-        self.env.ref("l10n_mx_edi_payslip.ir_cron_create_mx_allocation").sudo().method_direct_trigger()
+        self.env.ref(
+            "l10n_mx_edi_payslip.ir_cron_create_mx_allocation"
+        ).sudo().method_direct_trigger()
         allocation = self.env["hr.leave.allocation"].search(
-            [("employee_id", "=", self.employee.id), ("name", "=", "%s MX %s" % (holiday.name, date_mx.year))]
+            [
+                ("employee_id", "=", self.employee.id),
+                ("name", "=", "%s MX %s" % (holiday.name, date_mx.year)),
+            ]
         )
         self.assertTrue(allocation, "Allocation not generated")
-        self.assertEqual(allocation.number_of_days, 12.0, "The contract has a year, the expected days are 12")
+        self.assertEqual(
+            allocation.number_of_days,
+            12.0,
+            "The contract has a year, the expected days are 12",
+        )
 
     def test_018_inabilities(self):
         """Ensure that inabilities are created"""
         self.remove_leaves()
-        self.contract.resource_calendar_id.tz = self.employee.tz = self.env.user.tz = "America/Mexico_City"
+        self.contract.resource_calendar_id.tz = self.employee.tz = self.env.user.tz = (
+            "America/Mexico_City"
+        )
         self.contract.write(
             {
                 "state": "open",
@@ -538,9 +622,13 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         leave = self.env["hr.leave"].create(
             {
                 "employee_id": self.employee.id,
-                "holiday_status_id": self.env.ref("l10n_mx_edi_payslip.mexican_maternity").id,
-                "request_date_from": "%s-%s-01" % (time.strftime("%Y"), time.strftime("%m")),
-                "request_date_to": "%s-%s-03" % (time.strftime("%Y"), time.strftime("%m")),
+                "holiday_status_id": self.env.ref(
+                    "l10n_mx_edi_payslip.mexican_maternity"
+                ).id,
+                "request_date_from": "%s-%s-01"
+                % (time.strftime("%Y"), time.strftime("%m")),
+                "request_date_to": "%s-%s-03"
+                % (time.strftime("%Y"), time.strftime("%m")),
                 "number_of_days": 3,
             }
         )
@@ -567,7 +655,9 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
     def test_019_inabilities(self):
         """Ensure that inabilities are created"""
         self.remove_leaves()
-        self.contract.resource_calendar_id.tz = self.employee.tz = self.env.user.tz = "America/Mexico_City"
+        self.contract.resource_calendar_id.tz = self.employee.tz = self.env.user.tz = (
+            "America/Mexico_City"
+        )
         self.contract.write(
             {
                 "state": "open",
@@ -576,9 +666,13 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         leave = self.env["hr.leave"].create(
             {
                 "employee_id": self.employee.id,
-                "holiday_status_id": self.env.ref("l10n_mx_edi_payslip.mexican_riesgo_de_trabajo").id,
-                "request_date_from": "%s-%s-01" % (time.strftime("%Y"), time.strftime("%m")),
-                "request_date_to": "%s-%s-03" % (time.strftime("%Y"), time.strftime("%m")),
+                "holiday_status_id": self.env.ref(
+                    "l10n_mx_edi_payslip.mexican_riesgo_de_trabajo"
+                ).id,
+                "request_date_from": "%s-%s-01"
+                % (time.strftime("%Y"), time.strftime("%m")),
+                "request_date_to": "%s-%s-03"
+                % (time.strftime("%Y"), time.strftime("%m")),
                 "number_of_days": 3,
             }
         )
@@ -604,7 +698,9 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
     def test_020_inabilities(self):
         """Ensure that inability for 'Enfermedad General' created"""
         self.remove_leaves()
-        self.contract.resource_calendar_id.tz = self.employee.tz = self.env.user.tz = "America/Mexico_City"
+        self.contract.resource_calendar_id.tz = self.employee.tz = self.env.user.tz = (
+            "America/Mexico_City"
+        )
         self.contract.write(
             {
                 "state": "open",
@@ -613,9 +709,13 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         leave = self.env["hr.leave"].create(
             {
                 "employee_id": self.employee.id,
-                "holiday_status_id": self.env.ref("l10n_mx_edi_payslip.mexican_enfermedad_general").id,
-                "request_date_from": "%s-%s-01" % (time.strftime("%Y"), time.strftime("%m")),
-                "request_date_to": "%s-%s-07" % (time.strftime("%Y"), time.strftime("%m")),
+                "holiday_status_id": self.env.ref(
+                    "l10n_mx_edi_payslip.mexican_enfermedad_general"
+                ).id,
+                "request_date_from": "%s-%s-01"
+                % (time.strftime("%Y"), time.strftime("%m")),
+                "request_date_to": "%s-%s-07"
+                % (time.strftime("%Y"), time.strftime("%m")),
                 "number_of_days": 7,
             }
         )
@@ -641,7 +741,9 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
     def test_021_inabilities(self):
         """Ensure that inability for 'Hijos con Cancer' is created"""
         self.remove_leaves()
-        self.contract.resource_calendar_id.tz = self.employee.tz = self.env.user.tz = "America/Mexico_City"
+        self.contract.resource_calendar_id.tz = self.employee.tz = self.env.user.tz = (
+            "America/Mexico_City"
+        )
         self.contract.write(
             {
                 "state": "open",
@@ -650,9 +752,13 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         leave = self.env["hr.leave"].create(
             {
                 "employee_id": self.employee.id,
-                "holiday_status_id": self.env.ref("l10n_mx_edi_payslip.mexican_licencia_padres_hijo_cancer").id,
-                "request_date_from": "%s-%s-01" % (time.strftime("%Y"), time.strftime("%m")),
-                "request_date_to": "%s-%s-03" % (time.strftime("%Y"), time.strftime("%m")),
+                "holiday_status_id": self.env.ref(
+                    "l10n_mx_edi_payslip.mexican_licencia_padres_hijo_cancer"
+                ).id,
+                "request_date_from": "%s-%s-01"
+                % (time.strftime("%Y"), time.strftime("%m")),
+                "request_date_to": "%s-%s-03"
+                % (time.strftime("%Y"), time.strftime("%m")),
                 "number_of_days": 3,
             }
         )
@@ -680,15 +786,23 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         self.contract.date_start = self.contract.date_start + timedelta(days=5)
         payroll = self.create_payroll()
         payroll.action_refresh_from_work_entries()
-        self.assertEqual(15, sum(payroll.worked_days_line_ids.mapped("number_of_days")), "Total days incorrect")
+        self.assertEqual(
+            15,
+            sum(payroll.worked_days_line_ids.mapped("number_of_days")),
+            "Total days incorrect",
+        )
 
     def test_023_get_dates_on_datetime(self):
         """Ensure payslips dates are converted correctly to employee timezones"""
         self.employee.sudo().tz = "America/Mazatlan"
         payroll = self.create_payroll(date(2020, 11, 16), date(2020, 11, 30))
         date_from, date_to = payroll._get_dates_on_datetime()
-        self.assertEqual(date_from, datetime(2020, 11, 16, 7, 6), "Date from incorrectly converted")
-        self.assertEqual(date_to, datetime(2020, 12, 1, 7, 5, 59), "Date to incorrectly converted")
+        self.assertEqual(
+            date_from, datetime(2020, 11, 16, 7, 6), "Date from incorrectly converted"
+        )
+        self.assertEqual(
+            date_to, datetime(2020, 12, 1, 7, 5, 59), "Date to incorrectly converted"
+        )
 
     @unittest.skip("FIXME activate again when the time zone issue is resolved")
     def test_024_public_time_off_creation(self):
@@ -702,25 +816,39 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
             }
         )
         public_holiday.action_confirm()  # This method was depreciated in v17
-        self.assertEqual(public_holiday.state, "validate", "Public Holiday not Validated")
-        global_leave = self.env["resource.calendar.leaves"].search([("name", "=", "Thanksgiving")])[0]
+        self.assertEqual(
+            public_holiday.state, "validate", "Public Holiday not Validated"
+        )
+        global_leave = self.env["resource.calendar.leaves"].search(
+            [("name", "=", "Thanksgiving")]
+        )[0]
         self.assertTrue(global_leave, "Global leave not created")
         expected_date_from = datetime.combine(date.today(), dt_time(7, 0))
-        self.assertEqual(global_leave.date_from, expected_date_from, "Incorrect Date To on Leave")
+        self.assertEqual(
+            global_leave.date_from, expected_date_from, "Incorrect Date To on Leave"
+        )
         expected_date_to = expected_date_from + timedelta(days=1, seconds=-1)
-        self.assertEqual(global_leave.date_to, expected_date_to, "Incorrect Date from on Leave")
+        self.assertEqual(
+            global_leave.date_to, expected_date_to, "Incorrect Date from on Leave"
+        )
 
     def test_025_onchange_date_errors(self):
         # TODO: Review: this test must be redesigned
         payroll = self.create_payroll()
         payroll.compute_sheet()
         # Attendances to check salary rules prima dominical, septimo dia and dias de descanso trabajados
-        self.generate_attendances(self.employee, payroll.date_from, payroll.date_from + timedelta(days=8))
+        self.generate_attendances(
+            self.employee, payroll.date_from, payroll.date_from + timedelta(days=8)
+        )
         # Test Onchange date errors
         form = Form(payroll)
         form.date_to = payroll.date_to - timedelta(days=1)
         form.save()
-        self.assertEqual(payroll.date_to.strftime("%Y-%m-%d"), form.date_to, "The date was not updated.")
+        self.assertEqual(
+            payroll.date_to.strftime("%Y-%m-%d"),
+            form.date_to,
+            "The date was not updated.",
+        )
 
     def test_026_mexican_holiday_allocation(self):
         """Test the cron for automatic Mexican Holiday allocation
@@ -740,7 +868,11 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
 
         # Create an allocation for the last year
         self.env.user.group_ids += self.env.ref("hr_holidays.group_hr_holidays_user")
-        allocation_form = Form(self.env["hr.leave.allocation"].with_context(**{"is_employee_allocation": True}))
+        allocation_form = Form(
+            self.env["hr.leave.allocation"].with_context(
+                **{"is_employee_allocation": True}
+            )
+        )
         allocation_form.number_of_days_display = 6
         allocation_form.holiday_status_id = holiday
         allocation_form.employee_id = self.employee
@@ -749,8 +881,12 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         old_allocation = allocation_form.save()
         old_allocation.action_validate()
         # Use Cron, update the holidays. The old allocation should not be refused
-        self.env.ref("l10n_mx_edi_payslip.ir_cron_create_mx_allocation").sudo().method_direct_trigger()
-        self.assertEqual(old_allocation.state, "validate", "The allocation should not be refused")
+        self.env.ref(
+            "l10n_mx_edi_payslip.ir_cron_create_mx_allocation"
+        ).sudo().method_direct_trigger()
+        self.assertEqual(
+            old_allocation.state, "validate", "The allocation should not be refused"
+        )
         allocations = self.allocation_obj.search(
             [
                 ("employee_id", "=", self.employee.id),
@@ -758,9 +894,15 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
                 ("holiday_status_id", "=", holiday.id),
             ]
         )
-        self.assertEqual(len(allocations), 2, "There should be two allocations, for the actual and the last year")
+        self.assertEqual(
+            len(allocations),
+            2,
+            "There should be two allocations, for the actual and the last year",
+        )
         new_allocation = allocations - old_allocation
-        self.assertTrue(new_allocation, "The allocation for the next holiday period was not created")
+        self.assertTrue(
+            new_allocation, "The allocation for the next holiday period was not created"
+        )
         self.assertEqual(
             new_allocation.name,
             "%s MX %s" % (holiday.name, (date_mx.year)),
@@ -768,7 +910,9 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         )
         # Ensure that holiday is available and paid in the payslip
         leave_date = new_allocation.date_from + timedelta(days=1)
-        payroll = self.create_payroll(date_from=leave_date, date_to=leave_date + timedelta(days=15))
+        payroll = self.create_payroll(
+            date_from=leave_date, date_to=leave_date + timedelta(days=15)
+        )
         leave = self.env["hr.leave"].create(
             {
                 "employee_id": self.employee.id,
@@ -783,7 +927,9 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         payroll.action_refresh_from_work_entries()
         payroll.compute_sheet()
         self.assertTrue(
-            self.env.ref("l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_perception_001_holidays")
+            self.env.ref(
+                "l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_perception_001_holidays"
+            )
             in payroll.line_ids.mapped("salary_rule_id"),
             "Holidays not paid.",
         )
@@ -793,7 +939,9 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         self.contract.state = "open"
         payroll = self.create_payroll()
         payroll.compute_sheet()
-        input_type_id = self.env.ref("l10n_mx_edi_payslip.hr_payslip_input_type_perception_028_g")
+        input_type_id = self.env.ref(
+            "l10n_mx_edi_payslip.hr_payslip_input_type_perception_028_g"
+        )
         extras = self.env["hr.payslip.extra"].create(
             {
                 "name": "Payslip Extras Test",
@@ -819,12 +967,20 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         )
         extras.action_approve()
         payroll.l10n_mx_edi_update_extras()
-        input_line = payroll.input_line_ids.filtered(lambda line, code=input_type_id.code: line.code == code)
+        input_line = payroll.input_line_ids.filtered(
+            lambda line, code=input_type_id.code: line.code == code
+        )
         self.assertTrue(input_line, "The input for Commission was not created")
         code = input_line[0].code
         code = "%s%s" % (code.split("_")[0].upper(), code.split("_")[1])
-        payslip_line = payroll.line_ids.filtered(lambda line, code=code: line.code == code)
-        self.assertEqual(payslip_line.amount, 4775.0, "The commision payslip line amount must be 4775.0")
+        payslip_line = payroll.line_ids.filtered(
+            lambda line, code=code: line.code == code
+        )
+        self.assertEqual(
+            payslip_line.amount,
+            4775.0,
+            "The commision payslip line amount must be 4775.0",
+        )
         # Check l10n_mx_edi_dynamic_name
         self.assertEqual(
             payslip_line.name,
@@ -833,15 +989,22 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         )
         # Activate l10n_mx_edi_dynamic_name
         payroll.company_id.sudo().l10n_mx_edi_dynamic_name = True
-        expected_name = "%s: %s" % (payslip_line.name, ", ".join(extras.detail_ids.mapped("name")))
+        expected_name = "%s: %s" % (
+            payslip_line.name,
+            ", ".join(extras.detail_ids.mapped("name")),
+        )
         self.assertEqual(
-            expected_name, payroll.l10n_mx_edi_name(payslip_line), "The name returned name must be %s" % expected_name
+            expected_name,
+            payroll.l10n_mx_edi_name(payslip_line),
+            "The name returned name must be %s" % expected_name,
         )
         # Check the line string on the CFDI
         payroll.action_payslip_done()
         with self.with_mocked_mx_payslip_pac_sucess():
             payroll.l10n_mx_edi_update_pac_status()
-        self.assertEqual(payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)
+        self.assertEqual(
+            payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error
+        )
         xml = payroll.l10n_mx_edi_get_xml_etree()
         node_payroll = payroll.l10n_mx_edi_get_payroll_etree(xml)
         commission_node = None
@@ -851,7 +1014,9 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
                 break
         self.assertTrue(commission_node, "The node for commisions were not created.")
         self.assertEqual(
-            expected_name, commission_node.attrib["Concepto"], "The name returned name must be %s" % expected_name
+            expected_name,
+            commission_node.attrib["Concepto"],
+            "The name returned name must be %s" % expected_name,
         )
 
         # Check when the extras have not details string
@@ -863,7 +1028,9 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         new_payroll.action_payslip_done()
         with self.with_mocked_mx_payslip_pac_sucess():
             new_payroll.l10n_mx_edi_update_pac_status()
-        self.assertEqual(new_payroll.l10n_mx_edi_pac_status, "signed", new_payroll.l10n_mx_edi_error)
+        self.assertEqual(
+            new_payroll.l10n_mx_edi_pac_status, "signed", new_payroll.l10n_mx_edi_error
+        )
 
     def test_028_out_of_contract(self):
         """Test out of contract worked days and recompute worked days method"""
@@ -892,7 +1059,8 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
 
     def test_029_schedule_action_pac_sign(self):
         """Test the normal flow for the schedule action to sign the payslips
-        Create one or more payslips prepere them to be sign and sign them by the action"""
+        Create one or more payslips prepere them to be sign and sign them by the action
+        """
         payroll = self.create_payroll()
         payroll.compute_sheet()
         payroll.action_payslip_done()
@@ -900,9 +1068,15 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         payroll2.compute_sheet()
         payroll2.action_payslip_done()
         with self.with_mocked_mx_payslip_pac_sucess():
-            self.env.ref("l10n_mx_edi_payslip.ir_cron_mx_edi_payslip_web_services").sudo().method_direct_trigger()
-        self.assertEqual(payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)
-        self.assertEqual(payroll2.l10n_mx_edi_pac_status, "signed", payroll2.l10n_mx_edi_error)
+            self.env.ref(
+                "l10n_mx_edi_payslip.ir_cron_mx_edi_payslip_web_services"
+            ).sudo().method_direct_trigger()
+        self.assertEqual(
+            payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error
+        )
+        self.assertEqual(
+            payroll2.l10n_mx_edi_pac_status, "signed", payroll2.l10n_mx_edi_error
+        )
 
     def test_030_expected_sign_fails_catch_flow(self):
         """When a configuration or sign fail is showing the error should be managed, this test checks if
@@ -914,8 +1088,15 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         payroll.action_payslip_done()
         with self.with_mocked_mx_payslip_pac_retry():
             payroll.l10n_mx_edi_update_pac_status()
-        self.assertEqual(payroll.l10n_mx_edi_pac_status, "retry", "The sign must fail, The pac status must be Retry")
-        self.assertTrue(payroll.l10n_mx_edi_error, "The sign must fail, the error variable must show a message")
+        self.assertEqual(
+            payroll.l10n_mx_edi_pac_status,
+            "retry",
+            "The sign must fail, The pac status must be Retry",
+        )
+        self.assertTrue(
+            payroll.l10n_mx_edi_error,
+            "The sign must fail, the error variable must show a message",
+        )
 
     def test_031_change_struct_in_end_contract(self):
         """Verify payroll information and confirm payslips from batches
@@ -931,22 +1112,31 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
                 "name": "Payslip VX",
                 "date_start": "%s-%s-01" % (time.strftime("%Y"), time.strftime("%m")),
                 "date_end": "%s-%s-15" % (time.strftime("%Y"), time.strftime("%m")),
-                "l10n_mx_edi_payment_date": "%s-%s-15" % (time.strftime("%Y"), time.strftime("%m")),
+                "l10n_mx_edi_payment_date": "%s-%s-15"
+                % (time.strftime("%Y"), time.strftime("%m")),
             }
         )
         self.env["hr.work.entry"].sudo().search([("state", "!=", "validated")]).unlink()
-        employees.generate_work_entries(payslip_run.date_start, payslip_run.date_end, True)
+        employees.generate_work_entries(
+            payslip_run.date_start, payslip_run.date_end, True
+        )
         self.wizard_batch.create(
             {
                 "employee_ids": [Command.set(employees.ids)],
                 "structure_id": self.struct.id,
             }
         ).with_context(active_id=payslip_run.id).compute_sheet()
-        self.assertEqual(len(payslip_run.slip_ids), 3, "There must be 3 payslips in the batch")
-        struct_bf = self.env.ref("l10n_mx_edi_payslip.payroll_structure_data_06")
-        slips = payslip_run.slip_ids.filtered(lambda slip, struct_bf=struct_bf: slip.struct_id == struct_bf)
         self.assertEqual(
-            len(slips), 2, "There must be two payslips with Base + Finiquito. Maybe the struct was not changed"
+            len(payslip_run.slip_ids), 3, "There must be 3 payslips in the batch"
+        )
+        struct_bf = self.env.ref("l10n_mx_edi_payslip.payroll_structure_data_06")
+        slips = payslip_run.slip_ids.filtered(
+            lambda slip, struct_bf=struct_bf: slip.struct_id == struct_bf
+        )
+        self.assertEqual(
+            len(slips),
+            2,
+            "There must be two payslips with Base + Finiquito. Maybe the struct was not changed",
         )
         slip = slips[0]
         self.assertTrue(
@@ -954,7 +1144,11 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
             "The payslip lines of salario + finiquito were not computed",
         )
         payslip = payslip_run.slip_ids - slips
-        self.assertEqual(payslip.struct_id, self.struct, "There should be a payslip with the regular Nomina")
+        self.assertEqual(
+            payslip.struct_id,
+            self.struct,
+            "There should be a payslip with the regular Nomina",
+        )
 
         # Test if the option is off
         self.env.company.sudo().write({"l10n_mx_edi_automatic_settlement": False})
@@ -963,7 +1157,8 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
                 "name": "Payslip VX 2",
                 "date_start": "%s-%s-01" % (time.strftime("%Y"), time.strftime("%m")),
                 "date_end": "%s-%s-15" % (time.strftime("%Y"), time.strftime("%m")),
-                "l10n_mx_edi_payment_date": "%s-%s-15" % (time.strftime("%Y"), time.strftime("%m")),
+                "l10n_mx_edi_payment_date": "%s-%s-15"
+                % (time.strftime("%Y"), time.strftime("%m")),
             }
         )
         self.wizard_batch.create(
@@ -972,18 +1167,26 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
                 "structure_id": self.struct.id,
             }
         ).with_context(active_id=payslip_run.id).compute_sheet()
-        slips = payslip_run.slip_ids.filtered(lambda slip, struct=struct_bf: slip.struct_id == struct)
+        slips = payslip_run.slip_ids.filtered(
+            lambda slip, struct=struct_bf: slip.struct_id == struct
+        )
         self.assertFalse(slips, "There should be not nómina + finiquito payslips")
 
     def test_032_daily_payment(self):
         """Check daily wage is correctly calculated"""
         self.assertTrue(
-            float_is_zero(self.contract.l10n_mx_edi_daily_wage - self.contract.wage / 30.0, precision_digits=4),
+            float_is_zero(
+                self.contract.l10n_mx_edi_daily_wage - self.contract.wage / 30.0,
+                precision_digits=4,
+            ),
             "The amount in the contract is different that expected.",
         )
         self.contract.company_id.sudo().l10n_mx_edi_days_daily_wage = 30.4
         self.assertTrue(
-            float_is_zero(self.contract.l10n_mx_edi_daily_wage - self.contract.wage / 30.4, precision_digits=4),
+            float_is_zero(
+                self.contract.l10n_mx_edi_daily_wage - self.contract.wage / 30.4,
+                precision_digits=4,
+            ),
             "The amount in the contract is different that expected.",
         )
 
@@ -991,7 +1194,9 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         """Test if a company loan is greater than the net salary, the payslip line should be cancelled
         and the loan should not have the payslip added"""
         self.employee.loan_ids.write({"active": False})
-        company_rule = self.env.ref("l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_004_loan_company")
+        company_rule = self.env.ref(
+            "l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_004_loan_company"
+        )
 
         payroll = self.create_payroll()
         payroll.compute_sheet()
@@ -1010,21 +1215,35 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
             }
         )
         payroll.compute_sheet()
-        loan_line = payroll.line_ids.filtered(lambda line: line.salary_rule_id == company_rule)
-        self.assertFalse(loan_line, "There should not be a company loan line in the payslip")
-        self.assertEqual(payroll.net_wage, original_net_salary, "The Net salary should not change")
+        loan_line = payroll.line_ids.filtered(
+            lambda line: line.salary_rule_id == company_rule
+        )
+        self.assertFalse(
+            loan_line, "There should not be a company loan line in the payslip"
+        )
+        self.assertEqual(
+            payroll.net_wage, original_net_salary, "The Net salary should not change"
+        )
         payroll.action_payslip_done()
-        self.assertFalse(company_loan.payslip_ids, "The loan should not have any payslip linked")
+        self.assertFalse(
+            company_loan.payslip_ids, "The loan should not have any payslip linked"
+        )
         # Loan amount is ok
         second_payroll = self.create_payroll()
         company_loan.write({"amount": 1})
         second_payroll.compute_sheet()
         self.assertTrue(
-            second_payroll.line_ids.filtered(lambda line: line.salary_rule_id == company_rule),
+            second_payroll.line_ids.filtered(
+                lambda line: line.salary_rule_id == company_rule
+            ),
             "There should be a company loan line in the payslip",
         )
         second_payroll.action_payslip_done()
-        self.assertEqual(len(company_loan.payslip_ids), 1, "There should be one payslip linked to the loan")
+        self.assertEqual(
+            len(company_loan.payslip_ids),
+            1,
+            "There should be one payslip linked to the loan",
+        )
 
     def test_034_extra_hours(self):
         """Test if the extra hours salary rules are being calculated with the three rules from ART 93 from ISR law
@@ -1033,8 +1252,12 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         3. The 50% taxed has as limit of 5 umas, the rest is taxed. for example, if uma = 100 and the total amount
         for extra hours is 1500. Exempt value is 500 and taxed value is 1000.
         """
-        extra_exempt_rule = self.env.ref("l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_perception_019_e")
-        extra_taxed_rule = self.env.ref("l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_perception_019_g")
+        extra_exempt_rule = self.env.ref(
+            "l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_perception_019_e"
+        )
+        extra_taxed_rule = self.env.ref(
+            "l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_perception_019_g"
+        )
         payroll = self.create_payroll()
 
         # Getting Date for overtime, next monday
@@ -1052,9 +1275,13 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         payroll.compute_sheet()
         # The quantity exempt is less than 5 umas
         extra_taxed_line = self.search_rule_in_payroll(payroll, extra_taxed_rule, True)
-        extra_exempt_line = self.search_rule_in_payroll(payroll, extra_exempt_rule, True)
+        extra_exempt_line = self.search_rule_in_payroll(
+            payroll, extra_exempt_rule, True
+        )
         self.assertEqual(
-            extra_taxed_line.total, extra_exempt_line.total, "The extra hours amounts should be 50%% exempt 50%% taxed"
+            extra_taxed_line.total,
+            extra_exempt_line.total,
+            "The extra hours amounts should be 50%% exempt 50%% taxed",
         )
         # The exempt amount should be limited to 5 umas
         overtimes += self.env["hr.payslip.overtime"].create(
@@ -1066,14 +1293,20 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         )
         payroll.compute_sheet()
         extra_taxed_line = self.search_rule_in_payroll(payroll, extra_taxed_rule, True)
-        extra_exempt_line = self.search_rule_in_payroll(payroll, extra_exempt_rule, True)
+        extra_exempt_line = self.search_rule_in_payroll(
+            payroll, extra_exempt_rule, True
+        )
         self.assertTrue(
             extra_taxed_line.total != extra_exempt_line.total,
             "The extra hours amounts should not be 50%% exempt 50%% taxed",
         )
         umas = round(self.contract.company_id.l10n_mx_edi_uma * 5, 2)
-        self.assertEqual(extra_exempt_line.total, umas, "The amount in the exempt should be 5 umas")
-        taxed_expected = (self.contract.wage / 30.0 / 8 * 2 * sum(overtimes.mapped("hours"))) - umas
+        self.assertEqual(
+            extra_exempt_line.total, umas, "The amount in the exempt should be 5 umas"
+        )
+        taxed_expected = (
+            self.contract.wage / 30.0 / 8 * 2 * sum(overtimes.mapped("hours"))
+        ) - umas
         self.assertTrue(
             float_is_zero(extra_taxed_line.total - taxed_expected, precision_digits=2),
             "The amount in the taxed it is not complete",
@@ -1081,11 +1314,21 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         # Days with 4 or more days, Triple hours
         overtimes.write({"hours": 4})
         payroll.compute_sheet()
-        extra_triple_rule = self.env.ref("l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_perception_019_t")
-        extra_triple_line = self.search_rule_in_payroll(payroll, extra_triple_rule, True)
-        self.assertTrue(extra_triple_line, "A extra hours triple line should be created, overtimes has more than 3h")
+        extra_triple_rule = self.env.ref(
+            "l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_perception_019_t"
+        )
+        extra_triple_line = self.search_rule_in_payroll(
+            payroll, extra_triple_rule, True
+        )
         self.assertTrue(
-            float_is_zero(extra_triple_line.total - (self.contract.wage / 30.0 / 8 * 3 * 2), precision_digits=2),
+            extra_triple_line,
+            "A extra hours triple line should be created, overtimes has more than 3h",
+        )
+        self.assertTrue(
+            float_is_zero(
+                extra_triple_line.total - (self.contract.wage / 30.0 / 8 * 3 * 2),
+                precision_digits=2,
+            ),
             "The amount in the taxed it is not complete",
         )
         # The salary is the minimal, up to 9 hours are exempt
@@ -1094,11 +1337,19 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         payroll.compute_sheet()
         extra_taxed_line = self.search_rule_in_payroll(payroll, extra_taxed_rule)
         self.assertFalse(extra_taxed_line, "Should not be any extra hour taxed line")
-        extra_exempt_line = self.search_rule_in_payroll(payroll, extra_exempt_rule, True)
-        amount_expected = self.contract.wage / 30.0 / 8 * 2 * sum(overtimes.mapped("hours"))
+        extra_exempt_line = self.search_rule_in_payroll(
+            payroll, extra_exempt_rule, True
+        )
+        amount_expected = (
+            self.contract.wage / 30.0 / 8 * 2 * sum(overtimes.mapped("hours"))
+        )
         self.assertTrue(
-            float_is_zero(round(extra_exempt_line.total, 1) - round(amount_expected, 1), precision_digits=4),
-            "The extra hours amount expected is %d (Found: %d)" % (amount_expected, round(extra_exempt_line.total, 2)),
+            float_is_zero(
+                round(extra_exempt_line.total, 1) - round(amount_expected, 1),
+                precision_digits=4,
+            ),
+            "The extra hours amount expected is %d (Found: %d)"
+            % (amount_expected, round(extra_exempt_line.total, 2)),
         )
 
         # Check if the overtime node can be added to the cfdi and can be printed
@@ -1106,11 +1357,15 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         payroll.with_context(payslip_generate_pdf=True).action_payslip_done()
         with self.with_mocked_mx_payslip_pac_sucess():
             payroll.l10n_mx_edi_update_pac_status()
-        self.assertEqual(payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)
+        self.assertEqual(
+            payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error
+        )
         xml = payroll.l10n_mx_edi_get_xml_etree()
         node_payroll = payroll.l10n_mx_edi_get_payroll_etree(xml)
         extra_hours_node = [
-            p.HorasExtra for p in node_payroll.Percepciones.Percepcion if p.get("TipoPercepcion", "") == "019"
+            p.HorasExtra
+            for p in node_payroll.Percepciones.Percepcion
+            if p.get("TipoPercepcion", "") == "019"
         ]
         self.assertTrue(extra_hours_node, "Extra hours node were not created")
 
@@ -1121,7 +1376,11 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         payroll = self.create_payroll()
         payroll.action_refresh_from_work_entries()
         payroll.action_payslip_done()
-        audit = self.env["hr.payslip.audit.isr"].with_context(active_ids=payroll.id).create({"payslip_id": payroll.id})
+        audit = (
+            self.env["hr.payslip.audit.isr"]
+            .with_context(active_ids=payroll.id)
+            .create({"payslip_id": payroll.id})
+        )
         rule = self.env.ref("l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_002")
         isr_line = self.search_rule_in_payroll(payroll, rule, True)
         self.assertTrue(
@@ -1139,15 +1398,24 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
             .with_context(active_ids=second_payroll.id)
             .create({"payslip_id": second_payroll.id})
         )
-        self.assertTrue(second_audit.previous_isr, "This is a monthly audit, must generate previous isr")
-        self.assertTrue(second_audit.monthly_isr, "This is a monthly audit, must generate monthly isr")
+        self.assertTrue(
+            second_audit.previous_isr,
+            "This is a monthly audit, must generate previous isr",
+        )
+        self.assertTrue(
+            second_audit.monthly_isr,
+            "This is a monthly audit, must generate monthly isr",
+        )
         self.assertEqual(
             second_isr_line.total,
             second_audit.isr,
             "The ISR audit wizard should give the same ISR amount than the payslip",
         )
         self.assertTrue(
-            float_is_zero(second_audit.monthly_isr - isr_line.total - second_isr_line.total, precision_digits=2),
+            float_is_zero(
+                second_audit.monthly_isr - isr_line.total - second_isr_line.total,
+                precision_digits=2,
+            ),
             "The sum of ISR amounts in the payslips should match with the monthly ISR in the audit",
         )
 
@@ -1158,9 +1426,15 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         self.contract.wage = 5000
         payroll = self.create_payroll()
         payroll.action_refresh_from_work_entries()
-        subsidy_rule = self.env.ref("l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_other_payment_aux_002")
+        subsidy_rule = self.env.ref(
+            "l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_other_payment_aux_002"
+        )
         subsidy_line = self.search_rule_in_payroll(payroll, subsidy_rule, True)
-        audit = self.env["hr.payslip.audit.isr"].with_context(active_ids=payroll.id).create({"payslip_id": payroll.id})
+        audit = (
+            self.env["hr.payslip.audit.isr"]
+            .with_context(active_ids=payroll.id)
+            .create({"payslip_id": payroll.id})
+        )
         self.assertEqual(
             round(subsidy_line.total, 2),
             round(audit.subsidy, 2),
@@ -1183,11 +1457,15 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         self.contract.date_end = date(2021, 9, 30)
         self.contract.state = "open"
         self.contract.sudo().company_id.l10n_mx_edi_uma = 89.62
-        self.contract.wage = 430.68 * self.contract.company_id.l10n_mx_edi_days_daily_wage
+        self.contract.wage = (
+            430.68 * self.contract.company_id.l10n_mx_edi_days_daily_wage
+        )
         self.struct = self.env.ref("l10n_mx_edi_payslip.payroll_structure_data_06")
         payroll = self.create_payroll(date(2021, 9, 16), date(2021, 9, 30))
         payroll.compute_sheet()
-        exempt_rule = self.env.ref("l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_perception_023_e_3_bf")
+        exempt_rule = self.env.ref(
+            "l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_perception_023_e_3_bf"
+        )
         line = self.search_rule_in_payroll(payroll, exempt_rule, True)
         expected_amount = line.total
         payroll.write(
@@ -1207,7 +1485,9 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         payroll.compute_sheet()
         line = self.search_rule_in_payroll(payroll, exempt_rule, False)
         self.assertFalse(line, "There should not be exempt part")
-        taxed_rule = self.env.ref("l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_perception_023_g_3_bf")
+        taxed_rule = self.env.ref(
+            "l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_perception_023_g_3_bf"
+        )
         line = self.search_rule_in_payroll(payroll, taxed_rule, False)
         self.assertTrue(line, "There should be an aguinaldo proporcional taxed line")
         self.assertEqual(
@@ -1230,7 +1510,9 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         )
         # Case 1 and 2, in just one calculation
         lines |= self.search_rule_in_payroll(payroll, taxed_rule, False)
-        self.assertEqual(len(lines), 2, "there should be two lines for aguinaldo, taxed and exempt")
+        self.assertEqual(
+            len(lines), 2, "there should be two lines for aguinaldo, taxed and exempt"
+        )
         # The amount gotten here in two lines, now should be given just in taxed
         expected_amount = round(sum(lines.mapped("total")), 2)
         payroll.write(
@@ -1309,12 +1591,18 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         action_result = payroll.action_open_overtimes()
         self.assertTrue(isinstance(action_result, dict))
         weeks = set(action_result["domain"][1][2])
-        self.assertTrue(payroll.date_from.isocalendar()[1] in weeks, "Wrong weeks in the payslips overtimes view")
+        self.assertTrue(
+            payroll.date_from.isocalendar()[1] in weeks,
+            "Wrong weeks in the payslips overtimes view",
+        )
         self.assertTrue(
             (payroll.date_from + timedelta(days=8)).isocalendar()[1] in weeks,
             "Wrong weeks in the payslips overtimes view",
         )
-        self.assertTrue(payroll.date_to.isocalendar()[1] in weeks, "Wrong weeks in the payslips overtimes view")
+        self.assertTrue(
+            payroll.date_to.isocalendar()[1] in weeks,
+            "Wrong weeks in the payslips overtimes view",
+        )
 
     @unittest.skip("Blocking un-mocked external HTTP request solfact")
     def test_040_solfact_sign_cancel(self):
@@ -1327,7 +1615,9 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         payroll.compute_sheet()
         payroll.action_payslip_done()
         payroll.l10n_mx_edi_update_pac_status()
-        self.assertEqual(payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)
+        self.assertEqual(
+            payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error
+        )
         # TODO: Cancel for Solfact is pending
         # payroll.l10n_mx_edi_cancellation = '03'
         # payroll.l10n_mx_edi_action_request_edi_cancel()
@@ -1377,7 +1667,9 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
                             "number_of_days": 1,
                             "number_of_hours": 8,
                             "contract_id": self.contract.id,
-                            "work_entry_type_id": self.ref("hr_work_entry_contract.work_entry_type_unpaid_leave"),
+                            "work_entry_type_id": self.ref(
+                                "hr_work_entry_contract.work_entry_type_unpaid_leave"
+                            ),
                         },
                     ),
                 ],
@@ -1385,7 +1677,9 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         )
         payroll.contract_id.sudo().company_id.l10n_mx_edi_use_leave_deduction = False
         payroll.compute_sheet()
-        line = payroll.line_ids.filtered(lambda line: line.code == "FJSS" and line.category_id.code == "AUX")
+        line = payroll.line_ids.filtered(
+            lambda line: line.code == "FJSS" and line.category_id.code == "AUX"
+        )
         self.assertTrue(
             line,
             "There should be a line with the code FJSS: Falta Justificada Sin Goce de Salario and "
@@ -1394,12 +1688,18 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         original_net_salary = payroll.net_wage
         payroll.contract_id.sudo().company_id.l10n_mx_edi_use_leave_deduction = True
         payroll.compute_sheet()
-        line = payroll.line_ids.filtered(lambda line: line.code == "FJSS" and line.category_id.code == "DED")
+        line = payroll.line_ids.filtered(
+            lambda line: line.code == "FJSS" and line.category_id.code == "DED"
+        )
         self.assertTrue(
             line,
             "There should be a line with the code FJSS: Falta Justificada Sin Goce de Salario and Type Deduction",
         )
-        self.assertEqual(original_net_salary, payroll.net_wage, "The net salary of both options should be the same")
+        self.assertEqual(
+            original_net_salary,
+            payroll.net_wage,
+            "The net salary of both options should be the same",
+        )
 
     def test_043_disciplinary_warning(self):
         self.employee.sudo().l10n_mx_edi_disciplinary_warning_ids = [
@@ -1449,7 +1749,9 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         payroll.action_payslip_done()
         with self.with_mocked_mx_payslip_pac_sucess():
             payroll.l10n_mx_edi_update_pac_status()
-        self.assertEqual(payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)
+        self.assertEqual(
+            payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error
+        )
 
     def test_base_viaticos(self):
         """Ensure that structure for viaticos is executed correctly."""
@@ -1462,18 +1764,24 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         payroll.action_payslip_done()
         with self.with_mocked_mx_payslip_pac_sucess():
             payroll.l10n_mx_edi_update_pac_status()
-        self.assertEqual(payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)
+        self.assertEqual(
+            payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error
+        )
 
     def test_base_week(self):
         """Ensure that structure base is executed correctly for week."""
         payroll = self.create_payroll()
-        self.contract.l10n_mx_edi_schedule_pay_id = self.env.ref("l10n_mx_edi_payslip.schedule_pay_weekly")
+        self.contract.l10n_mx_edi_schedule_pay_id = self.env.ref(
+            "l10n_mx_edi_payslip.schedule_pay_weekly"
+        )
         payroll.date_to = payroll.date_from + timedelta(days=7)
         payroll.compute_sheet()
         payroll.action_payslip_done()
         with self.with_mocked_mx_payslip_pac_sucess():
             payroll.l10n_mx_edi_update_pac_status()
-        self.assertEqual(payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)
+        self.assertEqual(
+            payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error
+        )
 
     def test_net_salary_in_0(self):
         """Ensure that not try to stamp when net salary is 0"""
@@ -1495,7 +1803,9 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         payroll.action_payslip_done()
         with self.with_mocked_mx_payslip_pac_sucess():
             payroll.l10n_mx_edi_update_pac_status()
-        self.assertEqual(payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)
+        self.assertEqual(
+            payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error
+        )
 
     def test_prorrate_isr(self):
         """Ensure that rules with l10n_mx_edi_prorate_isr works correctly"""
@@ -1505,14 +1815,20 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         payroll.action_payslip_done()
         with self.with_mocked_mx_payslip_pac_sucess():
             payroll.l10n_mx_edi_update_pac_status()
-        self.assertEqual(payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)
+        self.assertEqual(
+            payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error
+        )
 
     def test_leave_without_salary(self):
         """Ensure that leave for 'Falta Justificada Sin Goce de Salario' is created"""
         holiday = self.env.ref("l10n_mx_edi_payslip.mexican_falta_justificada")
         self.employee.parent_id = False
         self.env.user.group_ids += self.env.ref("hr_holidays.group_hr_holidays_user")
-        allocation_form = Form(self.env["hr.leave.allocation"].with_context(**{"is_employee_allocation": True}))
+        allocation_form = Form(
+            self.env["hr.leave.allocation"].with_context(
+                **{"is_employee_allocation": True}
+            )
+        )
         allocation_form.holiday_status_id = holiday
         allocation_form.number_of_days_display = 10
         allocation_form.employee_id = self.employee
@@ -1523,8 +1839,10 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
             {
                 "employee_id": self.employee.id,
                 "holiday_status_id": holiday.id,
-                "request_date_from": "%s-%s-01" % (time.strftime("%Y"), time.strftime("%m")),
-                "request_date_to": "%s-%s-03" % (time.strftime("%Y"), time.strftime("%m")),
+                "request_date_from": "%s-%s-01"
+                % (time.strftime("%Y"), time.strftime("%m")),
+                "request_date_to": "%s-%s-03"
+                % (time.strftime("%Y"), time.strftime("%m")),
                 "number_of_days": 3,
             }
         )
@@ -1545,7 +1863,9 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         payroll = self.env.ref("l10n_mx_edi_payslip.hr_payslip_mlc_cfdi0")
         payroll.contract_id.state = "open"
         payroll.employee_id.l10n_mx_edi_force_attendances = True
-        self.generate_attendances(self.employee, payroll.date_from, payroll.date_to - timedelta(days=3))
+        self.generate_attendances(
+            self.employee, payroll.date_from, payroll.date_to - timedelta(days=3)
+        )
         payroll.action_refresh_from_work_entries()
         self.assertTrue(
             payroll.worked_days_line_ids.filtered(lambda line: line.code == "LEAVE150"),
@@ -1557,20 +1877,27 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         leave = self.env["hr.leave"].create(
             {
                 "employee_id": self.employee.id,
-                "holiday_status_id": self.env.ref("l10n_mx_edi_payslip.mexican_licencia_padres_hijo_cancer").id,
-                "request_date_from": "%s-%s-01" % (time.strftime("%Y"), time.strftime("%m")),
-                "request_date_to": "%s-%s-03" % (time.strftime("%Y"), time.strftime("%m")),
+                "holiday_status_id": self.env.ref(
+                    "l10n_mx_edi_payslip.mexican_licencia_padres_hijo_cancer"
+                ).id,
+                "request_date_from": "%s-%s-01"
+                % (time.strftime("%Y"), time.strftime("%m")),
+                "request_date_to": "%s-%s-03"
+                % (time.strftime("%Y"), time.strftime("%m")),
                 "number_of_days": 3,
             }
         )
         leave._compute_date_from_to()
         leave.action_approve()
         self.generate_attendances(
-            self.employee, payroll.date_from + timedelta(days=3), payroll.date_to + timedelta(days=1)
+            self.employee,
+            payroll.date_from + timedelta(days=3),
+            payroll.date_to + timedelta(days=1),
         )
         payroll.action_refresh_from_work_entries()
         self.assertFalse(
-            payroll.worked_days_line_ids.filtered(lambda line: line.code == "LEAVE150"), "Not attendance in payslip."
+            payroll.worked_days_line_ids.filtered(lambda line: line.code == "LEAVE150"),
+            "Not attendance in payslip.",
         )
 
     def generate_attendances(self, employee, date_from, date_to):
@@ -1599,11 +1926,27 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         # setting up expected amount
         line = payroll.line_ids.filtered(lambda line: line.code == "INF009")
         date_payroll = payroll.date_from
-        leap_year = not date_payroll.year % 4 and date_payroll.year % 100 or not date_payroll.year % 400
-        period = {1: 59 if not leap_year else 60, 2: 59 if not leap_year else 60, 7: 62, 8: 62}
-        expected_amount = float_round(loan.amount * 2 / period.get(date_payroll.month, 61) * 10, precision_digits=2)
+        leap_year = (
+            not date_payroll.year % 4
+            and date_payroll.year % 100
+            or not date_payroll.year % 400
+        )
+        period = {
+            1: 59 if not leap_year else 60,
+            2: 59 if not leap_year else 60,
+            7: 62,
+            8: 62,
+        }
+        expected_amount = float_round(
+            loan.amount * 2 / period.get(date_payroll.month, 61) * 10,
+            precision_digits=2,
+        )
         # tests
-        self.assertEqual(line.total, expected_amount, "Loan charge not calculated correctly for the period")
+        self.assertEqual(
+            line.total,
+            expected_amount,
+            "Loan charge not calculated correctly for the period",
+        )
 
     def test_liquidacion_structure(self):
         """Ensure that liquidacion is generated correctly."""
@@ -1613,7 +1956,9 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         payroll.action_payslip_done()
         with self.with_mocked_mx_payslip_pac_sucess():
             payroll.l10n_mx_edi_update_pac_status()
-        self.assertEqual(payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)
+        self.assertEqual(
+            payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error
+        )
 
     def test_ptu_structure(self):
         """Ensure that PTU is generated correctly."""
@@ -1622,11 +1967,15 @@ class HRPayroll(L10nMxEdiPayslipTransactionCase):
         payroll.input_line_ids[0].write(
             {
                 "amount": 20000.0,
-                "input_type_id": self.ref("l10n_mx_edi_payslip.hr_payslip_input_type_perception_003_g"),
+                "input_type_id": self.ref(
+                    "l10n_mx_edi_payslip.hr_payslip_input_type_perception_003_g"
+                ),
             }
         )
         payroll.compute_sheet()
         payroll.action_payslip_done()
         with self.with_mocked_mx_payslip_pac_sucess():
             payroll.l10n_mx_edi_update_pac_status()
-        self.assertEqual(payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error)
+        self.assertEqual(
+            payroll.l10n_mx_edi_pac_status, "signed", payroll.l10n_mx_edi_error
+        )

@@ -9,19 +9,25 @@ class BankRecWidget(models.Model):
 
     def _prepare_embedded_views_data(self):
         res = super()._prepare_embedded_views_data()
-        lines = self.st_line_id.operation_line_ids.filtered(lambda amol: amol.state == "ready" and amol.move_id)
+        lines = self.st_line_id.operation_line_ids.filtered(
+            lambda amol: amol.state == "ready" and amol.move_id
+        )
         if not (lines and res.get("amls")):
             return res
         res["amls"].update(
             {
-                "domain": expression.AND([res["amls"].get("domain"), [("move_id", "in", lines.move_id.ids)]]),
+                "domain": expression.AND(
+                    [res["amls"].get("domain"), [("move_id", "in", lines.move_id.ids)]]
+                ),
             }
         )
         return res
 
     def _action_validate(self):
         res = super()._action_validate()
-        op_line = self.st_line_id.operation_line_ids.filtered(lambda amol: amol.state == "ready" and amol.move_id)[:1]
+        op_line = self.st_line_id.operation_line_ids.filtered(
+            lambda amol: amol.state == "ready" and amol.move_id
+        )[:1]
         if op_line:
             op_line.action_done()
         return res

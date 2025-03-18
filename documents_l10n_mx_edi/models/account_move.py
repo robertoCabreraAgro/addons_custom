@@ -6,7 +6,6 @@ from odoo.tools.float_utils import float_round
 class AccountMove(models.Model):
     _inherit = "account.move"
 
-
     x_check_tax = fields.Monetary(
         string="Verification tax",
         copy=False,
@@ -24,7 +23,6 @@ class AccountMove(models.Model):
         compute="_compute_x_difference",
     )
 
-
     @api.constrains("state", "l10n_mx_edi_cfdi_uuid")
     def _check_uuid_duplicated(self):
         for move in self:
@@ -39,12 +37,11 @@ class AccountMove(models.Model):
                 if dupli:
                     msg = _(
                         "UUID duplicated %s for following invoices:\n",
-                        move.l10n_mx_edi_cfdi_uuid
+                        move.l10n_mx_edi_cfdi_uuid,
                     )
                     for rec in dupli:
                         msg += f"-({rec.id}) {rec.name}\n"
                         raise ValidationError(msg)
-
 
     @api.depends("amount_tax", "amount_total", "x_check_tax", "x_check_total")
     def _compute_x_difference(self):
@@ -54,10 +51,10 @@ class AccountMove(models.Model):
             if move.x_check_tax:
                 move.x_tax_difference = float_round(
                     move.x_check_tax - move.amount_tax,
-                    precision_rounding=move.currency_id.rounding
+                    precision_rounding=move.currency_id.rounding,
                 )
             if move.x_check_total:
                 move.x_total_difference = float_round(
                     move.x_check_total - move.amount_total,
-                    precision_rounding=move.currency_id.rounding
+                    precision_rounding=move.currency_id.rounding,
                 )

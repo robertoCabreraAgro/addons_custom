@@ -12,18 +12,27 @@ class HrEmployeeAlimony(models.Model):
     discount_type = fields.Selection(
         selection=[
             ("percentage_wage", "Percentage over salary"),
-            ("percentage_perceptions_ISR", "Percentage over perceptions less ISR and Social Security"),
+            (
+                "percentage_perceptions_ISR",
+                "Percentage over perceptions less ISR and Social Security",
+            ),
             ("amount_fixed", "Amount fixed"),
             ("percentage_over_net", "Percentage over net"),
             ("percentage_perceptions", "Percentage over perceptions"),
-            ("percentage_perceptions_ISR_mortgages", "Percentage over perceptions less ISR and Mortgages"),
+            (
+                "percentage_perceptions_ISR_mortgages",
+                "Percentage over perceptions less ISR and Mortgages",
+            ),
             (
                 "percentage_perceptions_ISR_mortgages_ss",
                 "Percentage over perceptions less ISR, Social Security and Mortgages",
             ),
             ("percentage_christmas", "Percentage over Christmas bonus"),
             ("percentage_christmas_isr", "Percentage over Christmas bonus less ISR"),
-            ("percentage_christmas_holidays", "Percentage over Christmas bonus and holidays"),
+            (
+                "percentage_christmas_holidays",
+                "Percentage over Christmas bonus and holidays",
+            ),
             ("amount_fixed_christmas", "Fixed over Christmas bonus"),
         ],
         required=True,
@@ -38,7 +47,9 @@ class HrEmployeeAlimony(models.Model):
     date_to = fields.Date(tracking=True)
     partner_id = fields.Many2one("res.partner", "Beneficiary", tracking=True)
     employee_id = fields.Many2one("hr.employee", tracking=True)
-    payment_method_id = fields.Many2one("l10n_mx_edi.payment.method", "Payment Way", tracking=True)
+    payment_method_id = fields.Many2one(
+        "l10n_mx_edi.payment.method", "Payment Way", tracking=True
+    )
     notes = fields.Text(tracking=True)
     increase_based_on = fields.Selection(
         selection=[

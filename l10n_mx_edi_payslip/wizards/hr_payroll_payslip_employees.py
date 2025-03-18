@@ -11,21 +11,30 @@ class HrPayslipEmployees(models.TransientModel):
         active_id = self.env.context.get("active_id")
         payslips = payslip_obj.search([("payslip_run_id", "=", active_id)])
         [run_data] = (
-            self.env["hr.payslip.run"].browse(active_id).read(["l10n_mx_edi_payment_date"]) if active_id else []
+            self.env["hr.payslip.run"]
+            .browse(active_id)
+            .read(["l10n_mx_edi_payment_date"])
+            if active_id
+            else []
         )
         payslips.write(
             {
-                "l10n_mx_edi_payment_date": run_data.get("l10n_mx_edi_payment_date", False),
-                #"number": payslips[0].payslip_run_id.name if payslips else "",
+                "l10n_mx_edi_payment_date": run_data.get(
+                    "l10n_mx_edi_payment_date", False
+                ),
+                # "number": payslips[0].payslip_run_id.name if payslips else "",
             }
         )
 
         if self.env.company.l10n_mx_edi_automatic_settlement:
             struct_id = self.env.ref("l10n_mx_edi_payslip.payroll_structure_data_01")
             changed_slips = payslips.filtered(
-                lambda slip, st=struct_id: slip.date_to == slip.contract_id.date_end and slip.struct_id == struct_id
+                lambda slip, st=struct_id: slip.date_to == slip.contract_id.date_end
+                and slip.struct_id == struct_id
             )
-            settlement_struct_id = self.env.ref("l10n_mx_edi_payslip.payroll_structure_data_06")
+            settlement_struct_id = self.env.ref(
+                "l10n_mx_edi_payslip.payroll_structure_data_06"
+            )
             changed_slips.write({"struct_id": settlement_struct_id.id})
             message = self.env._(
                 """The contract will expire at the end of the payslip period.

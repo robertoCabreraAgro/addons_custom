@@ -1,4 +1,3 @@
-
 {
     "name": "Account Invoice Margin",
     "summary": "Show margin in invoices",

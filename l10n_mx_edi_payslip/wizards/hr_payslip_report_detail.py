@@ -24,7 +24,9 @@ class HrPayslipReportDetail(models.TransientModel):
     )
 
     def print_report(self):
-        return self.env.ref("l10n_mx_edi_payslip.payslip_details_by_rule").report_action(self)
+        return self.env.ref(
+            "l10n_mx_edi_payslip.payslip_details_by_rule"
+        ).report_action(self)
 
     def _get_lines(self):
         payslips = self.env["hr.payslip"].search(
@@ -35,25 +37,41 @@ class HrPayslipReportDetail(models.TransientModel):
             ]
         )
         categories = [cat.id for cat in self._l10n_mx_edi_get_categories()]
-        return payslips.mapped("line_ids").filtered(lambda line: line.category_id.id in categories)
+        return payslips.mapped("line_ids").filtered(
+            lambda line: line.category_id.id in categories
+        )
 
     def _l10n_mx_edi_get_details(self):
         """Return the totals by rule"""
         lines = self._get_lines()
-        group = lines.read_group([("id", "in", lines.ids), ("amount", "!=", 0)], ["amount"], ["salary_rule_id"])
+        group = lines.read_group(
+            [("id", "in", lines.ids), ("amount", "!=", 0)],
+            ["amount"],
+            ["salary_rule_id"],
+        )
         return group
 
     def _l10n_mx_edi_get_details_by_category(self, rule):
         """Return the totals by category"""
         lines = self._get_lines()
         group = lines.read_group(
-            [("id", "in", lines.ids), ("amount", "!=", 0), ("salary_rule_id", "=", rule)], ["amount"], ["category_id"]
+            [
+                ("id", "in", lines.ids),
+                ("amount", "!=", 0),
+                ("salary_rule_id", "=", rule),
+            ],
+            ["amount"],
+            ["category_id"],
         )
         return group
 
     def _l10n_mx_edi_get_categories(self):
-        taxed = self.env.ref("l10n_mx_edi_payslip.hr_salary_rule_category_perception_mx_taxed")
-        exempt = self.env.ref("l10n_mx_edi_payslip.hr_salary_rule_category_perception_mx_exempt")
+        taxed = self.env.ref(
+            "l10n_mx_edi_payslip.hr_salary_rule_category_perception_mx_taxed"
+        )
+        exempt = self.env.ref(
+            "l10n_mx_edi_payslip.hr_salary_rule_category_perception_mx_exempt"
+        )
         deduction = self.env.ref("hr_payroll.DED")
         other = self.env.ref("l10n_mx_edi_payslip.hr_salary_rule_category_other_mx")
         company = self.env.ref("hr_payroll.COMP")

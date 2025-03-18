@@ -18,7 +18,9 @@ class TestPurchase(ValuationReconciliationTestCommon):
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
 
-        cls.product_id_1 = cls.env["product.product"].create({"name": "Large Desk", "purchase_method": "purchase"})
+        cls.product_id_1 = cls.env["product.product"].create(
+            {"name": "Large Desk", "purchase_method": "purchase"}
+        )
         cls.product_id_2 = cls.env["product.product"].create(
             {"name": "Conference Chair", "purchase_method": "purchase"}
         )
@@ -35,7 +37,9 @@ class TestPurchase(ValuationReconciliationTestCommon):
                         "product_qty": 5.0,
                         "product_uom": cls.product_id_1.uom_po_id.id,
                         "price_unit": 500.0,
-                        "date_planned": datetime.today().replace(hour=9).strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                        "date_planned": datetime.today()
+                        .replace(hour=9)
+                        .strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                     },
                 ),
                 (
@@ -47,7 +51,9 @@ class TestPurchase(ValuationReconciliationTestCommon):
                         "product_qty": 5.0,
                         "product_uom": cls.product_id_2.uom_po_id.id,
                         "price_unit": 250.0,
-                        "date_planned": datetime.today().replace(hour=9).strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                        "date_planned": datetime.today()
+                        .replace(hour=9)
+                        .strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                     },
                 ),
             ],
@@ -79,7 +85,11 @@ class TestPurchase(ValuationReconciliationTestCommon):
         line.qty_received_method = "stock_moves"
         self.assertEqual(line.qty_to_receive, 5.0)
 
-        self.assertEqual(purchase_order.incoming_picking_count, 1, 'Purchase: one picking should be created"')
+        self.assertEqual(
+            purchase_order.incoming_picking_count,
+            1,
+            'Purchase: one picking should be created"',
+        )
         self.picking = purchase_order.picking_ids[0]
         self.picking.move_line_ids.write({"quantity": 5.0})
         self.picking.move_ids.picked = True
@@ -89,9 +99,13 @@ class TestPurchase(ValuationReconciliationTestCommon):
         self.assertEqual(line.qty_to_receive, 0.0)
         self.assertFalse(purchase_order.order_line[0].product_updatable)
 
-        move_form = Form(self.env["account.move"].with_context(default_move_type="in_invoice"))
+        move_form = Form(
+            self.env["account.move"].with_context(default_move_type="in_invoice")
+        )
         move_form.partner_id = self.partner_a
-        move_form.purchase_bill_union_id = self.env["purchase.bill.union"].browse(-purchase_order.id)
+        move_form.purchase_bill_union_id = self.env["purchase.bill.union"].browse(
+            -purchase_order.id
+        )
         self.invoice = move_form.save()
         self.assertEqual(purchase_order.order_line.mapped("qty_invoiced"), [5.0, 5.0])
         self.assertEqual(purchase_order.invoice_status, "invoiced")
@@ -100,7 +114,9 @@ class TestPurchase(ValuationReconciliationTestCommon):
         purchase_order = self.env["purchase.order"].create(self.purchase_order_vals)
         purchase_order.button_confirm()
         picking = purchase_order.picking_ids[0]
-        res = picking.with_context(default_picking_id=picking.id).action_view_purchase_order()
+        res = picking.with_context(
+            default_picking_id=picking.id
+        ).action_view_purchase_order()
         self.assertEqual(res.get("res_model"), "purchase.order")
         self.assertEqual(res.get("res_id"), purchase_order.id)
         self.assertFalse(res.get("context", {}).get("default_picking_id"))
@@ -112,7 +128,9 @@ class TestPurchase(ValuationReconciliationTestCommon):
         action = purchase_line.action_purchase_order_form()
         self.assertEqual(action["res_id"], purchase_line.order_id.id)
         self.assertEqual(action["res_model"], "purchase.order")
-        self.assertEqual(action["views"], [(self.env.ref("purchase.purchase_order_form").id, "form")])
+        self.assertEqual(
+            action["views"], [(self.env.ref("purchase.purchase_order_form").id, "form")]
+        )
 
     def test_04_purchase_order_price_history(self):
         order = self.env["purchase.order"].create(self.purchase_order_vals)
@@ -163,7 +181,9 @@ class TestPurchase(ValuationReconciliationTestCommon):
         )
 
     def test_05_purchase_order_create_and_show(self):
-        with Form(self.env["purchase.order.line"], view="marin.view_purchase_order_line_tree") as line_form:
+        with Form(
+            self.env["purchase.order.line"], view="marin.view_purchase_order_line_tree"
+        ) as line_form:
             line_form.partner_id = self.partner_a
             line_form.product_id = self.product_id_1
             line_form.price_unit = 190.50

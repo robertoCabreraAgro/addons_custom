@@ -9,14 +9,12 @@ class DateRangeSearchMixin(models.AbstractModel):
     _description = "Mixin class to add a Many2one style period search field"
     _date_range_search_field = "date"
 
-
     date_range_search_id = fields.Many2one(
         comodel_name="date.range",
         string="Filter by period (technical field)",
         compute="_compute_date_range_search_id",
         search="_search_date_range_search_id",
     )
-
 
     def _compute_date_range_search_id(self):
         """Assign a dummy value for this search field"""

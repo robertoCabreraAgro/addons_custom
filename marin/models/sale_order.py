@@ -26,13 +26,13 @@ class SaleOrder(models.Model):
         "Route",
         domain=[("sale_selectable", "=", True)],
         help="When you change this field all the lines will be changed. "
-             "After use it you will be able to change each line.",
+        "After use it you will be able to change each line.",
     )
     season_id = fields.Many2one(
         "date.range",
         "AG season",
         help="Since every farmer can have several growing seasons the specific one "
-             "can be selected.",
+        "can be selected.",
     )
 
     # Extend original method
@@ -56,26 +56,36 @@ class SaleOrder(models.Model):
                     )
         return res
 
-    @api.depends("company_id", "partner_id", "amount_total", "commercial_partner_id.credit_limit")
+    @api.depends(
+        "company_id", "partner_id", "amount_total", "commercial_partner_id.credit_limit"
+    )
     def _compute_partner_credit_warning(self):
         for order in self:
             order.with_company(order.company_id)
             order.partner_credit_warning = ""
-            future_credit = order.commercial_partner_id.credit + (order.amount_total * order.currency_rate)
+            future_credit = order.commercial_partner_id.credit + (
+                order.amount_total * order.currency_rate
+            )
             show_warning = (
                 order.company_id.account_use_credit_limit
                 and order.state in ("draft", "sent")
                 and future_credit > order.commercial_partner_id.credit_limit
             )
             if show_warning:
-                order.partner_credit_warning = order.commercial_partner_id._build_credit_warning_message(
-                    future_credit, order.company_id.currency_id
+                order.partner_credit_warning = (
+                    order.commercial_partner_id._build_credit_warning_message(
+                        future_credit, order.company_id.currency_id
+                    )
                 )
 
     # Override original method
-    @api.depends("state", "order_line_ids.qty_to_deliver", "order_line_ids.product_uom_qty")
+    @api.depends(
+        "state", "order_line_ids.qty_to_deliver", "order_line_ids.product_uom_qty"
+    )
     def _compute_delivery_status(self):
-        precision = self.env["decimal.precision"].precision_get("Product Unit of measure")
+        precision = self.env["decimal.precision"].precision_get(
+            "Product Unit of measure"
+        )
         for order in self:
             if order.state not in ("sale", "done"):
                 order.delivery_status = "no"
@@ -89,9 +99,9 @@ class SaleOrder(models.Model):
 
             if not float_compare(qty1, to_deliver, precision_digits=precision):
                 order.delivery_status = "pending"
-            elif float_compare(qty1, to_deliver, precision_digits=precision) > 0 and not float_is_zero(
-                to_deliver, precision_digits=precision
-            ):
+            elif float_compare(
+                qty1, to_deliver, precision_digits=precision
+            ) > 0 and not float_is_zero(to_deliver, precision_digits=precision):
                 order.delivery_status = "partial"
             elif float_is_zero(to_deliver, precision_digits=precision):
                 order.delivery_status = "full"
@@ -146,23 +156,29 @@ class SaleOrder(models.Model):
         self._compute_invoice_status()
 
     def action_open_order_lines(self):
-        action = self.env["ir.actions.act_window"]._for_xml_id("marin.action_sale_order_line")
+        action = self.env["ir.actions.act_window"]._for_xml_id(
+            "marin.action_sale_order_line"
+        )
         action["domain"] = [("id", "in", self.order_line_ids.ids)]
         return action
 
     def validate_credit_limit(self):
         if self.partner_credit_warning and not self.payment_term_id.is_immediate:
             if self.commercial_partner_id.credit_on_hold:
-                raise UserError(_(
-                    "The partner's credit line has been held. Contact the Credit Manager."
-                ))
+                raise UserError(
+                    _(
+                        "The partner's credit line has been held. Contact the Credit Manager."
+                    )
+                )
 
             if not self.env.user.has_group("marin.group_account_debt_manager"):
-                raise UserError(_(
-                    "The Partner %s does not have an authorized credit line. "
-                    "Contact the Credit Manager.",
-                    self.partner_invoice_id.name,
-                ))
+                raise UserError(
+                    _(
+                        "The Partner %s does not have an authorized credit line. "
+                        "Contact the Credit Manager.",
+                        self.partner_invoice_id.name,
+                    )
+                )
 
             return self.action_sale_authorize_debt()
 
@@ -178,7 +194,9 @@ class SaleOrder(models.Model):
 
     def action_clean_3_0(self):
         orders = self.filtered(lambda order: order.state == "sale")
-        precision = self.env["decimal.precision"].precision_get("Product Unit of measure")
+        precision = self.env["decimal.precision"].precision_get(
+            "Product Unit of measure"
+        )
         lines = orders.mapped("order_line_ids").filtered(
             lambda line: float_is_zero(line.product_uom_qty, precision_digits=precision)
             and float_is_zero(line.qty_delivered, precision_digits=precision)
@@ -186,7 +204,9 @@ class SaleOrder(models.Model):
             and not line.invoice_lines
         )
         for line in lines:
-            moves = line.move_ids.filtered(lambda sm: sm.state not in ["done", "cancel"])
+            moves = line.move_ids.filtered(
+                lambda sm: sm.state not in ["done", "cancel"]
+            )
             moves._action_cancel()
             line.with_context(avoid_check_unlink=True).unlink()
 

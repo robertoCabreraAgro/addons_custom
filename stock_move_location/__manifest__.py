@@ -2,11 +2,11 @@
     "name": "Stock Quant Relocate",
     "version": "saas~18.2.1.0.0",
     "author": "Julius Network Solutions, "
-        "BCIM,"
-        "Camptocamp,"
-        "Odoo Community Association (OCA)",
+    "BCIM,"
+    "Camptocamp,"
+    "Odoo Community Association (OCA)",
     "summary": "This module allows to move all stock "
-        "in a stock location to an other one.",
+    "in a stock location to an other one.",
     "website": "https://github.com/OCA/stock-logistics-warehouse",
     "license": "AGPL-3",
     "depends": ["stock"],

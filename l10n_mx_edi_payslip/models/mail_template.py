@@ -4,9 +4,13 @@ from odoo import models
 class MailTemplate(models.Model):
     _inherit = "mail.template"
 
-    def _generate_template_attachments(self, res_ids, render_fields, render_results=None):
+    def _generate_template_attachments(
+        self, res_ids, render_fields, render_results=None
+    ):
         self.ensure_one()
-        res = super()._generate_template_attachments(res_ids, render_fields, render_results)
+        res = super()._generate_template_attachments(
+            res_ids, render_fields, render_results
+        )
         if self.model != "hr.payslip":
             return res
 
@@ -16,5 +20,7 @@ class MailTemplate(models.Model):
                 continue  # pragma: no cover
             attachment = payslip.l10n_mx_edi_retrieve_last_attachment()
             if attachment:
-                res[payslip.id].get("attachments", []).append((attachment.name, attachment.datas))
+                res[payslip.id].get("attachments", []).append(
+                    (attachment.name, attachment.datas)
+                )
         return res

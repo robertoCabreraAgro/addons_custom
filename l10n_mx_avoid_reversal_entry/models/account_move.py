@@ -37,7 +37,9 @@ class AccountPartialReconcile(models.Model):
         This Method will un-post and delete the journal entry from the Tax Cash
         Basis
         """
-        mxn_moves = self.filtered(lambda r: r.company_id.country_id == self.env.ref("base.mx"))
+        mxn_moves = self.filtered(
+            lambda r: r.company_id.country_id == self.env.ref("base.mx")
+        )
         res = super(AccountPartialReconcile, self - mxn_moves).unlink()
         if not mxn_moves:
             return res
@@ -52,16 +54,22 @@ class AccountPartialReconcile(models.Model):
         fx_apr_ids = fx_move_ids.mapped("line_ids.matched_debit_ids")
         fx_apr_ids |= fx_move_ids.mapped("line_ids.matched_credit_ids")
         # delete the tax basis move created at the reconciliation time by the FX moves
-        caba_fx_move_ids = move_obj.search([("tax_cash_basis_rec_id", "in", (fx_apr_ids | self).ids)])
+        caba_fx_move_ids = move_obj.search(
+            [("tax_cash_basis_rec_id", "in", (fx_apr_ids | self).ids)]
+        )
         caba_fx_apr_ids = caba_fx_move_ids.mapped("line_ids.matched_debit_ids")
         caba_fx_apr_ids |= caba_fx_move_ids.mapped("line_ids.matched_credit_ids")
         caba_fx_afr_ids = caba_fx_move_ids.mapped("line_ids.full_reconcile_id")
-        fx_caba_fx_move_ids = caba_fx_afr_ids.exchange_move_id | caba_fx_apr_ids.exchange_move_id
+        fx_caba_fx_move_ids = (
+            caba_fx_afr_ids.exchange_move_id | caba_fx_apr_ids.exchange_move_id
+        )
         fx_caba_fx_apr_ids = fx_caba_fx_move_ids.mapped("line_ids.matched_debit_ids")
         fx_caba_fx_apr_ids |= fx_caba_fx_move_ids.mapped("line_ids.matched_credit_ids")
 
         # delete the tax basis move created at the reconciliation time
-        caba_move_ids = move_obj.search([("tax_cash_basis_rec_id", "in", partial_to_unlink.ids)])
+        caba_move_ids = move_obj.search(
+            [("tax_cash_basis_rec_id", "in", partial_to_unlink.ids)]
+        )
         # Journal entries from tax cash might include reconciliations
         caba_afr_ids = caba_move_ids.mapped("line_ids.full_reconcile_id")
         caba_apr_ids = caba_move_ids.mapped("line_ids.matched_debit_ids")
@@ -75,10 +83,22 @@ class AccountPartialReconcile(models.Model):
         full_to_unlink = afr_ids | caba_fx_afr_ids | caba_afr_ids
         full_to_unlink.unlink()
         # stitch together all the partial reconcile records
-        partial_to_unlink |= fx_apr_ids | caba_fx_apr_ids | fx_caba_fx_apr_ids | caba_apr_ids | fx_caba_apr_ids
+        partial_to_unlink |= (
+            fx_apr_ids
+            | caba_fx_apr_ids
+            | fx_caba_fx_apr_ids
+            | caba_apr_ids
+            | fx_caba_apr_ids
+        )
         res = super(models.Model, partial_to_unlink).unlink()
         # stitch together all the caba and fx moves
-        move_ids = fx_move_ids | caba_fx_move_ids | fx_caba_fx_move_ids | caba_move_ids | fx_caba_move_ids
+        move_ids = (
+            fx_move_ids
+            | caba_fx_move_ids
+            | fx_caba_fx_move_ids
+            | caba_move_ids
+            | fx_caba_move_ids
+        )
         move_ids.with_context(force_draft_in_fx_and_caba_entries=True).button_cancel()
         move_ids.with_context(force_delete=True).unlink()
         return res

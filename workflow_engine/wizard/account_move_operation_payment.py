@@ -26,8 +26,13 @@ class AccountMoveOperationPayment(models.TransientModel):
     @api.model
     def default_get(self, fields_list):
         defaults = super().default_get(fields_list)
-        if self.env.context.get("active_model") == "account.move.operation.line" and "active_ids" in self.env.context:
-            line = self.env[self.env.context["active_model"]].browse(self.env.context["active_ids"])[:1]
+        if (
+            self.env.context.get("active_model") == "account.move.operation.line"
+            and "active_ids" in self.env.context
+        ):
+            line = self.env[self.env.context["active_model"]].browse(
+                self.env.context["active_ids"]
+            )[:1]
             move = line.orig_line_id._get_latest_move()
             defaults.update(
                 {

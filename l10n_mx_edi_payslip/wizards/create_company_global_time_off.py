@@ -28,7 +28,9 @@ class CreateCompanyGlobalTimeOff(models.TransientModel):
 
     def action_confirm(self):
         self.ensure_one()
-        self.env["resource.calendar"].search([("company_id", "=", self.company_id.id)]).write(
+        self.env["resource.calendar"].search(
+            [("company_id", "=", self.company_id.id)]
+        ).write(
             {
                 "leave_ids": [
                     Command.create(

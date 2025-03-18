@@ -29,7 +29,9 @@ class ProductTemplate(models.Model):
         "Leave empty to use the account from the product category.",
     )
     x_dose_x_ha = fields.Float("Dose per Hectare", digits="Product Price")
-    use_expiration_date = fields.Boolean(compute="_compute_use_expiration_date", store=True)
+    use_expiration_date = fields.Boolean(
+        compute="_compute_use_expiration_date", store=True
+    )
 
     @api.depends("tracking")
     def _compute_use_expiration_date(self):
@@ -38,13 +40,25 @@ class ProductTemplate(models.Model):
 
     def _prepare_compute_group(self):
         return {
-            "user_product_cost_readonly": self.env.user.has_group("marin.group_product_cost_readonly"),
-            "user_product_cost_manager": self.env.user.has_group("marin.group_product_cost_manager"),
-            "user_purchase_readonly": self.env.user.has_group("marin.group_purchase_readonly"),
-            "user_purchase_manager": self.env.user.has_group("purchase.group_purchase_manager"),
+            "user_product_cost_readonly": self.env.user.has_group(
+                "marin.group_product_cost_readonly"
+            ),
+            "user_product_cost_manager": self.env.user.has_group(
+                "marin.group_product_cost_manager"
+            ),
+            "user_purchase_readonly": self.env.user.has_group(
+                "marin.group_purchase_readonly"
+            ),
+            "user_purchase_manager": self.env.user.has_group(
+                "purchase.group_purchase_manager"
+            ),
             "user_sale_readonly": self.env.user.has_group("marin.group_sale_readonly"),
-            "user_sale_manager": self.env.user.has_group("sales_team.group_sale_manager"),
-            "user_stock_readonly": self.env.user.has_group("marin.group_stock_readonly"),
+            "user_sale_manager": self.env.user.has_group(
+                "sales_team.group_sale_manager"
+            ),
+            "user_stock_readonly": self.env.user.has_group(
+                "marin.group_stock_readonly"
+            ),
             "user_stock_manager": self.env.user.has_group("marin.group_stock_manager"),
         }
 

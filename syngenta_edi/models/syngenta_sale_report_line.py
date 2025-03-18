@@ -7,15 +7,14 @@ class SyngentaSaleReportLine(models.Model):
     _order = "agreement_id, report_id, sequence, id"
     _description = "Report line send to Syngenta with customer's consumptions"
 
-
     name = fields.Char("Name")
     report_id = fields.Many2one(
         "syngenta.sale.report",
         "Document",
     )
     company_id = fields.Many2one(
-        related='report_id.company_id',
-        store=True, 
+        related="report_id.company_id",
+        store=True,
         readonly=True,
     )
     agreement_id = fields.Many2one(related="report_id.agreement_id")
@@ -41,15 +40,15 @@ class SyngentaSaleReportLine(models.Model):
     price_subtotal = fields.Float(
         string="Subtotal",
         digits=(16, 2),
-        compute="_compute_amounts", store=True,
+        compute="_compute_amounts",
+        store=True,
         readonly=False,
         help="Amount asigned to the sale agreement that will "
-             "be used as base for following calculations.",
+        "be used as base for following calculations.",
     )
     sequence = fields.Integer(default=10)
 
-
-    @api.depends('company_id', 'product_qty',  'report_id.partner_id')
+    @api.depends("company_id", "product_qty", "report_id.partner_id")
     def _compute_price_unit(self):
         for line in self:
             if not line.company_id or not line.product_id:
@@ -73,57 +72,53 @@ class SyngentaSaleReportLine(models.Model):
 
                 po_line_uom = line.product_id.uom_po_id
                 price_unit = line.product_id.uom_id._compute_price(
-                        line.product_id.standard_price, po_line_uom
+                    line.product_id.standard_price, po_line_uom
                 )
                 price_unit = line.product_id.cost_currency_id._convert(
                     price_unit,
                     line.company_id.currency_id,
                     line.company_id,
                     fields.Date.context_today(line),
-                    False
+                    False,
                 )
                 line.price_unit = float_round(
                     price_unit,
                     precision_digits=max(
                         line.currency_id.decimal_places,
-                        self.env['decimal.precision'].precision_get('Product Price')
-                    )
+                        self.env["decimal.precision"].precision_get("Product Price"),
+                    ),
                 )
 
             elif seller:
-                price_unit = line.env['account.tax']._fix_tax_included_price_company(
-                    seller.price,
-                    line.product_id.supplier_taxes_id,
-                    (),
-                    line.company_id
+                price_unit = line.env["account.tax"]._fix_tax_included_price_company(
+                    seller.price, line.product_id.supplier_taxes_id, (), line.company_id
                 )
                 price_unit = seller.currency_id._convert(
                     price_unit,
                     line.currency_id,
                     line.company_id,
                     fields.Date.context_today(line),
-                    False
+                    False,
                 )
                 price_unit = float_round(
                     price_unit,
                     precision_digits=max(
                         line.currency_id.decimal_places,
-                        self.env['decimal.precision'].precision_get('Product Price')
-                    )
+                        self.env["decimal.precision"].precision_get("Product Price"),
+                    ),
                 )
 
     @api.depends("product_qty", "price_unit")
     def _compute_amounts(self):
         for line in self:
-            line.update(
-                {"price_subtotal": line.product_qty * line.price_unit}
-            )
+            line.update({"price_subtotal": line.product_qty * line.price_unit})
 
     def _get_json_line(self):
         self.ensure_one()
         return {
             "folio": self.report_id.folio or "",
-            "fecha_Facturacion": self.report_id.date.strftime("%Y-%m-%d") or "",  # YYYY-MM-DD
+            "fecha_Facturacion": self.report_id.date.strftime("%Y-%m-%d")
+            or "",  # YYYY-MM-DD
             "volumen_Facturado": self.product_qty or 0.0,
             "unidad_Medida": "",  # Not required
             "valorT_Facturado": self.price_subtotal or 0.0,

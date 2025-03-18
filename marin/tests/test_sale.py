@@ -128,17 +128,28 @@ class TestSale(TestSaleCommon):
         order.order_line_ids.price_unit = 10.0
         order._compute_partner_credit_warning()
         partner.credit_on_hold = True
-        self.env.user.group_ids = [(3, self.env.ref("marin.group_account_debt_manager").id)]
-        with self.assertRaisesRegex(UserError, "The partner's credit line has been held. Contact the Credit Manager."):
+        self.env.user.group_ids = [
+            (3, self.env.ref("marin.group_account_debt_manager").id)
+        ]
+        with self.assertRaisesRegex(
+            UserError,
+            "The partner's credit line has been held. Contact the Credit Manager.",
+        ):
             order.action_confirm()
         partner.credit_on_hold = False
         with self.assertRaises(UserError):
             order.action_confirm()
-        self.env.user.group_ids = [(4, self.env.ref("marin.group_account_debt_manager").id)]
+        self.env.user.group_ids = [
+            (4, self.env.ref("marin.group_account_debt_manager").id)
+        ]
         res = order.action_confirm()
         self.assertEqual(order.state, "draft")
         self.assertEqual(res.get("res_model"), "authorize.debt.wizard")
-        wizard = self.env["authorize.debt.wizard"].with_context(**res.get("context")).create([{}])
+        wizard = (
+            self.env["authorize.debt.wizard"]
+            .with_context(**res.get("context"))
+            .create([{}])
+        )
         wizard._compute_from_record_ids()
         self.assertEqual(wizard.flag, "credit")
         self.assertEqual(wizard.count_so, 1)
@@ -154,7 +165,9 @@ class TestSale(TestSaleCommon):
         order2.action_confirm()
         picking = order.picking_ids[0]
         picking2 = order2.picking_ids[0]
-        res = picking.with_context(default_picking_id=picking2.id).action_view_sale_order()
+        res = picking.with_context(
+            default_picking_id=picking2.id
+        ).action_view_sale_order()
         self.assertEqual(res.get("res_model"), "sale.order")
         self.assertEqual(res.get("res_id"), order.id)
         self.assertFalse(res.get("context", {}).get("default_picking_id"))
@@ -171,7 +184,9 @@ class TestSale(TestSaleCommon):
             picking2._validate_picking()
 
     def test_04_sale_order_authorize_debt_multi(self):
-        self.env.user.group_ids = [(4, self.env.ref("marin.group_account_debt_manager").id)]
+        self.env.user.group_ids = [
+            (4, self.env.ref("marin.group_account_debt_manager").id)
+        ]
         order = self.sale_order
         order.payment_term_id = self.pay_term_net_30_days
         partner = order.commercial_partner_id
@@ -184,7 +199,11 @@ class TestSale(TestSaleCommon):
         self.assertEqual(order.state, "draft")
         self.assertEqual(res.get("res_model"), "authorize.debt.wizard")
         res["context"]["active_ids"] = (order | order2).ids
-        wizard = self.env["authorize.debt.wizard"].with_context(**res["context"]).create([{}])
+        wizard = (
+            self.env["authorize.debt.wizard"]
+            .with_context(**res["context"])
+            .create([{}])
+        )
         wizard._compute_from_record_ids()
         self.assertEqual(wizard.flag, "credit")
         self.assertEqual(wizard.count_so, 2)
@@ -195,16 +214,22 @@ class TestSale(TestSaleCommon):
         self.assertEqual(partner.credit_limit, 100)
 
     def test_05_sale_order_authorize_errors(self):
-        self.env.user.group_ids = [(4, self.env.ref("marin.group_account_debt_manager").id)]
+        self.env.user.group_ids = [
+            (4, self.env.ref("marin.group_account_debt_manager").id)
+        ]
         ctx = {"active_model": "sale.order", "active_ids": []}
         with self.assertRaisesRegex(
-            UserError, "You can't authorize debt because the records dont match the criteria."
+            UserError,
+            "You can't authorize debt because the records dont match the criteria.",
         ):
             self.env["authorize.debt.wizard"].with_context(**ctx).create([{}])
         order = self.sale_order
         order2 = order.copy({"partner_id": self.partner_x.id})
         ctx["active_ids"] = (order | order2).ids
-        with self.assertRaisesRegex(UserError, "You cant authorize debt for records belonging to different partners."):
+        with self.assertRaisesRegex(
+            UserError,
+            "You cant authorize debt for records belonging to different partners.",
+        ):
             self.env["authorize.debt.wizard"].with_context(**ctx).create([{}])
         # order3 = order.copy({"company_id": self.company_test.id})
         # ctx["active_ids"] = (order | order3).ids
@@ -214,12 +239,15 @@ class TestSale(TestSaleCommon):
         order.order_line_ids.price_unit = 0.0
         ctx["active_ids"] = order.ids
         with self.assertRaisesRegex(
-            UserError, "You can't authorize debt because the records dont match the criteria."
+            UserError,
+            "You can't authorize debt because the records dont match the criteria.",
         ):
             self.env["authorize.debt.wizard"].with_context(**ctx).create([{}])
         order.order_line_ids.price_unit = 10.0
         order.action_confirm()
-        with self.assertRaisesRegex(UserError, "You can only authorize debt for quotations."):
+        with self.assertRaisesRegex(
+            UserError, "You can only authorize debt for quotations."
+        ):
             self.env["authorize.debt.wizard"].with_context(**ctx).create([{}])
         ctx = {"active_model": "purchase.order", "active_ids": []}
         wizard = self.env["authorize.debt.wizard"].with_context(**ctx).create([{}])
@@ -235,18 +263,28 @@ class TestSale(TestSaleCommon):
         action = sale_line.action_sale_order_form()
         self.assertEqual(action["res_id"], sale_line.order_id.id)
         self.assertEqual(action["res_model"], "sale.order")
-        self.assertEqual(action["views"], [(self.env.ref("sale.view_order_form").id, "form")])
+        self.assertEqual(
+            action["views"], [(self.env.ref("sale.view_order_form").id, "form")]
+        )
 
     def test_07_picking_type_search(self):
         order = self.sale_order
         order.action_confirm()
         picking = order.picking_ids[0]
         with self.assertRaisesRegex(UserError, "Operation not supported"):
-            ready_picking_types = picking.picking_type_id.search([("count_picking_ready", ">", 0)])
-        ready_picking_types = picking.picking_type_id.search([("count_picking_ready", "=", True)])
+            ready_picking_types = picking.picking_type_id.search(
+                [("count_picking_ready", ">", 0)]
+            )
+        ready_picking_types = picking.picking_type_id.search(
+            [("count_picking_ready", "=", True)]
+        )
         with self.assertRaisesRegex(UserError, "Operation not supported"):
-            waiting_picking_types = picking.picking_type_id.search([("count_picking_waiting", ">", 0)])
-        waiting_picking_types = picking.picking_type_id.search([("count_picking_waiting", "!=", False)])
+            waiting_picking_types = picking.picking_type_id.search(
+                [("count_picking_waiting", ">", 0)]
+            )
+        waiting_picking_types = picking.picking_type_id.search(
+            [("count_picking_waiting", "!=", False)]
+        )
         self.assertEqual(picking.picking_type_id, ready_picking_types)
         self.assertEqual(len(waiting_picking_types), 0)
         action = picking.picking_type_id.action_move_location()
@@ -301,7 +339,9 @@ class TestSale(TestSaleCommon):
         )
 
     def test_09_sale_order_create_and_show(self):
-        with Form(self.env["sale.order.line"], view="marin.view_order_line_tree_marin") as line_form:
+        with Form(
+            self.env["sale.order.line"], view="marin.view_order_line_tree_marin"
+        ) as line_form:
             line_form.order_partner_id = self.partner_a
             line_form.product_id = self.product
             line_form.price_unit = 190.50

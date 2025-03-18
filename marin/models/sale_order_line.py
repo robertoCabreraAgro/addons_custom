@@ -5,7 +5,6 @@ from odoo.tools import float_compare, float_is_zero
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
-
     # Extended fields
     # In core this a related field. We need to trigger its value on view, so we can
     # have it even when we're in a NewId
@@ -36,7 +35,8 @@ class SaleOrderLine(models.Model):
         "Forced company",
         compute="_compute_force_company_id",
         readonly=False,
-        help="Technical field to force company or get it " "from env user if order don't exist.",
+        help="Technical field to force company or get it "
+        "from env user if order don't exist.",
     )
 
     @api.depends("state", "product_uom_qty", "qty_delivered")
@@ -48,17 +48,33 @@ class SaleOrderLine(models.Model):
         - partially: the quantity delivered is lesser than the quantity ordered.
         - delivered: the quantity delivered is equal to the quantity ordered.
         """
-        precision = self.env["decimal.precision"].precision_get("Product Unit of measure")
+        precision = self.env["decimal.precision"].precision_get(
+            "Product Unit of measure"
+        )
         for line in self:
-            if line.state not in ("sale", "done") or float_is_zero(line.product_uom_qty, precision_digits=precision):
+            if line.state not in ("sale", "done") or float_is_zero(
+                line.product_uom_qty, precision_digits=precision
+            ):
                 line.delivery_status = "no"
             elif float_is_zero(line.qty_delivered, precision_digits=precision):
                 line.delivery_status = "to deliver"
-            elif float_compare(line.qty_delivered, line.product_uom_qty, precision_digits=precision) < 0:
+            elif (
+                float_compare(
+                    line.qty_delivered, line.product_uom_qty, precision_digits=precision
+                )
+                < 0
+            ):
                 line.delivery_status = "partially"
-            elif not float_compare(line.qty_delivered, line.product_uom_qty, precision_digits=precision):
+            elif not float_compare(
+                line.qty_delivered, line.product_uom_qty, precision_digits=precision
+            ):
                 line.delivery_status = "delivered"
-            elif float_compare(line.qty_delivered, line.product_uom_qty, precision_digits=precision) > 0:
+            elif (
+                float_compare(
+                    line.qty_delivered, line.product_uom_qty, precision_digits=precision
+                )
+                > 0
+            ):
                 line.delivery_status = "over delivered"
             else:
                 line.delivery_status = "no"
@@ -87,7 +103,9 @@ class SaleOrderLine(models.Model):
         if not self.order_partner_id or self.order_id:
             return
         sale_order = self.env["sale.order"]
-        new_so = sale_order.new({"partner_id": self.order_partner_id, "company_id": self.force_company_id})
+        new_so = sale_order.new(
+            {"partner_id": self.order_partner_id, "company_id": self.force_company_id}
+        )
         for onchange_method in new_so._onchange_methods["partner_id"]:
             onchange_method(new_so)
         order_vals = new_so._convert_to_write(new_so._cache)

@@ -4,11 +4,7 @@ from odoo import _, api, fields, models
 class FleetVehicleInherit(models.Model):
     _inherit = "fleet.vehicle"
 
-
-    department_id = fields.Many2one(
-        comodel_name="hr.department",
-        string="Department"
-    )
+    department_id = fields.Many2one(comodel_name="hr.department", string="Department")
     fuel_card_id = fields.Many2one(
         comodel_name="documents.document",
         domain=lambda self: [
@@ -22,7 +18,11 @@ class FleetVehicleInherit(models.Model):
     highway_pass_id = fields.Many2one(
         comodel_name="documents.document",
         domain=lambda self: [
-            ("tag_ids", "in", self.env.ref("marin_data.documents_fleet_highway_pass").ids),
+            (
+                "tag_ids",
+                "in",
+                self.env.ref("marin_data.documents_fleet_highway_pass").ids,
+            ),
         ],
         inverse="_inverse_highway_pass_id",
         store=True,
@@ -30,24 +30,29 @@ class FleetVehicleInherit(models.Model):
     )
     highway_pass_name = fields.Char(compute="_compute_highway_pass_name", store=True)
     l10n_mx_vehicle_code = fields.Char(
-        string='Vehicle Code',
+        string="Vehicle Code",
         tracking=True,
-        help='In Mexico the tax authority assign a 7 character code to identify its characteristics.',
+        help="In Mexico the tax authority assign a 7 character code to identify its characteristics.",
     )
     account_prefix = fields.Char(
-        string='Account Prefix',
+        string="Account Prefix",
         tracking=True,
-        help='This fields is required by Accounting to group according to its needs.',
+        help="This fields is required by Accounting to group according to its needs.",
     )
     brand_new = fields.Boolean(
-        string='Brand New',
+        string="Brand New",
         default=True,
         help="Mark as True if this vehicle was acquired as brand new.",
     )
 
-
     # Extend original method
-    @api.depends("model_id.brand_id.name", "model_id.name", "model_year", "color", "license_plate")
+    @api.depends(
+        "model_id.brand_id.name",
+        "model_id.name",
+        "model_year",
+        "color",
+        "license_plate",
+    )
     def _compute_vehicle_name(self):
         for vehicle in self:
             vehicle.name = "%s/%s %s/%s/%s" % (
@@ -78,15 +83,18 @@ class FleetVehicleInherit(models.Model):
 
     def _inverse_fuel_card_id(self):
         """
-        Set the vehicle on the corresponding document, and unset the vehicle on 
+        Set the vehicle on the corresponding document, and unset the vehicle on
         previously related documents
         """
         tag = self.env.ref("marin_data.documents_fleet_fuel_card", False)
         for vehicle in self:
             doc = vehicle.fuel_card_id
-            other_docs = doc.search(
-                [("vehicle_id", "=", vehicle.id), ("tag_ids", "in", tag.ids)]
-            ) - doc
+            other_docs = (
+                doc.search(
+                    [("vehicle_id", "=", vehicle.id), ("tag_ids", "in", tag.ids)]
+                )
+                - doc
+            )
             if doc:
                 doc.write(
                     {
@@ -113,9 +121,12 @@ class FleetVehicleInherit(models.Model):
         tag = self.env.ref("marin_data.documents_fleet_highway_pass", False)
         for vehicle in self:
             doc = vehicle.highway_pass_id
-            other_docs = doc.search(
-                [("vehicle_id", "=", vehicle.id), ("tag_ids", "in", tag.ids)]
-            ) - doc
+            other_docs = (
+                doc.search(
+                    [("vehicle_id", "=", vehicle.id), ("tag_ids", "in", tag.ids)]
+                )
+                - doc
+            )
             if doc:
                 doc.write(
                     {

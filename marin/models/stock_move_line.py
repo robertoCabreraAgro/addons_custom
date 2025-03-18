@@ -5,7 +5,6 @@ from odoo.exceptions import UserError
 class StockMoveLineInherit(models.Model):
     _inherit = "stock.move.line"
 
-
     move_id = fields.Many2one(ondelete="cascade")
     location_availability = fields.Float(
         "From availability",
@@ -13,9 +12,7 @@ class StockMoveLineInherit(models.Model):
         readonly=True,
     )
     location_dest_availability = fields.Float(
-        "To availability",
-        compute="_compute_location_availability",
-        readonly=True
+        "To availability", compute="_compute_location_availability", readonly=True
     )
 
     @api.onchange("product_id", "location_id", "location_dest_id")
@@ -24,10 +21,14 @@ class StockMoveLineInherit(models.Model):
             line.location_availability = 0.0
             line.location_dest_availability = 0.0
             if line.product_id:
-                line.location_availability = self.env["stock.quant"]._get_available_quantity(
+                line.location_availability = self.env[
+                    "stock.quant"
+                ]._get_available_quantity(
                     line.product_id, line.location_id, line.lot_id
                 )
-                line.location_dest_availability = self.env["stock.quant"]._get_available_quantity(
+                line.location_dest_availability = self.env[
+                    "stock.quant"
+                ]._get_available_quantity(
                     line.product_id, line.location_dest_id, line.lot_id
                 )
 
@@ -36,7 +37,9 @@ class StockMoveLineInherit(models.Model):
     def _unlink_except_done_or_cancel(self):
         for ml in self:
             if ml.state == "done":
-                raise UserError(_(
+                raise UserError(
+                    _(
                         "You can not delete product moves if the picking is done. "
                         "You can only correct the done quantities."
-                ))
+                    )
+                )

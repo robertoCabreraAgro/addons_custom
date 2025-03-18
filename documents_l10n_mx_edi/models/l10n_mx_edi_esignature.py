@@ -48,40 +48,51 @@ class Esignature(models.Model):
 
     content = fields.Binary(
         string="Esignature",
-        help="Esignature in der format",
         required=True,
         attachment=False,
+        help="Esignature in der format",
     )
     key = fields.Binary(
         string="Esignature Key",
-        help="Esignature Key in der format",
         required=True,
         attachment=False,
+        help="Esignature Key in der format",
     )
     password = fields.Char(
         string="Esignature Password",
-        help="Password for the Esignature Key",
         required=True,
+        help="Password for the Esignature Key",
     )
     holder = fields.Char(
-        help="Holder for the certificate",
         required=False,
+        help="Holder for the certificate",
     )
     holder_vat = fields.Char(
         string='Holder"s VAT',
-        help='Holder"s Vat for the certificate',
         required=False,
+        help='Holder"s Vat for the certificate',
     )
     serial_number = fields.Char(
-        string="Serial number", help="The serial number to add to electronic documents", readonly=True, index=True
+        string="Serial number",
+        readonly=True,
+        index=True,
+        help="The serial number to add to electronic documents",
     )
     date_start = fields.Datetime(
-        string="Available date", help="The date on which the certificate starts to be valid", readonly=True
+        string="Available date",
+        readonly=True,
+        help="The date on which the certificate starts to be valid",
     )
     date_end = fields.Datetime(
-        string="Expiration date", help="The date on which the certificate expires", readonly=True
+        string="Expiration date",
+        readonly=True,
+        help="The date on which the certificate expires",
     )
-    company_id = fields.Many2one("res.company", "Company", default=lambda self: self.env.company)
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        string="Company",
+        default=lambda self: self.env.company,
+    )
 
     @tools.ormcache("content")
     def get_pem_cer(self, content):
@@ -107,13 +118,17 @@ class Esignature(models.Model):
     def get_pk_data(self):
         """Return the content (b64 encoded) and the certificate decrypted"""
         self.ensure_one()
-        key_pem = convert_key_cer_to_pem(base64.decodebytes(self.key), self.password.encode("UTF-8"))
+        key_pem = convert_key_cer_to_pem(
+            base64.decodebytes(self.key), self.password.encode("UTF-8")
+        )
         private_key = crypto.load_privatekey(crypto.FILETYPE_PEM, key_pem)
         return key_pem, private_key
 
     def get_mx_current_datetime(self):
         """Get the current datetime with the Mexican timezone."""
-        return fields.Datetime.context_timestamp(self.with_context(tz="America/Mexico_City"), fields.Datetime.now())
+        return fields.Datetime.context_timestamp(
+            self.with_context(tz="America/Mexico_City"), fields.Datetime.now()
+        )
 
     def get_valid_esignature(self):
         """Search for a valid esignature that is available and not expired."""
@@ -138,12 +153,20 @@ class Esignature(models.Model):
             try:
                 _cer_pem, certificate = record.get_cert_data()
                 before = mexican_tz.localize(
-                    datetime.strptime(certificate.get_notBefore().decode("utf-8"), date_format)
+                    datetime.strptime(
+                        certificate.get_notBefore().decode("utf-8"), date_format
+                    )
                 )
-                after = mexican_tz.localize(datetime.strptime(certificate.get_notAfter().decode("utf-8"), date_format))
+                after = mexican_tz.localize(
+                    datetime.strptime(
+                        certificate.get_notAfter().decode("utf-8"), date_format
+                    )
+                )
                 serial_number = certificate.get_serial_number()
                 holder = certificate.get_subject().CN
-                holder_vat = certificate.get_subject().x500UniqueIdentifier.split(" ")[0]
+                holder_vat = certificate.get_subject().x500UniqueIdentifier.split(" ")[
+                    0
+                ]
             except UserError as exc_orm:
                 raise exc_orm
             except Exception:
@@ -155,9 +178,13 @@ class Esignature(models.Model):
             record.date_start = before.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
             record.date_end = after.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
             if mexican_dt > after:
-                raise ValidationError(_("The certificate is expired since %s", record.date_end))
+                raise ValidationError(
+                    _("The certificate is expired since %s", record.date_end)
+                )
             # Check the pair key/password
             try:
                 record.get_pk_data()
             except Exception:
-                raise ValidationError(_("The certificate key and/or password is/are invalid."))
+                raise ValidationError(
+                    _("The certificate key and/or password is/are invalid.")
+                )

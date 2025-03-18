@@ -30,7 +30,11 @@ class HrPayslipRun(models.Model):
     @api.depends("l10n_mx_edi_payment_date", "date_start", "date_end")
     def _compute_l10n_mx_edi_payment_date_warning(self):
         for payslip_run in self.filtered(lambda p: p.l10n_mx_edi_payment_date):
-            if not payslip_run.date_start <= payslip_run.l10n_mx_edi_payment_date <= payslip_run.date_end:
+            if (
+                not payslip_run.date_start
+                <= payslip_run.l10n_mx_edi_payment_date
+                <= payslip_run.date_end
+            ):
                 payslip_run.l10n_mx_edi_payment_date_warning = self.env._(
                     "Please note that the payment date falls outside the payslip period. "
                     "Proceed only if this is expected."
@@ -41,9 +45,15 @@ class HrPayslipRun(models.Model):
     def action_payslips_done(self):
         self.ensure_one()
         if not self.env.user.has_group("l10n_mx_edi_payslip.allow_validate_payslip"):
-            raise UserError(self.env._("Only Managers who are allow to Validate payslip can perform this operation"))
+            raise UserError(
+                self.env._(
+                    "Only Managers who are allow to Validate payslip can perform this operation"
+                )
+            )
         # using search instead of filtered to keep performance in batch with many payslips
-        payslips = self.slip_ids.search([("id", "in", self.slip_ids.ids), ("state", "=", "draft")])
+        payslips = self.slip_ids.search(
+            [("id", "in", self.slip_ids.ids), ("state", "=", "draft")]
+        )
         for payslip in payslips:
             try:
                 with self.env.cr.savepoint():
@@ -82,7 +92,9 @@ class HrPayslipRun(models.Model):
 
     def action_set_overtimes(self):
         self.ensure_one()
-        self.slip_ids.filtered(lambda s: s.contract_id.l10n_mx_edi_allow_overtimes).auto_generate_overtimes()
+        self.slip_ids.filtered(
+            lambda s: s.contract_id.l10n_mx_edi_allow_overtimes
+        ).auto_generate_overtimes()
         weeks = []
         for day in range((self.date_end - self.date_start).days + 1):
             weeks.append((self.date_start + timedelta(days=day)).isocalendar()[1])
@@ -103,7 +115,9 @@ class HrPayslipRun(models.Model):
     def _get_payslips_dispersion_report_name(self, bank_name=False):
         self.ensure_one()
         name = self.name.replace(" ", "_")
-        bank_name = bank_name.replace(" ", "_") if bank_name else self.env._("Dispersions")
+        bank_name = (
+            bank_name.replace(" ", "_") if bank_name else self.env._("Dispersions")
+        )
         date = self.l10n_mx_edi_payment_date.strftime("%d_%m_%Y")
         return "%s_%s_%s" % (bank_name, date, name)
 
@@ -129,13 +143,23 @@ class HrPayslipRun(models.Model):
             trans = str.maketrans(name_from, name_to)
             employee_name = employee_name.translate(trans)
             # 001 are fixed values, represent bank and branch. 99 Account type
-            line = "%s%s%s%s%s%s%s" % (consecutive, "99", bank_account, amount, employee_name, "001", "001")
+            line = "%s%s%s%s%s%s%s" % (
+                consecutive,
+                "99",
+                bank_account,
+                amount,
+                employee_name,
+                "001",
+                "001",
+            )
             data.append({"line": line})
         txt_result = ""
         if data:
             csv.register_dialect("pipe_separator", delimiter="|", skipinitialspace=True)
             output = StringIO()
-            writer = csv.DictWriter(output, dialect="pipe_separator", fieldnames=data[0].keys())
+            writer = csv.DictWriter(
+                output, dialect="pipe_separator", fieldnames=data[0].keys()
+            )
             writer.writerows(data)
             txt_result = output.getvalue()
         return txt_result
@@ -172,7 +196,9 @@ class HrPayslipRun(models.Model):
             amount = f"{amount:.2f}".replace(".", "").zfill(18)
             bank_account = payslip.employee_id.bank_account_id.acc_number
             employee = payslip.employee_id
-            employee_name = f"{employee.firstname},{employee.lastname}/{employee.lastname2}".upper()
+            employee_name = (
+                f"{employee.firstname},{employee.lastname}/{employee.lastname2}".upper()
+            )
             name_from, name_to = "ÁÉÍÓÚÑ", "AEIOUN"
             trans = str.maketrans(name_from, name_to)
             employee_name = employee_name.translate(trans)[:55].ljust(55)
@@ -225,7 +251,9 @@ class HrPayslipRun(models.Model):
             return []
         csv.register_dialect("pipe_separator", delimiter="|", skipinitialspace=True)
         output = StringIO()
-        writer = csv.DictWriter(output, dialect="pipe_separator", fieldnames=data[0].keys())
+        writer = csv.DictWriter(
+            output, dialect="pipe_separator", fieldnames=data[0].keys()
+        )
         writer.writerows(data)
         txt_result = output.getvalue().strip("\n").strip("\r")
 

@@ -10,10 +10,8 @@ _logger = logging.getLogger(__name__)
 
 
 ENDPOINT_URL = {
-    "prod":
-        "https://conagrosyngentapp.syngentadigitalapps.com/syngenta-service-0.0.1/api/v1/inventario",
-    "test":
-        "https://conagrosyngentapp.syngentadigitalapps.com/syngenta-service-0.0.1/api/v1/test/inventario",
+    "prod": "https://conagrosyngentapp.syngentadigitalapps.com/syngenta-service-0.0.1/api/v1/inventario",
+    "test": "https://conagrosyngentapp.syngentadigitalapps.com/syngenta-service-0.0.1/api/v1/test/inventario",
 }
 
 
@@ -22,7 +20,6 @@ class SyngentaStockReport(models.Model):
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _order = "date desc, id desc"
     _description = "Inventory report send to Syngenta"
-
 
     name = fields.Char(
         string="Document Reference",
@@ -44,14 +41,20 @@ class SyngentaStockReport(models.Model):
         default="draft",
         readonly=True,
     )
-    date = fields.Date(required=True, default=fields.Date.end_of(fields.Date.today(), "month"))
+    date = fields.Date(
+        required=True, default=fields.Date.end_of(fields.Date.today(), "month")
+    )
     response_message = fields.Text(readonly=True, copy=False)
     response_status = fields.Char(readonly=True, copy=False)
     response_error = fields.Char(readonly=True, copy=False)
     response_json = fields.Text(readonly=True, copy=False)
     sent_json = fields.Text(readonly=True, copy=False)
-    company_id = fields.Many2one("res.company", index=True, required=True, default=lambda self: self.env.company.id)
-
+    company_id = fields.Many2one(
+        "res.company",
+        index=True,
+        required=True,
+        default=lambda self: self.env.company.id,
+    )
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -60,7 +63,9 @@ class SyngentaStockReport(models.Model):
                 self = self.with_company(vals["company_id"])
             if vals.get("name", _("New")) == _("New"):
                 seq_date = (
-                    fields.Datetime.context_timestamp(self, fields.Datetime.to_datetime(vals["date"]))
+                    fields.Datetime.context_timestamp(
+                        self, fields.Datetime.to_datetime(vals["date"])
+                    )
                     if "date" in vals
                     else None
                 )
@@ -98,7 +103,14 @@ class SyngentaStockReport(models.Model):
     def action_send(self):
         if self.state in ["done", "cancel"]:
             return
-        timeout = int(self.env["ir.config_parameter"].sudo().get_param("syngenta_edi.request_timeout")) or 60
+        timeout = (
+            int(
+                self.env["ir.config_parameter"]
+                .sudo()
+                .get_param("syngenta_edi.request_timeout")
+            )
+            or 60
+        )
         data = self._get_json_data()
         endpoint_url = self._get_url()
         try:
@@ -108,8 +120,9 @@ class SyngentaStockReport(models.Model):
         except (Timeout, ConnError, RequestException, ValueError):
             _logger.warning("Syngenta synchronization error")
             raise UserError(
-                _("The syngenta synchronization service is not available at the moment. "
-                  "Please try again later."
+                _(
+                    "The syngenta synchronization service is not available at the moment. "
+                    "Please try again later."
                 )
             )
 

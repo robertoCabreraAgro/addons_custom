@@ -1,4 +1,3 @@
-
 {
     "name": "Account Move Number Sequence",
     "version": "saas~18.2.1.0.5",

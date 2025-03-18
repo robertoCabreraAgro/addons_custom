@@ -164,7 +164,9 @@ class ApprovalCategory(models.Model):
     @api.constrains("approval_minimum", "approver_ids")
     def _constrains_approval_minimum(self):
         for category in self:
-            if category.approval_minimum < len(category.approver_ids.filtered("required")):
+            if category.approval_minimum < len(
+                category.approver_ids.filtered("required")
+            ):
                 raise ValidationError(
                     _(
                         "Minimum Approval must be equal or superior to the sum of required Approvers."

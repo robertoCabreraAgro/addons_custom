@@ -69,7 +69,9 @@ class HrContract(models.Model):
     l10n_mx_edi_schedule_pay_id = fields.Many2one(
         "l10n_mx_edi.schedule.pay",
         string="Mexican Schedule Pay",
-        default=lambda self: self.env.ref("l10n_mx_edi_payslip.schedule_pay_fortnightly", raise_if_not_found=False),
+        default=lambda self: self.env.ref(
+            "l10n_mx_edi_payslip.schedule_pay_fortnightly", raise_if_not_found=False
+        ),
     )
     l10n_mx_edi_integrated_salary = fields.Float(
         "Integrated Salary",
@@ -237,12 +239,16 @@ class HrContract(models.Model):
     @api.depends("wage", "company_id.l10n_mx_edi_days_daily_wage")
     def _compute_l10n_mx_edi_daily_wage(self):
         for record in self.filtered(lambda c: c.country_code == "MX"):
-            record.l10n_mx_edi_daily_wage = record.wage / (record.company_id.l10n_mx_edi_days_daily_wage or 30.0)
+            record.l10n_mx_edi_daily_wage = record.wage / (
+                record.company_id.l10n_mx_edi_days_daily_wage or 30.0
+            )
 
     @api.depends("l10n_mx_edi_integrated_salary", "l10n_mx_edi_sdi_variable")
     def _compute_l10n_mx_edi_sdi_total(self):
         for record in self.filtered(lambda c: c.country_code == "MX"):
-            record.l10n_mx_edi_sdi_total = record.l10n_mx_edi_integrated_salary + record.l10n_mx_edi_sdi_variable
+            record.l10n_mx_edi_sdi_total = (
+                record.l10n_mx_edi_integrated_salary + record.l10n_mx_edi_sdi_variable
+            )
 
     @api.depends(
         "l10n_mx_edi_vacation_bonus",
@@ -281,9 +287,13 @@ class HrContract(models.Model):
         payslips = self.env["hr.payslip"]
         # Avoid tz issues
         date_mx = fields.Date.context_today(self)
-        date_from = (date_mx - timedelta(days=30 * (2 if date_mx.month % 2 else 3))).replace(day=1)
+        date_from = (
+            date_mx - timedelta(days=30 * (2 if date_mx.month % 2 else 3))
+        ).replace(day=1)
         date_to = date_mx - timedelta(days=30 * (1 if date_mx.month % 2 else 2))
-        date_to = date_to.replace(day=calendar.monthrange(date_to.year, date_to.month)[1])
+        date_to = date_to.replace(
+            day=calendar.monthrange(date_to.year, date_to.month)[1]
+        )
         for record in self:
             payslips = payslips.search(
                 [
@@ -298,7 +308,11 @@ class HrContract(models.Model):
                 .worked_days_line_ids.filtered(lambda work: work.code == "WORK100")
                 .mapped("number_of_days")
             )
-            inputs = sum(payslips.line_ids.filtered("salary_rule_id.l10n_mx_edi_sdi_variable").mapped("total"))
+            inputs = sum(
+                payslips.line_ids.filtered(
+                    "salary_rule_id.l10n_mx_edi_sdi_variable"
+                ).mapped("total")
+            )
             record.l10n_mx_edi_sdi_variable = (inputs / worked) if worked else 0
 
     def _get_static_sdi(self, wage=None):
@@ -308,7 +322,9 @@ class HrContract(models.Model):
         - Christmas bonus
         """
         self.ensure_one()
-        return ((wage / 30) if wage else self.l10n_mx_edi_daily_wage) * self._get_integration_factor()
+        return (
+            (wage / 30) if wage else self.l10n_mx_edi_daily_wage
+        ) * self._get_integration_factor()
 
     def _get_integration_factor(self):
         """get the factor used to get the static integrated salary
@@ -319,7 +335,9 @@ class HrContract(models.Model):
         self.ensure_one()
         vacation_bonus = (self.l10n_mx_edi_vacation_bonus or 25) / 100
         holidays = (
-            self.l10n_mx_edi_imss_holidays if self.l10n_mx_edi_imss_date else self.l10n_mx_edi_holidays
+            self.l10n_mx_edi_imss_holidays
+            if self.l10n_mx_edi_imss_date
+            else self.l10n_mx_edi_holidays
         ) * vacation_bonus
         bonus = self.l10n_mx_edi_christmas_bonus or 15
         return round(1 + (holidays + bonus) / 365, 4)
@@ -328,9 +346,15 @@ class HrContract(models.Model):
         """Assign number of days according with the seniority and holidays"""
         # TODO - Moverlo a la metodología de listado de server action por contrato @nhomar
         for record in self:
-            record.l10n_mx_edi_holidays = record._l10n_mx_get_holidays(record.get_seniority()["years"])
+            record.l10n_mx_edi_holidays = record._l10n_mx_get_holidays(
+                record.get_seniority()["years"]
+            )
             record.l10n_mx_edi_imss_holidays = (
-                record._l10n_mx_get_holidays(record.get_seniority(date_from=record.l10n_mx_edi_imss_date)["years"])
+                record._l10n_mx_get_holidays(
+                    record.get_seniority(date_from=record.l10n_mx_edi_imss_date)[
+                        "years"
+                    ]
+                )
                 if record.l10n_mx_edi_imss_date
                 else 0
             )
@@ -338,7 +362,8 @@ class HrContract(models.Model):
     @api.model
     def _l10n_mx_get_holidays(self, seniority):
         """Get how many holidays an employee has based on a given seniority.
-        This method will be used by the assignation method and by the allocation cron."""
+        This method will be used by the assignation method and by the allocation cron.
+        """
         holidays = 12
         if seniority <= 0:
             return holidays
@@ -354,12 +379,16 @@ class HrContract(models.Model):
         for contract in self:
             date_start = contract.l10n_mx_edi_imss_date or contract.date_start
             if filter_by_anniversary and (
-                date_start.day != date_mx.day or date_start.month != date_mx.month or date_start.year >= date_mx.year
+                date_start.day != date_mx.day
+                or date_start.month != date_mx.month
+                or date_start.year >= date_mx.year
             ):
                 continue
 
             # Create and confirm the new allocation
-            allocation = self.env["hr.leave.allocation"].create(contract._l10n_mx_prepare_allocation_holidays())
+            allocation = self.env["hr.leave.allocation"].create(
+                contract._l10n_mx_prepare_allocation_holidays()
+            )
             allocation.sudo().action_validate()
             contract.action_update_current_holidays()
 
@@ -379,9 +408,11 @@ class HrContract(models.Model):
             "employee_id": self.employee_id.id,
             "state": "confirm",
             "date_from": date_mx,
-            "date_to": False
-            if (self.company_id.l10n_mx_edi_accumulate_holidays)
-            else (date_mx + relativedelta(years=1) - timedelta(days=1)),
+            "date_to": (
+                False
+                if (self.company_id.l10n_mx_edi_accumulate_holidays)
+                else (date_mx + relativedelta(years=1) - timedelta(days=1))
+            ),
         }
 
     def get_seniority(self, date_from=False, date_to=False, method="r"):
@@ -430,9 +461,13 @@ class HrContract(models.Model):
             if (contract_date - date_start).days > 0:
                 date_start = contract_date
             return (date - date_start).days + 1
-        date_start = fields.date(contract_date.year, contract_date.month, contract_date.day)
+        date_start = fields.date(
+            contract_date.year, contract_date.month, contract_date.day
+        )
         if (date - date_start).days < 0:
-            date_start = fields.date(date.year - 1, contract_date.month, contract_date.day)
+            date_start = fields.date(
+                date.year - 1, contract_date.month, contract_date.day
+            )
         return (date - date_start).days + 1
 
     def _get_worked_leaves(self, date_from, date_to, domain=None):
@@ -454,9 +489,13 @@ class HrContract(models.Model):
         wizard = self.env["hr.work.entry.regeneration.wizard"]
         for contract in self.filtered(lambda c: c.employee_id and c.state == "open"):
             last_payslip = self.env["hr.payslip"].search(
-                [("employee_id", "=", contract.employee_id.id), ("state", "=", "open")], order="date_from"
+                [("employee_id", "=", contract.employee_id.id), ("state", "=", "open")],
+                order="date_from",
             )
-            domain = [("employee_id", "=", contract.employee_id.id), ("state", "=", "draft")]
+            domain = [
+                ("employee_id", "=", contract.employee_id.id),
+                ("state", "=", "draft"),
+            ]
             if last_payslip:
                 domain.append(("date_stop", ">=", last_payslip.date_to))
             work_entry = self.env["hr.work.entry"].search(domain, order="date_start")

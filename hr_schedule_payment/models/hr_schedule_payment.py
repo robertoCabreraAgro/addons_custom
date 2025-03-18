@@ -3,7 +3,9 @@ from odoo import fields, models
 
 class HrSchedulePayment(models.Model):
     _name = "hr.schedule.payment"
-    _description = "Allows to configure the paydays and periods of the year for the payroll."
+    _description = (
+        "Allows to configure the paydays and periods of the year for the payroll."
+    )
 
     name = fields.Char(
         required=True,

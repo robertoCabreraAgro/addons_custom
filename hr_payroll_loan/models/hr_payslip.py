@@ -28,10 +28,15 @@ class HrPayslip(models.Model):
     def _cancel_payslip_loan(self):
         """Delete the relationship of the loan and the payslip"""
         for record in self:
-            loans = record.get_loans("all", ["active", "close"]) - record._get_to_not_link_loans()
+            loans = (
+                record.get_loans("all", ["active", "close"])
+                - record._get_to_not_link_loans()
+            )
             loans = loans.filtered(lambda loan: record in loan.payslip_ids)
             loans.write({"payslip_ids": [Command.unlink(record.id)]})
-            loan_lines = loans.loan_line_ids.filtered(lambda loan: loan.payslip_id == record)
+            loan_lines = loans.loan_line_ids.filtered(
+                lambda loan: loan.payslip_id == record
+            )
             for line in loan_lines:
                 loan = line.loan_id
                 line.write(
@@ -85,12 +90,18 @@ class HrPayslip(models.Model):
             and (loan.payment_term == -1 or loan.payslips_count < loan.payment_term)
             and (not loan.date_from or loan.date_from <= date_to)
             and (
-                not loan.date_to or loan.date_to >= date_to or (loan.date_to >= date_from and loan.date_to <= date_to)
+                not loan.date_to
+                or loan.date_to >= date_to
+                or (loan.date_to >= date_from and loan.date_to <= date_to)
             )
         )
         return loans
 
     def _get_loan_breakdown_lines(self):
         self.ensure_one()
-        valid_loans = self.get_loans("all", ["active", "close"]).filtered(lambda loan: not loan._is_timeless())
-        return valid_loans.mapped("loan_line_ids").filtered(lambda loan: loan.payslip_id == self)
+        valid_loans = self.get_loans("all", ["active", "close"]).filtered(
+            lambda loan: not loan._is_timeless()
+        )
+        return valid_loans.mapped("loan_line_ids").filtered(
+            lambda loan: loan.payslip_id == self
+        )

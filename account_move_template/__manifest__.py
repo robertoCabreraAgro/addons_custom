@@ -1,4 +1,3 @@
-
 {
     "name": "Account Move Template",
     "version": "saas~18.2.1.0.0",

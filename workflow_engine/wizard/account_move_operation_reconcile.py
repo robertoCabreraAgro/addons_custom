@@ -39,13 +39,20 @@ class AccountMoveOperationReconcile(models.TransientModel):
     )
     currency_id = fields.Many2one(related="st_line_id.currency_id", readonly=True)
     amount = fields.Monetary(related="st_line_id.amount", readonly=True)
-    statement_id = fields.Many2one("account.bank.statement", related="st_line_id.statement_id", readonly=True)
+    statement_id = fields.Many2one(
+        "account.bank.statement", related="st_line_id.statement_id", readonly=True
+    )
 
     @api.model
     def default_get(self, fields_list):
         defaults = super().default_get(fields_list)
-        if self.env.context.get("active_model") == "account.move.operation.line" and "active_ids" in self.env.context:
-            line = self.env[self.env.context["active_model"]].browse(self.env.context["active_ids"])[:1]
+        if (
+            self.env.context.get("active_model") == "account.move.operation.line"
+            and "active_ids" in self.env.context
+        ):
+            line = self.env[self.env.context["active_model"]].browse(
+                self.env.context["active_ids"]
+            )[:1]
             operation = line.operation_id
             st_line_id = operation.st_line_id or line.st_line_id
             move = line._get_latest_move()
@@ -53,7 +60,9 @@ class AccountMoveOperationReconcile(models.TransientModel):
                 {
                     "move_id": move and move.id or False,
                     "line_id": line.id,
-                    "partner_id": move and move.partner_id.id or operation.partner_id.id,
+                    "partner_id": move
+                    and move.partner_id.id
+                    or operation.partner_id.id,
                     "st_line_id": st_line_id.id or False,
                 }
             )

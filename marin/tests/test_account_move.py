@@ -37,17 +37,25 @@ class TestInvoicing(AccountTestInvoicingCommon):
         invoice.invoice_line_ids.price_unit = 10.0
         invoice._compute_partner_credit_warning()
         partner.credit_on_hold = True
-        self.env.user.group_ids = [(3, self.env.ref("marin.group_account_debt_manager").id)]
+        self.env.user.group_ids = [
+            (3, self.env.ref("marin.group_account_debt_manager").id)
+        ]
         with self.assertRaises(UserError):
             invoice.action_post()
         partner.credit_on_hold = False
         with self.assertRaises(UserError):
             invoice.action_post()
-        self.env.user.group_ids = [(4, self.env.ref("marin.group_account_debt_manager").id)]
+        self.env.user.group_ids = [
+            (4, self.env.ref("marin.group_account_debt_manager").id)
+        ]
         res = invoice.action_post()
         self.assertEqual(invoice.state, "draft")
         self.assertEqual(res.get("res_model"), "authorize.debt.wizard")
-        wizard = self.env["authorize.debt.wizard"].with_context(**res.get("context")).create([{}])
+        wizard = (
+            self.env["authorize.debt.wizard"]
+            .with_context(**res.get("context"))
+            .create([{}])
+        )
         wizard._compute_from_record_ids()
         self.assertEqual(wizard.flag, "credit")
         self.assertEqual(wizard.count_so, 0)
@@ -57,7 +65,9 @@ class TestInvoicing(AccountTestInvoicingCommon):
         self.assertEqual(partner.credit_limit, 11.5)
 
     def test_02_invoice_authorize_debt_multi(self):
-        self.env.user.group_ids = [(4, self.env.ref("marin.group_account_debt_manager").id)]
+        self.env.user.group_ids = [
+            (4, self.env.ref("marin.group_account_debt_manager").id)
+        ]
         invoice = self.invoice
         invoice.invoice_payment_term_id = self.pay_term_net_30_days
         partner = invoice.commercial_partner_id
@@ -70,7 +80,11 @@ class TestInvoicing(AccountTestInvoicingCommon):
         self.assertEqual(invoice.state, "draft")
         self.assertEqual(res.get("res_model"), "authorize.debt.wizard")
         res["context"]["active_ids"] = (invoice | invoice2).ids
-        wizard = self.env["authorize.debt.wizard"].with_context(**res["context"]).create([{}])
+        wizard = (
+            self.env["authorize.debt.wizard"]
+            .with_context(**res["context"])
+            .create([{}])
+        )
         wizard._compute_from_record_ids()
         self.assertEqual(wizard.flag, "credit")
         self.assertEqual(wizard.count_so, 0)
@@ -81,28 +95,36 @@ class TestInvoicing(AccountTestInvoicingCommon):
         self.assertEqual(partner.credit_limit, 23)
 
     def test_03_invoice_authorize_errors(self):
-        self.env.user.group_ids = [(4, self.env.ref("marin.group_account_debt_manager").id)]
+        self.env.user.group_ids = [
+            (4, self.env.ref("marin.group_account_debt_manager").id)
+        ]
         ctx = {"active_model": "account.move", "active_ids": []}
         with self.assertRaisesRegex(
-            UserError, "You can't authorize debt because the records dont match the criteria."
+            UserError,
+            "You can't authorize debt because the records dont match the criteria.",
         ):
             self.env["authorize.debt.wizard"].with_context(**ctx).create([{}])
         invoice = self.invoice
         invoice2 = invoice.copy({"partner_id": invoice.partner_id.copy().id})
         ctx["active_ids"] = (invoice | invoice2).ids
-        with self.assertRaisesRegex(UserError, "You cant authorize debt for records belonging to different partners."):
+        with self.assertRaisesRegex(
+            UserError,
+            "You cant authorize debt for records belonging to different partners.",
+        ):
             self.env["authorize.debt.wizard"].with_context(**ctx).create([{}])
         invoice.invoice_line_ids.price_unit = 0.0
         ctx["active_ids"] = invoice.ids
         with self.assertRaisesRegex(
-            UserError, "You can't authorize debt because the records dont match the criteria."
+            UserError,
+            "You can't authorize debt because the records dont match the criteria.",
         ):
             self.env["authorize.debt.wizard"].with_context(**ctx).create([{}])
         invoice.invoice_line_ids.price_unit = 10.0
         vendor_bill = self.vendor_bill
         ctx["active_ids"] = (invoice | vendor_bill).ids
         with self.assertRaisesRegex(
-            UserError, "You can't authorize debt for records being either all inbound, either all outbound."
+            UserError,
+            "You can't authorize debt for records being either all inbound, either all outbound.",
         ):
             self.env["authorize.debt.wizard"].with_context(**ctx).create([{}])
 
@@ -162,11 +184,21 @@ class TestInvoicing(AccountTestInvoicingCommon):
         invoice.invoice_line_ids.price_unit = 10.00
         invoice.invoice_line_ids.quantity = 100.00
         action = invoice.action_cash_discount_wizard()
-        self.env.user.group_ids = [(4, self.env.ref("marin.group_account_move_cash_discount").id)]
-        with self.assertRaisesRegex(UserError, "You can only register cash discounts on posted moves."):
-            self.env["account.invoice.cash.discount"].with_context(action.get("context", {})).create({})
+        self.env.user.group_ids = [
+            (4, self.env.ref("marin.group_account_move_cash_discount").id)
+        ]
+        with self.assertRaisesRegex(
+            UserError, "You can only register cash discounts on posted moves."
+        ):
+            self.env["account.invoice.cash.discount"].with_context(
+                action.get("context", {})
+            ).create({})
         invoice.action_post()
-        wiz = self.env["account.invoice.cash.discount"].with_context(action.get("context", {})).create({})
+        wiz = (
+            self.env["account.invoice.cash.discount"]
+            .with_context(action.get("context", {}))
+            .create({})
+        )
         wiz.amount = 15
         wiz.action_invoice_cash_discount()
         self.assertEqual(invoice.invoice_line_ids.price_unit, 8.5)

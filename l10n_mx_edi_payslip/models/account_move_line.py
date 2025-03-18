@@ -27,7 +27,9 @@ class AccountMoveLine(models.Model):
             if not record.l10n_mx_edi_payslip_line_ids:
                 record.l10n_mx_edi_employer_registration_id = False
                 continue
-            employee = self.env["hr.employee"].search([("work_contact_id", "=", record.partner_id.id)], limit=1)
+            employee = self.env["hr.employee"].search(
+                [("work_contact_id", "=", record.partner_id.id)], limit=1
+            )
             record.l10n_mx_edi_employer_registration_id = (
                 employee.l10n_mx_edi_employer_registration_id
                 if (employee and employee.l10n_mx_edi_employer_registration_id)

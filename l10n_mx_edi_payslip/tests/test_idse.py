@@ -23,7 +23,9 @@ class TestHrIdse(TestAccountReportsCommon):
         """Generated TXT for insured"""
         report = self.env.ref("l10n_mx_edi_payslip.idse_report")
         options = self._generate_options(
-            report, fields.Date.from_string("2024-01-01"), fields.Date.from_string("2024-12-31")
+            report,
+            fields.Date.from_string("2024-01-01"),
+            fields.Date.from_string("2024-12-31"),
         )
         self.assertEqual(
             "\n".join(
@@ -51,7 +53,9 @@ class TestHrIdse(TestAccountReportsCommon):
         date = self.contract.employee_id.departure_date
         report = self.env.ref("l10n_mx_edi_payslip.idse_baja_report")
         options = self._generate_options(
-            report, date.replace(month=1).replace(day=1), date.replace(month=12).replace(day=31)
+            report,
+            date.replace(month=1).replace(day=1),
+            date.replace(month=12).replace(day=31),
         )
         self.assertEqual(
             "\n".join(
@@ -71,13 +75,21 @@ class TestHrIdse(TestAccountReportsCommon):
     @unittest.skip("Message tracking is not working on tests.")
     def test_003_wage(self):
         """Generated TXT for wage"""
-        messages = self.contract.message_ids.filtered(lambda m: m.message_type == "notification")
-        tracking = messages.sudo().mapped("tracking_value_ids").filtered(lambda t: t.field.name == "l10n_mx_edi_sbc")
+        messages = self.contract.message_ids.filtered(
+            lambda m: m.message_type == "notification"
+        )
+        tracking = (
+            messages.sudo()
+            .mapped("tracking_value_ids")
+            .filtered(lambda t: t.field.name == "l10n_mx_edi_sbc")
+        )
         date = tracking.sorted("create_date").create_date.date()
 
         report = self.env.ref("l10n_mx_edi_payslip.idse_wage_report")
         options = self._generate_options(
-            report, date.replace(month=1).replace(day=1), date.replace(month=12).replace(day=31)
+            report,
+            date.replace(month=1).replace(day=1),
+            date.replace(month=12).replace(day=31),
         )
         self.assertEqual(
             "\n".join(

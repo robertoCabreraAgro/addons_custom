@@ -11,7 +11,6 @@ _logger = logging.getLogger(__name__)
 
 
 class NPA(models.Model):
-
     """GEO OSV SAMPLE"""
 
     _name = "dummy.zip"
@@ -66,7 +65,7 @@ class NPA(models.Model):
     def _compute_display_name(self):
         for rec in self:
             rec.display_name = f"{rec.name} {rec.city}"
-            
+
     def test_spatial_query(self):
         """Manual spatial query to test intersection"""
         self.ensure_one()
@@ -79,11 +78,7 @@ class NPA(models.Model):
 
         # Buscar máquinas que intersectan con la geometría de ZIP actual
         mach_obj = self.env["geoengine.demo.automatic.retailing.machine"]
-        res = mach_obj.search(
-            [
-                ("the_point", "geo_intersect", geom_test)
-            ]
-        )
+        res = mach_obj.search([("the_point", "geo_intersect", geom_test)])
 
         _logger.info("Geometría de ZIP: %s", geom_test)
         _logger.info("Máquinas intersectadas: %s", res)
@@ -96,20 +91,20 @@ class NPA(models.Model):
                 SELECT sum(total_sales) 
                 FROM geoengine_demo_automatic_retailing_machine 
                 WHERE id IN %s;
-                """, 
-                (tuple(res.ids),)
+                """,
+                (tuple(res.ids),),
             )
             total_sales = cursor.fetchone()[0] or 0.0
 
             # Retornar notificación con las máquinas intersectadas y el total de ventas
             return {
-                'type': 'ir.actions.client',
-                'tag': 'display_notification',
-                'params': {
-                    'title': 'Spatial Query Result',
-                    'message': f"Found {len(res)} intersecting machines. Total Sales: {total_sales}",
-                    'sticky': False,
-                }
+                "type": "ir.actions.client",
+                "tag": "display_notification",
+                "params": {
+                    "title": "Spatial Query Result",
+                    "message": f"Found {len(res)} intersecting machines. Total Sales: {total_sales}",
+                    "sticky": False,
+                },
             }
         else:
-            raise UserError('No intersecting machines found.')
+            raise UserError("No intersecting machines found.")

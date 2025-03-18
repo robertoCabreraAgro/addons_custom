@@ -5,7 +5,9 @@ class AccountPaymentTerm(models.Model):
     _inherit = "account.payment.term"
 
     is_immediate = fields.Boolean(
-        "Immediate payment term", compute="_compute_is_immediate_payment_term", readonly=True
+        "Immediate payment term",
+        compute="_compute_is_immediate_payment_term",
+        readonly=True,
     )
 
     @api.depends("line_ids")

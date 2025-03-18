@@ -8,7 +8,9 @@ from odoo.exceptions import UserError
 
 class TestRequest(common.TransactionCase):
     def test_compute_request_status(self):
-        category_test = self.env.ref("base_approval.approval_category_data_business_trip")
+        category_test = self.env.ref(
+            "base_approval.approval_category_data_business_trip"
+        )
         requester_user = self.env.ref("base.user_admin")
         record = self.env["approval.request"].create(
             {
@@ -76,7 +78,9 @@ class TestRequest(common.TransactionCase):
         self.assertEqual(record.request_status, "new")
 
     def test_compute_request_status_with_required(self):
-        category_test = self.env.ref("base_approval.approval_category_data_business_trip")
+        category_test = self.env.ref(
+            "base_approval.approval_category_data_business_trip"
+        )
         requester_user = self.env.ref("base.user_admin")
         record = self.env["approval.request"].create(
             {
@@ -120,7 +124,9 @@ class TestRequest(common.TransactionCase):
         self.assertEqual(record.request_status, "approved")
 
     def test_product_line_compute_uom(self):
-        category_test = self.env.ref("base_approval.approval_category_data_business_trip")
+        category_test = self.env.ref(
+            "base_approval.approval_category_data_business_trip"
+        )
         uom = self.env.ref("uom.product_uom_dozen")
         product = self.env["product.product"].create(
             {

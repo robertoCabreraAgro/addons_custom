@@ -40,7 +40,9 @@ class TestAutomaticLeaves(TransactionCase):
             }
         )
 
-        cls.company = cls.env["res.company"].create({"name": "Test Company", "tolerance_check_in": 15})
+        cls.company = cls.env["res.company"].create(
+            {"name": "Test Company", "tolerance_check_in": 15}
+        )
         cls.employee_delete_leave.write(
             {
                 "company_id": cls.company.id,
@@ -65,7 +67,9 @@ class TestAutomaticLeaves(TransactionCase):
         base_time = now.replace(hour=8, minute=0, second=0, microsecond=0)
         employee_tz = timezone(self.employee.tz or "UTC")
         base_time_with_tz = employee_tz.localize(base_time)
-        base_time_naive = base_time_with_tz.astimezone(timezone("UTC")).replace(tzinfo=None)
+        base_time_naive = base_time_with_tz.astimezone(timezone("UTC")).replace(
+            tzinfo=None
+        )
         self.env["hr.attendance"].create(
             {
                 "employee_id": self.employee.id,
@@ -78,7 +82,9 @@ class TestAutomaticLeaves(TransactionCase):
         leave = self.env["hr.leave"].search([("employee_id", "=", self.employee.id)])
         self.assertEqual(len(leave), 1)
         self.assertTrue(leave.auto_generated)
-        self.assertEqual(leave.holiday_status_id, self.env.ref("hr_holidays.holiday_status_unpaid"))
+        self.assertEqual(
+            leave.holiday_status_id, self.env.ref("hr_holidays.holiday_status_unpaid")
+        )
 
     def test_02_no_absence_for_exempt_employee(self):
         """Test that no absence is generated for an exempt employee.
@@ -91,7 +97,9 @@ class TestAutomaticLeaves(TransactionCase):
 
         employee_tz = timezone(self.employee.tz or "UTC")
         base_time_with_tz = employee_tz.localize(base_time)
-        base_time_naive = base_time_with_tz.astimezone(timezone("UTC")).replace(tzinfo=None)
+        base_time_naive = base_time_with_tz.astimezone(timezone("UTC")).replace(
+            tzinfo=None
+        )
 
         self.env["hr.attendance"].create(
             {
@@ -103,7 +111,9 @@ class TestAutomaticLeaves(TransactionCase):
 
         self.env["hr.leave"].generate_absences_for_missing_attendance()
 
-        leave_exempt = self.env["hr.leave"].search([("employee_id", "=", self.employee_exempt.id)])
+        leave_exempt = self.env["hr.leave"].search(
+            [("employee_id", "=", self.employee_exempt.id)]
+        )
         self.assertFalse(leave_exempt)
 
     def test_03_no_absence_if_leave_request_exists(self):
@@ -118,7 +128,9 @@ class TestAutomaticLeaves(TransactionCase):
 
         employee_tz = timezone(self.employee.tz or "UTC")
         base_time_with_tz = employee_tz.localize(base_time)
-        base_time_naive = base_time_with_tz.astimezone(timezone("UTC")).replace(tzinfo=None)
+        base_time_naive = base_time_with_tz.astimezone(timezone("UTC")).replace(
+            tzinfo=None
+        )
 
         self.env["hr.attendance"].create(
             {
@@ -132,7 +144,9 @@ class TestAutomaticLeaves(TransactionCase):
             {
                 "name": "Existing Leave",
                 "employee_id": self.employee.id,
-                "holiday_status_id": self.env.ref("hr_holidays.holiday_status_unpaid").id,
+                "holiday_status_id": self.env.ref(
+                    "hr_holidays.holiday_status_unpaid"
+                ).id,
                 "request_date_from": fields.Datetime.now() - timedelta(days=1),
                 "request_date_to": fields.Datetime.now() - timedelta(days=1),
             }
@@ -154,7 +168,9 @@ class TestAutomaticLeaves(TransactionCase):
 
         employee_tz = timezone(self.employee.tz or "UTC")
         base_time_with_tz = employee_tz.localize(base_time)
-        base_time_naive = base_time_with_tz.astimezone(timezone("UTC")).replace(tzinfo=None)
+        base_time_naive = base_time_with_tz.astimezone(timezone("UTC")).replace(
+            tzinfo=None
+        )
 
         self.env["hr.attendance"].create(
             {
@@ -166,7 +182,9 @@ class TestAutomaticLeaves(TransactionCase):
 
         self.env["hr.leave"].generate_absences_for_missing_attendance()
 
-        leave = self.env["hr.leave"].search([("employee_id", "=", self.employee_delete_leave.id)])
+        leave = self.env["hr.leave"].search(
+            [("employee_id", "=", self.employee_delete_leave.id)]
+        )
         self.assertTrue(leave.auto_generated)
         with self.assertRaises(ValidationError):
             leave.unlink()

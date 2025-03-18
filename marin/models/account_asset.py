@@ -2,15 +2,14 @@ from odoo import fields, models
 
 
 CATEGORY_SELECTION = [
-    ('required', 'Required'),
-    ('optional', 'Optional'),
-    ('no', 'None')
+    ("required", "Required"),
+    ("optional", "Optional"),
+    ("no", "None"),
 ]
 
 
 class AccountAsset(models.Model):
     _inherit = "account.asset"
-
 
     location = fields.Char(string="Location")
 

@@ -1,8 +1,9 @@
 from odoo import fields, models
 
+
 class IrUIView(models.Model):
     _inherit = "ir.ui.view"
-    
+
     type = fields.Selection(
         selection_add=[("geoengine", "GeoEngine")],
         ondelete={"geoengine": "cascade"},
@@ -27,7 +28,7 @@ class IrUIView(models.Model):
     restricted_extent = fields.Char(string="Restricted map extent")
 
     def _get_view_info(self):
-        return {'geoengine': {'icon': 'fa fa-map-o'}} | super()._get_view_info()
+        return {"geoengine": {"icon": "fa fa-map-o"}} | super()._get_view_info()
 
     def _is_qweb_based_view(self, view_type):
         if view_type == "geoengine":

@@ -6,7 +6,6 @@ from odoo.addons.base_approval.models.approval_category import CATEGORY_SELECTIO
 class ApprovalCategory(models.Model):
     _inherit = "approval.category"
 
-
     # Inherited fields
     approval_type = fields.Selection(
         selection_add=[
@@ -33,7 +32,6 @@ class ApprovalCategory(models.Model):
         required=True,
         default="no",
     )
-
 
     @api.onchange("approval_type")
     def _onchange_approval_type(self):

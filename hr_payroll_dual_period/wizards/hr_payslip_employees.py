@@ -11,7 +11,9 @@ class HrPayslipEmployees(models.TransientModel):
         active_id = self.env.context.get("active_id")
         payslips = payslip_obj.search([("payslip_run_id", "=", active_id)])
         [run_data] = (
-            self.env["hr.payslip.run"].browse(active_id).read(["secondary_date_from", "secondary_date_to"])
+            self.env["hr.payslip.run"]
+            .browse(active_id)
+            .read(["secondary_date_from", "secondary_date_to"])
             if active_id
             else []
         )

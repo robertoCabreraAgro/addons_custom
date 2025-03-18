@@ -10,10 +10,19 @@ class HrPayslip(models.Model):
         if not self:
             return False
         extras = self.env["hr.payslip.input.batch"].search(
-            [("state", "=", "approved"), ("date", "=", self.mapped("payslip_run_id").date_start or self[0].date_from)]
+            [
+                ("state", "=", "approved"),
+                (
+                    "date",
+                    "=",
+                    self.mapped("payslip_run_id").date_start or self[0].date_from,
+                ),
+            ]
         )
         for slip in self.filtered("contract_id"):
-            slip_extras = extras.detail_ids.filtered(lambda e: e.employee_id == slip.employee_id and e.amount)
+            slip_extras = extras.detail_ids.filtered(
+                lambda e: e.employee_id == slip.employee_id and e.amount
+            )
             slip.input_line_ids.filtered(
                 lambda line: line.code in slip_extras.extra_id.input_id.mapped("code")
             ).unlink()
@@ -21,7 +30,11 @@ class HrPayslip(models.Model):
                 slip.input_line_ids = [
                     Command.create(
                         {
-                            "amount": sum(slip_extras.filtered(lambda e: e.extra_id == extra).mapped("amount")),
+                            "amount": sum(
+                                slip_extras.filtered(
+                                    lambda e: e.extra_id == extra
+                                ).mapped("amount")
+                            ),
                             "code": extra.input_id.code,
                             "contract_id": slip.contract_id.id,
                             "input_type_id": extra.input_id.id,

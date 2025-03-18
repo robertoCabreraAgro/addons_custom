@@ -7,10 +7,16 @@ class AccountInvoiceTemplateLineRun(models.TransientModel):
     _name = "account.invoice.template.line.run"
     _description = "Wizard to generate invoice lines from template"
 
-    wizard_id = fields.Many2one("account.invoice.template.run", required=True, ondelete="cascade")
+    wizard_id = fields.Many2one(
+        "account.invoice.template.run", required=True, ondelete="cascade"
+    )
     company_id = fields.Many2one(related="wizard_id.company_id")
-    company_currency_id = fields.Many2one(related="wizard_id.company_id.currency_id", string="Company Currency")
-    line_id = fields.Many2one("account.move.template.line", required=True, ondelete="cascade")
+    company_currency_id = fields.Many2one(
+        related="wizard_id.company_id.currency_id", string="Company Currency"
+    )
+    line_id = fields.Many2one(
+        "account.move.template.line", required=True, ondelete="cascade"
+    )
     partner_id = fields.Many2one("res.partner", "Partner")
     product_id = fields.Many2one("product.product")
     product_uom_id = fields.Many2one(
@@ -22,7 +28,9 @@ class AccountInvoiceTemplateLineRun(models.TransientModel):
         precompute=True,
         domain="[('category_id', '=', product_uom_category_id)]",
     )
-    product_uom_category_id = fields.Many2one(related="product_id.uom_id.category_id", default=1)
+    product_uom_category_id = fields.Many2one(
+        related="product_id.uom_id.category_id", default=1
+    )
     product_uom_qty = fields.Float("Quantity", digits="Product Unit of Measure")
     name = fields.Char(readonly=True)
     account_id = fields.Many2one("account.account", required=True, readonly=True)
@@ -82,12 +90,18 @@ class AccountInvoiceTemplateLineRun(models.TransientModel):
     def _prepare_move_line_vals(self):
         date_maturity = False
         if self.line_id.payment_term_id:
-            pterm_list = self.line_id.payment_term_id.compute(value=1, date_ref=self.wizard_id.date)
+            pterm_list = self.line_id.payment_term_id.compute(
+                value=1, date_ref=self.wizard_id.date
+            )
             date_maturity = max(line[0] for line in pterm_list)
         debit = self.line_id.move_line_type == "dr"
         price_unit = False
         if self.line_id.template_id.move_type != "entry" and self.product_id:
-            price_unit = self.amount / self.product_uom_qty if self.product_uom_qty else self.amount
+            price_unit = (
+                self.amount / self.product_uom_qty
+                if self.product_uom_qty
+                else self.amount
+            )
         vals = {
             "partner_id": self.wizard_id.partner_id.id or self.partner_id.id,
             "date_maturity": date_maturity or self.wizard_id.date,
@@ -104,7 +118,9 @@ class AccountInvoiceTemplateLineRun(models.TransientModel):
         }
         if self.tax_ids:
             vals["tax_ids"] = [Command.set(self.tax_ids.ids)]
-            tax_repartition = "refund_tax_id" if self.line_id.is_refund else "invoice_tax_id"
+            tax_repartition = (
+                "refund_tax_id" if self.line_id.is_refund else "invoice_tax_id"
+            )
             atrl_ids = self.env["account.tax.repartition.line"].search(
                 [
                     (tax_repartition, "in", self.tax_ids.ids),
@@ -113,7 +129,9 @@ class AccountInvoiceTemplateLineRun(models.TransientModel):
             )
             vals["tax_tag_ids"] = [Command.set(atrl_ids.mapped("tag_ids").ids)]
         if self.line_id.tax_repartition_line_id:
-            vals["tax_tag_ids"] = [Command.set(self.line_id.tax_repartition_line_id.tag_ids.ids)]
+            vals["tax_tag_ids"] = [
+                Command.set(self.line_id.tax_repartition_line_id.tag_ids.ids)
+            ]
         overwrite = self._context.get("overwrite", {})
         move_line_vals = overwrite.get("L{}".format(self.line_id.sequence), {})
         vals.update(move_line_vals)
@@ -122,4 +140,9 @@ class AccountInvoiceTemplateLineRun(models.TransientModel):
 
     @api.onchange("product_id")
     def _onchange_product(self):
-        self.update({"name": self.product_id.display_name, "tax_ids": [Command.set(self.product_id.taxes_id.ids)]})
+        self.update(
+            {
+                "name": self.product_id.display_name,
+                "tax_ids": [Command.set(self.product_id.taxes_id.ids)],
+            }
+        )

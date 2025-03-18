@@ -9,7 +9,6 @@ class AccountMoveOperation(models.Model):
     _description = "Account Move Operations"
     _check_company_auto = True
 
-
     company_id = fields.Many2one(
         comodel_name="res.company",
         string="Company",
@@ -64,13 +63,14 @@ class AccountMoveOperation(models.Model):
         tracking=True,
     )
     amount = fields.Monetary(currency_field="currency_id")
-    from_bank_statement = fields.Boolean(related="workflow_template_id.from_bank_statement")
+    from_bank_statement = fields.Boolean(
+        related="workflow_template_id.from_bank_statement"
+    )
     line_ids = fields.One2many(
         comodel_name="account.move.operation.line",
         inverse_name="operation_id",
         readonly=True,
     )
-
 
     def action_start(self):
         self.ensure_one()
@@ -130,7 +130,9 @@ class AccountMoveOperation(models.Model):
         return vals
 
     def _get_next_action(self):
-        in_progress_line = self.line_ids.filtered(lambda line: line.state == "in_progress")[:1]
+        in_progress_line = self.line_ids.filtered(
+            lambda line: line.state == "in_progress"
+        )[:1]
         if in_progress_line:
             operation = in_progress_line.created_operation_id
             if operation and operation.company_id != self.env.company:
@@ -161,7 +163,9 @@ class AccountMoveOperation(models.Model):
                 self = self.sudo().with_company(vals["company_id"])
             if vals.get("name", _("New")) == _("New"):
                 seq_date = (
-                    fields.Datetime.context_timestamp(self, fields.Datetime.to_datetime(vals["date"]))
+                    fields.Datetime.context_timestamp(
+                        self, fields.Datetime.to_datetime(vals["date"])
+                    )
                     if "date" in vals
                     else None
                 )
@@ -176,7 +180,8 @@ class AccountMoveOperation(models.Model):
             self.update(
                 {
                     "partner_id": self.st_line_id.partner_id.id or self.partner_id.id,
-                    "currency_id": self.st_line_id.currency_id.id or self.currency_id.id,
+                    "currency_id": self.st_line_id.currency_id.id
+                    or self.currency_id.id,
                     "amount": self.st_line_id.amount,
                 }
             )
@@ -209,7 +214,9 @@ class AccountMoveOperationLine(models.Model):
         copy=False,
         readonly=True,
     )
-    operation_id = fields.Many2one("account.move.operation", required=True, readonly=True)
+    operation_id = fields.Many2one(
+        "account.move.operation", required=True, readonly=True
+    )
     orig_line_id = fields.Many2one(
         "account.move.operation.line",
         readonly=True,
@@ -235,7 +242,9 @@ class AccountMoveOperationLine(models.Model):
         required=True,
         index=True,
     )
-    template_id = fields.Many2one("account.move.template", "Move Template", readonly=True)
+    template_id = fields.Many2one(
+        "account.move.template", "Move Template", readonly=True
+    )
     journal_id = fields.Many2one("account.journal", "Journal", readonly=True)
     move_id = fields.Many2one("account.move", readonly=True)
     payment_id = fields.Many2one("account.payment", readonly=True)
@@ -256,7 +265,11 @@ class AccountMoveOperationLine(models.Model):
     @api.depends("orig_line_id.dest_line_id")
     def _compute_orig_line(self):
         for record in self.sudo():
-            record.orig_line_id = record.orig_line_id if record.orig_line_id.dest_line_id == record else False
+            record.orig_line_id = (
+                record.orig_line_id
+                if record.orig_line_id.dest_line_id == record
+                else False
+            )
 
     def _inverse_orig_line(self):
         for record in self.sudo():
@@ -265,7 +278,11 @@ class AccountMoveOperationLine(models.Model):
     @api.depends("dest_line_id.orig_line_id")
     def _compute_dest_line(self):
         for record in self.sudo():
-            record.dest_line_id = record.dest_line_id if record.dest_line_id.orig_line_id == record else False
+            record.dest_line_id = (
+                record.dest_line_id
+                if record.dest_line_id.orig_line_id == record
+                else False
+            )
 
     def _inverse_dest_line(self):
         for record in self.sudo():
@@ -297,14 +314,18 @@ class AccountMoveOperationLine(models.Model):
         lines.write({"state": "cancel"})
         for line in lines:
             if line.created_operation_id:
-                operation = line.created_operation_id.sudo().with_company(line.created_operation_id.company_id)
+                operation = line.created_operation_id.sudo().with_company(
+                    line.created_operation_id.company_id
+                )
                 operation.action_cancel()
             if (
                 line.dest_line_id.operation_id
                 and line.operation_id
                 and line.dest_line_id.operation_id != line.operation_id
             ):
-                dest_line = line.dest_line_id.sudo().with_company(line.dest_line_id.operation_id.company_id)
+                dest_line = line.dest_line_id.sudo().with_company(
+                    line.dest_line_id.operation_id.company_id
+                )
                 dest_line.operation_id.action_cancel()
 
     def _get_action_move(self):
@@ -358,7 +379,9 @@ class AccountMoveOperationLine(models.Model):
             wiz = self.env["account.move.operation.operation"].create(
                 {
                     "line_id": self.id,
-                    "diff_company_id": self.action_id.workflow_template_ids.mapped("company_id")[:1].id,
+                    "diff_company_id": self.action_id.workflow_template_ids.mapped(
+                        "company_id"
+                    )[:1].id,
                     "amount": self.operation_id.amount,
                 }
             )
@@ -410,7 +433,11 @@ class AccountMoveOperationLine(models.Model):
         orig = self.orig_line_id
         if orig:
             if self.operation_id.company_id != orig.operation_id.company_id:
-                return orig.sudo().with_company(orig.operation_id.company_id)._get_latest_document_date()
+                return (
+                    orig.sudo()
+                    .with_company(orig.operation_id.company_id)
+                    ._get_latest_document_date()
+                )
             return orig._get_latest_document_date()
         return False
 
@@ -422,7 +449,9 @@ class AccountMoveOperationLine(models.Model):
     def action_open_document_move(self):
         if not self.move_id:
             return False
-        action = self.env["ir.actions.actions"]._for_xml_id("account.action_move_journal_line")
+        action = self.env["ir.actions.actions"]._for_xml_id(
+            "account.action_move_journal_line"
+        )
         action.update(
             {
                 "name": _("Entry from template %s", self.template_id.name),

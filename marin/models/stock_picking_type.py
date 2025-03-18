@@ -5,7 +5,6 @@ from odoo.exceptions import UserError, ValidationError
 class StockPickingTypeInherit(models.Model):
     _inherit = "stock.picking.type"
 
-
     default_location_src_id = fields.Many2one(
         tracking=True,
     )
@@ -53,18 +52,21 @@ class StockPickingTypeInherit(models.Model):
         help="Users that can validate pickings of this type of operation.",
     )
 
-
     # This is a bug fix
     @api.constrains("active")
     def _check_active(self):
         for picking_type in self:
-            pos_config = self.env["pos.config"].search([("picking_type_id", "=", picking_type.id)], limit=1)
+            pos_config = self.env["pos.config"].search(
+                [("picking_type_id", "=", picking_type.id)], limit=1
+            )
             if not picking_type.active and pos_config:
-                raise ValidationError(_(
+                raise ValidationError(
+                    _(
                         "You cannot archive '%s' as it is used by a POS configuration '%s'.",
                         picking_type.name,
                         pos_config.name,
-                ))
+                    )
+                )
 
     def _search_count_picking_ready(self, operator, value):
         if operator not in ["=", "!="] or not isinstance(value, bool):
@@ -84,7 +86,9 @@ class StockPickingTypeInherit(models.Model):
 
         picking_type_ids = []
         pickings_groupby = self.env["stock.picking"].read_group(
-            [("state", "in", ("confirmed", "waiting"))], ["picking_type_id"], ["picking_type_id"]
+            [("state", "in", ("confirmed", "waiting"))],
+            ["picking_type_id"],
+            ["picking_type_id"],
         )
         for picking_type in pickings_groupby:
             picking_type_ids.append(picking_type["picking_type_id"][0])

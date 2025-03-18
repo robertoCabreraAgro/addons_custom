@@ -9,7 +9,9 @@ class HrSuaReportHandler(models.AbstractModel):
     _inherit = "account.report.custom.handler"
 
     def _custom_options_initializer(self, report, options, previous_options=None):
-        super()._custom_options_initializer(report, options, previous_options=previous_options)
+        super()._custom_options_initializer(
+            report, options, previous_options=previous_options
+        )
         options["columns"] = list(options["columns"])
         options.setdefault("buttons", []).extend(
             (
@@ -24,11 +26,25 @@ class HrSuaReportHandler(models.AbstractModel):
         )
 
     def _report_custom_engine_sua_report(
-        self, expressions, options, date_scope, current_groupby, next_groupby, offset=0, limit=None, warnings=None
+        self,
+        expressions,
+        options,
+        date_scope,
+        current_groupby,
+        next_groupby,
+        offset=0,
+        limit=None,
+        warnings=None,
     ):
         def build_dict(report, current_groupby, query_res):
             if not current_groupby:
-                return query_res[0] if query_res else {k: None for k in report.mapped("line_ids.expression_ids.label")}
+                return (
+                    query_res[0]
+                    if query_res
+                    else {
+                        k: None for k in report.mapped("line_ids.expression_ids.label")
+                    }
+                )
             return [(group_res["grouping_key"], group_res) for group_res in query_res]
 
         report = self.env["account.report"].browse(options["report_id"])
@@ -43,8 +59,12 @@ class HrSuaReportHandler(models.AbstractModel):
                 ("state", "=", "open"),
             ]
         )
-        date_from = fields.datetime.strptime(options["date"]["date_from"], DEFAULT_SERVER_DATE_FORMAT).date()
-        date_to = fields.datetime.strptime(options["date"]["date_to"], DEFAULT_SERVER_DATE_FORMAT).date()
+        date_from = fields.datetime.strptime(
+            options["date"]["date_from"], DEFAULT_SERVER_DATE_FORMAT
+        ).date()
+        date_to = fields.datetime.strptime(
+            options["date"]["date_to"], DEFAULT_SERVER_DATE_FORMAT
+        ).date()
         for contract in contracts:
             employee = contract.employee_id
             loan = employee.loan_ids.filtered(
@@ -53,7 +73,9 @@ class HrSuaReportHandler(models.AbstractModel):
                 and (not loan.date_from or loan.date_from >= date_from)
                 and (not loan.date_to or loan.date_to <= date_to)
             )
-            if not loan or not (contract.date_start >= date_from and contract.date_start <= date_to):
+            if not loan or not (
+                contract.date_start >= date_from and contract.date_start <= date_to
+            ):
                 continue
             lines.append(
                 {
@@ -63,23 +85,33 @@ class HrSuaReportHandler(models.AbstractModel):
                     "nss": employee.ssnid,
                     "vat": employee.l10n_mx_rfc,
                     "curp": employee.l10n_mx_curp,
-                    "worker_type": dict(employee._fields["l10n_mx_edi_type"]._description_selection(self.env)).get(
-                        str(employee.l10n_mx_edi_type), ""
-                    ),
+                    "worker_type": dict(
+                        employee._fields["l10n_mx_edi_type"]._description_selection(
+                            self.env
+                        )
+                    ).get(str(employee.l10n_mx_edi_type), ""),
                     "worker_type_value": employee.l10n_mx_edi_type or "",
                     "working_type": dict(
-                        contract._fields["l10n_mx_edi_working_type"]._description_selection(self.env)
+                        contract._fields[
+                            "l10n_mx_edi_working_type"
+                        ]._description_selection(self.env)
                     ).get(str(contract.l10n_mx_edi_working_type), ""),
                     "working_type_value": contract.l10n_mx_edi_working_type or "",
                     "date": fields.datetime.strftime(contract.date_start, "%d-%m-%Y"),
                     "sdi": contract.l10n_mx_edi_sdi_total,
                     "employee_key": employee.pin,
                     "infonavit_number": loan.name,
-                    "date_start": fields.datetime.strftime(loan.date_from, "%d-%m-%Y") if loan else False,
-                    "discount_type": dict(loan._fields["infonavit_type"]._description_selection(self.env)).get(
-                        str(loan.infonavit_type), ""
+                    "date_start": (
+                        fields.datetime.strftime(loan.date_from, "%d-%m-%Y")
+                        if loan
+                        else False
                     ),
-                    "discount_type_value": loan.infonavit_type.replace("percentage", "1")
+                    "discount_type": dict(
+                        loan._fields["infonavit_type"]._description_selection(self.env)
+                    ).get(str(loan.infonavit_type), ""),
+                    "discount_type_value": loan.infonavit_type.replace(
+                        "percentage", "1"
+                    )
                     .replace("fixed_amount", "2")
                     .replace("vsm", "3"),
                     "discount_amount": loan.amount,
@@ -91,7 +123,9 @@ class HrSuaReportHandler(models.AbstractModel):
         return lines
 
     def action_get_imss_txt(self, options):
-        return self.with_context(**{"no_format": True, "print_mode": True, "raise": True})._l10n_mx_txt_export(options)
+        return self.with_context(
+            **{"no_format": True, "print_mode": True, "raise": True}
+        )._l10n_mx_txt_export(options)
 
     def _l10n_mx_txt_export(self, options):
         lines = ""

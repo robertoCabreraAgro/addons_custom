@@ -45,7 +45,6 @@ class DateRange(models.Model):
         "A date range must be unique per Company",
     )
 
-
     @api.depends("type_id.active")
     def _compute_active(self):
         for date in self:

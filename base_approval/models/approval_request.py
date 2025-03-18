@@ -12,7 +12,6 @@ class ApprovalRequest(models.Model):
     _mail_post_access = "read"
     _order = "name"
 
-
     company_id = fields.Many2one(
         comodel_name="res.company",
         string="Company",
@@ -196,7 +195,10 @@ class ApprovalRequest(models.Model):
 
         if "approver_ids" in vals:
             to_resequence = self.filtered_domain(
-                [("approve_sequentially", "=", True), ("request_status", "=", "pending")]
+                [
+                    ("approve_sequentially", "=", True),
+                    ("request_status", "=", "pending"),
+                ]
             )
             for approval in to_resequence:
                 if not approval.approver_ids.filtered(lambda a: a.status == "pending"):
@@ -410,7 +412,9 @@ class ApprovalRequest(models.Model):
                     partner_ids=approval.request_owner_id.partner_id.ids,
                 )
         self.sudo()._update_next_approvers_status(
-            approver, "pending", only_next_approver=True,
+            approver,
+            "pending",
+            only_next_approver=True,
         )
         self.sudo()._get_user_approval_activities(user=self.env.user).action_feedback()
 

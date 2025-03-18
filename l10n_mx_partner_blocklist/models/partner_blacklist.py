@@ -47,7 +47,11 @@ class ResPartnerBlacklist(models.Model):
     )
 
     def download_csv_partner_list(self):
-        url = self.env["ir.config_parameter"].sudo().get_param("l10n_mx_partner_blocklist_url")
+        url = (
+            self.env["ir.config_parameter"]
+            .sudo()
+            .get_param("l10n_mx_partner_blocklist_url")
+        )
         _logger.info(_("Partner blocklist URL: " + url if url else "None URL"))
         if not url:
             return False
@@ -61,12 +65,19 @@ class ResPartnerBlacklist(models.Model):
                 # This conditional was added because near
                 # line number 996 find a white space
                 # For this reason cause error
-                if line and line[line.index(b",") :] not in file_content and count not in [0, 1, 2] and line != b"":
+                if (
+                    line
+                    and line[line.index(b",") :] not in file_content
+                    and count not in [0, 1, 2]
+                    and line != b""
+                ):
                     number_line += 1
                     line = line.decode("utf-8", errors="ignore").replace('""', "")
                     sub_line = re.search('"[A-Za-z0-9 .,&-/_]+', line)
                     if sub_line and count > 2:
-                        line = line.replace(sub_line.group(0), sub_line.group(0).replace(",", " "))
+                        line = line.replace(
+                            sub_line.group(0), sub_line.group(0).replace(",", " ")
+                        )
                     # copy only the cols that are not empty
                     cols = line.split(",")
                     line = (",").join(((",").join(cols[0:8]), (",").join(cols[11:14])))
@@ -93,7 +104,9 @@ class ResPartnerBlacklist(models.Model):
             return False
         cr = self.env.cr
         cr.execute("DELETE FROM res_partner_blacklist;")
-        cr.execute("DELETE FROM ir_model_data WHERE model='l10n_mx_partner_blocklist.res.partner.blacklist';")
+        cr.execute(
+            "DELETE FROM ir_model_data WHERE model='l10n_mx_partner_blocklist.res.partner.blacklist';"
+        )
         csv_path = attachment_id._full_path(attachment_id.store_fname)
         with open(csv_path, "rb") as csv_file:
             cr.copy_expert(

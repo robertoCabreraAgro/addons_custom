@@ -10,16 +10,21 @@ class InvoiceLineIn(models.Model):
     _auto = False
     _order = "payment_reference ASC, date ASC"
 
-
     aml_id = fields.Many2one("account.move.line", readonly=True)
     move_id = fields.Many2one("account.move", readonly=True)
     journal_id = fields.Many2one("account.journal", readonly=True)
     company_id = fields.Many2one("res.company", readonly=True)
     partner_id = fields.Many2one("res.partner", readonly=True)
     product_id = fields.Many2one("product.product", readonly=True)
-    product_categ_id = fields.Many2one("product.category", string="Product Category", readonly=True)
-    parent_categ_id = fields.Many2one("product.category", string="Parent Category", readonly=True)
-    root_categ_id = fields.Many2one("product.category", string="Root Category", readonly=True)
+    product_categ_id = fields.Many2one(
+        "product.category", string="Product Category", readonly=True
+    )
+    parent_categ_id = fields.Many2one(
+        "product.category", string="Parent Category", readonly=True
+    )
+    root_categ_id = fields.Many2one(
+        "product.category", string="Root Category", readonly=True
+    )
     sequence = fields.Integer(readonly=True)
     move_name = fields.Char("Name", readonly=True)
     parent_state = fields.Selection(
@@ -82,7 +87,6 @@ class InvoiceLineIn(models.Model):
         "Treatment",
         readonly=True,
     )
-
 
     def _query(self):
         return """

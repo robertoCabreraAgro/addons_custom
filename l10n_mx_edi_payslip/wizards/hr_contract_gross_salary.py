@@ -66,19 +66,35 @@ class HrContractGrossSalary(models.TransientModel):
     )
 
     def _compute_company_id(self):
-        self.company_id = self.env["hr.contract"].browse(self._context.get("active_ids", [])).company_id
+        self.company_id = (
+            self.env["hr.contract"]
+            .browse(self._context.get("active_ids", []))
+            .company_id
+        )
 
     @api.depends("net_salary", "include_imss", "include_subsidy")
     def _compute_gross_salary(self):
         imss = subsidy = 0
         if self.include_subsidy:
             subsidy = self.get_subsidy_amount(self.net_salary)
-        lower_limit, excess_lower_limit, percentage, marginal_tax, fixed_tax_rate, isr = self.get_isr_amount(subsidy)
+        (
+            lower_limit,
+            excess_lower_limit,
+            percentage,
+            marginal_tax,
+            fixed_tax_rate,
+            isr,
+        ) = self.get_isr_amount(subsidy)
         if self.include_imss:
             imss = self.get_imss_amount(self.net_salary + isr - subsidy)
-            lower_limit, excess_lower_limit, percentage, marginal_tax, fixed_tax_rate, isr = self.get_isr_amount(
-                imss - subsidy
-            )
+            (
+                lower_limit,
+                excess_lower_limit,
+                percentage,
+                marginal_tax,
+                fixed_tax_rate,
+                isr,
+            ) = self.get_isr_amount(imss - subsidy)
         gross = round(isr + self.net_salary + imss - subsidy, 2)
         last_gross = 0
         while (
@@ -96,9 +112,14 @@ class HrContractGrossSalary(models.TransientModel):
                 subsidy = self.get_subsidy_amount(gross)
             if self.include_imss:
                 imss = self.get_imss_amount(gross)
-            lower_limit, excess_lower_limit, percentage, marginal_tax, fixed_tax_rate, isr = self.get_isr_amount(
-                imss - subsidy
-            )
+            (
+                lower_limit,
+                excess_lower_limit,
+                percentage,
+                marginal_tax,
+                fixed_tax_rate,
+                isr,
+            ) = self.get_isr_amount(imss - subsidy)
             gross = round(isr + self.net_salary + imss - subsidy, 2)
         self.imss = imss
         self.subsidy = subsidy
@@ -125,7 +146,9 @@ class HrContractGrossSalary(models.TransientModel):
             (125325.21, 375975.61, 32691.18, 0.3400),
             (375975.62, 999999999, 117912.32, 0.3500),
         ]
-        lower_limit = excess_lower_limit = percentage = marginal_tax = fixed_tax_rate = isr = higher_limit = 0
+        lower_limit = excess_lower_limit = percentage = marginal_tax = (
+            fixed_tax_rate
+        ) = isr = higher_limit = 0
         for value in table:
             if value[1] >= amount >= value[0]:
                 lower_limit = value[0]
@@ -135,15 +158,29 @@ class HrContractGrossSalary(models.TransientModel):
                 excess_lower_limit = amount - lower_limit
                 marginal_tax = excess_lower_limit * percentage
                 isr = round(marginal_tax + fixed_tax_rate, 2)
-        return lower_limit, excess_lower_limit, higher_limit, percentage, marginal_tax, fixed_tax_rate, isr
+        return (
+            lower_limit,
+            excess_lower_limit,
+            higher_limit,
+            percentage,
+            marginal_tax,
+            fixed_tax_rate,
+            isr,
+        )
 
     def get_isr_amount(self, extra=None):
         """Based on ISR rule, get the ISR amount (Recursive to get the correct value)"""
         base_amount = self.net_salary + (extra or 0)
         amount = base_amount
-        lower_limit, excess_lower_limit, higher_limit, percentage, marginal_tax, fixed_tax_rate, isr = self._get_isr(
-            amount
-        )
+        (
+            lower_limit,
+            excess_lower_limit,
+            higher_limit,
+            percentage,
+            marginal_tax,
+            fixed_tax_rate,
+            isr,
+        ) = self._get_isr(amount)
         higher = higher_limit
         less = base_amount
         if base_amount + isr > higher:
@@ -160,7 +197,9 @@ class HrContractGrossSalary(models.TransientModel):
             )
             higher = higher_limit
         last_amount = 0
-        while round(amount - isr, 2) != base_amount and last_amount != round(amount - isr, 2):
+        while round(amount - isr, 2) != base_amount and last_amount != round(
+            amount - isr, 2
+        ):
             last_amount = round(amount - isr, 2)
             amount = (higher + less) / 2
             (
@@ -178,7 +217,14 @@ class HrContractGrossSalary(models.TransientModel):
                 higher = amount
             elif base_amount >= amount - isr <= less:
                 less = amount
-        return lower_limit, excess_lower_limit, percentage, marginal_tax, fixed_tax_rate, isr
+        return (
+            lower_limit,
+            excess_lower_limit,
+            percentage,
+            marginal_tax,
+            fixed_tax_rate,
+            isr,
+        )
 
     def get_imss_amount(self, wage):
         """Get IMSS amount if is activated the option (Comes from IMSS Rule)"""
@@ -186,12 +232,16 @@ class HrContractGrossSalary(models.TransientModel):
         sbc = contract._get_integrated_salary(wage)[1]
         uma = contract.company_id.l10n_mx_edi_uma
         days_work = 31
-        specie_excess = ((sbc - (uma * 3)) * 0.004 * days_work) if (sbc - (uma * 3)) > 0 else 0
+        specie_excess = (
+            ((sbc - (uma * 3)) * 0.004 * days_work) if (sbc - (uma * 3)) > 0 else 0
+        )
         benefits = 0.0025 * sbc * days_work
         pensioners = 0.00375 * sbc * days_work
         disability = 0.00625 * sbc * days_work
         unemployment = 0.01125 * sbc * days_work
-        return round(specie_excess + benefits + pensioners + disability + unemployment, 2)
+        return round(
+            specie_excess + benefits + pensioners + disability + unemployment, 2
+        )
 
     def get_subsidy_amount(self, wage):
         """Get subsidy amount if is activated the option (Comes from subsidy rule)"""
@@ -215,4 +265,6 @@ class HrContractGrossSalary(models.TransientModel):
 
     def set_wage(self):
         """Assign the calculated amount in the contract"""
-        self.env["hr.contract"].browse(self._context.get("active_ids", [])).write({"wage": self.gross_salary})
+        self.env["hr.contract"].browse(self._context.get("active_ids", [])).write(
+            {"wage": self.gross_salary}
+        )

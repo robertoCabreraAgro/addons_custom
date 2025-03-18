@@ -18,7 +18,7 @@
         "views/power_user_views.xml",
         "report/print_pdf.xml",
         "wizard/pdforientation.xml",
-        ],
+    ],
     "images": ["static/description/banner.gif"],
     "license": "AGPL-3",
     "installable": True,

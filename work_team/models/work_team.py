@@ -21,7 +21,7 @@ class WorkTeam(models.Model):
     _check_company_auto = True
 
     def _get_default_team_id(self, user_id=False, domain=False):
-        """ Compute default team id for sales related documents. Note that this
+        """Compute default team id for sales related documents. Note that this
         method is not called by default_get as it takes some additional
         parameters and is meant to be called by other default methods.
 
@@ -43,18 +43,26 @@ class WorkTeam(models.Model):
             user = self.env.user
         else:
             user = self.env["res.users"].sudo().browse(user_id)
-        default_team = self.env["work.team"].browse(
-            self.env.context["default_team_id"]
-        ) if self.env.context.get("default_team_id") else self.env["work.team"]
-        valid_cids = [False] + [c for c in user.company_ids.ids if c in self.env.companies.ids]
+        default_team = (
+            self.env["work.team"].browse(self.env.context["default_team_id"])
+            if self.env.context.get("default_team_id")
+            else self.env["work.team"]
+        )
+        valid_cids = [False] + [
+            c for c in user.company_ids.ids if c in self.env.companies.ids
+        ]
 
         # 1- find in user memberships - note that if current user in C1 searches
         # for team belonging to a user in C1/C2 -> only results for C1 will be returned
         team = self.env["work.team"]
-        teams = self.env["work.team"].search([
-            ("company_id", "in", valid_cids),
-             "|", ("user_id", "=", user.id), ("member_ids", "in", [user.id])
-        ])
+        teams = self.env["work.team"].search(
+            [
+                ("company_id", "in", valid_cids),
+                "|",
+                ("user_id", "=", user.id),
+                ("member_ids", "in", [user.id]),
+            ]
+        )
         if teams and domain:
             filtered_teams = teams.filtered_domain(domain)
             if default_team and default_team in filtered_teams:
@@ -87,7 +95,6 @@ class WorkTeam(models.Model):
     def _get_default_favorite_user_ids(self):
         return [(6, 0, [self.env.uid])]
 
-
     # description
     name = fields.Char(
         string="Work Team",
@@ -97,7 +104,7 @@ class WorkTeam(models.Model):
     active = fields.Boolean(
         default=True,
         help="If the active field is set to false, "
-             "it will allow you to hide the Work Team without removing it."
+        "it will allow you to hide the Work Team without removing it.",
     )
     sequence = fields.Integer(
         string="Sequence",
@@ -123,7 +130,7 @@ class WorkTeam(models.Model):
         string="Multiple Memberships Allowed",
         compute="_compute_is_membership_multi",
         help="If True, users may belong to several sales teams. "
-             "Otherwise membership is limited to a single sales team."
+        "Otherwise membership is limited to a single sales team.",
     )
     member_company_ids = fields.Many2many(
         comodel_name="res.company",
@@ -164,9 +171,10 @@ class WorkTeam(models.Model):
     favorite_user_ids = fields.Many2many(
         "res.users",
         "team_favorite_user_rel",
-        "team_id", "user_id",
+        "team_id",
+        "user_id",
         string="Favorite Members",
-        default=_get_default_favorite_user_ids
+        default=_get_default_favorite_user_ids,
     )
     is_favorite = fields.Boolean(
         string="Show on dashboard",
@@ -180,14 +188,15 @@ class WorkTeam(models.Model):
     )
     dashboard_graph_data = fields.Text(compute="_compute_dashboard_graph")
 
-
     # ------------------------------------------------------------
     # CRUD
     # ------------------------------------------------------------
 
     @api.model_create_multi
     def create(self, vals_list):
-        teams = super(WorkTeam, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
+        teams = super(WorkTeam, self.with_context(mail_create_nosubscribe=True)).create(
+            vals_list
+        )
         teams.filtered(lambda t: t.member_ids)._add_members_to_favorites()
         return teams
 
@@ -211,14 +220,17 @@ class WorkTeam(models.Model):
             if team in default_teams:
                 raise UserError(_('Cannot delete default team "%s"', team.name))
 
-
     # ------------------------------------------------------------
     # COMPUTE
     # ------------------------------------------------------------
 
     @api.depends("sequence")  # TDE FIXME: force compute in new mode
     def _compute_is_membership_multi(self):
-        multi_enabled = self.env["ir.config_parameter"].sudo().get_param("work_team.membership_multi", False)
+        multi_enabled = (
+            self.env["ir.config_parameter"]
+            .sudo()
+            .get_param("work_team.membership_multi", False)
+        )
         self.is_membership_multi = multi_enabled
 
     @api.depends("work_team_member_ids.active")
@@ -234,7 +246,9 @@ class WorkTeam(models.Model):
             users_current = team.member_ids
             users_new = users_current - memberships.user_id
             # add missing memberships
-            self.env["work.team.member"].create([{"work_team_id": team.id, "user_id": user.id} for user in users_new])
+            self.env["work.team.member"].create(
+                [{"work_team_id": team.id, "user_id": user.id} for user in users_new]
+            )
             # activate or deactivate other memberships depending on members
             for membership in memberships:
                 membership.active = membership.user_id in users_current
@@ -253,18 +267,26 @@ class WorkTeam(models.Model):
         # done in a loop, but to be used in form view only -> not optimized
         for team in self:
             member_warning = False
-            other_memberships = self.env["work.team.member"].search([
-                ("work_team_id", "!=", team._origin.id if team.ids else False),
-                ("user_id", "in", team.member_ids.ids)
-            ])
+            other_memberships = self.env["work.team.member"].search(
+                [
+                    ("work_team_id", "!=", team._origin.id if team.ids else False),
+                    ("user_id", "in", team.member_ids.ids),
+                ]
+            )
             if other_memberships:
                 member_warning = _(
                     "Adding %(user_names)s in this team will remove them from %(team_names)s.",
                     user_names=", ".join(other_memberships.mapped("user_id.name")),
-                    team_names=", ".join(other_memberships.mapped("work_team_id.name"))
+                    team_names=", ".join(other_memberships.mapped("work_team_id.name")),
                 )
             if member_warning:
-                team.member_warning = member_warning + " " + _("Working in multiple teams? Activate the option under Configuration>Settings.")
+                team.member_warning = (
+                    member_warning
+                    + " "
+                    + _(
+                        "Working in multiple teams? Activate the option under Configuration>Settings."
+                    )
+                )
 
     def _search_member_ids(self, operator, value):
         return [("work_team_member_ids.user_id", operator, value)]
@@ -287,7 +309,9 @@ class WorkTeam(models.Model):
 
     def _inverse_is_favorite(self):
         sudoed_self = self.sudo()
-        to_fav = sudoed_self.filtered(lambda team: self.env.user not in team.favorite_user_ids)
+        to_fav = sudoed_self.filtered(
+            lambda team: self.env.user not in team.favorite_user_ids
+        )
         to_fav.write({"favorite_user_ids": [(4, self.env.uid)]})
         (sudoed_self - to_fav).write({"favorite_user_ids": [(3, self.env.uid)]})
         return True
@@ -297,7 +321,7 @@ class WorkTeam(models.Model):
         Sets the adequate dashboard button name depending on the Work Team's options
         """
         for team in self:
-            team.dashboard_button_name = _("Big Pretty Button :)") # placeholder
+            team.dashboard_button_name = _("Big Pretty Button :)")  # placeholder
 
     def _compute_dashboard_graph(self):
         for team in self:
@@ -358,16 +382,16 @@ class WorkTeam(models.Model):
         return SQL()
 
     def _graph_title_and_key(self):
-        """ Returns an array containing the appropriate graph title and key respectively.
+        """Returns an array containing the appropriate graph title and key respectively.
 
-            The key is for lineCharts, to have the on-hover label.
+        The key is for lineCharts, to have the on-hover label.
         """
         return ["", ""]
 
     def _graph_data(self, start_date, end_date):
-        """ return format should be an iterable of dicts that contain {"x_value": ..., "y_value": ...}
-            x_values should be weeks.
-            y_values are floats.
+        """return format should be an iterable of dicts that contain {"x_value": ..., "y_value": ...}
+        x_values should be weeks.
+        y_values are floats.
         """
         # apply rules
         extra_conditions = self._extra_sql_conditions() or SQL("TRUE")
@@ -403,16 +427,18 @@ class WorkTeam(models.Model):
 
     def _get_dashboard_graph_data(self):
         def get_week_name(start_date, locale):
-            """ Generates a week name (string) from a datetime according to the locale:
-                E.g.: locale    start_date (datetime)      return string
-                      "en_US"      November 16th           "16-22 Nov"
-                      "en_US"      December 28th           "28 Dec-3 Jan"
+            """Generates a week name (string) from a datetime according to the locale:
+            E.g.: locale    start_date (datetime)      return string
+                  "en_US"      November 16th           "16-22 Nov"
+                  "en_US"      December 28th           "28 Dec-3 Jan"
             """
             if (start_date + relativedelta(days=6)).month == start_date.month:
                 short_name_from = format_date(start_date, "d", locale=locale)
             else:
                 short_name_from = format_date(start_date, "d MMM", locale=locale)
-            short_name_to = format_date(start_date + relativedelta(days=6), "d MMM", locale=locale)
+            short_name_to = format_date(
+                start_date + relativedelta(days=6), "d MMM", locale=locale
+            )
             return short_name_from + "-" + short_name_to
 
         self.ensure_one()
@@ -426,14 +452,29 @@ class WorkTeam(models.Model):
         # generate all required x_fields and update the y_values where we have data for them
         locale = self._context.get("lang") or "en_US"
 
-        weeks_in_start_year = int(date(start_date.year, 12, 28).isocalendar()[1]) # This date is always in the last week of ISO years
-        week_count = (end_date.isocalendar()[1] - start_date.isocalendar()[1]) % weeks_in_start_year + 1
+        weeks_in_start_year = int(
+            date(start_date.year, 12, 28).isocalendar()[1]
+        )  # This date is always in the last week of ISO years
+        week_count = (
+            end_date.isocalendar()[1] - start_date.isocalendar()[1]
+        ) % weeks_in_start_year + 1
         for week in range(week_count):
-            short_name = get_week_name(start_date + relativedelta(days=7 * week), locale)
-            values.append({x_field: short_name, y_field: 0, "type": "future" if week + 1 == week_count else "past"})
+            short_name = get_week_name(
+                start_date + relativedelta(days=7 * week), locale
+            )
+            values.append(
+                {
+                    x_field: short_name,
+                    y_field: 0,
+                    "type": "future" if week + 1 == week_count else "past",
+                }
+            )
 
         for data_item in graph_data:
-            index = int((data_item.get("x_value") - start_date.isocalendar()[1]) % weeks_in_start_year)
+            index = int(
+                (data_item.get("x_value") - start_date.isocalendar()[1])
+                % weeks_in_start_year
+            )
             values[index][y_field] = data_item.get("y_value")
 
         [graph_title, graph_key] = self._graph_title_and_key()
@@ -446,4 +487,12 @@ class WorkTeam(models.Model):
                 value["type"] = "o_sample_data"
                 # we use unrealistic values for the sample data
                 value["value"] = random.randint(0, 20)
-        return [{"values": values, "area": True, "title": graph_title, "key": graph_key, "color": color}]
+        return [
+            {
+                "values": values,
+                "area": True,
+                "title": graph_title,
+                "key": graph_key,
+                "color": color,
+            }
+        ]

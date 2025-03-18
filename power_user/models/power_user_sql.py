@@ -7,7 +7,6 @@ class PowerUserSql(models.Model):
     _description = "PostgreSQL queries from Odoo interface"
     _inherit = ["mail.thread", "mail.activity.mixin"]
 
-
     name = fields.Text(string="Type a query : ")
     valid_query_name = fields.Text()
     tips = fields.Many2one("power.user.tip", string="Examples")
@@ -17,7 +16,6 @@ class PowerUserSql(models.Model):
     show_raw_output = fields.Boolean(string="Show the raw output of the query")
     html = fields.Html(string="HTML")
 
-
     def print_result(self):
         self.ensure_one()
         return {
@@ -26,9 +24,7 @@ class PowerUserSql(models.Model):
             "res_model": "pdforientation",
             "type": "ir.actions.act_window",
             "target": "new",
-            "context": {
-                "default_query_name": self.valid_query_name
-            },
+            "context": {"default_query_name": self.valid_query_name},
         }
 
     def copy_query(self):
@@ -62,24 +58,42 @@ class PowerUserSql(models.Model):
                 raise UserError(e)
 
             rowcount = self.env.cr.rowcount
-            self.rowcount = _("{0} row{1} processed").format(rowcount, "s" if 1 < rowcount else "")
+            self.rowcount = _("{0} row{1} processed").format(
+                rowcount, "s" if 1 < rowcount else ""
+            )
 
             if headers and datas:
                 self.valid_query_name = self.name
                 self.raw_output = datas
                 header_html = "<tr style='background-color: lightgrey'> <th style='background-color:white'/>"
-                header_html += "".join(["<th style='border: 1px solid black'>"+str(header)+"</th>" for header in headers])
+                header_html += "".join(
+                    [
+                        "<th style='border: 1px solid black'>" + str(header) + "</th>"
+                        for header in headers
+                    ]
+                )
                 header_html += "</tr>"
                 body_html = ""
                 i = 0
                 for data in datas:
                     i += 1
-                    body_line = "<tr style='background-color: {0}'> <td style='border-right: 3px double; border-bottom: 1px solid black; background-color: yellow'>{1}</td>".format("cyan" if i%2 == 0 else "white", i)
+                    body_line = "<tr style='background-color: {0}'> <td style='border-right: 3px double; border-bottom: 1px solid black; background-color: yellow'>{1}</td>".format(
+                        "cyan" if i % 2 == 0 else "white", i
+                    )
                     for value in data:
                         display_value = ""
                         if value is not None:
-                            display_value = str(value).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-                        body_line += "<td style='border: 1px solid black'>{0}</td>".format(display_value)
+                            display_value = (
+                                str(value)
+                                .replace("&", "&amp;")
+                                .replace("<", "&lt;")
+                                .replace(">", "&gt;")
+                            )
+                        body_line += (
+                            "<td style='border: 1px solid black'>{0}</td>".format(
+                                display_value
+                            )
+                        )
                     body_line += "</tr>"
                     body_html += body_line
                 self.html = """
@@ -91,4 +105,6 @@ class PowerUserSql(models.Model):
                     <tbody>
                         {1}
                     </tbody>
-                    </table>""".format(header_html, body_html)
+                    </table>""".format(
+                    header_html, body_html
+                )

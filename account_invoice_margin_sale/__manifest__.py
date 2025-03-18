@@ -1,4 +1,3 @@
-
 {
     "name": "Account Invoice Margin Sale",
     "summary": "Set margin in invoices from sale orders",

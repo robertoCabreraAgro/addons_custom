@@ -5,8 +5,7 @@ class MxEdiToRecordWizard(models.TransientModel):
     _name = "documents.mx_edi_to_record_wizard"
     _description = "MX EDI to Record"
 
-
-    document_ids = fields.Many2many('documents.document', 'Documents', readonly=True)
+    document_ids = fields.Many2many("documents.document", "Documents", readonly=True)
     company_id = fields.Many2one(
         comodel_name="res.company",
         default=lambda self: self.env.company,
@@ -29,9 +28,8 @@ class MxEdiToRecordWizard(models.TransientModel):
     # )
     # analytic_group = fields.Boolean(compute="_compute_show_fields")
 
-
-    #@api.depends("folder_id")
-    #def _compute_show_fields(self):
+    # @api.depends("folder_id")
+    # def _compute_show_fields(self):
     #    folders = self.env.ref("documents.documents_finance_folder")
     #    folders |= self._get_children_folder_ids(folders)
     #    for record in self:
@@ -42,8 +40,12 @@ class MxEdiToRecordWizard(models.TransientModel):
     def create_records(self):
         move_ids = []
         for document in self.document_ids:
-            cfdi_etree = self.env["l10n_mx_edi.document"].check_objectify_xml(document.datas)
-            obj_exist = self.env["l10n_mx_edi.document"].xml2record(cfdi_etree, self.journal_id)
+            cfdi_etree = self.env["l10n_mx_edi.document"].check_objectify_xml(
+                document.datas
+            )
+            obj_exist = self.env["l10n_mx_edi.document"].xml2record(
+                cfdi_etree, self.journal_id
+            )
             document.attachment_id.with_context(no_document=True).write(
                 {
                     "res_model": "account.move",

@@ -172,9 +172,9 @@ class StockPickingTracker(models.Model):
         for vals in vals_list:
             if vals.get("name", self.env._("New")) == self.env._("New"):
                 company_id = vals.get("company_id", self.env.company.id)
-                vals["name"] = self.env["ir.sequence"].with_company(company_id).next_by_code(
-                    "picking.tracker"
-                ) or self.env._("New")
+                vals["name"] = self.env["ir.sequence"].with_company(
+                    company_id
+                ).next_by_code("picking.tracker") or self.env._("New")
         return super().create(vals_list)
 
     @api.depends("vehicle_id")
@@ -192,7 +192,9 @@ class StockPickingTracker(models.Model):
         for tracker in self:
             driver_is_commercial = False
             if tracker.driver_department_id and commercial_department:
-                driver_is_commercial = tracker.driver_department_id == commercial_department
+                driver_is_commercial = (
+                    tracker.driver_department_id == commercial_department
+                )
             tracker.driver_is_commercial = driver_is_commercial
 
     @api.depends("odometer_start", "odometer_end")
@@ -200,7 +202,9 @@ class StockPickingTracker(models.Model):
         """Compute the difference between the starting and ending odometer readings."""
         for tracker in self:
             if tracker.odometer_start and tracker.odometer_end:
-                tracker.odometer_difference = tracker.odometer_end - tracker.odometer_start
+                tracker.odometer_difference = (
+                    tracker.odometer_end - tracker.odometer_start
+                )
             else:
                 tracker.odometer_difference = 0.0
 
@@ -208,10 +212,18 @@ class StockPickingTracker(models.Model):
     def _compute_fuel_consumption(self):
         """Compute the fuel consumption."""
         for tracker in self:
-            if tracker.fuel_start and tracker.fuel_end and tracker.vehicle_id.fuel_tank_capacity:
+            if (
+                tracker.fuel_start
+                and tracker.fuel_end
+                and tracker.vehicle_id.fuel_tank_capacity
+            ):
                 # Convert percentage to actual fuel quantity
-                start_fuel = tracker.vehicle_id.fuel_tank_capacity * (tracker.fuel_start / 100)
-                end_fuel = tracker.vehicle_id.fuel_tank_capacity * (tracker.fuel_end / 100)
+                start_fuel = tracker.vehicle_id.fuel_tank_capacity * (
+                    tracker.fuel_start / 100
+                )
+                end_fuel = tracker.vehicle_id.fuel_tank_capacity * (
+                    tracker.fuel_end / 100
+                )
                 tracker.fuel_consumption = start_fuel - end_fuel
             else:
                 tracker.fuel_consumption = 0.0
@@ -224,10 +236,14 @@ class StockPickingTracker(models.Model):
             empty_distance = 0
             if all(p.state in ["done", "cancel"] for p in tracker_pickings):
                 # Get the last delivered picking
-                last_picking = tracker_pickings.filtered(lambda p: p.state == "done").sorted(
-                    key=lambda p: p.date_done, reverse=True
-                )[:1]
-                empty_distance = tracker.odometer_end - last_picking.odometer_done if last_picking else 0
+                last_picking = tracker_pickings.filtered(
+                    lambda p: p.state == "done"
+                ).sorted(key=lambda p: p.date_done, reverse=True)[:1]
+                empty_distance = (
+                    tracker.odometer_end - last_picking.odometer_done
+                    if last_picking
+                    else 0
+                )
             tracker.empty_distance = empty_distance
 
     @api.depends("fuel_end", "picking_ids.fuel_done")
@@ -238,8 +254,12 @@ class StockPickingTracker(models.Model):
             empty_fuel = 0
             if all(p.state in ["done", "cancel"] for p in tracker_pickings):
                 # Get the last delivered picking
-                last_picking = tracker_pickings.filtered(lambda p: p.fuel_done).sorted("date_done")[-1:]
-                empty_fuel = tracker.fuel_end - last_picking.fuel_done if last_picking else 0
+                last_picking = tracker_pickings.filtered(lambda p: p.fuel_done).sorted(
+                    "date_done"
+                )[-1:]
+                empty_fuel = (
+                    tracker.fuel_end - last_picking.fuel_done if last_picking else 0
+                )
             tracker.empty_fuel = empty_fuel
 
     @api.depends("odometer_difference", "fuel_consumption")
@@ -247,7 +267,9 @@ class StockPickingTracker(models.Model):
         """Compute the fuel efficiency."""
         for tracker in self:
             if tracker.odometer_difference and tracker.fuel_consumption > 0:
-                tracker.fuel_efficiency = tracker.odometer_difference / tracker.fuel_consumption
+                tracker.fuel_efficiency = (
+                    tracker.odometer_difference / tracker.fuel_consumption
+                )
             else:
                 tracker.fuel_efficiency = 0.0
 
@@ -256,16 +278,24 @@ class StockPickingTracker(models.Model):
         self.ensure_one()
 
         if not self.picking_ids:
-            raise UserError(self.env._("You have to set some pickings to this tracker."))
+            raise UserError(
+                self.env._("You have to set some pickings to this tracker.")
+            )
 
         # Check odometer and fuel values
         if not self.odometer_start:
             raise UserError(
-                self.env._("You cannot confirm this tracker because the starting odometer value is not set.")
+                self.env._(
+                    "You cannot confirm this tracker because the starting odometer value is not set."
+                )
             )
 
         if not self.fuel_start:
-            raise UserError(self.env._("You cannot confirm this tracker because the starting fuel value is not set."))
+            raise UserError(
+                self.env._(
+                    "You cannot confirm this tracker because the starting fuel value is not set."
+                )
+            )
 
         self.picking_ids.action_confirm()
         self._check_company()
@@ -284,19 +314,23 @@ class StockPickingTracker(models.Model):
         # Check tracker requirements
         if not self.odometer_end:
             raise UserError(
-                self.env._("You cannot mark as done this tracker because the ending odometer value is not set.")
+                self.env._(
+                    "You cannot mark as done this tracker because the ending odometer value is not set."
+                )
             )
 
         if not self.fuel_end:
             raise UserError(
-                self.env._("You cannot mark as done this tracker because the ending fuel value is not set.")
+                self.env._(
+                    "You cannot mark as done this tracker because the ending fuel value is not set."
+                )
             )
 
         # Check picking requirements
         pickings_not_done = []
         pickings_without_odometer = []
         pickings_without_fuel = []
-        all_pickings_cancelled = True 
+        all_pickings_cancelled = True
 
         for picking in self.picking_ids:  # pylint: disable=not-an-iterable
             if picking.state not in ["done", "cancel"]:
@@ -339,7 +373,7 @@ class StockPickingTracker(models.Model):
                     "You cannot mark as done this tracker because all pickings are cancelled"
                 )
             )
- 
+
         return self.write(
             {
                 "state": "done",

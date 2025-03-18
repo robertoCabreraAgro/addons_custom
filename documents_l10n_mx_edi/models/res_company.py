@@ -21,16 +21,19 @@ ERROR_TYPE = [
 class ResCompany(models.Model):
     _inherit = "res.company"
 
-
-    l10n_mx_edi_esignature_ids = fields.Many2many("l10n_mx_edi.esignature", string="MX E-signature")
-    last_sat_fetch_date = fields.Datetime("Last CFDI fetch date", default=fields.Datetime.now)
+    l10n_mx_edi_esignature_ids = fields.Many2many(
+        "l10n_mx_edi.esignature", string="MX E-signature"
+    )
+    last_sat_fetch_date = fields.Datetime(
+        "Last CFDI fetch date", default=fields.Datetime.now
+    )
 
     documents_l10n_mx_edi_folder_settings = fields.Boolean()
     l10n_mx_edi_folder = fields.Many2one(
         "documents.document",
         default=lambda self: self.env.ref(
             "documents_l10n_mx_edi.documents_l10n_mx_edi_folder",
-            raise_if_not_found=False
+            raise_if_not_found=False,
         ),
     )
 
@@ -47,16 +50,17 @@ class ResCompany(models.Model):
 
     def download_cfdi_files(self, esignature, **kwargs):
         edi_obj = self.env["l10n_mx_edi.document"]
-        esignature = esignature or self.l10n_mx_edi_esignature_ids.get_valid_esignature()
+        esignature = (
+            esignature or self.l10n_mx_edi_esignature_ids.get_valid_esignature()
+        )
         sanitized = {}
         sanitized["date_from"] = (
             kwargs["date_from"]
             or self.last_sat_fetch_date
             or fields.Datetime.now().replace(month=1, day=1, hour=0, minute=0, second=0)
         )
-        sanitized["date_to"] = (
-            kwargs["date_to"]
-            or fields.Datetime.now().replace(hour=0, minute=0, second=0)
+        sanitized["date_to"] = kwargs["date_to"] or fields.Datetime.now().replace(
+            hour=0, minute=0, second=0
         )
         _cer_pem, certificate = esignature.get_cert_data()
         _key_pem, private_key = esignature.get_pk_data()
@@ -73,7 +77,9 @@ class ResCompany(models.Model):
             }
         )
         sanitized["uuid"] = uuid
-        request_res = edi_obj.l10n_mx_ws_request_download(certificate, private_key, ses.token, sanitized)
+        request_res = edi_obj.l10n_mx_ws_request_download(
+            certificate, private_key, ses.token, sanitized
+        )
         ses.write(
             {
                 "request": request_res["id_solicitud"],
@@ -85,15 +91,21 @@ class ResCompany(models.Model):
         for _ in range(5):
             if ses.token_expiration < fields.Datetime.now():
                 uuid = uid.uuid4()  # TODO do I need to recompute this?
-                token_res = edi_obj.l10n_mx_ws_generate_token(certificate, private_key, uuid)
+                token_res = edi_obj.l10n_mx_ws_generate_token(
+                    certificate, private_key, uuid
+                )
                 ses.write(
                     {
                         "uuid": uuid,
                         "token": token_res["token"],
-                        "token_expiration": datetime.fromisoformat(token_res["expires"]),
+                        "token_expiration": datetime.fromisoformat(
+                            token_res["expires"]
+                        ),
                     }
                 )
-            verify_download = edi_obj.l10n_mx_ws_verify_package(certificate, private_key, ses.token, ses.request)
+            verify_download = edi_obj.l10n_mx_ws_verify_package(
+                certificate, private_key, ses.token, ses.request
+            )
             ses.write(
                 {
                     "request_state": verify_download["estado_solicitud"],
@@ -104,16 +116,21 @@ class ResCompany(models.Model):
             if int(ses.request_state) <= 2:
                 time.sleep(20)
                 continue
-    
+
             if int(ses.request_state) >= 4:
                 message = f"{ERROR_TYPE[ses.request_state]} - {ses.request_message}"
                 self.env["bus.bus"]._sendone(
                     self.env.user.partner_id,
                     "simple_notification",
-                    {"title": "Error", "message": message, "sticky": False, "warning": True},
+                    {
+                        "title": "Error",
+                        "message": message,
+                        "sticky": False,
+                        "warning": True,
+                    },
                 )
                 break
-    
+
             download_res = edi_obj.l10n_mx_ws_download_package(
                 certificate, private_key, ses.token, verify_download["paquetes"][0]
             )
@@ -127,7 +144,9 @@ class ResCompany(models.Model):
         with zipfile.ZipFile(io.BytesIO(base64.b64decode(content[0]))) as container:
             for fname in container.namelist():
                 name = fname.split(".")[0].upper()
-                doc_exist = doc_obj.sudo().search([("name", "=", name), ("company_id", "=", self.id)])
+                doc_exist = doc_obj.sudo().search(
+                    [("name", "=", name), ("company_id", "=", self.id)]
+                )
                 if doc_exist:
                     continue
 
@@ -137,12 +156,14 @@ class ResCompany(models.Model):
                         file_content
                     )
                     tags = [
-                    "{http://www.sat.gob.mx/cfd/3}Comprobante",
-                    "{http://www.sat.gob.mx/cfd/4}Comprobante",
+                        "{http://www.sat.gob.mx/cfd/3}Comprobante",
+                        "{http://www.sat.gob.mx/cfd/4}Comprobante",
                     ]
                     is_cfdi = cfdi_etree.tag in tags
                     if is_cfdi:
-                        att_exist = att_obj.with_context(force_l10n_mx_edi_cfdi_uuid=True).create(
+                        att_exist = att_obj.with_context(
+                            force_l10n_mx_edi_cfdi_uuid=True
+                        ).create(
                             {
                                 "name": name + ".xml",
                                 "type": "binary",

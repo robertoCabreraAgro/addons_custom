@@ -14,7 +14,9 @@ class L10nMxEdiPayslip(Controller):
         - If there is just one dispersion return a .TXT file
         - If there is more dispersions return a .zip file with a txt per dispersion/bank
         """
-        is_allowed = request.env.user.has_group("l10n_mx_edi_payslip.l10n_mx_edi_allow_print_payslip_dispertion")
+        is_allowed = request.env.user.has_group(
+            "l10n_mx_edi_payslip.l10n_mx_edi_allow_print_payslip_dispertion"
+        )
         if not is_allowed or not list_ids or re.search("[^0-9|,]", list_ids):
             return request.not_found()
         ids = [int(s) for s in list_ids.split(",")]

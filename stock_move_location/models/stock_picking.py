@@ -5,7 +5,6 @@ from odoo.exceptions import UserError
 class StockPicking(models.Model):
     _inherit = "stock.picking"
 
-
     def _validate_picking(self):
         if self.location_id.child_ids:
             raise UserError(_("Please choose a source end location"))
@@ -37,12 +36,14 @@ class StockPicking(models.Model):
         move_wizard = (
             self.env["stock.quant.relocate"]
             .with_context(**context)
-            .create({
-                "location_destination_id": self.location_dest_id.id,
-                "location_origin_id": self.location_id.id,
-                "picking_type_id": self.picking_type_id.id,
-                "picking_id": self.id,
-            })
+            .create(
+                {
+                    "location_destination_id": self.location_dest_id.id,
+                    "location_origin_id": self.location_id.id,
+                    "picking_type_id": self.picking_type_id.id,
+                    "picking_id": self.id,
+                }
+            )
         )
         move_wizard._onchange_location_destination_id()
         move_wizard.action_move_location()

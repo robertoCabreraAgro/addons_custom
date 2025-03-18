@@ -8,7 +8,6 @@ from odoo.tools.translate import _
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
-
     def _prepare_partner_category_domain(self):
         parents = []
         if self.env.user.has_group("account.group_account_basic"):
@@ -23,10 +22,11 @@ class ResPartner(models.Model):
             return [("id", "=", False)]
         return [("parent_id", "!=", False), ("parent_id", "in", parents)]
 
-
     # Extend core fields
     category_id = fields.Many2many(domain=_prepare_partner_category_domain)
-    credit_limit = fields.Float(tracking=True, help="Receivable limit specific to this partner.")
+    credit_limit = fields.Float(
+        tracking=True, help="Receivable limit specific to this partner."
+    )
 
     # New fields
     mobile = fields.Char()
@@ -62,19 +62,22 @@ class ResPartner(models.Model):
         -Medium: cover the debt with a payment note
         -No collateral required: The customer have high moral and economical
         solvency so no collateral needed
-        """
+        """,
     )
     # Misc
     customer = fields.Boolean()
     supplier = fields.Boolean()
     competitor = fields.Boolean()
-    gender = fields.Selection([("male", "Male"), ("female", "Female"), ("other", "Other")])
+    gender = fields.Selection(
+        [("male", "Male"), ("female", "Female"), ("other", "Other")]
+    )
     birthdate = fields.Date()
     age = fields.Integer(compute="_compute_age", readonly=True)
     age_range_id = fields.Many2one(
         "res.partner.age.range",
         "Age Range",
-        compute="_compute_age_range_id", store=True,
+        compute="_compute_age_range_id",
+        store=True,
     )
     b2x = fields.Selection(
         [
@@ -91,12 +94,14 @@ class ResPartner(models.Model):
             ("blue", "blue"),
             ("red", "red"),
         ],
-        "Social style color"
+        "Social style color",
     )
     team_id = fields.Many2one(
         "crm.team",
         "Sales Team",
-        compute="_compute_team_id", store=True, precompute=True,  # avoid queries post-create
+        compute="_compute_team_id",
+        store=True,
+        precompute=True,  # avoid queries post-create
         readonly=False,
         ondelete="set null",
     )
@@ -104,11 +109,17 @@ class ResPartner(models.Model):
     def _prepare_compute_group(self):
         return {
             "user_account_user": self.env.user.has_group("account.group_account_user"),
-            "user_debt_manager": self.env.user.has_group("marin.group_account_debt_manager"),
+            "user_debt_manager": self.env.user.has_group(
+                "marin.group_account_debt_manager"
+            ),
             "user_hr_user": self.env.user.has_group("marin.group_hr_user"),
             "user_hr_manager": self.env.user.has_group("marin.group_hr_manager"),
-            "user_purchase_manager": self.env.user.has_group("purchase.group_purchase_manager"),
-            "user_sale_manager": self.env.user.has_group("sales_team.group_sale_manager"),
+            "user_purchase_manager": self.env.user.has_group(
+                "purchase.group_purchase_manager"
+            ),
+            "user_sale_manager": self.env.user.has_group(
+                "sales_team.group_sale_manager"
+            ),
             "user_stock_user": self.env.user.has_group("marin.group_stock_user"),
             "user_stock_manager": self.env.user.has_group("marin.group_stock_manager"),
         }
@@ -121,10 +132,9 @@ class ResPartner(models.Model):
     @api.depends("parent_id")
     def _compute_team_id(self):
         for partner in self.filtered(
-            lambda partner: 
-                not partner.team_id
-                and partner.company_type == "person"
-                and partner.parent_id.team_id
+            lambda partner: not partner.team_id
+            and partner.company_type == "person"
+            and partner.parent_id.team_id
         ):
             partner.team_id = partner.parent_id.team_id
 
@@ -133,7 +143,9 @@ class ResPartner(models.Model):
         for partner in self:
             partner.age = False
             if partner.birthdate:
-                partner.age = relativedelta(fields.Date.today(), partner.birthdate).years
+                partner.age = relativedelta(
+                    fields.Date.today(), partner.birthdate
+                ).years
 
     @api.depends("age")
     def _compute_age_range_id(self):
@@ -141,7 +153,9 @@ class ResPartner(models.Model):
         for partner in self:
             if partner.age >= 0:
                 age_range = age_ranges.filtered(
-                    lambda age_range: age_range.age_from <= partner.age <= age_range.age_to
+                    lambda age_range: age_range.age_from
+                    <= partner.age
+                    <= age_range.age_to
                 )
             else:
                 age_range = self.env["res.partner.age.range"].browse()
@@ -173,7 +187,7 @@ class ResPartner(models.Model):
         )
         msg += _(
             "Credit available: %s",
-            formatLang(self.env, self.credit_limit_available, currency_obj=currency)
+            formatLang(self.env, self.credit_limit_available, currency_obj=currency),
         )
         return msg
 

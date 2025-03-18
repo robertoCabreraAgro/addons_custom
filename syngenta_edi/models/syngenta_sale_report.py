@@ -10,10 +10,8 @@ _logger = logging.getLogger(__name__)
 
 
 ENDPOINT_URL = {
-    "prod": 
-        "https://conagrosyngentapp.syngentadigitalapps.com/syngenta-service-0.0.1/api/v1/Sellout",
-    "test":
-        "https://conagrosyngentapp.syngentadigitalapps.com/syngenta-service-0.0.1/api/v1/test/Sellout",
+    "prod": "https://conagrosyngentapp.syngentadigitalapps.com/syngenta-service-0.0.1/api/v1/Sellout",
+    "test": "https://conagrosyngentapp.syngentadigitalapps.com/syngenta-service-0.0.1/api/v1/test/Sellout",
 }
 
 
@@ -22,7 +20,6 @@ class SyngentaSaleReport(models.Model):
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _order = "date desc, id desc"
     _description = "Report send to Syngenta with customer's consumptions"
-
 
     company_id = fields.Many2one(
         "res.company",
@@ -50,7 +47,9 @@ class SyngentaSaleReport(models.Model):
         readonly=True,
         required=True,
     )
-    date = fields.Date(required=True, default=fields.Date.end_of(fields.Date.today(), "month"))
+    date = fields.Date(
+        required=True, default=fields.Date.end_of(fields.Date.today(), "month")
+    )
     agreement_id = fields.Many2one(
         "syngenta.commercial.agreement",
         "Agreement",
@@ -72,9 +71,9 @@ class SyngentaSaleReport(models.Model):
     )
     amount_total = fields.Float(
         string="Total",
-        compute="_compute_amounts", store=True,
+        compute="_compute_amounts",
+        store=True,
     )
-
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -83,7 +82,9 @@ class SyngentaSaleReport(models.Model):
                 self = self.with_company(vals["company_id"])
             if vals.get("name", _("New")) == _("New"):
                 seq_date = (
-                    fields.Datetime.context_timestamp(self, fields.Datetime.to_datetime(vals["date"]))
+                    fields.Datetime.context_timestamp(
+                        self, fields.Datetime.to_datetime(vals["date"])
+                    )
                     if "date" in vals
                     else None
                 )
@@ -104,7 +105,7 @@ class SyngentaSaleReport(models.Model):
                 doc = self.search([("folio", "=", folio)], limit=1)
             rec.folio = folio
 
-    @api.depends('report_line_ids.price_subtotal')
+    @api.depends("report_line_ids.price_subtotal")
     def _compute_amounts(self):
         for order in self:
             amount = 0.0
@@ -147,9 +148,14 @@ class SyngentaSaleReport(models.Model):
         if not self.folio:
             self._compute_folio()
 
-        timeout = int(
-            self.env["ir.config_parameter"].sudo().get_param("syngenta_edi.request_timeout")
-        ) or 60
+        timeout = (
+            int(
+                self.env["ir.config_parameter"]
+                .sudo()
+                .get_param("syngenta_edi.request_timeout")
+            )
+            or 60
+        )
         data = self._get_json_data()
         endpoint_url = self._get_url()
         try:
@@ -158,10 +164,12 @@ class SyngentaSaleReport(models.Model):
             return self._handle_response(resp_json, data)
         except (Timeout, ConnError, RequestException, ValueError):
             _logger.warning("Syngenta synchronization error")
-            raise UserError(_(
-                "The syngenta synchronization service is not available at the moment. "
-                "Please try again later."
-            ))
+            raise UserError(
+                _(
+                    "The syngenta synchronization service is not available at the moment. "
+                    "Please try again later."
+                )
+            )
 
     def action_cancel(self):
         self.filtered(lambda doc: doc.state not in ["done", "cancel"]).state = "cancel"

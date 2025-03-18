@@ -9,28 +9,21 @@ from odoo.tools.translate import _
 class AccountMove(models.Model):
     _inherit = "account.move"
 
-
     # Extended fields
     invoice_date = fields.Date(
-        compute="_compute_invoice_date", store=True, precompute=True,
+        compute="_compute_invoice_date",
+        store=True,
+        precompute=True,
         readonly=False,
         copy=True,
     )
     invoice_origin = fields.Char(readonly=False)
-    l10n_mx_edi_payment_policy = fields.Selection(
-        store=True,
-        readonly=False
-    )
-    l10n_mx_edi_usage = fields.Selection(
-        selection_add=[("CP01", "Payments")]
-    )
+    l10n_mx_edi_payment_policy = fields.Selection(store=True, readonly=False)
+    l10n_mx_edi_usage = fields.Selection(selection_add=[("CP01", "Payments")])
 
     # New fields
     journal_type = fields.Selection(
-        related="journal_id.type",
-        string="Journal type",
-        store=True,
-        readonly=True
+        related="journal_id.type", string="Journal type", store=True, readonly=True
     )
     force_payment_policy_pue = fields.Boolean(
         string="Force PUE",
@@ -40,12 +33,9 @@ class AccountMove(models.Model):
         string="Stored",
         tracking=True,
         help="If this checkbox is ticked, it means that a management representative has "
-             "received and stored a printed invoice on credit signed by the customer. ",
+        "received and stored a printed invoice on credit signed by the customer. ",
     )
-    show_update_line_account = fields.Boolean(
-        string="Has Journal Changed",
-        store=False
-    )
+    show_update_line_account = fields.Boolean(string="Has Journal Changed", store=False)
     pos_session_origin_id = fields.Many2one(
         comodel_name="pos.session",
         string="POS session",
@@ -53,7 +43,6 @@ class AccountMove(models.Model):
     count_approval = fields.Integer(
         compute="_compute_count_approval",
     )
-
 
     # Extend original method
     def unlink(self):
@@ -97,7 +86,7 @@ class AccountMove(models.Model):
                     invoice.amount_total,
                     invoice.company_currency_id,
                     invoice.company_id,
-                    invoice.date
+                    invoice.date,
                 )
                 if invoice.move_type == "out_invoice"
                 else 0
@@ -106,12 +95,17 @@ class AccountMove(models.Model):
                 invoice.company_id.account_use_credit_limit
                 and invoice.state == "draft"
                 and invoice.commercial_partner_id
-                and invoice.commercial_partner_id.credit_limit_available < amount_total_currency
+                and invoice.commercial_partner_id.credit_limit_available
+                < amount_total_currency
             )
             if show_warning:
-                future_credit = invoice.commercial_partner_id.credit + amount_total_currency
-                invoice.partner_credit_warning = invoice.commercial_partner_id._build_credit_warning_message(
-                    future_credit, invoice.company_id.currency_id
+                future_credit = (
+                    invoice.commercial_partner_id.credit + amount_total_currency
+                )
+                invoice.partner_credit_warning = (
+                    invoice.commercial_partner_id._build_credit_warning_message(
+                        future_credit, invoice.company_id.currency_id
+                    )
                 )
 
     @api.depends("move_type")
@@ -126,11 +120,7 @@ class AccountMove(models.Model):
     @api.depends("needed_terms")
     def _compute_invoice_date_due(self):
         for move in self:
-            if (
-                move.invoice_payment_term_id
-                and move.invoice_date
-                and not move.line_ids
-            ):
+            if move.invoice_payment_term_id and move.invoice_date and not move.line_ids:
                 invoice_payment_terms = move.invoice_payment_term_id._compute_terms(
                     date_ref=move.invoice_date,
                     currency=move.currency_id,
@@ -149,17 +139,16 @@ class AccountMove(models.Model):
                 super()._compute_invoice_date_due()
 
     # Override original method
-    @api.depends("move_type", "company_currency_id", "origin_payment_id", "statement_line_id")
+    @api.depends(
+        "move_type", "company_currency_id", "origin_payment_id", "statement_line_id"
+    )
     def _compute_l10n_mx_edi_is_cfdi_needed(self):
         for move in self:
             move.l10n_mx_edi_is_cfdi_needed = (
                 move.country_code == "MX"
                 and move.company_currency_id.name == "MXN"
                 and move.journal_id.x_treatment in ("fiscal_simulated", "fiscal_real")
-                and (
-                    move.is_sale_document()
-                    or move._l10n_mx_edi_is_cfdi_payment()
-                )
+                and (move.is_sale_document() or move._l10n_mx_edi_is_cfdi_payment())
             )
 
     # Override original method
@@ -170,11 +159,9 @@ class AccountMove(models.Model):
     )
     def _compute_l10n_mx_edi_cfdi_to_public(self):
         for move in self:
-            if (
-                move.move_type == "out_refund"
-                and "global_sent" in set(
-                    move._l10n_mx_edi_get_refund_original_invoices()\
-                    .mapped("l10n_mx_edi_cfdi_state")
+            if move.move_type == "out_refund" and "global_sent" in set(
+                move._l10n_mx_edi_get_refund_original_invoices().mapped(
+                    "l10n_mx_edi_cfdi_state"
                 )
             ):
                 move.l10n_mx_edi_cfdi_to_public = True
@@ -183,12 +170,16 @@ class AccountMove(models.Model):
                 and move.l10n_mx_edi_is_cfdi_needed
                 and not move.l10n_mx_edi_cfdi_to_public
             ):
-                cfdi_values = self.env["l10n_mx_edi.document"]._get_company_cfdi_values(move.company_id)
+                cfdi_values = self.env["l10n_mx_edi.document"]._get_company_cfdi_values(
+                    move.company_id
+                )
                 self.env["l10n_mx_edi.document"]._add_customer_cfdi_values(
                     cfdi_values,
                     customer=move.partner_id,
                 )
-                move.l10n_mx_edi_cfdi_to_public = cfdi_values["receptor"]["rfc"] == "XAXX010101000"
+                move.l10n_mx_edi_cfdi_to_public = (
+                    cfdi_values["receptor"]["rfc"] == "XAXX010101000"
+                )
             else:
                 move.l10n_mx_edi_cfdi_to_public = False
 
@@ -198,7 +189,7 @@ class AccountMove(models.Model):
         "invoice_date",
         "invoice_date_due",
         "invoice_payment_term_id",
-        "force_payment_policy_pue"
+        "force_payment_policy_pue",
     )
     def _compute_l10n_mx_edi_payment_policy(self):
         for move in self:
@@ -226,9 +217,11 @@ class AccountMove(models.Model):
 
     def _compute_count_approval(self):
         for move in self:
-            approvals = self.env["approval.product.line"].search(
-                [("account_move_id", "=", move.id)]
-            ).mapped("approval_request_id")
+            approvals = (
+                self.env["approval.product.line"]
+                .search([("account_move_id", "=", move.id)])
+                .mapped("approval_request_id")
+            )
             move.count_approval = len(approvals)
 
     @api.onchange("journal_id")
@@ -241,51 +234,53 @@ class AccountMove(models.Model):
                 float_compare(
                     invoice.x_check_total,
                     invoice.amount_total,
-                    precision_rounding=invoice.currency_id.rounding
+                    precision_rounding=invoice.currency_id.rounding,
                 )
                 or float_compare(
                     invoice.x_check_tax,
                     invoice.amount_tax,
-                    precision_rounding=invoice.currency_id.rounding
+                    precision_rounding=invoice.currency_id.rounding,
                 )
             ):
-                raise UserError(_(
-                    "EDI amounts doesn't match with entry ones.\n\n"
-                    "Total amount: %s --> Verification total amount: %s. Difference: %s\n"
-                    "Tax amount: %s --> Verification tax amount: %s. Difference: %s\n",
-                    formatLang(self.env, invoice.amount_total),
-                    formatLang(self.env, invoice.x_check_total),
-                    formatLang(self.env, invoice.x_total_difference),
-                    formatLang(self.env, invoice.amount_tax),
-                    formatLang(self.env, invoice.x_check_tax),
-                    formatLang(self.env, invoice.x_tax_difference),
-                ))
+                raise UserError(
+                    _(
+                        "EDI amounts doesn't match with entry ones.\n\n"
+                        "Total amount: %s --> Verification total amount: %s. Difference: %s\n"
+                        "Tax amount: %s --> Verification tax amount: %s. Difference: %s\n",
+                        formatLang(self.env, invoice.amount_total),
+                        formatLang(self.env, invoice.x_check_total),
+                        formatLang(self.env, invoice.x_total_difference),
+                        formatLang(self.env, invoice.amount_tax),
+                        formatLang(self.env, invoice.x_check_tax),
+                        formatLang(self.env, invoice.x_tax_difference),
+                    )
+                )
 
     def _pre_post_invoice_credit_limit_validation(self):
         for invoice in self.filtered(
-            lambda i:
-                i.move_type == "out_invoice"
-                and i.partner_credit_warning
-                and not i.invoice_payment_term_id.is_immediate
+            lambda i: i.move_type == "out_invoice"
+            and i.partner_credit_warning
+            and not i.invoice_payment_term_id.is_immediate
         ):
             if invoice.commercial_partner_id.credit_on_hold:
-                raise UserError(_(
-                    "The Partner's %s credit line has been held. Contact the Credit Manager.",
-                    invoice.commercial_partner_id.name,
-                ))
+                raise UserError(
+                    _(
+                        "The Partner's %s credit line has been held. Contact the Credit Manager.",
+                        invoice.commercial_partner_id.name,
+                    )
+                )
 
             if not self.env.user.has_group("marin.group_account_debt_manager"):
-                raise UserError(_(
-                    "The Partner %s does not have enough credit line. Contact the Credit Manager.",
-                    invoice.commercial_partner_id.name,
-                ))
+                raise UserError(
+                    _(
+                        "The Partner %s does not have enough credit line. Contact the Credit Manager.",
+                        invoice.commercial_partner_id.name,
+                    )
+                )
 
             authorized = self._context.get("debt_authorized")
-            if (
-                authorized
-                or self.env["ir.config_parameter"].sudo().get_param(
-                    "marin.avoid_authorize_debt"
-                )
+            if authorized or self.env["ir.config_parameter"].sudo().get_param(
+                "marin.avoid_authorize_debt"
             ):
                 return True
 
@@ -316,7 +311,10 @@ class AccountMove(models.Model):
             "type": "ir.actions.act_window",
             "res_model": "account.move.line",
             "view_mode": "list",
-            "views": [(self.env.ref("account.view_move_line_tree").id, "list"), (False, "form")],
+            "views": [
+                (self.env.ref("account.view_move_line_tree").id, "list"),
+                (False, "form"),
+            ],
             "context": {"search_default_group_by_move": True},
             "domain": [("id", "in", self.line_ids.ids)],
         }
@@ -346,9 +344,12 @@ class AccountMove(models.Model):
 
     def action_view_approval(self):
         self.ensure_one()
-        approvals_ids = self.env["approval.product.line"].search(
-            [("account_move_id", "=", self.id)]
-        ).mapped("approval_request_id").ids
+        approvals_ids = (
+            self.env["approval.product.line"]
+            .search([("account_move_id", "=", self.id)])
+            .mapped("approval_request_id")
+            .ids
+        )
         domain = [("id", "in", approvals_ids)]
         action = {
             "name": _("Approvals"),
@@ -373,7 +374,9 @@ class AccountMove(models.Model):
             "date_order": self.invoice_date,
             "fiscal_position_id": (
                 self.fiscal_position_id
-                or self.fiscal_position_id._get_fiscal_position(self.commercial_partner_id)
+                or self.fiscal_position_id._get_fiscal_position(
+                    self.commercial_partner_id
+                )
             ).id,
             "payment_term_id": self.invoice_payment_term_id.id,
             "origin": self.name,
@@ -384,16 +387,20 @@ class AccountMove(models.Model):
         self.ensure_one()
         purchase_line_vals = {}
         fpos = purchase.fiscal_position_id
-        for line in move.invoice_line_ids.filtered(lambda ln: ln.display_type == "product"):
+        for line in move.invoice_line_ids.filtered(
+            lambda ln: ln.display_type == "product"
+        ):
             taxes = fpos.map_tax(line.product_id.supplier_tax_ids)
             if taxes:
                 taxes = taxes.filtered(lambda t: t.company_id.id == self.company_id.id)
             purchase_line_vals[line.id] = {
                 "order_id": purchase.id,
                 "product_id": line.product_id.id,
-                "name": "[%s] %s" % (line.product_id.default_code, line.name)
+                "name": (
+                    "[%s] %s" % (line.product_id.default_code, line.name)
                     if line.product_id.default_code
-                    else line.name,
+                    else line.name
+                ),
                 "product_qty": line.quantity,
                 "product_uom": line.product_uom_id.id,
                 "price_unit": line.price_unit,
@@ -406,26 +413,32 @@ class AccountMove(models.Model):
     def create_purchase_order(self):
         for move in self:
             if any(not line.product_id for line in move.invoice_line_ids):
-                raise UserError(_(
-                    "Some move lines does not have a product set. Please review"
-                ))
+                raise UserError(
+                    _("Some move lines does not have a product set. Please review")
+                )
 
-            purchase_exist = self.env["purchase.order"].search([
+            purchase_exist = self.env["purchase.order"].search(
+                [
                     ("partner_id", "=", self.commercial_partner_id.id),
                     ("company_id", "=", self.company_id.id),
                     ("origin", "=", self.name),
-            ])
+                ]
+            )
             if purchase_exist and len(purchase_exist) >= 1:
-                raise UserError(_(
-                    "More than one Purchase Orders with the same origin have been found. "
-                    "Please review"
-                ))
+                raise UserError(
+                    _(
+                        "More than one Purchase Orders with the same origin have been found. "
+                        "Please review"
+                    )
+                )
 
             if not purchase_exist:
                 purchase_exist = self.env["purchase.order"].create(
                     self._prepare_purchase_order_vals()
                 )
-                purchase_line_vals = self._prepare_purchase_line_vals(move, purchase_exist)
+                purchase_line_vals = self._prepare_purchase_line_vals(
+                    move, purchase_exist
+                )
                 for line, vals in purchase_line_vals.items():
                     move_line = self.env["account.move.line"].browse(int(line))
                     po_line = self.env["purchase.order.line"].create(vals)

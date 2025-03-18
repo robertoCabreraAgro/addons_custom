@@ -8,8 +8,7 @@ class InvoiceLineOut(models.Model):
     _name = "invoice.line.out.report"
     _description = "Invoice Line Out"
     _auto = False
-    _order = 'date DESC'
-
+    _order = "date DESC"
 
     company_id = fields.Many2one("res.company", readonly=True)
     move_id = fields.Many2one("account.move", readonly=True)
@@ -58,8 +57,12 @@ class InvoiceLineOut(models.Model):
     )
     product_id = fields.Many2one("product.product", readonly=True)
     product_categ_id = fields.Many2one("product.category", readonly=True)
-    parent_categ_id = fields.Many2one("product.category", string="Parent Category", readonly=True)
-    root_categ_id = fields.Many2one("product.category", string="Root Category", readonly=True)
+    parent_categ_id = fields.Many2one(
+        "product.category", string="Parent Category", readonly=True
+    )
+    root_categ_id = fields.Many2one(
+        "product.category", string="Root Category", readonly=True
+    )
     quantity = fields.Float(readonly=True)
     price_unit = fields.Float(readonly=True, aggregator="avg")
     discount = fields.Float(readonly=True, aggregator="avg")
@@ -69,7 +72,6 @@ class InvoiceLineOut(models.Model):
     purchase_price_total = fields.Float("Total Purchase", readonly=True)
     margin = fields.Float(readonly=True)
     margin_percent = fields.Float(readonly=True)
-
 
     def _query(self):
         return """
@@ -149,9 +151,7 @@ class InvoiceLineOut(models.Model):
         self._cr.execute(f"DROP MATERIALIZED view IF EXISTS {table} CASCADE")
         if self._context.get("with_data"):
             # When calling with that context it will create the view and populate it
-            self._cr.execute(
-                f"CREATE MATERIALIZED VIEW {table} AS ({query})"
-            )
+            self._cr.execute(f"CREATE MATERIALIZED VIEW {table} AS ({query})")
         else:
             # To avoid long time to update the module we create the view without data
             # and later be populated by the cron that executes the method refresh_concurrently()

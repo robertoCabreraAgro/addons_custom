@@ -8,44 +8,66 @@ class InvoiceLineOutTeam(models.Model):
     _description = "Invoice Line Out by Team"
     _auto = False
 
-
     team_id = fields.Many2one("crm.team", readonly=True)
     partner_id = fields.Many2one("res.partner", readonly=True)
     commercial_partner_id = fields.Many2one("res.partner", readonly=True)
     product_id = fields.Many2one("product.product", readonly=True)
     product_categ_id = fields.Many2one("product.category", readonly=True)
-    parent_categ_id = fields.Many2one("product.category", string="Parent Category", readonly=True)
-    root_categ_id = fields.Many2one("product.category", string="Root Category", readonly=True)
+    parent_categ_id = fields.Many2one(
+        "product.category", string="Parent Category", readonly=True
+    )
+    root_categ_id = fields.Many2one(
+        "product.category", string="Root Category", readonly=True
+    )
     name = fields.Char(readonly=True)
     quarter = fields.Integer(readonly=True)
-    total_qty_current_year = fields.Float("Cantidad venta real", readonly=True)  # Field 1
+    total_qty_current_year = fields.Float(
+        "Cantidad venta real", readonly=True
+    )  # Field 1
     total_qty_last_year = fields.Float(readonly=True)
-    real_sale_variation_percentage = fields.Float("Variacion % cantidad venta real OYB", readonly=True, aggregator="avg")  # Field 2
+    real_sale_variation_percentage = fields.Float(
+        "Variacion % cantidad venta real OYB", readonly=True, aggregator="avg"
+    )  # Field 2
     cost_purchase_total_current_year = fields.Float(readonly=True)
     cost_purchase_total_last_year = fields.Float(readonly=True)
-    average_real_cost_current_year = fields.Float("Costo promedio real", readonly=True, aggregator="avg")  # Field 3
+    average_real_cost_current_year = fields.Float(
+        "Costo promedio real", readonly=True, aggregator="avg"
+    )  # Field 3
     average_real_cost_last_year = fields.Float(readonly=True, aggregator="avg")
-    real_cost_variation_percentage = fields.Float("Variacion % costo promedio real OYB", readonly=True, aggregator="avg")  # Field 4
-    average_abs_sale_price_current_year = fields.Float("Precio venta promedio real absoluto", readonly=True, aggregator="avg")  # Field 5
+    real_cost_variation_percentage = fields.Float(
+        "Variacion % costo promedio real OYB", readonly=True, aggregator="avg"
+    )  # Field 4
+    average_abs_sale_price_current_year = fields.Float(
+        "Precio venta promedio real absoluto", readonly=True, aggregator="avg"
+    )  # Field 5
     average_abs_sale_price_last_year = fields.Float(readonly=True, aggregator="avg")
-    average_sale_price_current_year = fields.Float("Precio venta promedio real", readonly=True, aggregator="avg")  # Field 6
+    average_sale_price_current_year = fields.Float(
+        "Precio venta promedio real", readonly=True, aggregator="avg"
+    )  # Field 6
     average_sale_price_last_year = fields.Float(readonly=True, aggregator="avg")
     real_price_variation_percentage = fields.Float(
         "Variacion % precio venta promedio real OYB", readonly=True, aggregator="avg"
     )  # Field 7
-    sale_price_total_current_year = fields.Float("Valor ventas real", readonly=True)  # Field 8
+    sale_price_total_current_year = fields.Float(
+        "Valor ventas real", readonly=True
+    )  # Field 8
     sale_price_total_last_year = fields.Float(readonly=True)
-    sale_price_variation_percentage = fields.Float("Variacion % valor ventas real OYB", readonly=True, aggregator="avg")  # Field 9
-    real_margin_value_current_year = fields.Float("Valor margen real", readonly=True)  # Field 10
+    sale_price_variation_percentage = fields.Float(
+        "Variacion % valor ventas real OYB", readonly=True, aggregator="avg"
+    )  # Field 9
+    real_margin_value_current_year = fields.Float(
+        "Valor margen real", readonly=True
+    )  # Field 10
     real_margin_value_last_year = fields.Float(readonly=True)
-    real_margin_variation_percentage = fields.Float("Variacion % valor margen real OYB", readonly=True, aggregator="avg")  # Field 11
+    real_margin_variation_percentage = fields.Float(
+        "Variacion % valor margen real OYB", readonly=True, aggregator="avg"
+    )  # Field 11
 
     real_sale_variation = fields.Float(readonly=True)
     real_cost_variation = fields.Float(readonly=True, aggregator="avg")
     real_price_variation = fields.Float(readonly=True, aggregator="avg")
     sale_price_variation = fields.Float(readonly=True)
     real_margin_variation = fields.Float(readonly=True)
-
 
     def _query(self):
         return """

@@ -16,8 +16,12 @@ class Session(models.Model):
     _name = "l10n_mx_edi.session"
     _description = "MX SAT session"
 
-    name = fields.Date("Date", required=True, index=True, default=fields.Date.context_today)
-    company_id = fields.Many2one("res.company", "Company", default=lambda self: self.env.company)
+    name = fields.Date(
+        "Date", required=True, index=True, default=fields.Date.context_today
+    )
+    company_id = fields.Many2one(
+        "res.company", "Company", default=lambda self: self.env.company
+    )
     uuid = fields.Char("UUID")
     token = fields.Char()
     token_expiration = fields.Datetime()
@@ -30,4 +34,6 @@ class Session(models.Model):
     file_count = fields.Integer("File count")
 
     def get_mx_current_datetime(self):
-        return fields.Datetime.context_timestamp(self.with_context(tz="America/Mexico_City"), fields.Datetime.now())
+        return fields.Datetime.context_timestamp(
+            self.with_context(tz="America/Mexico_City"), fields.Datetime.now()
+        )

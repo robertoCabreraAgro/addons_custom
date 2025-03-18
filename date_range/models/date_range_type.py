@@ -12,11 +12,9 @@ class DateRangeType(models.Model):
     _description = "Date Range Type"
     _order = "name,id"
 
-
     @api.model
     def _default_company(self):
         return self.env.company
-
 
     name = fields.Char(required=True, translate=True)
     allow_overlap = fields.Boolean(
@@ -72,7 +70,6 @@ class DateRangeType(models.Model):
         "UNIQUE(name, company_id)",
         "A date range type must be unique per Company",
     )
-
 
     @api.constrains("company_id")
     def _check_company_id(self):

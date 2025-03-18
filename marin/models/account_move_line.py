@@ -6,7 +6,6 @@ from odoo.tools import frozendict
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
 
-
     # Extended fields
     move_type = fields.Selection(store=True)
 
@@ -16,7 +15,6 @@ class AccountMoveLine(models.Model):
         string="Allowed sale lines to be related",
         compute="_compute_allowed_sale_line_ids",
     )
-
 
     # Override original method
     def _compute_account_id(self):
@@ -37,10 +35,9 @@ class AccountMoveLine(models.Model):
                 )
                 move = line.move_id
                 previous_two_accounts = move.line_ids.filtered(
-                    lambda x:
-                        x.account_id
-                        and x.display_type == "payment_term"
-                        and line._origin.id not in x.ids
+                    lambda x: x.account_id
+                    and x.display_type == "payment_term"
+                    and line._origin.id not in x.ids
                 )[-2:].account_id
                 account_id = (
                     getattr(journal, journal_prop)
@@ -93,7 +90,9 @@ class AccountMoveLine(models.Model):
                             or line.account_id
                         )
                 if not line.product_id and line.partner_id:
-                    account_id = self.env["account.account"]._get_most_frequent_account_for_partner(
+                    account_id = self.env[
+                        "account.account"
+                    ]._get_most_frequent_account_for_partner(
                         company_id=line.company_id.id,
                         partner_id=line.partner_id.id,
                         move_type=line.move_id.move_type,
@@ -102,7 +101,8 @@ class AccountMoveLine(models.Model):
                         line.account_id = account_id
 
         for line in self.filtered(
-            lambda l: not l.account_id and l.display_type not in ("line_section", "line_note")
+            lambda l: not l.account_id
+            and l.display_type not in ("line_section", "line_note")
         ):
             previous_two_accounts = line.move_id.line_ids.filtered(
                 lambda x: x.account_id and x.display_type == line.display_type
@@ -129,16 +129,16 @@ class AccountMoveLine(models.Model):
     @api.depends("account_id", "partner_id", "product_id", "vehicle_id")
     def _compute_analytic_distribution(self):
         vehicle_lines = self.filtered(
-            lambda line:
-                line.vehicle_id
-                and line.display_type == "product"
+            lambda line: line.vehicle_id and line.display_type == "product"
         )
         super(AccountMoveLine, self - vehicle_lines)._compute_analytic_distribution()
         cache = {}
         for line in vehicle_lines:
             arguments = line._prepare_compute_analytic_distribution()
             if arguments not in cache:
-                cache[arguments] = self.env['account.analytic.distribution.model']._get_distribution(arguments)
+                cache[arguments] = self.env[
+                    "account.analytic.distribution.model"
+                ]._get_distribution(arguments)
             line.analytic_distribution = cache[arguments] or line.analytic_distribution
 
     @api.depends("move_id.partner_id", "move_id.line_ids.sale_line_ids")
@@ -155,7 +155,8 @@ class AccountMoveLine(models.Model):
             )
             lines = orders.order_line_ids | move.line_ids.mapped("sale_line_ids")
             rec.allowed_sale_line_ids = (
-                lines if not rec.product_id
+                lines
+                if not rec.product_id
                 else lines.filtered(lambda line: line.product_id == rec.product_id)
             )
 
@@ -168,16 +169,23 @@ class AccountMoveLine(models.Model):
     # Override original method
     def _check_constrains_account_id_journal_id(self):
         self.flush_recordset()
-        for line in self.filtered(lambda x: x.display_type not in ("line_section", "line_note")):
+        for line in self.filtered(
+            lambda x: x.display_type not in ("line_section", "line_note")
+        ):
             account = line.account_id
             journal = line.move_id.journal_id
-            parent_state = line.parent_state # Changes here
+            parent_state = line.parent_state  # Changes here
 
-            if account.deprecated and not self.env.context.get("skip_account_deprecation_check"):
-                raise UserError(_(
-                    'The account %(name)s (%(code)s) is deprecated.',
-                    name=account.name, code=account.code
-                ))
+            if account.deprecated and not self.env.context.get(
+                "skip_account_deprecation_check"
+            ):
+                raise UserError(
+                    _(
+                        "The account %(name)s (%(code)s) is deprecated.",
+                        name=account.name,
+                        code=account.code,
+                    )
+                )
 
             account_currency = account.currency_id
             if (
@@ -185,19 +193,27 @@ class AccountMoveLine(models.Model):
                 and account_currency != line.company_currency_id
                 and account_currency != line.currency_id
             ):
-                raise UserError(_(
-                    "The account selected on your journal entry forces to provide a secondary currency. "
-                    "You should remove the secondary currency on the account."
-                ))
+                raise UserError(
+                    _(
+                        "The account selected on your journal entry forces to provide a secondary currency. "
+                        "You should remove the secondary currency on the account."
+                    )
+                )
 
             # Change made in the line below
-            if account.allowed_journal_ids and journal not in account.allowed_journal_ids and parent_state == "posted":
-                raise UserError(_(
-                    'You cannot use the account (%s) in the journal (%s), '
-                    'check the field "Allowed Journals" on the related account.',
-                    account.display_name,
-                    journal.name,
-                ))
+            if (
+                account.allowed_journal_ids
+                and journal not in account.allowed_journal_ids
+                and parent_state == "posted"
+            ):
+                raise UserError(
+                    _(
+                        "You cannot use the account (%s) in the journal (%s), "
+                        'check the field "Allowed Journals" on the related account.',
+                        account.display_name,
+                        journal.name,
+                    )
+                )
 
             if account in (journal.default_account_id, journal.suspense_account_id):
                 continue
@@ -208,12 +224,14 @@ class AccountMoveLine(models.Model):
                 and account not in journal.account_control_ids
                 and parent_state == "posted"
             ):
-                raise UserError(_(
-                    'You cannot use the account (%s) in the journal (%s), check the section '
-                    '"Control-Access" under tab "Advanced Settings" on the related journal.',
-                    account.display_name,
-                    journal.name,
-                ))
+                raise UserError(
+                    _(
+                        "You cannot use the account (%s) in the journal (%s), check the section "
+                        '"Control-Access" under tab "Advanced Settings" on the related journal.',
+                        account.display_name,
+                        journal.name,
+                    )
+                )
 
     # Extend original method
     def _prepare_analytic_distribution_line(

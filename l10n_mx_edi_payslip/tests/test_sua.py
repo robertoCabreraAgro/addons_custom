@@ -24,7 +24,9 @@ class TestHrSuaReport(TestAccountReportsCommon):
         report = self.env.ref("l10n_mx_edi_payslip.sua_report")
         date = self.contract.date_start
         options = self._generate_options(
-            report, date.replace(month=1).replace(day=1), date.replace(month=12).replace(day=31)
+            report,
+            date.replace(month=1).replace(day=1),
+            date.replace(month=12).replace(day=31),
         )
         self.assertEqual(
             "\n".join(
@@ -45,7 +47,9 @@ class TestHrSuaReport(TestAccountReportsCommon):
         report = self.env.ref("l10n_mx_edi_payslip.sua_affiliation_report")
         date = self.contract.date_start
         options = self._generate_options(
-            report, date.replace(month=1).replace(day=1), date.replace(month=12).replace(day=31)
+            report,
+            date.replace(month=1).replace(day=1),
+            date.replace(month=12).replace(day=31),
         )
         self.assertEqual(
             "\n".join(
@@ -67,9 +71,13 @@ class TestHrSuaReport(TestAccountReportsCommon):
             {
                 "holiday_type": "employee",
                 "employee_id": self.contract.employee_id.id,
-                "holiday_status_id": self.env.ref("l10n_mx_edi_payslip.mexican_faltas_injustificadas").id,
-                "request_date_from": "%s-%s-10" % (time.strftime("%Y"), time.strftime("%m")),
-                "request_date_to": "%s-%s-13" % (time.strftime("%Y"), time.strftime("%m")),
+                "holiday_status_id": self.env.ref(
+                    "l10n_mx_edi_payslip.mexican_faltas_injustificadas"
+                ).id,
+                "request_date_from": "%s-%s-10"
+                % (time.strftime("%Y"), time.strftime("%m")),
+                "request_date_to": "%s-%s-13"
+                % (time.strftime("%Y"), time.strftime("%m")),
                 "number_of_days": 1,
                 "date_from": "%s-%s-10" % (time.strftime("%Y"), time.strftime("%m")),
                 "date_to": "%s-%s-13" % (time.strftime("%Y"), time.strftime("%m")),
@@ -80,10 +88,18 @@ class TestHrSuaReport(TestAccountReportsCommon):
         report = self.env.ref("l10n_mx_edi_payslip.sua_move_report")
         date = self.contract.date_start
         options = self._generate_options(
-            report, date.replace(month=1).replace(day=1), date.replace(month=12).replace(day=31)
+            report,
+            date.replace(month=1).replace(day=1),
+            date.replace(month=12).replace(day=31),
         )
-        messages = self.contract.message_ids.filtered(lambda m: m.message_type == "notification")
-        tracking = messages.sudo().mapped("tracking_value_ids").filtered(lambda t: t.field.name == "l10n_mx_edi_sbc")
+        messages = self.contract.message_ids.filtered(
+            lambda m: m.message_type == "notification"
+        )
+        tracking = (
+            messages.sudo()
+            .mapped("tracking_value_ids")
+            .filtered(lambda t: t.field.name == "l10n_mx_edi_sbc")
+        )
         self.assertEqual(
             "\n".join(
                 self.env[report.custom_handler_model_name]
@@ -94,9 +110,13 @@ class TestHrSuaReport(TestAccountReportsCommon):
             "1203256    1234567892307{date}        000076648\n"
             "1203256    1234567892311{date2}        0{days}0076648\n"
             "1203256    1234567892312{date3}SICK DAY030076648\n".format(
-                date=fields.datetime.strftime(tracking.sorted("create_date").create_date.date(), "%d%m%Y"),
+                date=fields.datetime.strftime(
+                    tracking.sorted("create_date").create_date.date(), "%d%m%Y"
+                ),
                 date2="10%s%s" % (time.strftime("%m"), time.strftime("%Y")),
-                date3=fields.datetime.strftime(self.contract.date_start + relativedelta(day=1, weekday=0), "%d%m%Y"),
+                date3=fields.datetime.strftime(
+                    self.contract.date_start + relativedelta(day=1, weekday=0), "%d%m%Y"
+                ),
                 days=int(leave.number_of_days),
             ),
             "Error with SUA generation",

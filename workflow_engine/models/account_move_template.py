@@ -4,7 +4,6 @@ from odoo import models
 class AccountMoveTemplate(models.Model):
     _inherit = "account.move.template"
 
-
     def generate_journal_entry(self):
         self.ensure_one()
         if self.move_type == "entry":

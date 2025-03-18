@@ -14,7 +14,9 @@ class HrPayroll(Controller):
         - If there is just one dispersion return a .TXT file
         - If there is more dispersions return a .zip file with a txt per dispersion/bank
         """
-        is_allowed = request.env.user.has_group("hr_bank_dispersion.allow_print_payslip_dispersion")
+        is_allowed = request.env.user.has_group(
+            "hr_bank_dispersion.allow_print_payslip_dispersion"
+        )
         if not is_allowed or not list_ids or re.search("[^0-9|,]", list_ids):
             return request.not_found()
         ids = [int(s) for s in list_ids.split(",")]

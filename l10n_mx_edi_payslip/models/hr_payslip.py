@@ -249,7 +249,11 @@ class HrPayslip(models.Model):
                 replaced_payslip = payslip.search(
                     [
                         ("l10n_mx_edi_origin", "like", "04|%"),
-                        ("l10n_mx_edi_origin", "like", "%" + payslip.l10n_mx_edi_cfdi_uuid + "%"),
+                        (
+                            "l10n_mx_edi_origin",
+                            "like",
+                            "%" + payslip.l10n_mx_edi_cfdi_uuid + "%",
+                        ),
                         ("company_id", "=", payslip.company_id.id),
                     ],
                     limit=1,
@@ -262,7 +266,8 @@ class HrPayslip(models.Model):
     def _compute_warning_message(self):
         super()._compute_warning_message()
         for slip in self.filtered(
-            lambda p: p.l10n_mx_edi_payment_date and not p.date_from <= p.l10n_mx_edi_payment_date <= p.date_to
+            lambda p: p.l10n_mx_edi_payment_date
+            and not p.date_from <= p.l10n_mx_edi_payment_date <= p.date_to
         ):
             date_warning = self.env._(
                 "Please note that the payment date falls outside the payslip period. Proceed only if "
@@ -271,7 +276,10 @@ class HrPayslip(models.Model):
             if slip.warning_message:
                 date_warning = "%s\n  ・ %s" % (slip.warning_message, date_warning)
             else:
-                date_warning = "%s\n  ・ %s" % (self.env._("This payslip can be erroneous :"), date_warning)
+                date_warning = "%s\n  ・ %s" % (
+                    self.env._("This payslip can be erroneous :"),
+                    date_warning,
+                )
             slip.warning_message = date_warning
         return True
 
@@ -299,20 +307,35 @@ class HrPayslip(models.Model):
             if tfd_node is not None:
                 record.l10n_mx_edi_cfdi_uuid = tfd_node.get("UUID")
             record.l10n_mx_edi_cfdi_amount = tree.get("Total", tree.get("total"))
-            record.l10n_mx_edi_cfdi_supplier_rfc = tree.Emisor.get("Rfc", tree.Emisor.get("rfc"))
-            record.l10n_mx_edi_cfdi_customer_rfc = tree.Receptor.get("Rfc", tree.Receptor.get("rfc"))
+            record.l10n_mx_edi_cfdi_supplier_rfc = tree.Emisor.get(
+                "Rfc", tree.Emisor.get("rfc")
+            )
+            record.l10n_mx_edi_cfdi_customer_rfc = tree.Receptor.get(
+                "Rfc", tree.Receptor.get("rfc")
+            )
 
     def compute_sheet(self):
-        if self.filtered(lambda r: r.l10n_mx_edi_is_required()) and not self.env.company.l10n_mx_edi_minimum_wage:
+        if (
+            self.filtered(lambda r: r.l10n_mx_edi_is_required())
+            and not self.env.company.l10n_mx_edi_minimum_wage
+        ):
             raise ValidationError(
-                self.env._("Please, you set the minimum wage in Mexico to that you can calculate the payroll.")
+                self.env._(
+                    "Please, you set the minimum wage in Mexico to that you can calculate the payroll."
+                )
             )
         res = super().compute_sheet()
         for payslip in self.filtered(lambda slip: slip.state in ["draft", "verify"]):
             payslip.write(
-                {"l10n_mx_edi_extra_node_ids": [Command.create(node) for node in payslip._get_extra_nodes()]}
+                {
+                    "l10n_mx_edi_extra_node_ids": [
+                        Command.create(node) for node in payslip._get_extra_nodes()
+                    ]
+                }
             )
-            payslip.line_ids.filtered(lambda line: line.category_id.code != "NETSA" and (not line.amount)).unlink()
+            payslip.line_ids.filtered(
+                lambda line: line.category_id.code != "NETSA" and (not line.amount)
+            ).unlink()
         return res
 
     def _l10n_mx_edi_finkok_verify_is_stamped(self, cfdi_values):
@@ -325,7 +348,9 @@ class HrPayslip(models.Model):
         try:
             transport = Transport(timeout=20)
             client = Client(finkok_info["url"], transport=transport)
-            response = client.service.stamped(cfdi_values["cfdi"], finkok_info["username"], finkok_info["password"])
+            response = client.service.stamped(
+                cfdi_values["cfdi"], finkok_info["username"], finkok_info["password"]
+            )
         except BaseException as e:
             self.l10n_mx_edi_log_error(str(e))
             return False
@@ -378,8 +403,14 @@ class HrPayslip(models.Model):
                 )
             )
         to_cancel.write({"state": "cancel"})
-        to_cancel.filtered(lambda r: r.l10n_mx_edi_pac_status in ["to_sign", "retry"]).write(
-            {"l10n_mx_edi_pac_status": "cancelled", "l10n_mx_edi_error": False, "l10n_mx_edi_error_count": 0}
+        to_cancel.filtered(
+            lambda r: r.l10n_mx_edi_pac_status in ["to_sign", "retry"]
+        ).write(
+            {
+                "l10n_mx_edi_pac_status": "cancelled",
+                "l10n_mx_edi_error": False,
+                "l10n_mx_edi_error_count": 0,
+            }
         )
         res = super().action_payslip_cancel()
         return res
@@ -421,12 +452,20 @@ class HrPayslip(models.Model):
     def action_payslip_done(self):
         """Generates the cfdi attachments for mexican companies when validated."""
         if not self.env.user.has_group("l10n_mx_edi_payslip.allow_validate_payslip"):
-            raise UserError(self.env._("Only Managers who are allow to validate payslip can perform this operation"))
+            raise UserError(
+                self.env._(
+                    "Only Managers who are allow to validate payslip can perform this operation"
+                )
+            )
         result = super().action_payslip_done()
         version = self.l10n_mx_edi_get_pac_version()
         for record in self.filtered(lambda r: r.l10n_mx_edi_is_required()):
             if not record.net_wage and record.struct_id.type_id.l10n_mx_edi_type == "O":
-                record.message_post(body=self.env._("Stamp process omitted because the Net Salary is 0."))
+                record.message_post(
+                    body=self.env._(
+                        "Stamp process omitted because the Net Salary is 0."
+                    )
+                )
                 continue
             # Assign overtimes to avoid write in that records
             self.env["hr.payslip.overtime"].search(
@@ -437,7 +476,10 @@ class HrPayslip(models.Model):
                 ]
             ).write({"payslip_id": record.id})
             record._l10n_mx_edi_update_expedition_date()
-            record.l10n_mx_edi_cfdi_name = "%s-MX-Payroll-%s.xml" % ((record.number).replace("/", ""), version)
+            record.l10n_mx_edi_cfdi_name = "%s-MX-Payroll-%s.xml" % (
+                (record.number).replace("/", ""),
+                version,
+            )
             # Prepare to send sign
             record.l10n_mx_edi_pac_status = "to_sign"
         return result
@@ -449,14 +491,22 @@ class HrPayslip(models.Model):
         """
         self.ensure_one()
         nodes = []
-        categ_g = self.env.ref("l10n_mx_edi_payslip.hr_salary_rule_category_perception_mx_taxed").id
-        categ_e = self.env.ref("l10n_mx_edi_payslip.hr_salary_rule_category_perception_mx_exempt").id
+        categ_g = self.env.ref(
+            "l10n_mx_edi_payslip.hr_salary_rule_category_perception_mx_taxed"
+        ).id
+        categ_e = self.env.ref(
+            "l10n_mx_edi_payslip.hr_salary_rule_category_perception_mx_exempt"
+        ).id
         perceptions = self.line_ids.search(
             [
                 ("id", "in", self.line_ids.ids),
                 ("category_id", "in", [categ_g, categ_e]),
                 ("total", "!=", "0"),
-                ("salary_rule_id.l10n_mx_edi_code", "in", ["022", "023", "025", "039", "044"]),
+                (
+                    "salary_rule_id.l10n_mx_edi_code",
+                    "in",
+                    ["022", "023", "025", "039", "044"],
+                ),
             ]
         )
         separation_line_ids = perceptions.search(
@@ -470,7 +520,8 @@ class HrPayslip(models.Model):
             seniority = self.contract_id.get_seniority(date_to=self.date_to)
             years = (
                 round(seniority.get("years"), 0)
-                if seniority.get("months") > 6 or (seniority.get("months") == 6 and seniority.get("days") > 1)
+                if seniority.get("months") > 6
+                or (seniority.get("months") == 6 and seniority.get("days") > 1)
                 else seniority.get("years")
             )
             nodes.append(
@@ -479,16 +530,30 @@ class HrPayslip(models.Model):
                     "amount_total": total,
                     "last_salary": self.contract_id.wage,
                     "service_years": years,
-                    "non_accumulable_income": (total - self.contract_id.wage)
-                    if (total > self.contract_id.wage)
-                    else 0,
-                    "accumulable_income": self.contract_id.wage if (total > self.contract_id.wage) else total,
+                    "non_accumulable_income": (
+                        (total - self.contract_id.wage)
+                        if (total > self.contract_id.wage)
+                        else 0
+                    ),
+                    "accumulable_income": (
+                        self.contract_id.wage
+                        if (total > self.contract_id.wage)
+                        else total
+                    ),
                 }
             )
-        retirement_line_ids = perceptions.filtered(lambda line: line.salary_rule_id.l10n_mx_edi_code == "039")
-        retirement_partial_ids = perceptions.filtered(lambda line: line.salary_rule_id.l10n_mx_edi_code == "044")
+        retirement_line_ids = perceptions.filtered(
+            lambda line: line.salary_rule_id.l10n_mx_edi_code == "039"
+        )
+        retirement_partial_ids = perceptions.filtered(
+            lambda line: line.salary_rule_id.l10n_mx_edi_code == "044"
+        )
         if retirement_line_ids and retirement_partial_ids:
-            raise UserError(self.env._("You have perceptions with code 039 and 044. You can only have one of them."))
+            raise UserError(
+                self.env._(
+                    "You have perceptions with code 039 and 044. You can only have one of them."
+                )
+            )
         retirement_line_ids = retirement_line_ids or retirement_partial_ids
         total = round(sum(retirement_line_ids.mapped("total")), 2)
         if retirement_line_ids and total:
@@ -496,13 +561,24 @@ class HrPayslip(models.Model):
                 {
                     "node": "retirement",
                     "amount_total": total,
-                    "amount_daily": self.contract_id.wage / 30
-                    if (retirement_line_ids[0].salary_rule_id.l10n_mx_edi_code == "044")
-                    else 0,
-                    "non_accumulable_income": (total - self.contract_id.wage)
-                    if (total > self.contract_id.wage)
-                    else 0,
-                    "accumulable_income": self.contract_id.wage if (total > self.contract_id.wage) else total,
+                    "amount_daily": (
+                        self.contract_id.wage / 30
+                        if (
+                            retirement_line_ids[0].salary_rule_id.l10n_mx_edi_code
+                            == "044"
+                        )
+                        else 0
+                    ),
+                    "non_accumulable_income": (
+                        (total - self.contract_id.wage)
+                        if (total > self.contract_id.wage)
+                        else 0
+                    ),
+                    "accumulable_income": (
+                        self.contract_id.wage
+                        if (total > self.contract_id.wage)
+                        else total
+                    ),
                 }
             )
         self.l10n_mx_edi_extra_node_ids.unlink()
@@ -547,7 +623,9 @@ class HrPayslip(models.Model):
         cadena_root = etree.parse(tools.file_open(xslt_path))
         return str(etree.XSLT(cadena_root)(cfdi))
 
-    def _l10n_mx_edi_finkok_get_status(self, username, password, supplier_rfc, customer_rfc, uuid, total):
+    def _l10n_mx_edi_finkok_get_status(
+        self, username, password, supplier_rfc, customer_rfc, uuid, total
+    ):
         """Check the possible form of cancellation and the status of the CFDI.
 
         It allows to identify if the CFDI is cancellable.
@@ -770,7 +848,9 @@ class HrPayslip(models.Model):
             try:
                 transport = Transport(timeout=20)
                 client = Client(url, transport=transport)
-                response = client.service.cancelar(username, password, uuids, cer_pem, key_pem, key_password)
+                response = client.service.cancelar(
+                    username, password, uuids, cer_pem, key_pem, key_password
+                )
             except BaseException as e:
                 record.l10n_mx_edi_log_error(str(e))
                 continue
@@ -822,9 +902,14 @@ class HrPayslip(models.Model):
             self.l10n_mx_edi_error_count = 0
             if response.Incidencias and not response.xml:
                 code = getattr(response.Incidencias.Incidencia[0], "CodigoError", None)
-                msg = getattr(response.Incidencias.Incidencia[0], "MensajeIncidencia", None)
+                msg = getattr(
+                    response.Incidencias.Incidencia[0], "MensajeIncidencia", None
+                )
                 if code == "301":
-                    msg = "%s (%s)" % (msg, getattr(response.Incidencias.Incidencia[0], "ExtraInfo", None))
+                    msg = "%s (%s)" % (
+                        msg,
+                        getattr(response.Incidencias.Incidencia[0], "ExtraInfo", None),
+                    )
                 self.l10n_mx_edi_error_count = len(response.Incidencias.Incidencia)
             xml_signed = getattr(response, "xml", None)
             if xml_signed:
@@ -857,7 +942,9 @@ class HrPayslip(models.Model):
                     and record.l10n_mx_edi_cancel_payslip_id
                     and record.l10n_mx_edi_cancel_payslip_id != record
                 ):
-                    uuid_type.FolioSustitucion = record.l10n_mx_edi_cancel_payslip_id.l10n_mx_edi_cfdi_uuid
+                    uuid_type.FolioSustitucion = (
+                        record.l10n_mx_edi_cancel_payslip_id.l10n_mx_edi_cfdi_uuid
+                    )
                 docs_list = factory.UUIDArray(uuid_type)
                 response = client.service.cancel(
                     docs_list,
@@ -876,7 +963,9 @@ class HrPayslip(models.Model):
                 msg = (
                     self.env._("Cancelling got an error")
                     if code
-                    else self.env._("A delay of 2 hours has to be respected before to cancel")
+                    else self.env._(
+                        "A delay of 2 hours has to be respected before to cancel"
+                    )
                 )
             else:
                 code = getattr(response.Folios.Folio[0], "EstatusUUID", None)
@@ -923,7 +1012,9 @@ class HrPayslip(models.Model):
         :type service_type: string
         """
         # Regroup the payslip by company (= by pac)
-        comp_x_records = groupby(self, lambda r: r.company_id or r.contract_id.company_id)
+        comp_x_records = groupby(
+            self, lambda r: r.company_id or r.contract_id.company_id
+        )
         for company_id, records in comp_x_records:
             pac_name = company_id.l10n_mx_edi_pac
             if not pac_name:
@@ -954,7 +1045,11 @@ class HrPayslip(models.Model):
         """Call the sign service with records that can be signed."""
         records = self.search(
             [
-                ("l10n_mx_edi_pac_status", "not in", ["signed", "to_cancel", "cancelled", "retry"]),
+                (
+                    "l10n_mx_edi_pac_status",
+                    "not in",
+                    ["signed", "to_cancel", "cancelled", "retry"],
+                ),
                 ("id", "in", self.ids),
             ]
         )
@@ -963,22 +1058,35 @@ class HrPayslip(models.Model):
     def _l10n_mx_edi_cancel(self):
         """Call the cancel service with records that can be signed."""
         records = self.search(
-            [("l10n_mx_edi_pac_status", "in", ["to_sign", "signed", "to_cancel", "retry"]), ("id", "in", self.ids)]
+            [
+                (
+                    "l10n_mx_edi_pac_status",
+                    "in",
+                    ["to_sign", "signed", "to_cancel", "retry"],
+                ),
+                ("id", "in", self.ids),
+            ]
         )
         records.write({"l10n_mx_edi_error": False})
         for record in records:
             if record.l10n_mx_edi_pac_status in ["to_sign", "retry"]:
                 record.l10n_mx_edi_pac_status = "cancelled"
-                record.message_post(body=self.env._("The cancel service has been called with success"))
+                record.message_post(
+                    body=self.env._("The cancel service has been called with success")
+                )
             else:
                 record.l10n_mx_edi_pac_status = "to_cancel"
-        records = self.search([("l10n_mx_edi_pac_status", "=", "to_cancel"), ("id", "in", self.ids)])
+        records = self.search(
+            [("l10n_mx_edi_pac_status", "=", "to_cancel"), ("id", "in", self.ids)]
+        )
         records._l10n_mx_edi_call_service("cancel")
 
     def _get_valid_certificate(self):
         """Get the valid certificate of the company"""
         company_id = self.company_id or self.contract_id.company_id
-        certificate = company_id.sudo().l10n_mx_edi_certificate_ids.filtered("is_valid")[:1]
+        certificate = company_id.sudo().l10n_mx_edi_certificate_ids.filtered(
+            "is_valid"
+        )[:1]
         return certificate
 
     # -------------------------------------------------------------------------
@@ -987,13 +1095,26 @@ class HrPayslip(models.Model):
 
     def l10n_mx_edi_action_request_edi_cancel(self):
         to_cancel = self.filtered(
-            lambda r: r.state == "done" and r.l10n_mx_edi_pac_status == "signed" and r.l10n_mx_edi_is_required()
+            lambda r: r.state == "done"
+            and r.l10n_mx_edi_pac_status == "signed"
+            and r.l10n_mx_edi_is_required()
         )
         # Ensure that cancellation case is defined
         if to_cancel.filtered(lambda p: not p.l10n_mx_edi_cancellation):
-            raise UserError(self.env._("In order to allow cancel, please define the cancellation case."))
-        if to_cancel.filtered(lambda p: p.l10n_mx_edi_cancellation.split("|")[0] not in ["01", "02", "03", "04"]):
-            raise UserError(self.env._("In order to allow cancel, please define a correct cancellation case."))
+            raise UserError(
+                self.env._(
+                    "In order to allow cancel, please define the cancellation case."
+                )
+            )
+        if to_cancel.filtered(
+            lambda p: p.l10n_mx_edi_cancellation.split("|")[0]
+            not in ["01", "02", "03", "04"]
+        ):
+            raise UserError(
+                self.env._(
+                    "In order to allow cancel, please define a correct cancellation case."
+                )
+            )
         if to_cancel.mapped("move_id").filtered("posted_before"):
             raise UserError(
                 self.env._(
@@ -1003,7 +1124,9 @@ class HrPayslip(models.Model):
                 )
             )
         to_cancel.write({"l10n_mx_edi_pac_status": "to_cancel"})
-        to_cancel.filtered(lambda p: p.l10n_mx_edi_cancellation.split("|")[0] == "01").action_payslip_cancel()
+        to_cancel.filtered(
+            lambda p: p.l10n_mx_edi_cancellation.split("|")[0] == "01"
+        ).action_payslip_cancel()
 
     def _get_to_not_link_loans(self):
         """Add Payslip to loans when the payslip is validated"""
@@ -1015,31 +1138,46 @@ class HrPayslip(models.Model):
         loans = self.get_loans("all")
         # Ignore Company loans if there is not salary rule of it
         present_rules = self.mapped("line_ids.salary_rule_id")
-        company_rule = self.env.ref("l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_004_loan_company")
-        company_rule_bf = self.env.ref("l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_004_loan_company_bf")
+        company_rule = self.env.ref(
+            "l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_004_loan_company"
+        )
+        company_rule_bf = self.env.ref(
+            "l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_004_loan_company_bf"
+        )
 
         # TODO: Make this part more generic to include other types of loans
         if not (company_rule in present_rules or company_rule_bf in present_rules):
             input_types = [
-                self.env.ref("l10n_mx_edi_payslip.hr_payslip_input_type_deduction_004_loan_company"),
+                self.env.ref(
+                    "l10n_mx_edi_payslip.hr_payslip_input_type_deduction_004_loan_company"
+                ),
             ]
 
-            to_not_link_loans |= loans.filtered(lambda loan: loan.input_type_id in input_types)
+            to_not_link_loans |= loans.filtered(
+                lambda loan: loan.input_type_id in input_types
+            )
 
         return to_not_link_loans
 
     def _prepare_line_values(self, line, account_id, date, debit, credit):
         # Adding payslip lines to account.move.line
         account_id = self._get_department_account(line, account_id)
-        line_values = super()._prepare_line_values(line, account_id, date, debit, credit)
+        line_values = super()._prepare_line_values(
+            line, account_id, date, debit, credit
+        )
         line_values["l10n_mx_edi_payslip_line_ids"] = [Command.set(line.ids)]
         return line_values
 
     def _get_existing_lines(self, line_ids, line, account_id, debit, credit):
-        if line.slip_id.company_id.l10n_mx_edi_not_global_entry or not line.salary_rule_id.l10n_mx_group_entry:
+        if (
+            line.slip_id.company_id.l10n_mx_edi_not_global_entry
+            or not line.salary_rule_id.l10n_mx_group_entry
+        ):
             return False
         account_id = self._get_department_account(line, account_id)
-        existing_lines = super()._get_existing_lines(line_ids, line, account_id, debit, credit)
+        existing_lines = super()._get_existing_lines(
+            line_ids, line, account_id, debit, credit
+        )
         first_line = next(existing_lines, False)
         if first_line:
             remaining_lines = list(existing_lines)
@@ -1103,7 +1241,9 @@ class HrPayslip(models.Model):
                     attachment_ids=[attach_id.id],
                 )
             else:
-                attach_id.write({"datas": base64.encodebytes(cfdi), "mimetype": "application/xml"})
+                attach_id.write(
+                    {"datas": base64.encodebytes(cfdi), "mimetype": "application/xml"}
+                )
             if not is_xml_signed:
                 record._l10n_mx_edi_sign()
 
@@ -1115,7 +1255,11 @@ class HrPayslip(models.Model):
         self.ensure_one()
         if not self.l10n_mx_edi_cfdi_name:
             return []
-        domain = [("res_id", "=", self.id), ("res_model", "=", self._name), ("name", "=", self.l10n_mx_edi_cfdi_name)]
+        domain = [
+            ("res_id", "=", self.id),
+            ("res_model", "=", self._name),
+            ("name", "=", self.l10n_mx_edi_cfdi_name),
+        ]
         return self.env["ir.attachment"].search(domain)
 
     @api.model
@@ -1206,7 +1350,9 @@ class HrPayslip(models.Model):
             "company": self.company_id or self.contract_id.company_id,
             "employee": self.employee_id,
             "payslip_type": self.struct_id.type_id.l10n_mx_edi_type or "O",
-            "number_of_days": int(sum(self.worked_days_line_ids.mapped("number_of_days"))),
+            "number_of_days": int(
+                sum(self.worked_days_line_ids.mapped("number_of_days"))
+            ),
             "date_start": self.contract_id.date_start,
             "seniority_emp": "P%sW" % int(seniority),
             "is_settlement": bool(perceptions_data["total_compensation"]),
@@ -1222,7 +1368,9 @@ class HrPayslip(models.Model):
 
     def _l10n_mx_edi_force_other_payments(self):
         """Return True if the other payments node must be added"""
-        if self.struct_id == self.env.ref("l10n_mx_edi_payslip.payroll_structure_data_04", False):
+        if self.struct_id == self.env.ref(
+            "l10n_mx_edi_payslip.payroll_structure_data_04", False
+        ):
             return False
         if self.employee_id.l10n_mx_edi_contract_regime_type == "02":
             return True
@@ -1234,42 +1382,81 @@ class HrPayslip(models.Model):
         Method mainly used for the ISR salary rules themself, to get know how much the employee
         has been paid of ISR in the payslips of the month.
         """
-        rules = self.env.ref("l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_isr")
-        rules |= self.env.ref("l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_002_bf")
-        rules |= self.env.ref("l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_finiquito_002_bf")
-        rules |= self.env.ref("l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_002_ptu")
-        rules |= self.env.ref("l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_finiquito_002_04")
-        rules |= self.env.ref("l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_finiquito_002")
-        rules |= self.env.ref("l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_aguinaldo_002")
-        rules |= self.env.ref("l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_isr_bonus")
-        rules |= self.env.ref("l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_isr_174")
-        rules |= self.env.ref("l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_isr_174_bf")
+        rules = self.env.ref(
+            "l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_isr"
+        )
+        rules |= self.env.ref(
+            "l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_002_bf"
+        )
+        rules |= self.env.ref(
+            "l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_finiquito_002_bf"
+        )
+        rules |= self.env.ref(
+            "l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_002_ptu"
+        )
+        rules |= self.env.ref(
+            "l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_finiquito_002_04"
+        )
+        rules |= self.env.ref(
+            "l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_finiquito_002"
+        )
+        rules |= self.env.ref(
+            "l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_aguinaldo_002"
+        )
+        rules |= self.env.ref(
+            "l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_isr_bonus"
+        )
+        rules |= self.env.ref(
+            "l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_isr_174"
+        )
+        rules |= self.env.ref(
+            "l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_isr_174_bf"
+        )
         return rules
 
     def get_cfdi_perceptions_data(self):
-        categ_g = self.env.ref("l10n_mx_edi_payslip.hr_salary_rule_category_perception_mx_taxed")
-        categ_e = self.env.ref("l10n_mx_edi_payslip.hr_salary_rule_category_perception_mx_exempt")
-        perceptions = self.line_ids.filtered(lambda r: r.category_id in [categ_g, categ_e] and r.total)
-        total_taxed = round(sum(perceptions.filtered(lambda r: r.category_id == categ_g).mapped("total")), 2)
-        total_exempt = round(sum(perceptions.filtered(lambda r: r.category_id == categ_e).mapped("total")), 2)
+        categ_g = self.env.ref(
+            "l10n_mx_edi_payslip.hr_salary_rule_category_perception_mx_taxed"
+        )
+        categ_e = self.env.ref(
+            "l10n_mx_edi_payslip.hr_salary_rule_category_perception_mx_exempt"
+        )
+        perceptions = self.line_ids.filtered(
+            lambda r: r.category_id in [categ_g, categ_e] and r.total
+        )
+        total_taxed = round(
+            sum(
+                perceptions.filtered(lambda r: r.category_id == categ_g).mapped("total")
+            ),
+            2,
+        )
+        total_exempt = round(
+            sum(
+                perceptions.filtered(lambda r: r.category_id == categ_e).mapped("total")
+            ),
+            2,
+        )
         total_salaries = round(
             sum(
                 perceptions.filtered(
-                    lambda r: r.salary_rule_id.l10n_mx_edi_code not in ["022", "023", "025", "039", "044"]
+                    lambda r: r.salary_rule_id.l10n_mx_edi_code
+                    not in ["022", "023", "025", "039", "044"]
                 ).mapped("total")
             ),
             2,
         )
         total_compensation = round(
             sum(
-                perceptions.filtered(lambda r: r.salary_rule_id.l10n_mx_edi_code in ["022", "023", "025"]).mapped(
-                    "total"
-                )
+                perceptions.filtered(
+                    lambda r: r.salary_rule_id.l10n_mx_edi_code in ["022", "023", "025"]
+                ).mapped("total")
             ),
             2,
         )
         total_retirement = sum(
-            perceptions.filtered(lambda r: r.salary_rule_id.l10n_mx_edi_code in ["039", "044"]).mapped("total")
+            perceptions.filtered(
+                lambda r: r.salary_rule_id.l10n_mx_edi_code in ["039", "044"]
+            ).mapped("total")
         )
         values = {
             "total_salaries": total_salaries,
@@ -1277,7 +1464,9 @@ class HrPayslip(models.Model):
             "total_retirement": total_retirement,
             "total_taxed": total_taxed,
             "total_exempt": total_exempt,
-            "total_perceptions": (total_salaries + total_compensation + total_retirement),
+            "total_perceptions": (
+                total_salaries + total_compensation + total_retirement
+            ),
             "category_taxed": categ_g,
             "category_exempt": categ_e,
             "perceptions": perceptions,
@@ -1286,7 +1475,9 @@ class HrPayslip(models.Model):
         # it is of Type "E"
         if perceptions.filtered(
             lambda r: r.salary_rule_id.l10n_mx_edi_code in ["002", "023"]
-        ) and not perceptions.filtered(lambda r: r.salary_rule_id.l10n_mx_edi_code in ["001"]):
+        ) and not perceptions.filtered(
+            lambda r: r.salary_rule_id.l10n_mx_edi_code in ["001"]
+        ):
             values.update(
                 {
                     "payslip_type": "E",
@@ -1296,14 +1487,26 @@ class HrPayslip(models.Model):
 
     def get_cfdi_deductions_data(self):
         categ = self.env.ref("hr_payroll.DED")
-        deductions = self.line_ids.filtered(lambda r: r.category_id == categ and r.amount)
+        deductions = self.line_ids.filtered(
+            lambda r: r.category_id == categ and r.amount
+        )
         total = sum(deductions.mapped("total"))
-        total_other = sum(deductions.filtered(lambda r: r.salary_rule_id.l10n_mx_edi_code != "002").mapped("total"))
-        total_withheld = sum(deductions.filtered(lambda r: r.salary_rule_id.l10n_mx_edi_code == "002").mapped("total"))
+        total_other = sum(
+            deductions.filtered(
+                lambda r: r.salary_rule_id.l10n_mx_edi_code != "002"
+            ).mapped("total")
+        )
+        total_withheld = sum(
+            deductions.filtered(
+                lambda r: r.salary_rule_id.l10n_mx_edi_code == "002"
+            ).mapped("total")
+        )
         return {
             "total_deductions": abs(total),
             "total_other_deductions": abs(total_other),
-            "total_taxes_withheld": "%.2f" % abs(total_withheld) if total_withheld else None,  # noqa
+            "total_taxes_withheld": (
+                "%.2f" % abs(total_withheld) if total_withheld else None
+            ),  # noqa
             "deductions": deductions,
         }
 
@@ -1311,26 +1514,50 @@ class HrPayslip(models.Model):
         # Incapacidad Riesgo de Trabajo
         if line.salary_rule_id in self.env.ref(
             "l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_006_irt"
-        ) | self.env.ref("l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_006_irt_bf"):
-            days = sum(self.worked_days_line_ids.filtered(lambda w: w.code == "LEAVE112").mapped("number_of_days"))
+        ) | self.env.ref(
+            "l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_006_irt_bf"
+        ):
+            days = sum(
+                self.worked_days_line_ids.filtered(
+                    lambda w: w.code == "LEAVE112"
+                ).mapped("number_of_days")
+            )
             return {"days": days, "inability_type": "01"}
         # Incapacidad Enfermedad General
         if line.salary_rule_id in self.env.ref(
             "l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_006"
-        ) | self.env.ref("l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_006_bf"):
-            days = sum(self.worked_days_line_ids.filtered(lambda w: w.code == "LEAVE110").mapped("number_of_days"))
+        ) | self.env.ref(
+            "l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_006_bf"
+        ):
+            days = sum(
+                self.worked_days_line_ids.filtered(
+                    lambda w: w.code == "LEAVE110"
+                ).mapped("number_of_days")
+            )
             return {"days": days, "inability_type": "02"}
         # Incapacidad Maternidad
         if line.salary_rule_id in self.env.ref(
             "l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_006_im"
-        ) | self.env.ref("l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_006_im_bf"):
-            days = sum(self.worked_days_line_ids.filtered(lambda w: w.code == "LEAVE111").mapped("number_of_days"))
+        ) | self.env.ref(
+            "l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_006_im_bf"
+        ):
+            days = sum(
+                self.worked_days_line_ids.filtered(
+                    lambda w: w.code == "LEAVE111"
+                ).mapped("number_of_days")
+            )
             return {"days": days, "inability_type": "03"}
         # Licencia para Padres con Hijos con Cancer
         if line.salary_rule_id in self.env.ref(
             "l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_006_lphc"
-        ) | self.env.ref("l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_006_lphc_bf"):
-            days = sum(self.worked_days_line_ids.filtered(lambda w: w.code == "LEAVE113").mapped("number_of_days"))
+        ) | self.env.ref(
+            "l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_006_lphc_bf"
+        ):
+            days = sum(
+                self.worked_days_line_ids.filtered(
+                    lambda w: w.code == "LEAVE113"
+                ).mapped("number_of_days")
+            )
             return {"days": days, "inability_type": "04"}
         return {"days": 0, "inability_type": ""}
 
@@ -1339,7 +1566,8 @@ class HrPayslip(models.Model):
         "OtrosPagos"."""
         categ = self.env.ref("l10n_mx_edi_payslip.hr_salary_rule_category_other_mx")
         other_payments = self.line_ids.filtered(
-            lambda line: line.category_id == categ and (line.amount or line.salary_rule_id.l10n_mx_edi_code == "002")
+            lambda line: line.category_id == categ
+            and (line.amount or line.salary_rule_id.l10n_mx_edi_code == "002")
         )
         return {
             "total_other": abs(sum(other_payments.mapped("total"))),
@@ -1380,21 +1608,29 @@ class HrPayslip(models.Model):
 
         if error_log:
             self.l10n_mx_edi_error_count = len(error_log)
-            return {"error": self.env._("Please check your configuration: ") + create_list_html(error_log)}
+            return {
+                "error": self.env._("Please check your configuration: ")
+                + create_list_html(error_log)
+            }
 
         # -----------------------
         # Create the EDI document
         # -----------------------
 
         # - Compute certificate data
-        time_payslip = fields.datetime.strptime(self.l10n_mx_edi_time_payslip, DEFAULT_SERVER_TIME_FORMAT).time()
+        time_payslip = fields.datetime.strptime(
+            self.l10n_mx_edi_time_payslip, DEFAULT_SERVER_TIME_FORMAT
+        ).time()
         values.update(
             {
                 "date": fields.datetime.combine(
-                    fields.Datetime.from_string(self.l10n_mx_edi_expedition_date), time_payslip
+                    fields.Datetime.from_string(self.l10n_mx_edi_expedition_date),
+                    time_payslip,
                 ).strftime("%Y-%m-%dT%H:%M:%S"),
                 "certificate_number": ("%x" % int(certificate.serial_number))[1::2],
-                "certificate": certificate.sudo()._get_der_certificate_bytes(formatting="base64").decode(),
+                "certificate": certificate.sudo()
+                ._get_der_certificate_bytes(formatting="base64")
+                .decode(),
             }
         )
 
@@ -1418,13 +1654,22 @@ class HrPayslip(models.Model):
                 with BytesIO(xsd_datas) as xsd:
                     _check_with_xsd(tree, xsd)
             except (OSError, ValueError):
-                _logger.info("The xsd file to validate the XML structure was not found.")
+                _logger.info(
+                    "The xsd file to validate the XML structure was not found."
+                )
             except BaseException as e:
                 return {
-                    "error": (self.env._("The cfdi generated is not valid") + create_list_html(str(e).split("\\n")))
+                    "error": (
+                        self.env._("The cfdi generated is not valid")
+                        + create_list_html(str(e).split("\\n"))
+                    )
                 }
 
-        return {"cfdi": etree.tostring(tree, pretty_print=True, xml_declaration=True, encoding="UTF-8")}
+        return {
+            "cfdi": etree.tostring(
+                tree, pretty_print=True, xml_declaration=True, encoding="UTF-8"
+            )
+        }
 
     def l10n_mx_edi_update_pac_status(self):
         """Synchronize both systems: Odoo & PAC if the payrolls need to be
@@ -1445,15 +1690,21 @@ class HrPayslip(models.Model):
             customer_rfc = record.l10n_mx_edi_cfdi_customer_rfc
             total = record.l10n_mx_edi_cfdi_amount
             uuid = record.l10n_mx_edi_cfdi_uuid
-            status = self.env["l10n_mx_edi.document"]._fetch_sat_status(supplier_rfc, customer_rfc, total, uuid)
+            status = self.env["l10n_mx_edi.document"]._fetch_sat_status(
+                supplier_rfc, customer_rfc, total, uuid
+            )
             record.l10n_mx_edi_sat_status = status["value"]
 
     def _get_worked_day_lines(self, domain=None, check_out_of_contract=True):
         """Overwrite WORK100 to get all days in the period"""
-        result = super()._get_worked_day_lines(domain=domain, check_out_of_contract=check_out_of_contract)
+        result = super()._get_worked_day_lines(
+            domain=domain, check_out_of_contract=check_out_of_contract
+        )
         result = self._set_leaves_calendar_days_count(result)
         hours_per_day = (
-            result[0]["number_of_hours"] / result[0]["number_of_days"] if result and result[0]["number_of_days"] else 0
+            result[0]["number_of_hours"] / result[0]["number_of_days"]
+            if result and result[0]["number_of_days"]
+            else 0
         )
         total = sum(line["number_of_days"] for line in result)
         work_entry = self.env.ref("hr_work_entry.work_entry_type_attendance")
@@ -1461,18 +1712,26 @@ class HrPayslip(models.Model):
         date_from = max(self.date_from, self.contract_id.date_start)
         days = self.contract_id.get_seniority(date_from, self.date_to, "a")["days"]
         days_out_start, days_out_end = self._get_out_of_contract_days()
-        total -= sum(line["number_of_days"] for line in result if line["work_entry_type_id"] == out_contract.id)
+        total -= sum(
+            line["number_of_days"]
+            for line in result
+            if line["work_entry_type_id"] == out_contract.id
+        )
         absences = 0
         if self.employee_id.l10n_mx_edi_force_attendances:
             absences = self._get_absences()
         # Adjust Attendances
         for line in result:
             if line["work_entry_type_id"] == work_entry.id:
-                line["number_of_days"] = line["number_of_days"] + days - total - days_out_end - absences
+                line["number_of_days"] = (
+                    line["number_of_days"] + days - total - days_out_end - absences
+                )
 
         # Include Absences
         if absences:
-            absence_entry = self.env.ref("l10n_mx_edi_payslip.work_entry_type_absence_l10n_mx_payroll")
+            absence_entry = self.env.ref(
+                "l10n_mx_edi_payslip.work_entry_type_absence_l10n_mx_payroll"
+            )
             vals = {
                 "sequence": absence_entry.sequence,
                 "work_entry_type_id": absence_entry.id,
@@ -1484,7 +1743,9 @@ class HrPayslip(models.Model):
         # Include Out of contract line
         out_of_contract_days = days_out_start + days_out_end
         if out_of_contract_days:
-            out_contract_line = [line for line in result if line["work_entry_type_id"] == out_contract.id]
+            out_contract_line = [
+                line for line in result if line["work_entry_type_id"] == out_contract.id
+            ]
             vals = {
                 "sequence": out_contract.sequence,
                 "work_entry_type_id": out_contract.id,
@@ -1519,13 +1780,17 @@ class HrPayslip(models.Model):
         dt_from = max(self.date_from, self.contract_id.date_start)
         date_from = fields.datetime.combine(dt_from, dt_time(0, 0), tz)
         date_to = fields.datetime.combine(self.date_to, dt_time(23, 59, 59), tz)
-        resources = self.contract_id.resource_calendar_id._get_resources_day_total(date_from, date_to)[False]
+        resources = self.contract_id.resource_calendar_id._get_resources_day_total(
+            date_from, date_to
+        )[False]
         absences = 0
         for day in range((self.date_to - dt_from).days + 1):
             date = dt_from + timedelta(days=day)
             if date not in resources:
                 continue
-            if self.employee_id.attendance_ids.filtered(lambda a: a.check_in.date() == date):
+            if self.employee_id.attendance_ids.filtered(
+                lambda a: a.check_in.date() == date
+            ):
                 continue
             # Used SUPERUSER_ID to forcefully get status of other user's leave, to bypass record rule
             if (
@@ -1550,7 +1815,11 @@ class HrPayslip(models.Model):
         contract = self.contract_id
         if not contract:
             return 0, 0
-        days_out_start = (contract.date_start - self.date_from).days if contract.date_start > self.date_from else 0
+        days_out_start = (
+            (contract.date_start - self.date_from).days
+            if contract.date_start > self.date_from
+            else 0
+        )
         days_out_end = (
             0
             if not contract.date_end or contract.date_end >= self.date_to
@@ -1574,7 +1843,9 @@ class HrPayslip(models.Model):
         add the days count to its number_of_days and number_of_hours. If not, create a new dict in the
         worked_day_lines list to create a new worked day on the payslip.
         """
-        work_days = self.contract_id.resource_calendar_id.attendance_ids.mapped("dayofweek")
+        work_days = self.contract_id.resource_calendar_id.attendance_ids.mapped(
+            "dayofweek"
+        )
         not_work_days = list({"0", "1", "2", "3", "4", "5", "6"} - set(work_days))
 
         leave_days = {}
@@ -1584,7 +1855,11 @@ class HrPayslip(models.Model):
                 continue
             leave = self.env["hr.leave"].search(
                 [
-                    ("holiday_status_id.l10n_mx_edi_payslip_use_calendar_days", "=", True),
+                    (
+                        "holiday_status_id.l10n_mx_edi_payslip_use_calendar_days",
+                        "=",
+                        True,
+                    ),
                     ("employee_id", "=", self.employee_id.id),
                     ("state", "=", "validate"),
                     ("request_date_from", "<=", date),
@@ -1597,7 +1872,9 @@ class HrPayslip(models.Model):
             # Use entry type as key and count as value
             # If the entry type is already set, sum 1, if not set the count as 1
             entry_type_id = leave.holiday_status_id.work_entry_type_id.id
-            leave_days[entry_type_id] = leave_days[entry_type_id] + 1 if leave_days.get(entry_type_id) else 1
+            leave_days[entry_type_id] = (
+                leave_days[entry_type_id] + 1 if leave_days.get(entry_type_id) else 1
+            )
 
         # Add the work entry type and count to the result/worked_day_lines dict
         for work_entry_type, days_count in leave_days.items():
@@ -1689,7 +1966,8 @@ class HrPayslip(models.Model):
                 (
                     "date",
                     "=",
-                    self.mapped("payslip_run_id").l10n_mx_edi_payment_date or self[0].l10n_mx_edi_payment_date,
+                    self.mapped("payslip_run_id").l10n_mx_edi_payment_date
+                    or self[0].l10n_mx_edi_payment_date,
                 ),
             ]
         )
@@ -1704,7 +1982,11 @@ class HrPayslip(models.Model):
                 slip.input_line_ids = [
                     Command.create(
                         {
-                            "amount": sum(slip_extras.filtered(lambda e: e.extra_id == extra).mapped("amount")),
+                            "amount": sum(
+                                slip_extras.filtered(
+                                    lambda e: e.extra_id == extra
+                                ).mapped("amount")
+                            ),
                             "code": extra.input_id.code,
                             "contract_id": slip.contract_id.id,
                             "input_type_id": extra.input_id.id,
@@ -1720,13 +2002,19 @@ class HrPayslip(models.Model):
         leave = self.env.ref("hr_work_entry_contract.work_entry_type_sick_leave")
         domain = [("work_entry_type_id", "=", leave.id)]
         work_entry = self.env["hr.work.entry"].search(
-            contract._get_work_hours_domain(self.date_from, self.date_to, domain=domain, inside=True)
+            contract._get_work_hours_domain(
+                self.date_from, self.date_to, domain=domain, inside=True
+            )
         )
         result = 0
         for leave in work_entry.mapped("leave_id"):
             days = number_of_days = 0
-            for day in range(3 if leave.number_of_days >= 3 else int(leave.number_of_days)):
-                if (leave.date_from + timedelta(days=day)).date() >= self.date_from and (
+            for day in range(
+                3 if leave.number_of_days >= 3 else int(leave.number_of_days)
+            ):
+                if (
+                    leave.date_from + timedelta(days=day)
+                ).date() >= self.date_from and (
                     leave.date_from + timedelta(days=day)
                 ).date() <= self.date_to:
                     days += 1
@@ -1737,9 +2025,9 @@ class HrPayslip(models.Model):
                 if leave.date_from.date() <= date <= leave.date_to.date():
                     number_of_days += 1
             if number_of_days > days > 3:
-                result += (contract.l10n_mx_edi_daily_wage - (contract.l10n_mx_edi_sbc * 0.60)) * (
-                    number_of_days - days
-                )
+                result += (
+                    contract.l10n_mx_edi_daily_wage - (contract.l10n_mx_edi_sbc * 0.60)
+                ) * (number_of_days - days)
         return result
 
     def _get_dates_on_datetime(self, timezone=None):
@@ -1788,7 +2076,9 @@ class HrPayslip(models.Model):
         for record in self:
             for day in range((record.date_to - record.date_from).days + 1):
                 date = record.date_from + timedelta(days=day)
-                if overtime.search_count([("name", "=", date), ("employee_id", "=", record.employee_id.id)]):
+                if overtime.search_count(
+                    [("name", "=", date), ("employee_id", "=", record.employee_id.id)]
+                ):
                     continue
                 overtime.create(
                     {
@@ -1823,15 +2113,24 @@ class HrPayslip(models.Model):
         )
         for overtime in weeks_overtimes.sorted("name"):
             if overtime.week not in detail:
-                detail[overtime.week] = {"paid": 0, "no_paid": 0, "triple_paid": 0, "triple_no_paid": 0}
+                detail[overtime.week] = {
+                    "paid": 0,
+                    "no_paid": 0,
+                    "triple_paid": 0,
+                    "triple_no_paid": 0,
+                }
             if overtime.id not in overtimes.ids:
-                detail[overtime.week]["paid"] += overtime.hours if (overtime.hours <= 3 or is_simple) else 3
+                detail[overtime.week]["paid"] += (
+                    overtime.hours if (overtime.hours <= 3 or is_simple) else 3
+                )
                 detail[overtime.week]["triple_paid"] += (
                     overtime.hours - 3 if (overtime.hours > 3 and not is_simple) else 0
                 )
                 continue
 
-            detail[overtime.week]["no_paid"] += overtime.hours if (overtime.hours <= 3 or is_simple) else 3
+            detail[overtime.week]["no_paid"] += (
+                overtime.hours if (overtime.hours <= 3 or is_simple) else 3
+            )
             detail[overtime.week]["triple_no_paid"] += (
                 overtime.hours - 3 if (overtime.hours > 3 and not is_simple) else 0
             )
@@ -1854,7 +2153,11 @@ class HrPayslip(models.Model):
     @api.model
     def l10n_mx_edi_get_pac_version(self):
         """Returns the cfdi version to generate the CFDI."""
-        return self.env["ir.config_parameter"].sudo().get_param("l10n_mx_edi_payroll_version", "4.0")
+        return (
+            self.env["ir.config_parameter"]
+            .sudo()
+            .get_param("l10n_mx_edi_payroll_version", "4.0")
+        )
 
     def _l10n_mx_edi_verify_or_update_cfdi(self, cfdi_values):
         """Checks the expedition date of the CFDI and verifies if the CFDI has been previously signed.
@@ -1893,13 +2196,17 @@ class HrPayslip(models.Model):
           period and keep the computed values if they are valid.
         """
         company = self.company_id or self.contract_id.company_id
-        time_zone = company.partner_id.commercial_partner_id._l10n_mx_edi_get_cfdi_timezone()
+        time_zone = (
+            company.partner_id.commercial_partner_id._l10n_mx_edi_get_cfdi_timezone()
+        )
         date_time_mx = fields.datetime.now(time_zone)
         date_in_range = self.l10n_mx_edi_payment_date + timedelta(days=3)
         time_mx = date_time_mx.time()
         l10n_mx_edi_expedition_date = date_time_mx.date()
         l10n_mx_edi_time_payslip = time_mx.strftime(DEFAULT_SERVER_TIME_FORMAT)
-        date_time_mx = fields.datetime.strftime(date_time_mx, DEFAULT_SERVER_DATETIME_FORMAT)
+        date_time_mx = fields.datetime.strftime(
+            date_time_mx, DEFAULT_SERVER_DATETIME_FORMAT
+        )
 
         if not self.l10n_mx_edi_expedition_date:
             if self.l10n_mx_edi_payment_date > l10n_mx_edi_expedition_date:
@@ -1908,16 +2215,25 @@ class HrPayslip(models.Model):
                 return False
             if l10n_mx_edi_expedition_date.month > self.l10n_mx_edi_payment_date.month:
                 l10n_mx_edi_expedition_date = fields.Date.from_string(
-                    "%s-%s-01" % (l10n_mx_edi_expedition_date.year, l10n_mx_edi_expedition_date.month)
+                    "%s-%s-01"
+                    % (
+                        l10n_mx_edi_expedition_date.year,
+                        l10n_mx_edi_expedition_date.month,
+                    )
                 ) - timedelta(days=1)
                 l10n_mx_edi_time_payslip = "23:59:00"
             elif date_time_mx < fields.datetime.strftime(
-                fields.datetime.combine(date_in_range, time_mx, time_zone), DEFAULT_SERVER_DATETIME_FORMAT
+                fields.datetime.combine(date_in_range, time_mx, time_zone),
+                DEFAULT_SERVER_DATETIME_FORMAT,
             ):
                 l10n_mx_edi_expedition_date = self.l10n_mx_edi_payment_date
             elif date_time_mx <= fields.datetime.strftime(
                 fields.datetime.combine(
-                    date_in_range, fields.datetime.strptime("23:59:00", DEFAULT_SERVER_TIME_FORMAT).time(), time_zone
+                    date_in_range,
+                    fields.datetime.strptime(
+                        "23:59:00", DEFAULT_SERVER_TIME_FORMAT
+                    ).time(),
+                    time_zone,
                 ),
                 DEFAULT_SERVER_DATETIME_FORMAT,
             ):
@@ -1931,7 +2247,9 @@ class HrPayslip(models.Model):
         date_in_range = fields.datetime.strftime(
             fields.datetime.combine(
                 date_in_range,
-                fields.datetime.strptime(self.l10n_mx_edi_time_payslip, DEFAULT_SERVER_TIME_FORMAT).time(),
+                fields.datetime.strptime(
+                    self.l10n_mx_edi_time_payslip, DEFAULT_SERVER_TIME_FORMAT
+                ).time(),
                 time_zone,
             ),
             DEFAULT_SERVER_DATETIME_FORMAT,
@@ -1947,6 +2265,8 @@ class HrPayslip(models.Model):
         contract = self.contract_id
         domain = [("work_entry_type_id", "=", leave.id)]
         work_entry = self.env["hr.work.entry"].search(
-            contract._get_work_hours_domain(self.date_from, self.date_to, domain=domain, inside=True)
+            contract._get_work_hours_domain(
+                self.date_from, self.date_to, domain=domain, inside=True
+            )
         )
         return sum(work_entry.mapped("leave_id.number_of_days"))

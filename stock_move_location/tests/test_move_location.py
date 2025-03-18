@@ -81,9 +81,7 @@ class TestMoveLocation(TestsCommon):
         self.assertEqual(len(wizard.line_ids), 7)
         wizard._onchange_location_destination_id()
         self.assertEqual(len(wizard.line_ids), 7)
-        dest_location_line = wizard.line_ids.mapped(
-            "location_destination_id"
-        )
+        dest_location_line = wizard.line_ids.mapped("location_destination_id")
         self.assertEqual(dest_location_line, wizard.location_destination_id)
         wizard.clear_lines()
         self.assertEqual(len(wizard.line_ids), 0)
@@ -120,9 +118,7 @@ class TestMoveLocation(TestsCommon):
         wizard.action_move_location()
         picking = wizard.picking_id
         self.assertEqual(picking.state, "assigned")
-        self.assertEqual(
-            len(wizard.line_ids), len(picking.move_line_ids)
-        )
+        self.assertEqual(len(wizard.line_ids), len(picking.move_line_ids))
         wizard_lines = sorted(
             [
                 (line.product_id.id, line.lot_id.id, line.move_quantity)

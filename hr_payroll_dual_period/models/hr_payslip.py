@@ -6,7 +6,9 @@ from odoo import api, fields, models
 class HrPayslip(models.Model):
     _inherit = "hr.payslip"
 
-    show_secondary_date_fields = fields.Boolean(related="company_id.show_secondary_date_fields")
+    show_secondary_date_fields = fields.Boolean(
+        related="company_id.show_secondary_date_fields"
+    )
     secondary_date_from = fields.Date(
         help="If the payroll period is different to the dates that must be show in the PDF, please set here the real date "
         "from. If is empty, will be used the Date From.",
@@ -32,13 +34,18 @@ class HrPayslip(models.Model):
         end_date = self.secondary_date_to
         lang = self.employee_id.lang or self.env.user.lang
         week_start = self.env["res.lang"]._get_data(code=lang).week_start
-        schedule = self.contract_id.schedule_pay or self.contract_id.structure_type_id.default_schedule_pay
+        schedule = (
+            self.contract_id.schedule_pay
+            or self.contract_id.structure_type_id.default_schedule_pay
+        )
         if schedule == "monthly":
             period_name = self._format_date_cached(cache, start_date, "MMMM Y")
         elif schedule == "quarterly":
             current_year_quarter = math.ceil(start_date.month / 3)
             period_name = self.env._(
-                "Quarter %(quarter)s of %(year)s", quarter=current_year_quarter, year=start_date.year
+                "Quarter %(quarter)s of %(year)s",
+                quarter=current_year_quarter,
+                year=start_date.year,
             )
         elif schedule == "semi-annually":
             year_half = start_date.replace(day=1, month=6)
@@ -51,13 +58,28 @@ class HrPayslip(models.Model):
         elif schedule == "annually":
             period_name = start_date.year
         elif schedule == "weekly":
-            wk_num = start_date.strftime("%U") if week_start == "7" else start_date.strftime("%W")
-            period_name = self.env._("Week %(week_number)s of %(year)s", week_number=wk_num, year=start_date.year)
+            wk_num = (
+                start_date.strftime("%U")
+                if week_start == "7"
+                else start_date.strftime("%W")
+            )
+            period_name = self.env._(
+                "Week %(week_number)s of %(year)s",
+                week_number=wk_num,
+                year=start_date.year,
+            )
         elif schedule == "bi-weekly":
-            week = int(start_date.strftime("%U") if week_start == "7" else start_date.strftime("%W"))
+            week = int(
+                start_date.strftime("%U")
+                if week_start == "7"
+                else start_date.strftime("%W")
+            )
             first_week = week - 1 + week % 2
             period_name = self.env._(
-                "Weeks %(week)s and %(week1)s of %(year)s", week=first_week, week1=first_week + 1, year=start_date.year
+                "Weeks %(week)s and %(week1)s of %(year)s",
+                week=first_week,
+                week1=first_week + 1,
+                year=start_date.year,
             )
         elif schedule == "bi-monthly":
             start_date_string = self._format_date_cached(cache, start_date, "MMMM Y")

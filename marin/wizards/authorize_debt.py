@@ -6,20 +6,37 @@ class AuthorizeDebt(models.TransientModel):
     _name = "authorize.debt.wizard"
     _description = "Partner authorize debt wizard"
 
-    company_id = fields.Many2one("res.company", compute="_compute_from_record_ids", store=True)
-    company_currency_id = fields.Many2one("res.currency", related="company_id.currency_id")
-    partner_id = fields.Many2one("res.partner", "Partner", compute="_compute_from_record_ids", store=True)
+    company_id = fields.Many2one(
+        "res.company", compute="_compute_from_record_ids", store=True
+    )
+    company_currency_id = fields.Many2one(
+        "res.currency", related="company_id.currency_id"
+    )
+    partner_id = fields.Many2one(
+        "res.partner", "Partner", compute="_compute_from_record_ids", store=True
+    )
     flag = fields.Char(compute="_compute_from_record_ids", store=True)
-    credit = fields.Monetary("Total receivable", "company_currency_id", related="partner_id.credit")
+    credit = fields.Monetary(
+        "Total receivable", "company_currency_id", related="partner_id.credit"
+    )
     credit_limit = fields.Float("Credit limit", related="partner_id.credit_limit")
     credit_limit_available = fields.Monetary(
-        "Credit limit available", "company_currency_id", related="partner_id.credit_limit_available"
+        "Credit limit available",
+        "company_currency_id",
+        related="partner_id.credit_limit_available",
     )
     debt_request = fields.Monetary(
-        "Exceeded debit amount", "company_currency_id", compute="_compute_from_record_ids", store=True
+        "Exceeded debit amount",
+        "company_currency_id",
+        compute="_compute_from_record_ids",
+        store=True,
     )
     amount_authorize = fields.Monetary(
-        "Amount", "company_currency_id", compute="_compute_from_record_ids", store=True, readonly=False
+        "Amount",
+        "company_currency_id",
+        compute="_compute_from_record_ids",
+        store=True,
+        readonly=False,
     )
     move_ids = fields.Many2many(
         "account.move",
@@ -48,21 +65,37 @@ class AuthorizeDebt(models.TransientModel):
             sanitized_moves = self.env["account.move"]
             for move in moves:
                 if move.state != "draft":
-                    raise UserError(_("You can only authorize debt for draft journal entries."))
+                    raise UserError(
+                        _("You can only authorize debt for draft journal entries.")
+                    )
                 if move.move_type not in ("in_invoice", "out_invoice"):
                     continue
                 if move.company_currency_id.is_zero(move.amount_residual):
                     continue
                 sanitized_moves |= move
             if not sanitized_moves:
-                raise UserError(_("You can't authorize debt because the records dont match the criteria."))
+                raise UserError(
+                    _(
+                        "You can't authorize debt because the records dont match the criteria."
+                    )
+                )
             if len(sanitized_moves.company_id) > 1:
-                raise UserError(_("You cant authorize debt for records belonging to different companies."))
+                raise UserError(
+                    _(
+                        "You cant authorize debt for records belonging to different companies."
+                    )
+                )
             if len(sanitized_moves.commercial_partner_id) > 1:
-                raise UserError(_("You cant authorize debt for records belonging to different partners."))
+                raise UserError(
+                    _(
+                        "You cant authorize debt for records belonging to different partners."
+                    )
+                )
             if len(set(sanitized_moves.mapped("move_type"))) > 1:
                 raise UserError(
-                    _("You can't authorize debt for records being either all inbound, either all outbound.")
+                    _(
+                        "You can't authorize debt for records being either all inbound, either all outbound."
+                    )
                 )
             res["move_ids"] = [Command.set(sanitized_moves.ids)]
             return res
@@ -75,11 +108,23 @@ class AuthorizeDebt(models.TransientModel):
                 continue
             sanitized_orders |= order
         if not sanitized_orders:
-            raise UserError(_("You can't authorize debt because the records dont match the criteria."))
+            raise UserError(
+                _(
+                    "You can't authorize debt because the records dont match the criteria."
+                )
+            )
         if len(sanitized_orders.company_id) > 1:
-            raise UserError(_("You cant authorize debt for records belonging to different companies."))
+            raise UserError(
+                _(
+                    "You cant authorize debt for records belonging to different companies."
+                )
+            )
         if len(sanitized_orders.partner_id) > 1:
-            raise UserError(_("You cant authorize debt for records belonging to different partners."))
+            raise UserError(
+                _(
+                    "You cant authorize debt for records belonging to different partners."
+                )
+            )
         res["so_ids"] = [Command.set(sanitized_orders.ids)]
         return res
 
@@ -136,7 +181,9 @@ class AuthorizeDebt(models.TransientModel):
             if order.commercial_partner_id.id not in batches:
                 batches[order.commercial_partner_id.id] = self._get_so_batch_key(order)
             elif order.commercial_partner_id.id in batches:
-                batches[order.commercial_partner_id.id]["debt_request"] += abs(order.amount_total)
+                batches[order.commercial_partner_id.id]["debt_request"] += abs(
+                    order.amount_total
+                )
         return batches
 
     @api.model
@@ -174,7 +221,9 @@ class AuthorizeDebt(models.TransientModel):
             if move.commercial_partner_id.id not in batches:
                 batches[move.commercial_partner_id.id] = self._get_move_batch_key(move)
             elif move.commercial_partner_id.id in batches:
-                batches[move.commercial_partner_id.id]["debt_request"] += abs(move.amount_total_in_currency_signed)
+                batches[move.commercial_partner_id.id]["debt_request"] += abs(
+                    move.amount_total_in_currency_signed
+                )
         return batches
 
     @api.model

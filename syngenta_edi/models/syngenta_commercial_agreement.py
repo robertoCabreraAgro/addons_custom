@@ -7,7 +7,6 @@ class SyngentaCommercialAgreement(models.Model):
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _description = "Customer purchase agreements with the distributor to earn benefits"
 
-
     company_id = fields.Many2one(
         "res.company",
         required=True,
@@ -68,7 +67,7 @@ class SyngentaCommercialAgreement(models.Model):
     )
     notes = fields.Html(
         "Terms and Conditions",
-        help="The reach levels with their respective discount must be noted here."
+        help="The reach levels with their respective discount must be noted here.",
     )
     report_ids = fields.One2many(
         "syngenta.sale.report",
@@ -85,13 +84,14 @@ class SyngentaCommercialAgreement(models.Model):
     )
     count_line = fields.Integer(compute="_compute_count_line")
 
-
     @api.depends("name", "date_from", "date_to")
     def _compute_display_name(self):
         for agreement in self.sudo():
             name = agreement.name and agreement.name.split("\n")[0] or ""
             if agreement.date_from and agreement.date_to:
-                name = "{} ({} - {})".format(name, agreement.date_from, agreement.date_to)
+                name = "{} ({} - {})".format(
+                    name, agreement.date_from, agreement.date_to
+                )
             agreement.display_name = name
 
     @api.depends("report_ids")
@@ -109,8 +109,12 @@ class SyngentaCommercialAgreement(models.Model):
 
     def action_new_report(self):
         self.ensure_one()
-        action = self.env["ir.actions.actions"]._for_xml_id("syngenta_edi.action_syngenta_sale_report")
-        action["views"] = [(self.env.ref("syngenta_edi.view_syngenta_sale_report_form").id, "form")]
+        action = self.env["ir.actions.actions"]._for_xml_id(
+            "syngenta_edi.action_syngenta_sale_report"
+        )
+        action["views"] = [
+            (self.env.ref("syngenta_edi.view_syngenta_sale_report_form").id, "form")
+        ]
         action["context"] = {
             "default_agreement_id": self.id,
         }
@@ -120,13 +124,19 @@ class SyngentaCommercialAgreement(models.Model):
         if not self.report_ids:
             raise UserError(_("There are no reports to show."))
 
-        action = self.env["ir.actions.actions"]._for_xml_id("syngenta_edi.action_syngenta_sale_report")
+        action = self.env["ir.actions.actions"]._for_xml_id(
+            "syngenta_edi.action_syngenta_sale_report"
+        )
         if self.count_report > 1:
             action["domain"] = [("id", "in", self.report_ids.ids)]
         elif self.count_report == 1:
-            form_view = [(self.env.ref("syngenta_edi.view_syngenta_sale_report_form").id, "form")]
+            form_view = [
+                (self.env.ref("syngenta_edi.view_syngenta_sale_report_form").id, "form")
+            ]
             if "views" in action:
-                action["views"] = form_view + [(state, view) for state, view in action["views"] if view != "form"]
+                action["views"] = form_view + [
+                    (state, view) for state, view in action["views"] if view != "form"
+                ]
             else:
                 action["views"] = form_view
             action["res_id"] = self.report_ids.ids[0]
@@ -138,7 +148,9 @@ class SyngentaCommercialAgreement(models.Model):
         if not self.report_line_ids:
             raise UserError(_("There are no reports lines to show."))
 
-        action = self.env["ir.actions.actions"]._for_xml_id("syngenta_edi.action_syngenta_sale_report_line")
+        action = self.env["ir.actions.actions"]._for_xml_id(
+            "syngenta_edi.action_syngenta_sale_report_line"
+        )
         if self.count_line >= 1:
             action["domain"] = [("id", "in", self.report_line_ids.ids)]
         else:

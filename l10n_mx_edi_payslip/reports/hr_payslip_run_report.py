@@ -15,7 +15,11 @@ class RayaListReport(models.AbstractModel):
         payslip_data = self.env["hr.payslip"].read_group(
             domain=[("payslip_run_id", "in", docids)],
             fields=["payslip_ids:array_agg(id)", "payslip_run_id"],
-            groupby=["payslip_run_id", "department_id", "l10n_mx_edi_employer_registration_id"],
+            groupby=[
+                "payslip_run_id",
+                "department_id",
+                "l10n_mx_edi_employer_registration_id",
+            ],
             lazy=False,
         )
         batches = defaultdict(lambda: defaultdict(dict))
@@ -25,21 +29,28 @@ class RayaListReport(models.AbstractModel):
             batch_perceptions = []
             batch_deductions = []
             batch_obligations = []
-            payslip_run_id = self.env["hr.payslip.run"].browse(row.get("payslip_run_id")[0])
+            payslip_run_id = self.env["hr.payslip.run"].browse(
+                row.get("payslip_run_id")[0]
+            )
             payslips = self.env["hr.payslip"].browse(row.get("payslip_ids"))
             payslips = sorted(
                 payslips,
-                key=lambda p: p.employee_id.l10n_mx_edi_imss_date or p.employee_id.contract_id.date_start,
+                key=lambda p: p.employee_id.l10n_mx_edi_imss_date
+                or p.employee_id.contract_id.date_start,
                 reverse=False,
             )
             department_id = row.get("department_id", False)
             department_name = (
-                department.browse(department_id[0]).name if department_id else self.env._("Without Department")
+                department.browse(department_id[0]).name
+                if department_id
+                else self.env._("Without Department")
             )
             data_perception_deduction = defaultdict(dict)
             employer_registration = row.get("l10n_mx_edi_employer_registration_id")
             employer_registration = (
-                self.env["l10n_mx_edi.employer.registration"].browse(employer_registration[0]).name
+                self.env["l10n_mx_edi.employer.registration"]
+                .browse(employer_registration[0])
+                .name
                 if employer_registration
                 else payslip_run_id.company_id.company_registry
             )
@@ -49,7 +60,9 @@ class RayaListReport(models.AbstractModel):
                 deductions = payslip.get_cfdi_deductions_data()
                 other_payments = payslip.get_cfdi_other_payments_data()
 
-                total_perceptions = other_payments.get("total_other") + perceptions.get("total_perceptions")
+                total_perceptions = other_payments.get("total_other") + perceptions.get(
+                    "total_perceptions"
+                )
                 total_deductions = deductions.get("total_deductions")
                 overtimes = self.env["hr.payslip.overtime"].search(
                     [
@@ -71,7 +84,8 @@ class RayaListReport(models.AbstractModel):
                     "overtimes": overtimes,
                 }
                 batch_obligations += payslip.line_ids.filtered(
-                    lambda line: line.salary_rule_id.code in ["SSComp", "CesComp"] and line.total
+                    lambda line: line.salary_rule_id.code in ["SSComp", "CesComp"]
+                    and line.total
                 )
                 batch_perceptions += perceptions["perceptions"]
                 batch_deductions += deductions["deductions"]
@@ -81,17 +95,23 @@ class RayaListReport(models.AbstractModel):
             obligations_summary = defaultdict(dict)
 
             total_perceptions = 0
-            for salary_rule, lines_in_salary in groupby(batch_perceptions, key=lambda p: p["salary_rule_id"]):
+            for salary_rule, lines_in_salary in groupby(
+                batch_perceptions, key=lambda p: p["salary_rule_id"]
+            ):
                 subtotal = sum(line["total"] for line in list(lines_in_salary))
                 perceptions_summary[salary_rule] = subtotal
                 total_perceptions += subtotal
             total_deductions = 0
-            for salary_rule, lines_in_salary in groupby(batch_deductions, key=lambda p: p["salary_rule_id"]):
+            for salary_rule, lines_in_salary in groupby(
+                batch_deductions, key=lambda p: p["salary_rule_id"]
+            ):
                 subtotal = sum(line["total"] for line in list(lines_in_salary))
                 deductions_summary[salary_rule] = subtotal
                 total_deductions += subtotal
             total_obligations = 0
-            for salary_rule, lines_in_salary in groupby(batch_obligations, key=lambda p: p["salary_rule_id"]):
+            for salary_rule, lines_in_salary in groupby(
+                batch_obligations, key=lambda p: p["salary_rule_id"]
+            ):
                 subtotal = sum(line["total"] for line in list(lines_in_salary))
                 obligations_summary[salary_rule] = subtotal
                 total_obligations += subtotal

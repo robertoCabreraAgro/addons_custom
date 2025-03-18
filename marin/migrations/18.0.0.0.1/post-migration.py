@@ -22,6 +22,8 @@ def populate_materialized_views(env):
         | env.ref("marin.ir_cron_update_pos_line_report")
         | env.ref("marin.ir_cron_update_stock_need_report")
     )
-    crons.write({
-        "nextcall": datetime.now() + timedelta(minutes=10),
-    })
+    crons.write(
+        {
+            "nextcall": datetime.now() + timedelta(minutes=10),
+        }
+    )

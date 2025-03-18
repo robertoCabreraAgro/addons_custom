@@ -8,11 +8,25 @@ class HrAlimonyReportHandler(models.AbstractModel):
     _inherit = "account.report.custom.handler"
 
     def _report_custom_engine_alimony_report(
-        self, expressions, options, date_scope, current_groupby, next_groupby, offset=0, limit=None, warnings=None
+        self,
+        expressions,
+        options,
+        date_scope,
+        current_groupby,
+        next_groupby,
+        offset=0,
+        limit=None,
+        warnings=None,
     ):
         def build_dict(report, current_groupby, query_res):
             if not current_groupby:
-                return query_res[0] if query_res else {k: None for k in report.mapped("line_ids.expression_ids.label")}
+                return (
+                    query_res[0]
+                    if query_res
+                    else {
+                        k: None for k in report.mapped("line_ids.expression_ids.label")
+                    }
+                )
             return [(group_res["grouping_key"], group_res) for group_res in query_res]
 
         report = self.env["account.report"].browse(options["report_id"])
@@ -24,22 +38,39 @@ class HrAlimonyReportHandler(models.AbstractModel):
     def _get_report_name(self):
         company = self.env.company
         vat = company.vat or ""
-        return self.env._("Alimony_%(vat)s_%(date)s", vat=vat, date=fields.date.today().strftime("%Y%m"))
+        return self.env._(
+            "Alimony_%(vat)s_%(date)s",
+            vat=vat,
+            date=fields.date.today().strftime("%Y%m"),
+        )
 
     @api.model
     def _get_lines(self, options, line_id=None):
         lines = []
         total_perceptions = total_isr = total_alimony = 0
-        date_from = fields.datetime.strptime(options["date"]["date_from"], DEFAULT_SERVER_DATE_FORMAT).date()
-        date_to = fields.datetime.strptime(options["date"]["date_to"], DEFAULT_SERVER_DATE_FORMAT).date()
+        date_from = fields.datetime.strptime(
+            options["date"]["date_from"], DEFAULT_SERVER_DATE_FORMAT
+        ).date()
+        date_to = fields.datetime.strptime(
+            options["date"]["date_to"], DEFAULT_SERVER_DATE_FORMAT
+        ).date()
         slips = self.env["hr.payslip"].search(
-            [("state", "=", "done"), ("date_from", ">=", date_from), ("date_to", "<=", date_to)], order="employee_id"
+            [
+                ("state", "=", "done"),
+                ("date_from", ">=", date_from),
+                ("date_to", "<=", date_to),
+            ],
+            order="employee_id",
         )
-        percep = self.env.ref("l10n_mx_edi_payslip.hr_salary_rule_category_perception_mx_taxed") | self.env.ref(
+        percep = self.env.ref(
+            "l10n_mx_edi_payslip.hr_salary_rule_category_perception_mx_taxed"
+        ) | self.env.ref(
             "l10n_mx_edi_payslip.hr_salary_rule_category_perception_mx_exempt"
         )
 
-        alimony_rules = self.env.ref("l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_007")
+        alimony_rules = self.env.ref(
+            "l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_007"
+        )
         base_ref = "l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_007%s"
         alimony_refs = [
             "_b",
@@ -67,10 +98,13 @@ class HrAlimonyReportHandler(models.AbstractModel):
         for slip in slips:
             employee = slip.employee_id
             alimony = employee.l10n_mx_edi_alimony_ids.filtered(
-                lambda a: a.date_from <= slip.date_from and (not a.date_to or a.date_to and a.date_to >= slip.date_to)
+                lambda a: a.date_from <= slip.date_from
+                and (not a.date_to or a.date_to and a.date_to >= slip.date_to)
             )
             count = 0
-            for line in slip.line_ids.filtered(lambda line: line.amount and line.salary_rule_id in alimony_rules):
+            for line in slip.line_ids.filtered(
+                lambda line: line.amount and line.salary_rule_id in alimony_rules
+            ):
                 if employee != last_employee:
                     last_employee = employee
                     lines.append(
@@ -87,17 +121,24 @@ class HrAlimonyReportHandler(models.AbstractModel):
                 line_columns = [
                     {"employee_code": employee.barcode or employee.id},
                     {"vat": employee.l10n_mx_rfc},
-                    {"payment_date": fields.datetime.strftime(slip.l10n_mx_edi_payment_date, "%d-%m-%Y")},
+                    {
+                        "payment_date": fields.datetime.strftime(
+                            slip.l10n_mx_edi_payment_date, "%d-%m-%Y"
+                        )
+                    },
                     {
                         "total_perceptions": sum(
-                            slip.line_ids.filtered(lambda line: line.category_id in percep).mapped("amount")
+                            slip.line_ids.filtered(
+                                lambda line: line.category_id in percep
+                            ).mapped("amount")
                         )
                     },
                     {
                         "isr": abs(
                             sum(
                                 slip.line_ids.filtered(
-                                    lambda line: line.salary_rule_id.l10n_mx_edi_code == "002"
+                                    lambda line: line.salary_rule_id.l10n_mx_edi_code
+                                    == "002"
                                 ).mapped("amount")
                             )
                         )

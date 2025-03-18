@@ -1,4 +1,3 @@
-
 {
     "name": "Base Approval",
     "version": "1.0",

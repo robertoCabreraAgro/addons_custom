@@ -5,10 +5,10 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
+
 class StockQuantRelocateLine(models.TransientModel):
     _name = "stock.quant.relocate.line"
     _description = "Wizard move location line"
-
 
     move_location_wizard_id = fields.Many2one(
         comodel_name="stock.quant.relocate",
@@ -46,29 +46,26 @@ class StockQuantRelocateLine(models.TransientModel):
         string="From Owner",
     )
     move_quantity = fields.Float(
-        string="Quantity to move",
-        digits="Product Unit of Measure"
+        string="Quantity to move", digits="Product Unit of Measure"
     )
     max_quantity = fields.Float(
-        string="Maximum available quantity",
-        digits="Product Unit of Measure"
+        string="Maximum available quantity", digits="Product Unit of Measure"
     )
     total_quantity = fields.Float(
-        string="Total existence quantity",
-        digits="Product Unit of Measure"
+        string="Total existence quantity", digits="Product Unit of Measure"
     )
     reserved_quantity = fields.Float(digits="Product Unit of Measure")
     custom = fields.Boolean(string="Custom line", default=True)
 
-
     @api.constrains("max_quantity", "move_quantity")
     def _constraint_max_move_quantity(self):
         for record in self:
-            
+
             rounding = record.product_uom_id.rounding or 1
             if rounding < 1:
                 _logger.warning(
-                    "Rounding value '%s' adjusted to 1 for float_compare compatibility", rounding
+                    "Rounding value '%s' adjusted to 1 for float_compare compatibility",
+                    rounding,
                 )
                 rounding = 1
             move_qty_gt_max_qty = (
@@ -76,9 +73,9 @@ class StockQuantRelocateLine(models.TransientModel):
             )
             move_qty_lt_0 = float_compare(record.move_quantity, 0.0, rounding) == -1
             if move_qty_gt_max_qty or move_qty_lt_0:
-                raise ValidationError(_(
-                    "Move quantity can not exceed max quantity or be negative"
-                ))
+                raise ValidationError(
+                    _("Move quantity can not exceed max quantity or be negative")
+                )
 
     def _get_available_quantity(self):
         """

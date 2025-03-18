@@ -8,22 +8,21 @@ class AccountMoveTemplate(models.Model):
     _description = "Journal Entry Template"
     _check_company_auto = True
 
-
     company_ids = fields.Many2many(
-        comodel_name='res.company',
-        string='Companies',
+        comodel_name="res.company",
+        string="Companies",
         required=True,
         default=lambda self: self.env.company,
         readonly=False,
     )
     company_currency_id = fields.Many2one(
-        comodel_name='res.currency',
-        compute='_compute_company_currency_id',
+        comodel_name="res.currency",
+        compute="_compute_company_currency_id",
     )
     journal_code = fields.Char(
-        string='Journal Code',
+        string="Journal Code",
         help="When creating a new journal entry a journal having this code"
-             "will be looked for",
+        "will be looked for",
     )
     currency_id = fields.Many2one(
         comodel_name="res.currency",
@@ -63,13 +62,12 @@ class AccountMoveTemplate(models.Model):
     )
     use_product = fields.Boolean(default=False)
 
-
     def copy(self, default=None):
         self.ensure_one()
         default = dict(default or {}, name=_("%s (copy)") % self.name)
         return super().copy(default)
 
-    @api.depends_context('company')
+    @api.depends_context("company")
     def _compute_company_currency_id(self):
         self.company_currency_id = self.env.company.currency_id
 
@@ -142,12 +140,16 @@ class AccountMoveTemplate(models.Model):
         if self._context.get("default_partner_id"):
             vals["partner_id"] = self._context.get("default_partner_id")
         if self.env.context.get("operation_id"):
-            operation = self.env["account.move.operation"].browse(self.env.context.get("operation_id"))
+            operation = self.env["account.move.operation"].browse(
+                self.env.context.get("operation_id")
+            )
             if not vals.get("currency_id") and operation.currency_id:
                 vals["currency_id"] = operation.currency_id.id
             if not vals.get("partner_id"):
                 vals["partner_id"] = operation.partner_id.id
-            line = self.env["account.move.operation.line"].browse(self.env.context.get("operation_line_id"))
+            line = self.env["account.move.operation.line"].browse(
+                self.env.context.get("operation_line_id")
+            )
             if line and line.date_last_document:
                 date_last_document = line._get_latest_document_date()
                 if date_last_document:

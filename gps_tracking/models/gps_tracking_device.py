@@ -39,7 +39,7 @@ class GpsTrackingDevice(models.Model):
     allowed_tracking_point = fields.One2many(
         comodel_name="gps.tracking.point",
         compute="_compute_allowed_tracking_point",
-        string="Allowed Tracking Points"
+        string="Allowed Tracking Points",
     )
     tracking_points = fields.One2many(
         comodel_name="gps.tracking.point",
@@ -129,8 +129,8 @@ class GpsTrackingDevice(models.Model):
 
         for device in self:
             device.allowed_tracking_point = self.env["gps.tracking.point"].search(
-                [("device_id", "=", device.id), ("timestamp", ">=", last_week)],  
-                order="timestamp desc"
+                [("device_id", "=", device.id), ("timestamp", ">=", last_week)],
+                order="timestamp desc",
             )
 
     @api.depends("vehicle_id.driver_id")

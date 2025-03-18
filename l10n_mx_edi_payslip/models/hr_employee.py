@@ -149,7 +149,9 @@ class HrEmployee(models.Model):
     @api.depends("l10n_mx_edi_disciplinary_warning_ids")
     def _compute_l10n_mx_edi_disciplinary_warning_count(self):
         for employee in self:
-            employee.l10n_mx_edi_disciplinary_warning_count = len(employee.l10n_mx_edi_disciplinary_warning_ids)
+            employee.l10n_mx_edi_disciplinary_warning_count = len(
+                employee.l10n_mx_edi_disciplinary_warning_ids
+            )
 
     @api.depends("address_id")
     def _compute_l10n_mx_edi_employer_registration_id(self):
@@ -178,10 +180,14 @@ class HrEmployee(models.Model):
         """Based on employee category, verify if a category set in this
         employee come from this module and get code."""
         category = self.category_ids.filtered(lambda r: r.color == 3)
-        if not category or not category[0].get_external_id()[category[0].id].startswith("l10n_mx_edi_payslip"):
+        if not category or not category[0].get_external_id()[category[0].id].startswith(
+            "l10n_mx_edi_payslip"
+        ):
             return ""
         return category[0].name[:2] if not whole_text else category[0].name
 
     def get_isn_percentage(self):
         self.ensure_one()
-        return (self.l10n_mx_edi_employer_registration_id.branch_id or self.address_id).state_id.l10n_mx_payslip_isn
+        return (
+            self.l10n_mx_edi_employer_registration_id.branch_id or self.address_id
+        ).state_id.l10n_mx_payslip_isn

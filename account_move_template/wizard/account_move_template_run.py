@@ -9,7 +9,6 @@ class AccountMoveTemplateRun(models.TransientModel):
     _description = "Wizard to generate move from template"
     _check_company_auto = True
 
-
     company_id = fields.Many2one(
         comodel_name="res.company",
         required=True,
@@ -19,7 +18,7 @@ class AccountMoveTemplateRun(models.TransientModel):
     template_id = fields.Many2one(
         comodel_name="account.move.template",
         required=True,
-        #domain = [('company_ids', 'in', lambda self: self.env.companies.ids)]
+        # domain = [('company_ids', 'in', lambda self: self.env.companies.ids)]
     )
     journal_id = fields.Many2one(
         comodel_name="account.journal",
@@ -36,10 +35,7 @@ class AccountMoveTemplateRun(models.TransientModel):
         default=fields.Date.context_today,
     )
     state = fields.Selection(
-        [
-            ("select_template", "Select Template"),
-            ("set_lines", "Set Lines")
-        ],
+        [("select_template", "Select Template"), ("set_lines", "Set Lines")],
         readonly=True,
         default="select_template",
     )
@@ -54,11 +50,10 @@ class AccountMoveTemplateRun(models.TransientModel):
     line_ids = fields.One2many(
         comodel_name="account.move.template.line.run",
         inverse_name="wizard_id",
-        string="Lines"
+        string="Lines",
     )
     use_journal = fields.Boolean(default=False)
     use_partner = fields.Boolean(default=False)
-
 
     # STEP 1
     def load_lines(self):
@@ -72,7 +67,9 @@ class AccountMoveTemplateRun(models.TransientModel):
             amtlro.create(vals)
         self.write(
             {
-                "journal_id": self.env['account.journal'].search([('company_id', '=', self.company_id.id)]),
+                "journal_id": self.env["account.journal"].search(
+                    [("company_id", "=", self.company_id.id)]
+                ),
                 "ref": self.template_id.ref,
                 "state": "set_lines",
             }
@@ -143,9 +140,9 @@ class AccountMoveTemplateRun(models.TransientModel):
             overwrite_vals = literal_eval(overwrite_vals)
             assert isinstance(overwrite_vals, dict)
         except (SyntaxError, ValueError, AssertionError) as err:
-            raise ValidationError(_(
-                "Overwrite value must be a valid python dict"
-            )) from err
+            raise ValidationError(
+                _("Overwrite value must be a valid python dict")
+            ) from err
         # First level keys must be L1, L2, ...
         keys = overwrite_vals.keys()
         if list(filter(lambda x: x[:1] != "L" or not x[1:].isdigit(), keys)):
@@ -155,9 +152,9 @@ class AccountMoveTemplateRun(models.TransientModel):
             if dict(
                 filter(lambda x: set(overwrite_vals[x].keys()) - set(valid_keys), keys)
             ):
-                raise ValidationError(_(
-                    "Valid fields to overwrite are %s"
-                ) % valid_keys)
+                raise ValidationError(
+                    _("Valid fields to overwrite are %s") % valid_keys
+                )
         except ValidationError as e:
             raise e
         except Exception as e:
@@ -194,10 +191,9 @@ class AccountMoveTemplateRun(models.TransientModel):
             "move_line_type": tmpl_line.move_line_type,
             "tax_ids": [Command.set(tmpl_line.tax_ids.ids)],
             "note": tmpl_line.note,
-            #"payment_term_id": tmpl_line.payment_term_id.id or False,
+            # "payment_term_id": tmpl_line.payment_term_id.id or False,
         }
         return vals
-
 
     def _prepare_move(self):
         move_vals = {
@@ -273,14 +269,11 @@ class AccountMoveTemplateLineRun(models.TransientModel):
     _description = "Wizard Lines to generate move from template"
     _inherit = "analytic.mixin"
 
-
     wizard_id = fields.Many2one(
         comodel_name="account.move.template.run",
         ondelete="cascade",
     )
-    company_id = fields.Many2one(
-        related="wizard_id.company_id"
-    )
+    company_id = fields.Many2one(related="wizard_id.company_id")
     company_currency_id = fields.Many2one(
         related="wizard_id.company_id.currency_id", string="Company Currency"
     )

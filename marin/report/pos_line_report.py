@@ -9,7 +9,6 @@ class PosLineReport(models.Model):
     _auto = False
     _order = "date ASC"
 
-
     line_id = fields.Many2one("pos.order.line", readonly=True)
     order_id = fields.Many2one("pos.order", readonly=True)
     company_id = fields.Many2one("res.company", readonly=True)
@@ -20,11 +19,11 @@ class PosLineReport(models.Model):
     config_id = fields.Many2one("pos.config", readonly=True)
     parent_state = fields.Selection(
         selection=[
-            ('draft', 'New'),
-            ('cancel', 'Cancelled'),
-            ('paid', 'Paid'),
-            ('done', 'Posted'),
-            ('invoiced', 'Invoiced')
+            ("draft", "New"),
+            ("cancel", "Cancelled"),
+            ("paid", "Paid"),
+            ("done", "Posted"),
+            ("invoiced", "Invoiced"),
         ],
         string="State",
         readonly=True,
@@ -49,7 +48,6 @@ class PosLineReport(models.Model):
     day_of_month = fields.Integer(readonly=True)
     day_of_week = fields.Integer(readonly=True)
     day_of_year = fields.Integer(readonly=True)
-
 
     def _query(self):
         return """
@@ -127,9 +125,7 @@ class PosLineReport(models.Model):
         self._cr.execute(f"DROP MATERIALIZED view IF EXISTS {table} CASCADE")
         if self._context.get("with_data"):
             # When calling with that context it will create the view and populate it
-            self._cr.execute(
-                f"CREATE MATERIALIZED VIEW {table} AS ({query})"
-            )
+            self._cr.execute(f"CREATE MATERIALIZED VIEW {table} AS ({query})")
         else:
             # To avoid long time to update the module we create the view without data
             # and later be populated by the cron that executes the method refresh_concurrently()

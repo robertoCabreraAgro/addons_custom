@@ -20,9 +20,14 @@ def remove_old_field(cr):
     """
 
     def _update_fields(table, old_column, new_column):
-        if tools.column_exists(cr, table, old_column) and tools.column_exists(cr, table, new_column):
+        if tools.column_exists(cr, table, old_column) and tools.column_exists(
+            cr, table, new_column
+        ):
             _logger.info(
-                "Replace the use of column `%s` from the table `%s` to colum `%s`", old_column, table, new_column
+                "Replace the use of column `%s` from the table `%s` to colum `%s`",
+                old_column,
+                table,
+                new_column,
             )
 
             update_query = """
@@ -30,7 +35,10 @@ def remove_old_field(cr):
                 SET %s=%s
                 WHERE %s IS NOT NULL
             """
-            cr.execute(update_query, (AsIs(table), AsIs(new_column), AsIs(old_column), AsIs(old_column)))
+            cr.execute(
+                update_query,
+                (AsIs(table), AsIs(new_column), AsIs(old_column), AsIs(old_column)),
+            )
 
             _logger.info(
                 "%d companies were updated to use the `%s` column instead of `%s` column",

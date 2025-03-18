@@ -10,19 +10,37 @@ class StockNeed(models.Model):
     _order = "root_categ_id ASC, product_categ_id ASC, product_id ASC"
 
     product_id = fields.Many2one("product.product", string="Product", readonly=True)
-    product_categ_id = fields.Many2one("product.category", string="Product Category", readonly=True)
-    parent_categ_id = fields.Many2one("product.category", string="Parent Category", readonly=True)
-    root_categ_id = fields.Many2one("product.category", string="Root Category", readonly=True)
+    product_categ_id = fields.Many2one(
+        "product.category", string="Product Category", readonly=True
+    )
+    parent_categ_id = fields.Many2one(
+        "product.category", string="Parent Category", readonly=True
+    )
+    root_categ_id = fields.Many2one(
+        "product.category", string="Root Category", readonly=True
+    )
     name = fields.Char(readonly=True)
     available_quantity = fields.Float("Stock available Qty", readonly=True)
     quantity = fields.Float("Stock on hand Qty", readonly=True)
     standard_price = fields.Float("Product standar price", readonly=True)
-    available_stock_cost_value = fields.Float("Suma de Valor stock disponible a costo", readonly=True)
-    available_stock_price_value = fields.Float("Suma de Valor stock disponible a precio de lista", readonly=True)
-    last_year_qty_sold = fields.Float("Cantidad venta real año pasado LMMR", readonly=True)
-    current_year_qty_sold = fields.Float("Cantidad venta real año actual LMMR", readonly=True)
-    stock_supply_need = fields.Float("Stock supply need qty año actual LMMR", readonly=True)
-    stock_supply_need_value = fields.Float("Stock supply need value at standard price año actual LMMR", readonly=True)
+    available_stock_cost_value = fields.Float(
+        "Suma de Valor stock disponible a costo", readonly=True
+    )
+    available_stock_price_value = fields.Float(
+        "Suma de Valor stock disponible a precio de lista", readonly=True
+    )
+    last_year_qty_sold = fields.Float(
+        "Cantidad venta real año pasado LMMR", readonly=True
+    )
+    current_year_qty_sold = fields.Float(
+        "Cantidad venta real año actual LMMR", readonly=True
+    )
+    stock_supply_need = fields.Float(
+        "Stock supply need qty año actual LMMR", readonly=True
+    )
+    stock_supply_need_value = fields.Float(
+        "Stock supply need value at standard price año actual LMMR", readonly=True
+    )
 
     def _query(self):
         return """
@@ -225,7 +243,8 @@ class StockNeed(models.Model):
 
     def _check_populated(self, table):
         self._cr.execute(
-            "SELECT relispopulated FROM pg_class WHERE relname = '%s' and relkind = 'm'" % (table,)
+            "SELECT relispopulated FROM pg_class WHERE relname = '%s' and relkind = 'm'"
+            % (table,)
         )
         res = self._cr.fetchone()
         return res and res[0]
@@ -257,7 +276,8 @@ class StockNeed(models.Model):
         self._cr.execute("CREATE UNIQUE INDEX id_%s ON %s(product_id)", (table, table))
 
     def create_function_convert_uom(self):
-        self._cr.execute("""
+        self._cr.execute(
+            """
             CREATE OR REPLACE FUNCTION convert_uom(
                 prod int, qty float, from_uom_id int, to_uom_id int)
             RETURNS float AS $e_name$
@@ -312,4 +332,5 @@ class StockNeed(models.Model):
                 return con_factor;
             END;
             $e_name$ LANGUAGE plpgsql;
-        """)
+        """
+        )

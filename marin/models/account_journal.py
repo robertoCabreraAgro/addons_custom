@@ -5,15 +5,11 @@ from odoo.exceptions import UserError
 class AccountJournalInherit(models.Model):
     _inherit = "account.journal"
 
-
     default_receivable_account_id = fields.Many2one(
         comodel_name="account.account",
         string="Default Receivable Account",
         check_company=True,
-        domain=[
-            ("deprecated", "=", False),
-            ("account_type", "=", "asset_receivable")
-        ],
+        domain=[("deprecated", "=", False), ("account_type", "=", "asset_receivable")],
         copy=False,
         ondelete="restrict",
         help="It acts as a default account for receivable amount instead of the Company's default",
@@ -22,10 +18,7 @@ class AccountJournalInherit(models.Model):
         comodel_name="account.account",
         string="Default Payable Account",
         check_company=True,
-        domain=[
-            ("deprecated", "=", False),
-            ("account_type", "=", "liability_payable")
-        ],
+        domain=[("deprecated", "=", False), ("account_type", "=", "liability_payable")],
         copy=False,
         ondelete="restrict",
         help="It acts as a default account for payable amount instead of the Company's default",
@@ -36,7 +29,11 @@ class AccountJournalInherit(models.Model):
         check_company=True,
         domain=[
             ("deprecated", "=", False),
-            ("account_type", "in", ("expense", "expense_direct_cost", "income", "income_other"))
+            (
+                "account_type",
+                "in",
+                ("expense", "expense_direct_cost", "income", "income_other"),
+            ),
         ],
         copy=False,
         ondelete="restrict",
@@ -54,11 +51,11 @@ class AccountJournalInherit(models.Model):
         help="Technical field used to group journal and journal moves according to fiscal logic.",
     )
     account_control_ids = fields.Many2many(
-        'account.account',
-        'account_journal_account_account_control_rel',
-        'journal_id',
-        'account_id',
-        string='Allowed accounts',
+        "account.account",
+        "account_journal_account_account_control_rel",
+        "journal_id",
+        "account_id",
+        string="Allowed accounts",
         check_company=True,
         domain="[('deprecated', '=', False), ('account_type', '!=', 'off_balance')]",
     )
@@ -71,15 +68,23 @@ class AccountJournalInherit(models.Model):
         help="Users that can visualize entries of this journal.",
     )
 
-
-    @api.constrains("type", "default_receivable_account_id", "default_payable_account_id")
+    @api.constrains(
+        "type", "default_receivable_account_id", "default_payable_account_id"
+    )
     def _check_type_default_receivable_payable_account_id_type(self):
-        journals_to_check = self.filtered(lambda journal: journal.type in ("sale", "purchase"))
-        accounts_to_check = journals_to_check.mapped("default_receivable_account_id") + journals_to_check.mapped(
-            "default_payable_account_id"
+        journals_to_check = self.filtered(
+            lambda journal: journal.type in ("sale", "purchase")
         )
-        if any(account.account_type not in ("asset_receivable", "liability_payable") for account in accounts_to_check):
-            raise UserError(_(
-                "The type of the journal's default receivable/payable "
-                "account should be 'receivable' or 'payable'."
-            ))
+        accounts_to_check = journals_to_check.mapped(
+            "default_receivable_account_id"
+        ) + journals_to_check.mapped("default_payable_account_id")
+        if any(
+            account.account_type not in ("asset_receivable", "liability_payable")
+            for account in accounts_to_check
+        ):
+            raise UserError(
+                _(
+                    "The type of the journal's default receivable/payable "
+                    "account should be 'receivable' or 'payable'."
+                )
+            )

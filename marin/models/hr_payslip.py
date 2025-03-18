@@ -6,11 +6,12 @@ class HrPayslipInherit(models.Model):
     _name = "hr.payslip"
     _inherit = "hr.payslip"
 
-
     move_state = fields.Selection(
-        related="move_id.state", string="Accounting Entry state", readonly=True, copy=False
+        related="move_id.state",
+        string="Accounting Entry state",
+        readonly=True,
+        copy=False,
     )
-
 
     @api.onchange("contract_id")
     def onchange_contract(self):
@@ -19,7 +20,10 @@ class HrPayslipInherit(models.Model):
     # Override original method
     def l10n_mx_edi_is_required(self):
         self.ensure_one()
-        fiscal = self.struct_id.journal_id.x_treatment in ("fiscal_real", "fiscal_simulated")
+        fiscal = self.struct_id.journal_id.x_treatment in (
+            "fiscal_real",
+            "fiscal_simulated",
+        )
         company = self.company_id or self.contract_id.company_id
         return company.country_id == self.env.ref("base.mx") and fiscal
 
@@ -31,7 +35,9 @@ class HrPayslipInherit(models.Model):
         seniority = self.contract_id.get_seniority(date_to=self.date_to)
         str_seniority = ""
         if seniority["years"] > 0:
-            str_seniority = f"""P{seniority["years"]}Y{seniority["months"]}M{seniority["days"]}D"""
+            str_seniority = (
+                f"""P{seniority["years"]}Y{seniority["months"]}M{seniority["days"]}D"""
+            )
         elif seniority["years"] == 0 and seniority["months"] >= 1:
             str_seniority = f"""P{seniority["months"]}M{seniority["days"]}D"""
         else:
@@ -58,10 +64,13 @@ class HrPayslipInherit(models.Model):
         payroll.update(self.get_cfdi_other_payments_data())
         payroll["inability_data"] = lambda i, p: p._get_inability_data(i)
         return payroll
-    
+
     def _create_account_move(self, values):
         for val in values:
-            if not val.get("partner_id") and not self.company_id.batch_payroll_move_lines:
+            if (
+                not val.get("partner_id")
+                and not self.company_id.batch_payroll_move_lines
+            ):
                 val["partner_id"] = self.employee_id.work_contact_id.id
         return super()._create_account_move(values)
 
@@ -73,14 +82,14 @@ class HrPayslipInherit(models.Model):
 
     def action_payslip_move_post(self):
         if not self.env.user.has_group("l10n_mx_edi_payslip.allow_validate_payslip"):
-            raise UserError(_(
-                "Only Managers who are allow to validate payslip can perform this operation"
-            ))
+            raise UserError(
+                _(
+                    "Only Managers who are allow to validate payslip can perform this operation"
+                )
+            )
 
         if self.filtered(lambda slip: slip.state != "done"):
-            raise UserError(_(
-                "Cannot post a payslip's account move that is not done."
-            ))
+            raise UserError(_("Cannot post a payslip's account move that is not done."))
 
         to_post = self.filtered(lambda slip: slip.state == "done")
         moves = to_post.mapped("move_id")

@@ -97,17 +97,26 @@ class HrPayslipAuditIsr(models.TransientModel):
         isr_values = {"isr_lines": safe_eval(schedule_pay_id.isr_table)}
         isr_table = self.env["ir.qweb"]._render(ISR_TABLE_TEMPLATE, isr_values)
         subsidy_values = {"subsidy_lines": safe_eval(schedule_pay_id.subsidy_table)}
-        subsidy_table = self.env["ir.qweb"]._render(SUBSIDY_TABLE_TEMPLATE, subsidy_values)
+        subsidy_table = self.env["ir.qweb"]._render(
+            SUBSIDY_TABLE_TEMPLATE, subsidy_values
+        )
         return isr_table, subsidy_table
 
     def _get_incomes(self, payslip_id):
         taxed_rules = self.env.ref("l10n_mx_edi_payslip.hr_rule_total_taxed")
         taxed_rules += self.env.ref("l10n_mx_edi_payslip.hr_rule_total_taxed_bf")
-        taxed_line = payslip_id.line_ids.filtered(lambda line: line.salary_rule_id.id in taxed_rules.ids)
+        taxed_line = payslip_id.line_ids.filtered(
+            lambda line: line.salary_rule_id.id in taxed_rules.ids
+        )
         used_taxable_income = period_taxable_income = taxed_line.total
         # Get monthly taxable
-        if not payslip_id.company_id.l10n_mx_edi_isr_annual_adjustment and payslip_id.l10n_mx_edi_is_last_payslip():
-            taxed_categ = self.env.ref("l10n_mx_edi_payslip.hr_salary_rule_category_perception_mx_taxed")
+        if (
+            not payslip_id.company_id.l10n_mx_edi_isr_annual_adjustment
+            and payslip_id.l10n_mx_edi_is_last_payslip()
+        ):
+            taxed_categ = self.env.ref(
+                "l10n_mx_edi_payslip.hr_salary_rule_category_perception_mx_taxed"
+            )
             lines = payslip_id.employee_id.slip_ids.filtered(
                 lambda slip: slip.state in ("done", "paid")
                 and slip.id != payslip_id.id
@@ -115,11 +124,16 @@ class HrPayslipAuditIsr(models.TransientModel):
                 and slip.date_from.year == payslip_id.date_from.year
             ).mapped("line_ids")
 
-            taxed = sum(lines.filtered(lambda li: li.category_id.id == taxed_categ.id).mapped("total"))
-            leaves_amount = sum(
-                lines.filtered(lambda li: li.code in ("D020", "IEG006", "IM006", "IRT006", "LPHC006", "FJSS")).mapped(
+            taxed = sum(
+                lines.filtered(lambda li: li.category_id.id == taxed_categ.id).mapped(
                     "total"
                 )
+            )
+            leaves_amount = sum(
+                lines.filtered(
+                    lambda li: li.code
+                    in ("D020", "IEG006", "IM006", "IRT006", "LPHC006", "FJSS")
+                ).mapped("total")
             )
             used_taxable_income += taxed - leaves_amount
         return period_taxable_income, used_taxable_income
@@ -134,11 +148,9 @@ class HrPayslipAuditIsr(models.TransientModel):
     def _get_isr(self, schedule_pay_id, amount, payslip_id):
         """Get monthly ISR corresponding to the amount given."""
         table = safe_eval(schedule_pay_id.isr_table)
-        lower_limit = (
-            higher_limit
-        ) = (
-            excess_lower_limit
-        ) = percentage = marginal_tax = fixed_tax_rate = monthly_isr = previous_isr = isr = 0  # noqa
+        lower_limit = higher_limit = excess_lower_limit = percentage = marginal_tax = (
+            fixed_tax_rate
+        ) = monthly_isr = previous_isr = isr = 0  # noqa
         for value in table:
             if value[1] >= amount >= value[0]:
                 lower_limit = value[0]
@@ -150,14 +162,18 @@ class HrPayslipAuditIsr(models.TransientModel):
                 isr = round(marginal_tax + fixed_tax_rate, 2)
 
         if payslip_id.l10n_mx_edi_is_last_payslip():
-            rule = self.env.ref("l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_isr")
+            rule = self.env.ref(
+                "l10n_mx_edi_payslip.hr_rule_l10n_mx_payroll_deduction_isr"
+            )
             lines = payslip_id.employee_id.slip_ids.filtered(
                 lambda slip: slip.state in ("done", "paid")
                 and slip.id != payslip_id.id
                 and slip.date_from.month == payslip_id.date_from.month
                 and slip.date_from.year == payslip_id.date_from.year
             ).mapped("line_ids")
-            previous_isr = sum(lines.filtered(lambda li: li.salary_rule_id == rule).mapped("total"))
+            previous_isr = sum(
+                lines.filtered(lambda li: li.salary_rule_id == rule).mapped("total")
+            )
             monthly_isr = isr
             isr -= previous_isr
 

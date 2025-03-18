@@ -18,8 +18,12 @@ class TestPayrollDispersion(TransactionCase):
                 "date_end": self.date,
             }
         )
-        self.dispersion_group = self.env.ref("hr_bank_dispersion.allow_print_payslip_dispersion", False)
-        self.dispersion_group.sudo().write({"users": [Command.set([self.env.user.id, 1])]})
+        self.dispersion_group = self.env.ref(
+            "hr_bank_dispersion.allow_print_payslip_dispersion", False
+        )
+        self.dispersion_group.sudo().write(
+            {"users": [Command.set([self.env.user.id, 1])]}
+        )
 
     def test_001_payslip_dispersion(self):
         self.employee.bank_account_id = self.employee.bank_account_id.create(
@@ -29,7 +33,9 @@ class TestPayrollDispersion(TransactionCase):
                 "partner_id": self.ref("base.partner_demo"),
             }
         )
-        report_name = self.payslip_run._get_payslips_dispersion_report_name("BBVA BANCOMER")
+        report_name = self.payslip_run._get_payslips_dispersion_report_name(
+            "BBVA BANCOMER"
+        )
         self.assertEqual(
             report_name,
             "BBVA_BANCOMER_%s_Payslip_VX" % self.date.strftime("%d_%m_%Y"),
@@ -58,8 +64,10 @@ class TestPayrollDispersion(TransactionCase):
                 "employee_id": self.ref("hr.employee_qdp"),
                 "contract_id": self.ref("hr_payroll.hr_contract_gilles_gravie"),
                 "struct_id": self.ref("hr_payroll.structure_002"),
-                "date_from": date_from or "%s-%s-01" % (time.strftime("%Y"), time.strftime("%m")),
-                "date_to": date_to or "%s-%s-15" % (time.strftime("%Y"), time.strftime("%m")),
+                "date_from": date_from
+                or "%s-%s-01" % (time.strftime("%Y"), time.strftime("%m")),
+                "date_to": date_to
+                or "%s-%s-15" % (time.strftime("%Y"), time.strftime("%m")),
                 "worked_days_line_ids": [
                     Command.create(
                         {
@@ -68,7 +76,9 @@ class TestPayrollDispersion(TransactionCase):
                             "number_of_days": 15,
                             "number_of_hours": 40,
                             "contract_id": self.contract.id,
-                            "work_entry_type_id": self.ref("hr_work_entry.work_entry_type_attendance"),
+                            "work_entry_type_id": self.ref(
+                                "hr_work_entry.work_entry_type_attendance"
+                            ),
                         },
                     )
                 ],

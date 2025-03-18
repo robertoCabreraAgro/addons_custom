@@ -9,7 +9,6 @@ _logger = logging.getLogger(__name__)
 class AccountJournal(models.Model):
     _inherit = "account.journal"
 
-
     sequence_id = fields.Many2one(
         comodel_name="ir.sequence",
         string="Entry Sequence",
@@ -28,7 +27,6 @@ class AccountJournal(models.Model):
     )
     has_sequence_holes = fields.Boolean(compute=False)
 
-
     @api.constrains("refund_sequence_id", "sequence_id")
     def _check_journal_sequence(self):
         for journal in self:
@@ -37,11 +35,13 @@ class AccountJournal(models.Model):
                 and journal.sequence_id
                 and journal.refund_sequence_id == journal.sequence_id
             ):
-                raise ValidationError(_(
-                    "On journal '%s', the same sequence is used as "
-                    "Entry Sequence and Credit Note Entry Sequence.",
-                    journal.display_name,
-                ))
+                raise ValidationError(
+                    _(
+                        "On journal '%s', the same sequence is used as "
+                        "Entry Sequence and Credit Note Entry Sequence.",
+                        journal.display_name,
+                    )
+                )
 
             if journal.sequence_id and not journal.sequence_id.company_id:
                 msg = _(

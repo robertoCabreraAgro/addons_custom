@@ -6,7 +6,6 @@ from odoo.tools import float_compare, float_is_zero
 class HrPayslipRun(models.Model):
     _inherit = "hr.payslip.run"
 
-
     def create_payslip_moves(self):
         """Prepare the creation of journal entries (account.move) by creating a list of python dictionary to be passed
         to the "create" method.
@@ -22,7 +21,8 @@ class HrPayslipRun(models.Model):
             move_dict = {
                 "partner_id": partner.id,
                 "journal_id": journal.id,
-                "currency_id": journal.currency_id.id or payslip.company_id.currency_id.id,
+                "currency_id": journal.currency_id.id
+                or payslip.company_id.currency_id.id,
                 "date": date,
                 "narration": "",
                 "ref": "",
@@ -32,9 +32,15 @@ class HrPayslipRun(models.Model):
             for line in payslip.line_ids:
                 amount = -line.total if payslip.credit_note else line.total
                 if line.code == "NET":  # Check if the line is the "Net Salary".
-                    for tmp_line in payslip.line_ids.filtered(lambda tmp: tmp.salary_rule_id.not_computed_in_net):
+                    for tmp_line in payslip.line_ids.filtered(
+                        lambda tmp: tmp.salary_rule_id.not_computed_in_net
+                    ):
                         # Check if the rule must be computed in the "Net Salary" or not.
-                        amount += abs(tmp_line.total) if amount < 0 else -abs(tmp_line.total) if amount > 0 else 0.0
+                        amount += (
+                            abs(tmp_line.total)
+                            if amount < 0
+                            else -abs(tmp_line.total) if amount > 0 else 0.0
+                        )
                 if float_is_zero(amount, precision_digits=precision):
                     continue
 
@@ -81,7 +87,10 @@ class HrPayslipRun(models.Model):
                 acc_id = journal.default_credit_account_id
                 if not acc_id:
                     raise UserError(
-                        _('The Expense Journal "%s" has not properly configured the Credit Account!', journal.name)
+                        _(
+                            'The Expense Journal "%s" has not properly configured the Credit Account!',
+                            journal.name,
+                        )
                     )
                 adjust_credit = {
                     "name": _("Adjustment Entry"),
@@ -98,7 +107,10 @@ class HrPayslipRun(models.Model):
                 acc_id = journal.default_debit_account_id
                 if not acc_id:
                     raise UserError(
-                        _('The Expense Journal "%s" has not properly configured the Debit Account!', journal.name)
+                        _(
+                            'The Expense Journal "%s" has not properly configured the Debit Account!',
+                            journal.name,
+                        )
                     )
                 adjust_debit = {
                     "name": _("Adjustment Entry"),

@@ -24,16 +24,26 @@ class AccountBankStatementOperation(models.TransientModel):
     @api.model
     def default_get(self, fields_list):
         defaults = super().default_get(fields_list)
-        if self.env.context.get("active_model") == "account.bank.statement.line" and "active_ids" in self.env.context:
-            line = self.env[self.env.context["active_model"]].browse(self.env.context["active_ids"])[:1]
+        if (
+            self.env.context.get("active_model") == "account.bank.statement.line"
+            and "active_ids" in self.env.context
+        ):
+            line = self.env[self.env.context["active_model"]].browse(
+                self.env.context["active_ids"]
+            )[:1]
             defaults.update(
                 {
                     "st_line_id": line.id,
                     "company_id": line.company_id.id,
                 }
             )
-        elif self.env.context.get("active_model") == "bank.rec.widget" and "active_ids" in self.env.context:
-            widget = self.env[self.env.context["active_model"]].browse(self.env.context["active_ids"])[:1]
+        elif (
+            self.env.context.get("active_model") == "bank.rec.widget"
+            and "active_ids" in self.env.context
+        ):
+            widget = self.env[self.env.context["active_model"]].browse(
+                self.env.context["active_ids"]
+            )[:1]
             defaults.update(
                 {
                     "st_line_id": widget.st_line_id.id,
@@ -63,7 +73,9 @@ class AccountBankStatementOperation(models.TransientModel):
         }
 
     def open_existing_operations(self):
-        action = self.env["ir.actions.actions"]._for_xml_id("account_move_operation.workflow_template_action")
+        action = self.env["ir.actions.actions"]._for_xml_id(
+            "account_move_operation.workflow_template_action"
+        )
         action["domain"] = [("id", "in", self.st_line_id.operation_ids.ids)]
         action["views"] = [
             ((view_id, "list") if view_type == "tree" else (view_id, view_type))

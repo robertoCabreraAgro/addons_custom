@@ -14,7 +14,11 @@ class TestHrPayrollInputBatch(TransactionCase):
         cls.contract.state = "open"
         cls.struct_id = cls.env.ref("hr_payroll.structure_002")
         cls.input = cls.env["hr.payslip.input.type"].create(
-            {"code": "T01", "name": "Test 01", "struct_ids": [Command.set(cls.struct_id.ids)]}
+            {
+                "code": "T01",
+                "name": "Test 01",
+                "struct_ids": [Command.set(cls.struct_id.ids)],
+            }
         )
 
     def create_payroll(self):
@@ -53,7 +57,9 @@ class TestHrPayrollInputBatch(TransactionCase):
         input_batch.action_approve()
         payroll.update_inputs_from_batch()
         self.assertEqual(
-            payroll.input_line_ids.filtered(lambda line: line.input_type_id == self.input).amount,
+            payroll.input_line_ids.filtered(
+                lambda line: line.input_type_id == self.input
+            ).amount,
             120.0,
             "The input amount must be 120.00.",
         )

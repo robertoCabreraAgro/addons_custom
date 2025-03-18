@@ -8,7 +8,6 @@ class AccountMoveTemplateLine(models.Model):
     _order = "sequence, id"
     _check_company_auto = True
 
-
     template_id = fields.Many2one(
         comodel_name="account.move.template",
         string="Move Template",
@@ -17,8 +16,8 @@ class AccountMoveTemplateLine(models.Model):
     name = fields.Char(string="Label")
     sequence = fields.Integer(required=True)
     company_id = fields.Many2one(
-        comodel_name='res.company',
-        string='Companies',
+        comodel_name="res.company",
+        string="Companies",
     )
     partner_id = fields.Many2one(
         comodel_name="res.partner",
@@ -26,16 +25,16 @@ class AccountMoveTemplateLine(models.Model):
         domain=["|", ("parent_id", "=", False), ("is_company", "=", True)],
     )
     account_prefix = fields.Char(
-        string='Accounts Prefix',
+        string="Accounts Prefix",
         help="When creating a new journal item an account having this prefix"
-             "will be looked for",
+        "will be looked for",
     )
     account_id = fields.Many2one(
         comodel_name="account.account",
         string="Account",
         required=True,
         check_company=True,
-        domain=[('deprecated', '=', False), ('account_type', '!=', 'off_balance')],
+        domain=[("deprecated", "=", False), ("account_type", "!=", "off_balance")],
     )
     product_id = fields.Many2one(
         comodel_name="product.product",
@@ -48,9 +47,11 @@ class AccountMoveTemplateLine(models.Model):
     product_uom_id = fields.Many2one(
         comodel_name="uom.uom",
         string="Unit of Measure",
-        compute="_compute_product_uom_id", store=True, precompute=True,
+        compute="_compute_product_uom_id",
+        store=True,
+        precompute=True,
         readonly=False,
-        domain=[('category_id', '=', product_uom_category_id)],
+        domain=[("category_id", "=", product_uom_category_id)],
     )
     quantity = fields.Float(
         string="Quantity",
@@ -61,8 +62,8 @@ class AccountMoveTemplateLine(models.Model):
         digits="Product Price",
     )
     discount = fields.Float(
-        string='Discount (%)',
-        digits='Discount',
+        string="Discount (%)",
+        digits="Discount",
     )
     amount = fields.Float(default=0)
     tax_ids = fields.Many2many(
@@ -71,10 +72,7 @@ class AccountMoveTemplateLine(models.Model):
         check_company=True,
     )
     move_line_type = fields.Selection(
-        [
-            ("cr", "Credit"),
-            ("dr", "Debit")
-        ],
+        [("cr", "Credit"), ("dr", "Debit")],
         string="Direction",
         required=True,
     )
@@ -94,7 +92,6 @@ class AccountMoveTemplateLine(models.Model):
         "The sequence of the line must be unique per template",
     )
 
-
     @api.constrains("type", "python_code")
     def check_python_code(self):
         for line in self:
@@ -112,7 +109,9 @@ class AccountMoveTemplateLine(models.Model):
     def _safe_overwrite_vals(self, model, vals):
         obj = self.env[model]
         copy_vals = vals.copy()
-        invalid_keys = list(set(list(vals.keys())) - set(list(dict(obj._fields).keys())))
+        invalid_keys = list(
+            set(list(vals.keys())) - set(list(dict(obj._fields).keys()))
+        )
         for key in invalid_keys:
             copy_vals.pop(key)
         return copy_vals
@@ -122,7 +121,9 @@ class AccountMoveTemplateLine(models.Model):
             "line_id": self.id,
             "partner_id": self.partner_id.id or False,
             "product_id": self.product_id.id or False,
-            "product_uom_id": self.product_uom_id.id or self.product_id.uom_id.id or False,
+            "product_uom_id": self.product_uom_id.id
+            or self.product_id.uom_id.id
+            or False,
             "product_uom_qty": self.product_uom_qty or 1.0,
             "name": self.name,
             "account_id": self.account_id.id,
@@ -132,8 +133,7 @@ class AccountMoveTemplateLine(models.Model):
         }
         if overwrite_vals:
             safe_overwrite_vals = self._safe_overwrite_vals(
-                self._name,
-                overwrite_vals.get("L{}".format(self.sequence), {})
+                self._name, overwrite_vals.get("L{}".format(self.sequence), {})
             )
             vals.update(safe_overwrite_vals)
         return vals

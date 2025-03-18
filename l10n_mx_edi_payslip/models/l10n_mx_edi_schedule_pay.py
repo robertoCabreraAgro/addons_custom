@@ -14,7 +14,9 @@ class L10nMxEdiSchedulePay(models.Model):
         "ISR Table",
         help="Define the ISR table for the ordinary payslip in this schedule pay.",
     )
-    subsidy_table = fields.Text(help="Define the subsidy table for the ordinary payslip in this schedule pay.")
+    subsidy_table = fields.Text(
+        help="Define the subsidy table for the ordinary payslip in this schedule pay."
+    )
     days_to_pay = fields.Float(
         required=True,
         digits=(10, 4),

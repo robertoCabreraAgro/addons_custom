@@ -56,8 +56,8 @@ class ApprovalProductLine(models.Model):
             "partner_id": self.partner_id.id,
             "payment_term_id": self.partner_id.property_supplier_payment_term_id.id,
             "fiscal_position_id": self.env["account.fiscal.position"]
-                ._get_fiscal_position(self.partner_id)
-                .id,
+            ._get_fiscal_position(self.partner_id)
+            .id,
             "origin": self.approval_request_id.name,
             "order_line_ids": [
                 Command.create(
@@ -67,7 +67,7 @@ class ApprovalProductLine(models.Model):
                         "product_qty": self.quantity,
                     },
                 )
-            ]
+            ],
         }
         return vals
 
@@ -95,6 +95,6 @@ class ApprovalProductLine(models.Model):
                         "quantity": self.quantity,
                     },
                 )
-            ]
+            ],
         }
         return vals

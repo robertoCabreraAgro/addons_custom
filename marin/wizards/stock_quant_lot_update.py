@@ -5,7 +5,6 @@ class StockQuantLotUpdate(models.TransientModel):
     _name = "stock.quant.lot.update"
     _description = "Change Quant Lot Wizard"
 
-
     quant_id = fields.Many2one(
         comodel_name="stock.quant",
         required=True,
@@ -34,12 +33,13 @@ class StockQuantLotUpdate(models.TransientModel):
         help="Quantity to be transfered to the destintation lot.",
     )
 
-
     @api.model
     def default_get(self, fields_list):
         res = super().default_get(fields_list)
         if self._context.get("active_model") == "stock.quant":
-            quant = self.env["stock.quant"].browse(self._context.get("active_ids", []))[:1]
+            quant = self.env["stock.quant"].browse(self._context.get("active_ids", []))[
+                :1
+            ]
             res.update(
                 {
                     "quant_id": quant.id,
@@ -63,19 +63,23 @@ class StockQuantLotUpdate(models.TransientModel):
             ]
         )
         if dest_quant:
-            dest_quant.write({
-                "quantity": dest_quant.quantity + self.quantity,
-            })
+            dest_quant.write(
+                {
+                    "quantity": dest_quant.quantity + self.quantity,
+                }
+            )
         else:
-            dest_quant = self.env["stock.quant"].create({
-                "location_id": origin_quant.location_id.id,
-                "product_id": self.product_id.id,
-                "lot_id": self.dest_lot_id.id,
-                "quantity": self.quantity,
-                
-            })
-        
-        origin_quant.write({
-            "quantity": origin_quant.quantity - self.quantity,
-        })
+            dest_quant = self.env["stock.quant"].create(
+                {
+                    "location_id": origin_quant.location_id.id,
+                    "product_id": self.product_id.id,
+                    "lot_id": self.dest_lot_id.id,
+                    "quantity": self.quantity,
+                }
+            )
 
+        origin_quant.write(
+            {
+                "quantity": origin_quant.quantity - self.quantity,
+            }
+        )

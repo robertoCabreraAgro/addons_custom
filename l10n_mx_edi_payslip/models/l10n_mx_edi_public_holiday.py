@@ -52,7 +52,9 @@ class L10nMxEdiPublicHoliday(models.Model):
             )
 
         global_time_off_obj = self.env["create.company.global.time.off"]
-        work_entry_type_id = self.env.ref("l10n_mx_edi_payslip.work_entry_type_public_holiday_l10n_mx_payroll")
+        work_entry_type_id = self.env.ref(
+            "l10n_mx_edi_payslip.work_entry_type_public_holiday_l10n_mx_payroll"
+        )
 
         for record in self:
             for company in record.company_ids:

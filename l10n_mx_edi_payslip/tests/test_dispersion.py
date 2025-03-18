@@ -24,13 +24,21 @@ class TestHrBankDispersion(L10nMxEdiPayslipTransactionCase):
         self.payroll = self.create_payroll()
         self.payroll.compute_sheet()
         self.payroll.payslip_run_id = self.payslip_run
-        self.dispersion_group = self.env.ref("hr_bank_dispersion.allow_print_payslip_dispersion", False)
-        self.dispersion_group.sudo().write({"users": [Command.set([self.env.user.id, 1])]})
+        self.dispersion_group = self.env.ref(
+            "hr_bank_dispersion.allow_print_payslip_dispersion", False
+        )
+        self.dispersion_group.sudo().write(
+            {"users": [Command.set([self.env.user.id, 1])]}
+        )
 
     def test_001_payslip_dispersion(self):
         """Test BBVA text and permissions"""
-        self.employee.bank_account_id.bank_id = self.env.ref("l10n_mx.acc_bank_012_BBVA_BANCOMER")
-        report_name = self.payslip_run._get_payslips_dispersion_report_name("BBVA BANCOMER")
+        self.employee.bank_account_id.bank_id = self.env.ref(
+            "l10n_mx.acc_bank_012_BBVA_BANCOMER"
+        )
+        report_name = self.payslip_run._get_payslips_dispersion_report_name(
+            "BBVA BANCOMER"
+        )
         self.assertEqual(
             report_name,
             "BBVA_BANCOMER_%s_Payslip_VX" % self.date.strftime("%d_%m_%Y"),
@@ -49,7 +57,9 @@ class TestHrBankDispersion(L10nMxEdiPayslipTransactionCase):
         self.payroll.compute_sheet()
 
         # Give back permission and finish test normal flow
-        self.dispersion_group.sudo().write({"users": [Command.set([self.env.user.id, 1])]})
+        self.dispersion_group.sudo().write(
+            {"users": [Command.set([self.env.user.id, 1])]}
+        )
         dispersion_text = self.payslip_run._generate_bbva_dispersion(self.payroll)
         # Preparing amount
         amount = self.payroll.net_wage
@@ -63,7 +73,9 @@ class TestHrBankDispersion(L10nMxEdiPayslipTransactionCase):
 
     def test_002_santander(self):
         """Test Sandander Text Generation. For now, dummy, change it when santander is supported"""
-        self.employee.bank_account_id.bank_id = self.env.ref("l10n_mx.acc_bank_014_SANTANDER")
+        self.employee.bank_account_id.bank_id = self.env.ref(
+            "l10n_mx.acc_bank_014_SANTANDER"
+        )
         report_name = self.payslip_run._get_payslips_dispersion_report_name("SANTANDER")
         self.assertEqual(
             report_name,
@@ -84,17 +96,21 @@ class TestHrBankDispersion(L10nMxEdiPayslipTransactionCase):
 
     def test_003_general_dispersion(self):
         """Test General Text Generation. For now, just characteristics for Banamex have been specified."""
-        self.employee.bank_account_id.bank_id = self.env.ref("l10n_mx.acc_bank_002_BANAMEX")
-        self.env["ir.config_parameter"].sudo().set_param("l10n_mx_edi_dispersion_type", "banamex")
+        self.employee.bank_account_id.bank_id = self.env.ref(
+            "l10n_mx.acc_bank_002_BANAMEX"
+        )
+        self.env["ir.config_parameter"].sudo().set_param(
+            "l10n_mx_edi_dispersion_type", "banamex"
+        )
         dispersion_text = self.payslip_run._get_payslips_dispersions()
         file_path = f"{self.test_module}/tests/data/expected_dispersion.txt"
         with misc.file_open(file_path, "r") as file:
             expected_dispersion = file.read()
         current_month = str(self.payslip_run.l10n_mx_edi_payment_date.month)
         current_day = str(self.payslip_run.l10n_mx_edi_payment_date.day)
-        expected_dispersion = expected_dispersion.replace("-month-", current_month).replace(
-            "-day-", f"0{current_day}" if len(current_day) == 1 else current_day
-        )
+        expected_dispersion = expected_dispersion.replace(
+            "-month-", current_month
+        ).replace("-day-", f"0{current_day}" if len(current_day) == 1 else current_day)
         self.assertEqual(
             dispersion_text[0][0],
             f"PAYSLIP_VX_{self.payslip_run.l10n_mx_edi_payment_date.strftime('%d_%m_%Y')}_Dispersion",

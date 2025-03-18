@@ -31,7 +31,9 @@ class HrPayslipRun(models.Model):
 
     def _check_can_generate_dispersion(self):
         self.ensure_one()
-        if not self.env.user.has_group("hr_bank_dispersion.allow_print_payslip_dispersion"):
+        if not self.env.user.has_group(
+            "hr_bank_dispersion.allow_print_payslip_dispersion"
+        ):
             raise UserError(
                 self.env._(
                     "Only Managers with the group 'Allow to Print Payslip Dispersion' can generate "
@@ -52,7 +54,9 @@ class HrPayslipRun(models.Model):
         bank_errors = []
         dispersion_methods = []
         for bank in bank_ids:
-            dispersion_method = "_generate_%s_dispersion" % bank.name.split(" ")[0].lower()
+            dispersion_method = (
+                "_generate_%s_dispersion" % bank.name.split(" ")[0].lower()
+            )
             if not hasattr(self, dispersion_method):
                 bank_errors.append(bank.name)
                 continue
@@ -67,7 +71,9 @@ class HrPayslipRun(models.Model):
             )
         dispersion_type = self._get_dispersion_type_parameter()
         if bank_errors and not dispersion_type:
-            body_msg = self.env._("The following of your banks are not available for payroll dispersion")
+            body_msg = self.env._(
+                "The following of your banks are not available for payroll dispersion"
+            )
             self.message_post(body=body_msg + create_list_html(bank_errors))
 
     def _get_payslips_dispersions(self):
@@ -82,7 +88,10 @@ class HrPayslipRun(models.Model):
         for bank_id in self.mapped("slip_ids.employee_id.bank_account_id.bank_id"):
             # using search instead filtered to keep performance in batch with many payslips like action_payslips_done()
             payslips = self.slip_ids.search(
-                [("id", "in", self.slip_ids.ids), ("employee_id.bank_account_id.bank_id", "=", bank_id.id)]
+                [
+                    ("id", "in", self.slip_ids.ids),
+                    ("employee_id.bank_account_id.bank_id", "=", bank_id.id),
+                ]
             )
             # Call generate dispersion methods with the first word of the bank name
             # The method must return lines prepared by _prepare_join_dispersion_lines
@@ -100,7 +109,9 @@ class HrPayslipRun(models.Model):
     def _get_payslips_dispersion_report_name(self, bank_name=False):
         self.ensure_one()
         name = self.name.replace(" ", "_")
-        bank_name = bank_name.replace(" ", "_") if bank_name else self.env._("Dispersions")
+        bank_name = (
+            bank_name.replace(" ", "_") if bank_name else self.env._("Dispersions")
+        )
         date = self.date_end.strftime("%d_%m_%Y")
         return "%s_%s_%s" % (bank_name, date, name)
 
@@ -116,7 +127,15 @@ class HrPayslipRun(models.Model):
             amount = str(amount).replace(".", "").zfill(15)
             employee_name = payslip.employee_id.name.ljust(40)[:40]
             # 001 are fixed values, represent bank and branch. 99 Account type
-            line = "%s%s%s%s%s%s%s" % (consecutive, "99", bank_account, amount, employee_name, "001", "001")
+            line = "%s%s%s%s%s%s%s" % (
+                consecutive,
+                "99",
+                bank_account,
+                amount,
+                employee_name,
+                "001",
+                "001",
+            )
             lines.append(line)
         return self._prepare_join_dispersion_lines(lines)
 

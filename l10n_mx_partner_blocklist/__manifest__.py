@@ -4,7 +4,8 @@
     "name": "Partner blocklist for Mexican Localization",
     "author": "Vauxoo",
     "website": "http://www.vauxoo.com",
-    "summary": "Manage the partner blocklist provided by the SAT and avoid " "sell to block partners",
+    "summary": "Manage the partner blocklist provided by the SAT and avoid "
+    "sell to block partners",
     "license": "LGPL-3",
     "category": "Hidden",
     "version": "1.0",

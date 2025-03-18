@@ -96,4 +96,6 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
         related="company_id.l10n_mx_edi_isr_174_bonus",
     )
-    l10n_mx_edi_isr_monthly = fields.Boolean(readonly=False, related="company_id.l10n_mx_edi_isr_monthly")
+    l10n_mx_edi_isr_monthly = fields.Boolean(
+        readonly=False, related="company_id.l10n_mx_edi_isr_monthly"
+    )

@@ -136,8 +136,14 @@ class ResCompany(models.Model):
     def _compute_l10n_mx_edi_payslip_email(self):
         for record in self:
             payslip_alias = record.l10n_mx_edi_payslip_email_alias
-            alias_domain = self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain")
-            email = "%s@%s" % (payslip_alias, alias_domain) if payslip_alias and alias_domain else ""
+            alias_domain = (
+                self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain")
+            )
+            email = (
+                "%s@%s" % (payslip_alias, alias_domain)
+                if payslip_alias and alias_domain
+                else ""
+            )
             record.l10n_mx_edi_payslip_email = email
 
     def write(self, values):
@@ -149,7 +155,9 @@ class ResCompany(models.Model):
         res = super().write(values)
         if uma and uma != self.l10n_mx_edi_uma:
             factor = (self.l10n_mx_edi_uma - uma) / uma
-            for ali in self.env["hr.employee.alimony"].search([("increase_based_on", "=", "uma")]):
+            for ali in self.env["hr.employee.alimony"].search(
+                [("increase_based_on", "=", "uma")]
+            ):
                 ali.write(
                     {
                         "discount_amount": ali.discount_amount * (1 + factor),
@@ -157,7 +165,9 @@ class ResCompany(models.Model):
                 )
         if vsm and vsm != self.l10n_mx_edi_minimum_wage:
             factor = (self.l10n_mx_edi_minimum_wage - vsm) / vsm
-            for ali in self.env["hr.employee.alimony"].search([("increase_based_on", "=", "vsm")]):
+            for ali in self.env["hr.employee.alimony"].search(
+                [("increase_based_on", "=", "vsm")]
+            ):
                 ali.write(
                     {
                         "discount_amount": ali.discount_amount * (1 + factor),

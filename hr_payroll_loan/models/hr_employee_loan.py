@@ -122,19 +122,27 @@ class HrEmployeeLoan(models.Model):
         tracking=True,
         help="Set the interest percent that will be charged for the requested loan.",
     )
-    allows_interest_payment = fields.Boolean(related="input_type_id.allows_interest_payment")
+    allows_interest_payment = fields.Boolean(
+        related="input_type_id.allows_interest_payment"
+    )
 
     @api.depends("payslip_ids")
     def _compute_payslips_count(self):
         for loan in self:
-            loan.payslips_count = len(loan.payslip_ids.filtered(lambda rec: rec.state == "done"))
+            loan.payslips_count = len(
+                loan.payslip_ids.filtered(lambda rec: rec.state == "done")
+            )
 
     @api.depends("loan_line_ids")
     def _compute_loan_line_count_and_amount_paid(self):
         for loan in self:
             lines = loan.loan_line_ids
             loan.loan_line_count = len(lines)
-            loan.amount_paid = sum(lines.filtered(lambda line: line.payslip_id.state == "done").mapped("amount"))
+            loan.amount_paid = sum(
+                lines.filtered(lambda line: line.payslip_id.state == "done").mapped(
+                    "amount"
+                )
+            )
 
     @api.depends("total_amount", "amount_paid")
     def _compute_amount_remaining(self):
@@ -166,12 +174,20 @@ class HrEmployeeLoan(models.Model):
         """
         self.loan_line_ids.unlink()
 
-        records = self.filtered(lambda line: line.state in ["draft", "verify"] and not line._is_timeless())
+        records = self.filtered(
+            lambda line: line.state in ["draft", "verify"] and not line._is_timeless()
+        )
         records.write({"state": "verify"})
         if not records:
-            raise UserError(_("This option only could be used in draft/verify loans and with a positive payment term"))
+            raise UserError(
+                _(
+                    "This option only could be used in draft/verify loans and with a positive payment term"
+                )
+            )
 
-        for loan in self.filtered(lambda line: line.state in ["draft", "verify"] and not line._is_timeless()):
+        for loan in self.filtered(
+            lambda line: line.state in ["draft", "verify"] and not line._is_timeless()
+        ):
             vals_list = []
             days = loan.employee_id.contract_id.hr_schedule_payment_id.days_to_pay or 0
             for num in range(loan.payment_term):
@@ -181,7 +197,11 @@ class HrEmployeeLoan(models.Model):
                         "sequence": sequence,
                         "loan_id": loan.id,
                         "name": "%s (%d)" % (loan.name, sequence),
-                        "date": loan.date_from + relativedelta(days=days * num) if days else loan.date_from,
+                        "date": (
+                            loan.date_from + relativedelta(days=days * num)
+                            if days
+                            else loan.date_from
+                        ),
                         "amount": loan.amount,
                     }
                 )
@@ -200,7 +220,13 @@ class HrEmployeeLoan(models.Model):
             "res_model": "hr.payslip",
             "view_id": False,
             "type": "ir.actions.act_window",
-            "domain": [("id", "in", self.payslip_ids.filtered(lambda rec: rec.state == "done").ids)],
+            "domain": [
+                (
+                    "id",
+                    "in",
+                    self.payslip_ids.filtered(lambda rec: rec.state == "done").ids,
+                )
+            ],
         }
 
     def _is_timeless(self):
@@ -234,7 +260,11 @@ class HrEmployeeLoan(models.Model):
                         "sequence": sequence,
                         "loan_id": loan.id,
                         "name": "%s (%d)" % (loan.name, sequence),
-                        "date": loan.date_from + relativedelta(days=days * (sequence - 1)) if days else loan.date_from,
+                        "date": (
+                            loan.date_from + relativedelta(days=days * (sequence - 1))
+                            if days
+                            else loan.date_from
+                        ),
                         "amount": amount,
                     }
                 )
@@ -261,7 +291,11 @@ class HrEmployeeLoan(models.Model):
 
     def action_force_confirm(self):
         if not self.env.user.has_groups("hr_payroll_loan.allow_force_validate_loan"):
-            raise UserError(_("Only Managers who are allow to force validate loans can perform this operation"))
+            raise UserError(
+                _(
+                    "Only Managers who are allow to force validate loans can perform this operation"
+                )
+            )
         loans = self.filtered(lambda line: line.state in ["unlocked", "verify"])
         loans.write({"state": "active"})
 
@@ -285,16 +319,18 @@ class HrEmployeeLoan(models.Model):
         self.ensure_one()
         if not self.loan_line_ids:
             return self.browse()
-        return self.loan_line_ids.filtered(lambda line: not line.payslip_id.id).sorted(key=lambda line: line.sequence)[
-            0
-        ]
+        return self.loan_line_ids.filtered(lambda line: not line.payslip_id.id).sorted(
+            key=lambda line: line.sequence
+        )[0]
 
     def assign_payslip(self, payslip):
         """This method will assign a payslip to the loan, updating the loan lines with a new payment."""
         for input_type in self.mapped("input_type_id"):
             # Inputs are created with rule code but in lower and with a _ to split the code and number, ex: d_001
             input_code = input_type.code.upper().replace("_", "")
-            payslip_line = payslip.line_ids.filtered(lambda line: line.amount and line.code == input_code)
+            payslip_line = payslip.line_ids.filtered(
+                lambda line: line.amount and line.code == input_code
+            )
             if not payslip_line:
                 continue
 
@@ -312,15 +348,23 @@ class HrEmployeeLoan(models.Model):
                 payslip_amount -= line_amount
                 # Create the loan line with the amount calculated.
                 if loan._is_timeless():
-                    self.create_loan_line_timeless(payslip, payslip_line, loan, line_amount)
+                    self.create_loan_line_timeless(
+                        payslip, payslip_line, loan, line_amount
+                    )
                     continue
 
                 loan_line = loan.get_next_line()
                 if loan_line:
-                    self.create_loan_line_fixed(payslip, payslip_line, loan, line_amount, loan_line)
+                    self.create_loan_line_fixed(
+                        payslip, payslip_line, loan, line_amount, loan_line
+                    )
 
     def create_loan_line_timeless(self, payslip, payslip_line, loan, line_amount):
-        last_line = loan.loan_line_ids.sorted(key=lambda line: line.sequence)[-1] if loan.loan_line_ids else False
+        last_line = (
+            loan.loan_line_ids.sorted(key=lambda line: line.sequence)[-1]
+            if loan.loan_line_ids
+            else False
+        )
         vals = {
             "payslip_line_id": payslip_line.id,
             "sequence": last_line.sequence + 1 if last_line else 1,
@@ -328,12 +372,20 @@ class HrEmployeeLoan(models.Model):
             "date": payslip.date_from,
             "name": "%s (%d)" % (loan.name, last_line.sequence + 1 if last_line else 1),
             "amount": line_amount,
-            "cumulative_amount": payslip_line.total + (last_line.cumulative_amount if last_line else 0),
+            "cumulative_amount": payslip_line.total
+            + (last_line.cumulative_amount if last_line else 0),
             "remaining_amount": 0.0,
         }
-        loan.write({"payslip_ids": [Command.link(payslip.id)], "loan_line_ids": [Command.create(vals)]})
+        loan.write(
+            {
+                "payslip_ids": [Command.link(payslip.id)],
+                "loan_line_ids": [Command.create(vals)],
+            }
+        )
 
-    def create_loan_line_fixed(self, payslip, payslip_line, loan, line_amount, loan_line):
+    def create_loan_line_fixed(
+        self, payslip, payslip_line, loan, line_amount, loan_line
+    ):
         loan_line.write(
             {
                 "payslip_line_id": payslip_line.id,
@@ -350,7 +402,8 @@ class HrEmployeeLoan(models.Model):
         After a payslip validation and after link the payslip to the loan, check if the loan is complete, if so,
         Set the loan as close / done.
         If the loan is not complete and the next loan line is the last line, check if the loan will be
-        correctly finished, if not, set the loan as unlocked and ask for user intervation."""
+        correctly finished, if not, set the loan as unlocked and ask for user intervation.
+        """
         self.ensure_one()
         if (
             not self.loan_line_ids.filtered(lambda line: not line.payslip_id)
@@ -359,7 +412,11 @@ class HrEmployeeLoan(models.Model):
             self.write({"state": "close"})
             return
         next_line = self.get_next_line()
-        if next_line and next_line == self.loan_line_ids[-1] and next_line.remaining_amount:
+        if (
+            next_line
+            and next_line == self.loan_line_ids[-1]
+            and next_line.remaining_amount
+        ):
             self.write(
                 {
                     "state": "unlocked",
@@ -370,7 +427,9 @@ class HrEmployeeLoan(models.Model):
                 }
             )
             self.activity_schedule(
-                "mail.mail_activity_data_todo", note=_("Review the loan amounts"), user_id=self.env.user.id
+                "mail.mail_activity_data_todo",
+                note=_("Review the loan amounts"),
+                user_id=self.env.user.id,
             )
 
     def check_table_integrity(self):
@@ -379,7 +438,9 @@ class HrEmployeeLoan(models.Model):
         if self._is_timeless():
             return False
         if not self.loan_line_ids:
-            raise ValidationError(_("The amortization table is empty, it can not be validated"))
+            raise ValidationError(
+                _("The amortization table is empty, it can not be validated")
+            )
         if self.loan_line_ids[-1].remaining_amount:
             raise ValidationError(
                 _(

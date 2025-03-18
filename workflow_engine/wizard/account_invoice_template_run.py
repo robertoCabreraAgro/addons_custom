@@ -65,15 +65,22 @@ class AccountMoveInvoiceTemplateRun(models.TransientModel):
             }
         """
     )
-    line_ids = fields.One2many("account.invoice.template.line.run", "wizard_id", "Lines")
+    line_ids = fields.One2many(
+        "account.invoice.template.line.run", "wizard_id", "Lines"
+    )
     post = fields.Boolean(help="Set true if want to post the entry as it is created.")
 
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
             if vals.get("template_id"):
-                template = self.env["account.move.template"].browse(vals.get("template_id"))
-                if not vals.get("company_id") or vals.get("company_id") != template.company_id.id:
+                template = self.env["account.move.template"].browse(
+                    vals.get("template_id")
+                )
+                if (
+                    not vals.get("company_id")
+                    or vals.get("company_id") != template.company_id.id
+                ):
                     vals["company_id"] = template.company_id.id
         return super().create(vals_list)
 
@@ -93,14 +100,18 @@ class AccountMoveInvoiceTemplateRun(models.TransientModel):
             overwrite_vals = literal_eval(overwrite_vals)
             assert isinstance(overwrite_vals, dict)
         except (SyntaxError, ValueError, AssertionError) as err:
-            raise ValidationError(_("Overwrite value must be a valid python dict")) from err
+            raise ValidationError(
+                _("Overwrite value must be a valid python dict")
+            ) from err
         # First level keys must be L1, L2, ...
         keys = overwrite_vals.keys()
         if list(filter(lambda x: x[:1] != "L" or not x[1:].isdigit(), keys)):
             raise ValidationError(_("Keys must be line sequence, i..e, L1, L2, ..."))
         # Second level keys must be a valid keys
         try:
-            if dict(filter(lambda x: set(overwrite_vals[x].keys()) - set(valid_keys), keys)):
+            if dict(
+                filter(lambda x: set(overwrite_vals[x].keys()) - set(valid_keys), keys)
+            ):
                 raise ValidationError(_("Valid fields to overwrite are %s", valid_keys))
         except ValidationError as e:
             raise e
@@ -187,7 +198,9 @@ class AccountMoveInvoiceTemplateRun(models.TransientModel):
 
     def action_open_move(self, move):
         self.ensure_one()
-        action = self.env["ir.actions.actions"]._for_xml_id("account.action_move_journal_line")
+        action = self.env["ir.actions.actions"]._for_xml_id(
+            "account.action_move_journal_line"
+        )
         action.update(
             {
                 "name": _("Entry from template %s", self.template_id.name),
@@ -207,11 +220,15 @@ class AccountMoveInvoiceTemplateRun(models.TransientModel):
             line._compute_line()
         self._validate_not_all_zero()
         move_vals = self._prepare_move_vals()
-        for line in self.line_ids.filtered(lambda ln: not ln.company_currency_id.is_zero(ln.amount)):
+        for line in self.line_ids.filtered(
+            lambda ln: not ln.company_currency_id.is_zero(ln.amount)
+        ):
             move_vals["line_ids"].append(Command.create(line._prepare_move_line_vals()))
         move = self.env["account.move"].create(move_vals)
         if self.env.context.get("operation_line_id"):
-            operation_line = self.env["account.move.operation.line"].browse(self.env.context.get("operation_line_id"))
+            operation_line = self.env["account.move.operation.line"].browse(
+                self.env.context.get("operation_line_id")
+            )
             operation_line.move_id = move
             operation_line.action_in_progress()
         action = self.action_open_move(move)

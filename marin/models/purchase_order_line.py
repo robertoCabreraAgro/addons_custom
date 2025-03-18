@@ -19,12 +19,14 @@ class PurchaseOrderLineInherit(models.Model):
             ("over invoiced", "Over billed"),
         ],
         default="no",
-        compute="_compute_invoice_status", store=True,
+        compute="_compute_invoice_status",
+        store=True,
     )
     qty_to_receive = fields.Float(
         "Quantity to receive",
         digits="Product Unit of measure",
-        compute="_compute_qty_to_receive", store=True,
+        compute="_compute_qty_to_receive",
+        store=True,
     )
     reception_status = fields.Selection(
         [
@@ -35,7 +37,8 @@ class PurchaseOrderLineInherit(models.Model):
             ("over received", "Over received"),
         ],
         default="no",
-        compute="_compute_reception_status", store=True,
+        compute="_compute_reception_status",
+        store=True,
     )
     force_company_id = fields.Many2one(
         "res.company",
@@ -50,17 +53,31 @@ class PurchaseOrderLineInherit(models.Model):
 
     @api.depends("state", "product_uom_qty", "qty_invoiced", "qty_to_invoice")
     def _compute_invoice_status(self):
-        precision = self.env["decimal.precision"].precision_get("Product Unit of measure")
+        precision = self.env["decimal.precision"].precision_get(
+            "Product Unit of measure"
+        )
         for line in self:
             if line.state not in ("purchase", "done"):
                 line.invoice_status = "no"
             elif not float_is_zero(line.qty_to_invoice, precision_digits=precision):
                 line.invoice_status = "to invoice"
-            elif float_compare(line.qty_invoiced, line.product_uom_qty, precision_digits=precision) < 0:
+            elif (
+                float_compare(
+                    line.qty_invoiced, line.product_uom_qty, precision_digits=precision
+                )
+                < 0
+            ):
                 line.invoice_status = "partially"
-            elif not float_compare(line.qty_invoiced, line.product_uom_qty, precision_digits=precision):
+            elif not float_compare(
+                line.qty_invoiced, line.product_uom_qty, precision_digits=precision
+            ):
                 line.invoice_status = "invoiced"
-            elif float_compare(line.qty_invoiced, line.product_uom_qty, precision_digits=precision) > 0:
+            elif (
+                float_compare(
+                    line.qty_invoiced, line.product_uom_qty, precision_digits=precision
+                )
+                > 0
+            ):
                 line.invoice_status = "over invoiced"
             else:
                 line.invoice_status = "no"
@@ -84,7 +101,9 @@ class PurchaseOrderLineInherit(models.Model):
         - partially: the quantity received is lesser than the quantity ordered.
         - received: the quantity received is equal to the quantity ordered.
         """
-        precision = self.env["decimal.precision"].precision_get("Product Unit of measure")
+        precision = self.env["decimal.precision"].precision_get(
+            "Product Unit of measure"
+        )
         for line in self:
             if line.state not in ("purchase", "done") or float_is_zero(
                 line.product_uom_qty, precision_digits=precision
@@ -92,11 +111,23 @@ class PurchaseOrderLineInherit(models.Model):
                 line.reception_status = "no"
             elif float_is_zero(line.qty_received, precision_digits=precision):
                 line.reception_status = "to receive"
-            elif float_compare(line.qty_received, line.product_uom_qty, precision_digits=precision) < 0:
+            elif (
+                float_compare(
+                    line.qty_received, line.product_uom_qty, precision_digits=precision
+                )
+                < 0
+            ):
                 line.reception_status = "partially"
-            elif not float_compare(line.qty_received, line.product_uom_qty, precision_digits=precision):
+            elif not float_compare(
+                line.qty_received, line.product_uom_qty, precision_digits=precision
+            ):
                 line.reception_status = "received"
-            elif float_compare(line.qty_received, line.product_uom_qty, precision_digits=precision) > 0:
+            elif (
+                float_compare(
+                    line.qty_received, line.product_uom_qty, precision_digits=precision
+                )
+                > 0
+            ):
                 line.reception_status = "over received"
             else:
                 line.reception_status = "no"
@@ -116,7 +147,8 @@ class PurchaseOrderLineInherit(models.Model):
     def _compute_product_updatable(self):
         for line in self:
             if line.state in ["done", "cancel"] or (
-                line.state == "purchase" and (line.qty_invoiced > 0 or line.qty_received > 0)
+                line.state == "purchase"
+                and (line.qty_invoiced > 0 or line.qty_received > 0)
             ):
                 line.product_updatable = False
             else:
@@ -136,7 +168,7 @@ class PurchaseOrderLineInherit(models.Model):
         for po_line in self.sudo():
             name = "{} - {}".format(
                 po_line.order_id.name,
-                po_line.name and po_line.name.split("\n")[0] or po_line.product_id.name
+                po_line.name and po_line.name.split("\n")[0] or po_line.product_id.name,
             )
             additional_name = name_per_id.get(po_line.id)
             if additional_name:
@@ -157,7 +189,9 @@ class PurchaseOrderLineInherit(models.Model):
             return
 
         purchase_order = self.env["purchase.order"]
-        new_so = purchase_order.new({"partner_id": self.partner_id, "company_id": self.force_company_id})
+        new_so = purchase_order.new(
+            {"partner_id": self.partner_id, "company_id": self.force_company_id}
+        )
         for onchange_method in new_so._onchange_methods["partner_id"]:
             onchange_method(new_so)
         order_vals = new_so._convert_to_write(new_so._cache)

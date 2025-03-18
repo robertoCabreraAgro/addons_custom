@@ -14,13 +14,17 @@ class PurchaseOrderInherit(models.Model):
             categories.append(self.env.ref("marin.partner_category_supplier_core").id)
 
         if self.env.user.has_group("marin.group_purchase_general"):
-            categories.append(self.env.ref("marin.partner_category_supplier_general").id)
+            categories.append(
+                self.env.ref("marin.partner_category_supplier_general").id
+            )
 
         if self.env.user.has_group("marin.group_purchase_xiuman"):
             categories.append(self.env.ref("marin.partner_category_supplier_xiuman").id)
 
         if self.env.user.has_group("marin.group_purchase_potatoes"):
-            categories.append(self.env.ref("marin.partner_category_supplier_potatoes").id)
+            categories.append(
+                self.env.ref("marin.partner_category_supplier_potatoes").id
+            )
 
         if not categories:
             return [("id", "=", False)]
@@ -33,7 +37,10 @@ class PurchaseOrderInherit(models.Model):
     # Override original fields
     partner_id = fields.Many2one(domain=_domain_partner_id)
     invoice_status = fields.Selection(
-        selection_add=[("partially", "Partially billed"), ("over invoiced", "Over billed")]
+        selection_add=[
+            ("partially", "Partially billed"),
+            ("over invoiced", "Over billed"),
+        ]
     )
     receipt_status = fields.Selection(
         selection_add=[("no", "Nothing to receive"), ("over full", "Over received")]
@@ -81,15 +88,19 @@ class PurchaseOrderInherit(models.Model):
 
     def _compute_count_approval(self):
         for order in self:
-            approvals = self.env["approval.product.line"].search(
-                [("purchase_order_line_id.order_id", "=", order.id)]
-            ).mapped("approval_request_id")
+            approvals = (
+                self.env["approval.product.line"]
+                .search([("purchase_order_line_id.order_id", "=", order.id)])
+                .mapped("approval_request_id")
+            )
             order.count_approval = len(approvals)
 
     # Override original method
     @api.depends("state", "order_line_ids.qty_to_invoice")
     def _get_invoiced(self):
-        precision = self.env["decimal.precision"].precision_get("Product Unit of measure")
+        precision = self.env["decimal.precision"].precision_get(
+            "Product Unit of measure"
+        )
         for order in self:
             if order.state not in ("purchase", "done"):
                 order.invoice_status = "no"
@@ -103,18 +114,14 @@ class PurchaseOrderInherit(models.Model):
 
             if not float_compare(qty1, to_invoice, precision_digits=precision):
                 order.invoice_status = "to invoice"
-            elif (
-                float_compare(
-                    qty1,
-                    to_invoice,
-                    precision_digits=precision
-                ) > 0
-                and not float_is_zero(
-                    to_invoice, precision_digits=precision
-                )
-            ):
+            elif float_compare(
+                qty1, to_invoice, precision_digits=precision
+            ) > 0 and not float_is_zero(to_invoice, precision_digits=precision):
                 order.invoice_status = "partially"
-            elif float_is_zero(to_invoice, precision_digits=precision) and order.invoice_ids:
+            elif (
+                float_is_zero(to_invoice, precision_digits=precision)
+                and order.invoice_ids
+            ):
                 order.invoice_status = "invoiced"
             elif float_compare(qty1, to_invoice, precision_digits=precision) < 1:
                 order.invoice_status = "over invoiced"
@@ -122,9 +129,13 @@ class PurchaseOrderInherit(models.Model):
                 order.invoice_status = "no"
 
     # Override original method
-    @api.depends("state", "order_line_ids.qty_to_receive", "order_line_ids.product_uom_qty")
+    @api.depends(
+        "state", "order_line_ids.qty_to_receive", "order_line_ids.product_uom_qty"
+    )
     def _compute_receipt_status(self):
-        precision = self.env["decimal.precision"].precision_get("Product Unit of measure")
+        precision = self.env["decimal.precision"].precision_get(
+            "Product Unit of measure"
+        )
         for order in self:
             if order.state not in ("purchase", "done"):
                 order.receipt_status = "no"
@@ -138,9 +149,9 @@ class PurchaseOrderInherit(models.Model):
 
             if not float_compare(qty1, to_receive, precision_digits=precision):
                 order.receipt_status = "pending"
-            elif float_compare(qty1, to_receive, precision_digits=precision) > 0 and not float_is_zero(
-                to_receive, precision_digits=precision
-            ):
+            elif float_compare(
+                qty1, to_receive, precision_digits=precision
+            ) > 0 and not float_is_zero(to_receive, precision_digits=precision):
                 order.receipt_status = "partial"
             elif float_is_zero(to_receive, precision_digits=precision):
                 order.receipt_status = "full"
@@ -156,9 +167,12 @@ class PurchaseOrderInherit(models.Model):
 
     def action_view_approval(self):
         self.ensure_one()
-        approvals_ids = self.env["approval.product.line"].search(
-            [("purchase_order_line_id.order_id", "=", self.id)]
-        ).mapped("approval_request_id").ids
+        approvals_ids = (
+            self.env["approval.product.line"]
+            .search([("purchase_order_line_id.order_id", "=", self.id)])
+            .mapped("approval_request_id")
+            .ids
+        )
         domain = [("id", "in", approvals_ids)]
         action = {
             "name": _("Approvals"),
@@ -195,7 +209,9 @@ class PurchaseOrderInherit(models.Model):
                 )
                 approval_request._message_log(body=state_change_msg)
 
-    def _prepare_state_change_msg(self, old_state, new_state, approval_request_products):
+    def _prepare_state_change_msg(
+        self, old_state, new_state, approval_request_products
+    ):
         state_label = dict(self._fields["state"]._description_selection(self.env))
         return Markup("%(state_change_header)s<br> %(products_summary)s") % {
             "state_change_header": _(

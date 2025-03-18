@@ -7,7 +7,9 @@ class HrIdseReportHandler(models.AbstractModel):
     _inherit = "account.report.custom.handler"
 
     def _custom_options_initializer(self, report, options, previous_options=None):
-        res = super()._custom_options_initializer(report, options, previous_options=previous_options)
+        res = super()._custom_options_initializer(
+            report, options, previous_options=previous_options
+        )
         options["columns"] = list(options["columns"])
         options.setdefault("buttons", []).extend(
             (
@@ -23,11 +25,25 @@ class HrIdseReportHandler(models.AbstractModel):
         return res
 
     def _report_custom_engine_idse_report(
-        self, expressions, options, date_scope, current_groupby, next_groupby, offset=0, limit=None, warnings=None
+        self,
+        expressions,
+        options,
+        date_scope,
+        current_groupby,
+        next_groupby,
+        offset=0,
+        limit=None,
+        warnings=None,
     ):
         def build_dict(report, current_groupby, query_res):
             if not current_groupby:
-                return query_res[0] if query_res else {k: None for k in report.mapped("line_ids.expression_ids.label")}
+                return (
+                    query_res[0]
+                    if query_res
+                    else {
+                        k: None for k in report.mapped("line_ids.expression_ids.label")
+                    }
+                )
             return [(group_res["grouping_key"], group_res) for group_res in query_res]
 
         report = self.env["account.report"].browse(options["report_id"])
@@ -68,16 +84,22 @@ class HrIdseReportHandler(models.AbstractModel):
                     or employee.company_id.company_registry,
                     "nss": employee.ssnid,
                     "sbc": contract.l10n_mx_edi_sbc,
-                    "worker_type": dict(employee._fields["l10n_mx_edi_type"]._description_selection(self.env)).get(
-                        str(employee.l10n_mx_edi_type), ""
-                    ),
+                    "worker_type": dict(
+                        employee._fields["l10n_mx_edi_type"]._description_selection(
+                            self.env
+                        )
+                    ).get(str(employee.l10n_mx_edi_type), ""),
                     "worker_type_value": employee.l10n_mx_edi_type or "",
                     "wage_type": dict(
-                        contract._fields["l10n_mx_edi_salary_type"]._description_selection(self.env)
+                        contract._fields[
+                            "l10n_mx_edi_salary_type"
+                        ]._description_selection(self.env)
                     ).get(str(contract.l10n_mx_edi_salary_type), ""),
                     "wage_type_value": contract.l10n_mx_edi_salary_type or "",
                     "working_type": dict(
-                        contract._fields["l10n_mx_edi_working_type"]._description_selection(self.env)
+                        contract._fields[
+                            "l10n_mx_edi_working_type"
+                        ]._description_selection(self.env)
                     ).get(str(contract.l10n_mx_edi_working_type), ""),
                     "working_type_value": contract.l10n_mx_edi_working_type or "",
                     "date": fields.datetime.strftime(contract.date_start, "%d-%m-%Y"),
@@ -93,7 +115,9 @@ class HrIdseReportHandler(models.AbstractModel):
         return lines
 
     def action_get_imss_txt(self, options):
-        return self.with_context(**{"no_format": True, "print_mode": True, "raise": True})._l10n_mx_txt_export(options)
+        return self.with_context(
+            **{"no_format": True, "print_mode": True, "raise": True}
+        )._l10n_mx_txt_export(options)
 
     def _l10n_mx_txt_export(self, options):
         txt_data = self._get_lines(options)

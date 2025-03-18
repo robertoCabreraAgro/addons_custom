@@ -65,7 +65,9 @@ class TestPayslipDualPeriod(TransactionCase):
         payslip_form.date_to = date_to
         payslip = payslip_form.save()
         format_datef = date_from.strftime("%Y")
-        payslip_name = f"{slip_name} - {payslip.employee_id.legal_name} - {format_datef}"
+        payslip_name = (
+            f"{slip_name} - {payslip.employee_id.legal_name} - {format_datef}"
+        )
         self.assertEqual(payslip.name, payslip_name)
         self.contract.schedule_pay = "semi-annually"
         secondary_date_from = date_from = datetime.now().replace(day=1, month=6)
@@ -78,8 +80,14 @@ class TestPayslipDualPeriod(TransactionCase):
         payslip = payslip_form.save()
         year_half = date_from.replace(day=1, month=6)
         is_first_half = date_from < year_half
-        format_datef = f"1st semester of {date_from.year}" if is_first_half else f"2nd semester of {date_from.year}"
-        payslip_name = f"{slip_name} - {payslip.employee_id.legal_name} - {format_datef}"
+        format_datef = (
+            f"1st semester of {date_from.year}"
+            if is_first_half
+            else f"2nd semester of {date_from.year}"
+        )
+        payslip_name = (
+            f"{slip_name} - {payslip.employee_id.legal_name} - {format_datef}"
+        )
         self.assertEqual(payslip.name, payslip_name)
         self.contract.schedule_pay = "weekly"
         secondary_date_from = date_from = datetime.now()

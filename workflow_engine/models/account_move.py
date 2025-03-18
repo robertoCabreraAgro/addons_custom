@@ -4,7 +4,6 @@ from odoo import models
 class AccountMove(models.Model):
     _inherit = "account.move"
 
-
     def action_post(self):
         operation_line_obj = self.env["account.move.operation.line"]
         res = super().action_post()
@@ -13,9 +12,9 @@ class AccountMove(models.Model):
                 [
                     ("action", "=", "move"),
                     ("state", "=", "in_progress"),
-                    ("move_id", "=", move.id)
+                    ("move_id", "=", move.id),
                 ],
-                limit=1
+                limit=1,
             )
             if line:
                 line.action_done()

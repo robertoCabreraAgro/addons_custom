@@ -8,7 +8,12 @@ class SaleOrderLinePriceHistory(models.TransientModel):
     line_id = fields.Many2one("sale.order.line", "Sale order line")
     partner_id = fields.Many2one("res.partner", "Customer")
     product_id = fields.Many2one("product.product", "Product")
-    line_ids = fields.One2many("sale.order.line.price.history.line", "wizard_id", "Historical lines", readonly=True)
+    line_ids = fields.One2many(
+        "sale.order.line.price.history.line",
+        "wizard_id",
+        "Historical lines",
+        readonly=True,
+    )
     include_quotations = fields.Boolean()
 
     @api.onchange("partner_id", "product_id", "include_quotations")
@@ -18,7 +23,13 @@ class SaleOrderLinePriceHistory(models.TransientModel):
         states += ["draft", "sent"] if self.include_quotations else states
         domain = [("product_id", "=", self.product_id.id), ("state", "in", states)]
         if self.partner_id:
-            domain += [("order_partner_id", "child_of", self.partner_id.commercial_partner_id.ids)]
+            domain += [
+                (
+                    "order_partner_id",
+                    "child_of",
+                    self.partner_id.commercial_partner_id.ids,
+                )
+            ]
         vals = []
         lines = self.env["sale.order.line"].search(domain, order="id desc", limit=10)
         lines -= self.line_id

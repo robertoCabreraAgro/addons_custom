@@ -9,32 +9,36 @@ from odoo.osv import expression
 class HrContract(models.Model):
     _inherit = "hr.contract"
 
-
-#    final_yearly_costs = fields.Monetary(
-#        string="Employee Budget",
-#        compute="_compute_final_yearly_costs",
-#        store=True,
-#        readonly=False,
-#        tracking=True,
-#        help="Total yearly cost of the employee for the employer.",
-#    )
+    #    final_yearly_costs = fields.Monetary(
+    #        string="Employee Budget",
+    #        compute="_compute_final_yearly_costs",
+    #        store=True,
+    #        readonly=False,
+    #        tracking=True,
+    #        help="Total yearly cost of the employee for the employer.",
+    #    )
     structure_default_id = fields.Many2one(
-        comodel_name='hr.payroll.structure',
+        comodel_name="hr.payroll.structure",
         string="Structure",
         tracking=True,
     )
 
-
     # Override original method
     @api.constrains(
-        "employee_id", "state", "kanban_state", "date_start", "date_end", "structure_type_id"
+        "employee_id",
+        "state",
+        "kanban_state",
+        "date_start",
+        "date_end",
+        "structure_type_id",
     )
     def _check_current_contract(self):
         """Two contracts in state [incoming | open | close] cannot overlap"""
         for contract in self.filtered(
             lambda c: (
-                c.state not in ["draft", "cancel"] 
-                or c.state == "draft" and c.kanban_state == "done"
+                c.state not in ["draft", "cancel"]
+                or c.state == "draft"
+                and c.kanban_state == "done"
             )
             and c.employee_id
         ):
@@ -51,10 +55,18 @@ class HrContract(models.Model):
             ]
             if not contract.date_end:
                 start_domain = []
-                end_domain = ["|", ("date_end", ">=", contract.date_start), ("date_end", "=", False)]
+                end_domain = [
+                    "|",
+                    ("date_end", ">=", contract.date_start),
+                    ("date_end", "=", False),
+                ]
             else:
                 start_domain = [("date_start", "<=", contract.date_end)]
-                end_domain = ["|", ("date_end", ">", contract.date_start), ("date_end", "=", False)]
+                end_domain = [
+                    "|",
+                    ("date_end", ">", contract.date_start),
+                    ("date_end", "=", False),
+                ]
             domain = expression.AND([domain, start_domain, end_domain])
             if self.search_count(domain):
                 raise ValidationError(
@@ -66,31 +78,31 @@ class HrContract(models.Model):
                     )
                 )
 
-#    @api.depends(
-#        "wage",
-#        "l10n_mx_edi_food_voucher",
-#        "l10n_mx_edi_punctuality_bonus",
-#        "l10n_mx_edi_attendance_bonus",
-#        "l10n_mx_edi_feeding",
-#        "l10n_mx_edi_housing",
-#        "l10n_mx_edi_electric_ho",
-#        "l10n_mx_edi_internet_ho",
-#    )
-#    def _compute_final_yearly_costs(self):
-#        for contract in self:
-#            contract.final_yearly_costs = contract._get_advantages_costs() + (contract.wage * 12.5)
+    #    @api.depends(
+    #        "wage",
+    #        "l10n_mx_edi_food_voucher",
+    #        "l10n_mx_edi_punctuality_bonus",
+    #        "l10n_mx_edi_attendance_bonus",
+    #        "l10n_mx_edi_feeding",
+    #        "l10n_mx_edi_housing",
+    #        "l10n_mx_edi_electric_ho",
+    #        "l10n_mx_edi_internet_ho",
+    #    )
+    #    def _compute_final_yearly_costs(self):
+    #        for contract in self:
+    #            contract.final_yearly_costs = contract._get_advantages_costs() + (contract.wage * 12.5)
 
-#    def _get_advantages_costs(self):
-#        self.ensure_one()
-#        return 12.0 * (
-#            self.l10n_mx_edi_food_voucher
-#            + self.l10n_mx_edi_punctuality_bonus
-#            + self.l10n_mx_edi_attendance_bonus
-#            + self.l10n_mx_edi_feeding
-#            + self.l10n_mx_edi_housing
-#            + self.l10n_mx_edi_electric_ho
-#            + self.l10n_mx_edi_internet_ho
-#        )
+    #    def _get_advantages_costs(self):
+    #        self.ensure_one()
+    #        return 12.0 * (
+    #            self.l10n_mx_edi_food_voucher
+    #            + self.l10n_mx_edi_punctuality_bonus
+    #            + self.l10n_mx_edi_attendance_bonus
+    #            + self.l10n_mx_edi_feeding
+    #            + self.l10n_mx_edi_housing
+    #            + self.l10n_mx_edi_electric_ho
+    #            + self.l10n_mx_edi_internet_ho
+    #        )
 
     def _l10n_mx_edi_year_days(self, date=False):
         """Given a date return the number of days in the dates year taking into account leap ones
@@ -177,9 +189,9 @@ class HrContract(models.Model):
         - Christmas bonus
         """
         self.ensure_one()
-        return ((wage / 30) if wage else self.l10n_mx_edi_daily_wage) * self._get_integration_factor(
-            date_from, date_to
-        )
+        return (
+            (wage / 30) if wage else self.l10n_mx_edi_daily_wage
+        ) * self._get_integration_factor(date_from, date_to)
 
     # Override original method
     def _get_integrated_salary(self, wage=None, date_from=False, date_to=False):

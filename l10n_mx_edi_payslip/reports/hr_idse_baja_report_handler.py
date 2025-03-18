@@ -7,7 +7,9 @@ class HrIdseBajaReportHandler(models.AbstractModel):
     _inherit = "account.report.custom.handler"
 
     def _custom_options_initializer(self, report, options, previous_options=None):
-        res = super()._custom_options_initializer(report, options, previous_options=previous_options)
+        res = super()._custom_options_initializer(
+            report, options, previous_options=previous_options
+        )
         options["columns"] = list(options["columns"])
         options.setdefault("buttons", []).extend(
             (
@@ -23,11 +25,25 @@ class HrIdseBajaReportHandler(models.AbstractModel):
         return res
 
     def _report_custom_engine_idse_report(
-        self, expressions, options, date_scope, current_groupby, next_groupby, offset=0, limit=None, warnings=None
+        self,
+        expressions,
+        options,
+        date_scope,
+        current_groupby,
+        next_groupby,
+        offset=0,
+        limit=None,
+        warnings=None,
     ):
         def build_dict(report, current_groupby, query_res):
             if not current_groupby:
-                return query_res[0] if query_res else {k: None for k in report.mapped("line_ids.expression_ids.label")}
+                return (
+                    query_res[0]
+                    if query_res
+                    else {
+                        k: None for k in report.mapped("line_ids.expression_ids.label")
+                    }
+                )
             return [(group_res["grouping_key"], group_res) for group_res in query_res]
 
         report = self.env["account.report"].browse(options["report_id"])
@@ -61,7 +77,9 @@ class HrIdseBajaReportHandler(models.AbstractModel):
                     "employer_register": employee.l10n_mx_edi_employer_registration_id.name
                     or employee.company_id.company_registry,
                     "nss": employee.ssnid,
-                    "date": fields.datetime.strftime(employee.departure_date, "%d-%m-%Y"),
+                    "date": fields.datetime.strftime(
+                        employee.departure_date, "%d-%m-%Y"
+                    ),
                     "guide": employee.l10n_mx_edi_employer_registration_id.guide,
                     "employee_code": employee.barcode or employee.id,
                     "reason": employee.departure_reason_id.l10n_mx_code,
@@ -73,7 +91,9 @@ class HrIdseBajaReportHandler(models.AbstractModel):
         return lines
 
     def action_get_imss_txt(self, options):
-        return self.with_context(**{"no_format": True, "print_mode": True, "raise": True})._l10n_mx_txt_export(options)
+        return self.with_context(
+            **{"no_format": True, "print_mode": True, "raise": True}
+        )._l10n_mx_txt_export(options)
 
     def _l10n_mx_txt_export(self, options):
         txt_data = self._get_lines(options)

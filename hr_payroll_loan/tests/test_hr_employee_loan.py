@@ -25,12 +25,17 @@ class TestEmployeeLoan(TransactionCase):
     def prepare_account_settings(cls):
         """Method to set accounting settings for payroll, just if hr_payroll_account is installed.
         Avoid to add accounting to dependencies in this module."""
-        if not cls.env["ir.module.module"].search([("name", "=", "hr_payroll_account"), ("state", "=", "installed")]):
+        if not cls.env["ir.module.module"].search(
+            [("name", "=", "hr_payroll_account"), ("state", "=", "installed")]
+        ):
             return False
         cls.journal_id = (
             cls.env["account.journal"]
             .sudo()
-            .search([("type", "=", "general"), ("company_id", "=", cls.env.company.id)], limit=1)
+            .search(
+                [("type", "=", "general"), ("company_id", "=", cls.env.company.id)],
+                limit=1,
+            )
         )
         cls.journal_id.default_account_id = cls.env["account.account"].create(
             {
@@ -56,7 +61,9 @@ class TestEmployeeLoan(TransactionCase):
                     Command.clear(),
                     Command.create(
                         {
-                            "input_type_id": self.ref("hr_payroll_loan.hr_rule_input_loan_deduction_life_insurance"),
+                            "input_type_id": self.ref(
+                                "hr_payroll_loan.hr_rule_input_loan_deduction_life_insurance"
+                            ),
                         }
                     ),
                 ],
@@ -69,10 +76,14 @@ class TestEmployeeLoan(TransactionCase):
         payroll = self.create_payroll()
         payroll.compute_sheet()
         payroll.action_payslip_done()
-        self.assertEqual(self.loan_id.payslips_count, 1, "Payslip not applied in the loan.")
+        self.assertEqual(
+            self.loan_id.payslips_count, 1, "Payslip not applied in the loan."
+        )
         self.assertEqual(self.employee.loan_count, 1, "Loan not found.")
 
-        loan_line = payroll.line_ids.filtered(lambda line: line.code == "LED" and line.amount)
+        loan_line = payroll.line_ids.filtered(
+            lambda line: line.code == "LED" and line.amount
+        )
         self.assertEqual(
             len(loan_line),
             1,
@@ -94,7 +105,9 @@ class TestEmployeeLoan(TransactionCase):
         salary_rule_form.struct_id = self.struct_id
         salary_rule_form.condition_select = "none"
         salary_rule_form.amount_select = "code"
-        salary_rule_form.amount_python_compute = "result = sum(payslip.get_loans('cld_01').mapped('amount'))"
+        salary_rule_form.amount_python_compute = (
+            "result = sum(payslip.get_loans('cld_01').mapped('amount'))"
+        )
         salary_rule_form.save()
 
         second_loan = self.loan_id.copy()
@@ -117,12 +130,26 @@ class TestEmployeeLoan(TransactionCase):
         payroll.action_payslip_done()
         self.assertEqual(self.employee.loan_count, 3, "The employee must have 3 loans")
 
-        loan_line = payroll.line_ids.filtered(lambda line: line.code == "LED" and line.amount)
-        self.assertEqual(len(loan_line), 1, "There should be just one loan line in the payslip")
-        self.assertEqual(loan_line.amount, 1800, "The line amount must be the same than the amount in the loan")
+        loan_line = payroll.line_ids.filtered(
+            lambda line: line.code == "LED" and line.amount
+        )
+        self.assertEqual(
+            len(loan_line), 1, "There should be just one loan line in the payslip"
+        )
+        self.assertEqual(
+            loan_line.amount,
+            1800,
+            "The line amount must be the same than the amount in the loan",
+        )
 
-        loan_car_line = payroll.line_ids.filtered(lambda line: line.code == "CLD" and line.amount)
-        self.assertEqual(len(loan_car_line), 1, "There should be just one loan CLD line in the payslip")
+        loan_car_line = payroll.line_ids.filtered(
+            lambda line: line.code == "CLD" and line.amount
+        )
+        self.assertEqual(
+            len(loan_car_line),
+            1,
+            "There should be just one loan CLD line in the payslip",
+        )
         self.assertEqual(
             loan_car_line.amount,
             second_loan.amount + third_loan.amount,
@@ -143,35 +170,47 @@ class TestEmployeeLoan(TransactionCase):
         payroll = self.create_payroll()
         # Inactive Loan, at this point the loan is not confirmed and should not be called
         payroll.compute_sheet()
-        loan_line = payroll.line_ids.filtered(lambda line: line.code == "LED" and line.amount)
+        loan_line = payroll.line_ids.filtered(
+            lambda line: line.code == "LED" and line.amount
+        )
         self.assertFalse(loan_line, "The payslip shouldn't have loan line with amount")
         self.loan_id.compute_sheet()
         self.assertEqual(self.loan_id.state, "verify")
-        loan_line = payroll.line_ids.filtered(lambda line: line.code == "LED" and line.amount)
+        loan_line = payroll.line_ids.filtered(
+            lambda line: line.code == "LED" and line.amount
+        )
         self.assertFalse(loan_line, "The payslip shouldn't have loan line with amount")
         # Now Confirm
         self.loan_id.action_confirm()
         self.assertEqual(self.loan_id.state, "active")
         payroll.compute_sheet()
-        loan_line = payroll.line_ids.filtered(lambda line: line.code == "LED" and line.amount)
+        loan_line = payroll.line_ids.filtered(
+            lambda line: line.code == "LED" and line.amount
+        )
         self.assertTrue(loan_line, "The payslip should have loan line with amount")
         # Now set in edition mode
         self.loan_id.action_unlocked()
         self.assertEqual(self.loan_id.state, "unlocked")
         payroll.compute_sheet()
-        loan_line = payroll.line_ids.filtered(lambda line: line.code == "LED" and line.amount)
+        loan_line = payroll.line_ids.filtered(
+            lambda line: line.code == "LED" and line.amount
+        )
         self.assertFalse(loan_line, "The payslip shouldn't have loan line with amount")
         # Come back to active
         self.loan_id.action_confirm()
         payroll.compute_sheet()
-        loan_line = payroll.line_ids.filtered(lambda line: line.code == "LED" and line.amount)
+        loan_line = payroll.line_ids.filtered(
+            lambda line: line.code == "LED" and line.amount
+        )
         self.assertTrue(loan_line, "The payslip must have a loan line")
         # Date, period out of payslip period
         month = payroll.date_from.month
         self.loan_id.date_from = payroll.date_from.replace(month=month - 1)
         self.loan_id.date_to = payroll.date_to.replace(month=month - 1)
         payroll.compute_sheet()
-        loan_line = payroll.line_ids.filtered(lambda line: line.code == "LED" and line.amount)
+        loan_line = payroll.line_ids.filtered(
+            lambda line: line.code == "LED" and line.amount
+        )
         self.assertFalse(loan_line, "There shouldn't be any loan line in the payslip")
 
     def test_004_loan_count(self):
@@ -179,16 +218,22 @@ class TestEmployeeLoan(TransactionCase):
         payroll = self.create_payroll()
         payroll.compute_sheet()
         payroll.action_payslip_done()
-        self.assertEqual(self.loan_id.payslips_count, 1, "Payslip not applied in the loan.")
+        self.assertEqual(
+            self.loan_id.payslips_count, 1, "Payslip not applied in the loan."
+        )
 
         payroll2 = self.create_payroll()
         payroll2.compute_sheet()
         payroll2.action_payslip_done()
-        self.assertEqual(self.loan_id.payslips_count, 2, "Payslip not applied in the loan.")
+        self.assertEqual(
+            self.loan_id.payslips_count, 2, "Payslip not applied in the loan."
+        )
 
         # Force state and check if a cancelled payslip affects count
         payroll.action_payslip_cancel()
-        self.assertEqual(self.loan_id.payslips_count, 1, "Loan should have just 1 Payslip.")
+        self.assertEqual(
+            self.loan_id.payslips_count, 1, "Loan should have just 1 Payslip."
+        )
 
     def test_005_timeless_loan(self):
         """Test when the loan is a timeless or with a period undefined.
@@ -214,7 +259,9 @@ class TestEmployeeLoan(TransactionCase):
         payslip_loan_line = payroll.line_ids.filtered(lambda line: line.code == "LED")
         self.assertEqual(payslip_loan_line.total, loan_amount)
         payroll.action_payslip_done()
-        self.assertEqual(len(loan.loan_line_ids), 1, "Now there should be just one line in the loan")
+        self.assertEqual(
+            len(loan.loan_line_ids), 1, "Now there should be just one line in the loan"
+        )
         loan_line = loan.loan_line_ids
         self.assertEqual(loan_line.amount, loan_amount)
         self.assertEqual(loan_line.cumulative_amount, loan_amount)
@@ -225,7 +272,9 @@ class TestEmployeeLoan(TransactionCase):
         payslip_loan_line = payroll.line_ids.filtered(lambda line: line.code == "LED")
         self.assertEqual(payslip_loan_line.total, loan_amount)
         payroll.action_payslip_done()
-        self.assertEqual(len(loan.loan_line_ids), 2, "Now there should two lines in the loan")
+        self.assertEqual(
+            len(loan.loan_line_ids), 2, "Now there should two lines in the loan"
+        )
         loan_line = loan.loan_line_ids[-1]
         self.assertEqual(loan_line.amount, loan_amount)
         self.assertEqual(loan_line.cumulative_amount, loan_amount * 2)
@@ -234,9 +283,13 @@ class TestEmployeeLoan(TransactionCase):
         payroll = self.create_payroll()
         payroll.compute_sheet()
         payslip_loan_line = payroll.line_ids.filtered(lambda line: line.code == "LED")
-        payslip_loan_line.write({"amount": loan_amount + 500, "total": loan_amount + 500})
+        payslip_loan_line.write(
+            {"amount": loan_amount + 500, "total": loan_amount + 500}
+        )
         payroll.action_payslip_done()
-        self.assertEqual(len(loan.loan_line_ids), 3, "Now there should be three lines in the loan")
+        self.assertEqual(
+            len(loan.loan_line_ids), 3, "Now there should be three lines in the loan"
+        )
         loan_line = loan.loan_line_ids[-1]
         self.assertEqual(
             loan_line.amount,
@@ -258,21 +311,37 @@ class TestEmployeeLoan(TransactionCase):
         )
         self.loan_id.compute_sheet()
         self.assertEqual(self.loan_id.state, "verify")
-        self.assertTrue(self.loan_id.loan_line_ids, "This option must generate the table")
+        self.assertTrue(
+            self.loan_id.loan_line_ids, "This option must generate the table"
+        )
         self.loan_id.action_confirm()
 
         # Table check
-        self.assertEqual(len(self.loan_id.loan_line_ids), payment_term, "The table should be the same as the term")
-        lines = self.loan_id.loan_line_ids.filtered(lambda line: line.amount != loan_amount)
+        self.assertEqual(
+            len(self.loan_id.loan_line_ids),
+            payment_term,
+            "The table should be the same as the term",
+        )
+        lines = self.loan_id.loan_line_ids.filtered(
+            lambda line: line.amount != loan_amount
+        )
         self.assertFalse(lines, "All lines should have the same amount")
-        self.assertEqual(self.loan_id.total_amount, loan_amount * payment_term, "The loan total amount is incorrect")
+        self.assertEqual(
+            self.loan_id.total_amount,
+            loan_amount * payment_term,
+            "The loan total amount is incorrect",
+        )
         # Amount check
         first_line = self.loan_id.loan_line_ids[0]
-        self.assertEqual(first_line.amount, loan_amount, "The amount expected is the loan amount")
+        self.assertEqual(
+            first_line.amount, loan_amount, "The amount expected is the loan amount"
+        )
         self.assertEqual(first_line.cumulative_amount, loan_amount)
         self.assertEqual(first_line.remaining_amount, loan_amount * (payment_term - 1))
         last_line = self.loan_id.loan_line_ids[-1]
-        self.assertEqual(last_line.amount, loan_amount, "The amount expected is the loan amount")
+        self.assertEqual(
+            last_line.amount, loan_amount, "The amount expected is the loan amount"
+        )
         self.assertEqual(last_line.cumulative_amount, loan_amount * payment_term)
         self.assertEqual(last_line.remaining_amount, 0)
         # Create payroll
@@ -283,8 +352,14 @@ class TestEmployeeLoan(TransactionCase):
         payroll.action_payslip_done()
         # Now check the loan after the payslip confirm
         loan_line = self.loan_id.loan_line_ids.filtered("payslip_id")
-        self.assertEqual(len(loan_line), 1, "There must be one line with a payslip linked")
-        self.assertEqual(loan_line, first_line, "The payslip should be assigned to the first loan line")
+        self.assertEqual(
+            len(loan_line), 1, "There must be one line with a payslip linked"
+        )
+        self.assertEqual(
+            loan_line,
+            first_line,
+            "The payslip should be assigned to the first loan line",
+        )
         self.assertEqual(loan_line.amount, loan_amount)
         self.assertEqual(loan_line.cumulative_amount, loan_amount)
         self.assertEqual(loan_line.remaining_amount, loan_amount * (payment_term - 1))
@@ -295,7 +370,11 @@ class TestEmployeeLoan(TransactionCase):
         self.assertEqual(payslip_loan_line.total, loan_amount)
         payroll.action_payslip_done()
         loan_line = self.loan_id.loan_line_ids.filtered("payslip_id")
-        self.assertEqual(len(loan_line), 2, "Now there must be two lines in the loan with a payslip linked")
+        self.assertEqual(
+            len(loan_line),
+            2,
+            "Now there must be two lines in the loan with a payslip linked",
+        )
         loan_line = loan_line[-1]
         self.assertEqual(loan_line.amount, loan_amount)
         self.assertEqual(loan_line.cumulative_amount, loan_amount * 2)
@@ -304,10 +383,14 @@ class TestEmployeeLoan(TransactionCase):
         payroll = self.create_payroll()
         payroll.compute_sheet()
         payslip_loan_line = payroll.line_ids.filtered(lambda line: line.code == "LED")
-        payslip_loan_line.write({"amount": loan_amount + 500, "total": loan_amount + 500})
+        payslip_loan_line.write(
+            {"amount": loan_amount + 500, "total": loan_amount + 500}
+        )
         payroll.action_payslip_done()
         loan_line = self.loan_id.loan_line_ids.filtered("payslip_id")
-        self.assertEqual(len(loan_line), 3, "Now there should be three lines in the loan")
+        self.assertEqual(
+            len(loan_line), 3, "Now there should be three lines in the loan"
+        )
         loan_line = loan_line[-1]
         self.assertEqual(
             loan_line.amount,
@@ -315,7 +398,9 @@ class TestEmployeeLoan(TransactionCase):
             "The amount in the new loan line should be consistent with the amount in the payslip line",
         )
         self.assertEqual(loan_line.cumulative_amount, (loan_amount * 3 + 500))
-        self.assertEqual(loan_line.remaining_amount, loan_amount * (payment_term - 3) - 500)
+        self.assertEqual(
+            loan_line.remaining_amount, loan_amount * (payment_term - 3) - 500
+        )
 
     def test_007_check_total_amount_inverse(self):
         """Test that if we set the total amount instead the amount, the regular amount will be changed automacally"""
@@ -325,7 +410,11 @@ class TestEmployeeLoan(TransactionCase):
                 "payment_term": 12,
             }
         )
-        self.assertEqual(self.loan_id.amount, 1000, "The expected amount is 1000 (total_amount / payment_term)")
+        self.assertEqual(
+            self.loan_id.amount,
+            1000,
+            "The expected amount is 1000 (total_amount / payment_term)",
+        )
 
     def test_008_block_validation_no_valid_loan(self):
         """Check if the validation of a loan is being perform before confirm it again"""
@@ -340,7 +429,9 @@ class TestEmployeeLoan(TransactionCase):
         )
         self.loan_id.compute_sheet()
         self.assertEqual(self.loan_id.state, "verify")
-        self.assertTrue(self.loan_id.loan_line_ids, "This option must generate the table")
+        self.assertTrue(
+            self.loan_id.loan_line_ids, "This option must generate the table"
+        )
         self.loan_id.action_confirm()
 
         # Create payroll
@@ -351,7 +442,9 @@ class TestEmployeeLoan(TransactionCase):
         payroll = self.create_payroll()
         payroll.compute_sheet()
         payslip_loan_line = payroll.line_ids.filtered(lambda line: line.code == "LED")
-        payslip_loan_line.write({"amount": loan_amount + 500, "total": loan_amount + 500})
+        payslip_loan_line.write(
+            {"amount": loan_amount + 500, "total": loan_amount + 500}
+        )
         payroll.action_payslip_done()
 
         self.loan_id.action_unlocked()
@@ -383,11 +476,14 @@ class TestEmployeeLoan(TransactionCase):
         )
         self.loan_id.compute_sheet()
         self.assertEqual(self.loan_id.state, "verify")
-        self.assertTrue(self.loan_id.loan_line_ids, "This option must generate the table")
+        self.assertTrue(
+            self.loan_id.loan_line_ids, "This option must generate the table"
+        )
         self.loan_id.action_confirm()
         self.loan_id.action_unlocked()
         with self.assertRaises(
-            UserError, msg="Only Managers who are allow to force validate loans can perform this operation"
+            UserError,
+            msg="Only Managers who are allow to force validate loans can perform this operation",
         ):
             self.loan_id.action_force_confirm()
         # Give permissions and try again to finish the test
@@ -413,7 +509,10 @@ class TestEmployeeLoan(TransactionCase):
         payslip_loan_line.write({"amount": 0, "total": 0})
         payroll.action_payslip_done()
         loan_line = self.loan_id.loan_line_ids.filtered("payslip_id")
-        self.assertFalse(loan_line, "The payslip should not be linked to the loan, the amount in the payslip is 0")
+        self.assertFalse(
+            loan_line,
+            "The payslip should not be linked to the loan, the amount in the payslip is 0",
+        )
 
     def test_011_multi_loan_fixed_term_values(self):
         """Test the values of the loan lines when the loan has a fixed term"""
@@ -431,11 +530,19 @@ class TestEmployeeLoan(TransactionCase):
             self.assertEqual(rec.payslips_count, 1, "Payslip not applied in loan.")
             self.assertEqual(rec.total_amount, 5000, "The total amount is incorrect.")
             self.assertEqual(rec.amount_paid, 1000, "The amount paid is incorrect.")
-            self.assertEqual(rec.amount_remaining, 4000, "The remaining amount is incorrect.")
-            line = rec.loan_line_ids[0]
-            self.assertEqual(line.amount, rec.amount, "The amount is incorrect on the first line is incorrect.")
             self.assertEqual(
-                line.cumulative_amount, rec.amount, "The cumulative amount on the first line is incorrect."
+                rec.amount_remaining, 4000, "The remaining amount is incorrect."
+            )
+            line = rec.loan_line_ids[0]
+            self.assertEqual(
+                line.amount,
+                rec.amount,
+                "The amount is incorrect on the first line is incorrect.",
+            )
+            self.assertEqual(
+                line.cumulative_amount,
+                rec.amount,
+                "The cumulative amount on the first line is incorrect.",
             )
             self.assertEqual(
                 line.remaining_amount,
@@ -443,8 +550,18 @@ class TestEmployeeLoan(TransactionCase):
                 "The remaining amount on the first line is incorrect.",
             )
             line = rec.loan_line_ids[-1]
-            self.assertEqual(line.amount, rec.amount, "The amount is incorrect on the last line is incorrect.")
             self.assertEqual(
-                line.cumulative_amount, rec.total_amount, "The cumulative amount on the last line is incorrect."
+                line.amount,
+                rec.amount,
+                "The amount is incorrect on the last line is incorrect.",
             )
-            self.assertEqual(line.remaining_amount, 0, "The remaining amount on the last line is incorrect.")
+            self.assertEqual(
+                line.cumulative_amount,
+                rec.total_amount,
+                "The cumulative amount on the last line is incorrect.",
+            )
+            self.assertEqual(
+                line.remaining_amount,
+                0,
+                "The remaining amount on the last line is incorrect.",
+            )

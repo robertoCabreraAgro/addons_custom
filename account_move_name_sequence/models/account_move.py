@@ -4,7 +4,6 @@ from odoo import api, fields, models
 class AccountMove(models.Model):
     _inherit = "account.move"
 
-
     name = fields.Char(compute="_compute_name_by_sequence")
     highest_name = fields.Char(compute=False)
     made_sequence_gap = fields.Boolean(compute=False)
@@ -12,14 +11,13 @@ class AccountMove(models.Model):
     sequence_prefix = fields.Char(compute=False)
     sequence_number = fields.Integer(compute=False)
 
-
-    _name_state_diagonal = models.Constraint(
-        "CHECK(COALESCE(name, '') NOT IN ('/', '') OR state <> 'posted')",
-        "A move can not be posted with name \"/\" or empty value.\n"
-        "Check the journal sequence",
-    ),
-    
-
+    _name_state_diagonal = (
+        models.Constraint(
+            "CHECK(COALESCE(name, '') NOT IN ('/', '') OR state <> 'posted')",
+            'A move can not be posted with name "/" or empty value.\n'
+            "Check the journal sequence",
+        ),
+    )
 
     @api.depends("state", "journal_id", "date")
     def _compute_name_by_sequence(self):
@@ -59,7 +57,7 @@ class AccountMove(models.Model):
         return self._compute_name_by_sequence()
 
     # Override core method
-    @api.onchange('name', 'highest_name')
+    @api.onchange("name", "highest_name")
     def _onchange_name_warning(self):
         pass
 

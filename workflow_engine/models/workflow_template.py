@@ -7,16 +7,15 @@ class WorkflowTemplate(models.Model):
     _order = "sequence"
     _check_company_auto = True
 
-
     name = fields.Char("Type", required=True, translate=True)
     active = fields.Boolean(
         default=True,
-        help="If unchecked, it will allow you to hide the action without removing it."
+        help="If unchecked, it will allow you to hide the action without removing it.",
     )
     sequence = fields.Integer(default=0)
     company_ids = fields.Many2many(
-        comodel_name='res.company',
-        string='Companies',
+        comodel_name="res.company",
+        string="Companies",
         required=True,
         default=lambda self: self.env.company,
         readonly=False,

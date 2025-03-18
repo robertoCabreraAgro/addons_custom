@@ -31,7 +31,8 @@ class HrAttendance(models.Model):
 
             day_period = "morning" if not record._is_first_attendace() else "afternoon"
             resource = record.employee_id.resource_calendar_id.attendance_ids.filtered(
-                lambda a: a.dayofweek == str(check_in.isocalendar()[2] - 1) and a.day_period == day_period
+                lambda a: a.dayofweek == str(check_in.isocalendar()[2] - 1)
+                and a.day_period == day_period
             )
             if len(resource) != 1:
                 continue
@@ -50,8 +51,8 @@ class HrAttendance(models.Model):
         If the company field exclude_previous_work_time is True this method sets the pre-work time as 0.
         """
 
-        pre_work_time, work_duration, post_work_time, planned_work_duration = super()._get_pre_post_work_time(
-            employee, working_times, attendance_date
+        pre_work_time, work_duration, post_work_time, planned_work_duration = (
+            super()._get_pre_post_work_time(employee, working_times, attendance_date)
         )
         if employee.company_id.exclude_previous_work_time:
             pre_work_time = 0

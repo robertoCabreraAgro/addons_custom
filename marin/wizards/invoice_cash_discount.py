@@ -12,10 +12,16 @@ class AccountInvoiceCashDiscount(models.TransientModel):
     @api.model
     def default_get(self, fields_list):
         res = super().default_get(fields_list)
-        if "move_ids" in fields_list and self._context.get("active_model") == "account.move" and "move_ids" not in res:
+        if (
+            "move_ids" in fields_list
+            and self._context.get("active_model") == "account.move"
+            and "move_ids" not in res
+        ):
             moves = self.env["account.move"].browse(self._context.get("active_ids", []))
             if any(move.state != "posted" for move in moves):
-                raise UserError(_("You can only register cash discounts on posted moves."))
+                raise UserError(
+                    _("You can only register cash discounts on posted moves.")
+                )
             res["move_ids"] = [Command.set(moves.ids)]
         return res
 
@@ -26,5 +32,7 @@ class AccountInvoiceCashDiscount(models.TransientModel):
             for line in move.invoice_line_ids:
                 if not line.product_id:
                     continue
-                line.write({"price_unit": line.price_unit * (1 - (self.amount / 100.0))})
+                line.write(
+                    {"price_unit": line.price_unit * (1 - (self.amount / 100.0))}
+                )
             move._post(soft=False)

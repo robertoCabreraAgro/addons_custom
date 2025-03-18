@@ -24,11 +24,19 @@ class TestAnalyticLine(TestAccountAnalyticAccount):
             }
         )
         car_1 = self.env["fleet.vehicle"].create(
-            {"model_id": vmodel.id, "driver_id": self.env.user.partner_id.id, "plan_to_change_car": False}
+            {
+                "model_id": vmodel.id,
+                "driver_id": self.env.user.partner_id.id,
+                "plan_to_change_car": False,
+            }
         )
 
         car_2 = self.env["fleet.vehicle"].create(
-            {"model_id": vmodel.id, "driver_id": self.env.user.partner_id.id, "plan_to_change_car": False}
+            {
+                "model_id": vmodel.id,
+                "driver_id": self.env.user.partner_id.id,
+                "plan_to_change_car": False,
+            }
         )
         out_invoice = self.env["account.move"].create(
             [
@@ -56,7 +64,9 @@ class TestAnalyticLine(TestAccountAnalyticAccount):
         move_line = out_invoice.line_ids[0]
         out_invoice.action_post()
         analytic_line = (
-            self.env["account.analytic.line"].search([("move_line_id", "in", move_line.ids)]).sorted("amount")[0]
+            self.env["account.analytic.line"]
+            .search([("move_line_id", "in", move_line.ids)])
+            .sorted("amount")[0]
         )
         self.assertEqual(move_line.vehicle_id, car_1)
         self.assertEqual(analytic_line.vehicle_id, move_line.vehicle_id)
