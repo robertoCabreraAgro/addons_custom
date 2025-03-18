@@ -3,7 +3,7 @@ import logging
 import re
 import time
 from calendar import monthrange
-from datetime import time as dt_time, timedelta
+from datetime import time as dt_time, timedelta, datetime
 from io import BytesIO
 
 from lxml import etree, objectify
@@ -1618,12 +1618,12 @@ class HrPayslip(models.Model):
         # -----------------------
 
         # - Compute certificate data
-        time_payslip = fields.Datetime.strptime(
+        time_payslip = datetime.strptime(
             self.l10n_mx_edi_time_payslip, DEFAULT_SERVER_TIME_FORMAT
         ).time()
         values.update(
             {
-                "date": fields.Datetime.combine(
+                "date": datetime.combine(
                     fields.Datetime.from_string(self.l10n_mx_edi_expedition_date),
                     time_payslip,
                 ).strftime("%Y-%m-%dT%H:%M:%S"),
@@ -1778,8 +1778,8 @@ class HrPayslip(models.Model):
         self.ensure_one()
         tz = pytz_timezone(self.employee_id.tz or self.env.user.tz)
         dt_from = max(self.date_from, self.contract_id.date_start)
-        date_from = fields.Datetime.combine(dt_from, dt_time(0, 0), tz)
-        date_to = fields.Datetime.combine(self.date_to, dt_time(23, 59, 59), tz)
+        date_from = datetime.combine(dt_from, dt_time(0, 0), tz)
+        date_to = datetime.combine(self.date_to, dt_time(23, 59, 59), tz)
         resources = self.contract_id.resource_calendar_id._get_resources_day_total(
             date_from, date_to
         )[False]
@@ -2034,8 +2034,8 @@ class HrPayslip(models.Model):
         """Cast payslips dates to datetime considering time zone. Used to compare dates on salary rules."""
         tz = timezone or pytz_timezone(self.employee_id.tz or self.env.user.tz)
         # Creating dates with Timezone, 'imitating' odoo behavior.
-        date_from = fields.Datetime.combine(self.date_from, dt_time(0, 0), tz)
-        date_to = fields.Datetime.combine(self.date_to, dt_time(23, 59, 59), tz)
+        date_from = datetime.combine(self.date_from, dt_time(0, 0), tz)
+        date_to = datetime.combine(self.date_to, dt_time(23, 59, 59), tz)
         # Storing datetime equivalent in UTC. 'Imitating' odoo
         date_from = date_from.astimezone()
         date_to = date_to.astimezone()
@@ -2199,12 +2199,12 @@ class HrPayslip(models.Model):
         time_zone = (
             company.partner_id.commercial_partner_id._l10n_mx_edi_get_cfdi_timezone()
         )
-        date_time_mx = fields.Datetime.now(time_zone)
+        date_time_mx = datetime.now(time_zone)
         date_in_range = self.l10n_mx_edi_payment_date + timedelta(days=3)
         time_mx = date_time_mx.time()
         l10n_mx_edi_expedition_date = date_time_mx.date()
         l10n_mx_edi_time_payslip = time_mx.strftime(DEFAULT_SERVER_TIME_FORMAT)
-        date_time_mx = fields.Datetime.strftime(
+        date_time_mx = datetime.strftime(
             date_time_mx, DEFAULT_SERVER_DATETIME_FORMAT
         )
 
@@ -2222,15 +2222,15 @@ class HrPayslip(models.Model):
                     )
                 ) - timedelta(days=1)
                 l10n_mx_edi_time_payslip = "23:59:00"
-            elif date_time_mx < fields.Datetime.strftime(
-                fields.Datetime.combine(date_in_range, time_mx, time_zone),
+            elif date_time_mx < datetime.strftime(
+                datetime.combine(date_in_range, time_mx, time_zone),
                 DEFAULT_SERVER_DATETIME_FORMAT,
             ):
                 l10n_mx_edi_expedition_date = self.l10n_mx_edi_payment_date
-            elif date_time_mx <= fields.Datetime.strftime(
-                fields.Datetime.combine(
+            elif date_time_mx <= datetime.strftime(
+                datetime.combine(
                     date_in_range,
-                    fields.Datetime.strptime(
+                    datetime.strptime(
                         "23:59:00", DEFAULT_SERVER_TIME_FORMAT
                     ).time(),
                     time_zone,
@@ -2244,10 +2244,10 @@ class HrPayslip(models.Model):
             return False
 
         date_in_range = self.l10n_mx_edi_expedition_date + timedelta(days=3)
-        date_in_range = fields.Datetime.strftime(
-            fields.Datetime.combine(
+        date_in_range = datetime.strftime(
+            datetime.combine(
                 date_in_range,
-                fields.Datetime.strptime(
+                datetime.strptime(
                     self.l10n_mx_edi_time_payslip, DEFAULT_SERVER_TIME_FORMAT
                 ).time(),
                 time_zone,
