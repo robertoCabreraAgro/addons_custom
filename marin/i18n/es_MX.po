@@ -3376,7 +3376,12 @@ msgstr "Seguimientos de rutas"
 #. module: marin
 #: model:ir.model,name:marin.model_stock_picking_type
 msgid "Picking Type"
-msgstr "Tipo de recolección"
+msgstr "Tipo de operación"
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_stock_picking_tracker_form
+msgid "Pickings"
+msgstr "Traslados"
 
 #. module: marin
 #. odoo-python

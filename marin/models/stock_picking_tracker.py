@@ -174,7 +174,7 @@ class StockPickingTracker(models.Model):
                 company_id = vals.get("company_id", self.env.company.id)
                 vals["name"] = self.env["ir.sequence"].with_company(
                     company_id
-                ).next_by_code("picking.tracker") or self.env._("New")
+                ).next_by_code("stock.picking.tracker") or self.env._("New")
         return super().create(vals_list)
 
     @api.depends("vehicle_id")
@@ -410,3 +410,19 @@ class StockPickingTracker(models.Model):
         """Action to get fuel level from GPS at end a route"""
         self.ensure_one()
         self.fuel_end = self.vehicle_id._get_gps_fuel_level()
+
+    def action_view_pickings(self):
+        self.ensure_one()
+        action = self.env["ir.actions.actions"]._for_xml_id("stock.action_picking_tree_all")
+        pickings = self.picking_ids
+        if len(pickings) > 1:
+            action['domain'] = [('id', 'in', pickings.ids)]
+        elif pickings:
+            form_view = [(self.env.ref('stock.view_picking_form').id, 'form')]
+            if 'views' in action:
+                action['views'] = form_view + [(state,view) for state,view in action['views'] if view != 'form']
+            else:
+                action['views'] = form_view
+            action['res_id'] = pickings.id
+        action["context"] = dict(self._context, create=False, edit=False)
+        return action
