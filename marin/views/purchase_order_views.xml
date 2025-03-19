@@ -179,12 +179,6 @@
                 <attribute name="decoration-info">not display_type and reception_status == 'over full'</attribute>
                 <attribute name="decoration-success">not display_type and reception_status == 'full'</attribute>
             </xpath>
-            <!-- This is a fix, delete when Odoo fix it in core -->
-            <xpath expr="//field[@name='tax_ids']" position="attributes">
-                <attribute
-                    name="domain"
-                >[('type_tax_use', '=', 'purchase'), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id), ('active', '=', True)]</attribute>
-            </xpath>
             <field name="user_id" position="before">
                 <field name="is_user_id_editable" invisible="1" />
             </field>
