@@ -10,6 +10,7 @@ _logger = logging.getLogger(__name__)
 class GpsTrackingDevice(models.Model):
     _name = "gps.tracking.device"
     _description = "GPS Tracking Device"
+    _rec_name = "imei"
 
     imei = fields.Char(
         string="IMEI",

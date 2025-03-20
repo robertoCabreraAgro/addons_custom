@@ -13,8 +13,18 @@ class GpsTrackingPoint(models.Model):
     _description = "GPS Tracking Point"
     _order = "timestamp desc"
 
-    device_id = fields.Many2one(
-        "gps.tracking.device", string="Device", required=True, ondelete="cascade"
+    device_id = fields.Many2one("gps.tracking.device", string="Device", required=True, ondelete="cascade")
+    vehicle_id = fields.Many2one(
+        comodel_name="fleet.vehicle",
+        string="Vehícle",
+        related="device_id.vehicle_id",
+        store=True,
+        readonly=True,
+    )
+    driver_name = fields.Char(
+        string="Driver",
+        compute="_compute_driver_name",
+        store=True,
     )
     timestamp = fields.Datetime(string="Timestamp", required=True)
     priority = fields.Integer(string="Priority")
@@ -25,9 +35,7 @@ class GpsTrackingPoint(models.Model):
     event_id = fields.Integer(string="Event ID")
     latitude = fields.Float(string="Latitude", digits=(16, 7))
     longitude = fields.Float(string="Longitude", digits=(16, 7))
-    the_point = fields.GeoPoint(
-        string="Position", srid=3857, compute="_compute_the_point", store=True
-    )
+    the_point = fields.GeoPoint(string="Position", srid=3857, compute="_compute_the_point", store=True)
     address = fields.Char(string="Address", compute="_compute_address", store=True)
     ignition = fields.Integer(string="Ignition")
     movement = fields.Integer(string="Movement")
@@ -44,9 +52,7 @@ class GpsTrackingPoint(models.Model):
     fuel_level = fields.Integer(string="Fuel Level")
     wheel_speed = fields.Float(string="Wheel Speed")
     engine_speed_rpm = fields.Integer(string="Engine Speed (RPM)")
-    engine_total_hours_counted = fields.Float(
-        string="Engine Total Hours Counted", digits=(16, 2)
-    )
+    engine_total_hours_counted = fields.Float(string="Engine Total Hours Counted", digits=(16, 2))
     engine_temperature = fields.Float(string="Engine Temperature", digits=(16, 2))
     parking_brake_state = fields.Integer(string="Parking Brake State")
     central_lock = fields.Integer(string="Central Lock")
@@ -63,43 +69,48 @@ class GpsTrackingPoint(models.Model):
     auto_geofence = fields.Integer(string="Auto Geofence")
     event_type = fields.Char(string="Event Type")
 
+    @api.depends("device_id")
+    def _compute_driver_name(self):
+        for point in self:
+            point.driver_name = point.device_id.driver_name
+
     @api.depends("latitude", "longitude")
     def _compute_the_point(self):
         transformer = Transformer.from_crs(4326, 3857, always_xy=True)
-        for rec in self:
-            if rec.latitude and rec.longitude and not rec.the_point:
+        for point in self:
+            if point.latitude and point.longitude and not point.the_point:
                 _logger.info(
-                    f"Transformando latitud {rec.latitude} y longitud {rec.longitude} de SRID 4326 a SRID 3857."
+                    f"Transformando latitud {point.latitude} y longitud {point.longitude} de SRID 4326 a SRID 3857."
                 )
-                x, y = transformer.transform(rec.longitude, rec.latitude)
-                rec.the_point = f"POINT({x} {y})"
-            elif rec.the_point:
-                _logger.info(f"Punto ya calculado: {rec.the_point}")
+                x, y = transformer.transform(point.longitude, point.latitude)
+                point.the_point = f"POINT({x} {y})"
+            elif point.the_point:
+                _logger.info(f"Punto ya calculado: {point.the_point}")
 
     def _compute_address(self):
         #     api_key = ''  #Sustituye por tu clave de API
-        for rec in self:
-            rec.address = ""
+        for point in self:
+            point.address = ""
 
-    #         _logger.info(f"Ejecutando _compute_address para ID {rec.id} con latitude={rec.latitude}, longitude={rec.longitude}")
-    #         if rec.latitude and rec.longitude:
-    #             url = f"https://maps.googleapis.com/maps/api/geocode/json?latlng={rec.latitude},{rec.longitude}&key={api_key}"
+    #         _logger.info(f"Ejecutando _compute_address para ID {point.id} con latitude={point.latitude}, longitude={point.longitude}")
+    #         if point.latitude and point.longitude:
+    #             url = f"https://maps.googleapis.com/maps/api/geocode/json?latlng={point.latitude},{point.longitude}&key={api_key}"
     #             try:
     #                 response = requests.get(url)
     #                 if response.status_code == 200:
     #                     data = response.json()
     #                     if data['results']:
-    #                         rec.address = data['results'][0]['formatted_address']
-    #                         _logger.info(f"Dirección obtenida para ID {rec.id}: {rec.address}")
+    #                         point.address = data['results'][0]['formatted_address']
+    #                         _logger.info(f"Dipointción obtenida para ID {point.id}: {point.address}")
     #                     else:
-    #                         rec.address = "Address not found"
-    #                         _logger.warning(f"Sin resultados para las coordenadas ID {rec.id}: {url}")
+    #                         point.address = "Address not found"
+    #                         _logger.warning(f"Sin resultados para las coordenadas ID {point.id}: {url}")
     #                 else:
-    #                     _logger.error(f"Error al consultar la API de Google Maps para ID {rec.id}: {response.status_code}")
-    #                     rec.address = "Error fetching address"
+    #                     _logger.error(f"Error al consultar la API de Google Maps para ID {point.id}: {response.status_code}")
+    #                     point.address = "Error fetching address"
     #             except Exception as e:
-    #                 _logger.exception(f"Excepción al consultar la API de Google Maps para ID {rec.id}: {e}")
-    #                 rec.address = "Error fetching address"
+    #                 _logger.exception(f"Excepción al consultar la API de Google Maps para ID {point.id}: {e}")
+    #                 point.address = "Error fetching address"
     #         else:
-    #             rec.address = "Coordinates not set"
-    #             _logger.warning(f"Coordenadas no establecidas para ID {rec.id}")
+    #             point.address = "Coordinates not set"
+    #             _logger.warning(f"Coordenadas no establecidas para ID {point.id}")

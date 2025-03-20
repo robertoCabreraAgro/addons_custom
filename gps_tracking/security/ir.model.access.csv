@@ -3,3 +3,4 @@ access_gps_tracking_data_history,gps_tracking_data_history,model_gps_tracking_da
 access_gps_tracking_device_user,gps.tracking.device user,model_gps_tracking_device,group_gps_tracking_manager,1,1,1,1
 access_gps_tracking_point_user,gps.tracking.point user,model_gps_tracking_point,group_gps_tracking_manager,1,1,1,1
 access_gps_geofence_user,gps.geofence user,model_gps_geofence,group_gps_tracking_manager,1,1,1,1
+access_gps_tracking_report,gps.tracking.report,model_gps_tracking_report,group_gps_tracking_manager,1,1,1,1
