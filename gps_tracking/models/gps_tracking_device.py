@@ -117,6 +117,11 @@ class GpsTrackingDevice(models.Model):
         string="Color de Recorrido",
         default="#FF0000",
     )
+    private = fields.Boolean(
+        default=False,
+        groups="gps_tracking.group_gps_tracking_private",
+        help="If checked, only users with specific access rights can see this device"
+    )
 
     _unique_code = models.Constraint(
         "unique (imei)",

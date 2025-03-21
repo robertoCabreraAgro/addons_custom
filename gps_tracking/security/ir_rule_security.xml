@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Regla para usuarios normales (solo ven dispositivos no privados) -->
+    <record id="rule_gps_tracking_device_user" model="ir.rule">
+        <field name="name">User: see only non-private devices</field>
+        <field name="model_id" ref="model_gps_tracking_device"/>
+        <field name="domain_force">[('private', '=', False)]</field>
+        <field name="groups" eval="[(4, ref('group_gps_tracking_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- Regla para usuarios con acceso a dispositivos privados -->
+    <record id="rule_gps_tracking_device_private_access" model="ir.rule">
+        <field name="name">User: see all devices</field>
+        <field name="model_id" ref="model_gps_tracking_device"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_gps_tracking_private'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- Regla para administradores (acceso total) -->
+    <record id="rule_gps_tracking_device_administrator" model="ir.rule">
+        <field name="name">Administrator: full access to all devices</field>
+        <field name="model_id" ref="model_gps_tracking_device"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_gps_tracking_manager'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+</odoo>

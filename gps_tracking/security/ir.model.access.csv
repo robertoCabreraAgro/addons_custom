@@ -1,6 +1,10 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_gps_tracking_data_history,gps_tracking_data_history,model_gps_tracking_data_history,group_gps_tracking_manager,1,1,1,1
-access_gps_tracking_device_user,gps.tracking.device user,model_gps_tracking_device,group_gps_tracking_manager,1,1,1,1
-access_gps_tracking_point_user,gps.tracking.point user,model_gps_tracking_point,group_gps_tracking_manager,1,1,1,1
-access_gps_geofence_user,gps.geofence user,model_gps_geofence,group_gps_tracking_manager,1,1,1,1
-access_gps_tracking_report,gps.tracking.report,model_gps_tracking_report,group_gps_tracking_manager,1,1,1,1
+access_gps_tracking_data_history_user,gps_tracking_data_history_user,model_gps_tracking_data_history,group_gps_tracking_user,1,0,0,0
+access_gps_tracking_data_history_manager,gps_tracking_data_history_manager,model_gps_tracking_data_history,group_gps_tracking_manager,1,1,1,1
+access_gps_tracking_device_user,gps.tracking.device.user,model_gps_tracking_device,gps_tracking.group_gps_tracking_user,1,0,0,0
+access_gps_tracking_device_manager,gps.tracking.device.manager,model_gps_tracking_device,gps_tracking.group_gps_tracking_manager,1,1,1,1
+access_gps_tracking_point_user,gps.tracking.point user,model_gps_tracking_point,group_gps_tracking_user,1,0,0,0
+access_gps_tracking_point_manager,gps.tracking.point manager,model_gps_tracking_point,group_gps_tracking_manager,1,1,1,1
+access_gps_geofence_user,gps.geofence user,model_gps_geofence,group_gps_tracking_user,1,0,0,0
+access_gps_geofence_manager,gps.geofence manager,model_gps_geofence,group_gps_tracking_manager,1,1,1,1
+access_gps_tracking_report_user,gps.tracking.report.user,model_gps_tracking_report,group_gps_tracking_user,1,1,1,1

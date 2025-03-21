@@ -8,6 +8,7 @@
     "depends": ["base_geoengine", "fleet"],
     "data": [
         "security/res_group_security.xml",
+        "security/ir_rule_security.xml",
         "security/ir.model.access.csv",
         "report/gps_tracking_report_views.xml",
         "views/gps_geofence_views.xml",

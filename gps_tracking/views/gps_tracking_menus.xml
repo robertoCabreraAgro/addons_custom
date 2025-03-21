@@ -1,7 +1,7 @@
 <odoo>
 
     <!-- Menú para acceder a los dispositivos de rastreo GPS -->
-    <menuitem id="gps_tracking_menu_root" name="GPS Tracking" sequence="130" groups="group_gps_tracking_manager" >
+    <menuitem id="gps_tracking_menu_root" name="GPS Tracking" sequence="130" groups="group_gps_tracking_user" >
 
 	<menuitem id="menu_gps_tracking_device"
 	    name="Devices"
