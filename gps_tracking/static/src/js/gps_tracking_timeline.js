@@ -9,29 +9,24 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
         ...GpsTrackingDashboard.props,
     };
 
+    // Initializes the component state and configuration
     setup() {
         super.setup();
         this.state.liveMode = false;
         this.state.pathPoints = [];
         this.state.deviceLayers = {};
-
-        // 🟢 NUEVO: Estado separado para el dispositivo seleccionado en el Kanban
         this.state.selectedDevice = null;
-
-        // 🔴 Definir fecha actual con hora 00:00
+        this.state.firstOdometers = 0; 
         const today = new Date();
-        today.setHours(0, 0, 0, 0); // 🔥 Establece la hora en 00:00:00
-
-        const formattedDate = today.toISOString().slice(0, 16); // Formato YYYY-MM-DDTHH:mm
-
+        today.setHours(0, 0, 0, 0);
+        const formattedDate = today.toISOString().slice(0, 16);
         this.state.startDate = formattedDate;
         this.state.endDate = formattedDate;
-        
-        // 🔴 ELIMINAR la recarga automática
+
         if (this.refreshInterval) {
             clearInterval(this.refreshInterval);
         }
-        // 🔴 Desactivamos la carga de geocercas
+
         this.loadGeofences = async () => {
             console.log("Carga de geocercas desactivada en Timeline.");
         };
@@ -40,26 +35,23 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
         };
     }
 
-    // ✅ Método para seleccionar un dispositivo desde el Kanban
-    
+    // Handles device selection from the Kanban view and centers the map on its location
     onCardClick(device) {
         if (device.the_point) {
             try {
-                this.state.selectedDevice = device;  // 🟢 Asigna solo al dispositivo seleccionado
-                console.log("Dispositivo seleccionado en el Kanban:", device);
-                
+                this.state.selectedDevice = device;
+
                 this.state.activeDevice = device;
                 this.updateDeviceRoutes();
 
                 const point = JSON.parse(device.the_point);
                 const coords = [point.coordinates[0], point.coordinates[1]];
 
-                // 🔴 Hacer zoom al dispositivo seleccionado sin afectar los checkboxes
                 setTimeout(() => {
                     console.log("Iniciando animación del mapa...");
                     this.map.getView().animate({
                         center: coords,
-                        zoom: 10,
+                        zoom: 13,
                         duration: 500,
                     });
                 }, 200);
@@ -68,64 +60,47 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
             }
         }
     }
+
+    // Updates the route layers for active devices on the map
     updateDeviceRoutes() {
         if (!this.map) {
             console.error("El mapa no está inicializado.");
             return;
         }
-    
-        // 🔥 Eliminar SOLO capas de rutas sin afectar marcadores de íconos
-        Object.values(this.state.routeLayers || {}).forEach(layer => {
-            this.map.removeLayer(layer);
-        });
-    
-        this.state.routeLayers = {}; // Limpiar almacenamiento de rutas
-    
-        // Filtrar dispositivos activos con checkbox marcado
-        const activeDevices = this.state.devices.filter(device => 
+        this.cleanupAllLayers();
+        const activeDevices = this.state.devices.filter(device =>
             this.state.activeDevices.includes(device.imei)
         );
-    
         if (activeDevices.length === 0) {
             console.log("No hay dispositivos activos para mostrar rutas.");
             return;
         }
-    
         activeDevices.forEach(async (device) => {
-            // 🔥 Verificar que `the_point` no sea null/undefined antes de intentar parsear
             if (!device.the_point) {
                 console.warn(`El dispositivo ${device.imei} no tiene coordenadas.`);
                 return;
             }
-    
             try {
                 const domain = [
                     ["device_id", "=", device.id],
                     ["timestamp", ">=", new Date(this.state.startDate).toISOString()],
                     ["timestamp", "<=", new Date(this.state.endDate).toISOString()]
                 ];
-    
-                const points = await this.orm.searchRead("gps.tracking.point", domain, ["latitude", "longitude"]);
-    
+                const points = await this.orm.searchRead("gps.tracking.point", domain, ["latitude", "longitude", "ignition", "speed", "total_odometer", "timestamp","movement"]);
                 if (!points || points.length === 0) {
                     console.log(`No se encontraron puntos para el dispositivo ${device.imei}`);
                     return;
                 }
-    
-                // Convertir puntos GPS a coordenadas de OpenLayers
                 const coordinates = points
-                    .filter(point => point.latitude !== null && point.longitude !== null) // 🔥 Evitar errores con datos inválidos
+                    .filter(point => point.latitude !== null && point.longitude !== null)
                     .map(point => ol.proj.transform([point.longitude, point.latitude], "EPSG:4326", "EPSG:3857"));
-    
                 if (coordinates.length === 0) {
                     console.warn(`No hay coordenadas válidas para ${device.imei}`);
                     return;
                 }
-    
                 const lineFeature = new ol.Feature({
                     geometry: new ol.geom.LineString(coordinates),
                 });
-    
                 const lineLayer = new ol.layer.Vector({
                     source: new ol.source.Vector({
                         features: [lineFeature],
@@ -137,18 +112,27 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
                         }),
                     }),
                 });
-    
                 this.map.addLayer(lineLayer);
-                this.state.routeLayers[device.imei] = lineLayer; // Guardar referencia
-    
+                this.state.routeLayers[device.imei] = lineLayer;
                 console.log(`Ruta agregada para ${device.imei}`);
             } catch (error) {
                 console.error(`Error al obtener recorrido del dispositivo ${device.imei}:`, error);
             }
         });
     }
-    
-    
+
+    cleanupAllLayers() {
+        const layers = this.map.getLayers().getArray().slice();
+        layers.forEach(layer => {
+            if (layer instanceof ol.layer.Vector) {
+                this.map.removeLayer(layer);
+            }
+        });
+        this.state.routeLayers = {};
+        this.state.deviceLayers = {};
+        console.log("Todas las capas vectoriales eliminadas completamente");
+    }
+
     toggleDeviceRouteVisibility(device) {
         if (!device || !device.imei) {
             console.warn("Dispositivo inválido o nulo:", device);
@@ -156,7 +140,6 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
         }
         const updatedActiveDevices = [...this.state.activeDevices];
         const deviceIndex = updatedActiveDevices.indexOf(device.imei);
-    
         if (deviceIndex > -1) {
             updatedActiveDevices.splice(deviceIndex, 1);
             console.log("Checkbox desmarcado. Dispositivo ocultado:", device.imei);
@@ -165,6 +148,16 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
             console.log("Checkbox marcado. Dispositivo mostrado:", device.imei);
         }
         this.state.activeDevices = updatedActiveDevices;
+        this.refreshMapWithActiveDevices();
+    }
+
+    refreshMapWithActiveDevices() {
+        this.cleanupAllLayers();
+        if (this.state.activeDevices.length === 0) {
+            console.log("No hay dispositivos activos para mostrar");
+            this.map.renderSync();
+            return;
+        }
         this.fetchDevicePaths();
     }
 
@@ -173,98 +166,78 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
             alert("Selecciona un rango de fechas.");
             return;
         }
-        
-        // Eliminar todas las capas actuales del mapa antes de redibujar
-        this.map.getLayers().getArray().forEach(layer => {
-            if (layer instanceof ol.layer.Vector) {
-                this.map.removeLayer(layer);
-            }
-        });
-        
-        // Vaciar completamente `deviceLayers` para evitar referencias residuales
-        this.state.deviceLayers = {};
-    
-        // Obtener la lista de dispositivos activos (solo los con checkbox marcado)
+        this.cleanupAllLayers();
         const activeDevices = this.state.activeDevices.slice();
-    
-        // Si no hay dispositivos activos, limpiar el mapa y salir
         if (activeDevices.length === 0) {
             console.log("No hay dispositivos activos. Mapa en blanco.");
             this.map.renderSync();
-            setTimeout(() => this.map.renderSync(), 100);
             return;
         }
-    
         const formattedStartDate = new Date(this.state.startDate).toISOString();
         const formattedEndDate = new Date(this.state.endDate).toISOString();
-    
         try {
             for (const imei of activeDevices) {
                 const device = this.state.devices.find(d => d.imei === imei);
-                if (!device) continue;
-    
+                if (!device) {
+                    console.warn(`Dispositivo ${imei} no encontrado en la lista de dispositivos`);
+                    continue;
+                }
                 const domain = [
                     ["device_id", "=", device.id],
                     ["timestamp", ">=", formattedStartDate],
                     ["timestamp", "<=", formattedEndDate],
                 ];
-    
-                // Obtener todos los puntos para la ruta
-                const points = await this.orm.searchRead("gps.tracking.point", domain, ["latitude", "longitude"]);
-                
-                // Obtener el primer punto (el más antiguo)
-                const firstPointResult = await this.orm.searchRead(
-                    "gps.tracking.point", 
-                    domain, 
-                    ["latitude", "longitude", "timestamp"],
-                    {
-                        order: "timestamp ASC",
-                        limit: 1
-                    }
+                const points = await this.orm.searchRead(
+                    "gps.tracking.point",
+                    domain,
+                    ["latitude", "longitude", "ignition", "speed", "total_odometer", "timestamp", "movement"]
                 );
-                const firstPoint = firstPointResult[0];
-                
-                // Obtener el último punto (el más reciente)
-                const lastPointResult = await this.orm.searchRead(
-                    "gps.tracking.point", 
-                    domain, 
-                    ["latitude", "longitude", "timestamp"],
-                    {
-                        order: "timestamp DESC",
-                        limit: 1
-                    }
-                );
-                const lastPoint = lastPointResult[0];
-                
+                console.log("Puntos obtenidos para", device.imei, points);
                 if (points.length === 0) {
                     console.log("No se encontraron puntos para el dispositivo:", device.imei);
                     continue;
                 }
-    
-                const coordinates = points.map((point) => 
+                device.points = points;
+                const coordinates = points.map((point) =>
                     ol.proj.transform([point.longitude, point.latitude], "EPSG:4326", "EPSG:3857")
                 );
-    
-                // Pasar también el primer y último punto al método de renderizado
+                const firstPoint = points[0];
+                
+                this.state.firstOdometers = firstPoint?.total_odometer || 0;
+                const lastPoint = points[points.length - 1]
                 this.renderDevicePath(device, coordinates, firstPoint, lastPoint);
             }
-    
             this.map.renderSync();
-            setTimeout(() => this.map.renderSync(), 100);
-    
         } catch (error) {
             console.error("Error al obtener recorridos:", error);
         }
     }
-    
+
+    // Removes all vector layers from the map
+    clearAllVectorLayers() {
+        const layersToRemove = this.map.getLayers().getArray().filter(layer =>
+            layer instanceof ol.layer.Vector
+        );
+        layersToRemove.forEach(layer => {
+            this.map.removeLayer(layer);
+        });
+        this.state.deviceLayers = {};
+        this.state.routeLayers = {};
+        console.log("Todas las capas vectoriales han sido eliminadas del mapa");
+    }
+
+    // Renders a device's path on the map with start and end markers
     renderDevicePath(device, coordinates, firstPoint, lastPoint) {
-        if (!this.map || !device || !coordinates.length) {
+        if (!this.map || !device || !coordinates || coordinates.length === 0) {
             console.warn("Datos inválidos para renderizar la ruta del dispositivo:", device?.imei);
             return;
         }
     
+        // Crear capa para la línea de la ruta
         const lineFeature = new ol.Feature({
             geometry: new ol.geom.LineString(coordinates),
+            name: `Ruta - ${device.imei}`,
+            device: device.imei
         });
     
         const lineLayer = new ol.layer.Vector({
@@ -277,124 +250,211 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
                     width: 3,
                 }),
             }),
+            zIndex: 5,
+            id: `route_${device.imei}`
         });
     
         this.map.addLayer(lineLayer);
         this.state.deviceLayers[device.imei] = lineLayer;
+
+        const getColorBySpeed = (speed, ignition) => {
+            console.log("getColorBySpeed ignition ", typeof(ignition))
+            console.log("getColorBySpeed speed ", speed)
+            if (speed === 0 && ignition === 0) return "#FF0000";  // 🔴 Rojo - Alto total y apagado
+            if (speed === 0) return "#FFFF00";  // 🟡 Amarillo - Alto total pero encendido
+            if (speed > 110) return "#FFA500";  // 🟠 Naranja - Velocidad alta (>120 km/h)
+            return "#00FF00"; // 🔵 Azul - Por defecto (no debería ocurrir)
+        };
     
-        // Crear marcador para el primer punto (inicio de ruta)
-        if (firstPoint) {
-            const startCoord = ol.proj.transform([firstPoint.longitude, firstPoint.latitude], "EPSG:4326", "EPSG:3857");
-            const startFeature = new ol.Feature({
-                geometry: new ol.geom.Point(startCoord),
+        // Crear puntos individuales con datos correctos desde 'device.points'
+        const pointFeatures = device.points.map((point, index) => {
+            const coord = ol.proj.transform([point.longitude, point.latitude], "EPSG:4326", "EPSG:3857");
+    
+            const color = getColorBySpeed(point.speed || 0);
+
+            const pointFeature = new ol.Feature({
+                geometry: new ol.geom.Point(coord),
+                name: `Punto ${index + 1} - ${device.imei}`,
+                device: device.imei,
+                timestamp: point.timestamp || "Desconocido",
+                speed: point.speed || 0,
+                total_odometer: point.total_odometer || 0,
+                ignition: point.ignition,
+                movement: point.movement,
+            });
+    
+            pointFeature.setStyle(new ol.style.Style({
+                image: new ol.style.Circle({
+                    radius: 3,
+                    fill: new ol.style.Fill({ color: color  }),
+                }),
+            }));
+    
+            return pointFeature;
+        });
+    
+        // Agregar marcador para el primer punto
+        if (firstPoint && firstPoint.latitude && firstPoint.longitude) {
+            const firstCoord = ol.proj.transform([firstPoint.longitude, firstPoint.latitude], "EPSG:4326", "EPSG:3857");
+            const firstFeature = new ol.Feature({
+                geometry: new ol.geom.Point(firstCoord),
                 name: `Inicio - ${device.imei}`,
                 device: device.imei,
                 timestamp: firstPoint.timestamp,
+                speed: firstPoint.speed || 0,
+                total_odometer: firstPoint.total_odometer || 0
             });
     
-            const startStyle = new ol.style.Style({
+            firstFeature.setStyle(new ol.style.Style({
                 image: new ol.style.Circle({
-                    radius: 7,
-                    fill: new ol.style.Fill({ color: '#00FF00' }),
-                    stroke: new ol.style.Stroke({ color: '#FFFFFF', width: 2 })
+                    radius: 6,
+                    fill: new ol.style.Fill({ color: '#00FF00' }), // Verde para el inicio
                 }),
                 text: new ol.style.Text({
                     text: 'Inicio',
-                    offsetY: -20,
+                    offsetY: -15,
                     fill: new ol.style.Fill({ color: '#000000' }),
-                    stroke: new ol.style.Stroke({ color: '#FFFFFF', width: 2 })
                 })
-            });
+            }));
     
-            startFeature.setStyle(startStyle);
-            
-            const startLayer = new ol.layer.Vector({
-                source: new ol.source.Vector({
-                    features: [startFeature]
-                })
-            });
-            
-            this.map.addLayer(startLayer);
-            this.state.deviceLayers[`${device.imei}_start`] = startLayer;
+            pointFeatures.push(firstFeature);
         }
     
-        // Crear marcador para el último punto (fin de ruta)
-        if (lastPoint) {
-            const endCoord = ol.proj.transform([lastPoint.longitude, lastPoint.latitude], "EPSG:4326", "EPSG:3857");
-            const endFeature = new ol.Feature({
-                geometry: new ol.geom.Point(endCoord),
+        // Agregar marcador para el último punto
+        if (lastPoint && lastPoint.latitude && lastPoint.longitude) {
+            const lastCoord = ol.proj.transform([lastPoint.longitude, lastPoint.latitude], "EPSG:4326", "EPSG:3857");
+            const lastFeature = new ol.Feature({
+                geometry: new ol.geom.Point(lastCoord),
                 name: `Fin - ${device.imei}`,
                 device: device.imei,
                 timestamp: lastPoint.timestamp,
+                speed: lastPoint.speed || 0,
+                total_odometer: lastPoint.total_odometer || 0
             });
     
-            const endStyle = new ol.style.Style({
+            lastFeature.setStyle(new ol.style.Style({
                 image: new ol.style.Circle({
-                    radius: 7,
-                    fill: new ol.style.Fill({ color: '#FF0000' }),
-                    stroke: new ol.style.Stroke({ color: '#FFFFFF', width: 2 })
+                    radius: 6,
+                    fill: new ol.style.Fill({ color: '#FF0000' }), // Rojo para el final
                 }),
                 text: new ol.style.Text({
                     text: 'Fin',
-                    offsetY: -20,
+                    offsetY: -15,
                     fill: new ol.style.Fill({ color: '#000000' }),
-                    stroke: new ol.style.Stroke({ color: '#FFFFFF', width: 2 })
                 })
-            });
+            }));
     
-            endFeature.setStyle(endStyle);
-            
-            const endLayer = new ol.layer.Vector({
-                source: new ol.source.Vector({
-                    features: [endFeature]
-                })
-            });
-            
-            this.map.addLayer(endLayer);
-            this.state.deviceLayers[`${device.imei}_end`] = endLayer;
+            pointFeatures.push(lastFeature);
         }
     
-        console.log("Línea y marcadores del dispositivo renderizados:", device.imei);
+        // Agregar los puntos al mapa
+        const pointLayer = new ol.layer.Vector({
+            source: new ol.source.Vector({
+                features: pointFeatures,
+            }),
+            zIndex: 10,
+            id: `points_${device.imei}`
+        });
+    
+        this.map.addLayer(pointLayer);
+        this.state.deviceLayers[`${device.imei}_points`] = pointLayer;
+    
+        console.log(`Ruta, puntos y marcadores de inicio/fin del dispositivo ${device.imei} renderizados correctamente.`);
     }
     
 
+    // Adjusts the map view to fit the entire route
     zoomToRoute() {
         if (!this.map || this.state.pathPoints.length === 0) {
             return;
         }
-
-        const extent = [Infinity, Infinity, -Infinity, -Infinity];
-
+        const extent = [Infinity, Infinity, -Infinity, -Infinity]
         const transformedPoints = this.state.pathPoints.map((coord) =>
             ol.proj.transform(coord, "EPSG:4326", "EPSG:3857")
         );
-
         transformedPoints.forEach(([lon, lat]) => {
-            extent[0] = Math.min(extent[0], lon); // Min Longitud
-            extent[1] = Math.min(extent[1], lat); // Min Latitud
-            extent[2] = Math.max(extent[2], lon); // Max Longitud
-            extent[3] = Math.max(extent[3], lat); // Max Latitud
+            extent[0] = Math.min(extent[0], lon);
+            extent[1] = Math.min(extent[1], lat);
+            extent[2] = Math.max(extent[2], lon);
+            extent[3] = Math.max(extent[3], lat);
         });
-
         this.map.getView().fit(extent, {
-            padding: [50, 50, 50, 50], // Agregar un margen alrededor
-            duration: 1000,  // Animación de 1 segundo
+            padding: [50, 50, 50, 50],
+            duration: 1000,
         });
-
         console.log("Mapa ajustado a la ruta.");
     }
-        // ✅ Método para Reiniciar Todo
+
+    _displayFeatureInfo(pixel, target, click = false) {
+        if (!this.map || this.state.drawingToolActive) {
+            return;
+        }
+        const tooltipElement = this.tooltipRef?.el;
+        if (!tooltipElement) {
+            console.error("Tooltip no encontrado en el DOM.");
+            return;
+        }
+        let closestFeature = null;
+        this.map.forEachFeatureAtPixel(pixel, (feature) => {
+            if (feature.getGeometry().getType() === "Point") {
+                closestFeature = feature;
+            }
+        });
+        if (!closestFeature) {
+            this._hideTooltip();
+            return;
+        }
+        
+        const timestamp = closestFeature.get("timestamp") || "Desconocido";
+        const movement = closestFeature.get("movement") || "Desconocido";
+        const ignition = closestFeature.get("ignition") || "Desconocido";
+        const plate = closestFeature.get("device_id") || closestFeature.get("imei") || "Desconocido";
+        const speed = closestFeature.get("speed") || 0;
+        const currentOdometer = closestFeature.get("total_odometer") || 0;
+        const imei = closestFeature.get("device");
+
+        //console.log("point Odome ",this.state.firstOdometers)
+        const initialOdometer = this.state.firstOdometers;
+        const distanceTraveled = initialOdometer - currentOdometer;
+        tooltipElement.style.visibility = "visible";
+        tooltipElement.style.left = pixel[0] + "px";
+        tooltipElement.style.top = pixel[1] + "px";
+        let formattedTime = timestamp ? new Date(timestamp).toLocaleString() : "";
+        tooltipElement.innerHTML = `
+            <div style="min-width: 200px;">
+                <strong>Plate:</strong> ${plate}<br/>
+                <strong>Velocidad:</strong> ${speed} km/h<br/>
+                <strong>Encendido:</strong>
+                <span style="color: ${ignition == 1 ? 'green' : 'red'};">
+                    <i class="fa fa-power-off" style="margin-right: 5px;"></i>
+                    ${ignition == 1 ? 'Encendido' : 'Apagado'}
+                </span><br/>
+                <strong>Movimiento:</strong>
+                <span style="color: ${movement == 1 ? 'green' : 'red'};">
+                    <i class="fa fa-car" style="margin-right: 5px;"></i>
+                    ${movement == 1 ? 'En movimiento' : 'Estacionado'}
+                </span><br/>
+                <strong>Odómetro:</strong> ${distanceTraveled.toFixed(2)} km<br/>
+                <strong>Hora:</strong> ${formattedTime}<br/>
+                <button id="btn-street" class="btn btn-sm btn-info" style="margin-top:5px;">
+                    Ver Street View
+                </button>
+            </div>
+        `;
+    }
+
+    // Resets the component state and clears the map
     resetAll() {
         console.log("Reiniciando todo...");
         const layersToRemove = this.map.getLayers().getArray().filter(layer => layer instanceof ol.layer.Vector);
         layersToRemove.forEach(layer => this.map.removeLayer(layer));
         this.state.deviceLayers = {};
-        this.state.routeLayers = {}; // 🔥 Ahora también eliminamos rutas
+        this.state.routeLayers = {};
         this.state.activeDevices = [];
         this.state.selectedDevice = null;
         const today = new Date();
-        today.setHours(0, 0, 0, 0); // Establece la hora en 00:00:00
-        const formattedDate = today.toISOString().slice(0, 16); // Formato YYYY-MM-DDTHH:mm
+        today.setHours(0, 0, 0, 0);
+        const formattedDate = today.toISOString().slice(0, 16);
         this.state.startDate = formattedDate;
         this.state.endDate = formattedDate;
         console.log(`Fechas reiniciadas: ${this.state.startDate} - ${this.state.endDate}`);
@@ -407,5 +467,4 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
     }
 }
 
-// Registrar el nuevo componente en Odoo
 registry.category("actions").add("gps_tracking_timeline", GpsTrackingTimeline);
