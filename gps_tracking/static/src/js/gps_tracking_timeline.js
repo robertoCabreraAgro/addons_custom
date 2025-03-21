@@ -2,7 +2,7 @@
 
 import { GpsTrackingDashboard } from "./gps_tracking_dashboard";
 import { registry } from "@web/core/registry";
-
+import { user } from "@web/core/user";
 export class GpsTrackingTimeline extends GpsTrackingDashboard {
     static template = "gps_tracking.gps_tracking_timeline_template";
     static props = {
@@ -197,6 +197,8 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
                     console.log("No se encontraron puntos para el dispositivo:", device.imei);
                     continue;
                 }
+                points.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+
                 device.points = points;
                 const coordinates = points.map((point) =>
                     ol.proj.transform([point.longitude, point.latitude], "EPSG:4326", "EPSG:3857")
@@ -419,7 +421,9 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
         tooltipElement.style.visibility = "visible";
         tooltipElement.style.left = pixel[0] + "px";
         tooltipElement.style.top = pixel[1] + "px";
-        let formattedTime = timestamp ? new Date(timestamp).toLocaleString() : "";
+        let formattedTime = timestamp
+        ? new Date(timestamp + "Z").toLocaleString("es-MX", { timeZone: "America/Mexico_City" })
+        : "";
         tooltipElement.innerHTML = `
             <div style="min-width: 200px;">
                 <strong>Plate:</strong> ${plate}<br/>
