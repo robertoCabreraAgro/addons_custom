@@ -7,6 +7,8 @@
         <field name="inherit_id" ref="base_approval.approval_request_view_tree" />
         <field name="arch" type="xml">
             <xpath expr="//list" position="inside">
+                <field name="journal_id"
+                    optional="hide" />
                 <field name="vehicle_id"
                     optional="hide" />
                 <field name="odometer" string="Odometer"
@@ -21,6 +23,7 @@
         <field name="inherit_id" ref="base_approval.approval_request_view_form" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='can_change_request_owner']" position="after">
+                <field name="has_journal" invisible="1" />
                 <field name="has_vehicle" invisible="1" />
                 <field name="has_odometer" invisible="1" />
             </xpath>
@@ -66,6 +69,10 @@
                     groups="purchase.group_purchase_user" />
             </xpath>
             <xpath expr="//group[@name='request_main']" position="inside">
+                <field name="journal_id"
+                    required="has_journal == 'required'"
+                    readonly="request_status != 'new'"
+                    invisible="has_journal == 'no'" />
                 <field name="vehicle_id"
                     required="has_vehicle == 'required'"
                     readonly="request_status != 'new'"

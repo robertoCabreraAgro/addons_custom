@@ -9,6 +9,9 @@ from odoo.tools.translate import _
 class ApprovalRequest(models.Model):
     _inherit = "approval.request"
 
+    has_journal = fields.Selection(
+        related="category_id.has_journal",
+    )
     has_vehicle = fields.Selection(
         related="category_id.has_vehicle",
     )
@@ -19,6 +22,9 @@ class ApprovalRequest(models.Model):
     journal_id = fields.Many2one(
         comodel_name="account.journal",
         string="Journal",
+        # compute="_compute_vehicle_id",
+        # store=True,
+        # readonly=False,
     )
     count_account_move = fields.Integer(compute="_compute_count_account_move")
     count_purchase_order = fields.Integer(
@@ -65,16 +71,16 @@ class ApprovalRequest(models.Model):
             purchases = request.product_line_ids.purchase_order_line_id.order_id
             request.count_purchase_order = len(purchases)
 
+    def action_approve(self, approver=None):
+        self._check_approval_type_purchase_has_product()
+        return super().action_approve(approver)
+
     def action_confirm(self):
         for request in self:
             request._check_approval_type_purchase_has_product()
             if request.approval_type == "fleet_vehicle_log" and not request.odometer:
                 raise UserError(_("You cannot create a log without odometer value."))
         return super().action_confirm()
-
-    def action_approve(self, approver=None):
-        self._check_approval_type_purchase_has_product()
-        return super().action_approve(approver)
 
     def action_cancel(self):
         """Override to unlink the products of the cancelled Approval Request from Purchase Orders"""
@@ -90,10 +96,10 @@ class ApprovalRequest(models.Model):
 
     def _create_account_moves(self):
         for line in self.product_line_ids:
-            new_account_move = self.env["account.move"].create(
+            account_move = self.env["account.move"].create(
                 line._prepare_account_move_values_from_approval()
             )
-            line.account_move_id = new_account_move.id
+            line.account_move_id = account_move.id
 
     def action_create_purchase_orders(self):
         """Create and/or modifier Purchase Orders."""

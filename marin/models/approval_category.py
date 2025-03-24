@@ -20,6 +20,12 @@ class ApprovalCategory(models.Model):
     )
 
     # New fields
+    has_journal = fields.Selection(
+        selection=CATEGORY_SELECTION,
+        string="Has Journal",
+        required=True,
+        default="no",
+    )
     has_vehicle = fields.Selection(
         selection=CATEGORY_SELECTION,
         string="Has Vehicle",
