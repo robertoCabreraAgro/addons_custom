@@ -1,11 +1,8 @@
 import logging
-import pytz
+from datetime import datetime, timezone
 
 from odoo import http
 from odoo.http import request
-
-from datetime import datetime
-
 
 _logger = logging.getLogger(__name__)
 
@@ -52,16 +49,20 @@ class GPSWebhook(http.Controller):
     }
 
     @http.route(
-        "/gps/webhook", type="jsonrpc", auth="public", methods=["POST"], csrf=False
+        "/gps/webhook",
+        type="jsonrpc",
+        auth="public",
+        methods=["GET", "POST"],
+        csrf=False,
     )
     def gps_webhook(self, **kwargs):
         gps_tracking_point = request.env["gps.tracking.point"].sudo()
-        _logger.info(
+        _logger.debug(
             "Iniciando procesamiento del webhook GPS."
         )  # TODO: cambiar a debug luego de estabilizacion
         try:
             json_data = request.get_json_data() or {}
-            _logger.info(
+            _logger.debug(
                 f"Payload recibido: {json_data}"
             )  # TODO: cambiar a debug luego de estabilizacion
 
@@ -77,7 +78,7 @@ class GPSWebhook(http.Controller):
                     _logger.warning("El payload no contiene el campo '14' (IMEI).")
                     return b"\x00"
 
-                _logger.info(f"Buscando dispositivo con IMEI: {imei}")
+                _logger.debug(f"Buscando dispositivo con IMEI: {imei}")
                 device = (
                     request.env["gps.tracking.device"]
                     .sudo()
@@ -89,43 +90,44 @@ class GPSWebhook(http.Controller):
                     )
                     return b"\x00"
 
-                _logger.info(f"Dispositivo encontrado: {device.id} (IMEI: {imei})")
+                _logger.debug(f"Dispositivo encontrado: {device.id} (IMEI: {imei})")
                 vals = {"device_id": device.id}
                 tracking_point_fields = gps_tracking_point._fields
                 for gps_field, model_field in self.field_mapping.items():
                     if gps_field in payload:
                         value = payload[gps_field]
+                        if model_field == "latitude_longitude":  # exceptional case
+                            lat, lng = value.split(",")
+                            vals["latitude"] = float(lat)
+                            vals["longitude"] = float(lng)
+                            continue
                         if model_field not in tracking_point_fields:
                             continue
                         if model_field == "timestamp":
                             try:
                                 vals[model_field] = datetime.fromtimestamp(
-                                    value / 1000, pytz.UTC
-                                )
+                                    value / 1000, tz=timezone.utc
+                                ).replace(tzinfo=None)
                             except Exception as e:
                                 _logger.error(
                                     f"Error converting timestamp: {value} - {e}"
                                 )
                                 continue
-                        elif model_field == "latitude_longitude":
-                            lat, lng = value.split(",")
-                            vals["latitude"] = float(lat)
-                            vals["longitude"] = float(lng)
                         elif model_field == "odometer":
                             vals[model_field] = value / 1000
                         else:
                             vals[model_field] = value
 
-                _logger.info(
+                _logger.debug(
                     f"Creando nuevo punto de seguimiento GPS: {vals}"
                 )  # TODO: cambiar a debug luego de estabilizacion
                 new_point = gps_tracking_point.create(vals)
-                _logger.info(
+                _logger.debug(
                     f"Punto de seguimiento creado exitosamente: ID {new_point.id}"
                 )  # TODO: cambiar a debug luego de estabilizacion
 
                 device.sudo().write({"last_point_id": new_point.id})
-                _logger.info(
+                _logger.debug(
                     f"Dispositivo actualizado con el último punto: ID {new_point.id}"
                 )  # TODO: cambiar a debug luego de estabilizacion
 
