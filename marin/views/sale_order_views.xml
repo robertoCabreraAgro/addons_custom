@@ -230,7 +230,7 @@
                 <attribute name="decoration-success">not display_type and invoice_status == 'invoiced'</attribute>
             </xpath>
             <xpath expr="//page/field[@name='order_line_ids']/list/field[@name='price_unit']" position="after">
-                <field name="partner_id" column_invisible="1" />
+                <field name="order_partner_id" column_invisible="1" />
                 <field name="delivery_status" column_invisible="1" />
                 <widget name="sale_line_price_history_widget" width="20px" />
             </xpath>

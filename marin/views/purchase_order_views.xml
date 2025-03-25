@@ -18,7 +18,7 @@
                     domain="[('receipt_status', '=', 'over full')]" />
                 <separator />
             </xpath>
-            <xpath expr="//group/filter[@name='order_date']" position="after">
+	    <xpath expr="//group/filter[@name='order_date']" position="after">
                 <separator />
                 <filter name="status" string="Status"
                     domain="[]" context="{'group_by': 'state'}" />
@@ -26,7 +26,7 @@
                     domain="[]" context="{'group_by': 'invoice_status'}" />
                 <filter name="reception_status" string="Reception Status"
                     domain="[]" context="{'group_by': 'receipt_status'}" />
-            </xpath>
+	    </xpath>
         </field>
     </record>
 
@@ -42,7 +42,7 @@
                 sample="1"
             >
                 <header>
-                    <button name="create_invoice" type="object" string="Create Bills" />
+                    <button name="action_create_invoice" type="object" string="Create Bills" />
                 </header>
                 <field
                     name="company_id"
@@ -85,7 +85,7 @@
                 />
                 <field name="amount_total" sum="Total amount" widget="monetary" optional="show" decoration-bf="1" />
                 <field name="currency_id" column_invisible="True" readonly="state in ['cancel', 'done', 'purchase']" />
-                <field name="purchase_rep_id" widget="many2one_avatar_user" optional="show" />
+                <field name="user_id" widget="many2one_avatar_user" optional="show" />
                 <field name="activity_ids" widget="list_activity" optional="hide" />
                 <field name="activity_exception_decoration" widget="activity_exception" />
                 <field
@@ -146,7 +146,7 @@
             <xpath expr="//field[@name='partner_id']" position="attributes">
                 <attribute name="options">{'no_create': True}</attribute>
             </xpath>
-            <xpath expr="//field[@name='purchase_rep_id']" position="attributes">
+            <xpath expr="//field[@name='user_id']" position="attributes">
                 <attribute name="options">{'no_create': True}</attribute>
                 <attribute name="readonly">not is_user_id_editable</attribute>
                 <attribute name="force_save">1</attribute>
@@ -167,7 +167,7 @@
             <xpath expr="//page/field[@name='order_line_ids']/list/field[@name='qty_invoiced']" position="after">
                 <field name="reception_status" column_invisible="1" />
             </xpath>
-            <xpath expr="//page/field[@name='order_line_ids']/list/field[@name='qty_invoiced']" position="attributes">
+	    <!--<xpath expr="//page/field[@name='order_line_ids']/list/field[@name='qty_invoiced']" position="attributes">
                 <attribute name="decoration-danger">not display_type and invoice_status == 'over invoiced'</attribute>
                 <attribute name="decoration-warning">not display_type and invoice_status == 'to invoice'</attribute>
                 <attribute name="decoration-success">not display_type and invoice_status == 'invoiced'</attribute>
@@ -177,8 +177,8 @@
                 <attribute name="decoration-warning">not display_type and reception_status == 'partial'</attribute>
                 <attribute name="decoration-info">not display_type and reception_status == 'over full'</attribute>
                 <attribute name="decoration-success">not display_type and reception_status == 'full'</attribute>
-            </xpath>
-            <field name="purchase_rep_id" position="before">
+	    </xpath>-->
+            <field name="user_id" position="before">
                 <field name="is_user_id_editable" invisible="1" />
             </field>
         </field>
