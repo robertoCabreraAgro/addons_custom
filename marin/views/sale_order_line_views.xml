@@ -1,72 +1,47 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
+
     <record id="view_sales_order_line_filter" model="ir.ui.view">
         <field name="name">sale.order.line.select</field>
         <field name="model">sale.order.line</field>
         <field name="arch" type="xml">
             <search string="Search order lines">
                 <field name="order_id" />
-                <field name="order_partner_id" operator="child_of" />
+                <field name="partner_id" operator="child_of" />
                 <field name="product_id" />
-                <field name="salesman_id" />
-                <filter
-                    name="to_invoice"
-                    string="To invoice"
+                <field name="sales_rep_id" />
+                <filter name="to_invoice" string="To invoice"
                     domain="[('qty_to_invoice', '!=', 0)]"
-                    help="Order lines ready to be invoiced"
-                />
-                <filter
-                    name="to_deliver"
-                    string="To deliver"
+                    help="Order lines ready to be invoiced" />
+                <filter name="to_deliver" string="To deliver"
                     domain="[('delivery_status', '=', 'to deliver')]"
-                    help="Order lines ready to be delivered"
-                />
+                    help="Order lines ready to be delivered" />
                 <separator />
-                <filter
-                    name="my_sales_order_lines"
-                    string="My Sale order lines"
-                    domain="[('salesman_id','=',uid)]"
-                    help="Sale order lines related to a Sale order of mine"
-                />
+                <filter name="my_sales_order_lines" string="My Sale order lines"
+                    domain="[('sales_rep_id', '=', uid)]"
+                    help="Sale order lines related to a Sale order of mine" />
                 <separator />
-                <filter name="date_order" string="Order Date" date="date_order" />
+                <filter name="date_order" string="Order Date"
+                    date="date_order" />
                 <group expand="0" string="Group By">
-                    <filter
-                        name="group_by_order_id"
-                        string="Order"
+                    <filter name="group_by_order_id" string="Order"
                         domain="[]"
-                        context="{'group_by':'order_id'}"
-                    />
-                    <filter
-                        name="group_by_product_id"
-                        string="Product"
+                        context="{'group_by': 'order_id'}" />
+                    <filter name="group_by_product_id" string="Product"
                         domain="[]"
-                        context="{'group_by':'product_id'}"
-                    />
-                    <filter
-                        name="group_by_state"
-                        string="State"
+                        context="{'group_by': 'product_id'}" />
+                    <filter name="group_by_state" string="State"
                         domain="[]"
-                        context="{'group_by':'state'}"
-                    />
-                    <filter
-                        name="group_by_delivery_status"
-                        string="Delivery status"
+                        context="{'group_by': 'state'}" />
+                    <filter name="group_by_delivery_status" string="Delivery status"
                         domain="[]"
-                        context="{'group_by':'delivery_status'}"
-                    />
-                    <filter
-                        name="group_by_invoice_status"
-                        string="Invoice status"
+                        context="{'group_by': 'delivery_status'}" />
+                    <filter name="group_by_invoice_status" string="Invoice status"
                         domain="[]"
-                        context="{'group_by':'invoice_status'}"
-                    />
-                    <filter
-                        name="group_by_user_id"
-                        string="Salesperson"
+                        context="{'group_by': 'invoice_status'}" />
+                    <filter name="group_by_user_id" string="Salesperson"
                         domain="[]"
-                        context="{'group_by':'salesman_id'}"
-                    />
+                        context="{'group_by': 'sales_rep_id'}" />
                 </group>
             </search>
         </field>
@@ -121,8 +96,8 @@
                     options='{"no_open": True, "no_create": True}'
                 />
                 <field
-                    name="order_partner_id"
-                    readonly="order_partner_id and order_id"
+                    name="partner_id"
+                    readonly="partner_id and order_id"
                     context="{'res_partner_search_mode': 'customer', 'default_is_company': True, 'default_customer_rank': 1}"
                     options='{"always_reload": True}'
                     required="1"
@@ -130,7 +105,7 @@
                 <field
                     name="product_id"
                     readonly="not product_updatable"
-                    context="{'partner_id': order_partner_id, 'quantity': product_uom_qty, 'uom': product_uom_id, 'company_id': company_id}"
+                    context="{'partner_id': partner_id, 'quantity': product_uom_qty, 'uom': product_uom_id, 'company_id': company_id}"
                     force_save="1"
                 />
                 <field name="name" optional="show"/>
@@ -139,7 +114,7 @@
                     string="Ordered Qty"
                     sum="Ordered"
                     readonly="state in ['done', 'cancel']"
-                    context="{'partner_id': order_partner_id, 'quantity': product_uom_qty, 'uom': product_uom_id, 'company_id': company_id}"
+                    context="{'partner_id': partner_id, 'quantity': product_uom_qty, 'uom': product_uom_id, 'company_id': company_id}"
                     decoration-info="(not display_type and invoice_status == 'to invoice')"
                     decoration-bf="(not display_type and invoice_status == 'to invoice')"
                     optional="show"
@@ -193,7 +168,7 @@
                     optional="show"
                 />
                 <field name="qty_to_invoice" string="To invoice Qty" sum="To invoice" optional="hide" />
-                <field name="salesman_id" optional="show"/>
+                <field name="sales_rep_id" optional="show"/>
                 <field name="customer_lead" readonly="state not in ['draft', 'sent', 'sale']" optional="hide" />
                 <field name="force_company_id" readonly="order_id" options="{'no_create': True}" optional="hide" />
                 <button

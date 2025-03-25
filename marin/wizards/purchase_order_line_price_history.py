@@ -57,7 +57,7 @@ class PurchaseOrderLinePriceHistoryLine(models.TransientModel):
     date = fields.Datetime(
         related="line_id.order_id.date_order",
     )
-    qty = fields.Float(related="line_id.product_qty")
+    qty = fields.Float(related="line_id.product_uom_qty")
     price_unit = fields.Float(related="line_id.price_unit")
     tax_ids = fields.Many2many(related="line_id.tax_ids")
 

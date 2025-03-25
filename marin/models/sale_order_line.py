@@ -8,7 +8,7 @@ class SaleOrderLine(models.Model):
     # Extended fields
     # In core this a related field. We need to trigger its value on view, so we can
     # have it even when we're in a NewId
-    order_partner_id = fields.Many2one(depends=["product_id"])
+    partner_id = fields.Many2one(depends=["product_id"])
     margin_percent = fields.Float(digits="Product Price")
 
     # New fields
@@ -97,14 +97,14 @@ class SaleOrderLine(models.Model):
         for line in self:
             line.company_id = line.force_company_id
 
-    @api.onchange("order_partner_id")
-    def _onchange_order_partner_id(self):
+    @api.onchange("partner_id")
+    def _onchange_partner_id(self):
         """Create order to correct compute of taxes"""
-        if not self.order_partner_id or self.order_id:
+        if not self.partner_id or self.order_id:
             return
         sale_order = self.env["sale.order"]
         new_so = sale_order.new(
-            {"partner_id": self.order_partner_id, "company_id": self.force_company_id}
+            {"partner_id": self.partner_id, "company_id": self.force_company_id}
         )
         for onchange_method in new_so._onchange_methods["partner_id"]:
             onchange_method(new_so)

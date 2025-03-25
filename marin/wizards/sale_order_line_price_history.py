@@ -25,7 +25,7 @@ class SaleOrderLinePriceHistory(models.TransientModel):
         if self.partner_id:
             domain += [
                 (
-                    "order_partner_id",
+                    "partner_id",
                     "child_of",
                     self.partner_id.commercial_partner_id.ids,
                 )
@@ -45,7 +45,7 @@ class SaleOrderLinePriceHistoryline(models.TransientModel):
     wizard_id = fields.Many2one("sale.order.line.price.history", "Wizard")
     line_id = fields.Many2one("sale.order.line", "Sale order line")
     order_id = fields.Many2one(related="line_id.order_id")
-    partner_id = fields.Many2one(related="line_id.order_partner_id")
+    partner_id = fields.Many2one(related="line_id.partner_id")
     date = fields.Datetime(related="line_id.order_id.date_order")
     qty = fields.Float(related="line_id.product_uom_qty")
     price_unit = fields.Float(related="line_id.price_unit")

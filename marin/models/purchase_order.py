@@ -3,39 +3,18 @@ from markupsafe import Markup
 
 from odoo import api, fields, models
 from odoo.tools import float_compare, float_is_zero
+from odoo.tools.misc import clean_context
 
 
 class PurchaseOrderInherit(models.Model):
     _inherit = "purchase.order"
 
-    def _domain_partner_id(self):
-        categories = []
-        if self.env.user.has_group("marin.group_purchase_core_business"):
-            categories.append(self.env.ref("marin.partner_category_supplier_core").id)
-
-        if self.env.user.has_group("marin.group_purchase_general"):
-            categories.append(
-                self.env.ref("marin.partner_category_supplier_general").id
-            )
-
-        if self.env.user.has_group("marin.group_purchase_xiuman"):
-            categories.append(self.env.ref("marin.partner_category_supplier_xiuman").id)
-
-        if self.env.user.has_group("marin.group_purchase_potatoes"):
-            categories.append(
-                self.env.ref("marin.partner_category_supplier_potatoes").id
-            )
-
-        if not categories:
-            return [("id", "=", False)]
-
-        return [
-            ("category_id", "in", categories),
-            ("company_id", "in", (False, self.env.company.id)),
-        ]
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
 
     # Override original fields
-    partner_id = fields.Many2one(domain=_domain_partner_id)
+    partner_id = fields.Many2one(domain=lambda self: self._get_partner_id_domain())
     invoice_status = fields.Selection(
         selection_add=[
             ("partially", "Partially billed"),
@@ -97,7 +76,7 @@ class PurchaseOrderInherit(models.Model):
 
     # Override original method
     @api.depends("state", "order_line_ids.qty_to_invoice")
-    def _get_invoiced(self):
+    def _compute_invoice_status(self):
         precision = self.env["decimal.precision"].precision_get(
             "Product Unit of measure"
         )
@@ -109,7 +88,7 @@ class PurchaseOrderInherit(models.Model):
             qty1 = 0
             to_invoice = 0
             for line in order.order_line_ids.filtered(lambda ln: not ln.display_type):
-                qty1 += line.product_qty
+                qty1 += line.product_uom_qty
                 to_invoice += line.qty_to_invoice
 
             if not float_compare(qty1, to_invoice, precision_digits=precision):
@@ -180,9 +159,8 @@ class PurchaseOrderInherit(models.Model):
             "res_model": "approval.request",
             "view_mode": "list,form",
             "view_type": "list",
-            "context": clean_context(
-                self.env.context
-            ),  # avoid 'default_name' context key propagation
+            # avoid 'default_name' context key propagation
+            "context": clean_context(self.env.context),
             "domain": domain,
         }
         return action
@@ -208,6 +186,32 @@ class PurchaseOrderInherit(models.Model):
                     purchase_order.state, new_state, product_lines
                 )
                 approval_request._message_log(body=state_change_msg)
+
+    def _get_partner_id_domain(self):
+        categories = []
+        if self.env.user.has_group("marin.group_purchase_core_business"):
+            categories.append(self.env.ref("marin.partner_category_supplier_core").id)
+
+        if self.env.user.has_group("marin.group_purchase_general"):
+            categories.append(
+                self.env.ref("marin.partner_category_supplier_general").id
+            )
+
+        if self.env.user.has_group("marin.group_purchase_xiuman"):
+            categories.append(self.env.ref("marin.partner_category_supplier_xiuman").id)
+
+        if self.env.user.has_group("marin.group_purchase_potatoes"):
+            categories.append(
+                self.env.ref("marin.partner_category_supplier_potatoes").id
+            )
+
+        if not categories:
+            return [("id", "=", False)]
+
+        return [
+            ("category_id", "in", categories),
+            ("company_id", "in", (False, self.env.company.id)),
+        ]
 
     def _prepare_state_change_msg(
         self, old_state, new_state, approval_request_products

@@ -5,6 +5,13 @@ class AccountAnalyticLineInherit(models.Model):
     _inherit = "account.analytic.line"
 
     date_impacted = fields.Date(
-        "Date impacted", required=True, index=True, default=fields.Date.context_today
+        string="Date impacted",
+        required=True,
+        default=fields.Date.context_today,
+        index=True,
     )
-    amount_taxinc = fields.Monetary("Amount Tax included", required=True, default=0.0)
+    amount_taxinc = fields.Monetary(
+        string="Amount Tax included",
+        required=True,
+        default=0.0,
+    )

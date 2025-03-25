@@ -10,26 +10,14 @@ class PurchaseOrderLineInherit(models.Model):
     partner_id = fields.Many2one(depends=["product_id"])
 
     # New fields
-    invoice_status = fields.Selection(
-        [
-            ("no", "Nothing to invoice"),
-            ("to invoice", "To bill"),
-            ("partially", "Partially billed"),
-            ("invoiced", "Fully billed"),
-            ("over invoiced", "Over billed"),
-        ],
-        default="no",
-        compute="_compute_invoice_status",
-        store=True,
-    )
     qty_to_receive = fields.Float(
-        "Quantity to receive",
+        string="Quantity to receive",
         digits="Product Unit of measure",
         compute="_compute_qty_to_receive",
         store=True,
     )
     reception_status = fields.Selection(
-        [
+        selection=[
             ("no", "Nothing to receive"),
             ("to receive", "To receive"),
             ("partially", "Partially received"),
@@ -41,8 +29,8 @@ class PurchaseOrderLineInherit(models.Model):
         store=True,
     )
     force_company_id = fields.Many2one(
-        "res.company",
-        "Forced Company",
+        comodel_name="res.company",
+        string="Forced Company",
         compute="_compute_force_company_id",
         readonly=False,
         help="Technical field to force company or get it from env user if order don't exist.",
@@ -50,37 +38,6 @@ class PurchaseOrderLineInherit(models.Model):
     product_updatable = fields.Boolean(
         "Can Edit Product", default=True, compute="_compute_product_updatable"
     )
-
-    @api.depends("state", "product_uom_qty", "qty_invoiced", "qty_to_invoice")
-    def _compute_invoice_status(self):
-        precision = self.env["decimal.precision"].precision_get(
-            "Product Unit of measure"
-        )
-        for line in self:
-            if line.state not in ("purchase", "done"):
-                line.invoice_status = "no"
-            elif not float_is_zero(line.qty_to_invoice, precision_digits=precision):
-                line.invoice_status = "to invoice"
-            elif (
-                float_compare(
-                    line.qty_invoiced, line.product_uom_qty, precision_digits=precision
-                )
-                < 0
-            ):
-                line.invoice_status = "partially"
-            elif not float_compare(
-                line.qty_invoiced, line.product_uom_qty, precision_digits=precision
-            ):
-                line.invoice_status = "invoiced"
-            elif (
-                float_compare(
-                    line.qty_invoiced, line.product_uom_qty, precision_digits=precision
-                )
-                > 0
-            ):
-                line.invoice_status = "over invoiced"
-            else:
-                line.invoice_status = "no"
 
     @api.depends("qty_received", "qty_received_manual", "qty_received_method")
     def _compute_qty_to_receive(self):

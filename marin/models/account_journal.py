@@ -57,7 +57,7 @@ class AccountJournalInherit(models.Model):
         "account_id",
         string="Allowed accounts",
         check_company=True,
-        domain="[('deprecated', '=', False), ('account_type', '!=', 'off_balance')]",
+        domain=[("deprecated", "=", False), ("account_type", "!=", "off_balance")],
     )
     user_can_access_ids = fields.Many2many(
         "res.users",
@@ -85,6 +85,6 @@ class AccountJournalInherit(models.Model):
             raise UserError(
                 _(
                     "The type of the journal's default receivable/payable "
-                    "account should be 'receivable' or 'payable'."
+                    "account should be \"receivable\" or \"payable\"."
                 )
             )

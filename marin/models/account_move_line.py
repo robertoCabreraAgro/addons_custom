@@ -112,19 +112,6 @@ class AccountMoveLine(models.Model):
             else:
                 line.account_id = line.move_id.journal_id.default_account_id
 
-    def _prepare_compute_analytic_distribution(self):
-        return frozendict(
-            {
-                "account_prefix": self.account_id.code,
-                "company_id": self.company_id.id,
-                "partner_category_id": self.partner_id.category_id.ids,
-                "partner_id": self.partner_id.id,
-                "product_categ_id": self.product_id.categ_id.id,
-                "product_id": self.product_id.id,
-                "vehicle_id": self.vehicle_id.id,
-            }
-        )
-
     # Extend original method
     @api.depends("account_id", "partner_id", "product_id", "vehicle_id")
     def _compute_analytic_distribution(self):
@@ -165,6 +152,36 @@ class AccountMoveLine(models.Model):
         for rec in self:
             if rec.purchase_line_id:
                 rec.product_id = rec.purchase_line_id.product_id
+
+    def _prepare_compute_analytic_distribution(self):
+        return frozendict(
+            {
+                "account_prefix": self.account_id.code,
+                "company_id": self.company_id.id,
+                "partner_category_id": self.partner_id.category_id.ids,
+                "partner_id": self.partner_id.id,
+                "product_categ_id": self.product_id.categ_id.id,
+                "product_id": self.product_id.id,
+                "vehicle_id": self.vehicle_id.id,
+            }
+        )
+
+    # Extend original method
+    def _prepare_analytic_distribution_line(
+        self, distribution, account_id, distribution_on_each_plan
+    ):
+        res = super()._prepare_analytic_distribution_line(
+            distribution, account_id, distribution_on_each_plan
+        )
+        sign = -1 if res["amount"] < 0 else 1
+        res.update(
+            {
+                "amount_taxinc": self.price_total * sign,
+                "date_impacted": self.date,
+                "vehicle_id": self.vehicle_id and self.vehicle_id.id or False,
+            }
+        )
+        return res
 
     # Override original method
     def _check_constrains_account_id_journal_id(self):
@@ -232,20 +249,3 @@ class AccountMoveLine(models.Model):
                         journal.name,
                     )
                 )
-
-    # Extend original method
-    def _prepare_analytic_distribution_line(
-        self, distribution, account_id, distribution_on_each_plan
-    ):
-        res = super()._prepare_analytic_distribution_line(
-            distribution, account_id, distribution_on_each_plan
-        )
-        sign = -1 if res["amount"] < 0 else 1
-        res.update(
-            {
-                "amount_taxinc": self.price_total * sign,
-                "date_impacted": self.date,
-                "vehicle_id": self.vehicle_id and self.vehicle_id.id or False,
-            }
-        )
-        return res
