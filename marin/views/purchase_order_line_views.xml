@@ -112,7 +112,6 @@
                     optional="show"
                     widget="many2many_tags"
                 />
-                <field name="qty_received_manual" column_invisible="1" />
                 <field
                     name="qty_received"
                     readonly="qty_received_method != 'manual'"

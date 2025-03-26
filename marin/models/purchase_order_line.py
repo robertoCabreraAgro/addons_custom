@@ -39,11 +39,11 @@ class PurchaseOrderLineInherit(models.Model):
         "Can Edit Product", default=True, compute="_compute_product_updatable"
     )
 
-    @api.depends("qty_received", "qty_received_manual", "qty_received_method")
+    @api.depends("qty_received_method", "qty_received")
     def _compute_qty_to_receive(self):
         for line in self:
             if line.qty_received_method == "manual":
-                line.qty_to_receive = line.product_uom_qty - line.qty_received_manual
+                line.qty_to_receive = line.product_uom_qty - line.qty_received
             elif line.qty_received_method == "stock_moves":
                 line.qty_to_receive = line.product_uom_qty - line.qty_received
             else:
