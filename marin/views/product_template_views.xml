@@ -84,13 +84,6 @@
             <xpath expr="//div[@name='options']//label[@for='can_be_expensed']" position="attributes">
                 <attribute name="groups">marin.group_purchase_readonly</attribute>
             </xpath>
-            <xpath expr="//div[@name='options']//field[@name='rent_ok']" position="attributes">
-                <attribute name="readonly">not user_sale_manager</attribute>
-                <attribute name="groups">marin.group_sale_readonly</attribute>
-            </xpath>
-            <xpath expr="//div[@name='options']//label[@for='rent_ok']" position="attributes">
-                <attribute name="groups">marin.group_sale_readonly</attribute>
-            </xpath>
             <xpath expr="//div[@name='options']//field[@name='available_in_pos']" position="attributes">
                 <attribute name="readonly">not user_sale_manager</attribute>
                 <attribute name="groups">marin.group_sale_readonly</attribute>
