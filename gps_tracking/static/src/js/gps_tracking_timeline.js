@@ -260,51 +260,19 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
         this.state.deviceLayers[device.imei] = lineLayer;
 
         const getColorBySpeed = (speed, ignition) => {
-            const ign = Number(ignition);
-            const spd = Number(speed);
-        
-            if (spd === 0 && ign === 0) {
-                return {
-                    fill: new ol.style.Fill({ color: "#0033A0" }), // 🔵
-                    radius: 5,
-                    z: 20
-                };
-            }
-            if (spd === 0 && ign === 1) {
-                return {
-                    fill: new ol.style.Fill({ color: "#FBC02D" }), // 🟡
-                    radius: 3,
-                    z: 10
-                };
-            }
-            if (spd > 110) {
-                return {
-                    fill: new ol.style.Fill({ color: "#FB8C00" }), // 🟠
-                    radius: 3,
-                    z: 5
-                };
-            }
-            if (spd > 125) {
-                return {
-                    fill: new ol.style.Fill({ color: "#D32F2F" }), // 🔴
-                    radius: 3,
-                    z: 5
-                };
-            }
-            return {
-                fill: new ol.style.Fill({ color: "#388E3C" }), // 🟢
-                radius: 3,
-                z: 0
-            };
+            console.log("getColorBySpeed ignition ", typeof(ignition))
+            console.log("getColorBySpeed speed ", speed)
+            if (speed === 0 && ignition === 0) return "#FF0000";  // 🔴 Rojo - Alto total y apagado
+            if (speed === 0) return "#FFFF00";  // 🟡 Amarillo - Alto total pero encendido
+            if (speed > 110) return "#FFA500";  // 🟠 Naranja - Velocidad alta (>120 km/h)
+            return "#00FF00"; // 🔵 Azul - Por defecto (no debería ocurrir)
         };
     
+        // Crear puntos individuales con datos correctos desde 'device.points'
         const pointFeatures = device.points.map((point, index) => {
             const coord = ol.proj.transform([point.longitude, point.latitude], "EPSG:4326", "EPSG:3857");
-            const { fill, radius, z } = getColorBySpeed(
-                Number(point.speed) || 0,
-                Number(point.ignition)
-            );
-            
+    
+            const color = getColorBySpeed(point.speed || 0);
 
             const pointFeature = new ol.Feature({
                 geometry: new ol.geom.Point(coord),
@@ -319,10 +287,9 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
     
             pointFeature.setStyle(new ol.style.Style({
                 image: new ol.style.Circle({
-                    radius,
-                    fill
+                    radius: 3,
+                    fill: new ol.style.Fill({ color: color  }),
                 }),
-                zIndex: z,
             }));
     
             return pointFeature;
@@ -343,9 +310,13 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
             firstFeature.setStyle(new ol.style.Style({
                 image: new ol.style.Circle({
                     radius: 6,
-                    zIndex:50,
                     fill: new ol.style.Fill({ color: '#00FF00' }), // Verde para el inicio
                 }),
+                text: new ol.style.Text({
+                    text: 'Inicio',
+                    offsetY: -15,
+                    fill: new ol.style.Fill({ color: '#000000' }),
+                })
             }));
     
             pointFeatures.push(firstFeature);
@@ -366,9 +337,13 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
             lastFeature.setStyle(new ol.style.Style({
                 image: new ol.style.Circle({
                     radius: 6,
-                    zIndex:50,
                     fill: new ol.style.Fill({ color: '#FF0000' }), // Rojo para el final
                 }),
+                text: new ol.style.Text({
+                    text: 'Fin',
+                    offsetY: -15,
+                    fill: new ol.style.Fill({ color: '#000000' }),
+                })
             }));
     
             pointFeatures.push(lastFeature);
@@ -442,7 +417,7 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
 
         //console.log("point Odome ",this.state.firstOdometers)
         const initialOdometer = this.state.firstOdometers;
-        const distanceTraveled = currentOdometer - initialOdometer;
+        const distanceTraveled = initialOdometer - currentOdometer;
         tooltipElement.style.visibility = "visible";
         tooltipElement.style.left = pixel[0] + "px";
         tooltipElement.style.top = pixel[1] + "px";
@@ -457,6 +432,11 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
                 <span style="color: ${ignition == 1 ? 'green' : 'red'};">
                     <i class="fa fa-power-off" style="margin-right: 5px;"></i>
                     ${ignition == 1 ? 'Encendido' : 'Apagado'}
+                </span><br/>
+                <strong>Movimiento:</strong>
+                <span style="color: ${movement == 1 ? 'green' : 'red'};">
+                    <i class="fa fa-car" style="margin-right: 5px;"></i>
+                    ${movement == 1 ? 'En movimiento' : 'Estacionado'}
                 </span><br/>
                 <strong>Odómetro:</strong> ${distanceTraveled.toFixed(2)} km<br/>
                 <strong>Hora:</strong> ${formattedTime}<br/>
