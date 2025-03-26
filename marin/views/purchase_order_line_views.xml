@@ -44,7 +44,7 @@
                 <field name="state" column_invisible="1" />
                 <field name="display_type" column_invisible="1" />
                 <field name="product_updatable" column_invisible="1" />
-                <field name="qty_received_method" column_invisible="1" />
+                <field name="qty_transfered_method" column_invisible="1" />
                 <field name="price_tax" column_invisible="1" />
                 <field
                     name="force_company_id"
@@ -114,7 +114,7 @@
                 />
                 <field
                     name="qty_received"
-                    readonly="qty_received_method != 'manual'"
+                    readonly="qty_transfered_method != 'manual'"
                     sum="Delivered"
                     optional="show"
                 />
