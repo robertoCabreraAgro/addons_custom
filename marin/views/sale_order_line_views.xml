@@ -65,7 +65,7 @@
                 <field name="state" column_invisible="1" />
                 <field name="invoice_status" column_invisible="1" />
                 <field name="delivery_status" column_invisible="1" />
-                <field name="qty_delivered_method" column_invisible="1" />
+                <field name="qty_transfered_method" column_invisible="1" />
                 <field name="product_uom_readonly" column_invisible="1" />
                 <field name="product_uom_id" column_invisible="1" />
                 <field name="product_updatable" column_invisible="1" />
@@ -154,7 +154,7 @@
                     name="qty_delivered"
                     string="Delivered Qty"
                     sum="Delivered"
-                    readonly="qty_delivered_method != 'manual'"
+                    readonly="qty_transfered_method != 'manual'"
                     decoration-info="(not display_type and invoice_status == 'to invoice')"
                     decoration-bf="(not display_type and invoice_status == 'to invoice')"
                     optional="show"
