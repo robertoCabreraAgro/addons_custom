@@ -42,7 +42,7 @@
                 sample="1"
             >
                 <header>
-                    <button name="action_create_invoice" type="object" string="Create Bills" />
+                    <button name="create_invoice" type="object" string="Create Bills" />
                 </header>
                 <field
                     name="company_id"
@@ -85,14 +85,14 @@
                 />
                 <field name="amount_total" sum="Total amount" widget="monetary" optional="show" decoration-bf="1" />
                 <field name="currency_id" column_invisible="True" readonly="state in ['cancel', 'done', 'purchase']" />
-                <field name="user_id" widget="many2one_avatar_user" optional="show" />
+                <field name="purchase_user_id" widget="many2one_avatar_user" optional="show" />
                 <field name="activity_ids" widget="list_activity" optional="hide" />
                 <field name="activity_exception_decoration" widget="activity_exception" />
                 <field
                     name="state"
                     widget="badge"
-                    decoration-success="state == 'purchase' or state == 'done'"
-                    decoration-info="state == 'draft' or state == 'sent'"
+                    decoration-success="state == 'purchase'"
+                    decoration-info="state == 'draft'"
                     decoration-warning="state == 'to approve'"
                     optional="show"
                 />
@@ -146,7 +146,7 @@
             <xpath expr="//field[@name='partner_id']" position="attributes">
                 <attribute name="options">{'no_create': True}</attribute>
             </xpath>
-            <xpath expr="//field[@name='user_id']" position="attributes">
+            <xpath expr="//field[@name='purchase_user_id']" position="attributes">
                 <attribute name="options">{'no_create': True}</attribute>
                 <attribute name="readonly">not is_user_id_editable</attribute>
                 <attribute name="force_save">1</attribute>
@@ -178,7 +178,7 @@
                 <attribute name="decoration-info">not display_type and reception_status == 'over full'</attribute>
                 <attribute name="decoration-success">not display_type and reception_status == 'full'</attribute>
 	    </xpath>-->
-            <field name="user_id" position="before">
+            <field name="purchase_user_id" position="before">
                 <field name="is_user_id_editable" invisible="1" />
             </field>
         </field>

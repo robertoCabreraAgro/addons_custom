@@ -342,7 +342,7 @@ class TestSale(TestSaleCommon):
         with Form(
             self.env["sale.order.line"], view="marin.view_order_line_tree_marin"
         ) as line_form:
-            line_form.order_partner_id = self.partner_a
+            line_form.partner_id = self.partner_a
             line_form.product_id = self.product
             line_form.price_unit = 190.50
             line_form.product_uom = self.env.ref("uom.product_uom_unit")
