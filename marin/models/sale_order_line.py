@@ -39,7 +39,7 @@ class SaleOrderLine(models.Model):
         "from env user if order don't exist.",
     )
 
-    @api.depends("state", "product_uom_qty", "qty_delivered")
+    @api.depends("state", "product_uom_qty", "qty_transfered")
     def _compute_delivery_status(self):
         """Compute the Delivery Status of a SO line. Possible status:
         - no: if the SO is not in status "sale" or "done", we consider that there is nothing to
@@ -56,22 +56,22 @@ class SaleOrderLine(models.Model):
                 line.product_uom_qty, precision_digits=precision
             ):
                 line.delivery_status = "no"
-            elif float_is_zero(line.qty_delivered, precision_digits=precision):
+            elif float_is_zero(line.qty_transfered, precision_digits=precision):
                 line.delivery_status = "to deliver"
             elif (
                 float_compare(
-                    line.qty_delivered, line.product_uom_qty, precision_digits=precision
+                    line.qty_transfered, line.product_uom_qty, precision_digits=precision
                 )
                 < 0
             ):
                 line.delivery_status = "partially"
             elif not float_compare(
-                line.qty_delivered, line.product_uom_qty, precision_digits=precision
+                line.qty_transfered, line.product_uom_qty, precision_digits=precision
             ):
                 line.delivery_status = "delivered"
             elif (
                 float_compare(
-                    line.qty_delivered, line.product_uom_qty, precision_digits=precision
+                    line.qty_transfered, line.product_uom_qty, precision_digits=precision
                 )
                 > 0
             ):

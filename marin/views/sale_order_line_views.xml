@@ -151,7 +151,7 @@
                 <field name="price_subtotal" widget="monetary" optional="show" />
                 <field name="price_total" widget="monetary" optional="show" />
                 <field
-                    name="qty_delivered"
+                    name="qty_transfered"
                     string="Delivered Qty"
                     sum="Delivered"
                     readonly="qty_transfered_method != 'manual'"

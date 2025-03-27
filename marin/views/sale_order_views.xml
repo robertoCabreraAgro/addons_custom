@@ -218,7 +218,7 @@
             <xpath expr="//page/field[@name='order_line_ids']/list/field[@name='discount']" position="attributes">
                 <attribute name="optional">hide</attribute>
             </xpath>
-            <xpath expr="//page/field[@name='order_line_ids']/list/field[@name='qty_delivered']" position="attributes">
+            <xpath expr="//page/field[@name='order_line_ids']/list/field[@name='qty_transfered']" position="attributes">
                 <attribute name="decoration-danger">not display_type and delivery_status == 'over full'</attribute>
                 <attribute name="decoration-warning">not display_type and delivery_status == 'partial'</attribute>
                 <attribute name="decoration-info">not display_type and delivery_status == 'pending'</attribute>

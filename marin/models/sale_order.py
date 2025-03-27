@@ -199,7 +199,7 @@ class SaleOrder(models.Model):
         )
         lines = orders.mapped("order_line_ids").filtered(
             lambda line: float_is_zero(line.product_uom_qty, precision_digits=precision)
-            and float_is_zero(line.qty_delivered, precision_digits=precision)
+            and float_is_zero(line.qty_transfered, precision_digits=precision)
             and float_is_zero(line.qty_invoiced, precision_digits=precision)
             and not line.invoice_lines
         )
