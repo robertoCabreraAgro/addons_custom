@@ -87,8 +87,8 @@
                 <field name="name" string="Number" readonly="1" decoration-bf="1" />
                 <field name="create_date" string="Creation Date" widget="date" optional="show" />
                 <field name="date_order" string="Order Date" widget="date" optional="show" />
-                <field name="commitment_date" widget="date" optional="hide" />
-                <field name="expected_date" widget="date" optional="hide" />
+                <field name="date_commitment" widget="date" optional="hide" />
+                <field name="date_planned" widget="date" optional="hide" />
                 <field name="partner_id" readonly="1" />
                 <field name="amount_untaxed" sum="Total tax excluded" widget="monetary" optional="hide" />
                 <field name="amount_tax" sum="Tax Total" widget="monetary" optional="hide" />

@@ -57,7 +57,7 @@
         "account_invoice_margin_sale",
         # "stock_move_location",
         "sale_loyalty_delivery",
-        "sale_commission_margin",
+        # "sale_commission_margin",
         "pos_sale_margin",
         "pos_hr",
         # "website_sale_stock_renting",
