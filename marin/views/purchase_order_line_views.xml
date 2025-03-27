@@ -113,7 +113,7 @@
                     widget="many2many_tags"
                 />
                 <field
-                    name="qty_received"
+                    name="qty_transfered"
                     readonly="qty_transfered_method != 'manual'"
                     sum="Delivered"
                     optional="show"

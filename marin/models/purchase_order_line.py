@@ -39,17 +39,17 @@ class PurchaseOrderLineInherit(models.Model):
         "Can Edit Product", default=True, compute="_compute_product_updatable"
     )
 
-    @api.depends("qty_transfered_method", "qty_received")
+    @api.depends("qty_transfered_method", "qty_transfered")
     def _compute_qty_to_receive(self):
         for line in self:
             if line.qty_transfered_method == "manual":
-                line.qty_to_receive = line.product_uom_qty - line.qty_received
+                line.qty_to_receive = line.product_uom_qty - line.qty_transfered
             elif line.qty_transfered_method == "stock_moves":
-                line.qty_to_receive = line.product_uom_qty - line.qty_received
+                line.qty_to_receive = line.product_uom_qty - line.qty_transfered
             else:
                 line.qty_to_receive = 0.0
 
-    @api.depends("state", "product_uom_qty", "qty_received")
+    @api.depends("state", "product_uom_qty", "qty_transfered")
     def _compute_reception_status(self):
         """Compute the Reception Status of a PO line. Possible status:
         - no: if the PO is not in status "purchase" or "done", we consider that there is nothing to
@@ -66,22 +66,22 @@ class PurchaseOrderLineInherit(models.Model):
                 line.product_uom_qty, precision_digits=precision
             ):
                 line.reception_status = "no"
-            elif float_is_zero(line.qty_received, precision_digits=precision):
+            elif float_is_zero(line.qty_transfered, precision_digits=precision):
                 line.reception_status = "to receive"
             elif (
                 float_compare(
-                    line.qty_received, line.product_uom_qty, precision_digits=precision
+                    line.qty_transfered, line.product_uom_qty, precision_digits=precision
                 )
                 < 0
             ):
                 line.reception_status = "partially"
             elif not float_compare(
-                line.qty_received, line.product_uom_qty, precision_digits=precision
+                line.qty_transfered, line.product_uom_qty, precision_digits=precision
             ):
                 line.reception_status = "received"
             elif (
                 float_compare(
-                    line.qty_received, line.product_uom_qty, precision_digits=precision
+                    line.qty_transfered, line.product_uom_qty, precision_digits=precision
                 )
                 > 0
             ):
@@ -100,12 +100,12 @@ class PurchaseOrderLineInherit(models.Model):
                 or self.env.company
             )
 
-    @api.depends("order_id.state", "product_id", "qty_invoiced", "qty_received")
+    @api.depends("order_id.state", "product_id", "qty_invoiced", "qty_transfered")
     def _compute_product_updatable(self):
         for line in self:
             if line.state in ["done", "cancel"] or (
                 line.state == "purchase"
-                and (line.qty_invoiced > 0 or line.qty_received > 0)
+                and (line.qty_invoiced > 0 or line.qty_transfered > 0)
             ):
                 line.product_updatable = False
             else:
