@@ -1,0 +1,113 @@
+<odoo>
+    <record id="l10n_mx_edi_session_view_list" model="ir.ui.view">
+        <field name="name">l10n_mx_edi.session.view.list</field>
+        <field name="model">l10n_mx_edi.session</field>
+        <field name="arch" type="xml">
+            <list string="MX SAT Sessions">
+                <field name="name"/>
+                <field name="uuid"/>
+                <field name="token_expiration"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="file_count"/>
+                <field name="request"/>
+                <field name="request_message"/>
+                <field name="request_status_code"/>
+                <field name="request_state"  widget="badge" decoration-success="request_state=='3'" decoration-info="request_state=='2'" decoration-muted="request_state=='1'" decoration-danger="request_state in ('4', '5', '6')" />
+                <field name="company_id"/>
+                <button 
+                    name="action_verify_cfdi" 
+                    type="object"
+                    string="Verify"
+                    class="btn-primary"
+                    invisible="request_state != '1'"/>
+                <button 
+                    name="action_download_cfdi" 
+                    type="object"
+                    string="Download"
+                    class="btn-primary"
+                    invisible="request_state != '3' or request_status_code == '5008'"/>
+                <field name="file_count"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="l10n_mx_edi_session_view_form" model="ir.ui.view">
+        <field name="name">l10n_mx_edi.session.view.form</field>
+        <field name="model">l10n_mx_edi.session</field>
+        <field name="arch" type="xml">
+            <form string="MX SAT Session">
+                <header>
+                    <field name="request_state" widget="statusbar" statusbar_visible="1,2,3,4"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="company_id"/>
+                            <field name="uuid"/>
+                            <field name="token"/>
+                        </group>
+                        <group>
+                            <field name="token_expiration"/>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Request Details" name="request_details">
+                            <group>
+                                <field name="file_count"/>
+                                <field name="request"/>
+                                <field name="request_message"/>
+                                <field name="request_status_code"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_mx_edi_session_view_search" model="ir.ui.view">
+        <field name="name">l10n_mx_edi.session.view.search</field>
+        <field name="model">l10n_mx_edi.session</field>
+        <field name="arch" type="xml">
+            <search string="MX SAT Sessions">
+                <field name="name"/>
+                <field name="company_id"/>
+                <field name="uuid"/>
+                <field name="request_state"/>
+                <group expand="0" string="Group By">
+                    <filter string="Company" name="group_by_company" 
+                            context="{'group_by': 'company_id'}"/>
+                    <filter string="Request State" name="group_by_request_state" 
+                            context="{'group_by': 'request_state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="l10n_mx_edi_session_action" model="ir.actions.act_window">
+        <field name="name">MX SAT Sessions</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">l10n_mx_edi.session</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'create': False, 'edit': False}</field>
+    </record>
+
+    <menuitem
+        id="menu_sat_section"
+        name="SAT"
+        parent="documents.Config"
+        sequence="99"
+        groups="documents_l10n_mx_edi.group_documents_l10n_mx_edi_manager"
+    />
+    
+    <menuitem id="menu_sat_sessions"
+        name="SAT Sessions"
+        parent="menu_sat_section"
+        sequence="10"
+        groups="documents_l10n_mx_edi.group_documents_l10n_mx_edi_manager"
+        action="l10n_mx_edi_session_action"/>
+</odoo>

@@ -50,7 +50,7 @@
         name="Sync with SAT"
         parent="documents.menu_root"
         action="sat_sync_wizard_action"
-        sequence="10"
+        sequence="5"
         groups="documents_l10n_mx_edi.group_documents_l10n_mx_edi"
     />
 </odoo>

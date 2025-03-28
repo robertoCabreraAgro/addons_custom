@@ -930,7 +930,7 @@ class L10nMxEdiDocument(models.Model):
         }
         return ret_dict
 
-    def l10n_mx_ws_generate_token(self, certificate, private_key, uuid):
+    def l10n_mx_ws_generate_token(self, certificate, private_key, uuid=None):
         date_created = datetime.utcnow()
         date_expires = date_created + timedelta(seconds=300)
         date_created = date_created.isoformat()
@@ -1200,3 +1200,15 @@ class L10nMxEdiDocument(models.Model):
             "paquete_b64": communication.text,
         }
         return ret_dict
+
+    def _l10n_mx_edi_is_cfdi(self, xml64):
+        is_cfdi = False
+        try:
+            cfdi_etree = self.env["l10n_mx_edi.document"].check_objectify_xml(xml64)
+            is_cfdi = cfdi_etree.tag in [
+                "{http://www.sat.gob.mx/cfd/3}Comprobante",
+                "{http://www.sat.gob.mx/cfd/4}Comprobante",
+            ]
+        except Exception:
+            pass
+        return is_cfdi

@@ -1,20 +1,22 @@
-from pytz import timezone
+import base64
+import io
+import os
+import zipfile
+import logging
 
-from odoo import fields, models
-
+from datetime import datetime, timedelta
+from odoo import api, fields, models
 from .l10n_mx_edi_document import MXWS_ERROR_TYPE
 
-DEFAULT_TZ = timezone("America/Mexico_City")
+DEFAULT_TZ = "America/Mexico_City"
 
-
-# pylint: disable=invalid-name
-def str_to_datetime(dt_str, tz=DEFAULT_TZ):
-    return tz.localize(fields.Datetime.from_string(dt_str))
+_logger = logging.getLogger(__name__)
 
 
 class Session(models.Model):
     _name = "l10n_mx_edi.session"
     _description = "MX SAT session"
+    _order = "create_date desc"
 
     name = fields.Date(
         "Date", required=True, index=True, default=fields.Date.context_today
@@ -27,13 +29,271 @@ class Session(models.Model):
     token_expiration = fields.Datetime()
     date_from = fields.Datetime("Date from")
     date_to = fields.Datetime("Date to")
-    request = fields.Char("Download request")
-    request_status_code = fields.Char("Download request status code")
+    request = fields.Char("Request ID")
+    request_status_code = fields.Char("Request code")
     request_state = fields.Selection(MXWS_ERROR_TYPE, "Request state")
     request_message = fields.Char("Request message")
     file_count = fields.Integer("File count")
+    packages = fields.Char("packages")
 
     def get_mx_current_datetime(self):
         return fields.Datetime.context_timestamp(
             self.with_context(tz="America/Mexico_City"), fields.Datetime.now()
+        )
+
+    def action_verify_cfdi(self, esignature=None):
+        self.ensure_one()
+
+        mx_edi_document = self.env["l10n_mx_edi.document"]
+
+        esignature = (
+            esignature
+            or self.company_id.l10n_mx_edi_esignature_ids.get_valid_esignature()
+        )
+        certificate = esignature.get_cert_data()[1]
+        private_key = esignature.get_pk_data()[1]
+
+        if self.token_expiration < fields.Datetime.now():
+            token_res = mx_edi_document.l10n_mx_ws_generate_token(
+                certificate, private_key
+            )
+            self.write(
+                {
+                    "token": token_res["token"],
+                    "token_expiration": datetime.fromisoformat(token_res["expires"]),
+                }
+            )
+        verify_download = mx_edi_document.l10n_mx_ws_verify_package(
+            certificate, private_key, self.token, self.request
+        )
+        self.write(
+            {
+                "request_state": verify_download["estado_solicitud"],
+                "file_count": int(verify_download["numero_cfdis"]),
+                "request_message": verify_download["mensaje"],
+                "packages": verify_download["paquetes"][0],
+            }
+        )
+
+    def action_download_cfdi(self, esignature=None):
+        self.ensure_one()
+        mx_edi_document = self.env["l10n_mx_edi.document"]
+        docs_document = self.env["documents.document"]
+        ir_attachment = self.env["ir.attachment"]
+
+        esignature = (
+            esignature
+            or self.company_id.l10n_mx_edi_esignature_ids.get_valid_esignature()
+        )
+
+        certificate = esignature.get_cert_data()[1]
+        private_key = esignature.get_pk_data()[1]
+
+        document_ids = []
+
+        if self.token_expiration < fields.Datetime.now():
+            token_res = mx_edi_document.l10n_mx_ws_generate_token(
+                certificate, private_key
+            )
+            self.write(
+                {
+                    "token": token_res["token"],
+                    "token_expiration": datetime.fromisoformat(token_res["expires"]),
+                }
+            )
+
+        download_res = mx_edi_document.l10n_mx_ws_download_package(
+            certificate, private_key, self.token, self.packages
+        )
+        self.write(
+            {
+                "request_status_code": download_res["cod_estatus"],
+                "request_message": download_res["mensaje"],
+            }
+        )
+        if download_res["paquete_b64"]:
+            content = download_res["paquete_b64"]
+            folder_id = (
+                self.company_id.l10n_mx_edi_folder.id or False
+            )  # Precompute folder ID once
+
+            # Batch processing preparation
+            att_vals_list = []  # Stores attachment creation values
+            doc_vals_list = []  # Stores document creation values
+
+            with zipfile.ZipFile(io.BytesIO(base64.b64decode(content))) as container:
+
+                # Filtering only XML files and extract clean names (without extension)
+                xml_files = [
+                    (fname, os.path.splitext(fname)[0].upper())
+                    for fname in container.namelist()
+                    if fname.lower().endswith(".xml")
+                ]
+
+                if xml_files:
+                    # Extract just the names for existence check
+                    names = [xml_file[1] for xml_file in xml_files]
+
+                    # Find all existing documents
+                    existing_docs = docs_document.sudo().search(
+                        [("name", "in", names), ("company_id", "=", self.id)]
+                    )
+
+                    # Existing documents are kept for return
+                    document_ids.extend(existing_docs.ids)
+
+                    # already processed files
+                    existing_names = set(existing_docs.mapped("name"))
+
+                    for fname, name in xml_files:
+
+                        if name in existing_names:
+                            continue  # Skip already processed files
+
+                        with container.open(fname) as file:
+                            file_content = base64.b64encode(file.read())
+
+                            if not mx_edi_document._l10n_mx_edi_is_cfdi(file_content):
+                                continue  # Skip non-CFDI XMLs
+
+                            # Prepare for batch creation
+                            att_vals_list.append(
+                                {
+                                    "name": f"{name}.xml",
+                                    "type": "binary",
+                                    "datas": file_content,
+                                }
+                            )
+                            doc_vals_list.append(
+                                {
+                                    "name": name,
+                                    "folder_id": folder_id,
+                                    "l10n_mx_edi_is_cfdi": True,
+                                }
+                            )
+
+            # Bulk create records if we have valid files
+            if att_vals_list:
+
+                # Create all attachments in single operation
+                attachments = ir_attachment.with_context(
+                    force_l10n_mx_edi_cfdi_uuid=True
+                ).create(att_vals_list)
+
+                # Assign attachment IDs to corresponding documents
+                for attachment, doc_vals in zip(attachments, doc_vals_list):
+                    doc_vals["attachment_id"] = attachment.id
+
+                # Bulk create all documents
+                created_documents = docs_document.create(doc_vals_list)
+                document_ids.extend(created_documents.ids)
+        action = self.env.ref("documents.document_action").read()[0]
+        action["domain"] = [("id", "in", document_ids)]
+        return action
+
+    @api.model
+    def _cron_sync_with_sat(self, company_id):
+        """Schedule action to check MX SAT sessions not closed or create new one if apply"""
+        auto_commit = self.env.context.get("auto_commit", True)
+        company = self.env["res.company"].browse(company_id)
+        esignature = company.l10n_mx_edi_esignature_ids.get_valid_esignature()
+
+        # 1. Sync with SAT (create token & send request)
+        today = fields.Date.context_today(self.with_context(tz=DEFAULT_TZ))
+        cron_user = self.env.ref("base.user_root")
+        domain_today = [
+            ("create_uid", "=", cron_user.id),
+            ("name", "=", today),
+            ("company_id", "=", company_id),
+        ]
+        mx_session_today = self.search(domain_today, limit=1, order="id ASC")
+        if not mx_session_today:
+            mx_session_today = self.create(
+                {
+                    "name": today,
+                    "company_id": company_id,
+                }
+            )
+            _logger.info("Was created a new MX session with ID %s", mx_session_today.id)
+            try:
+                mx_session_today.action_sync_with_sat(esignature)
+            except Exception as e:
+                if auto_commit:
+                    self.env.cr.rollback()
+                _logger.error(e)
+            finally:
+                if auto_commit:
+                    self.env.cr.commit()  # pylint: disable=invalid-commit
+
+        # 2. Verify
+        domain_verify = [
+            ("request_state", "in", ["1", "2"]),
+            ("company_id", "=", company_id),
+        ]
+        mx_session_to_verify = self.search(domain_verify, order="id ASC")
+        try:
+            mx_session_to_verify.action_verify_cfdi(esignature)
+            _logger.info(
+                "Was verified request for MX session with ID %s",
+                mx_session_to_verify.id,
+            )
+        except Exception as e:
+            if auto_commit:
+                self.env.cr.rollback()
+            _logger.error(e)
+        finally:
+            if auto_commit:
+                self.env.cr.commit()  # pylint: disable=invalid-commit
+
+        # 3. Download
+        domain_download = [
+            ("request_state", "!=", "5008"),
+            ("request_state", "=", "3"),
+            ("company_id", "=", company_id),
+        ]
+        mx_session_to_download = self.search(domain_download, order="id ASC")
+        try:
+            mx_session_to_download.action_download_cfdi(esignature)
+            _logger.info(
+                "Was downloaded documents for MX session with ID %s",
+                mx_session_to_verify.id,
+            )
+        except Exception as e:
+            if auto_commit:
+                self.env.cr.rollback()
+            _logger.error(e)
+        finally:
+            if auto_commit:
+                self.env.cr.commit()  # pylint: disable=invalid-commit
+
+    def action_sync_with_sat(self, esignature):
+        self.ensure_one()
+        mx_edi_document = self.env["l10n_mx_edi.document"]
+        certificate = esignature.get_cert_data()[1]
+        private_key = esignature.get_pk_data()[1]
+        three_days_ago = self.name - timedelta(days=3)
+        date_from = datetime.combine(three_days_ago, datetime.min.time())
+        date_to = datetime.combine(self.name, datetime.min.time())
+        token_res = mx_edi_document.l10n_mx_ws_generate_token(certificate, private_key)
+        self.write(
+            {
+                "token": token_res["token"],
+                "token_expiration": datetime.fromisoformat(token_res["expires"]),
+                "date_from": date_from,
+                "date_to": date_to,
+            }
+        )
+        request_res = mx_edi_document.l10n_mx_ws_request_download(
+            certificate,
+            private_key,
+            self.token,
+            {"date_from": date_from, "date_to": date_to},
+        )
+        self.write(
+            {
+                "request": request_res["id_solicitud"],
+                "request_status_code": request_res["cod_estatus"],
+                "request_message": request_res["mensaje"],
+                "request_state": "1" if request_res["cod_estatus"] == "5000" else "0",
+            }
         )
