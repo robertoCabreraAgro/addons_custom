@@ -53,6 +53,10 @@ class ApprovalProductLine(models.Model):
         string="Quantity",
         default=1.0,
     )
+    price_unit = fields.Float(
+        string="Price",
+        default=1.0,
+    )
 
     @api.depends("product_id")
     def _compute_description(self):
