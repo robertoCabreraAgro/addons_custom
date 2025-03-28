@@ -131,8 +131,8 @@ class AccountMoveLine(models.Model):
     @api.depends("move_id.partner_id", "move_id.line_ids.sale_line_ids")
     def _compute_allowed_sale_line_ids(self):
         sale_obj = self.env["sale.order"]
-        for rec in self:
-            move = rec.move_id
+        for line in self:
+            move = line.move_id
             orders = sale_obj.search(
                 [
                     "|",
@@ -141,17 +141,17 @@ class AccountMoveLine(models.Model):
                 ]
             )
             lines = orders.order_line_ids | move.line_ids.mapped("sale_line_ids")
-            rec.allowed_sale_line_ids = (
+            line.allowed_sale_line_ids = (
                 lines
-                if not rec.product_id
-                else lines.filtered(lambda line: line.product_id == rec.product_id)
+                if not line.product_id
+                else lines.filtered(lambda line: line.product_id == line.product_id)
             )
 
-    @api.onchange("purchase_line_id")
+    @api.onchange("purchase_line_ids")
     def _onchange_purchase_line(self):
-        for rec in self:
-            if rec.purchase_line_id:
-                rec.product_id = rec.purchase_line_id.product_id
+        for line in self:
+            if line.purchase_line_ids:
+                line.product_id = line.purchase_line_ids.product_id
 
     def _prepare_compute_analytic_distribution(self):
         return frozendict(

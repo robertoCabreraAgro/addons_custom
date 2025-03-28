@@ -57,7 +57,7 @@ class AccountMove(models.Model):
     # -------------------------------------------------------------------------
 
     # Override original method
-    @api.depends("line_ids.purchase_line_id", "line_ids.product_id")
+    @api.depends("line_ids.purchase_line_ids", "line_ids.product_id")
     def _compute_hide_purchase_matching(self):
         """OVERRIDE to add condition that check if product_id is defined.
         More context: Task #5643
@@ -66,7 +66,7 @@ class AccountMove(models.Model):
         for move in self:
             if any(
                 il.display_type == "product"
-                and not bool(il.purchase_line_id)
+                and not bool(il.purchase_line_ids)
                 and bool(il.product_id)
                 for il in move.invoice_line_ids
             ):
@@ -442,5 +442,5 @@ class AccountMove(models.Model):
                 for line, vals in purchase_line_vals.items():
                     move_line = self.env["account.move.line"].browse(int(line))
                     po_line = self.env["purchase.order.line"].create(vals)
-                    move_line.purchase_line_id = po_line.id
+                    move_line.purchase_line_ids= po_line.id
         return True
