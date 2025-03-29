@@ -48,7 +48,7 @@ class GpsTrackingPoint(models.Model):
     battery_voltage = fields.Float(string="Battery Voltage", digits=(16, 3))
     battery_current = fields.Float(string="Battery Current", digits=(16, 3))
     active_gsm_operator = fields.Integer(string="Active GSM Operator")
-    odometer = fields.Integer(string="Total Odometer")
+    odometer = fields.Integer(string="Odometer")
     fuel_level = fields.Integer(string="Fuel Level")
     wheel_speed = fields.Float(string="Wheel Speed")
     engine_speed_rpm = fields.Integer(string="Engine Speed (RPM)")

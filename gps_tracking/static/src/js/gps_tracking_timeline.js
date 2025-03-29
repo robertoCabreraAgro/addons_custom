@@ -17,6 +17,7 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
         this.state.deviceLayers = {};
         this.state.selectedDevice = null;
         this.state.firstOdometers = 0; 
+        this.state.initialFuel = 0;
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         const formattedDate = today.toISOString().slice(0, 16);
@@ -86,7 +87,19 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
                     ["timestamp", ">=", new Date(this.state.startDate).toISOString()],
                     ["timestamp", "<=", new Date(this.state.endDate).toISOString()]
                 ];
-                const points = await this.orm.searchRead("gps.tracking.point", domain, ["latitude", "longitude", "ignition", "speed", "total_odometer", "timestamp","movement"]);
+                const points = await this.orm.searchRead(
+                    "gps.tracking.point", domain, 
+                    [
+                        "latitude", 
+                        "longitude", 
+                        "ignition", 
+                        "speed", 
+                        "odometer", 
+                        "timestamp",
+                        "movement",  
+                        "fuel_consumed_counted"
+                    ]
+                );
                 if (!points || points.length === 0) {
                     console.log(`No se encontraron puntos para el dispositivo ${device.imei}`);
                     return;
@@ -190,7 +203,16 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
                 const points = await this.orm.searchRead(
                     "gps.tracking.point",
                     domain,
-                    ["latitude", "longitude", "ignition", "speed", "total_odometer", "timestamp", "movement"]
+                    [
+                        "latitude", 
+                        "longitude", 
+                        "ignition", 
+                        "speed", 
+                        "odometer", 
+                        "timestamp", 
+                        "movement", 
+                        "fuel_consumed_counted"
+                    ]
                 );
                 console.log("Puntos obtenidos para", device.imei, points);
                 if (points.length === 0) {
@@ -205,7 +227,8 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
                 );
                 const firstPoint = points[0];
                 
-                this.state.firstOdometers = firstPoint?.total_odometer || 0;
+                this.state.firstOdometers = firstPoint?.odometer || 0;
+                this.state.firstFuel = firstPoint?.fuel_consumed_counted || 0;
                 const lastPoint = points[points.length - 1]
                 this.renderDevicePath(device, coordinates, firstPoint, lastPoint);
             }
@@ -280,9 +303,10 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
                 device: device.imei,
                 timestamp: point.timestamp || "Desconocido",
                 speed: point.speed || 0,
-                total_odometer: point.total_odometer || 0,
+                odometer: point.odometer || 0,
                 ignition: point.ignition,
                 movement: point.movement,
+                fuel_consumed_counted: point.fuel_consumed_counted || 0, 
             });
     
             pointFeature.setStyle(new ol.style.Style({
@@ -304,7 +328,7 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
                 device: device.imei,
                 timestamp: firstPoint.timestamp,
                 speed: firstPoint.speed || 0,
-                total_odometer: firstPoint.total_odometer || 0
+                odometer: firstPoint.odometer || 0
             });
     
             firstFeature.setStyle(new ol.style.Style({
@@ -331,7 +355,7 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
                 device: device.imei,
                 timestamp: lastPoint.timestamp,
                 speed: lastPoint.speed || 0,
-                total_odometer: lastPoint.total_odometer || 0
+                odometer: lastPoint.odometer || 0
             });
     
             lastFeature.setStyle(new ol.style.Style({
@@ -412,12 +436,18 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
         const ignition = closestFeature.get("ignition") || "Desconocido";
         const plate = closestFeature.get("device_id") || closestFeature.get("imei") || "Desconocido";
         const speed = closestFeature.get("speed") || 0;
-        const currentOdometer = closestFeature.get("total_odometer") || 0;
+        const currentOdometer = closestFeature.get("odometer") || 0;
+        const currentFuel = closestFeature.get("fuel_consumed_counted") || 0;
+        console.log("currentOdometer",currentOdometer)
+        console.log("currentFuel",currentFuel)
         const imei = closestFeature.get("device");
 
-        //console.log("point Odome ",this.state.firstOdometers)
         const initialOdometer = this.state.firstOdometers;
-        const distanceTraveled = initialOdometer - currentOdometer;
+        const initialFuel = this.state.firstFuel;
+        console.log("initialOdometer",initialOdometer)
+        console.log("initialFuel",initialFuel)
+        const consumedFuel = currentFuel - initialFuel;
+        const distanceTraveled = currentOdometer - initialOdometer;
         tooltipElement.style.visibility = "visible";
         tooltipElement.style.left = pixel[0] + "px";
         tooltipElement.style.top = pixel[1] + "px";
@@ -439,6 +469,7 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
                     ${movement == 1 ? 'En movimiento' : 'Estacionado'}
                 </span><br/>
                 <strong>Odómetro:</strong> ${distanceTraveled.toFixed(2)} km<br/>
+                <strong>Fuel:</strong> ${consumedFuel.toFixed(2)} km<br/>
                 <strong>Hora:</strong> ${formattedTime}<br/>
                 <button id="btn-street" class="btn btn-sm btn-info" style="margin-top:5px;">
                     Ver Street View
