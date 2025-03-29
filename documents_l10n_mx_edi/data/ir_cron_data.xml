@@ -2,11 +2,14 @@
 <odoo noupdate="1">
     <record id="ir_cron_automatic_fetch_cfdi_invoices" model="ir.cron">
         <field name="name">Auto Import CFDI SAT</field>
-        <field name="model_id" ref="model_res_company" />
+        <field name="model_id" ref="model_l10n_mx_edi_session" />
         <field name="user_id" ref="base.user_root" />
         <field name="interval_number">1</field>
         <field name="interval_type">days</field>
         <field name="state">code</field>
-        <field name="code">model.auto_sync_with_sat()</field>
+        <field name="code">
+company_id = 2
+model._cron_sync_with_sat(company_id)
+        </field>
     </record>
 </odoo>

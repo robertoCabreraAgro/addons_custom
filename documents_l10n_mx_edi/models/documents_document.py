@@ -265,13 +265,10 @@ class Document(models.Model):
         return folder
 
     def _l10n_edi_document_assign_tags_and_folder(self):
-        etree = self.env["l10n_mx_edi.document"].check_objectify_xml(self.datas)
-        tags = [
-            "{http://www.sat.gob.mx/cfd/3}Comprobante",
-            "{http://www.sat.gob.mx/cfd/4}Comprobante",
-        ]
-        is_cfdi = etree.tag in tags
-        if is_cfdi:
+        file_content = self.datas
+        mx_edi_document = self.env["l10n_mx_edi.document"]
+        etree = mx_edi_document.check_objectify_xml(file_content)
+        if mx_edi_document._l10n_mx_edi_is_cfdi(file_content):
             uuid = (
                 self.env["l10n_mx_edi.document"]
                 .collect_complemento(etree)
