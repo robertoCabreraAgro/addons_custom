@@ -16,6 +16,7 @@
         "data/ir_cron_data.xml",
         "data/documents_data.xml",
         "data/ir_actions_server_data.xml",
+        "data/ir_config_parameter_data.xml",
         "views/res_config_settings_views.xml",
         "views/documents_views.xml",
         "views/account_move_views.xml",

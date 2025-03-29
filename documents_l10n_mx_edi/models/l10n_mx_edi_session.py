@@ -1,11 +1,13 @@
 import base64
 import io
 import os
+import time
 import zipfile
 import logging
 
 from datetime import datetime, timedelta
 from odoo import api, fields, models
+
 from .l10n_mx_edi_document import MXWS_ERROR_TYPE
 
 DEFAULT_TZ = "America/Mexico_City"
@@ -35,13 +37,21 @@ class Session(models.Model):
     request_message = fields.Char("Request message")
     file_count = fields.Integer("File count")
     packages = fields.Char("packages")
+    document_ids = fields.Many2many(
+        "documents.document",
+        "document_l10n_mx_edi_session_rel",
+        "l10n_mx_edi_session_id",
+        "document_id",
+        string="Documents",
+    )
+    count_verify = fields.Integer()
 
     def get_mx_current_datetime(self):
         return fields.Datetime.context_timestamp(
             self.with_context(tz="America/Mexico_City"), fields.Datetime.now()
         )
 
-    def action_verify_cfdi(self, esignature=None):
+    def action_verify_cfdi(self, esignature=None, max_retries=5, waiting_sec=20):
         self.ensure_one()
 
         mx_edi_document = self.env["l10n_mx_edi.document"]
@@ -53,27 +63,42 @@ class Session(models.Model):
         certificate = esignature.get_cert_data()[1]
         private_key = esignature.get_pk_data()[1]
 
-        if self.token_expiration < fields.Datetime.now():
-            token_res = mx_edi_document.l10n_mx_ws_generate_token(
-                certificate, private_key
+        for retry_count in range(max_retries):
+            _logger.info(
+                f"CFDI download request status verification... ({retry_count + 1}/{max_retries})"
+            )
+            if self.token_expiration < fields.Datetime.now():
+                token_res = mx_edi_document.l10n_mx_ws_generate_token(
+                    certificate, private_key
+                )
+                self.write(
+                    {
+                        "token": token_res["token"],
+                        "token_expiration": datetime.fromisoformat(
+                            token_res["expires"]
+                        ),
+                    }
+                )
+            verify_download = mx_edi_document.l10n_mx_ws_verify_package(
+                certificate, private_key, self.token, self.request
             )
             self.write(
                 {
-                    "token": token_res["token"],
-                    "token_expiration": datetime.fromisoformat(token_res["expires"]),
+                    "request_state": verify_download["estado_solicitud"],
+                    "file_count": int(verify_download["numero_cfdis"]),
+                    "request_message": verify_download["mensaje"],
+                    "packages": verify_download["paquetes"][0]
+                    if verify_download["paquetes"]
+                    else "",
                 }
             )
-        verify_download = mx_edi_document.l10n_mx_ws_verify_package(
-            certificate, private_key, self.token, self.request
-        )
-        self.write(
-            {
-                "request_state": verify_download["estado_solicitud"],
-                "file_count": int(verify_download["numero_cfdis"]),
-                "request_message": verify_download["mensaje"],
-                "packages": verify_download["paquetes"][0],
-            }
-        )
+            if int(self.request_state) > 2:
+                break
+            elif retry_count < max_retries - 1:  # avoid waiting in the last iteration
+                _logger.info(f"Waiting {waiting_sec} seconds to retry...")
+                time.sleep(waiting_sec)
+                continue
+        self.write({"count_verify": self.count_verify + 1})
 
     def action_download_cfdi(self, esignature=None):
         self.ensure_one()
@@ -187,14 +212,21 @@ class Session(models.Model):
                 # Bulk create all documents
                 created_documents = docs_document.create(doc_vals_list)
                 document_ids.extend(created_documents.ids)
-        action = self.env.ref("documents.document_action").read()[0]
-        action["domain"] = [("id", "in", document_ids)]
-        return action
+
+        if document_ids:
+            self.write({"document_ids": [(6, 0, document_ids)]})
+
+        if not self.env.context.get("view_documents"):
+            return False
+        return self.action_view_documents()
 
     @api.model
     def _cron_sync_with_sat(self, company_id):
         """Schedule action to check MX SAT sessions not closed or create new one if apply"""
         auto_commit = self.env.context.get("auto_commit", True)
+        max_retries = self.env.context.get("max_retries", 5)
+        waiting_sec = self.env.context.get("waiting_sec", 20)
+
         company = self.env["res.company"].browse(company_id)
         esignature = company.l10n_mx_edi_esignature_ids.get_valid_esignature()
 
@@ -226,17 +258,26 @@ class Session(models.Model):
                     self.env.cr.commit()  # pylint: disable=invalid-commit
 
         # 2. Verify
+        max_verify_allowed = int(
+            self.env["ir.config_parameter"]
+            .sudo()
+            .get_param("documents_l10n_mx_edi.default_max_verify_cfdi", "5")
+        )
         domain_verify = [
+            ("count_verify", "<=", max_verify_allowed),
             ("request_state", "in", ["1", "2"]),
             ("company_id", "=", company_id),
         ]
-        mx_session_to_verify = self.search(domain_verify, order="id ASC")
+        mx_sessions_to_verify = self.search(domain_verify, order="id ASC")
         try:
-            mx_session_to_verify.action_verify_cfdi(esignature)
-            _logger.info(
-                "Was verified request for MX session with ID %s",
-                mx_session_to_verify.id,
-            )
+            for mx_session_to_verify in mx_sessions_to_verify:
+                mx_session_to_verify.action_verify_cfdi(
+                    esignature, max_retries=max_retries, waiting_sec=waiting_sec
+                )
+                _logger.info(
+                    "Was verified request for MX session with ID %s",
+                    mx_session_to_verify.id,
+                )
         except Exception as e:
             if auto_commit:
                 self.env.cr.rollback()
@@ -247,17 +288,20 @@ class Session(models.Model):
 
         # 3. Download
         domain_download = [
-            ("request_state", "!=", "5008"),
+            ("request_status_code", "!=", "5008"),
             ("request_state", "=", "3"),
             ("company_id", "=", company_id),
+            ("document_ids", "=", False),
         ]
-        mx_session_to_download = self.search(domain_download, order="id ASC")
+        mx_sessions_to_download = self.search(domain_download, order="id ASC")
         try:
-            mx_session_to_download.action_download_cfdi(esignature)
-            _logger.info(
-                "Was downloaded documents for MX session with ID %s",
-                mx_session_to_verify.id,
-            )
+
+            for mx_session_to_download in mx_sessions_to_download:
+                mx_session_to_download.action_download_cfdi(esignature)
+                _logger.info(
+                    "Was downloaded documents for MX session with ID %s",
+                    mx_session_to_download.id,
+                )
         except Exception as e:
             if auto_commit:
                 self.env.cr.rollback()
@@ -272,8 +316,8 @@ class Session(models.Model):
         certificate = esignature.get_cert_data()[1]
         private_key = esignature.get_pk_data()[1]
         three_days_ago = self.name - timedelta(days=3)
-        date_from = datetime.combine(three_days_ago, datetime.min.time())
-        date_to = datetime.combine(self.name, datetime.min.time())
+        date_from = fields.Datetime.to_datetime(three_days_ago)
+        date_to = fields.Datetime.to_datetime(self.name)
         token_res = mx_edi_document.l10n_mx_ws_generate_token(certificate, private_key)
         self.write(
             {
@@ -297,3 +341,8 @@ class Session(models.Model):
                 "request_state": "1" if request_res["cod_estatus"] == "5000" else "0",
             }
         )
+
+    def action_view_documents(self):
+        action = self.env.ref("documents.document_action").read()[0]
+        action["domain"] = [("id", "in", self.document_ids.ids)]
+        return action

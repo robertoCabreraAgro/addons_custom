@@ -149,12 +149,6 @@ class ResCompany(models.Model):
                 }
             )
 
-            _logger.info(
-                "REQUEST STATUS ->>>>>>>>>>>>>>>>> %s, REQUEST MSG ->>>>>>>>>>>>>>>>> %s, Count %s",
-                ses.request_state,
-                ses.request_message,
-                ses.file_count,
-            )
             if int(ses.request_state) <= 2:
                 time.sleep(20)
                 continue

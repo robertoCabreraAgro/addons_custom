@@ -15,19 +15,26 @@
                 <field name="request_status_code"/>
                 <field name="request_state"  widget="badge" decoration-success="request_state=='3'" decoration-info="request_state=='2'" decoration-muted="request_state=='1'" decoration-danger="request_state in ('4', '5', '6')" />
                 <field name="company_id"/>
+                <field name="document_ids" invisible="1" />
                 <button 
                     name="action_verify_cfdi" 
                     type="object"
-                    string="Verify"
+                    string="Verify Request"
                     class="btn-primary"
                     invisible="request_state != '1'"/>
                 <button 
                     name="action_download_cfdi" 
                     type="object"
-                    string="Download"
+                    string="Download &amp; View"
                     class="btn-primary"
-                    invisible="request_state != '3' or request_status_code == '5008'"/>
-                <field name="file_count"/>
+                    context="{'view_documents': True}"
+                    invisible="request_state != '3' or request_status_code == '5008' or document_ids"/>
+                <button
+                    name="action_view_documents"
+                    type="object"
+                    string="View Documents"
+                    class="btn-primary"
+                    invisible="not document_ids"/>
             </list>
         </field>
     </record>
