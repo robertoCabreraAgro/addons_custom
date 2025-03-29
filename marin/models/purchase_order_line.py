@@ -44,7 +44,7 @@ class PurchaseOrderLineInherit(models.Model):
         for line in self:
             if line.qty_transfered_method == "manual":
                 line.qty_to_receive = line.product_uom_qty - line.qty_transfered
-            elif line.qty_transfered_method == "stock_moves":
+            elif line.qty_transfered_method == "stock_move":
                 line.qty_to_receive = line.product_uom_qty - line.qty_transfered
             else:
                 line.qty_to_receive = 0.0

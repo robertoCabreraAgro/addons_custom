@@ -35,9 +35,9 @@ class AccountMoveLine(models.Model):
                 )
                 move = line.move_id
                 previous_two_accounts = move.line_ids.filtered(
-                    lambda x: x.account_id
-                    and x.display_type == "payment_term"
-                    and line._origin.id not in x.ids
+                    lambda line: line.account_id
+                    and line.display_type == "payment_term"
+                    and line._origin.id not in line.ids
                 )[-2:].account_id
                 account_id = (
                     getattr(journal, journal_prop)

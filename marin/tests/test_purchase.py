@@ -78,11 +78,11 @@ class TestPurchase(ValuationReconciliationTestCommon):
         self.assertEqual(purchase_order.invoice_status, "to invoice")
 
         line = purchase_order.order_line[0]
-        self.assertEqual(line.qty_received_method, "stock_moves")
+        self.assertEqual(line.qty_received_method, "stock_move")
         self.assertEqual(line.qty_to_receive, 5.0)
         line.qty_received_method = False
         self.assertEqual(line.qty_to_receive, 0.0)
-        line.qty_received_method = "stock_moves"
+        line.qty_received_method = "stock_move"
         self.assertEqual(line.qty_to_receive, 5.0)
 
         self.assertEqual(
