@@ -48,7 +48,7 @@
                 <field name="date_end" string="Request To" optional="hide" />
                 <field name="date_confirmed" string="Confirm Date" optional="hide" />
                 <field name="location" string="Location" optional="hide" />
-                <field name="amount" string="Location" optional="show" />
+                <field name="amount" string="Amount" optional="show" />
                 <field name="activity_ids" widget="list_activity" optional="hide" />
                 <field name="user_ids" string="Approvers" widget="many2many_avatar_user"
                     optional="hide" />
