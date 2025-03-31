@@ -4,6 +4,7 @@ import os
 import time
 import zipfile
 import logging
+import pytz
 
 from datetime import datetime, timedelta
 from odoo import api, fields, models
@@ -110,7 +111,6 @@ class Session(models.Model):
             esignature
             or self.company_id.l10n_mx_edi_esignature_ids.get_valid_esignature()
         )
-
         certificate = esignature.get_cert_data()[1]
         private_key = esignature.get_pk_data()[1]
 
@@ -222,6 +222,31 @@ class Session(models.Model):
 
     @api.model
     def _cron_sync_with_sat(self, company_id):
+        now_mx = datetime.now(pytz.timezone(DEFAULT_TZ))
+        current_hour = now_mx.hour
+        param = self.env['ir.config_parameter'].sudo()
+        hour_start = int(param.get_param("cfdi_cron.hour_start", 8))
+        hour_end = int(param.get_param("cfdi_cron.hour_end", 18))
+
+        if not (hour_start <= current_hour <= hour_end):
+            _logger.info("not in time %s",hour_start)
+            return
+        is_first_run = (current_hour == hour_start)
+        today = fields.Date.context_today(self.with_context(tz=DEFAULT_TZ))
+
+        if is_first_run:
+            date_from = now_mx - timedelta(hours=24)
+            date_to = now_mx
+        else:
+            date_from = now_mx - timedelta(hours=2)
+            date_to = now_mx
+            
+        context_with_dates = dict(self.env.context)
+        context_with_dates.update({
+            'cron_date_from': fields.Datetime.to_string(date_from),
+            'cron_date_to': fields.Datetime.to_string(date_to)
+        })
+        self = self.with_context(context_with_dates)
         """Schedule action to check MX SAT sessions not closed or create new one if apply"""
         auto_commit = self.env.context.get("auto_commit", True)
         max_retries = self.env.context.get("max_retries", 5)
@@ -229,7 +254,6 @@ class Session(models.Model):
 
         company = self.env["res.company"].browse(company_id)
         esignature = company.l10n_mx_edi_esignature_ids.get_valid_esignature()
-
         # 1. Sync with SAT (create token & send request)
         today = fields.Date.context_today(self.with_context(tz=DEFAULT_TZ))
         cron_user = self.env.ref("base.user_root")
@@ -316,9 +340,22 @@ class Session(models.Model):
         certificate = esignature.get_cert_data()[1]
         private_key = esignature.get_pk_data()[1]
         three_days_ago = self.name - timedelta(days=3)
-        date_from = fields.Datetime.to_datetime(three_days_ago)
-        date_to = fields.Datetime.to_datetime(self.name)
+        date_from = self.env.context.get('cron_date_from')
+        date_to = self.env.context.get('cron_date_to')
         token_res = mx_edi_document.l10n_mx_ws_generate_token(certificate, private_key)
+        if date_from:
+            date_from = fields.Datetime.to_datetime(date_from)
+        else:
+            three_days_ago = self.name - timedelta(days=3)
+            date_from = fields.Datetime.to_datetime(three_days_ago)
+
+        if date_to:
+            date_to = fields.Datetime.to_datetime(date_to)
+        else:
+            date_to = fields.Datetime.to_datetime(self.name)
+
+        _logger.info("date_from %s",date_from)
+        _logger.info("date_to %s",date_to)
         self.write(
             {
                 "token": token_res["token"],
