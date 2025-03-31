@@ -15,12 +15,6 @@ class PurchaseOrderInherit(models.Model):
 
     # Override original fields
     partner_id = fields.Many2one(domain=lambda self: self._get_partner_id_domain())
-    invoice_status = fields.Selection(
-        selection_add=[
-            ("partially", "Partially billed"),
-            ("over invoiced", "Over billed"),
-        ]
-    )
     receipt_status = fields.Selection(
         selection_add=[("no", "Nothing to receive"), ("over full", "Over received")]
     )
@@ -92,7 +86,7 @@ class PurchaseOrderInherit(models.Model):
                 to_invoice += line.qty_to_invoice
 
             if not float_compare(qty1, to_invoice, precision_digits=precision):
-                order.invoice_status = "to invoice"
+                order.invoice_status = "to do"
             elif float_compare(
                 qty1, to_invoice, precision_digits=precision
             ) > 0 and not float_is_zero(to_invoice, precision_digits=precision):
@@ -101,9 +95,9 @@ class PurchaseOrderInherit(models.Model):
                 float_is_zero(to_invoice, precision_digits=precision)
                 and order.invoice_ids
             ):
-                order.invoice_status = "invoiced"
+                order.invoice_status = "done"
             elif float_compare(qty1, to_invoice, precision_digits=precision) < 1:
-                order.invoice_status = "over invoiced"
+                order.invoice_status = "over done"
             else:
                 order.invoice_status = "no"
 

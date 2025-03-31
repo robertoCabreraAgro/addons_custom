@@ -23,7 +23,7 @@ class PurchaseBillUnion(models.Model):
                     FROM purchase_order
                     WHERE
                         state in ('purchase', 'done') AND
-                        invoice_status in ('partially', 'to invoice', 'no')
+                        invoice_status in ('partially', 'to do', 'no')
             )
             """
         )

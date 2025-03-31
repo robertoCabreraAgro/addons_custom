@@ -25,11 +25,11 @@
                     domain="[('state', 'in', ('sale', 'done'))]" />
                 <separator />
                 <filter name="to_invoice" string="To invoice"
-                    domain="[('invoice_status', '=', 'to invoice')]" />
+                    domain="[('invoice_status', '=', 'to do')]" />
                 <filter name="invoiced" string="Invoiced"
-                    domain="[('invoice_status', '=', 'invoiced')]" />
+                    domain="[('invoice_status', '=', 'done')]" />
                 <filter name="upselling" string="To upsell"
-                    domain="[('invoice_status', '=', 'upselling')]" />
+                    domain="[('invoice_status', '=', 'over done')]" />
                 <separator />
                 <filter name="pending" string="To deliver"
                     domain="[('delivery_status', '=', 'pending')]" />
@@ -79,7 +79,7 @@
         <field name="model">sale.order</field>
         <field name="priority">4</field>
         <field name="arch" type="xml">
-            <list sample="1" decoration-info="invoice_status == 'to invoice'" decoration-muted="state == 'cancel'">
+            <list sample="1" decoration-info="invoice_status == 'to do'" decoration-muted="state == 'cancel'">
                 <field name="company_id" column_invisible="1" />
                 <field name="currency_id" column_invisible="1" />
                 <field name="state" column_invisible="1" />
@@ -122,10 +122,10 @@
                     name="invoice_status"
                     widget="badge"
                     optional="show"
-                    decoration-danger="invoice_status == 'to invoice'"
-                    decoration-warning="invoice_status == 'upselling'"
+                    decoration-danger="invoice_status == 'to do'"
+                    decoration-warning="invoice_status == 'over done'"
                     decoration-info="invoice_status == 'no'"
-                    decoration-success="invoice_status == 'invoiced'"
+                    decoration-success="invoice_status == 'done'"
                 />
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide" />
                 <field name="warehouse_id" optional="show" />
@@ -225,9 +225,9 @@
                 <attribute name="decoration-success">not display_type and delivery_status == 'full'</attribute>
             </xpath>
             <xpath expr="//page/field[@name='order_line_ids']/list/field[@name='qty_invoiced']" position="attributes">
-                <attribute name="decoration-danger">not display_type and invoice_status == 'to invoice'</attribute>
-                <attribute name="decoration-info">not display_type and invoice_status == 'upselling'</attribute>
-                <attribute name="decoration-success">not display_type and invoice_status == 'invoiced'</attribute>
+                <attribute name="decoration-danger">not display_type and invoice_status == 'to do'</attribute>
+                <attribute name="decoration-info">not display_type and invoice_status == 'over done'</attribute>
+                <attribute name="decoration-success">not display_type and invoice_status == 'done'</attribute>
             </xpath>
             <xpath expr="//page/field[@name='order_line_ids']/list/field[@name='price_unit']" position="after">
                 <field name="partner_id" column_invisible="1" />
@@ -267,7 +267,7 @@
                             name="action_force_invoice_status"
                             string="Force invoice status"
                             type="object"
-                            invisible="invoice_status == 'invoiced' or state != 'sale'"
+                            invisible="invoice_status == 'done' or state != 'sale'"
                             groups="marin.group_sale_force_invoicing_status"
                             class="oe_inline oe_button"
                         />
@@ -275,7 +275,7 @@
                             name="action_unforce_invoice_status"
                             string="Restore invoice status"
                             type="object"
-                            invisible="invoice_status != 'invoiced' or state != 'sale'"
+                            invisible="invoice_status != 'done' or state != 'sale'"
                             groups="marin.group_sale_force_invoicing_status"
                             class="oe_inline oe_button"
                         />

@@ -380,7 +380,7 @@ class AccountMove(models.Model):
             ).id,
             "payment_term_id": self.invoice_payment_term_id.id,
             "origin": self.name,
-            "invoice_status": "invoiced",
+            "invoice_status": "done",
         }
 
     def _prepare_purchase_line_vals(self, move, purchase):

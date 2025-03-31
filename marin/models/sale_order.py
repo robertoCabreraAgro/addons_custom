@@ -114,7 +114,7 @@ class SaleOrder(models.Model):
     @api.depends("state", "order_line_ids.invoice_status")
     def _compute_invoice_status(self):
         forced = self.filtered("force_fully_invoiced")
-        forced.invoice_status = "invoiced"
+        forced.invoice_status = "done"
         return super(SaleOrder, self - forced)._compute_invoice_status()
 
     @api.onchange("route_id")
