@@ -223,15 +223,18 @@ class Session(models.Model):
     @api.model
     def _cron_sync_with_sat(self, company_id):
         now_mx = datetime.now(pytz.timezone(DEFAULT_TZ))
-        current_hour = now_mx.hour
         param = self.env['ir.config_parameter'].sudo()
         hour_start = int(param.get_param("cfdi_cron.hour_start", 8))
         hour_end = int(param.get_param("cfdi_cron.hour_end", 18))
 
-        if not (hour_start <= current_hour <= hour_end):
+        start_time = time(hour_start, 0, 0)
+        end_time = time(hour_end, 0, 0)
+        current_time = now_mx.time()
+
+        if not (start_time <= current_time <= end_time):
             _logger.info("not in time %s",hour_start)
             return
-        is_first_run = (current_hour == hour_start)
+        is_first_run = (current_time.hour == hour_start)
         today = fields.Date.context_today(self.with_context(tz=DEFAULT_TZ))
 
         if is_first_run:
@@ -257,29 +260,23 @@ class Session(models.Model):
         # 1. Sync with SAT (create token & send request)
         today = fields.Date.context_today(self.with_context(tz=DEFAULT_TZ))
         cron_user = self.env.ref("base.user_root")
-        domain_today = [
-            ("create_uid", "=", cron_user.id),
-            ("name", "=", today),
-            ("company_id", "=", company_id),
-        ]
-        mx_session_today = self.search(domain_today, limit=1, order="id ASC")
-        if not mx_session_today:
-            mx_session_today = self.create(
-                {
-                    "name": today,
-                    "company_id": company_id,
-                }
-            )
-            _logger.info("Was created a new MX session with ID %s", mx_session_today.id)
-            try:
-                mx_session_today.action_sync_with_sat(esignature)
-            except Exception as e:
-                if auto_commit:
-                    self.env.cr.rollback()
-                _logger.error(e)
-            finally:
-                if auto_commit:
-                    self.env.cr.commit()  # pylint: disable=invalid-commit
+        
+        mx_session_today = self.create(
+            {
+                "name": today,
+                "company_id": company_id,
+            }
+        )
+        _logger.info("Was created a new MX session with ID %s", mx_session_today.id)
+        try:
+            mx_session_today.action_sync_with_sat(esignature)
+        except Exception as e:
+            if auto_commit:
+                self.env.cr.rollback()
+            _logger.error(e)
+        finally:
+            if auto_commit:
+                self.env.cr.commit()  # pylint: disable=invalid-commit
 
         # 2. Verify
         max_verify_allowed = int(
