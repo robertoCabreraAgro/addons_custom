@@ -1,12 +1,11 @@
 import base64
 import io
 import os
-import time
 import zipfile
 import logging
 import pytz
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 from odoo import api, fields, models
 
 from .l10n_mx_edi_document import MXWS_ERROR_TYPE
@@ -238,12 +237,22 @@ class Session(models.Model):
         today = fields.Date.context_today(self.with_context(tz=DEFAULT_TZ))
 
         if is_first_run:
-            date_from = now_mx - timedelta(hours=24)
-            date_to = now_mx
+            date_from = (now_mx - timedelta(hours=24)).replace(minute=0, second=0, microsecond=0)
         else:
-            date_from = now_mx - timedelta(hours=2)
-            date_to = now_mx
-            
+            date_from = (now_mx - timedelta(hours=2)).replace(minute=0, second=0, microsecond=0)
+        
+        date_to = now_mx.replace(minute=0, second=0, microsecond=0)
+
+        existing_session = self.search([
+            ('company_id', '=', company_id),
+            ('date_from', '>=', date_from),
+            ('date_to', '<', date_to),
+        ], limit=1)
+
+        if existing_session:
+            _logger.info("Ya existe una sesión en ese rango de tiempo: ID %s", existing_session.id)
+            return
+
         context_with_dates = dict(self.env.context)
         context_with_dates.update({
             'cron_date_from': fields.Datetime.to_string(date_from),
