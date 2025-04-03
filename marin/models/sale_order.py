@@ -111,11 +111,11 @@ class SaleOrder(models.Model):
                 order.delivery_status = "no"
 
     # Extend original method
-    @api.depends("state", "order_line_ids.invoice_status")
-    def _compute_invoice_status(self):
+    @api.depends("state", "order_line_ids.invoice_state")
+    def _compute_invoice_state(self):
         forced = self.filtered("force_fully_invoiced")
-        forced.invoice_status = "done"
-        return super(SaleOrder, self - forced)._compute_invoice_status()
+        forced.invoice_state = "done"
+        return super(SaleOrder, self - forced)._compute_invoice_state()
 
     @api.onchange("route_id")
     def _onchange_route_id(self):
@@ -143,17 +143,17 @@ class SaleOrder(models.Model):
     def action_unforce_delivery_status(self):
         self._compute_delivery_status()
 
-    def action_recompute_invoice_status(self):
-        self.order_line_ids._compute_invoice_status()
-        self._compute_invoice_status()
+    def action_recompute_invoice_state(self):
+        self.order_line_ids._compute_invoice_state()
+        self._compute_invoice_state()
 
-    def action_force_invoice_status(self):
+    def action_force_invoice_state(self):
         self.force_fully_invoiced = True
-        self._compute_invoice_status()
+        self._compute_invoice_state()
 
-    def action_unforce_invoice_status(self):
+    def action_unforce_invoice_state(self):
         self.force_fully_invoiced = False
-        self._compute_invoice_status()
+        self._compute_invoice_state()
 
     def action_open_order_lines(self):
         action = self.env["ir.actions.act_window"]._for_xml_id(

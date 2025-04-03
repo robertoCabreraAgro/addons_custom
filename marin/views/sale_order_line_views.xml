@@ -36,9 +36,9 @@
                     <filter name="group_by_delivery_status" string="Delivery status"
                         domain="[]"
                         context="{'group_by': 'delivery_status'}" />
-                    <filter name="group_by_invoice_status" string="Invoice status"
+                    <filter name="group_by_invoice_state" string="Invoice status"
                         domain="[]"
-                        context="{'group_by': 'invoice_status'}" />
+                        context="{'group_by': 'invoice_state'}" />
                     <filter name="group_by_sale_user_id" string="Salesperson"
                         domain="[]"
                         context="{'group_by': 'sale_user_id'}" />
@@ -56,14 +56,14 @@
                 editable="bottom"
                 decoration-warning="state=='draft'"
                 decoration-muted="state=='cancel'"
-                decoration-info="invoice_status=='to do'"
+                decoration-info="invoice_state=='to do'"
                 decoration-success="state=='done'"
             >
                 <field name="company_id" column_invisible="1" />
                 <field name="currency_id" column_invisible="1" />
                 <field name="display_type" column_invisible="1" />
                 <field name="state" column_invisible="1" />
-                <field name="invoice_status" column_invisible="1" />
+                <field name="invoice_state" column_invisible="1" />
                 <field name="delivery_status" column_invisible="1" />
                 <field name="qty_transfered_method" column_invisible="1" />
                 <field name="product_uom_readonly" column_invisible="1" />
@@ -115,8 +115,8 @@
                     sum="Ordered"
                     readonly="state in ['done', 'cancel']"
                     context="{'partner_id': partner_id, 'quantity': product_uom_qty, 'uom': product_uom_id, 'company_id': company_id}"
-                    decoration-info="(not display_type and invoice_status == 'to do')"
-                    decoration-bf="(not display_type and invoice_status == 'to do')"
+                    decoration-info="(not display_type and invoice_state == 'to do')"
+                    decoration-bf="(not display_type and invoice_state == 'to do')"
                     optional="show"
                 />
                 <field
@@ -155,16 +155,16 @@
                     string="Delivered Qty"
                     sum="Delivered"
                     readonly="qty_transfered_method != 'manual'"
-                    decoration-info="(not display_type and invoice_status == 'to do')"
-                    decoration-bf="(not display_type and invoice_status == 'to do')"
+                    decoration-info="(not display_type and invoice_state == 'to do')"
+                    decoration-bf="(not display_type and invoice_state == 'to do')"
                     optional="show"
                 />
                 <field
                     name="qty_invoiced"
                     string="Invoiced Qty"
                     sum="Invoiced"
-                    decoration-info="(not display_type and invoice_status == 'to do')"
-                    decoration-bf="(not display_type and invoice_status == 'to do')"
+                    decoration-info="(not display_type and invoice_state == 'to do')"
+                    decoration-bf="(not display_type and invoice_state == 'to do')"
                     optional="show"
                 />
                 <field name="qty_to_invoice" string="To invoice Qty" sum="To invoice" optional="hide" />

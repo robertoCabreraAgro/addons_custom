@@ -118,15 +118,15 @@
                     sum="Delivered"
                     optional="show"
                 />
-<!--                 decoration-info="(not display_type and invoice_status == 'to do')"
-                decoration-bf="(not display_type and invoice_status == 'to do')"
+<!--                 decoration-info="(not display_type and invoice_state == 'to do')"
+                decoration-bf="(not display_type and invoice_state == 'to do')"
  -->                <field
                     name="qty_invoiced"
                     sum="Invoiced"
                     optional="show"
                 />
-<!--                     decoration-info="(not display_type and invoice_status == 'to do')"
-                    decoration-bf="(not display_type and invoice_status == 'to do')"
+<!--                     decoration-info="(not display_type and invoice_state == 'to do')"
+                    decoration-bf="(not display_type and invoice_state == 'to do')"
  -->                <field
                     name="qty_to_invoice"
                     sum="To invoice"

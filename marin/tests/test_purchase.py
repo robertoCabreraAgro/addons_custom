@@ -62,7 +62,7 @@ class TestPurchase(ValuationReconciliationTestCommon):
     def test_01_purchase_order_computed_values(self):
         purchase_order = self.env["purchase.order"].create(self.purchase_order_vals)
         self.assertTrue(purchase_order, "Purchase: no purchase order created")
-        self.assertEqual(purchase_order.invoice_status, "no")
+        self.assertEqual(purchase_order.invoice_state, "no")
 
         # receipt_status
         purchase_order._compute_receipt_status()
@@ -75,7 +75,7 @@ class TestPurchase(ValuationReconciliationTestCommon):
         purchase_order.button_confirm()
         self.assertEqual(purchase_order.receipt_status, "pending")
 
-        self.assertEqual(purchase_order.invoice_status, "to invoice")
+        self.assertEqual(purchase_order.invoice_state, "to invoice")
 
         line = purchase_order.order_line[0]
         self.assertEqual(line.qty_received_method, "stock_move")
@@ -108,7 +108,7 @@ class TestPurchase(ValuationReconciliationTestCommon):
         )
         self.invoice = move_form.save()
         self.assertEqual(purchase_order.order_line.mapped("qty_invoiced"), [5.0, 5.0])
-        self.assertEqual(purchase_order.invoice_status, "invoiced")
+        self.assertEqual(purchase_order.invoice_state, "invoiced")
 
     def test_02_view_purchase_from_picking(self):
         purchase_order = self.env["purchase.order"].create(self.purchase_order_vals)

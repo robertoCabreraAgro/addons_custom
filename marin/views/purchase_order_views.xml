@@ -22,8 +22,8 @@
                 <separator />
                 <filter name="status" string="Status"
                     domain="[]" context="{'group_by': 'state'}" />
-                <filter name="invoice_status" string="Billing Status"
-                    domain="[]" context="{'group_by': 'invoice_status'}" />
+                <filter name="invoice_state" string="Billing Status"
+                    domain="[]" context="{'group_by': 'invoice_state'}" />
                 <filter name="reception_status" string="Reception Status"
                     domain="[]" context="{'group_by': 'receipt_status'}" />
 	    </xpath>
@@ -106,10 +106,10 @@
                     optional="show"
                 />
                 <field
-                    name="invoice_status"
+                    name="invoice_state"
                     widget="badge"
-                    decoration-success="invoice_status == 'done'"
-                    decoration-info="invoice_status == 'to do'"
+                    decoration-success="invoice_state == 'done'"
+                    decoration-info="invoice_state == 'to do'"
                     optional="show"
                 />
                 <field name="payment_term_id" optional="hide" />
@@ -168,9 +168,9 @@
                 <field name="reception_status" column_invisible="1" />
             </xpath>
 	    <!--<xpath expr="//page/field[@name='order_line_ids']/list/field[@name='qty_invoiced']" position="attributes">
-                <attribute name="decoration-danger">not display_type and invoice_status == 'over done'</attribute>
-                <attribute name="decoration-warning">not display_type and invoice_status == 'to do'</attribute>
-                <attribute name="decoration-success">not display_type and invoice_status == 'done'</attribute>
+                <attribute name="decoration-danger">not display_type and invoice_state == 'over done'</attribute>
+                <attribute name="decoration-warning">not display_type and invoice_state == 'to do'</attribute>
+                <attribute name="decoration-success">not display_type and invoice_state == 'done'</attribute>
             </xpath>
             <xpath expr="//page/field[@name='order_line_ids']/list/field[@name='qty_transfered']" position="attributes">
                 <attribute name="decoration-danger">not display_type and reception_status == 'pending'</attribute>
