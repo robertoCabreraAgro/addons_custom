@@ -136,7 +136,7 @@
         <field name="name">stock.picking.tracker.list</field>
         <field name="model">stock.picking.tracker</field>
         <field name="arch" type="xml">
-            <list decoration-info="state=='draft'" decoration-muted="state=='cancel'" decoration-warning="state=='in_progress'" decoration-success="state=='done'">
+            <list decoration-info="state=='draft'" decoration-muted="state=='cancel'" decoration-success="state=='in_progress'">
                 <field name="name"/>
                 <field name="scheduled_date"/>
                 <field name="vehicle_id"/>

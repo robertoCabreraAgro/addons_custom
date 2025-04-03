@@ -149,6 +149,7 @@ class StockPickingTracker(models.Model):
         "uom.uom",
         string="Fuel Efficiency Unit",
         readonly=True,
+        default=lambda self: self.env.ref('marin.uom_km_per_liter').id
     )
 
     @api.depends("company_id", "picking_type_id", "state")
@@ -257,8 +258,12 @@ class StockPickingTracker(models.Model):
                 last_picking = tracker_pickings.filtered(lambda p: p.fuel_done).sorted(
                     "date_done"
                 )[-1:]
-                empty_fuel = (
-                    tracker.fuel_end - last_picking.fuel_done if last_picking else 0
+                empty_fuel_percent = (
+                    last_picking.fuel_done - tracker.fuel_end if last_picking else 0
+                )
+                # Convert percentage to actual fuel quantity
+                empty_fuel = tracker.vehicle_id.fuel_tank_capacity * (
+                    empty_fuel_percent / 100
                 )
             tracker.empty_fuel = empty_fuel
 
