@@ -5,6 +5,7 @@ from odoo.exceptions import UserError
 from odoo.tools.misc import clean_context
 from odoo.tools.translate import _
 
+from pytz import UTC, timezone
 
 class ApprovalRequest(models.Model):
     _inherit = "approval.request"
@@ -91,7 +92,10 @@ class ApprovalRequest(models.Model):
 
     def action_create_account_moves(self):
         self.ensure_one()
-        self._create_account_moves()
+        utc_datetime = UTC.localize(self.date)
+        user_datetime = utc_datetime.astimezone(timezone(self.env.user.tz))
+        move_date = fields.Date.to_date(user_datetime)
+        self.with_context(move_date=move_date)._create_account_moves()
         # self._log_po_creation_to_chatter()
 
     def _create_account_moves(self):

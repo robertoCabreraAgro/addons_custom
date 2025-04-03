@@ -96,4 +96,7 @@ class ApprovalProductLine(models.Model):
                 )
             ],
         }
+        if self.env.context.get("move_date"):
+            vals["invoice_date"] = self.env.context["move_date"]
+            vals["date"] = self.env.context["move_date"]
         return vals
