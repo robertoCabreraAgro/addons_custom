@@ -1,11 +1,11 @@
 import base64
 import io
 import os
-import time
 import zipfile
 import logging
+import pytz
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 from odoo import api, fields, models
 
 from .l10n_mx_edi_document import MXWS_ERROR_TYPE
@@ -110,7 +110,6 @@ class Session(models.Model):
             esignature
             or self.company_id.l10n_mx_edi_esignature_ids.get_valid_esignature()
         )
-
         certificate = esignature.get_cert_data()[1]
         private_key = esignature.get_pk_data()[1]
 
@@ -222,6 +221,44 @@ class Session(models.Model):
 
     @api.model
     def _cron_sync_with_sat(self, company_id):
+        now_mx = datetime.now(pytz.timezone(DEFAULT_TZ))
+        param = self.env['ir.config_parameter'].sudo()
+        hour_start = int(param.get_param("cfdi_cron.hour_start", 8))
+        hour_end = int(param.get_param("cfdi_cron.hour_end", 18))
+
+        start_time = time(hour_start, 0, 0)
+        end_time = time(hour_end, 0, 0)
+        current_time = now_mx.time()
+
+        if not (start_time <= current_time <= end_time):
+            _logger.info("not in time %s",hour_start)
+            return
+        is_first_run = (current_time.hour == hour_start)
+        today = fields.Date.context_today(self.with_context(tz=DEFAULT_TZ))
+
+        if is_first_run:
+            date_from = (now_mx - timedelta(hours=24)).replace(minute=0, second=0, microsecond=0)
+        else:
+            date_from = (now_mx - timedelta(hours=2)).replace(minute=0, second=0, microsecond=0)
+        
+        date_to = now_mx.replace(minute=0, second=0, microsecond=0)
+
+        existing_session = self.search([
+            ('company_id', '=', company_id),
+            ('date_from', '>=', date_from),
+            ('date_to', '<', date_to),
+        ], limit=1)
+
+        if existing_session:
+            _logger.info("Ya existe una sesión en ese rango de tiempo: ID %s", existing_session.id)
+            return
+
+        context_with_dates = dict(self.env.context)
+        context_with_dates.update({
+            'cron_date_from': fields.Datetime.to_string(date_from),
+            'cron_date_to': fields.Datetime.to_string(date_to)
+        })
+        self = self.with_context(context_with_dates)
         """Schedule action to check MX SAT sessions not closed or create new one if apply"""
         auto_commit = self.env.context.get("auto_commit", True)
         max_retries = self.env.context.get("max_retries", 5)
@@ -229,33 +266,26 @@ class Session(models.Model):
 
         company = self.env["res.company"].browse(company_id)
         esignature = company.l10n_mx_edi_esignature_ids.get_valid_esignature()
-
         # 1. Sync with SAT (create token & send request)
         today = fields.Date.context_today(self.with_context(tz=DEFAULT_TZ))
         cron_user = self.env.ref("base.user_root")
-        domain_today = [
-            ("create_uid", "=", cron_user.id),
-            ("name", "=", today),
-            ("company_id", "=", company_id),
-        ]
-        mx_session_today = self.search(domain_today, limit=1, order="id ASC")
-        if not mx_session_today:
-            mx_session_today = self.create(
-                {
-                    "name": today,
-                    "company_id": company_id,
-                }
-            )
-            _logger.info("Was created a new MX session with ID %s", mx_session_today.id)
-            try:
-                mx_session_today.action_sync_with_sat(esignature)
-            except Exception as e:
-                if auto_commit:
-                    self.env.cr.rollback()
-                _logger.error(e)
-            finally:
-                if auto_commit:
-                    self.env.cr.commit()  # pylint: disable=invalid-commit
+        
+        mx_session_today = self.create(
+            {
+                "name": today,
+                "company_id": company_id,
+            }
+        )
+        _logger.info("Was created a new MX session with ID %s", mx_session_today.id)
+        try:
+            mx_session_today.action_sync_with_sat(esignature)
+        except Exception as e:
+            if auto_commit:
+                self.env.cr.rollback()
+            _logger.error(e)
+        finally:
+            if auto_commit:
+                self.env.cr.commit()  # pylint: disable=invalid-commit
 
         # 2. Verify
         max_verify_allowed = int(
@@ -316,9 +346,22 @@ class Session(models.Model):
         certificate = esignature.get_cert_data()[1]
         private_key = esignature.get_pk_data()[1]
         three_days_ago = self.name - timedelta(days=3)
-        date_from = fields.Datetime.to_datetime(three_days_ago)
-        date_to = fields.Datetime.to_datetime(self.name)
+        date_from = self.env.context.get('cron_date_from')
+        date_to = self.env.context.get('cron_date_to')
         token_res = mx_edi_document.l10n_mx_ws_generate_token(certificate, private_key)
+        if date_from:
+            date_from = fields.Datetime.to_datetime(date_from)
+        else:
+            three_days_ago = self.name - timedelta(days=3)
+            date_from = fields.Datetime.to_datetime(three_days_ago)
+
+        if date_to:
+            date_to = fields.Datetime.to_datetime(date_to)
+        else:
+            date_to = fields.Datetime.to_datetime(self.name)
+
+        _logger.info("date_from %s",date_from)
+        _logger.info("date_to %s",date_to)
         self.write(
             {
                 "token": token_res["token"],

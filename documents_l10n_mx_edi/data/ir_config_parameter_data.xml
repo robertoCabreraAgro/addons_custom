@@ -6,4 +6,18 @@
             <field name="value">5</field>
         </record>
     </data>
+
+    <data noupdate="1">
+        <record id="start_time_verify_cfdi" model="ir.config_parameter">
+            <field name="key">documents_l10n_mx_edi.start_time_verify_cfdi</field>
+            <field name="value">08:00</field>
+        </record>
+    </data>
+
+    <data noupdate="1">
+        <record id="end_time_verify_cfdi" model="ir.config_parameter">
+            <field name="key">documents_l10n_mx_edi.end_time_verify_cfdi</field>
+            <field name="value">18:00</field>
+        </record>
+    </data>
 </odoo>
