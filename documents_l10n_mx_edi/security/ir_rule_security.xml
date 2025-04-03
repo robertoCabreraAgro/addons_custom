@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo noupdate="0">
-    <record id="l10n_mx_edi_esignature" model="ir.rule">
+    <record id="l10n_mx_edi_esignature_rule" model="ir.rule">
         <field name="name">MX E-signature (FIEL)</field>
         <field name="model_id" ref="documents_l10n_mx_edi.model_l10n_mx_edi_esignature" />
         <field name="active">True</field>
@@ -10,4 +10,11 @@
         <field name="perm_unlink">False</field>
         <field name="domain_force">['|', ('company_id', 'in', company_ids), ('company_id','=', False)]</field>
     </record>
+
+    <record id="l10n_mx_edi_session_rule" model="ir.rule">
+        <field name="name">MX EDI session multi-company</field>
+        <field name="model_id" ref="documents_l10n_mx_edi.model_l10n_mx_edi_session"  />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
 </odoo>
+ 

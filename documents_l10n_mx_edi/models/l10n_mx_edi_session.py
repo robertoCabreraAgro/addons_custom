@@ -4,8 +4,9 @@ import os
 import zipfile
 import logging
 import pytz
+import time
 
-from datetime import datetime, timedelta, time
+from datetime import datetime, timedelta
 from odoo import api, fields, models
 
 from .l10n_mx_edi_document import MXWS_ERROR_TYPE
@@ -51,7 +52,7 @@ class Session(models.Model):
             self.with_context(tz="America/Mexico_City"), fields.Datetime.now()
         )
 
-    def action_verify_cfdi(self, esignature=None, max_retries=5, waiting_sec=20):
+    def action_verify_cfdi(self, esignature=None, max_retries=2, waiting_sec=0):
         self.ensure_one()
 
         mx_edi_document = self.env["l10n_mx_edi.document"]
@@ -225,28 +226,27 @@ class Session(models.Model):
         param = self.env['ir.config_parameter'].sudo()
         hour_start = int(param.get_param("cfdi_cron.hour_start", 8))
         hour_end = int(param.get_param("cfdi_cron.hour_end", 18))
+        current_hour = now_mx.hour
 
-        start_time = time(hour_start, 0, 0)
-        end_time = time(hour_end, 0, 0)
-        current_time = now_mx.time()
-
-        if not (start_time <= current_time <= end_time):
+        if not (hour_start <= current_hour <= hour_end):
             _logger.info("not in time %s",hour_start)
             return
-        is_first_run = (current_time.hour == hour_start)
+        is_first_run = (current_hour == hour_start)
         today = fields.Date.context_today(self.with_context(tz=DEFAULT_TZ))
 
         if is_first_run:
+            _logger.info("is_first_run %s",is_first_run)
             date_from = (now_mx - timedelta(hours=24)).replace(minute=0, second=0, microsecond=0)
+            _logger.info("date_from %s",date_from)
         else:
             date_from = (now_mx - timedelta(hours=2)).replace(minute=0, second=0, microsecond=0)
         
         date_to = now_mx.replace(minute=0, second=0, microsecond=0)
-
+        _logger.info("date_to %s",date_to)
         existing_session = self.search([
             ('company_id', '=', company_id),
-            ('date_from', '>=', date_from),
-            ('date_to', '<', date_to),
+            ('date_from', '=', date_from),
+            ('date_to', '=', date_to),
         ], limit=1)
 
         if existing_session:
