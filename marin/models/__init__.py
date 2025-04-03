@@ -47,3 +47,4 @@ from . import stock_picking_type
 from . import stock_quant
 from . import stock_scrap
 from . import stock_picking_tracker
+from . import bbva_parser
