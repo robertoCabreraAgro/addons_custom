@@ -4,6 +4,7 @@
     <template id="report_aprroval_request_document">
         <t t-call="web.external_layout">
             <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang)" />
+            <h2 class="mt-2" t-field="o.name" />
             <h5 class="mt-2" t-field="o.category_id.name">Test Category</h5>
             <div class="row mt-4">
                 <div class="col-6">
