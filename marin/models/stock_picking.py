@@ -130,11 +130,11 @@ class Picking(models.Model):
             vals = self._prepare_compute_custom_permissions()
             picking.update(vals)
 
-    @api.depends("group_id")
+    @api.depends("procurement_group_id")
     def _compute_show_purchase_lines(self):
         for rec in self:
             order = rec.env["purchase.order"].search(
-                [("group_id", "=", rec.group_id.id)]
+                [("procurement_group_id", "=", rec.group_id.id)]
             )
             to_from_supplier = (
                 rec.location_id.usage == "supplier"
