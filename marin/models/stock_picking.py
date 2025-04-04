@@ -130,7 +130,7 @@ class Picking(models.Model):
             vals = self._prepare_compute_custom_permissions()
             picking.update(vals)
 
-    @api.depends("procurement_group_id")
+    @api.depends("group_id")
     def _compute_show_purchase_lines(self):
         for rec in self:
             order = rec.env["purchase.order"].search(
