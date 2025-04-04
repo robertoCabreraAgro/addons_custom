@@ -69,35 +69,28 @@ class PurchaseOrderInherit(models.Model):
             order.count_approval = len(approvals)
 
     # Override original method
-    @api.depends("state", "order_line_ids.qty_to_invoice")
+    @api.depends("state", "invoice_ids", "order_line_ids.invoice_state")
     def _compute_invoice_state(self):
-        precision = self.env["decimal.precision"].precision_get(
-            "Product Unit of measure"
-        )
         for order in self:
-            if order.state not in ("purchase", "done"):
+            if order.state != "purchase":
                 order.invoice_state = "no"
                 continue
 
-            qty1 = 0
-            to_invoice = 0
-            for line in order.order_line_ids.filtered(lambda ln: not ln.display_type):
-                qty1 += line.product_uom_qty
-                to_invoice += line.qty_to_invoice
-
-            if not float_compare(qty1, to_invoice, precision_digits=precision):
-                order.invoice_state = "to do"
-            elif float_compare(
-                qty1, to_invoice, precision_digits=precision
-            ) > 0 and not float_is_zero(to_invoice, precision_digits=precision):
-                order.invoice_state = "partially"
-            elif (
-                float_is_zero(to_invoice, precision_digits=precision)
-                and order.invoice_ids
+            order_lines = order.order_line_ids.filtered(lambda l: not l.display_type)
+            if not order.invoice_ids or all(
+                line.invoice_state == "to do" for line in order_lines
             ):
+                order.invoice_state = "to do"
+            elif all(line.invoice_state == "done" for line in order_lines):
                 order.invoice_state = "done"
-            elif float_compare(qty1, to_invoice, precision_digits=precision) < 1:
+            elif any(line.invoice_state == "over done" for line in order_lines):
                 order.invoice_state = "over done"
+            elif (
+                any(line.invoice_state == "partially" for line in order_lines)
+                or not any(line.invoice_state == "partially" for line in order_lines)
+                and any(line.invoice_state in ("to do", "done") for line in order_lines)
+            ):
+                order.invoice_state = "partially"
             else:
                 order.invoice_state = "no"
 

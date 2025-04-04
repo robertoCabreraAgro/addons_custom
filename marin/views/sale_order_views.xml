@@ -172,7 +172,7 @@
             </xpath>
             <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
                 <button
-                    name="action_open_order_lines"
+                    name="action_view_order_lines"
                     string="Order Lines"
                     type="object"
                     class="oe_stat_button"

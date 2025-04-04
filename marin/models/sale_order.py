@@ -155,7 +155,7 @@ class SaleOrder(models.Model):
         self.force_fully_invoiced = False
         self._compute_invoice_state()
 
-    def action_open_order_lines(self):
+    def action_view_order_lines(self):
         action = self.env["ir.actions.act_window"]._for_xml_id(
             "marin.action_sale_order_line"
         )
