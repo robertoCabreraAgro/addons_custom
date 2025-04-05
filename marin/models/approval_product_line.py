@@ -100,7 +100,7 @@ class ApprovalProductLine(models.Model):
             ],
         }
         if self.approval_request_id.date:
-            utc_datetime = UTC.localize(self.date)
+            utc_datetime = UTC.localize(self.approval_request_id.date)
             user_datetime = utc_datetime.astimezone(timezone(self.env.user.tz))
             move_date = fields.Date.to_date(user_datetime)
             vals["invoice_date"] = move_date
