@@ -24,6 +24,10 @@ class PurchaseOrderInherit(models.Model):
         compute="_compute_count_approval",
     )
 
+    # --------------------------------------------------
+    # CRUD METHODS
+    # --------------------------------------------------
+
     def write(self, vals):
         if "state" in vals:
             orders_changed_state = self.filtered(
@@ -56,6 +60,10 @@ class PurchaseOrderInherit(models.Model):
                     )
         return super().write(vals)
 
+    # --------------------------------------------------
+    # COMPUTE METHODS
+    # --------------------------------------------------
+
     def _compute_count_approval(self):
         for order in self:
             approvals = (
@@ -64,6 +72,37 @@ class PurchaseOrderInherit(models.Model):
                 .mapped("approval_request_id")
             )
             order.count_approval = len(approvals)
+
+    def _compute_is_user_id_editable(self):
+        self.is_user_id_editable = self.env.user.has_group(
+            "purchase.group_purchase_manager"
+        ) or not self.env.user.has_group("purchase_security.group_purchase_own_orders")
+
+    # Override original method
+    @api.depends("state", "picking_ids", "order_line_ids.transfer_state")
+    def _compute_transfer_state(self):
+        for order in self:
+            if order.state != "purchase":
+                order.transfer_state = "no"
+                continue
+
+            order_lines = order.order_line_ids.filtered(lambda l: not l.display_type)
+            if not order.picking_ids or all(
+                line.transfer_state == "to do" for line in order_lines
+            ):
+                order.transfer_state = "to do"
+            elif all(line.transfer_state == "done" for line in order_lines):
+                order.transfer_state = "done"
+            elif any(line.transfer_state == "over done" for line in order_lines):
+                order.transfer_state = "over done"
+            elif (
+                any(line.transfer_state == "partially" for line in order_lines)
+                or not any(line.transfer_state == "partially" for line in order_lines)
+                and any(line.transfer_state in ("to do", "done") for line in order_lines)
+            ):
+                order.transfer_state = "partially"
+            else:
+                order.transfer_state = "no"
 
     # Override original method
     @api.depends("state", "invoice_ids", "order_line_ids.invoice_state")
@@ -91,38 +130,9 @@ class PurchaseOrderInherit(models.Model):
             else:
                 order.invoice_state = "no"
 
-    # Override original method
-    @api.depends(
-        "state", "order_line_ids.product_uom_qty", "order_line_ids.qty_to_receive", 
-    )
-    def _compute_transfer_state(self):
-        for order in self:
-            if order.state != "purchase":
-                order.transfer_state = "no"
-                continue
-
-            order_lines = order.order_line_ids.filtered(lambda l: not l.display_type)
-            if not order.picking_ids or all(
-                line.transfer_state == "to do" for line in order_lines
-            ):
-                order.transfer_state = "to do"
-            elif all(line.transfer_state == "done" for line in order_lines):
-                order.transfer_state = "done"
-            elif any(line.transfer_state == "over done" for line in order_lines):
-                order.transfer_state = "over done"
-            elif (
-                any(line.transfer_state == "partially" for line in order_lines)
-                or not any(line.transfer_state == "partially" for line in order_lines)
-                and any(line.transfer_state in ("to do", "done") for line in order_lines)
-            ):
-                order.transfer_state = "partially"
-            else:
-                order.transfer_state = "no"
-
-    def _compute_is_user_id_editable(self):
-        self.is_user_id_editable = self.env.user.has_group(
-            "purchase.group_purchase_manager"
-        ) or not self.env.user.has_group("purchase_security.group_purchase_own_orders")
+    # --------------------------------------------------
+    # ACTION METHODS
+    # --------------------------------------------------
 
     def action_view_approval(self):
         self.ensure_one()
