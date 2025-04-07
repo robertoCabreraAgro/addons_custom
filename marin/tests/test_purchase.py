@@ -64,16 +64,16 @@ class TestPurchase(ValuationReconciliationTestCommon):
         self.assertTrue(purchase_order, "Purchase: no purchase order created")
         self.assertEqual(purchase_order.invoice_state, "no")
 
-        # receipt_status
+        # transfer_state
         purchase_order._compute_transfer_state()
-        self.assertEqual(purchase_order.receipt_status, "no")
+        self.assertEqual(purchase_order.transfer_state, "no")
         purchase_order.action_force_reception_status()
-        self.assertEqual(purchase_order.receipt_status, "full")
+        self.assertEqual(purchase_order.transfer_state, "full")
         purchase_order.action_unforce_reception_status()
-        self.assertEqual(purchase_order.receipt_status, "no")
+        self.assertEqual(purchase_order.transfer_state, "no")
         self.assertTrue(purchase_order.order_line[0].product_updatable)
         purchase_order.button_confirm()
-        self.assertEqual(purchase_order.receipt_status, "pending")
+        self.assertEqual(purchase_order.transfer_state, "pending")
 
         self.assertEqual(purchase_order.invoice_state, "to invoice")
 
@@ -94,7 +94,7 @@ class TestPurchase(ValuationReconciliationTestCommon):
         self.picking.move_line_ids.write({"quantity": 5.0})
         self.picking.move_ids.picked = True
         self.picking.button_validate()
-        self.assertEqual(purchase_order.receipt_status, "full")
+        self.assertEqual(purchase_order.transfer_state, "full")
         self.assertEqual(purchase_order.order_line.mapped("qty_received"), [5.0, 5.0])
         self.assertEqual(line.qty_to_receive, 0.0)
         self.assertFalse(purchase_order.order_line[0].product_updatable)

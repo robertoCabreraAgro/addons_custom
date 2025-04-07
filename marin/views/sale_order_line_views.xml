@@ -14,7 +14,7 @@
                     domain="[('qty_to_invoice', '!=', 0)]"
                     help="Order lines ready to be invoiced" />
                 <filter name="to_deliver" string="To deliver"
-                    domain="[('delivery_status', '=', 'to deliver')]"
+                    domain="[('transfer_state', '=', 'to do')]"
                     help="Order lines ready to be delivered" />
                 <separator />
                 <filter name="my_sales_order_lines" string="My Sale order lines"
@@ -33,9 +33,9 @@
                     <filter name="group_by_state" string="State"
                         domain="[]"
                         context="{'group_by': 'state'}" />
-                    <filter name="group_by_delivery_status" string="Delivery status"
+                    <filter name="group_by_transfer_state" string="Delivery status"
                         domain="[]"
-                        context="{'group_by': 'delivery_status'}" />
+                        context="{'group_by': 'transfer_state'}" />
                     <filter name="group_by_invoice_state" string="Invoice status"
                         domain="[]"
                         context="{'group_by': 'invoice_state'}" />
@@ -64,7 +64,7 @@
                 <field name="display_type" column_invisible="1" />
                 <field name="state" column_invisible="1" />
                 <field name="invoice_state" column_invisible="1" />
-                <field name="delivery_status" column_invisible="1" />
+                <field name="transfer_state" column_invisible="1" />
                 <field name="qty_transfered_method" column_invisible="1" />
                 <field name="product_uom_readonly" column_invisible="1" />
                 <field name="product_uom_id" column_invisible="1" />

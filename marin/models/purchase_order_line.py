@@ -10,22 +10,16 @@ class PurchaseOrderLineInherit(models.Model):
     partner_id = fields.Many2one(depends=["product_id"])
 
     # New fields
-    qty_to_receive = fields.Float(
-        string="Quantity to receive",
-        digits="Product Unit of measure",
-        compute="_compute_qty_to_receive",
-        store=True,
-    )
-    reception_status = fields.Selection(
+    transfer_state = fields.Selection(
         selection=[
             ("no", "Nothing to receive"),
-            ("to receive", "To receive"),
+            ("to do", "To receive"),
             ("partially", "Partially received"),
-            ("received", "Received"),
-            ("over received", "Over received"),
+            ("done", "Fully received"),
+            ("over done", "Over received"),
         ],
         default="no",
-        compute="_compute_reception_status",
+        compute="_compute_transfer_state",
         store=True,
     )
     force_company_id = fields.Many2one(
@@ -36,58 +30,14 @@ class PurchaseOrderLineInherit(models.Model):
         help="Technical field to force company or get it from env user if order don't exist.",
     )
     product_updatable = fields.Boolean(
-        "Can Edit Product", default=True, compute="_compute_product_updatable"
+        string="Can Edit Product",
+        default=True,
+        compute="_compute_product_updatable",
     )
 
-    @api.depends("qty_transfered_method", "qty_transfered")
-    def _compute_qty_to_receive(self):
-        for line in self:
-            if line.qty_transfered_method == "manual":
-                line.qty_to_receive = line.product_uom_qty - line.qty_transfered
-            elif line.qty_transfered_method == "stock_move":
-                line.qty_to_receive = line.product_uom_qty - line.qty_transfered
-            else:
-                line.qty_to_receive = 0.0
-
-    @api.depends("state", "product_uom_qty", "qty_transfered")
-    def _compute_reception_status(self):
-        """Compute the Reception Status of a PO line. Possible status:
-        - no: if the PO is not in status "purchase" or "done", we consider that there is nothing to
-          receive. This is also the default value if the conditions of no other status is met.
-        - to receive: we refer to the quantity to receive of the line.
-        - partially: the quantity received is lesser than the quantity ordered.
-        - received: the quantity received is equal to the quantity ordered.
-        """
-        precision = self.env["decimal.precision"].precision_get(
-            "Product Unit of measure"
-        )
-        for line in self:
-            if line.state not in ("purchase", "done") or float_is_zero(
-                line.product_uom_qty, precision_digits=precision
-            ):
-                line.reception_status = "no"
-            elif float_is_zero(line.qty_transfered, precision_digits=precision):
-                line.reception_status = "to receive"
-            elif (
-                float_compare(
-                    line.qty_transfered, line.product_uom_qty, precision_digits=precision
-                )
-                < 0
-            ):
-                line.reception_status = "partially"
-            elif not float_compare(
-                line.qty_transfered, line.product_uom_qty, precision_digits=precision
-            ):
-                line.reception_status = "received"
-            elif (
-                float_compare(
-                    line.qty_transfered, line.product_uom_qty, precision_digits=precision
-                )
-                > 0
-            ):
-                line.reception_status = "over received"
-            else:
-                line.reception_status = "no"
+    # ------------------------------------------------------------
+    # COMPUTE METHODS
+    # ------------------------------------------------------------
 
     @api.depends("order_id")
     def _compute_force_company_id(self):
@@ -100,7 +50,7 @@ class PurchaseOrderLineInherit(models.Model):
                 or self.env.company
             )
 
-    @api.depends("order_id.state", "product_id", "qty_invoiced", "qty_transfered")
+    @api.depends("state", "product_id", "qty_invoiced", "qty_transfered")
     def _compute_product_updatable(self):
         for line in self:
             if line.state in ["done", "cancel"] or (
@@ -111,15 +61,49 @@ class PurchaseOrderLineInherit(models.Model):
             else:
                 line.product_updatable = True
 
-    def _get_partner_display(self):
-        self.ensure_one()
-        commercial_partner = self.order_id.partner_id.commercial_partner_id
-        return f"({commercial_partner.ref or commercial_partner.name})"
+    @api.depends("state", "product_uom_qty", "qty_transfered", "qty_to_transfer")
+    def _compute_transfer_state(self):
+        """Compute the Reception Status of a PO line. Possible status:
+        -no: if the PO is not in status "purchase", we consider that there is nothing to
+         receive. This is also the default value if the conditions of no other status is met.
+        -to do: we refer to the quantity to receive of the line.
+        -partially: the quantity received is lesser than the quantity ordered.
+        -done: the quantity received is equal to the quantity ordered.
+        """
+        precision = self.env["decimal.precision"].precision_get("Product Price")
+        for line in self.filtered(lambda l: not l.display_type):
+            if line.state != "purchase":
+                line.transfer_state = "no"
+                continue
 
-    def _additional_name_per_id(self):
-        return {po_line.id: po_line._get_partner_display() for po_line in self}
+            if float_is_zero(line.qty_transfered, precision_digits=precision):
+                line.transfer_state = "to do"
+            elif not float_is_zero(
+                line.qty_transfered, precision_digits=precision
+            ) and not float_is_zero(line.qty_to_transfer, precision_digits=precision):
+                line.invoice_state = "partially"
+            elif (
+                float_compare(
+                    line.qty_transfered,
+                    line.product_uom_qty,
+                    precision_digits=precision,
+                )
+                == 0
+            ):
+                line.transfer_state = "done"
+            elif (
+                float_compare(
+                    line.qty_transfered,
+                    line.product_uom_qty,
+                    precision_digits=precision,
+                )
+                > 0
+            ):
+                line.transfer_state = "over done"
+            else:
+                line.transfer_state = "no"
 
-    @api.depends("order_id.partner_id", "order_id", "product_id")
+    @api.depends("order_id", "order_id.partner_id", "product_id")
     def _compute_display_name(self):
         name_per_id = self._additional_name_per_id()
         for po_line in self.sudo():
@@ -132,6 +116,10 @@ class PurchaseOrderLineInherit(models.Model):
                 name = f"{name} {additional_name}"
             po_line.display_name = name
 
+    # ------------------------------------------------------------
+    # ONCHANGE METHODS
+    # ------------------------------------------------------------
+
     @api.onchange("force_company_id")
     def _onchange_force_company_id(self):
         """Assign company_id because is used in domains as partner,
@@ -139,20 +127,9 @@ class PurchaseOrderLineInherit(models.Model):
         for line in self:
             line.company_id = line.force_company_id
 
-    @api.onchange("partner_id")
-    def _onchange_partner_id(self):
-        """Create order to correct compute of taxes"""
-        if not self.partner_id or self.order_id:
-            return
-
-        purchase_order = self.env["purchase.order"]
-        new_so = purchase_order.new(
-            {"partner_id": self.partner_id, "company_id": self.force_company_id}
-        )
-        for onchange_method in new_so._onchange_methods["partner_id"]:
-            onchange_method(new_so)
-        order_vals = new_so._convert_to_write(new_so._cache)
-        self.order_id = purchase_order.create(order_vals)
+    # ------------------------------------------------------------
+    # ACTION METHODS
+    # ------------------------------------------------------------
 
     def action_purchase_order_form(self):
         self.ensure_one()
@@ -162,3 +139,15 @@ class PurchaseOrderLineInherit(models.Model):
         action["views"] = [(form.id, "form")]
         action["res_id"] = self.order_id.id
         return action
+
+    # ------------------------------------------------------------
+    # HELPERS
+    # ------------------------------------------------------------
+
+    def _get_partner_display(self):
+        self.ensure_one()
+        commercial_partner = self.order_id.partner_id.commercial_partner_id
+        return f"({commercial_partner.ref or commercial_partner.name})"
+
+    def _additional_name_per_id(self):
+        return {po_line.id: po_line._get_partner_display() for po_line in self}

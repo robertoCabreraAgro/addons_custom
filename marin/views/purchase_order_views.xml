@@ -9,13 +9,13 @@
             <xpath expr="//filter[@name='starred']" position="after">
                 <separator />
                 <filter name="to_receive" string="To receive"
-                    domain="[('receipt_status', '=', 'pending')]" />
+                    domain="[('transfer_state', '=', 'to do')]" />
                 <filter name="partially_received" string="Partially received"
-                    domain="[('receipt_status', '=', 'partial')]" />
+                    domain="[('transfer_state', '=', 'partially')]" />
                 <filter name="received" string="Received"
-                    domain="[('receipt_status', '=', 'full')]" />
+                    domain="[('transfer_state', '=', 'done')]" />
                 <filter name="over_received" string="Over Received"
-                    domain="[('receipt_status', '=', 'over full')]" />
+                    domain="[('transfer_state', '=', 'over done')]" />
                 <separator />
             </xpath>
 	    <xpath expr="//group/filter[@name='order_date']" position="after">
@@ -25,7 +25,7 @@
                 <filter name="invoice_state" string="Billing Status"
                     domain="[]" context="{'group_by': 'invoice_state'}" />
                 <filter name="reception_status" string="Reception Status"
-                    domain="[]" context="{'group_by': 'receipt_status'}" />
+                    domain="[]" context="{'group_by': 'transfer_state'}" />
 	    </xpath>
         </field>
     </record>
@@ -97,12 +97,12 @@
                     optional="show"
                 />
                 <field
-                    name="receipt_status"
+                    name="transfer_state"
                     widget="badge"
-                    decoration-success="receipt_status=='full'"
-                    decoration-info="receipt_status!='pending'"
-                    decoration-warning="receipt_status!='partial'"
-                    decoration-danger="receipt_status!='over full'"
+                    decoration-success="transfer_state=='done'"
+                    decoration-info="transfer_state!='to do'"
+                    decoration-warning="transfer_state!='partially'"
+                    decoration-danger="transfer_state!='over done'"
                     optional="show"
                 />
                 <field
@@ -189,16 +189,16 @@
         <field name="model">purchase.order</field>
         <field name="inherit_id" ref="purchase_stock.purchase_order_view_form_inherit" />
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='receipt_status']" position="replace">
-                <label for="receipt_status" invisible="state not in ('purchase', 'done')" />
+            <xpath expr="//field[@name='transfer_state']" position="replace">
+                <label for="transfer_state" invisible="state not in ('purchase', 'done')" />
                 <div name="reception_status_div" class="d-flex" invisible="state not in ('purchase', 'done')">
-                    <field name="receipt_status" />
+                    <field name="transfer_state" />
                     <button
                         name="action_force_reception_status"
                         string="Force reception done"
                         type="object"
                         class="btn-link d-block"
-                        invisible="receipt_status == 'full' or state not in ('purchase', 'done')"
+                        invisible="transfer_state == 'done' or state not in ('purchase', 'done')"
                         groups="marin.group_purchase_force_reception_status"
                     />
                     <button
@@ -206,7 +206,7 @@
                         string="Unforce reception done"
                         type="object"
                         class="btn-link d-block"
-                        invisible="receipt_status != 'full'"
+                        invisible="transfer_state != 'done'"
                         groups="marin.group_purchase_force_reception_status"
                     />
                 </div>

@@ -7,9 +7,6 @@ class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     # Extended fields
-    delivery_status = fields.Selection(
-        selection_add=[("no", "Nothing to deliver"), ("over full", "Over delivered")]
-    )
     margin = fields.Float(digits="Product Price")
     margin_percent = fields.Float(digits="Product Price")
 
@@ -80,35 +77,33 @@ class SaleOrder(models.Model):
 
     # Override original method
     @api.depends(
-        "state", "order_line_ids.qty_to_deliver", "order_line_ids.product_uom_qty"
+        "state", "order_line_ids.qty_to_transfer", "order_line_ids.product_uom_qty"
     )
     def _compute_transfer_state(self):
-        precision = self.env["decimal.precision"].precision_get(
-            "Product Unit of measure"
-        )
+        precision = self.env["decimal.precision"].precision_get("Product Price")
         for order in self:
-            if order.state not in ("sale", "done"):
-                order.delivery_status = "no"
+            if order.state != "sale":
+                order.transfer_state = "no"
                 continue
 
             qty1 = 0
             to_deliver = 0
             for line in order.order_line_ids.filtered(lambda ln: not ln.display_type):
                 qty1 += line.product_uom_qty
-                to_deliver += line.qty_to_deliver
+                to_deliver += line.qty_to_transfer
 
             if not float_compare(qty1, to_deliver, precision_digits=precision):
-                order.delivery_status = "pending"
+                order.transfer_state = "pending"
             elif float_compare(
                 qty1, to_deliver, precision_digits=precision
             ) > 0 and not float_is_zero(to_deliver, precision_digits=precision):
-                order.delivery_status = "partial"
+                order.transfer_state = "partial"
             elif float_is_zero(to_deliver, precision_digits=precision):
-                order.delivery_status = "full"
+                order.transfer_state = "full"
             elif float_compare(qty1, to_deliver, precision_digits=precision) < 1:
-                order.delivery_status = "over full"
+                order.transfer_state = "over full"
             else:
-                order.delivery_status = "no"
+                order.transfer_state = "no"
 
     # Extend original method
     @api.depends("state", "order_line_ids.invoice_state")
@@ -137,10 +132,10 @@ class SaleOrder(models.Model):
             "context": {"active_model": "sale.order", "active_ids": self.ids},
         }
 
-    def action_force_delivery_status(self):
-        self.write({"delivery_status": "full"})
+    def action_force_transfer_state(self):
+        self.write({"transfer_state": "done"})
 
-    def action_unforce_delivery_status(self):
+    def action_unforce_transfer_state(self):
         self._compute_transfer_state()
 
     def action_recompute_invoice_state(self):

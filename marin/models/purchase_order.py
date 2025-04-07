@@ -15,9 +15,6 @@ class PurchaseOrderInherit(models.Model):
 
     # Override original fields
     partner_id = fields.Many2one(domain=lambda self: self._get_partner_id_domain())
-    receipt_status = fields.Selection(
-        selection_add=[("no", "Nothing to receive"), ("over full", "Over received")]
-    )
 
     # New fields
     is_user_id_editable = fields.Boolean(
@@ -99,32 +96,28 @@ class PurchaseOrderInherit(models.Model):
         "state", "order_line_ids.qty_to_receive", "order_line_ids.product_uom_qty"
     )
     def _compute_transfer_state(self):
-        precision = self.env["decimal.precision"].precision_get(
-            "Product Unit of measure"
-        )
         for order in self:
-            if order.state not in ("purchase", "done"):
-                order.receipt_status = "no"
+            if order.state != "purchase":
+                order.transfer_state = "no"
                 continue
 
-            qty1 = 0
-            to_receive = 0
-            for line in order.order_line_ids.filtered(lambda ln: not ln.display_type):
-                qty1 += line.product_uom_qty
-                to_receive += line.qty_to_receive
-
-            if not float_compare(qty1, to_receive, precision_digits=precision):
-                order.receipt_status = "pending"
-            elif float_compare(
-                qty1, to_receive, precision_digits=precision
-            ) > 0 and not float_is_zero(to_receive, precision_digits=precision):
-                order.receipt_status = "partial"
-            elif float_is_zero(to_receive, precision_digits=precision):
-                order.receipt_status = "full"
-            elif float_compare(qty1, to_receive, precision_digits=precision) < 1:
-                order.receipt_status = "over full"
+            order_lines = order.order_line_ids.filtered(lambda l: not l.display_type)
+            if not order.picking_ids or all(
+                line.transfer_state == "to do" for line in order_lines
+            ):
+                order.transfer_state = "to do"
+            elif all(line.transfer_state == "done" for line in order_lines):
+                order.transfer_state = "done"
+            elif any(line.transfer_state == "over done" for line in order_lines):
+                order.transfer_state = "over done"
+            elif (
+                any(line.transfer_state == "partially" for line in order_lines)
+                or not any(line.transfer_state == "partially" for line in order_lines)
+                and any(line.transfer_state in ("to do", "done") for line in order_lines)
+            ):
+                order.transfer_state = "partially"
             else:
-                order.receipt_status = "no"
+                order.transfer_state = "no"
 
     def _compute_is_user_id_editable(self):
         self.is_user_id_editable = self.env.user.has_group(
@@ -153,7 +146,7 @@ class PurchaseOrderInherit(models.Model):
         return action
 
     def action_force_reception_status(self):
-        self.write({"receipt_status": "full"})
+        self.write({"transfer_state": "done"})
 
     def action_unforce_reception_status(self):
         self._compute_transfer_state()

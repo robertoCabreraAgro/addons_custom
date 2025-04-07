@@ -108,15 +108,15 @@ class TestSale(TestSaleCommon):
         # partner_credit_warning
         order._compute_partner_credit_warning()
 
-        # delivery_status
+        # transfer_state
         order._compute_transfer_state()
-        self.assertEqual(order.delivery_status, "no")
-        order.action_force_delivery_status()
-        self.assertEqual(order.delivery_status, "full")
-        order.action_unforce_delivery_status()
-        self.assertEqual(order.delivery_status, "no")
+        self.assertEqual(order.transfer_state, "no")
+        order.action_force_transfer_state()
+        self.assertEqual(order.transfer_state, "full")
+        order.action_unforce_transfer_state()
+        self.assertEqual(order.transfer_state, "no")
         order.action_confirm()
-        self.assertEqual(order.delivery_status, "pending")
+        self.assertEqual(order.transfer_state, "pending")
         self.assertFalse(order.order_line_ids.product_updatable)
 
     def test_02_sale_order_authorize_debt(self):

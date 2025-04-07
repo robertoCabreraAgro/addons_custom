@@ -18,66 +18,43 @@ class SaleOrderLine(models.Model):
         readonly=True,
         index=True,
     )
-    delivery_status = fields.Selection(
-        [
+    transfer_state = fields.Selection(
+        selection=[
             ("no", "Nothing to deliver"),
-            ("to deliver", "To deliver"),
+            ("to do", "To deliver"),
             ("partially", "Partially delivered"),
-            ("delivered", "Delivered"),
-            ("over delivered", "Over delivered"),
+            ("done", "Fully delivered"),
+            ("over done", "Over delivered"),
         ],
         default="no",
         compute="_compute_transfer_state",
         store=True,
     )
     force_company_id = fields.Many2one(
-        "res.company",
-        "Forced company",
+        comodel_name="res.company",
+        string="Forced company",
         compute="_compute_force_company_id",
         readonly=False,
         help="Technical field to force company or get it "
         "from env user if order don't exist.",
     )
 
-    @api.depends("state", "product_uom_qty", "qty_transfered")
-    def _compute_transfer_state(self):
-        """Compute the Delivery Status of a SO line. Possible status:
-        - no: if the SO is not in status "sale" or "done", we consider that there is nothing to
-          deliver. This is also the default value if the conditions of no other status is met.
-        - to deliver: we refer to the quantity to deliver of the line.
-        - partially: the quantity delivered is lesser than the quantity ordered.
-        - delivered: the quantity delivered is equal to the quantity ordered.
-        """
-        precision = self.env["decimal.precision"].precision_get(
-            "Product Unit of measure"
-        )
-        for line in self:
-            if line.state not in ("sale", "done") or float_is_zero(
-                line.product_uom_qty, precision_digits=precision
-            ):
-                line.delivery_status = "no"
-            elif float_is_zero(line.qty_transfered, precision_digits=precision):
-                line.delivery_status = "to deliver"
-            elif (
-                float_compare(
-                    line.qty_transfered, line.product_uom_qty, precision_digits=precision
-                )
-                < 0
-            ):
-                line.delivery_status = "partially"
-            elif not float_compare(
-                line.qty_transfered, line.product_uom_qty, precision_digits=precision
-            ):
-                line.delivery_status = "delivered"
-            elif (
-                float_compare(
-                    line.qty_transfered, line.product_uom_qty, precision_digits=precision
-                )
-                > 0
-            ):
-                line.delivery_status = "over delivered"
-            else:
-                line.delivery_status = "no"
+    # ------------------------------------------------------------
+    # CRUD METHODS
+    # ------------------------------------------------------------
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if not vals.get("route_id", False):
+                order = self.env["sale.order"].browse(vals["order_id"])
+                if order.route_id:
+                    vals["route_id"] = order.route_id.id
+        return super().create(vals_list)
+
+    # ------------------------------------------------------------
+    # COMPUTE METHODS
+    # ------------------------------------------------------------
 
     @api.depends("order_id")
     def _compute_force_company_id(self):
@@ -90,6 +67,52 @@ class SaleOrderLine(models.Model):
                 or self.env.company
             )
 
+    @api.depends("state", "product_uom_qty", "qty_transfered", "qty_to_transfer")
+    def _compute_transfer_state(self):
+        """Compute the Reception Status of a PO line. Possible status:
+        -no: if the PO is not in status "purchase" or "done", we consider that there is nothing to
+         receive. This is also the default value if the conditions of no other status is met.
+        -to do: we refer to the quantity to receive of the line.
+        -partially: the quantity received is lesser than the quantity ordered.
+        -done: the quantity received is equal to the quantity ordered.
+        """
+        precision = self.env["decimal.precision"].precision_get("Product Price")
+        for line in self.filtered(lambda l: not l.display_type):
+            if line.state != "sale":
+                line.transfer_state = "no"
+                continue
+
+            if float_is_zero(line.qty_transfered, precision_digits=precision):
+                line.transfer_state = "to do"
+            elif not float_is_zero(
+                line.qty_transfered, precision_digits=precision
+            ) and not float_is_zero(line.qty_to_transfer, precision_digits=precision):
+                line.invoice_state = "partially"
+            elif (
+                float_compare(
+                    line.qty_transfered,
+                    line.product_uom_qty,
+                    precision_digits=precision,
+                )
+                == 0
+            ):
+                line.transfer_state = "done"
+            elif (
+                float_compare(
+                    line.qty_transfered,
+                    line.product_uom_qty,
+                    precision_digits=precision,
+                )
+                > 0
+            ):
+                line.transfer_state = "over done"
+            else:
+                line.transfer_state = "no"
+
+    # ------------------------------------------------------------
+    # ONCHANGE METHODS
+    # ------------------------------------------------------------
+
     @api.onchange("force_company_id")
     def _onchange_force_company_id(self):
         """Assign company_id because is used in domains as partner,
@@ -97,24 +120,14 @@ class SaleOrderLine(models.Model):
         for line in self:
             line.company_id = line.force_company_id
 
-    @api.onchange("partner_id")
-    def _onchange_partner_id(self):
-        """Create order to correct compute of taxes"""
-        if not self.partner_id or self.order_id:
-            return
-        sale_order = self.env["sale.order"]
-        new_so = sale_order.new(
-            {"partner_id": self.partner_id, "company_id": self.force_company_id}
-        )
-        for onchange_method in new_so._onchange_methods["partner_id"]:
-            onchange_method(new_so)
-        order_vals = new_so._convert_to_write(new_so._cache)
-        self.order_id = sale_order.create(order_vals)
-
     @api.onchange("product_id")
     def global_stock_route_product_id_change(self):
         if self.order_id.route_id:
             self.route_id = self.order_id.route_id
+
+    # ------------------------------------------------------------
+    # ACTION METHODS
+    # ------------------------------------------------------------
 
     def action_sale_order_form(self):
         self.ensure_one()
@@ -125,16 +138,11 @@ class SaleOrderLine(models.Model):
         action["res_id"] = self.order_id.id
         return action
 
+    # ------------------------------------------------------------
+    # VALIDATION METHODS
+    # ------------------------------------------------------------
+
     def _check_line_unlink(self):
         if self._context.get("avoid_check_unlink"):
             return False
         return super()._check_line_unlink()
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        for vals in vals_list:
-            if not vals.get("route_id", False):
-                order = self.env["sale.order"].browse(vals["order_id"])
-                if order.route_id:
-                    vals["route_id"] = order.route_id.id
-        return super().create(vals_list)

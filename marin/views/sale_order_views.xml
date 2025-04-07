@@ -32,13 +32,13 @@
                     domain="[('invoice_state', '=', 'over done')]" />
                 <separator />
                 <filter name="pending" string="To deliver"
-                    domain="[('delivery_status', '=', 'pending')]" />
+                    domain="[('transfer_state', '=', 'to do')]" />
                 <filter name="partially_delivered" string="Partially delivered"
-                    domain="[('delivery_status', '=', 'partial')]" />
+                    domain="[('transfer_state', '=', 'partially')]" />
                 <filter name="full" string="Delivered"
-                    domain="[('delivery_status', '=', 'full')]" />
+                    domain="[('transfer_state', '=', 'done')]" />
                 <filter name="over_full" string="Over Delivered"
-                    domain="[('delivery_status', '=', 'over full')]" />
+                    domain="[('transfer_state', '=', 'over done')]" />
                 <separator />
                 <filter name="activities_overdue" string="Late Activities"
                     domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
@@ -66,9 +66,9 @@
                     <filter name="invoice_state" string="Invoice status"
                         domain="[]"
                         context="{'group_by': 'invoice_state'}" />
-                    <filter name="delivery_status" string="Delivery Status"
+                    <filter name="transfer_state" string="Delivery Status"
                         domain="[]"
-                        context="{'group_by': 'delivery_status'}" />
+                        context="{'group_by': 'transfer_state'}" />
                 </group>
             </search>
         </field>
@@ -110,13 +110,13 @@
                     decoration-success="state in ('sale', 'done')"
                 />
                 <field
-                    name="delivery_status"
+                    name="transfer_state"
                     widget="badge"
                     optional="show"
-                    decoration-danger="delivery_status == 'over full'"
-                    decoration-warning="delivery_status == 'partial'"
-                    decoration-info="delivery_status == 'pending'"
-                    decoration-success="delivery_status == 'full'"
+                    decoration-danger="transfer_state == 'over done'"
+                    decoration-warning="transfer_state == 'partially'"
+                    decoration-info="transfer_state == 'to do'"
+                    decoration-success="transfer_state == 'done'"
                 />
                 <field
                     name="invoice_state"
@@ -219,10 +219,10 @@
                 <attribute name="optional">hide</attribute>
             </xpath>
             <xpath expr="//page/field[@name='order_line_ids']/list/field[@name='qty_transfered']" position="attributes">
-                <attribute name="decoration-danger">not display_type and delivery_status == 'over full'</attribute>
-                <attribute name="decoration-warning">not display_type and delivery_status == 'partial'</attribute>
-                <attribute name="decoration-info">not display_type and delivery_status == 'pending'</attribute>
-                <attribute name="decoration-success">not display_type and delivery_status == 'full'</attribute>
+                <attribute name="decoration-danger">not display_type and transfer_state == 'over done'</attribute>
+                <attribute name="decoration-warning">not display_type and transfer_state == 'partially'</attribute>
+                <attribute name="decoration-info">not display_type and transfer_state == 'to do'</attribute>
+                <attribute name="decoration-success">not display_type and transfer_state == 'done'</attribute>
             </xpath>
             <xpath expr="//page/field[@name='order_line_ids']/list/field[@name='qty_invoiced']" position="attributes">
                 <attribute name="decoration-danger">not display_type and invoice_state == 'to do'</attribute>
@@ -231,7 +231,7 @@
             </xpath>
             <xpath expr="//page/field[@name='order_line_ids']/list/field[@name='price_unit']" position="after">
                 <field name="partner_id" column_invisible="1" />
-                <field name="delivery_status" column_invisible="1" />
+                <field name="transfer_state" column_invisible="1" />
                 <widget name="sale_line_price_history_widget" width="20px" />
             </xpath>
             <xpath expr="//page[@name='other_information']/group" position="inside">
@@ -290,32 +290,32 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale_stock.view_order_form_inherit_sale_stock" />
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='delivery_status']" position="replace">
+            <xpath expr="//field[@name='transfer_state']" position="replace">
                 <label
                     string="Delivery Status"
-                    for="delivery_status"
+                    for="transfer_state"
                     class="fw-bold text-900"
                     invisible="state != 'sale'"
                 />
-                <div name="delivery_status_div" class="d-flex" invisible="state != 'sale'">
+                <div name="transfer_state_div" class="d-flex" invisible="state != 'sale'">
                     <div colspan="1">
-                        <field name="delivery_status" />
+                        <field name="transfer_state" />
                     </div>
                     <div colspan="2">
                         <button
-                            name="action_force_delivery_status"
+                            name="action_force_transfer_state"
                             string="Force delivery done"
                             type="object"
-                            invisible="delivery_status == 'full' or state != 'sale'"
-                            groups="marin.group_sale_force_delivery_status"
+                            invisible="transfer_state == 'done' or state != 'sale'"
+                            groups="marin.group_sale_force_transfer_state"
                             class="oe_inline oe_button"
                         />
                         <button
-                            name="action_unforce_delivery_status"
+                            name="action_unforce_transfer_state"
                             string="Unforce delivery done"
                             type="object"
-                            invisible="delivery_status != 'full' or state != 'sale'"
-                            groups="marin.group_sale_force_delivery_status"
+                            invisible="transfer_state != 'done' or state != 'sale'"
+                            groups="marin.group_sale_force_transfer_state"
                             class="oe_inline oe_button"
                         />
                     </div>
