@@ -93,8 +93,7 @@ class PurchaseOrderInherit(models.Model):
 
     # Override original method
     @api.depends(
-        "state", "order_line_ids.product_uom_qty",
-        #"order_line_ids.qty_to_receive", 
+        "state", "order_line_ids.product_uom_qty", "order_line_ids.qty_to_receive", 
     )
     def _compute_transfer_state(self):
         for order in self:
