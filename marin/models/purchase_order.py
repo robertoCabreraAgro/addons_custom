@@ -98,7 +98,7 @@ class PurchaseOrderInherit(models.Model):
     @api.depends(
         "state", "order_line_ids.qty_to_receive", "order_line_ids.product_uom_qty"
     )
-    def _compute_receipt_status(self):
+    def _compute_transfer_state(self):
         precision = self.env["decimal.precision"].precision_get(
             "Product Unit of measure"
         )
@@ -156,7 +156,7 @@ class PurchaseOrderInherit(models.Model):
         self.write({"receipt_status": "full"})
 
     def action_unforce_reception_status(self):
-        self._compute_receipt_status()
+        self._compute_transfer_state()
 
     def _log_po_state_change_to_approval_request_chatter(
         self, new_state, grouped_product_lines

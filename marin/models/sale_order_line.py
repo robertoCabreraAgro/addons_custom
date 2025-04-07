@@ -27,7 +27,7 @@ class SaleOrderLine(models.Model):
             ("over delivered", "Over delivered"),
         ],
         default="no",
-        compute="_compute_delivery_status",
+        compute="_compute_transfer_state",
         store=True,
     )
     force_company_id = fields.Many2one(
@@ -40,7 +40,7 @@ class SaleOrderLine(models.Model):
     )
 
     @api.depends("state", "product_uom_qty", "qty_transfered")
-    def _compute_delivery_status(self):
+    def _compute_transfer_state(self):
         """Compute the Delivery Status of a SO line. Possible status:
         - no: if the SO is not in status "sale" or "done", we consider that there is nothing to
           deliver. This is also the default value if the conditions of no other status is met.

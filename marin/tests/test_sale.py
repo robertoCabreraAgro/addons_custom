@@ -109,7 +109,7 @@ class TestSale(TestSaleCommon):
         order._compute_partner_credit_warning()
 
         # delivery_status
-        order._compute_delivery_status()
+        order._compute_transfer_state()
         self.assertEqual(order.delivery_status, "no")
         order.action_force_delivery_status()
         self.assertEqual(order.delivery_status, "full")

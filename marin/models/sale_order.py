@@ -82,7 +82,7 @@ class SaleOrder(models.Model):
     @api.depends(
         "state", "order_line_ids.qty_to_deliver", "order_line_ids.product_uom_qty"
     )
-    def _compute_delivery_status(self):
+    def _compute_transfer_state(self):
         precision = self.env["decimal.precision"].precision_get(
             "Product Unit of measure"
         )
@@ -141,7 +141,7 @@ class SaleOrder(models.Model):
         self.write({"delivery_status": "full"})
 
     def action_unforce_delivery_status(self):
-        self._compute_delivery_status()
+        self._compute_transfer_state()
 
     def action_recompute_invoice_state(self):
         self.order_line_ids._compute_invoice_state()

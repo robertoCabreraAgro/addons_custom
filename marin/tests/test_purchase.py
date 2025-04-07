@@ -65,7 +65,7 @@ class TestPurchase(ValuationReconciliationTestCommon):
         self.assertEqual(purchase_order.invoice_state, "no")
 
         # receipt_status
-        purchase_order._compute_receipt_status()
+        purchase_order._compute_transfer_state()
         self.assertEqual(purchase_order.receipt_status, "no")
         purchase_order.action_force_reception_status()
         self.assertEqual(purchase_order.receipt_status, "full")
