@@ -85,7 +85,6 @@ class SaleOrder(models.Model):
             if order.state != "sale":
                 order.transfer_state = "no"
                 continue
-
             qty1 = 0
             to_deliver = 0
             for line in order.order_line_ids.filtered(lambda ln: not ln.display_type):
@@ -93,15 +92,15 @@ class SaleOrder(models.Model):
                 to_deliver += line.qty_to_transfer
 
             if not float_compare(qty1, to_deliver, precision_digits=precision):
-                order.transfer_state = "pending"
+                order.transfer_state = "to do"
             elif float_compare(
                 qty1, to_deliver, precision_digits=precision
             ) > 0 and not float_is_zero(to_deliver, precision_digits=precision):
-                order.transfer_state = "partial"
+                order.transfer_state = "partially"
             elif float_is_zero(to_deliver, precision_digits=precision):
-                order.transfer_state = "full"
+                order.transfer_state = "done"
             elif float_compare(qty1, to_deliver, precision_digits=precision) < 1:
-                order.transfer_state = "over full"
+                order.transfer_state = "over done"
             else:
                 order.transfer_state = "no"
 
