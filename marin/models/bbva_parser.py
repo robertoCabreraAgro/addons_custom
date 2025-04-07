@@ -1,13 +1,14 @@
-# -*- coding: utf-8 -*-
-from odoo import _, fields, models
-from odoo.exceptions import UserError
-import xlrd
-import re
 import base64
 import logging
-import chardet
-
+import re
 from datetime import datetime
+from io import BytesIO
+
+import chardet
+from openpyxl import load_workbook
+
+from odoo import _, fields, models
+from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -70,17 +71,20 @@ class BBVAParser(models.AbstractModel):
             if file_type == "txt":
                 return bool(self._detect_encoding(data_file))
             elif file_type == "xlsx":
-                header_row = 5
-                workbook = xlrd.open_workbook(file_contents=data_file)
-                sheet = workbook.sheet_by_index(0)
+                header_row = 6
+                workbook = load_workbook(
+                    BytesIO(data_file), read_only=True, data_only=True
+                )
+                sheet = workbook.active
 
-                if sheet.nrows <= header_row:
+                if sheet.max_row <= header_row:
                     return False
 
                 header = [
-                    sheet.cell(header_row, col).value.strip()
-                    for col in range(sheet.ncols)
+                    cell.value.strip() if cell.value else ""
+                    for cell in sheet[header_row]
                 ]
+
                 return header == BBVA_XLSX_HEADER
 
             return False
@@ -299,7 +303,9 @@ class BBVAParser(models.AbstractModel):
                     "payment_ref": reference,
                     "amount": credit - debit,
                     "account_number": partner_bank.acc_number if partner_bank else None,
-                    "partner_id": partner_bank.partner_id.id,
+                    "partner_id": partner_bank.partner_id.id
+                    if partner_bank.partner_id
+                    else None,
                     "sequence": 1,  # always 1 to be consistent with running balance computing
                     "unique_import_id": self._generate_unique_import_id(
                         journal.code, date, sequence
@@ -332,11 +338,12 @@ class BBVAParser(models.AbstractModel):
             dict: Contains statement name, date, and transactions
         """
         try:
-            workbook = xlrd.open_workbook(file_contents=data_file)
-            sheet = workbook.sheet_by_index(0)
-            header_row = 5  # Header is in row 5
+            workbook = load_workbook(BytesIO(data_file), read_only=True, data_only=True)
+            sheet = workbook.active
+            header_row = 6
 
-            if sheet.nrows <= header_row + 1:  # Header row + at least 1 data row
+            # Check if exists at least one row after header
+            if sheet.max_row <= header_row + 1:
                 raise UserError(
                     _("Empty file: The Excel file contains no transaction data")
                 )
@@ -345,37 +352,37 @@ class BBVAParser(models.AbstractModel):
             date_start = None
             date_end = None
             sequence = 1
-            footer_row = sheet.nrows - 1
-
-            for row_number in reversed(range(header_row + 1, sheet.nrows)):
+            footer_row = sheet.max_row
+            # Iterate from the last row upwards
+            for row_number in range(footer_row - 1, header_row, -1):
+                # Get row as a list
+                row = [cell.value for cell in list(sheet.rows)[row_number - 1]]
 
                 # Skip empty rows
-                if not any(
-                    sheet.cell(row_number, col).value for col in range(sheet.ncols)
-                ):
-                    continue
-
-                # Skip footer
-                if row_number == footer_row:
+                if not any(row):
                     continue
 
                 # Get cell values
                 try:
-                    date_value = sheet.cell(row_number, 0).value
-                    date = self._parse_date(date_value, "%Y-%m-%d")
-                    reference = str(sheet.cell(row_number, 1).value).strip()
-                    credit = float(sheet.cell(row_number, 2).value or 0)
-                    debit = float(sheet.cell(row_number, 3).value or 0)
+                    date_value = row[0]
+                    date = (
+                        fields.Date.to_string(date_value)
+                        if isinstance(date_value, datetime)
+                        else self._parse_date(date_value, "%Y-%m-%d")
+                    )
+                    reference = str(row[1] or "").strip()
+                    credit = float(row[2] or 0)
+                    debit = float(row[3] or 0)
                 except (ValueError, IndexError) as e:
                     raise UserError(
-                        _("Row %d: Invalid data format - %s") % (row_number + 1, str(e))
+                        _("Row %d: Invalid data format - %s") % (row_number, str(e))
                     )
 
                 # Validate required values
                 if not (debit or credit):
                     raise UserError(
                         _("Row %d: Transaction must have either debit or credit amount")
-                        % (row_number + 1)
+                        % (row_number)
                     )
 
                 # Set start/end dates
@@ -417,5 +424,5 @@ class BBVAParser(models.AbstractModel):
                 "transactions": transactions,
             }
 
-        except xlrd.XLRDError as e:
+        except Exception as e:
             raise UserError(_("Excel file error: %s") % str(e))
