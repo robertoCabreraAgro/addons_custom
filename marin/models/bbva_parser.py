@@ -26,27 +26,38 @@ class BBVAParser(models.AbstractModel):
     _name = "bbva.parser"
     _description = "BBVA files parser"
 
-    def _decode_file_content(self, data_file):
+    def _detect_encoding(self, data_file):
         """
-        Detects the encoding of a file and decodes it into readable text.
+        Detects the most suitable encoding for the given file by trying multiple options.
 
-        If the detected encoding is "ISO-8859-1", it is converted to "UTF-8".
-        The decoded content is split into lines for further processing.
-
-        :param data_file: Bytes object representing the file content.
-        :return: List of decoded lines.
+        :param data_file: File content in bytes
+        :return: Valid encoding string if found, otherwise None
         """
-        # Detect encoding
-        encoding_detected = chardet.detect(data_file)["encoding"]
-
-        # Normalize encoding
-        if encoding_detected and encoding_detected.lower() == "iso-8859-1":
-            encoding_detected = "utf-8"
+        encodings = [
+            chardet.detect(data_file)["encoding"],
+            "utf-8",
+            "iso-8859-1",
+            "cp1252",
+            "latin1",
+        ]
 
         # Decode content and split into lines
-        lines = data_file.decode(encoding_detected, errors="replace").splitlines()
+        for encoding in encodings:
+            try:
+                lines = data_file.decode(encoding, errors="replace").splitlines()
 
-        return lines
+                if not lines:
+                    continue
+
+                header = lines[0].strip().split("\t")
+
+                if header == BBVA_TXT_HEADER:
+                    return encoding
+
+            except UnicodeDecodeError:
+                continue
+
+        return None
 
     def _validate_header(self, data_file, file_type):
         """Validates if the file header matches the expected format based on file type.
@@ -57,15 +68,7 @@ class BBVAParser(models.AbstractModel):
         """
         try:
             if file_type == "txt":
-                # Decode file and convert it into lines
-                lines = self._decode_file_content(data_file)
-
-                if not lines:
-                    return False
-
-                header = lines[0].strip().split("\t")
-                return header == BBVA_TXT_HEADER
-
+                return bool(self._detect_encoding(data_file))
             elif file_type == "xlsx":
                 header_row = 5
                 workbook = xlrd.open_workbook(file_contents=data_file)
@@ -239,7 +242,8 @@ class BBVAParser(models.AbstractModel):
             dict: Contains statement name, date, and transactions
         """
         # Decode file and convert it into lines
-        lines = self._decode_file_content(data_file)
+        encoding_detected = self._detect_encoding(data_file)
+        lines = data_file.decode(encoding_detected, errors="replace").splitlines()
 
         if not lines:
             raise UserError(_("Empty file: The uploaded file contains no data"))
@@ -296,7 +300,7 @@ class BBVAParser(models.AbstractModel):
                     "amount": credit - debit,
                     "account_number": partner_bank.acc_number if partner_bank else None,
                     "partner_id": partner_bank.partner_id.id,
-                    "sequence": sequence,
+                    "sequence": 1,  # always 1 to be consistent with running balance computing
                     "unique_import_id": self._generate_unique_import_id(
                         journal.code, date, sequence
                     ),
@@ -392,7 +396,7 @@ class BBVAParser(models.AbstractModel):
                         "partner_id": partner_bank.partner_id.id
                         if partner_bank.partner_id
                         else None,
-                        "sequence": sequence,
+                        "sequence": 1,  # always 1 to be consistent with running balance computing
                         "unique_import_id": self._generate_unique_import_id(
                             journal.code, date, sequence
                         ),

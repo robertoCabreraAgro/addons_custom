@@ -1,3 +1,5 @@
+from pytz import UTC, timezone
+
 from odoo import fields, models
 from odoo.fields import Command
 
@@ -85,6 +87,7 @@ class ApprovalProductLine(models.Model):
             "partner_id": self.approval_request_id.partner_id.id,
             "invoice_payment_term_id": self.approval_request_id.partner_id.property_supplier_payment_term_id.id,
             "move_type": self.approval_request_id.approval_type,
+            "narration": self.approval_request_id.reason,
             "line_ids": [
                 Command.create(
                     {
@@ -96,7 +99,10 @@ class ApprovalProductLine(models.Model):
                 )
             ],
         }
-        if self.env.context.get("move_date"):
-            vals["invoice_date"] = self.env.context["move_date"]
-            vals["date"] = self.env.context["move_date"]
+        if self.approval_request_id.date:
+            utc_datetime = UTC.localize(self.approval_request_id.date)
+            user_datetime = utc_datetime.astimezone(timezone(self.env.user.tz))
+            move_date = fields.Date.to_date(user_datetime)
+            vals["invoice_date"] = move_date
+            vals["date"] = move_date
         return vals
