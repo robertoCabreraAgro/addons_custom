@@ -10,6 +10,7 @@
                     id="documents_l10n_mx_edi_settings"
                     title="SAT Synchronization"
                     invisible="country_code != 'MX'"
+                    groups="documents_l10n_mx_edi.group_documents_l10n_mx_edi_manager"
                 >
                     <setting
                         id="l10n_mx_edi_esignature"
