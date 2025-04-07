@@ -97,8 +97,8 @@
         <field name="category_id" ref="base.module_category_usability" />
     </record>
 
-    <record id="group_purchase_force_reception_status" model="res.groups">
-        <field name="name">Force reception status on Purchase Orders</field>
+    <record id="group_purchase_force_transfer_state" model="res.groups">
+        <field name="name">Force transfer status on Purchase Orders</field>
         <field name="category_id" ref="base.module_category_usability" />
     </record>
 
@@ -134,7 +134,7 @@
     </record>
 
     <record id="group_sale_force_transfer_state" model="res.groups">
-        <field name="name">Force delivery status on Sale Orders</field>
+        <field name="name">Force transfer status on Sale Orders</field>
         <field name="category_id" ref="base.module_category_usability" />
     </record>
 

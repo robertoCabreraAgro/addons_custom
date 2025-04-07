@@ -24,7 +24,7 @@
                     domain="[]" context="{'group_by': 'state'}" />
                 <filter name="invoice_state" string="Billing Status"
                     domain="[]" context="{'group_by': 'invoice_state'}" />
-                <filter name="reception_status" string="Reception Status"
+                <filter name="transfer_state" string="Reception Status"
                     domain="[]" context="{'group_by': 'transfer_state'}" />
 	    </xpath>
         </field>
@@ -165,7 +165,7 @@
                 <widget name="purchase_line_price_history_widget" width="20px" />
             </xpath>
             <xpath expr="//page/field[@name='order_line_ids']/list/field[@name='qty_invoiced']" position="after">
-                <field name="reception_status" column_invisible="1" />
+                <field name="transfer_state" column_invisible="1" />
             </xpath>
 	    <!--<xpath expr="//page/field[@name='order_line_ids']/list/field[@name='qty_invoiced']" position="attributes">
                 <attribute name="decoration-danger">not display_type and invoice_state == 'over done'</attribute>
@@ -173,10 +173,10 @@
                 <attribute name="decoration-success">not display_type and invoice_state == 'done'</attribute>
             </xpath>
             <xpath expr="//page/field[@name='order_line_ids']/list/field[@name='qty_transfered']" position="attributes">
-                <attribute name="decoration-danger">not display_type and reception_status == 'pending'</attribute>
-                <attribute name="decoration-warning">not display_type and reception_status == 'partial'</attribute>
-                <attribute name="decoration-info">not display_type and reception_status == 'over full'</attribute>
-                <attribute name="decoration-success">not display_type and reception_status == 'full'</attribute>
+                <attribute name="decoration-danger">not display_type and transfer_state == 'to do'</attribute>
+                <attribute name="decoration-warning">not display_type and transfer_state == 'partially'</attribute>
+                <attribute name="decoration-info">not display_type and transfer_state == 'over done'</attribute>
+                <attribute name="decoration-success">not display_type and transfer_state == 'done'</attribute>
 	    </xpath>-->
             <field name="purchase_user_id" position="before">
                 <field name="is_user_id_editable" invisible="1" />
@@ -191,23 +191,23 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='transfer_state']" position="replace">
                 <label for="transfer_state" invisible="state not in ('purchase', 'done')" />
-                <div name="reception_status_div" class="d-flex" invisible="state not in ('purchase', 'done')">
+                <div name="transfer_state_div" class="d-flex" invisible="state not in ('purchase', 'done')">
                     <field name="transfer_state" />
                     <button
-                        name="action_force_reception_status"
+                        name="action_force_transfer_state"
                         string="Force reception done"
                         type="object"
                         class="btn-link d-block"
                         invisible="transfer_state == 'done' or state not in ('purchase', 'done')"
-                        groups="marin.group_purchase_force_reception_status"
+                        groups="marin.group_purchase_force_transfer_state"
                     />
                     <button
-                        name="action_unforce_reception_status"
+                        name="action_unforce_transfer_state"
                         string="Unforce reception done"
                         type="object"
                         class="btn-link d-block"
                         invisible="transfer_state != 'done'"
-                        groups="marin.group_purchase_force_reception_status"
+                        groups="marin.group_purchase_force_transfer_state"
                     />
                 </div>
             </xpath>

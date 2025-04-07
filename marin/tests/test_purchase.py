@@ -67,9 +67,9 @@ class TestPurchase(ValuationReconciliationTestCommon):
         # transfer_state
         purchase_order._compute_transfer_state()
         self.assertEqual(purchase_order.transfer_state, "no")
-        purchase_order.action_force_reception_status()
+        purchase_order.action_force_transfer_state()
         self.assertEqual(purchase_order.transfer_state, "full")
-        purchase_order.action_unforce_reception_status()
+        purchase_order.action_unforce_transfer_state()
         self.assertEqual(purchase_order.transfer_state, "no")
         self.assertTrue(purchase_order.order_line[0].product_updatable)
         purchase_order.button_confirm()

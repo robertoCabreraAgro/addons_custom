@@ -93,7 +93,8 @@ class PurchaseOrderInherit(models.Model):
 
     # Override original method
     @api.depends(
-        "state", "order_line_ids.qty_to_receive", "order_line_ids.product_uom_qty"
+        "state", "order_line_ids.product_uom_qty",
+        #"order_line_ids.qty_to_receive", 
     )
     def _compute_transfer_state(self):
         for order in self:
@@ -145,10 +146,10 @@ class PurchaseOrderInherit(models.Model):
         }
         return action
 
-    def action_force_reception_status(self):
+    def action_force_transfer_state(self):
         self.write({"transfer_state": "done"})
 
-    def action_unforce_reception_status(self):
+    def action_unforce_transfer_state(self):
         self._compute_transfer_state()
 
     def _log_po_state_change_to_approval_request_chatter(
