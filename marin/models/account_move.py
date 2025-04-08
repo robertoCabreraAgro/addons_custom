@@ -2,7 +2,7 @@ from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.tools.float_utils import float_compare
-from odoo.tools.misc import formatLang
+from odoo.tools.misc import clean_context, formatLang
 from odoo.tools.translate import _
 
 
