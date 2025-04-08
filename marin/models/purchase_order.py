@@ -82,26 +82,33 @@ class PurchaseOrder(models.Model):
     # Override original method
     @api.depends("state", "picking_ids", "order_line_ids.transfer_state")
     def _compute_transfer_state(self):
-        for order in self:
-            if order.state != "purchase":
-                order.transfer_state = "no"
-                continue
+        confirmed_orders = self.filtered(lambda o: o.state == "purchase")
+        (self - confirmed_orders).transfer_state = "no"
+        if not confirmed_orders:
+            return
 
-            order_lines = order.order_line_ids.filtered(lambda l: not l.display_type)
-            if not order.picking_ids or all(
-                line.transfer_state == "to do" for line in order_lines
-            ):
+        lines_domain = [
+            ("display_type", "=", False),
+            ("order_id", "in", confirmed_orders.ids),
+        ]
+        line_invoice_state_all = [
+            (order.id, invoice_status)
+            for order, invoice_status in self.env["purchase.order.line"]._read_group(
+                lines_domain,
+                ["order_id", "transfer_state"],
+            )
+        ]
+        for order in confirmed_orders:
+            states = [d[1] for d in line_invoice_state_all if d[0] == order.id]
+            if not order.picking_ids or all(state == "to do" for state in states):
                 order.transfer_state = "to do"
-            elif all(line.transfer_state == "done" for line in order_lines):
+            elif all(state == "done" for state in states):
                 order.transfer_state = "done"
-            elif any(line.transfer_state == "over done" for line in order_lines):
+            elif any(state == "over done" for state in states):
                 order.transfer_state = "over done"
-            elif (
-                any(line.transfer_state == "partially" for line in order_lines)
-                or not any(line.transfer_state == "partially" for line in order_lines)
-                and any(
-                    line.transfer_state in ("to do", "done") for line in order_lines
-                )
+            elif any(state == "partially" for state in states) or (
+                not any(state == "partially" for state in states)
+                and any(state in ("to do", "done") for state in states)
             ):
                 order.transfer_state = "partially"
             else:
@@ -110,28 +117,37 @@ class PurchaseOrder(models.Model):
     # Override original method
     @api.depends("state", "invoice_ids", "order_line_ids.invoice_state")
     def _compute_invoice_state(self):
-        for order in self:
-            if order.state != "purchase":
-                order.invoice_state = "no"
-                continue
+        confirmed_orders = self.filtered(lambda o: o.state == "purchase")
+        (self - confirmed_orders).transfer_state = "no"
+        if not confirmed_orders:
+            return
 
-            order_lines = order.order_line_ids.filtered(lambda l: not l.display_type)
-            if not order.invoice_ids or all(
-                line.invoice_state == "to do" for line in order_lines
+        lines_domain = [
+            ("display_type", "=", False),
+            ("order_id", "in", confirmed_orders.ids),
+        ]
+        line_invoice_state_all = [
+            (order.id, invoice_status)
+            for order, invoice_status in self.env["purchase.order.line"]._read_group(
+                lines_domain,
+                ["order_id", "invoice_state"],
+            )
+        ]
+        for order in confirmed_orders:
+            states = [d[1] for d in line_invoice_state_all if d[0] == order.id]
+            if not order.invoice_ids or all(state == "to do" for state in states):
+                order.transfer_state = "to do"
+            elif all(state == "done" for state in states):
+                order.transfer_state = "done"
+            elif any(state == "over done" for state in states):
+                order.transfer_state = "over done"
+            elif any(state == "partially" for state in states) or (
+                not any(state == "partially" for state in states)
+                and any(state in ("to do", "done") for state in states)
             ):
-                order.invoice_state = "to do"
-            elif all(line.invoice_state == "done" for line in order_lines):
-                order.invoice_state = "done"
-            elif any(line.invoice_state == "over done" for line in order_lines):
-                order.invoice_state = "over done"
-            elif (
-                any(line.invoice_state == "partially" for line in order_lines)
-                or not any(line.invoice_state == "partially" for line in order_lines)
-                and any(line.invoice_state in ("to do", "done") for line in order_lines)
-            ):
-                order.invoice_state = "partially"
+                order.transfer_state = "partially"
             else:
-                order.invoice_state = "no"
+                order.transfer_state = "no"
 
     # --------------------------------------------------
     # ACTION METHODS
