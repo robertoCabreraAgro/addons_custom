@@ -39,6 +39,10 @@
                             <span t-field="o.date_end">07/08/2023 10:00:00</span>
                         </h6>
                     </div>
+                    <div class="row mt-1" t-if="o.has_journal and o.journal_id">
+                        <h6 class="col-2 fw-bold">Journal:</h6>
+                        <h6 t-field="o.journal_id">General Journal</h6>
+                    </div>
                     <div class="row mt-1" t-if="o.location">
                         <h6 class="col-2 fw-bold">Location:</h6>
                         <h6 t-field="o.location">Brussels</h6>
