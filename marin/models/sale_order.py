@@ -1,14 +1,14 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools import float_compare, float_is_zero
+from odoo.tools import float_is_zero
 
 
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    # Extended fields
-    margin = fields.Float(digits="Product Price")
-    margin_percent = fields.Float(digits="Product Price")
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
 
     # New fields
     commercial_partner_id = fields.Many2one(
@@ -16,21 +16,38 @@ class SaleOrder(models.Model):
         store=True,
         index=True,
     )
-    force_fully_invoiced = fields.Boolean()
-    force_fully_delivered = fields.Boolean()
     route_id = fields.Many2one(
-        "stock.route",
-        "Route",
+        comodel_name="stock.route",
+        string="Route",
         domain=[("sale_selectable", "=", True)],
         help="When you change this field all the lines will be changed. "
         "After use it you will be able to change each line.",
     )
     season_id = fields.Many2one(
-        "date.range",
-        "AG season",
+        comodel_name="date.range",
+        string="AG season",
         help="Since every farmer can have several growing seasons the specific one "
         "can be selected.",
     )
+    force_fully_invoiced = fields.Boolean()
+    force_fully_delivered = fields.Boolean()
+
+    # --------------------------------------------------
+    # CRUD METHODS
+    # --------------------------------------------------
+
+    def write(self, vals):
+        res = super().write(vals)
+        if "route_id" in vals:
+            lines = self.mapped("order_line_ids").filtered(
+                lambda line: line.route_id.id != vals["route_id"]
+            )
+            lines.write({"route_id": vals["route_id"]})
+        return res
+
+    # --------------------------------------------------
+    # COMPUTE METHODS
+    # --------------------------------------------------
 
     # Extend original method
     @api.depends("company_id", "user_id", "sale_order_template_id")
@@ -76,40 +93,41 @@ class SaleOrder(models.Model):
                 )
 
     # Override original method
-    @api.depends(
-        "state", "order_line_ids.qty_to_transfer", "order_line_ids.product_uom_qty"
-    )
+    @api.depends("state", "picking_ids", "order_line_ids.transfer_state")
     def _compute_transfer_state(self):
-        precision = self.env["decimal.precision"].precision_get("Product Price")
         for order in self:
             if order.state != "sale":
                 order.transfer_state = "no"
                 continue
-            qty1 = 0
-            to_deliver = 0
-            for line in order.order_line_ids.filtered(lambda ln: not ln.display_type):
-                qty1 += line.product_uom_qty
-                to_deliver += line.qty_to_transfer
 
-            if not float_compare(qty1, to_deliver, precision_digits=precision):
+            order_lines = order.order_line_ids.filtered(lambda l: not l.display_type)
+            if not order.picking_ids or all(
+                line.transfer_state == "to do" for line in order_lines
+            ):
                 order.transfer_state = "to do"
-            elif float_compare(
-                qty1, to_deliver, precision_digits=precision
-            ) > 0 and not float_is_zero(to_deliver, precision_digits=precision):
-                order.transfer_state = "partially"
-            elif float_is_zero(to_deliver, precision_digits=precision):
+            elif all(line.transfer_state == "done" for line in order_lines):
                 order.transfer_state = "done"
-            elif float_compare(qty1, to_deliver, precision_digits=precision) < 1:
+            elif any(line.transfer_state == "over done" for line in order_lines):
                 order.transfer_state = "over done"
+            elif (
+                any(line.transfer_state == "partially" for line in order_lines)
+                or not any(line.transfer_state == "partially" for line in order_lines)
+                and any(line.transfer_state in ("to do", "done") for line in order_lines)
+            ):
+                order.transfer_state = "partially"
             else:
                 order.transfer_state = "no"
 
     # Extend original method
-    @api.depends("state", "order_line_ids.invoice_state")
+    @api.depends("state", "invoice_ids", "order_line_ids.invoice_state")
     def _compute_invoice_state(self):
         forced = self.filtered("force_fully_invoiced")
         forced.invoice_state = "done"
         return super(SaleOrder, self - forced)._compute_invoice_state()
+
+    # --------------------------------------------------
+    # ONCHANGE METHODS
+    # --------------------------------------------------
 
     @api.onchange("route_id")
     def _onchange_route_id(self):
@@ -117,6 +135,10 @@ class SaleOrder(models.Model):
         But this field is created by Odoo so I prefer not modify it.
         """
         self.order_line_ids.route_id = self.route_id
+
+    # --------------------------------------------------
+    # ACTION METHODS
+    # --------------------------------------------------
 
     def action_sale_authorize_debt(self):
         view = self.env.ref("marin.view_authorize_debt_wizard_form")
@@ -203,12 +225,3 @@ class SaleOrder(models.Model):
             )
             moves._action_cancel()
             line.with_context(avoid_check_unlink=True).unlink()
-
-    def write(self, vals):
-        res = super().write(vals)
-        if "route_id" in vals:
-            lines = self.mapped("order_line_ids").filtered(
-                lambda line: line.route_id.id != vals["route_id"]
-            )
-            lines.write({"route_id": vals["route_id"]})
-        return res

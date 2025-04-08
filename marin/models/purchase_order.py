@@ -2,11 +2,10 @@ from collections import defaultdict
 from markupsafe import Markup
 
 from odoo import api, fields, models
-from odoo.tools import float_compare, float_is_zero
 from odoo.tools.misc import clean_context
 
 
-class PurchaseOrderInherit(models.Model):
+class PurchaseOrder(models.Model):
     _inherit = "purchase.order"
 
     # ------------------------------------------------------------
