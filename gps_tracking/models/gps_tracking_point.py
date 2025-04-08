@@ -13,7 +13,12 @@ class GpsTrackingPoint(models.Model):
     _description = "GPS Tracking Point"
     _order = "timestamp desc"
 
-    device_id = fields.Many2one("gps.tracking.device", string="Device", required=True, ondelete="cascade")
+    device_id = fields.Many2one(
+        comodel_name="gps.tracking.device",
+        string="Device",
+        required=True,
+        ondelete="cascade",
+    )
     vehicle_id = fields.Many2one(
         comodel_name="fleet.vehicle",
         string="Vehícle",
@@ -35,7 +40,12 @@ class GpsTrackingPoint(models.Model):
     event_id = fields.Integer(string="Event ID")
     latitude = fields.Float(string="Latitude", digits=(16, 7))
     longitude = fields.Float(string="Longitude", digits=(16, 7))
-    the_point = fields.GeoPoint(string="Position", srid=3857, compute="_compute_the_point", store=True)
+    the_point = fields.GeoPoint(
+        string="Position",
+        srid=3857,
+        compute="_compute_the_point",
+        store=True,
+    )
     address = fields.Char(string="Address", compute="_compute_address", store=True)
     ignition = fields.Integer(string="Ignition")
     movement = fields.Integer(string="Movement")
@@ -52,7 +62,9 @@ class GpsTrackingPoint(models.Model):
     fuel_level = fields.Integer(string="Fuel Level")
     wheel_speed = fields.Float(string="Wheel Speed")
     engine_speed_rpm = fields.Integer(string="Engine Speed (RPM)")
-    engine_total_hours_counted = fields.Float(string="Engine Total Hours Counted", digits=(16, 2))
+    engine_total_hours_counted = fields.Float(
+        string="Engine Total Hours Counted", digits=(16, 2)
+    )
     engine_temperature = fields.Float(string="Engine Temperature", digits=(16, 2))
     parking_brake_state = fields.Integer(string="Parking Brake State")
     central_lock = fields.Integer(string="Central Lock")

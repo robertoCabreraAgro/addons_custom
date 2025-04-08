@@ -303,9 +303,9 @@ class BBVAParser(models.AbstractModel):
                     "payment_ref": reference,
                     "amount": credit - debit,
                     "account_number": partner_bank.acc_number if partner_bank else None,
-                    "partner_id": partner_bank.partner_id.id
-                    if partner_bank.partner_id
-                    else None,
+                    "partner_id": (
+                        partner_bank.partner_id.id if partner_bank.partner_id else None
+                    ),
                     "sequence": 1,  # always 1 to be consistent with running balance computing
                     "unique_import_id": self._generate_unique_import_id(
                         journal.code, date, sequence
@@ -397,12 +397,14 @@ class BBVAParser(models.AbstractModel):
                         "date": date,
                         "payment_ref": reference,
                         "amount": credit - debit,
-                        "account_number": partner_bank.acc_number
-                        if partner_bank
-                        else None,
-                        "partner_id": partner_bank.partner_id.id
-                        if partner_bank.partner_id
-                        else None,
+                        "account_number": (
+                            partner_bank.acc_number if partner_bank else None
+                        ),
+                        "partner_id": (
+                            partner_bank.partner_id.id
+                            if partner_bank.partner_id
+                            else None
+                        ),
                         "sequence": 1,  # always 1 to be consistent with running balance computing
                         "unique_import_id": self._generate_unique_import_id(
                             journal.code, date, sequence

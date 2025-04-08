@@ -55,7 +55,9 @@ class GpsTrackingReport(models.Model):
         end_date = self.date + timedelta(days=1)
 
         return {
-            "name": "Tracking Points for {} on {}".format(self.vehicle_id.name, self.date),
+            "name": "Tracking Points for {} on {}".format(
+                self.vehicle_id.name, self.date
+            ),
             "type": "ir.actions.act_window",
             "res_model": "gps.tracking.point",
             "view_mode": "list,form",

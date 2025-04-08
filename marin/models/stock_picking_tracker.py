@@ -149,7 +149,7 @@ class StockPickingTracker(models.Model):
         "uom.uom",
         string="Fuel Efficiency Unit",
         readonly=True,
-        default=lambda self: self.env.ref('marin.uom_km_per_liter').id
+        default=lambda self: self.env.ref("marin.uom_km_per_liter").id,
     )
 
     @api.depends("company_id", "picking_type_id", "state")
@@ -418,16 +418,20 @@ class StockPickingTracker(models.Model):
 
     def action_view_pickings(self):
         self.ensure_one()
-        action = self.env["ir.actions.actions"]._for_xml_id("stock.action_picking_tree_all")
+        action = self.env["ir.actions.actions"]._for_xml_id(
+            "stock.action_picking_tree_all"
+        )
         pickings = self.picking_ids
         if len(pickings) > 1:
-            action['domain'] = [('id', 'in', pickings.ids)]
+            action["domain"] = [("id", "in", pickings.ids)]
         elif pickings:
-            form_view = [(self.env.ref('stock.view_picking_form').id, 'form')]
-            if 'views' in action:
-                action['views'] = form_view + [(state,view) for state,view in action['views'] if view != 'form']
+            form_view = [(self.env.ref("stock.view_picking_form").id, "form")]
+            if "views" in action:
+                action["views"] = form_view + [
+                    (state, view) for state, view in action["views"] if view != "form"
+                ]
             else:
-                action['views'] = form_view
-            action['res_id'] = pickings.id
+                action["views"] = form_view
+            action["res_id"] = pickings.id
         action["context"] = dict(self._context, create=False, edit=False)
         return action

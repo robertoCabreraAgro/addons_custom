@@ -88,9 +88,11 @@ class Session(models.Model):
                     "request_state": verify_download["estado_solicitud"],
                     "file_count": int(verify_download["numero_cfdis"]),
                     "request_message": verify_download["mensaje"],
-                    "packages": verify_download["paquetes"][0]
-                    if verify_download["paquetes"]
-                    else "",
+                    "packages": (
+                        verify_download["paquetes"][0]
+                        if verify_download["paquetes"]
+                        else ""
+                    ),
                 }
             )
             if int(self.request_state) > 2:
@@ -223,41 +225,53 @@ class Session(models.Model):
     @api.model
     def _cron_sync_with_sat(self, company_id):
         now_mx = datetime.now(pytz.timezone(DEFAULT_TZ))
-        param = self.env['ir.config_parameter'].sudo()
+        param = self.env["ir.config_parameter"].sudo()
         hour_start = int(param.get_param("cfdi_cron.hour_start", 8))
         hour_end = int(param.get_param("cfdi_cron.hour_end", 18))
         current_hour = now_mx.hour
 
         if not (hour_start <= current_hour <= hour_end):
-            _logger.info("not in time %s",hour_start)
+            _logger.info("not in time %s", hour_start)
             return
-        is_first_run = (current_hour == hour_start)
+        is_first_run = current_hour == hour_start
         today = fields.Date.context_today(self.with_context(tz=DEFAULT_TZ))
 
         if is_first_run:
-            _logger.info("is_first_run %s",is_first_run)
-            date_from = (now_mx - timedelta(hours=24)).replace(minute=0, second=0, microsecond=0)
-            _logger.info("date_from %s",date_from)
+            _logger.info("is_first_run %s", is_first_run)
+            date_from = (now_mx - timedelta(hours=24)).replace(
+                minute=0, second=0, microsecond=0
+            )
+            _logger.info("date_from %s", date_from)
         else:
-            date_from = (now_mx - timedelta(hours=2)).replace(minute=0, second=0, microsecond=0)
-        
+            date_from = (now_mx - timedelta(hours=2)).replace(
+                minute=0, second=0, microsecond=0
+            )
+
         date_to = now_mx.replace(minute=0, second=0, microsecond=0)
-        _logger.info("date_to %s",date_to)
-        existing_session = self.search([
-            ('company_id', '=', company_id),
-            ('date_from', '=', date_from),
-            ('date_to', '=', date_to),
-        ], limit=1)
+        _logger.info("date_to %s", date_to)
+        existing_session = self.search(
+            [
+                ("company_id", "=", company_id),
+                ("date_from", "=", date_from),
+                ("date_to", "=", date_to),
+            ],
+            limit=1,
+        )
 
         if existing_session:
-            _logger.info("Ya existe una sesión en ese rango de tiempo: ID %s", existing_session.id)
+            _logger.info(
+                "Ya existe una sesión en ese rango de tiempo: ID %s",
+                existing_session.id,
+            )
             return
 
         context_with_dates = dict(self.env.context)
-        context_with_dates.update({
-            'cron_date_from': fields.Datetime.to_string(date_from),
-            'cron_date_to': fields.Datetime.to_string(date_to)
-        })
+        context_with_dates.update(
+            {
+                "cron_date_from": fields.Datetime.to_string(date_from),
+                "cron_date_to": fields.Datetime.to_string(date_to),
+            }
+        )
         self = self.with_context(context_with_dates)
         """Schedule action to check MX SAT sessions not closed or create new one if apply"""
         auto_commit = self.env.context.get("auto_commit", True)
@@ -269,7 +283,7 @@ class Session(models.Model):
         # 1. Sync with SAT (create token & send request)
         today = fields.Date.context_today(self.with_context(tz=DEFAULT_TZ))
         cron_user = self.env.ref("base.user_root")
-        
+
         mx_session_today = self.create(
             {
                 "name": today,
@@ -346,8 +360,8 @@ class Session(models.Model):
         certificate = esignature.get_cert_data()[1]
         private_key = esignature.get_pk_data()[1]
         three_days_ago = self.name - timedelta(days=3)
-        date_from = self.env.context.get('cron_date_from')
-        date_to = self.env.context.get('cron_date_to')
+        date_from = self.env.context.get("cron_date_from")
+        date_to = self.env.context.get("cron_date_to")
         token_res = mx_edi_document.l10n_mx_ws_generate_token(certificate, private_key)
         if date_from:
             date_from = fields.Datetime.to_datetime(date_from)
@@ -360,8 +374,8 @@ class Session(models.Model):
         else:
             date_to = fields.Datetime.to_datetime(self.name)
 
-        _logger.info("date_from %s",date_from)
-        _logger.info("date_to %s",date_to)
+        _logger.info("date_from %s", date_from)
+        _logger.info("date_to %s", date_to)
         self.write(
             {
                 "token": token_res["token"],

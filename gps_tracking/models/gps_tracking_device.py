@@ -120,7 +120,7 @@ class GpsTrackingDevice(models.Model):
     private = fields.Boolean(
         default=False,
         groups="gps_tracking.group_gps_tracking_private",
-        help="If checked, only users with specific access rights can see this device"
+        help="If checked, only users with specific access rights can see this device",
     )
 
     _unique_code = models.Constraint(

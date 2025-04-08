@@ -2204,9 +2204,7 @@ class HrPayslip(models.Model):
         time_mx = date_time_mx.time()
         l10n_mx_edi_expedition_date = date_time_mx.date()
         l10n_mx_edi_time_payslip = time_mx.strftime(DEFAULT_SERVER_TIME_FORMAT)
-        date_time_mx = datetime.strftime(
-            date_time_mx, DEFAULT_SERVER_DATETIME_FORMAT
-        )
+        date_time_mx = datetime.strftime(date_time_mx, DEFAULT_SERVER_DATETIME_FORMAT)
 
         if not self.l10n_mx_edi_expedition_date:
             if self.l10n_mx_edi_payment_date > l10n_mx_edi_expedition_date:
@@ -2230,9 +2228,7 @@ class HrPayslip(models.Model):
             elif date_time_mx <= datetime.strftime(
                 datetime.combine(
                     date_in_range,
-                    datetime.strptime(
-                        "23:59:00", DEFAULT_SERVER_TIME_FORMAT
-                    ).time(),
+                    datetime.strptime("23:59:00", DEFAULT_SERVER_TIME_FORMAT).time(),
                     time_zone,
                 ),
                 DEFAULT_SERVER_DATETIME_FORMAT,

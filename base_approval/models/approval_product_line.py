@@ -70,7 +70,7 @@ class ApprovalProductLine(models.Model):
         for line in self:
             line.product_uom_id = line.product_id.uom_id
 
-    @api.onchange('approval_request_id')
+    @api.onchange("approval_request_id")
     def _onchange_approval_request_id(self):
         if self.approval_request_id and not self.partner_id:
             self.partner_id = self.approval_request_id.partner_id

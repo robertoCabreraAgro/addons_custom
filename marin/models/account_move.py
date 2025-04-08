@@ -442,5 +442,5 @@ class AccountMove(models.Model):
                 for line, vals in purchase_line_vals.items():
                     move_line = self.env["account.move.line"].browse(int(line))
                     po_line = self.env["purchase.order.line"].create(vals)
-                    move_line.purchase_line_ids= po_line.id
+                    move_line.purchase_line_ids = po_line.id
         return True
