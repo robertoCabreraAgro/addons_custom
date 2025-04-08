@@ -13,14 +13,16 @@ class PurchaseOrder(models.Model):
     # ------------------------------------------------------------
 
     # Override original fields
-    partner_id = fields.Many2one(domain=lambda self: self._get_partner_id_domain())
+    partner_id = fields.Many2one(
+        domain=lambda self: self._get_partner_id_domain(),
+    )
 
     # New fields
-    is_user_id_editable = fields.Boolean(
-        compute="_compute_is_user_id_editable",
-    )
     count_approval = fields.Integer(
         compute="_compute_count_approval",
+    )
+    is_user_id_editable = fields.Boolean(
+        compute="_compute_is_user_id_editable",
     )
 
     # --------------------------------------------------
@@ -97,7 +99,9 @@ class PurchaseOrder(models.Model):
             elif (
                 any(line.transfer_state == "partially" for line in order_lines)
                 or not any(line.transfer_state == "partially" for line in order_lines)
-                and any(line.transfer_state in ("to do", "done") for line in order_lines)
+                and any(
+                    line.transfer_state in ("to do", "done") for line in order_lines
+                )
             ):
                 order.transfer_state = "partially"
             else:

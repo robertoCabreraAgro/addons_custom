@@ -112,7 +112,9 @@ class SaleOrder(models.Model):
             elif (
                 any(line.transfer_state == "partially" for line in order_lines)
                 or not any(line.transfer_state == "partially" for line in order_lines)
-                and any(line.transfer_state in ("to do", "done") for line in order_lines)
+                and any(
+                    line.transfer_state in ("to do", "done") for line in order_lines
+                )
             ):
                 order.transfer_state = "partially"
             else:

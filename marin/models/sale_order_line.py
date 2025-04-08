@@ -9,7 +9,6 @@ class SaleOrderLine(models.Model):
     # In core this a related field. We need to trigger its value on view, so we can
     # have it even when we're in a NewId
     partner_id = fields.Many2one(depends=["product_id"])
-    margin_percent = fields.Float(digits="Product Price")
 
     # New fields
     date_order = fields.Datetime(

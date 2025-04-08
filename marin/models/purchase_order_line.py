@@ -2,7 +2,7 @@ from odoo import api, fields, models
 from odoo.tools import float_compare, float_is_zero
 
 
-class PurchaseOrderLineInherit(models.Model):
+class PurchaseOrderLine(models.Model):
     _inherit = "purchase.order.line"
 
     # In core this a related field. We need to trigger its value on view, so we can
