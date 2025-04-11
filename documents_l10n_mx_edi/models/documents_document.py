@@ -94,6 +94,17 @@ class Document(models.Model):
         store=True,
         help='In case this is a CFDI file, show invoice"s product list',
     )
+    show_res_name = fields.Char(
+        string="Show Res Name",
+        compute="_compute_show_res_name",
+    )
+
+    @api.depends("name", "res_name")
+    def _compute_show_res_name(self):
+        for rec in self:
+            rec.show_res_name = (
+                rec.res_name if rec.name != rec.res_name else ""
+            )
 
     def check_document_already_linked(self):
         if documents_link_record := self.filtered(

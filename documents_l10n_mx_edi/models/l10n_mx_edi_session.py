@@ -163,7 +163,7 @@ class Session(models.Model):
 
                     # Find all existing documents
                     existing_docs = docs_document.sudo().search(
-                        [("name", "in", names), ("company_id", "=", self.id)]
+                        [("name", "in", names), ("company_id", "=", self.company_id.id)]
                     )
 
                     # Existing documents are kept for return
@@ -195,6 +195,7 @@ class Session(models.Model):
                                 {
                                     "name": name,
                                     "folder_id": folder_id,
+                                    "company_id": self.company_id.id,
                                     "l10n_mx_edi_is_cfdi": True,
                                 }
                             )
