@@ -275,26 +275,88 @@ class Document(models.Model):
         )
         return folder
 
-    def _l10n_edi_document_assign_tags_and_folder(self):
-        file_content = self.datas
+    def _documents_l10n_mx_edi_get_company(self, rfc):
+        """Finds a company by RFC (with or without MX prefix).
+
+        Args:
+            rfc (str): RFC to search for
+
+        Returns:
+            recordset: The found company or False
+        """
+        if not rfc:
+            return False
+        return self.env["res.company"].search(
+            ["|", ("vat", "=", rfc), ("vat", "=", "MX" + rfc)], limit=1
+        )
+
+    def _l10n_mx_edi_extract_cfdi_data(self, xml_content):
+        """Extracts key data from a CFDI for further processing.
+
+        Args:
+            xml_content (str/binary): XML content of the CFDI
+
+        Returns:
+            dict: Dictionary with:
+                - etree: Parsed XML object
+                - issuer_rfc: RFC of the issuer
+                - receiver_rfc: RFC of the receiver
+                - uuid: UUID of the voucher
+                - is_valid: Boolean indicating if it's a valid CFDI
+        """
         mx_edi_document = self.env["l10n_mx_edi.document"]
-        etree = mx_edi_document.check_objectify_xml(file_content)
-        if mx_edi_document._l10n_mx_edi_is_cfdi(file_content):
-            uuid = (
-                self.env["l10n_mx_edi.document"]
-                .collect_complemento(etree)
+        result = {
+            "etree": None,
+            "issuer_rfc": "",
+            "receiver_rfc": "",
+            "uuid": "",
+            "is_valid": False,
+        }
+
+        if not mx_edi_document._l10n_mx_edi_is_cfdi(xml_content):
+            return result
+
+        etree = mx_edi_document.check_objectify_xml(xml_content)
+        if etree is None:
+            return result
+
+        result.update(
+            {
+                "etree": etree,
+                "issuer_rfc": etree.Emisor.get("Rfc", ""),
+                "receiver_rfc": etree.Receptor.get("Rfc", ""),
+                "uuid": mx_edi_document.collect_complemento(etree)
                 .get("UUID", "")
-                .upper()
-            )
+                .upper(),
+                "is_valid": True,
+            }
+        )
+
+        return result
+
+    def _l10n_mx_edi_assign_cfdi_data(self):
+        """Assign tags, folder and company to the document based on CFDI content.
+
+        This method will:
+        - Verify if the document is a valid CFDI
+        - Check for duplicates by UUID
+        - Assign appropriate tags and folder
+        - Link the document to the corresponding company
+        """
+        cfdi_data = self._l10n_mx_edi_extract_cfdi_data(self.datas)
+        if not cfdi_data["is_valid"]:
+            return False
+
+        # Duplicate validation
+        if cfdi_data["uuid"]:
             exist_docs = self.env["documents.document"].search(
                 [
                     ("id", "!=", self.id),
-                    ("name", "ilike", uuid + ".xml"),
-                    ("res_model", "=", "documents.document"),
+                    ("name", "ilike", cfdi_data["uuid"] + ".xml"),
+                    ("res_model", "in", ["documents.document", "account.move"]),
                 ]
             )
             if exist_docs:
-                # Add duplicated tag
                 message = _("Duplicated CFDI: %s" % uuid)
                 self.env["bus.bus"]._sendone(
                     self.env.user.partner_id,
@@ -306,20 +368,32 @@ class Document(models.Model):
                         "warning": True,
                     },
                 )
-            else:
-                tag_ids = self._prepare_l10n_mx_edi_tags(etree)
-                self.update(
-                    {
-                        "name": uuid + ".xml",
-                        "folder_id": self._documents_l10n_mx_edi_get_folder(etree).id,
-                        "l10n_mx_edi_is_cfdi": True,
-                        "tag_ids": [Command.set(tag_ids)],
-                    }
-                )
+                return False
+
+        # Company assignment
+        company = self._documents_l10n_mx_edi_get_company(
+            cfdi_data["receiver_rfc"]
+        ) or self._documents_l10n_mx_edi_get_company(cfdi_data["issuer_rfc"])
+
+        # Prepare values to update
+        update_vals = {
+            "name": cfdi_data["uuid"] + ".xml",
+            "folder_id": self._documents_l10n_mx_edi_get_folder(cfdi_data["etree"]).id,
+            "l10n_mx_edi_is_cfdi": True,
+            "tag_ids": [
+                Command.link(tag_id)
+                for tag_id in self._prepare_l10n_mx_edi_tags(cfdi_data["etree"])
+            ],
+        }
+
+        if company and not self.company_id:
+            update_vals["company_id"] = company.id
+
+        self.write(update_vals)
 
     @api.model_create_multi
     def create(self, vals_list):
         documents = super().create(vals_list)
         for doc in documents.filtered(lambda r: splitext(r.name)[1].upper() == ".XML"):
-            doc._l10n_edi_document_assign_tags_and_folder()
+            doc._l10n_mx_edi_assign_cfdi_data()
         return documents
