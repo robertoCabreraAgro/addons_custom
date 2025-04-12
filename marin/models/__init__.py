@@ -48,3 +48,4 @@ from . import stock_quant
 from . import stock_scrap
 from . import stock_picking_tracker
 from . import bbva_parser
+from . import res_config_settings
