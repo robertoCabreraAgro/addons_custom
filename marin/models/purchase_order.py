@@ -80,7 +80,7 @@ class PurchaseOrder(models.Model):
         ) or not self.env.user.has_group("purchase_security.group_purchase_own_orders")
 
     # Override original method
-    @api.depends("state", "picking_ids", "order_line_ids.transfer_state")
+    @api.depends("state", "order_line_ids.transfer_state", "picking_ids")
     def _compute_transfer_state(self):
         confirmed_orders = self.filtered(lambda o: o.state == "purchase")
         (self - confirmed_orders).transfer_state = "no"
@@ -115,10 +115,10 @@ class PurchaseOrder(models.Model):
                 order.transfer_state = "no"
 
     # Override original method
-    @api.depends("state", "invoice_ids", "order_line_ids.invoice_state")
+    @api.depends("state", "order_line_ids.invoice_state", "invoice_ids")
     def _compute_invoice_state(self):
         confirmed_orders = self.filtered(lambda o: o.state == "purchase")
-        (self - confirmed_orders).transfer_state = "no"
+        (self - confirmed_orders).invoice_state = "no"
         if not confirmed_orders:
             return
 
@@ -136,18 +136,18 @@ class PurchaseOrder(models.Model):
         for order in confirmed_orders:
             states = [d[1] for d in line_invoice_state_all if d[0] == order.id]
             if not order.invoice_ids or all(state == "to do" for state in states):
-                order.transfer_state = "to do"
+                order.invoice_state = "to do"
             elif all(state == "done" for state in states):
-                order.transfer_state = "done"
+                order.invoice_state = "done"
             elif any(state == "over done" for state in states):
-                order.transfer_state = "over done"
+                order.invoice_state = "over done"
             elif any(state == "partially" for state in states) or (
                 not any(state == "partially" for state in states)
                 and any(state in ("to do", "done") for state in states)
             ):
-                order.transfer_state = "partially"
+                order.invoice_state = "partially"
             else:
-                order.transfer_state = "no"
+                order.invoice_state = "no"
 
     # --------------------------------------------------
     # ACTION METHODS
