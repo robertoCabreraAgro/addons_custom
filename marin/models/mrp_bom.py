@@ -6,6 +6,8 @@ from collections import defaultdict
 
 
 class MrpBom(models.Model):
+    """Inherit MrpBom"""
+
     _inherit = "mrp.bom"
 
     x_type = fields.Selection(

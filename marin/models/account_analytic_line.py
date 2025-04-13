@@ -2,6 +2,8 @@ from odoo import api, fields, models
 
 
 class AccountAnalyticLine(models.Model):
+    """Inherit AccountAnalyticLine"""
+
     _inherit = "account.analytic.line"
 
     vehicle_id = fields.Many2one(

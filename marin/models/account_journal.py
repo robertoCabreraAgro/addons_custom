@@ -4,7 +4,9 @@ from odoo import _, api, Command, fields, models, tools
 from odoo.exceptions import UserError, RedirectWarning
 
 
-class AccountJournalInherit(models.Model):
+class AccountJournal(models.Model):
+    """Inherit AccountJournal"""
+
     _inherit = "account.journal"
 
     default_receivable_account_id = fields.Many2one(

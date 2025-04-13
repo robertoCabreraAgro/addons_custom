@@ -5,6 +5,8 @@ from odoo.fields import Command
 
 
 class ApprovalProductLine(models.Model):
+    """Inherit ApprovalProductLine"""
+
     _inherit = "approval.product.line"
 
     product_id = fields.Many2one(

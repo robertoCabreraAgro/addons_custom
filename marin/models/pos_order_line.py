@@ -2,6 +2,8 @@ from odoo import api, fields, models
 
 
 class PosOrderLine(models.Model):
+    """Inherit PosOrderLine"""
+
     _inherit = "pos.order.line"
 
     # New fields

@@ -5,6 +5,8 @@ _logger = logging.getLogger(__name__)
 
 
 class MrpProduction(models.Model):
+    """Inherit MrpProduction"""
+
     _inherit = "mrp.production"
 
     @api.onchange(

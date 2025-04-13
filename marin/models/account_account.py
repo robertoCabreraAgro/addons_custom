@@ -2,6 +2,8 @@ from odoo import fields, models
 
 
 class AccountAccount(models.Model):
+    """Inherit AccountAccount"""
+
     _inherit = "account.account"
 
     x_sequence = fields.Integer(

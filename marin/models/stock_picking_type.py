@@ -2,7 +2,9 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 
-class StockPickingTypeInherit(models.Model):
+class StockPickingType(models.Model):
+    """Inherit StockPickingType"""
+
     _inherit = "stock.picking.type"
 
     default_location_src_id = fields.Many2one(

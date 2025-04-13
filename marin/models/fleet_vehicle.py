@@ -1,7 +1,9 @@
 from odoo import _, api, fields, models
 
 
-class FleetVehicleInherit(models.Model):
+class FleetVehicle(models.Model):
+    """Inherit FleetVehicle"""
+
     _inherit = "fleet.vehicle"
 
     department_id = fields.Many2one(comodel_name="hr.department", string="Department")
@@ -171,4 +173,4 @@ class FleetVehicleInherit(models.Model):
             vehicle.odometer = vehicle._get_gps_odometer()
             if vehicle.odometer:
                 gps_vehicles |= vehicle
-        return super(FleetVehicleInherit, self - gps_vehicles)._compute_odometer()
+        return super(FleetVehicle, self - gps_vehicles)._compute_odometer()

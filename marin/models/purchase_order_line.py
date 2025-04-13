@@ -3,6 +3,8 @@ from odoo.tools import float_compare, float_is_zero
 
 
 class PurchaseOrderLine(models.Model):
+    """Inherit PurchaseOrderLine"""
+
     _inherit = "purchase.order.line"
 
     # In core this a related field. We need to trigger its value on view, so we can
@@ -70,36 +72,27 @@ class PurchaseOrderLine(models.Model):
         -partially: the quantity received is lesser than the quantity ordered.
         -done: the quantity received is equal to the quantity ordered.
         """
-        precision = self.env["decimal.precision"].precision_get("Product Price")
+        precision = self.env["decimal.precision"].precision_get("Product Unit")
         for line in self.filtered(lambda l: not l.display_type):
-            if line.state != "purchase":
+            if line.state != "purchase" or float_is_zero(
+                line.product_uom_qty, precision_digits=precision
+            ):
                 line.transfer_state = "no"
                 continue
 
-            if float_is_zero(line.qty_transfered, precision_digits=precision):
-                line.transfer_state = "to do"
-            elif not float_is_zero(
-                line.qty_transfered, precision_digits=precision
-            ) and not float_is_zero(line.qty_to_transfer, precision_digits=precision):
-                line.invoice_state = "partially"
-            elif (
-                float_compare(
-                    line.qty_transfered,
-                    line.product_uom_qty,
-                    precision_digits=precision,
+            if not float_is_zero(line.qty_to_transfer, precision_digits=precision):
+                if float_is_zero(line.qty_transfered, precision_digits=precision):
+                    line.transfer_state = "to do"
+                elif not float_is_zero(line.qty_transfered, precision_digits=precision):
+                    line.transfer_state = "partially"
+            elif float_is_zero(line.qty_to_transfer, precision_digits=precision):
+                compare = float_compare(
+                    line.qty_transfered, line.product_uom_qty, precision_digits=precision
                 )
-                == 0
-            ):
-                line.transfer_state = "done"
-            elif (
-                float_compare(
-                    line.qty_transfered,
-                    line.product_uom_qty,
-                    precision_digits=precision,
-                )
-                > 0
-            ):
-                line.transfer_state = "over done"
+                if compare == 0:
+                    line.transfer_state = "done"
+                elif compare > 0:
+                    line.transfer_state = "over done"
             else:
                 line.transfer_state = "no"
 

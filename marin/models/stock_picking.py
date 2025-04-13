@@ -6,15 +6,16 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
-class Picking(models.Model):
+class StockPicking(models.Model):
+    """Inherit StockPicking"""
+
     _inherit = "stock.picking"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     # New fields
-    show_purchase_lines = fields.Boolean(compute="_compute_show_purchase_lines")
-    show_sale_lines = fields.Boolean(compute="_compute_show_sale_lines")
-    show_mark_as_todo = fields.Boolean(compute="_compute_custom_permissions")
-    show_validate = fields.Boolean(compute="_compute_custom_permissions")
-    waiting_warning = fields.Text(compute="_compute_waiting_warning")
     suitable_product_ids = fields.Many2many(
         comodel_name="product.product",
         compute="_compute_suitable_product_ids",
@@ -55,6 +56,60 @@ class Picking(models.Model):
         tracking=True,
         help="Fuel level percentage which the transfer has been processed.",
     )
+    waiting_warning = fields.Text(compute="_compute_waiting_warning")
+    show_purchase_lines = fields.Boolean(compute="_compute_show_purchase_lines")
+    show_sale_lines = fields.Boolean(compute="_compute_show_sale_lines")
+    show_mark_as_todo = fields.Boolean(compute="_compute_custom_permissions")
+    show_validate = fields.Boolean(compute="_compute_custom_permissions")
+
+    # -------------------------------------------------------------------------
+    # COMPUTE METHODS
+    # -------------------------------------------------------------------------
+
+    def _compute_custom_permissions(self):
+        for picking in self:
+            vals = self._prepare_compute_custom_permissions()
+            picking.update(vals)
+
+    @api.depends("state")
+    def _compute_waiting_warning(self):
+        for picking in self:
+            picking.waiting_warning = (
+                _(
+                    "All products could not be reserved. Click on the 'Check Availability' button to try to "
+                    "reserve products."
+                )
+                if picking.state == "confirmed"
+                else ""
+            )
+
+    @api.depends("picking_type_id", "state")
+    def _compute_suitable_location_dest_ids(self):
+        self.suitable_location_dest_ids = self.env["stock.location"].search(
+            [("usage", "=", "internal")]
+        )
+        for picking in self.filtered(
+            lambda p: p.state not in ("cancel", "done")
+            and p.picking_type_id.code in ("internal", "incoming")
+        ):
+            self.suitable_location_dest_ids = self.suitable_location_dest_ids.filtered(
+                lambda location: location.warehouse_id
+                == picking.picking_type_id.warehouse_id
+            )
+
+    @api.depends("picking_type_id", "state")
+    def _compute_suitable_location_ids(self):
+        self.suitable_location_ids = self.env["stock.location"].search(
+            [("usage", "=", "internal")]
+        )
+        for picking in self.filtered(
+            lambda p: p.state not in ("cancel", "done")
+            and p.picking_type_id.code in ("internal", "outgoing")
+        ):
+            self.suitable_location_ids = self.suitable_location_ids.filtered(
+                lambda location: location.warehouse_id
+                == picking.picking_type_id.warehouse_id
+            )
 
     @api.depends("picking_type_id", "location_id")
     def _compute_suitable_product_ids(self):
@@ -83,53 +138,6 @@ class Picking(models.Model):
                 )
         self.suitable_product_ids = suitable_product_ids
 
-    @api.depends("picking_type_id.code", "state")
-    def _compute_suitable_location_dest_ids(self):
-        self.suitable_location_dest_ids = self.env["stock.location"].search(
-            [("usage", "=", "internal")]
-        )
-        for picking in self.filtered(
-            lambda p: p.state not in ("cancel", "done")
-            and p.picking_type_id.code in ("internal", "incoming")
-        ):
-            self.suitable_location_dest_ids = self.suitable_location_dest_ids.filtered(
-                lambda location: location.warehouse_id
-                == picking.picking_type_id.warehouse_id
-            )
-
-    @api.depends("picking_type_id.code", "state")
-    def _compute_suitable_location_ids(self):
-        self.suitable_location_ids = self.env["stock.location"].search(
-            [("usage", "=", "internal")]
-        )
-        for picking in self.filtered(
-            lambda p: p.state not in ("cancel", "done")
-            and p.picking_type_id.code in ("internal", "outgoing")
-        ):
-            self.suitable_location_ids = self.suitable_location_ids.filtered(
-                lambda location: location.warehouse_id
-                == picking.picking_type_id.warehouse_id
-            )
-
-    def _prepare_compute_custom_permissions(self):
-        mark_as_todo = (
-            self.state == "draft"
-            and self.env.user in self.picking_type_id.can_todo_user_ids
-        )
-        validate = (
-            self.state in ("confirmed", "assigned")
-            and self.env.user in self.picking_type_id.can_validate_user_ids
-        )
-        return {
-            "show_mark_as_todo": mark_as_todo,
-            "show_validate": validate,
-        }
-
-    def _compute_custom_permissions(self):
-        for picking in self:
-            vals = self._prepare_compute_custom_permissions()
-            picking.update(vals)
-
     @api.depends("group_id")
     def _compute_show_purchase_lines(self):
         for rec in self:
@@ -151,17 +159,9 @@ class Picking(models.Model):
             )
             rec.show_sale_lines = bool(rec.sale_id and to_from_customer)
 
-    @api.depends("state")
-    def _compute_waiting_warning(self):
-        for picking in self:
-            picking.waiting_warning = (
-                _(
-                    "All products could not be reserved. Click on the 'Check Availability' button to try to "
-                    "reserve products."
-                )
-                if picking.state == "confirmed"
-                else ""
-            )
+    # -------------------------------------------------------------------------
+    # ACTIONS
+    # -------------------------------------------------------------------------
 
     def action_view_purchase_order(self):
         self.ensure_one()
@@ -179,14 +179,6 @@ class Picking(models.Model):
         ctx.pop("default_picking_id", False)
         return self.with_context(ctx).sale_id.get_formview_action()
 
-    # backport V17
-    def action_draft(self):
-        picking_to_reset = self.filtered(lambda p: p.state == "cancel")
-        picking_to_reset.do_unreserve()
-        picking_to_reset.move_ids.state = "draft"
-        picking_to_reset.move_ids.quantity = 0
-        picking_to_reset.move_ids.move_line_ids.unlink()
-
     def action_view_moves(self):
         action = self.env["ir.actions.act_window"]._for_xml_id(
             "stock.stock_move_action"
@@ -200,6 +192,63 @@ class Picking(models.Model):
         }
         return action
 
+    def _action_done(self):
+        res = super()._action_done()
+        for picking in self.filtered(
+            lambda p: p.picking_type_id.code == "outgoing" and p.vehicle_id
+        ):
+            picking._update_gps_tracking_information()
+        return res
+
+    # backport V17
+    def action_draft(self):
+        picking_to_reset = self.filtered(lambda p: p.state == "cancel")
+        picking_to_reset.do_unreserve()
+        picking_to_reset.move_ids.state = "draft"
+        picking_to_reset.move_ids.quantity = 0
+        picking_to_reset.move_ids.move_line_ids.unlink()
+
+    @api.model
+    def _print_deliveryslip(self):
+        self._validate_deliveryslip()
+        return self.env.ref("stock.action_report_delivery").report_action(self)
+
+    @api.model
+    def _print_picking_operation(self):
+        self._validate_picking_operation()
+        return self.env.ref("stock.action_report_picking").report_action(self)
+
+    def _update_gps_tracking_information(self, date=False):
+        for picking in self:
+            picking.write(
+                {
+                    "odometer_done": picking.vehicle_id._get_gps_odometer(date=date),
+                    "fuel_done": picking.vehicle_id._get_gps_fuel_level(date=date),
+                }
+            )
+
+    # -------------------------------------------------------------------------
+    # HELPERS
+    # -------------------------------------------------------------------------
+
+    def _prepare_compute_custom_permissions(self):
+        show_mark_as_todo = (
+            self.state == "draft"
+            and self.env.user in self.picking_type_id.can_todo_user_ids
+        )
+        show_validate = (
+            self.state in ("confirmed", "assigned")
+            and self.env.user in self.picking_type_id.can_validate_user_ids
+        )
+        return {
+            "show_mark_as_todo": show_mark_as_todo,
+            "show_validate": show_validate,
+        }
+
+    # ------------------------------------------------------------
+    # VALIDATIONS
+    # ------------------------------------------------------------
+
     def _validate_deliveryslip(self):
         invalid_pickings = self.filtered(lambda pick: pick.state != "done")
         if invalid_pickings:
@@ -211,11 +260,6 @@ class Picking(models.Model):
                 )
             )
         return True
-
-    @api.model
-    def _print_deliveryslip(self):
-        self._validate_deliveryslip()
-        return self.env.ref("stock.action_report_delivery").report_action(self)
 
     def _validate_picking_operation(self):
         invalid_pickings = self.filtered(
@@ -236,25 +280,3 @@ class Picking(models.Model):
                 )
             )
         return True
-
-    @api.model
-    def _print_picking_operation(self):
-        self._validate_picking_operation()
-        return self.env.ref("stock.action_report_picking").report_action(self)
-
-    def _update_gps_tracking_information(self, date=False):
-        for picking in self:
-            picking.write(
-                {
-                    "odometer_done": picking.vehicle_id._get_gps_odometer(date=date),
-                    "fuel_done": picking.vehicle_id._get_gps_fuel_level(date=date),
-                }
-            )
-
-    def _action_done(self):
-        res = super()._action_done()
-        for picking in self.filtered(
-            lambda p: p.picking_type_id.code == "outgoing" and p.vehicle_id
-        ):
-            picking._update_gps_tracking_information()
-        return res

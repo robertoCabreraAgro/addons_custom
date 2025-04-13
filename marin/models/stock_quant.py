@@ -4,6 +4,8 @@ from odoo.tools.float_utils import float_compare
 
 
 class StockQuant(models.Model):
+    """Inherit StockQuant"""
+
     _inherit = "stock.quant"
 
     # Extend core fields

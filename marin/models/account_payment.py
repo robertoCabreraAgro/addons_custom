@@ -2,6 +2,8 @@ from odoo import _, api, fields, models
 
 
 class AccountPayment(models.Model):
+    """Inherit AccountPayment"""
+
     _inherit = "account.payment"
 
     journal_type = fields.Selection(

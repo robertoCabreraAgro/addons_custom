@@ -6,6 +6,8 @@ from odoo.tools.translate import _
 
 
 class ResPartner(models.Model):
+    """Inherit ResPartner"""
+
     _inherit = "res.partner"
 
     def _prepare_partner_category_domain(self):

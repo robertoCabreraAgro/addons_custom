@@ -7,6 +7,8 @@ from odoo.osv import expression
 
 
 class HrContract(models.Model):
+    """Inherit HrContract"""
+
     _inherit = "hr.contract"
 
     #    final_yearly_costs = fields.Monetary(

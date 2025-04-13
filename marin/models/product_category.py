@@ -1,7 +1,9 @@
 from odoo import api, fields, models
 
 
-class ProductCategoryInherit(models.Model):
+class ProductCategory(models.Model):
+    """Inherit ProductCategory"""
+
     _inherit = "product.category"
 
     property_account_income_refund_id = fields.Many2one(

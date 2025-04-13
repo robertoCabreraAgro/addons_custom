@@ -1,7 +1,9 @@
 from odoo import fields, models
 
 
-class AccountAnalyticLineInherit(models.Model):
+class AccountAnalyticLine(models.Model):
+    """Inherit AccountAnalyticLine"""
+
     _inherit = "account.analytic.line"
 
     date_impacted = fields.Date(

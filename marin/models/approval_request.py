@@ -7,6 +7,8 @@ from odoo.tools.translate import _
 
 
 class ApprovalRequest(models.Model):
+    """Inherit ApprovalRequest"""
+
     _inherit = "approval.request"
 
     has_journal = fields.Selection(

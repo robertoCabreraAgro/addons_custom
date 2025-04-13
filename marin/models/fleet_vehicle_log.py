@@ -2,6 +2,8 @@ from odoo import fields, models
 
 
 class FleetVehiclelog(models.Model):
+    """Inherit FleetVehiclelog"""
+
     _inherit = "fleet.vehicle.log"
 
     approval_request_id = fields.Many2one(

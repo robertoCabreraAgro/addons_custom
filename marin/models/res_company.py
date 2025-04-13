@@ -3,6 +3,8 @@ from odoo.osv import expression
 
 
 class ResCompany(models.Model):
+    """Inherit ResCompany"""
+
     _inherit = "res.company"
 
     code = fields.Char(string="Short Code", size=6)

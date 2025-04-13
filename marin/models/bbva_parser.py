@@ -24,6 +24,8 @@ BBVA_XLSX_HEADER = [
 
 
 class BBVAParser(models.AbstractModel):
+    """BBVAParser"""
+
     _name = "bbva.parser"
     _description = "BBVA files parser"
 

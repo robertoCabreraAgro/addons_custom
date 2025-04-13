@@ -2,6 +2,8 @@ from odoo import api, fields, models
 
 
 class PosOrder(models.Model):
+    """Inherit PosOrder"""
+
     _inherit = "pos.order"
 
     margin = fields.Monetary(compute="_compute_margin", store=True)

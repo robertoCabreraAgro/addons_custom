@@ -2,6 +2,8 @@ from odoo import fields, models
 
 
 class StockLocation(models.Model):
+    """Inherit StockLocation"""
+
     _inherit = "stock.location"
 
     removal_priority = fields.Integer(

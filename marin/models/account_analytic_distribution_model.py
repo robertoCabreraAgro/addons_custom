@@ -2,6 +2,8 @@ from odoo import fields, models
 
 
 class AccountAnalyticDistributionModel(models.Model):
+    """Inherit AccountAnalyticDistributionModel"""
+
     _inherit = "account.analytic.distribution.model"
 
     vehicle_id = fields.Many2one(

@@ -2,6 +2,8 @@ from odoo import api, fields, models
 
 
 class AccountPaymentTerm(models.Model):
+    """Inherit AccountPaymentTerm"""
+
     _inherit = "account.payment.term"
 
     is_immediate = fields.Boolean(

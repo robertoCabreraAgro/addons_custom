@@ -2,6 +2,8 @@ from odoo import fields, models
 
 
 class ResUsers(models.Model):
+    """Inherit ResUsers"""
+
     _inherit = "res.users"
 
     property_sale_journal_id = fields.Many2one(

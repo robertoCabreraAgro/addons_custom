@@ -2,7 +2,9 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 
-class StockMoveLineInherit(models.Model):
+class StockMoveLine(models.Model):
+    """Inherit StockMoveLine"""
+
     _inherit = "stock.move.line"
 
     move_id = fields.Many2one(ondelete="cascade")

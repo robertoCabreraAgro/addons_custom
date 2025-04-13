@@ -1,7 +1,9 @@
 from odoo import api, fields, models
 
 
-class StockScrapInherit(models.Model):
+class StockScrap(models.Model):
+    """Inherit StockScrap"""
+
     _inherit = "stock.scrap"
 
     lot_id = fields.Many2one(domain="lot_domain")

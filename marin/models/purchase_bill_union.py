@@ -2,6 +2,8 @@ from odoo import models, tools
 
 
 class PurchaseBillUnion(models.Model):
+    """Inherit PurchaseBillUnion"""
+
     _inherit = "purchase.bill.union"
 
     def init(self):

@@ -2,7 +2,9 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 
-class HrPayslipInherit(models.Model):
+class HrPayslip(models.Model):
+    """Inherit HrPayslip"""
+
     _name = "hr.payslip"
     _inherit = "hr.payslip"
 

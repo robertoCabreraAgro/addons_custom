@@ -3,6 +3,8 @@ from odoo.exceptions import AccessError, UserError
 
 
 class PosSession(models.Model):
+    """Inherit PosSession"""
+
     _inherit = "pos.session"
 
     # Extend field

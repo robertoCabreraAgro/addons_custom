@@ -3,7 +3,9 @@ import re
 from odoo import api, models
 
 
-class AccountBankStatementLineInherit(models.Model):
+class AccountBankStatementLine(models.Model):
+    """Inherit AccountBankStatementLine"""
+
     _inherit = "account.bank.statement.line"
 
     def _predict_partner_from_payment_ref(self):

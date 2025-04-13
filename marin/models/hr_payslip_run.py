@@ -4,6 +4,8 @@ from odoo.tools import float_compare, float_is_zero
 
 
 class HrPayslipRun(models.Model):
+    """Inherit HrPayslipRun"""
+
     _inherit = "hr.payslip.run"
 
     def create_payslip_moves(self):

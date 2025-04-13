@@ -4,6 +4,8 @@ from odoo.tools import float_is_zero
 
 
 class SaleOrder(models.Model):
+    """Inherit SaleOrder"""
+
     _inherit = "sale.order"
 
     # ------------------------------------------------------------

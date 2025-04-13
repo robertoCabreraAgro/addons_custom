@@ -3,6 +3,8 @@ from odoo.exceptions import UserError
 
 
 class PosConfig(models.Model):
+    """Inherit PosConfig"""
+
     _inherit = "pos.config"
 
     active = fields.Boolean(default=True)

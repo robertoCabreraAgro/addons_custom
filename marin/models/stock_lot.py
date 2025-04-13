@@ -5,6 +5,8 @@ from odoo.tools import float_is_zero
 
 
 class StockLot(models.Model):
+    """Inherit StockLot"""
+
     _inherit = "stock.lot"
 
     active = fields.Boolean(default=True)

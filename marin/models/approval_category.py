@@ -4,6 +4,8 @@ from odoo.addons.base_approval.models.approval_category import CATEGORY_SELECTIO
 
 
 class ApprovalCategory(models.Model):
+    """Inherit ApprovalCategory"""
+
     _inherit = "approval.category"
 
     # Inherited fields

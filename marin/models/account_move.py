@@ -7,6 +7,8 @@ from odoo.tools.translate import _
 
 
 class AccountMove(models.Model):
+    """Inherit AccountMove"""
+
     _inherit = "account.move"
 
     # Extended fields

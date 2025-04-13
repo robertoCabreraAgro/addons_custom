@@ -9,6 +9,8 @@ CATEGORY_SELECTION = [
 
 
 class AccountAsset(models.Model):
+    """Inherit AccountAsset"""
+
     _inherit = "account.asset"
 
     location = fields.Char(string="Location")

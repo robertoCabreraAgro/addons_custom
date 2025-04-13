@@ -3,6 +3,8 @@ from odoo.exceptions import ValidationError
 
 
 class ResPartnerDateRange(models.Model):
+    """Inherit ResPartnerDateRange"""
+
     _name = "res.partner.age.range"
     _description = "Partner Age Range"
 

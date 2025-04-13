@@ -2,6 +2,8 @@ from odoo import fields, models, api
 
 
 class Task(models.Model):
+    """Inherit Task"""
+
     _inherit = "project.task"
 
     # Used in all project tasks

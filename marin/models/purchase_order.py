@@ -6,6 +6,8 @@ from odoo.tools.misc import clean_context
 
 
 class PurchaseOrder(models.Model):
+    """Inherit PurchaseOrder"""
+
     _inherit = "purchase.order"
 
     # ------------------------------------------------------------

@@ -4,6 +4,8 @@ from odoo.osv import expression
 
 
 class Documents(models.Model):
+    """Inherit Documents"""
+
     _inherit = "documents.document"
 
     legal_number = fields.Char("Legal number")

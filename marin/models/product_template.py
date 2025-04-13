@@ -2,6 +2,8 @@ from odoo import api, fields, models
 
 
 class ProductTemplate(models.Model):
+    """Inherit ProductTemplate"""
+
     _inherit = "product.template"
 
     user_product_cost_readonly = fields.Boolean(compute="_compute_group")

@@ -1,7 +1,9 @@
 from odoo import api, fields, models
 
 
-class StockMoveInherit(models.Model):
+class StockMove(models.Model):
+    """Inherit StockMove"""
+
     _inherit = "stock.move"
 
     picking_id = fields.Many2one(ondelete="cascade")

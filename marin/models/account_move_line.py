@@ -4,6 +4,8 @@ from odoo.tools import frozendict
 
 
 class AccountMoveLine(models.Model):
+    """Inherit AccountMoveLine"""
+
     _inherit = "account.move.line"
 
     # Extended fields
