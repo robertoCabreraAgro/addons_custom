@@ -11,12 +11,6 @@ class SaleOrderLine(models.Model):
     partner_id = fields.Many2one(depends=["product_id"])
 
     # New fields
-    date_order = fields.Datetime(
-        related="order_id.date_order",
-        store=True,
-        readonly=True,
-        index=True,
-    )
     transfer_state = fields.Selection(
         selection=[
             ("no", "Nothing to deliver"),
