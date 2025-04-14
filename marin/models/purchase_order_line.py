@@ -31,11 +31,6 @@ class PurchaseOrderLine(models.Model):
         readonly=False,
         help="Technical field to force company or get it from env user if order don't exist.",
     )
-    product_updatable = fields.Boolean(
-        string="Can Edit Product",
-        default=True,
-        compute="_compute_product_updatable",
-    )
 
     # ------------------------------------------------------------
     # COMPUTE METHODS
@@ -51,17 +46,6 @@ class PurchaseOrderLine(models.Model):
                 or self.env.context.get("force_company")
                 or self.env.company
             )
-
-    @api.depends("state", "product_id", "qty_invoiced", "qty_transfered")
-    def _compute_product_updatable(self):
-        for line in self:
-            if line.state in ["done", "cancel"] or (
-                line.state == "purchase"
-                and (line.qty_invoiced > 0 or line.qty_transfered > 0)
-            ):
-                line.product_updatable = False
-            else:
-                line.product_updatable = True
 
     @api.depends("state", "product_uom_qty", "qty_transfered", "qty_to_transfer")
     def _compute_transfer_state(self):
