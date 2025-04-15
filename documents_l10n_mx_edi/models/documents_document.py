@@ -151,7 +151,7 @@ class Document(models.Model):
         mx_edi_document = self.env["l10n_mx_edi.document"]
         cfdi_etree = mx_edi_document.check_objectify_xml(document.datas)
         partner = mx_edi_document.partner_search_create(cfdi_etree)
-        is_cfdi_payment =  mx_edi_document.is_payment_complement(cfdi_etree)
+        is_cfdi_payment = mx_edi_document.is_payment_complement(cfdi_etree)
         tfd_node = mx_edi_document.collect_complemento(cfdi_etree)
         product_list = []
         for line in cfdi_etree.Conceptos.Concepto:
@@ -353,8 +353,10 @@ class Document(models.Model):
         if not cfdi_data["is_valid"]:
             return False
 
+        check_duplicate = self.env.context.get("check_duplicate", True)
+
         # Duplicate validation
-        if cfdi_data["uuid"]:
+        if cfdi_data["uuid"] and check_duplicate:
             exist_docs = self.env["documents.document"].search(
                 [
                     ("id", "!=", self.id),
@@ -363,7 +365,7 @@ class Document(models.Model):
                 ]
             )
             if exist_docs:
-                message = _("Duplicated CFDI: %s" % uuid)
+                message = _("Duplicated CFDI: %s" % cfdi_data["uuid"])
                 self.env["bus.bus"]._sendone(
                     self.env.user.partner_id,
                     "simple_notification",

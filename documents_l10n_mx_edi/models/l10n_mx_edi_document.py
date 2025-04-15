@@ -1226,24 +1226,24 @@ class L10nMxEdiDocument(models.Model):
             bool: True if it is a payment complement, False otherwise.
         """
         namespaces = {
-            'pago10': 'http://www.sat.gob.mx/Pagos10',
-            'pago20': 'http://www.sat.gob.mx/Pagos20'
+            "pago10": "http://www.sat.gob.mx/Pagos10",
+            "pago20": "http://www.sat.gob.mx/Pagos20",
         }
 
         # Try with version 2.0
         pago_node_20 = self.collect_complemento(
             cfdi_etree,
-            attribute='pago20:Pagos',
+            attribute="pago20:Pagos",
             namespaces=namespaces,
         )
 
-        # Try with version 1.0 if 2.0 not found
-        if not pago_node_20:
-            pago_node_10 = self.collect_complemento(
-                cfdi_etree,
-                attribute='pago10:Pagos',
-                namespaces=namespaces,
-            )
-            return bool(pago_node_10)
+        if pago_node_20:
+            return True
 
-        return True
+        # Try with version 1.0 if 2.0 not found
+        pago_node_10 = self.collect_complemento(
+            cfdi_etree,
+            attribute="pago10:Pagos",
+            namespaces=namespaces,
+        )
+        return bool(pago_node_10)
