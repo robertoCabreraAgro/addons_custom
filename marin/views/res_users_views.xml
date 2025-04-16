@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
+
     <record id="view_users_form_simple_modif_marin" model="ir.ui.view">
         <field name="name">res.users.preferences.form.inherit</field>
         <field name="model">res.users</field>
@@ -7,6 +8,11 @@
         <field name="arch" type="xml">
             <group name="signature" position="after">
                 <group name="Journals">
+                    <field
+                        name="property_purchase_journal_id"
+                        options="{'no_create': True}"
+                        groups="account.group_account_invoice"
+                    />
                     <field
                         name="property_sale_journal_id"
                         options="{'no_create': True}"
@@ -25,6 +31,11 @@
             <group name="phone_numbers" position="after">
                 <group name="Journals">
                     <field
+                        name="property_purchase_journal_id"
+                        options="{'no_create': True}"
+                        groups="account.group_account_invoice"
+                    />
+                    <field
                         name="property_sale_journal_id"
                         options="{'no_create': True}"
                         groups="account.group_account_invoice"
@@ -41,6 +52,11 @@
         <field name="arch" type="xml">
             <group name="messaging" position="after">
                 <group name="Journals" string="Journal" groups="account.group_account_invoice">
+                    <field
+                        name="property_purchase_journal_id"
+                        options="{'no_create': True}"
+                        groups="account.group_account_invoice"
+                    />
                     <field
                         name="property_sale_journal_id"
                         options="{'no_create': True}"
@@ -83,4 +99,5 @@
             </xpath>
         </field>
     </record>
+
 </odoo>
