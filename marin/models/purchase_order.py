@@ -125,6 +125,7 @@ class PurchaseOrder(models.Model):
             return
 
         lines_domain = [
+            ("is_downpayment", "=", False),
             ("display_type", "=", False),
             ("order_id", "in", confirmed_orders.ids),
         ]
