@@ -20,7 +20,7 @@ class TestAccountMoveTemplate(TransactionCase):
     def _chart_of_accounts_create(self, company, chart):
         _logger.debug("Creating chart of account")
         self.env.user.write(
-            {"company_ids": [Command.link(company.id)], "company_id": company.id}
+            {"company_id": company.id}
         )
         self.with_context(company_id=company.id, force_company=company.id)
         wizard = self.env["wizard.multi.charts.accounts"].create(
@@ -43,11 +43,7 @@ class TestAccountMoveTemplate(TransactionCase):
         account_user_group = self.env.ref("account.group_account_user")
         account_manager_group = self.env.ref("account.group_account_manager")
         self.company = self.env["res.company"].create({"name": "Test company"})
-        self.company_2 = self.env["res.company"].create(
-            {"name": "Test company 2", "parent_id": self.company.id}
-        )
-        self.env.user.company_ids += self.company
-        self.env.user.company_ids += self.company_2
+        self.env.user.company_id += self.company
 
         self.user = (
             self.env["res.users"]
@@ -71,7 +67,6 @@ class TestAccountMoveTemplate(TransactionCase):
                         )
                     ],
                     "company_id": self.company.id,
-                    "company_ids": [Command.link(self.company.id)],
                 }
             )
         )
@@ -102,10 +97,7 @@ class TestAccountMoveTemplate(TransactionCase):
         account_template.chart_template_id = self.chart_2
         self.chart_2.tax_template_ids |= self.chart.tax_template_ids
 
-        self._chart_of_accounts_create(self.company_2, self.chart_2)
-
         self.chart.company_id = self.company
-        self.chart_2.company_id = self.company_2
 
         self.account_company_1 = self.env["account.account"].search(
             [("company_id", "=", self.company.id)], limit=1
