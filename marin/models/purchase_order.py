@@ -81,6 +81,27 @@ class PurchaseOrder(models.Model):
             "purchase.group_purchase_manager"
         ) or not self.env.user.has_group("purchase_security.group_purchase_own_orders")
 
+    # Extend original method
+    @api.depends("company_id", "user_id")
+    def _compute_journal_id(self):
+        for order in self:
+            if not order.journal_id:
+                default_journal_id = (
+                    self.env["ir.default"]
+                    .with_company(order.company_id.id)
+                    ._get_model_defaults("purchase.order")
+                    .get("purchase_journal_id")
+                )
+                if order.state == "draft" or not order.ids:
+                    order.journal_id = (
+                        default_journal_id
+                        or order.user_id.with_company(
+                            order.company_id.id
+                        )._get_default_purchase_journal_id()
+                    )
+            if not order.journal_id:
+                return super()._compute_journal_id()
+
     # Override original method
     @api.depends("state", "order_line_ids.transfer_state", "picking_ids")
     def _compute_transfer_state(self):

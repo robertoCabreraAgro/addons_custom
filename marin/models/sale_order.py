@@ -55,23 +55,23 @@ class SaleOrder(models.Model):
     # Extend original method
     @api.depends("company_id", "user_id", "sale_order_template_id")
     def _compute_journal_id(self):
-        res = super()._compute_journal_id()
         for order in self:
             if not order.journal_id:
-                default_sale_journal_id = (
+                default_journal_id = (
                     self.env["ir.default"]
                     .with_company(order.company_id.id)
                     ._get_model_defaults("sale.order")
                     .get("sale_journal_id")
                 )
-                if order.state in ("draft", "sent") or not order.ids:
+                if order.state == "draft" or not order.ids:
                     order.journal_id = (
-                        default_sale_journal_id
+                        default_journal_id
                         or order.user_id.with_company(
                             order.company_id.id
                         )._get_default_sale_journal_id()
                     )
-        return res
+            if not order.journal_id:
+                return super()._compute_journal_id()
 
     @api.depends(
         "company_id", "partner_id", "amount_total", "commercial_partner_id.credit_limit"
