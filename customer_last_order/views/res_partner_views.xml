@@ -1,0 +1,13 @@
+<odoo>
+    <record id="view_partner_form_last_order" model="ir.ui.view">
+        <field name="name">res.partner.form.last.order</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='property_product_pricelist']" position="after">
+                    <field name="customer_last_order_date" />
+                    <field name="customer_last_order_ref" />
+            </xpath>
+        </field>
+    </record>
+</odoo>
