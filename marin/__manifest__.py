@@ -131,6 +131,7 @@
         "views/mrp_bom_views.xml",
         "views/approval_category_views.xml",
         "views/approval_request_views.xml",
+        "views/res_config_settings_views.xml",
         "views/menuitem_views.xml",
         "report/invoice_line_in_views.xml",
         "report/invoice_line_out_views.xml",

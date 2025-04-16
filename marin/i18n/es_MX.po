@@ -2134,6 +2134,17 @@ msgid "If checked, some messages have a delivery error."
 msgstr "Si está marcado, algunos mensajes tienen un error de entrega."
 
 #. module: marin
+#: model:ir.model.fields,help:marin.field_pos_config__load_all_partners_by_company
+#: model:ir.model.fields,help:marin.field_res_config_settings__pos_load_all_partners_by_company
+#: model_terms:ir.ui.view,arch_db:marin.view_res_config_settings_inherit_marin
+msgid ""
+"If enabled, all customers filtered by company will be loaded instead of "
+"using limited scroll-based loading."
+msgstr ""
+"Si se activa, se cargarán todos los clientes filtrados por empresa en lugar de "
+"utilizar una carga limitada basada en el desplazamiento del scroll."
+
+#. module: marin
 #: model:ir.model.fields,help:marin.field_account_bank_statement_line__x_stored
 #: model:ir.model.fields,help:marin.field_account_move__x_stored
 msgid ""
@@ -2567,6 +2578,13 @@ msgstr ""
 #: model:ir.model.fields,help:marin.field_stock_picking_tracker__picking_ids
 msgid "List of transfers associated to this tracker"
 msgstr "Lista de transferencias asociadas a este rastreador de ruta"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_pos_config__load_all_partners_by_company
+#: model:ir.model.fields,field_description:marin.field_res_config_settings__pos_load_all_partners_by_company
+#: model_terms:ir.ui.view,arch_db:marin.view_res_config_settings_inherit_marin
+msgid "Load All Partners by Company"
+msgstr "Cargar todos los partner por compañia"
 
 #. module: marin
 #. odoo-javascript

@@ -189,11 +189,12 @@ class Session(models.Model):
                                     "name": f"{name}.xml",
                                     "type": "binary",
                                     "datas": file_content,
+                                    "mimetype": "text/plain",  # to be able to open file from documents
                                 }
                             )
                             doc_vals_list.append(
                                 {
-                                    "name": name,
+                                    "name": f"{name}.xml",
                                     "folder_id": folder_id,
                                     "company_id": self.company_id.id,
                                     "l10n_mx_edi_is_cfdi": True,

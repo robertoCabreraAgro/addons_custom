@@ -1212,3 +1212,38 @@ class L10nMxEdiDocument(models.Model):
         except Exception:
             pass
         return is_cfdi
+
+    def is_payment_complement(self, cfdi_etree):
+        """
+        Uses the provided collect_complemento function to detect if the CFDI
+        includes a payment complement (Pagos 1.0 or 2.0).
+
+        Args:
+            cfdi_etree (etree.Element): Parsed CFDI XML tree.
+            collect_complemento_func (callable): A function that extracts nodes from CFDI Complemento.
+
+        Returns:
+            bool: True if it is a payment complement, False otherwise.
+        """
+        namespaces = {
+            "pago10": "http://www.sat.gob.mx/Pagos10",
+            "pago20": "http://www.sat.gob.mx/Pagos20",
+        }
+
+        # Try with version 2.0
+        pago_node_20 = self.collect_complemento(
+            cfdi_etree,
+            attribute="pago20:Pagos",
+            namespaces=namespaces,
+        )
+
+        if pago_node_20:
+            return True
+
+        # Try with version 1.0 if 2.0 not found
+        pago_node_10 = self.collect_complemento(
+            cfdi_etree,
+            attribute="pago10:Pagos",
+            namespaces=namespaces,
+        )
+        return bool(pago_node_10)

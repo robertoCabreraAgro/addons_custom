@@ -94,6 +94,12 @@ class Document(models.Model):
         store=True,
         help='In case this is a CFDI file, show invoice"s product list',
     )
+    l10n_mx_edi_is_cfdi_payment = fields.Boolean(
+        string="Is a Payment Complement",
+        compute="_compute_l10n_mx_edi_common_fields",
+        store=True,
+        help="Specify if this is a CFDI Payment document.",
+    )
     show_res_name = fields.Char(
         string="Show Res Name",
         compute="_compute_show_res_name",
@@ -102,9 +108,7 @@ class Document(models.Model):
     @api.depends("name", "res_name")
     def _compute_show_res_name(self):
         for rec in self:
-            rec.show_res_name = (
-                rec.res_name if rec.name != rec.res_name else ""
-            )
+            rec.show_res_name = rec.res_name if rec.name != rec.res_name else ""
 
     def check_document_already_linked(self):
         if documents_link_record := self.filtered(
@@ -144,10 +148,11 @@ class Document(models.Model):
 
     def prepare_l10n_mx_edi_common_fields(self, document):
         vals = {}
-        edi_obj = self.env["l10n_mx_edi.document"]
-        cfdi_etree = edi_obj.check_objectify_xml(document.datas)
-        partner = edi_obj.partner_search_create(cfdi_etree)
-        tfd_node = edi_obj.collect_complemento(cfdi_etree)
+        mx_edi_document = self.env["l10n_mx_edi.document"]
+        cfdi_etree = mx_edi_document.check_objectify_xml(document.datas)
+        partner = mx_edi_document.partner_search_create(cfdi_etree)
+        is_cfdi_payment = mx_edi_document.is_payment_complement(cfdi_etree)
+        tfd_node = mx_edi_document.collect_complemento(cfdi_etree)
         product_list = []
         for line in cfdi_etree.Conceptos.Concepto:
             product_list += [line.get("Descripcion", "")]
@@ -155,8 +160,9 @@ class Document(models.Model):
             {
                 "partner_id": partner.id,
                 "l10n_mx_edi_cfdi_total_amount": float(cfdi_etree.get("Total", 0)),
-                "l10n_mx_edi_stamp_date": edi_obj.get_datetime(tfd_node),
+                "l10n_mx_edi_stamp_date": mx_edi_document.get_datetime(tfd_node),
                 "l10n_mx_edi_product_list": json.dumps(product_list),
+                "l10n_mx_edi_is_cfdi_payment": is_cfdi_payment,
             }
         )
         # if hasattr(cfdi_etree, "CfdiRelacionados"):
@@ -347,8 +353,10 @@ class Document(models.Model):
         if not cfdi_data["is_valid"]:
             return False
 
+        check_duplicate = self.env.context.get("check_duplicate", True)
+
         # Duplicate validation
-        if cfdi_data["uuid"]:
+        if cfdi_data["uuid"] and check_duplicate:
             exist_docs = self.env["documents.document"].search(
                 [
                     ("id", "!=", self.id),
@@ -357,7 +365,7 @@ class Document(models.Model):
                 ]
             )
             if exist_docs:
-                message = _("Duplicated CFDI: %s" % uuid)
+                message = _("Duplicated CFDI: %s" % cfdi_data["uuid"])
                 self.env["bus.bus"]._sendone(
                     self.env.user.partner_id,
                     "simple_notification",
