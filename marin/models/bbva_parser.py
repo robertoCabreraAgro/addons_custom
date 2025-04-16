@@ -1,14 +1,14 @@
-import base64
 import logging
 import re
+import chardet
+
 from datetime import datetime
 from io import BytesIO
-
-import chardet
 from openpyxl import load_workbook
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import UserError
+from odoo.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 

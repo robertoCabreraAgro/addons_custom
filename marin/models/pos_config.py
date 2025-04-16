@@ -1,7 +1,7 @@
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import UserError
-
 from odoo.tools.sql import SQL
+from odoo.tools.translate import _
 
 
 class PosConfig(models.Model):

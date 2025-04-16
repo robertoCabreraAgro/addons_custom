@@ -1,8 +1,8 @@
-from odoo import models, fields, api, _
-from odoo.exceptions import ValidationError
-from odoo.osv.expression import AND, OR
-
 from collections import defaultdict
+
+from odoo import models, fields, api
+from odoo.osv.expression import OR
+from odoo.tools.translate import _
 
 
 class MrpBom(models.Model):

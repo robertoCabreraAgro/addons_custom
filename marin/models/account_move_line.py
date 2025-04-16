@@ -1,6 +1,7 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import frozendict
+from odoo.tools.translate import _
 
 
 class AccountMoveLine(models.Model):

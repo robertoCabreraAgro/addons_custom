@@ -1,6 +1,7 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
+from odoo.tools.translate import _
 
 
 class Documents(models.Model):

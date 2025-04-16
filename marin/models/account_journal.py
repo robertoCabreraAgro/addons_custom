@@ -1,7 +1,8 @@
 import base64
 
-from odoo import _, api, Command, fields, models, tools
+from odoo import api, Command, fields, models, tools
 from odoo.exceptions import UserError, RedirectWarning
+from odoo.tools.translate import _
 
 
 class AccountJournal(models.Model):

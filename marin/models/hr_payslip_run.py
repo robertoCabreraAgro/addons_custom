@@ -1,6 +1,7 @@
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import UserError
 from odoo.tools import float_compare, float_is_zero
+from odoo.tools.translate import _
 
 
 class HrPayslipRun(models.Model):

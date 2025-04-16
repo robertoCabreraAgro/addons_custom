@@ -1,4 +1,5 @@
-from odoo import fields, models, _
+from odoo import fields, models
+from odoo.tools.translate import _
 
 
 class LostReason(models.Model):
