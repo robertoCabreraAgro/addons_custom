@@ -9,6 +9,7 @@ from . import account_move
 from . import account_move_line
 from . import account_payment
 from . import account_payment_term
+from . import account_reconcile_model
 from . import documents_document
 from . import documents_tag
 from . import fleet_vehicle

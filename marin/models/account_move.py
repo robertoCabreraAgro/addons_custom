@@ -25,7 +25,10 @@ class AccountMove(models.Model):
 
     # New fields
     journal_type = fields.Selection(
-        related="journal_id.type", string="Journal type", store=True, readonly=True
+        related="journal_id.type",
+        string="Journal type",
+        store=True,
+        readonly=True,
     )
     force_payment_policy_pue = fields.Boolean(
         string="Force PUE",
