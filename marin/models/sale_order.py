@@ -138,42 +138,11 @@ class SaleOrder(models.Model):
         forced_orders = self.filtered("force_fully_invoiced")
         forced_orders.invoice_state = "done"
 
-        self = self - forced_orders
-        if not self:
+        unforced_orders = self - forced_orders
+        if not unforced_orders:
             return
 
-        confirmed_orders = self.filtered(lambda o: o.state == "sale")
-        (self - confirmed_orders).invoice_state = "no"
-        if not confirmed_orders:
-            return
-
-        lines_domain = [
-            ("is_downpayment", "=", False),
-            ("display_type", "=", False),
-            ("order_id", "in", confirmed_orders.ids),
-        ]
-        line_invoice_state_all = [
-            (order.id, invoice_status)
-            for order, invoice_status in self.env["sale.order.line"]._read_group(
-                lines_domain,
-                ["order_id", "invoice_state"],
-            )
-        ]
-        for order in confirmed_orders:
-            states = [d[1] for d in line_invoice_state_all if d[0] == order.id]
-            if not order.invoice_ids or all(state == "to do" for state in states):
-                order.invoice_state = "to do"
-            elif all(state == "done" for state in states):
-                order.invoice_state = "done"
-            elif any(state == "over done" for state in states):
-                order.invoice_state = "over done"
-            elif any(state == "partially" for state in states) or (
-                not any(state == "partially" for state in states)
-                and any(state in ("to do", "done") for state in states)
-            ):
-                order.invoice_state = "partially"
-            else:
-                order.invoice_state = "no"
+        return super(SaleOrder, unforced_orders)._compute_invoice_state()
 
     # --------------------------------------------------
     # ONCHANGE METHODS
