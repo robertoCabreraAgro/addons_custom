@@ -59,15 +59,11 @@ class AccountMoveTemplateRun(models.TransientModel):
 
     def load_lines(self):
         self.ensure_one()
-        self.line_ids.unlink()
-        new_line_ids = self.env["account.move.template.line.run"]
-        for tmpl_line in self.template_id.line_ids.filtered(
-            lambda line: line.type == "input"
-        ):
-            new_line_ids += self.env["account.move.template.line.run"].new(
-                self._prepare_wizard_line(tmpl_line)
-            )
-        self.line_ids = new_line_ids
+        lines = [
+            (0, 0, self._prepare_wizard_line(tmpl_line))
+            for tmpl_line in self.template_id.line_ids.filtered(lambda line: line.type == "input")
+        ]
+        self.line_ids = [(5, 0, 0)] + lines
 
     def create_move(self):
         self.ensure_one()
