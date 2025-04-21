@@ -45,11 +45,6 @@ class AccountMoveTemplateLineRun(models.TransientModel):
     account_id = fields.Many2one(
         comodel_name="account.account",
     )
-    tax_ids = fields.Many2many(
-        comodel_name="account.tax",
-        string="Taxes",
-        readonly=True,
-    )
     python_code = fields.Text(string="Formula", readonly=True)
     note = fields.Char()
     is_refund = fields.Boolean(string="Is a refund?", readonly=True)

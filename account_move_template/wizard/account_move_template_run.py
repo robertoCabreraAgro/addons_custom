@@ -14,11 +14,6 @@ class AccountMoveTemplateRun(models.TransientModel):
     _name = "account.move.template.run"
     _description = "Wizard to generate move from template"
 
-    company_id = fields.Many2one(
-        comodel_name="res.company",
-        required=True,
-        default=lambda self: self.env.company,
-    )
     template_id = fields.Many2one(
         comodel_name="account.move.template",
         required=True,
@@ -52,10 +47,8 @@ class AccountMoveTemplateRun(models.TransientModel):
 
     @api.onchange("template_id")
     def _onchange_template_id(self):
-        if not self.template_id:
-            return
-
-        self.load_lines()
+        if self.template_id:
+            self.load_lines()
 
     def load_lines(self):
         self.ensure_one()
@@ -67,14 +60,12 @@ class AccountMoveTemplateRun(models.TransientModel):
 
     def create_move(self):
         self.ensure_one()
-        company_cur = self.company_id.currency_id
         move_vals = self._prepare_move()
         for line in self.line_ids:
             amount = line.amount
-            if not company_cur.is_zero(amount):
-                move_vals["line_ids"].append(
-                    Command.create(self._prepare_move_line(line, amount))
-                )
+            move_vals["line_ids"].append(
+                Command.create(self._prepare_move_line(line, amount))
+            )
 
         move = self.env["account.move"].create(move_vals)
         if hasattr(self, "price_unit") and self.price_unit:
@@ -145,7 +136,6 @@ class AccountMoveTemplateRun(models.TransientModel):
             "amount": 0.0,
             "account_id": account_id.id,
             "analytic_distribution": tmpl_line.analytic_distribution or False,
-            "tax_ids": [Command.set(tmpl_line.tax_ids.ids)],
             "python_code": (
                 tmpl_line.python_code if tmpl_line.type == "computed" else False
             ),
