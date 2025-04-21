@@ -12,17 +12,13 @@
                     </group>
                     <group>
                         <field name="date" />
-                        <field name="template_id"
-                            widget="selection"
-                            readonly="state == 'set_lines'" />
-                        <field name="state" invisible="1" />
+                        <field name="template_id" widget="selection" />
                         <field name="company_id" invisible="1" />
                         <field name="company_id" groups="base.group_multi_company" />
                     </group>
                 <field name="overwrite"
                     widget="ace"
-                    options="{'mode': 'python'}"
-                    invisible="state == 'set_lines'" />
+                    options="{'mode': 'python'}" />
                 </group>
                 <group name="lines">
                     <field name="line_ids" nolabel="1" colspan="2">
@@ -37,7 +33,6 @@
                             <field name="tax_ids"
                                 widget="many2many_tags"
                                 invisible="not tax_ids" />
-                            <field name="move_line_type" />
                             <field name="amount" />
                             <field name="note" />
                         </list>

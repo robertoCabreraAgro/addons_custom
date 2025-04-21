@@ -17,12 +17,7 @@ class AccountMoveTemplateLine(models.Model):
         ondelete="cascade",
         index=True,
     )
-    company_id = fields.Many2one(
-        comodel_name="res.company",
-        string="Company",
-        related="template_id.company_id",
-        store=True,
-    )
+    move_type = fields.Selection(related="template_id.move_type")
     partner_id = fields.Many2one(
         comodel_name="res.partner",
         string="Partner",
@@ -44,11 +39,6 @@ class AccountMoveTemplateLine(models.Model):
     )
     name = fields.Char(string="Label")
     sequence = fields.Integer(default=10)
-    move_line_type = fields.Selection(
-        selection=[("cr", "Credit"), ("dr", "Debit")],
-        string="Direction",
-        required=True,
-    )
     type = fields.Selection(
         [
             ("input", "User input"),
@@ -78,10 +68,13 @@ class AccountMoveTemplateLine(models.Model):
         digits="Product Price",
     )
     discount = fields.Float(
-        string='Discount (%)',
-        digits='Discount',
+        string="Discount (%)",
+        digits="Discount",
     )
-    amount = fields.Float(default=0)
+    balance = fields.Float(
+        string="Balance",
+        digits="Product Price",
+    )
     tax_ids = fields.Many2many(
         comodel_name="account.tax",
         string="Taxes",
@@ -115,18 +108,18 @@ class AccountMoveTemplateLine(models.Model):
             else:
                 line.product_uom_id = False
 
-    @api.onchange("product_id")
-    def _onchange_product_id(self):
-        """Actualiza campos relacionados cuando cambia el producto"""
-        for line in self:
-            if line.product_id:
-                accounts = line.product_id.product_tmpl_id.get_product_accounts(
-                    fiscal_pos=None
-                )
-                if accounts.get("expense") and line.move_line_type == "dr":
-                    line.account_id = accounts["expense"].id
-                elif accounts.get("income") and line.move_line_type == "cr":
-                    line.account_id = accounts["income"].id
+    # @api.onchange("product_id")
+    # def _onchange_product_id(self):
+    #     """Actualiza campos relacionados cuando cambia el producto"""
+    #     for line in self:
+    #         if line.product_id:
+    #             accounts = line.product_id.product_tmpl_id.get_product_accounts(
+    #                 fiscal_pos=None
+    #             )
+    #             if accounts.get("expense") and line.move_line_type == "dr":
+    #                 line.account_id = accounts["expense"].id
+    #             elif accounts.get("income") and line.move_line_type == "cr":
+    #                 line.account_id = accounts["income"].id
 
     @api.onchange("account_id")
     def _onchange_account_id(self):

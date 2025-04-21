@@ -48,7 +48,6 @@
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only" />
                         <h1>
-                            <field name="active" invisible="True" />
                             <field name="name" />
                         </h1>
                     </div>
@@ -56,17 +55,20 @@
                         <group name="main-left">
                             <field name="partner_id" options="{'no_open': True, 'no_create': True}" />
                             <field name="ref" />
+                            <field name="active" invisible="True" />
                         </group>
                         <group name="main-right">
                             <field name="journal_id" />
                             <field name="journal_code" />
                             <field name="move_type" />
+                            <field name="invoice_payment_term_id" />
                         </group>
                     </group>
                     <notebook>
                         <page id="line_tab" name="line_tab" string="Template Lines">
                             <field name="line_ids" nolabel="1" colspan="2">
                                 <list>
+                                    <field name="move_type" column_invisible="1" />
                                     <field name="sequence" widget="handle" />
                                     <field name="partner_id" column_invisible="parent.partner_id" />
                                     <field name="product_id" />
@@ -75,11 +77,10 @@
                                     <field name="account_id" />
                                     <field name="account_code" />
                                     <field name="name" />
-                                    <field name="amount" />
-                                    <field name="move_line_type" />
+                                    <field name="balance" />
                                     <field name="tax_ids" options="{'no_create': True}" />
                                 </list>
-                                <form string="Journal Entry Template Line">
+<!--                                 <form string="Journal Entry Template Line">
                                     <sheet>
                                         <group name="main">
                                             <group name="main-left">
@@ -88,17 +89,18 @@
                                                 <field name="product_uom_id" string="UoM" />
                                                 <field name="quantity" string="Qty" />
                                                 <field name="name" />
-                                                <field name="amount" />
+                                                <field name="balance" />
                                                 <field name="account_id" />
+                                                <field name="account_code" />
                                                 <field name="tax_ids" />
                                             </group>
                                             <group name="main-right">
-                                                <field name="move_line_type" />
+                                                <field name="move_type" invisible="1" />
                                             </group>
                                         </group>
                                     </sheet>
                                 </form>
-                            </field>
+ -->                            </field>
                         </page>
                         <page name="other_info" string="Other Information">
                             <group>

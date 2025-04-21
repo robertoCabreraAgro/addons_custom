@@ -32,11 +32,6 @@ class AccountMoveTemplateRun(models.TransientModel):
         required=True,
         default=fields.Date.context_today,
     )
-    state = fields.Selection(
-        [("select_template", "Select Template"), ("set_lines", "Set Lines")],
-        default="select_template",
-        readonly=True,
-    )
     overwrite = fields.Text(
         help="""
              Valid dictionary to overwrite template lines:
@@ -122,48 +117,22 @@ class AccountMoveTemplateRun(models.TransientModel):
 
     def _prepare_move_line(self, line, amount):
 
-        debit = line.move_line_type == "dr"
         values = {
             "name": line.name,
             "account_id": line.account_id.id,
-            "credit": 0.0 if debit else abs(amount),
-            "debit": abs(amount) if debit else 0.0,
+            "balance": line.balance,
             "partner_id": line.partner_id.id or self.partner_id.id,
         }
 
-        if hasattr(line, "price_unit") and line.price_unit:
+        if line.price_unit:
             values["price_unit"] = line.price_unit
-        elif hasattr(self, "price_unit") and self.price_unit:
-            values["price_unit"] = self.price_unit
 
         if line.tax_ids:
             values["tax_ids"] = [Command.set(line.tax_ids.ids)]
 
-        if getattr(line, "is_refund", False):
-            tax_repartition = "refund_tax_id" if line.is_refund else "invoice_tax_id"
-            atrl_ids = self.env["account.tax.repartition.line"].search(
-                [
-                    (tax_repartition, "in", line.tax_ids.ids),
-                    ("repartition_type", "=", "base"),
-                ]
-            )
-            if atrl_ids:
-                values["tax_tag_ids"] = [Command.set(atrl_ids.mapped("tag_ids").ids)]
-
-        if getattr(line, "tax_repartition_line_id", False):
-            values["tax_repartition_line_id"] = line.tax_repartition_line_id.id
-            values["tax_tag_ids"] = [
-                Command.set(line.tax_repartition_line_id.tag_ids.ids)
-            ]
-
-        if getattr(line, "analytic_distribution", False):
+        if line.analytic_distribution:
             values["analytic_distribution"] = line.analytic_distribution
 
-        overwrite = self._context.get("overwrite", {})
-        move_line_vals = overwrite.get(f"L{line.sequence}", {})
-        values.update(move_line_vals)
-
-        self._update_account_on_negative(line, values)
         return values
 
     def _prepare_wizard_line(self, tmpl_line):
@@ -174,7 +143,6 @@ class AccountMoveTemplateRun(models.TransientModel):
             "wizard_id": self.id,
             "name": tmpl_line.name,
             "sequence": tmpl_line.sequence,
-            "move_line_type": tmpl_line.move_line_type,
             "partner_id": tmpl_line.partner_id.id or False,
             "product_id": tmpl_line.product_id.id,
             "price_unit": tmpl_line.price_unit or False,

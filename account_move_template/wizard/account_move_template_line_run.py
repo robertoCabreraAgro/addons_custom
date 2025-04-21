@@ -21,11 +21,6 @@ class AccountMoveTemplateLineRun(models.TransientModel):
     )
     name = fields.Char()
     sequence = fields.Integer()
-    move_line_type = fields.Selection(
-        selection=[("cr", "Credit"), ("dr", "Debit")],
-        string="Direction",
-        readonly=True,
-    )
     template_type = fields.Selection(
         selection=[
             ("input", "User input"),
