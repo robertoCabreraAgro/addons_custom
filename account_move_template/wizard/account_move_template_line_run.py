@@ -40,6 +40,10 @@ class AccountMoveTemplateLineRun(models.TransientModel):
         comodel_name="product.product",
         string="Product",
     )
+    product_uom_id = fields.Many2one(
+        comodel_name="uom.uom",
+        string="Unit of Measure",
+    )
     quantity = fields.Float(
         string="Quantity",
         digits="Product Unit of Measure",

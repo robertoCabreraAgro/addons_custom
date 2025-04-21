@@ -96,6 +96,8 @@ class AccountMoveTemplateRun(models.TransientModel):
             .with_context(default_move_type=self.move_type)
             .create(move_vals)
         )
+        for line in move.invoice_line_ids:
+            line._compute_tax_ids()
 
         result = self.env["ir.actions.actions"]._for_xml_id(
             "account.action_move_journal_line"
@@ -112,37 +114,37 @@ class AccountMoveTemplateRun(models.TransientModel):
         )
         return result
 
-    def _prepare_move_vals(self):
-        journal = self.env["account.journal"].search(
-            [("code", "=", self.template_id.journal_code)], limit=1
-        )
-        move_vals = {
-            "company_id": self.env.company.id,
-            "journal_id": journal.id,
-            "move_type": self.template_id.move_type,
-            "partner_id": self.partner_id.id or False,
-            "date": self.date,
-            "ref": self.ref,
-            "line_ids": [],
-        }
-        return move_vals
-
     def _prepare_move_line_vals(self, line):
-        values = {
+        vals = {
             "name": line.name,
             "account_id": line.account_id.id,
             "analytic_distribution": line.analytic_distribution,
         }
         if self.template_id.move_type == "entry":
-            values["balance"] = self.balance or line.balance
+            vals["balance"] = self.balance or line.balance
 
         elif self.template_id.move_type != "entry":
-            values["product_id"] = line.product_id.id
-            values["quantity"] = self.quantity or line.quantity
-            values["price_unit"] = self.price_unit or line.price_unit
-            values["discount"] = self.discount or line.discount
+            vals["product_id"] = line.product_id.id
+            vals["quantity"] = self.quantity or line.quantity
+            vals["price_unit"] = self.price_unit or line.price_unit
+            vals["discount"] = self.discount or line.discount
 
-        return values
+        return vals
+
+    def _prepare_move_vals(self):
+        journal = self.env["account.journal"].search(
+            [("code", "=", self.template_id.journal_code)], limit=1
+        )
+        vals = {
+            "journal_id": journal.id,
+            "move_type": self.template_id.move_type,
+            "partner_id": self.partner_id.id or False,
+            "invoice_payment_term_id": self.template_id.invoice_payment_term_id.id or False,
+            "date": self.date,
+            "ref": self.ref,
+            "line_ids": [],
+        }
+        return vals
 
     def _prepare_wizard_line(self, tmpl_line):
         account_id = self.env["account.account"].search(
@@ -156,6 +158,7 @@ class AccountMoveTemplateRun(models.TransientModel):
             "account_id": account_id.id,
             "analytic_distribution": tmpl_line.analytic_distribution or False,
             "product_id": tmpl_line.product_id.id or False,
+            "product_uom_id": tmpl_line.product_uom_id.id or False,
             "quantity": tmpl_line.quantity or False,
             "price_unit": tmpl_line.price_unit or False,
             "discount": tmpl_line.discount or False,
