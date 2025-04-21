@@ -18,6 +18,9 @@ class AccountMoveTemplateRun(models.TransientModel):
         comodel_name="account.move.template",
         required=True,
     )
+    move_type = fields.Selection(
+        related="template_id.move_type",
+    )
     partner_id = fields.Many2one(
         comodel_name="res.partner",
         string="Partner",
@@ -34,9 +37,25 @@ class AccountMoveTemplateRun(models.TransientModel):
              'L2': {'partner_id': 2, 'amount': 200, 'name': 'some label 2'}, }
              """
     )
+    quantity = fields.Float(
+        string="Quantity",
+        digits="Product Unit of Measure",
+        default=False,
+    )
     price_unit = fields.Float(
         string="Unit Price",
-        default=0.0,
+        digits="Product Price",
+        default=False,
+    )
+    discount = fields.Float(
+        string="Discount (%)",
+        digits="Discount",
+        default=False,
+    )
+    balance = fields.Float(
+        string="Unit Price",
+        digits="Product Price",
+        default=False,
     )
     ref = fields.Char(string="Reference")
     line_ids = fields.One2many(
@@ -54,23 +73,29 @@ class AccountMoveTemplateRun(models.TransientModel):
         self.ensure_one()
         lines = [
             (0, 0, self._prepare_wizard_line(tmpl_line))
-            for tmpl_line in self.template_id.line_ids.filtered(lambda line: line.type == "input")
+            for tmpl_line in self.template_id.line_ids.filtered(
+                lambda line: line.type == "input"
+            )
         ]
         self.line_ids = [(5, 0, 0)] + lines
 
+    def _hook_create_move(self, move_vals):
+        move = 1
+        return move
+
     def create_move(self):
         self.ensure_one()
-        move_vals = self._prepare_move()
+        move_vals = self._prepare_move_vals()
         for line in self.line_ids:
-            amount = line.amount
             move_vals["line_ids"].append(
-                Command.create(self._prepare_move_line(line, amount))
+                Command.create(self._prepare_move_line_vals(line))
             )
 
-        move = self.env["account.move"].create(move_vals)
-        if hasattr(self, "price_unit") and self.price_unit:
-            for move_line in move.line_ids:
-                move_line.price_unit = self.price_unit
+        move = (
+            self.env["account.move"]
+            .with_context(default_move_type=self.move_type)
+            .create(move_vals)
+        )
 
         result = self.env["ir.actions.actions"]._for_xml_id(
             "account.action_move_journal_line"
@@ -87,12 +112,12 @@ class AccountMoveTemplateRun(models.TransientModel):
         )
         return result
 
-    def _prepare_move(self):
+    def _prepare_move_vals(self):
         journal = self.env["account.journal"].search(
             [("code", "=", self.template_id.journal_code)], limit=1
         )
         move_vals = {
-            "company_id": self.company_id.id,
+            "company_id": self.env.company.id,
             "journal_id": journal.id,
             "move_type": self.template_id.move_type,
             "partner_id": self.partner_id.id or False,
@@ -102,23 +127,20 @@ class AccountMoveTemplateRun(models.TransientModel):
         }
         return move_vals
 
-    def _prepare_move_line(self, line, amount):
-
+    def _prepare_move_line_vals(self, line):
         values = {
             "name": line.name,
             "account_id": line.account_id.id,
-            "balance": line.balance,
-            "partner_id": line.partner_id.id or self.partner_id.id,
+            "analytic_distribution": line.analytic_distribution,
         }
+        if self.template_id.move_type == "entry":
+            values["balance"] = self.balance or line.balance
 
-        if line.price_unit:
-            values["price_unit"] = line.price_unit
-
-        if line.tax_ids:
-            values["tax_ids"] = [Command.set(line.tax_ids.ids)]
-
-        if line.analytic_distribution:
-            values["analytic_distribution"] = line.analytic_distribution
+        elif self.template_id.move_type != "entry":
+            values["product_id"] = line.product_id.id
+            values["quantity"] = self.quantity or line.quantity
+            values["price_unit"] = self.price_unit or line.price_unit
+            values["discount"] = self.discount or line.discount
 
         return values
 
@@ -131,11 +153,13 @@ class AccountMoveTemplateRun(models.TransientModel):
             "name": tmpl_line.name,
             "sequence": tmpl_line.sequence,
             "partner_id": tmpl_line.partner_id.id or False,
-            "product_id": tmpl_line.product_id.id,
-            "price_unit": tmpl_line.price_unit or False,
-            "amount": 0.0,
             "account_id": account_id.id,
             "analytic_distribution": tmpl_line.analytic_distribution or False,
+            "product_id": tmpl_line.product_id.id or False,
+            "quantity": tmpl_line.quantity or False,
+            "price_unit": tmpl_line.price_unit or False,
+            "discount": tmpl_line.discount or False,
+            "balance": tmpl_line.balance or False,
             "python_code": (
                 tmpl_line.python_code if tmpl_line.type == "computed" else False
             ),
