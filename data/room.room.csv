@@ -1,6 +1,0 @@
-"id","name","company_id/id","office_id/id"
-marin_data.room_01,"Sales office 1",marin_data.company_lmmr,marin_data.office_01
-marin_data.room_02,"Sales office 2",marin_data.company_lmmr,marin_data.office_01
-marin_data.room_03,"Management office",marin_data.company_lmmr,marin_data.office_01
-marin_data.room_04,"Directors office",marin_data.company_lmmr,marin_data.office_01
-marin_data.room_05,"General meeting room",marin_data.company_lmmr,marin_data.office_01

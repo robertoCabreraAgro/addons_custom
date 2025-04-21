@@ -1,4 +1,0 @@
-id,name,company_id/id,resource_calendar_id/id,time_efficiency,default_capacity,oee_target
-workcenter_1,WC1,marin_data.company_lmmg,marin_data.resource_calendar_std_45_lmmg,100.0,1.0,90.0
-workcenter_2,WC1,marin_data.company_lmmr,marin_data.resource_calendar_std_45_lmmr,100.0,1.0,90.0
-workcenter_3,WC1,marin_data.company_society,marin_data.resource_calendar_std_45_xm,100.0,1.0,90.0
