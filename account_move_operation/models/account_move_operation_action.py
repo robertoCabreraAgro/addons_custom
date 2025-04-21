@@ -21,10 +21,6 @@ class AccountMoveOperationActions(models.Model):
         ondelete="cascade",
         index=True,
     )
-    type_company_id = fields.Many2one(
-        related="operation_type_id.company_id",
-        string="Route Company",
-    )
     name = fields.Char(required=True, translate=True)
     active = fields.Boolean(
         default=True, help="If unchecked, it will allow you to hide the action without removing it."
@@ -34,7 +30,7 @@ class AccountMoveOperationActions(models.Model):
         "res.company",
         "Company",
         default=lambda self: self.env.company,
-        domain="[('id', '=?', type_company_id)]"
+        # domain="[('id', '=?', type_company_id)]"
     )
     action = fields.Selection(
         selection=[
@@ -50,12 +46,6 @@ class AccountMoveOperationActions(models.Model):
     template_id = fields.Many2one(
         "account.move.template",
         string="Move Template",
-    )
-    journal_id = fields.Many2one(
-        "account.journal",
-        string="Journal",
-        domain=[("type", "in", ["bank", "cash"])],
-        help="Set to have as default journal for payment.",
     )
     operation_type_ids = fields.Many2many("account.move.operation.type")
     date_last_document = fields.Boolean(

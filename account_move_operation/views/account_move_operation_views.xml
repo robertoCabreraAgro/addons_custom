@@ -195,10 +195,12 @@
         <field name="view_mode">list,form</field>
         <field name="domain">[('company_id', 'in', allowed_company_ids)]</field>
     </record>
+
     <menuitem
         id="account_move_operation_menu"
-        action="account_move_operation_action"
         parent="account.menu_finance_entries_actions"
+        action="account_move_operation_action"
         sequence="10"
     />
+
 </odoo>

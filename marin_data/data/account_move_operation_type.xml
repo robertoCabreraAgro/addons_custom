@@ -43,7 +43,6 @@
 
     <record id="account_move_operation_type_09" model="account.move.operation.type">
         <field name="name">Own cash to multi company bank</field>
-        <field name="company_id" ref="marin_data.company_lmmg" />
         <field name="sequence" eval="10" />
     </record>
 

@@ -12,6 +12,7 @@
     "data": [
         # Security
         "security/ir.model.access.csv",
+        "security/ir_rule.xml",
 
         # # Views
         # "views/account_move_operation_views.xml",
