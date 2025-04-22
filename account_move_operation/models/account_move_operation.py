@@ -111,18 +111,18 @@ class AccountMoveOperation(models.Model):
         self._create_lines()
         self.state = "in_progress"
 
-    def action_done(self):
-        self.ensure_one()
-        if self.state != "in_progress":
-            return
-        self.state = "done"
-
     def action_cancel(self):
         self.ensure_one()
         if self.state in ["done", "cancel"]:
             return
         self.state = "cancel"
         self.line_ids.action_cancel()
+
+    def action_done(self):
+        self.ensure_one()
+        if self.state != "in_progress":
+            return
+        self.state = "done"
 
     def action_next_step(self):
         self.ensure_one()
@@ -171,7 +171,7 @@ class AccountMoveOperation(models.Model):
                         operation.company_id.name,
                     )
                 )
-            return in_progress_line.action_open_document()
+            return in_progress_line.action_view_document()
         nxt_line = self.line_ids.filtered(lambda line: line.state == "ready")
         if not nxt_line:
             raise UserError(_("There is no available action to execute."))
@@ -233,12 +233,12 @@ class AccountMoveOperationLine(models.Model):
         required=True,
         index=True,
     )
+    action_id = fields.Many2one("account.move.operation.action", readonly=True)
     template_id = fields.Many2one("account.move.template", "Move Template", readonly=True)
     journal_id = fields.Many2one("account.journal", "Journal", readonly=True)
     move_id = fields.Many2one("account.move", readonly=True)
     payment_id = fields.Many2one("account.payment", readonly=True)
     st_line_id = fields.Many2one("account.bank.statement.line", readonly=True)
-    action_id = fields.Many2one("account.move.operation.action", readonly=True)
     created_operation_id = fields.Many2one("account.move.operation", readonly=True)
     date_last_document = fields.Boolean(
         readonly=True,
@@ -269,27 +269,6 @@ class AccountMoveOperationLine(models.Model):
         for record in self.sudo():
             record.dest_line_id.orig_line_id = record
 
-    def _get_action(self):
-        self.ensure_one()
-        action = self._get_action_diff_partner()
-        if action:
-            return action
-        method_name = "_get_action_%s" % self.action
-        get_action_method = getattr(self, method_name)
-        return get_action_method()
-
-    def action_done(self):
-        self.state = "done"
-        if self.dest_line_id and self.dest_line_id.state == "waiting":
-            self.dest_line_id.state = "ready"
-        else:
-            self.operation_id.action_done()
-        if self.dest_line_id and self.dest_line_id.state == "in_progress":
-            self.sudo().dest_line_id.action_done()
-
-    def action_in_progress(self):
-        self.write({"state": "in_progress"})
-
     def action_cancel(self):
         lines = self.filtered(lambda line: line.state not in ["done", "cancel"])
         lines.write({"state": "cancel"})
@@ -305,49 +284,122 @@ class AccountMoveOperationLine(models.Model):
                 dest_line = line.dest_line_id.sudo().with_company(line.dest_line_id.operation_id.company_id)
                 dest_line.operation_id.action_cancel()
 
+    def action_done(self):
+        self.state = "done"
+        if self.dest_line_id and self.dest_line_id.state == "waiting":
+            self.dest_line_id.state = "ready"
+        else:
+            self.operation_id.action_done()
+        if self.dest_line_id and self.dest_line_id.state == "in_progress":
+            self.sudo().dest_line_id.action_done()
+
+    def action_in_progress(self):
+        self.write({"state": "in_progress"})
+
+    def action_view_document(self):
+        method_name = "action_view_document_%s" % self.action
+        open_document_method = getattr(self, method_name)
+        return open_document_method()
+
+    def action_view_document_info(self):
+        return self.operation_id.action_open_bank_statement_line()
+
+    def action_view_document_move(self):
+        if not self.move_id:
+            return False
+
+        action = self.env["ir.actions.actions"]._for_xml_id("account.action_move_journal_line")
+        action.update(
+            {
+                "name": _("Entry from template %s", self.template_id.name),
+                "views": False,
+                "view_id": False,
+                "view_mode": "form",
+                "context": self.env.context,
+                "res_id": self.move_id.id,
+            }
+        )
+        return action
+
+    def action_view_document_operation(self):
+        if not self.created_operation_id:
+            return False
+
+        if self.created_operation_id.company_id != self.env.company:
+            raise UserError(
+                _(
+                    "You are trying to access to operation %s which is from a different company %s",
+                    self.created_operation_id.name,
+                    self.created_operation_id.company_id.name,
+                )
+            )
+
+        action = {
+            "name": _("Accounting Operation"),
+            "type": "ir.actions.act_window",
+            "res_model": "account.move.operation",
+            "context": {"create": False},
+            "view_mode": "form",
+            "res_id": self.created_operation_id.id,
+        }
+        return action
+
+    def action_view_document_pay(self):
+        if not self.payment_id:
+            return False
+
+        action = {
+            "name": _("Payments"),
+            "type": "ir.actions.act_window",
+            "res_model": "account.payment",
+            "context": {"create": False},
+            "view_mode": "form",
+            "res_id": self.payment_id.id,
+        }
+        return action
+
+    def action_view_document_reconcile(self):
+        if not self.st_line_id:
+            return False
+
+        action = {
+            "name": _("Bank Statement Line"),
+            "type": "ir.actions.act_window",
+            "res_model": "account.bank.statement.line",
+            "context": {"create": False},
+            "view_mode": "form",
+            "res_id": self.st_line_id.id,
+        }
+        return action
+
+    def _get_action(self):
+        self.ensure_one()
+        action = self._get_action_diff_partner()
+        if action:
+            return action
+
+        method_name = "_get_action_%s" % self.action
+        get_action_method = getattr(self, method_name)
+        return get_action_method()
+
+    def _get_action_diff_partner(self):
+        if self.diff_partner and not self._context.get("default_partner_id"):
+            action = self.env["ir.actions.actions"]._for_xml_id(
+                "account_move_operation.account_move_operation_partner_action"
+            )
+            action = self._update_action_context(action)
+            return action
+
+        return False
+
+    def _get_action_info(self):
+        return self.action_done()
+
     def _get_action_move(self):
         ctx = self._context.copy()
         if self.action_id.auto and self.operation_id.amount:
             ctx.update({"amount": self.operation_id.amount})
         action = self.template_id.with_context(**ctx).generate_journal_entry()
-        action = self._update_action_context(action)
-        return action
-
-    def _get_action_pay(self):
-        if self.action_id.auto:
-            move = self.orig_line_id._get_latest_move()
-            if not move:
-                raise UserError(_("Missing invoice to pay"))
-            wiz = self.env["account.move.operation.payment"].create(
-                {
-                    "move_id": move.id,
-                    "line_id": self.id,
-                }
-            )
-            return wiz.action_open_register_payment()
-        action = self.env["ir.actions.actions"]._for_xml_id(
-            "account_move_operation.account_move_operation_payment_action"
-        )
-        action = self._update_action_context(action)
-        return action
-
-    def _get_action_reconcile(self):
-        if self.action_id.auto:
-            move = self._get_latest_move()
-            if not move:
-                raise UserError(_("Missing invoice to reconcile"))
-            wiz = self.env["account.move.operation.reconcile"].create(
-                {
-                    "partner_id": self.operation_id.partner_id.id,
-                    "move_id": move.id,
-                    "line_id": self.id,
-                    "st_line_id": self.operation_id.st_line_id.id,
-                }
-            )
-            return wiz.action_open_reconcile()
-        action = self.env["ir.actions.actions"]._for_xml_id(
-            "account_move_operation.account_move_operation_reconcile_action"
-        )
         action = self._update_action_context(action)
         return action
 
@@ -361,23 +413,54 @@ class AccountMoveOperationLine(models.Model):
                 }
             )
             return wiz.action_create_operation()
+
         action = self.env["ir.actions.actions"]._for_xml_id(
             "account_move_operation.account_move_operation_operation_action"
         )
         action = self._update_action_context(action)
         return action
 
-    def _get_action_diff_partner(self):
-        if self.diff_partner and not self._context.get("default_partner_id"):
-            action = self.env["ir.actions.actions"]._for_xml_id(
-                "account_move_operation.account_move_operation_partner_action"
-            )
-            action = self._update_action_context(action)
-            return action
-        return False
+    def _get_action_pay(self):
+        if self.action_id.auto:
+            move = self.orig_line_id._get_latest_move()
+            if not move:
+                raise UserError(_("Missing invoice to pay"))
 
-    def _get_action_info(self):
-        return self.action_done()
+            wiz = self.env["account.move.operation.payment"].create(
+                {
+                    "move_id": move.id,
+                    "line_id": self.id,
+                }
+            )
+            return wiz.action_open_register_payment()
+
+        action = self.env["ir.actions.actions"]._for_xml_id(
+            "account_move_operation.account_move_operation_payment_action"
+        )
+        action = self._update_action_context(action)
+        return action
+
+    def _get_action_reconcile(self):
+        if self.action_id.auto:
+            move = self._get_latest_move()
+            if not move:
+                raise UserError(_("Missing invoice to reconcile"))
+
+            wiz = self.env["account.move.operation.reconcile"].create(
+                {
+                    "partner_id": self.operation_id.partner_id.id,
+                    "move_id": move.id,
+                    "line_id": self.id,
+                    "st_line_id": self.operation_id.st_line_id.id,
+                }
+            )
+            return wiz.action_open_reconcile()
+
+        action = self.env["ir.actions.actions"]._for_xml_id(
+            "account_move_operation.account_move_operation_reconcile_action"
+        )
+        action = self._update_action_context(action)
+        return action
 
     def _update_action_context(self, action):
         context = self._context.copy()
@@ -397,88 +480,22 @@ class AccountMoveOperationLine(models.Model):
     def _get_latest_move(self):
         if self.move_id:
             return self.move_id
+
         if self.orig_line_id:
             return self.orig_line_id._get_latest_move()
+
         return False
 
     def _get_latest_document_date(self):
         doc = self.st_line_id or self.move_id or self.payment_id
         if doc:
             return doc.date or doc.invoice_date
+
         orig = self.orig_line_id
         if orig:
             if self.operation_id.company_id != orig.operation_id.company_id:
                 return orig.sudo().with_company(orig.operation_id.company_id)._get_latest_document_date()
+
             return orig._get_latest_document_date()
+
         return False
-
-    def action_open_document(self):
-        method_name = "action_open_document_%s" % self.action
-        open_document_method = getattr(self, method_name)
-        return open_document_method()
-
-    def action_open_document_move(self):
-        if not self.move_id:
-            return False
-        action = self.env["ir.actions.actions"]._for_xml_id("account.action_move_journal_line")
-        action.update(
-            {
-                "name": _("Entry from template %s", self.template_id.name),
-                "res_id": self.move_id.id,
-                "views": False,
-                "view_id": False,
-                "view_mode": "form",
-                "context": self.env.context,
-            }
-        )
-        return action
-
-    def action_open_document_pay(self):
-        if not self.payment_id:
-            return False
-        action = {
-            "name": _("Payments"),
-            "type": "ir.actions.act_window",
-            "res_model": "account.payment",
-            "context": {"create": False},
-            "view_mode": "form",
-            "res_id": self.payment_id.id,
-        }
-        return action
-
-    def action_open_document_reconcile(self):
-        if not self.st_line_id:
-            return False
-        action = {
-            "name": _("Bank Statement Line"),
-            "type": "ir.actions.act_window",
-            "res_model": "account.bank.statement.line",
-            "context": {"create": False},
-            "view_mode": "form",
-            "res_id": self.st_line_id.id,
-        }
-        return action
-
-    def action_open_document_operation(self):
-        if not self.created_operation_id:
-            return False
-        if self.created_operation_id.company_id != self.env.company:
-            raise UserError(
-                _(
-                    "You are trying to access to operation %s which is from a different company %s",
-                    self.created_operation_id.name,
-                    self.created_operation_id.company_id.name,
-                )
-            )
-        action = {
-            "name": _("Accounting Operation"),
-            "type": "ir.actions.act_window",
-            "res_model": "account.move.operation",
-            "context": {"create": False},
-            "view_mode": "form",
-            "res_id": self.created_operation_id.id,
-        }
-        return action
-
-    def action_open_document_info(self):
-        return self.operation_id.action_open_bank_statement_line()

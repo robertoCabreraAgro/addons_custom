@@ -446,7 +446,7 @@ class AccountMoveOperationLine(models.Model):
         open_document_method = getattr(self, method_name)
         return open_document_method()
 
-    def action_open_document_move(self):
+    def action_view_document_move(self):
         if not self.move_id:
             return False
         action = self.env["ir.actions.actions"]._for_xml_id(
@@ -455,16 +455,16 @@ class AccountMoveOperationLine(models.Model):
         action.update(
             {
                 "name": _("Entry from template %s", self.template_id.name),
-                "res_id": self.move_id.id,
                 "views": False,
                 "view_id": False,
                 "view_mode": "form",
                 "context": self.env.context,
+                "res_id": self.move_id.id,
             }
         )
         return action
 
-    def action_open_document_pay(self):
+    def action_view_document_pay(self):
         if not self.payment_id:
             return False
         action = {
@@ -477,7 +477,7 @@ class AccountMoveOperationLine(models.Model):
         }
         return action
 
-    def action_open_document_reconcile(self):
+    def action_view_document_reconcile(self):
         if not self.st_line_id:
             return False
         action = {
@@ -490,7 +490,7 @@ class AccountMoveOperationLine(models.Model):
         }
         return action
 
-    def action_open_document_operation(self):
+    def action_view_document_operation(self):
         if not self.created_operation_id:
             return False
         if self.created_operation_id.company_id != self.env.company:
@@ -511,5 +511,5 @@ class AccountMoveOperationLine(models.Model):
         }
         return action
 
-    def action_open_document_info(self):
+    def action_view_document_info(self):
         return self.operation_id.action_open_bank_statement_line()

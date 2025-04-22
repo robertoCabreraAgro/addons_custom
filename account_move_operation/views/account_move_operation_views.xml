@@ -20,7 +20,7 @@
                 <field name="created_operation_id" invisible="1" />
                 <field name="state" widget="badge" />
                 <button
-                    name="action_open_document"
+                    name="action_view_document"
                     type="object"
                     class="oe_stat_button"
                     icon="fa-file-text-o"
