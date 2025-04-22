@@ -10,8 +10,8 @@
                 <button
                     name="button_operation"
                     string="Operation"
-                    class="btn btn-secondary"
                     type="object"
+                    class="btn btn-secondary"
                     accesskey="o"
                 />
             </xpath>

@@ -1,8 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_account_move_template_user,Full access on account.move.template to accountant grp,model_account_move_template,account.group_account_user,1,1,1,1
-access_account_move_template_line_user,Full access on account.move.template.line to accountant grp,model_account_move_template_line,account.group_account_user,1,1,1,1
-access_account_invoice_template_run_user,Full access on account.invoice.template.run to accountant grp,model_account_invoice_template_run,account.group_account_user,1,1,1,1
-access_account_invoice_template_line_run_user,Full access on account.invoice.template.line.run to accountant grp,model_account_invoice_template_line_run,account.group_account_user,1,1,1,1
 access_account_move_operation_user,Full access on account.move.opeation to accountant grp,model_account_move_operation,account.group_account_user,1,1,1,1
 access_account_move_operation_line_user,Full access on account.move.operation.line to accountant grp,model_account_move_operation_line,account.group_account_user,1,1,1,1
 access_account_move_operation_type_user,Full access on account.move.operation.type to accountant grp,model_account_move_operation_type,account.group_account_user,1,1,1,1

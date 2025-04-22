@@ -10,44 +10,44 @@ class AccountMoveOperation(models.Model):
     _check_company_auto = True
 
     company_id = fields.Many2one(
-        "res.company",
+        comodel_name="res.company",
         string="Company",
         default=lambda self: self.env.company,
+        readonly=True,
         index=True,
         help="Leave this field empty if this route is shared between all companies",
-        readonly=True,
     )
     currency_id = fields.Many2one(
-        "res.currency",
-        "Currency",
+        comodel_name="res.currency",
+        string="Currency",
         required=True,
         default=lambda self: self.env.company.currency_id.id,
     )
     partner_id = fields.Many2one(
-        "res.partner",
-        "Partner",
+        comodel_name="res.partner",
+        string="Partner",
         domain=["|", ("parent_id", "=", False), ("is_company", "=", True)],
     )
     operation_type_id = fields.Many2one(
-        "account.move.operation.type",
+        comodel_name="account.move.operation.type",
         string="Type",
         required=True,
-        index=True,
         domain="[('company_id', '=', company_id), ('sub_operation', '=', False)]",
+        index=True,
     )
     st_line_id = fields.Many2one(
-        "account.bank.statement.line",
+        comodel_name="account.bank.statement.line",
         string="Bank Statement Line",
         domain=["|", ("partner_id", "=", partner_id), ("partner_id", "=", False)],
     )
     name = fields.Char(
         string="Operation",
         required=True,
-        copy=False,
-        readonly=True,
-        index="trigram",
         default=lambda self: _("New"),
+        readonly=True,
+        copy=False,
         tracking=True,
+        index="trigram",
     )
     state = fields.Selection(
         selection=[
@@ -190,7 +190,7 @@ class AccountMoveOperationLine(models.Model):
     _description = "Account Move Operation Lines"
 
     operation_id = fields.Many2one(
-        "account.move.operation",
+        comodel_name="account.move.operation",
         required=True,
         readonly=True,
     )
@@ -209,14 +209,14 @@ class AccountMoveOperationLine(models.Model):
         readonly=True,
     )
     orig_line_id = fields.Many2one(
-        "account.move.operation.line",
+        comodel_name="account.move.operation.line",
         readonly=True,
         compute="_compute_orig_line",
         inverse="_inverse_orig_line",
         store=True,
     )
     dest_line_id = fields.Many2one(
-        "account.move.operation.line",
+        comodel_name="account.move.operation.line",
         readonly=True,
         compute="_compute_dest_line",
         inverse="_inverse_dest_line",
@@ -241,14 +241,14 @@ class AccountMoveOperationLine(models.Model):
     action_id = fields.Many2one("account.move.operation.action", readonly=True)
     created_operation_id = fields.Many2one("account.move.operation", readonly=True)
     date_last_document = fields.Boolean(
+        readonly=True,
         help="When creating an invoice, set the date to be the same of the previous document, "
         "being it a payment or invoice.",
-        readonly=True,
     )
     diff_partner = fields.Boolean(
         string="Different Partner",
-        help="Enables use of a different partner than the one set on the operation",
         readonly=True,
+        help="Enables use of a different partner than the one set on the operation",
     )
 
     @api.depends("orig_line_id.dest_line_id")

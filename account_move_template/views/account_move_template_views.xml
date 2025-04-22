@@ -147,7 +147,8 @@
         <field name="view_mode">list,form</field>
     </record>
 
-    <menuitem id="account_move_template_menu"
+    <menuitem
+        id="account_move_template_menu"
         parent="account.account_account_menu"
         action="account_move_template_action"
         sequence="300" />
