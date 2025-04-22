@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="account_move_operation_line_list" model="ir.ui.view">
         <field name="name">account.move.operation.line.list</field>
@@ -69,8 +69,10 @@
                 <field name="operation_type_id" />
                 <field name="partner_id" />
                 <group name="groupby">
-                    <filter name="type_groupby" string="Type" context="{'group_by': 'operation_type_id'}" />
-                    <filter name="partner_groupby" string="Partner" context="{'group_by': 'partner_id'}" />
+                    <filter name="type_groupby" string="Type"
+                        context="{'group_by': 'operation_type_id'}" />
+                    <filter name="partner_groupby" string="Partner"
+                        context="{'group_by': 'partner_id'}" />
                     <filter name="state_groupby" string="State" context="{'group_by': 'state'}" />
                 </group>
             </search>
@@ -144,13 +146,9 @@
                     </div>
                     <group name="main">
                         <group name="main-left">
-                            <field name="company_id" invisible="1" />
-                            <field name="company_id" widget="selection" groups="base.group_multi_company" />
-                            <field
-                                name="operation_type_id"
+                            <field name="operation_type_id"
                                 readonly="state in ['in_progress', 'done', 'cancel']"
-                                options="{'no_open': True, 'no_create': True}"
-                            />
+                                options="{'no_open': True, 'no_create': True}" />
                             <field name="reference" />
                         </group>
                         <group name="main-right">
@@ -161,30 +159,43 @@
                                 required="1"
                             />
                             <field
-                                name="currency_id"
-                                options="{'no_open': True, 'no_create': True}"
-                                force_save="1"
-                                readonly="state != 'draft' or st_line_id"
-                            />
-                            <field
                                 name="st_line_id"
                                 options="{'no_open': True, 'no_create': True}"
                                 required="from_bank_statement"
                                 readonly="state in ['in_progress', 'done', 'cancel']"
                             />
-                            <field name="amount" force_save="1" readonly="state != 'draft' or st_line_id" />
+                            <field name="amount" force_save="1"
+                                readonly="state != 'draft' or st_line_id" />
                             <field name="from_bank_statement" invisible="1" />
                         </group>
                     </group>
-                    <group name="lines">
-                        <field name="line_ids" nolabel="1" colspan="2" />
-                    </group>
-                    <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers" />
-                        <field name="activity_ids" widget="mail_activity" />
-                        <field name="message_ids" widget="mail_thread" />
-                    </div>
+                    <notebook>
+                        <page id="lines_tab"
+                            name="lines_tab"
+                            string="Lines">
+                            <field name="line_ids" nolabel="1" colspan="2" />
+                        </page>
+                        <page id="other_info"
+                            name="other_info"
+                            string="Other Info">
+                            <group>
+                                <group>
+
+                                </group>
+                                <group>
+                                    <field name="currency_id"
+                                        force_save="1"
+                                        readonly="state != 'draft' or st_line_id"
+                                        options="{'no_open': True, 'no_create': True}" />
+                                    <field name="company_id" invisible="1" />
+                                    <field name="company_id" widget="selection"
+                                        groups="base.group_multi_company" />
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
                 </sheet>
+                <chatter />
             </form>
         </field>
     </record>
@@ -197,7 +208,7 @@
 
     <menuitem
         id="account_move_operation_menu"
-        parent="account.account_account_menu"
+        parent="account.menu_finance_entries"
         action="account_move_operation_action"
         sequence="400" />
 
