@@ -7,7 +7,7 @@ class PosOrder(models.Model):
     def action_pos_order_paid(self):
         self.ensure_one()
         res = super().action_pos_order_paid()
-        self.partner_id.write(
+        self.partner_id.sudo().write(
             {
                 "customer_last_order_date": fields.Datetime.now(),
                 "customer_last_order_ref": self.name,
