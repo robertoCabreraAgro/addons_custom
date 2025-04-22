@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
     <record id="account_move_operation_type_search" model="ir.ui.view">
@@ -42,22 +42,53 @@
                             <field name="from_bank_statement" invisible="sub_operation" />
                         </group>
                         <group>
-                            <field name="on_behalf_of_3p"  />
-                            <field name="multicompany"  />
+                            <field name="diff_partner" />
+                            <field name="multicompany" />
                         </group>
                     </group>
                     <notebook>
                         <page string="Operations">
-                            <field name="action_ids" nolabel="1" colspan="2" />
+                            <field name="action_ids" mode="list,form">
+                                <list editable="bottom" string="Actions"
+                                    default_order="sequence, id">
+                                    <field name="operation_type_id" invisible="1" />
+                                    <field name="company_id" invisible="1" />
+                                    <field name="sequence" widget="handle" />
+                                    <field name="name" />
+                                    <field name="action" />
+                                    <field name="template_id" readonly="action != 'move'" />
+                                </list>
+                                <form>
+                                    <sheet>
+                                        <group>
+                                            <group>
+                                                <field name="name" />
+                                                <field name="action" />
+                                                <field name="display_type" invisible="1" />
+                                            </group>
+                                            <group>
+                                                <field name="template_id" />
+                                                <field name="company_id" invisible="1" />
+                                            </group>
+                                        </group>
+                                    </sheet>
+                                </form>
+                            </field>
                         </page>
                         <page string="Other Information">
-                            <field name="company_id" invisible="1" />
-                            <field
-                                name="company_id"
-                                widget="selection"
-                                readonly="1"
-                                groups="base.group_multi_company"
-                            />
+                            <group>
+                                <group>
+                                </group>
+                                <group>
+                                    <field name="company_id" invisible="1" />
+                                    <field
+                                        name="company_id"
+                                        widget="selection"
+                                        readonly="1"
+                                        groups="base.group_multi_company"
+                                    />
+                                </group>
+                            </group>
                         </page>
                     </notebook>
                 </sheet>

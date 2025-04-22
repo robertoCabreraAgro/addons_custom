@@ -27,7 +27,7 @@ class AccountMoveType(models.Model):
     )
     from_bank_statement = fields.Boolean(help="Enable being set from a bank statement.")
     sub_operation = fields.Boolean(help="This sets the operation to be used as a sub operation.")
-    on_behalf_of_3p = fields.Boolean(
+    diff_partner = fields.Boolean(
         string="On Behalf of 3rd Party",
         help="This indicates an operation started on a partner different than the one on the last operation.",
     )
