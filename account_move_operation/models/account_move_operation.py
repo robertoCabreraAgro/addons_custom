@@ -32,6 +32,11 @@ class AccountMoveOperation(models.Model):
         string="Diff Partner",
         domain=["|", ("parent_id", "=", False), ("is_company", "=", True)],
     )
+    target_company_id = fields.Many2one(
+        comodel_name="res.company",
+        string="Target Company",
+        
+    )
     operation_type_id = fields.Many2one(
         comodel_name="account.move.operation.type",
         string="Type",
@@ -41,6 +46,9 @@ class AccountMoveOperation(models.Model):
     )
     diff_partner = fields.Boolean(
         related="operation_type_id.diff_partner",
+    )
+    multicompany = fields.Boolean(
+        related="operation_type_id.multicompany",
     )
     st_line_id = fields.Many2one(
         comodel_name="account.bank.statement.line",

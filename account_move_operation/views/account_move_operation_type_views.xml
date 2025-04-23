@@ -59,6 +59,8 @@
                                     <field name="template_id" readonly="action != 'move'" />
                                     <field name="diff_partner"
                                         column_invisible="not parent.diff_partner" />
+                                    <field name="multicompany"
+                                        column_invisible="not parent.multicompany" />
                                 </list>
                                 <form>
                                     <sheet>
@@ -71,7 +73,8 @@
                                                 <field name="template_id" />
                                                 <field name="diff_partner"
                                                     invisible="not parent.diff_partner" />
-                                                <field name="company_id" invisible="1" />
+                                                <field name="multicompany" 
+                                                    invisible="not parent.multicompany" />
                                             </group>
                                         </group>
                                     </sheet>

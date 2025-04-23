@@ -109,6 +109,13 @@
                                 invisible="not diff_partner"
                             />
                             <field
+                                name="multicompany"
+                                required="1"
+                                readonly="state in ['in_progress', 'done', 'cancel']"
+                                options="{'no_open': True, 'no_create': True}"
+                                invisible="not multicompany"
+                            />
+                            <field
                                 name="st_line_id"
                                 required="from_bank_statement"
                                 options="{'no_open': True, 'no_create': True}"
