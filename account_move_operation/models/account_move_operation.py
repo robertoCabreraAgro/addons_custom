@@ -183,6 +183,7 @@ class AccountMoveOperation(models.Model):
             "date_last_document": rule.date_last_document,
             "diff_partner": rule.diff_partner,
             "action_id": rule.id,
+            "multicompany": rule.multicompany,
         }
         return vals
 

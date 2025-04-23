@@ -53,7 +53,7 @@ class AccountMoveTemplateRun(models.TransientModel):
         default=False,
     )
     balance = fields.Float(
-        string="Unit Price",
+        string="Balance",
         digits="Product Price",
         default=False,
     )
@@ -63,6 +63,32 @@ class AccountMoveTemplateRun(models.TransientModel):
         inverse_name="wizard_id",
         string="Lines",
     )
+    is_payment = fields.Boolean(
+        related="template_id.is_payment",
+        readonly=True,
+    )
+    payment_type = fields.Selection(
+        related="template_id.payment_type",
+        readonly=True,
+    )
+    partner_type = fields.Selection(
+        related="template_id.partner_type",
+        readonly=True,
+    )
+    payment_method_line_id = fields.Many2one(
+        related="template_id.payment_method_line_id",
+        readonly=True,
+    )
+    currency_id = fields.Many2one(
+        related="template_id.currency_id",
+        readonly=True,
+    )
+    payment_amount = fields.Monetary(
+        string="Payment Amount",
+        currency_field="currency_id",
+        help="Amount to pay",
+    )
+
 
     @api.onchange("template_id")
     def _onchange_template_id(self):
@@ -83,8 +109,54 @@ class AccountMoveTemplateRun(models.TransientModel):
         move = 1
         return move
 
-    def create_move(self):
+    def create_payment(self):
+        """Create a payment instead of a journal entry"""
         self.ensure_one()
+
+        if not self.payment_method_line_id:
+            raise UserError(_("You must select a Payment Method."))
+
+        if not self.payment_amount:
+            raise UserError(_("Payment amount must be greater than zero."))
+
+        journal = self.env["account.journal"].search(
+            [("code", "=", self.template_id.journal_code)], limit=1
+        )
+
+        if not journal:
+            raise UserError(_("No valid journal found for this payment."))
+
+        payment_vals = {
+            'date': self.date,
+            'amount': self.payment_amount,
+            'payment_type': self.payment_type,
+            'partner_type': self.partner_type,
+            'partner_id': self.partner_id.id,
+            'journal_id': journal.id,
+            'payment_method_line_id': self.payment_method_line_id.id,
+            'currency_id': self.currency_id.id,
+        }
+
+        payment = self.env['account.payment'].create(payment_vals)
+        payment.action_post()
+
+        result = self.env["ir.actions.actions"]._for_xml_id(
+            "account.action_account_payments"
+        )
+        result.update({
+            "name": _("Payment from template %s") % self.template_id.name,
+            "res_id": payment.id,
+            "views": [(False, "form")],
+            "view_mode": "form",
+            "context": self.env.context,
+        })
+
+        return result
+
+    def create_move(self):
+        self.ensure_one()        
+        if self.is_payment:
+            return self.create_payment()
         move_vals = self._prepare_move_vals()
         for line in self.line_ids:
             move_vals["line_ids"].append(

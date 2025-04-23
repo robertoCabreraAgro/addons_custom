@@ -58,6 +58,36 @@ class AccountMoveTemplate(models.Model):
         inverse_name="template_id",
         string="Lines",
     )
+    is_payment = fields.Boolean(
+        string="Is Payment",
+        help="If checked, this template will generate a payment instead of a journal entry",
+        default=False,
+    )
+    payment_type = fields.Selection(
+        selection=[('outbound', 'Send Money'), ('inbound', 'Receive Money')],
+        string="Payment Type",
+        help="Determines the flow of the payment (outbound or inbound)",
+    )
+    partner_type = fields.Selection(
+        selection=[('customer', 'Customer'), ('supplier', 'Vendor')],
+        string="Partner Type",
+        help="Determines whether the payment is for a customer or vendor",
+    )
+    payment_method_line_id = fields.Many2one(
+        comodel_name="account.payment.method.line",
+        string="Payment Method",
+        domain="[('payment_type', '=', payment_type)]",
+    )
+    currency_id = fields.Many2one(
+        comodel_name="res.currency",
+        string="Currency",
+        default=lambda self: self.env.company.currency_id,
+    )
+    payment_amount = fields.Monetary(
+        string="Payment Amount",
+        currency_field="currency_id",
+        help="Default payment amount",
+    )
 
     _sql_constraints = [
         (
@@ -66,6 +96,23 @@ class AccountMoveTemplate(models.Model):
             "This name is already used by another template!",
         ),
     ]
+
+    @api.onchange("is_payment")
+    def _onchange_is_payment(self):
+        """Update fields based on operation type"""
+        if self.is_payment:
+            # If we're changing to payment type, calculate a default amount from any existing lines
+            total = 0.0
+            for line in self.line_ids:
+                if hasattr(line, 'balance') and line.balance:
+                    total += line.balance
+            if total != 0.0:
+                self.payment_amount = abs(total)
+                # Set payment type based on the calculated total
+                self.payment_type = 'outbound' if total < 0 else 'inbound'
+                # Set default partner type
+                self.partner_type = 'supplier' if self.payment_type == 'outbound' else 'customer'
+        
 
     def copy(self, default=None):
         """Override to set a different name when copying a template"""
@@ -76,6 +123,18 @@ class AccountMoveTemplate(models.Model):
 
     @api.onchange("journal_id")
     def _onchange_journal_id(self):
+        """Update payment method when journal changes"""
+        if self.journal_id and self.payment_type:
+            # Set the first available payment method for the selected journal
+            payment_methods = self.env['account.payment.method.line'].search([
+                ('journal_id', '=', self.journal_id.id),
+                ('payment_type', '=', self.payment_type)
+            ], limit=1)
+            if payment_methods:
+                self.payment_method_line_id = payment_methods[0].id
+            else:
+                self.payment_method_line_id = False
+
         if not self.journal_id:
             return
 
@@ -90,6 +149,8 @@ class AccountMoveTemplate(models.Model):
                 "template_id": self.id,
                 "partner_id": self.partner_id.id,
                 "date": fields.Date.context_today(self),
+                "ref": self.ref,
+                "payment_amount": self.payment_amount,
             }
         )
         wizard.load_lines()
