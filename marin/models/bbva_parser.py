@@ -277,8 +277,8 @@ class BBVAParser(models.AbstractModel):
                 day_str = values[0].strip()
                 date = self._parse_date(day_str, "%d-%m-%Y")
                 reference = values[1].strip()
-                debit = float(values[2].replace(",", "").strip() or "0")
-                credit = float(values[3].replace(",", "").strip() or "0")
+                debit = abs(float(values[2].replace(",", "").strip() or "0"))
+                credit = abs(float(values[3].replace(",", "").strip() or "0"))
             except (ValueError, IndexError) as e:
                 raise UserError(
                     _("Line %d: Invalid data format - %s")
@@ -373,8 +373,8 @@ class BBVAParser(models.AbstractModel):
                         else self._parse_date(date_value, "%Y-%m-%d")
                     )
                     reference = str(row[1] or "").strip()
-                    credit = float(row[2] or 0)
-                    debit = float(row[3] or 0)
+                    credit = abs(float(row[2] or 0))
+                    debit = abs(float(row[3] or 0))
                 except (ValueError, IndexError) as e:
                     raise UserError(
                         _("Row %d: Invalid data format - %s") % (row_number, str(e))
