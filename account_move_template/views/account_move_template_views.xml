@@ -63,21 +63,13 @@
                                 required="is_payment" />
                             <field name="partner_type" invisible="not is_payment"
                                 required="is_payment" />
-                            <field name="currency_id" invisible="not is_payment"
-                                required="is_payment" />
-                            <field name="payment_amount" invisible="not is_payment"
-                                required="is_payment" />
                         </group>
                         <group name="main-right">
                             <field name="journal_id" />
                             <field name="journal_code" />
                             <field name="move_type" />
-                            <field name="invoice_payment_term_id" 
+                            <field name="invoice_payment_term_id"
                                 invisible="is_payment" />
-                            <field name="payment_method_line_id"
-                                invisible="not is_payment"
-                                required="is_payment"
-                                options="{'no_create': True}" />
                         </group>
                     </group>
                     <notebook>
