@@ -178,7 +178,6 @@ class AccountMoveOperation(models.Model):
             "action": rule.action,
             "state": "waiting",
             "template_id": rule.template_id.id,
-            "journal_id": rule.journal_id.id,
             "operation_id": self.id,
             "date_last_document": rule.date_last_document,
             "diff_partner": rule.diff_partner,

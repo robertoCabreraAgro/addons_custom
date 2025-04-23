@@ -68,6 +68,7 @@ class AccountMoveOperationLine(models.Model):
         readonly=True,
         help="Enables use of a different partner than the one set on the operation",
     )
+    multicompany = fields.Boolean(string="Is Multicompany")
 
     @api.depends("orig_line_id.dest_line_id")
     def _compute_orig_line(self):
