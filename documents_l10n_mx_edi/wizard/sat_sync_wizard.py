@@ -158,10 +158,7 @@ class SatSyncWizard(models.TransientModel):
         return params
 
     def download_cfdi_files(self):
-        document_ids = []
-        for company in self.company_id:
-            params = self.get_params()
-            document_ids.extend(company.download_cfdi_files(esignature=False, **params))
-        action = self.env.ref("documents.document_action").read()[0]
-        action["domain"] = [("id", "in", document_ids)]
+        self.ensure_one()
+        params = self.get_params()
+        action = self.company_id.download_cfdi_files(esignature=False, **params)
         return action

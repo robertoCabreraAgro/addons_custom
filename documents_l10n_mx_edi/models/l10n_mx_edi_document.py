@@ -109,9 +109,9 @@ class L10nMxEdiDocument(models.Model):
         if not namespaces:
             namespaces = {"tfd": "http://www.sat.gob.mx/TimbreFiscalDigital"}
         if not hasattr(cfdi_etree, "Complemento"):
-            return {}
+            return None
         node = cfdi_etree.Complemento.xpath(attribute, namespaces=namespaces)
-        return node[0] if node else {}
+        return node[0] if node else None
 
     def get_import_type(self, cfdi_etree):
         import_type = (
@@ -686,14 +686,10 @@ class L10nMxEdiDocument(models.Model):
         elif import_type == "issued":
             domain.append(("name", "=", self.get_serie_folio(cfdi_etree)))
         partner = self.partner_search_create(cfdi_etree)
+        cfdi_node = self.collect_complemento(cfdi_etree)
+        l10n_mx_edi_cfdi_uuid = cfdi_node.get("UUID").upper() if cfdi_node else None
         domain.append(("commercial_partner_id", "=", partner.id))
-        domain.append(
-            (
-                "l10n_mx_edi_cfdi_uuid",
-                "=",
-                self.collect_complemento(cfdi_etree).get("UUID").upper(),
-            )
-        )
+        domain.append(("l10n_mx_edi_cfdi_uuid", "=", l10n_mx_edi_cfdi_uuid))
         return domain
 
     def check_cfdi_dupli(self, cfdi_etree):
@@ -1237,7 +1233,7 @@ class L10nMxEdiDocument(models.Model):
             namespaces=namespaces,
         )
 
-        if pago_node_20:
+        if pago_node_20 is not None:
             return True
 
         # Try with version 1.0 if 2.0 not found

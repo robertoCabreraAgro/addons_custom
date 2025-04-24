@@ -146,9 +146,13 @@ class ResCompany(models.Model):
                     "request_state": verify_download["estado_solicitud"],
                     "file_count": int(verify_download["numero_cfdis"]),
                     "request_message": verify_download["mensaje"],
+                    "packages": (
+                        verify_download["paquetes"][0]
+                        if verify_download["paquetes"]
+                        else ""
+                    ),
                 }
             )
-
             if int(ses.request_state) <= 2:
                 time.sleep(20)
                 continue
