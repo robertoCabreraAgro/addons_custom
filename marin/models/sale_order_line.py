@@ -69,24 +69,27 @@ class SaleOrderLine(models.Model):
          receive. This is also the default value if the conditions of no other status is met.
         -to do: we refer to the quantity to receive of the line.
         -partially: the quantity received is lesser than the quantity ordered.
-        -done: the quantity received is equal to the quantity ordered.
-        """
+        -done: the quantity received is equal to the quantity ordered."""
         precision = self.env["decimal.precision"].precision_get("Product Unit")
         for line in self.filtered(lambda l: not l.display_type):
-            if line.state != "sale" or float_is_zero(
-                line.product_uom_qty, precision_digits=precision
-            ):
+            if line.state != "sale":
                 line.transfer_state = "no"
                 continue
 
             if not float_is_zero(line.qty_to_transfer, precision_digits=precision):
                 if float_is_zero(line.qty_transfered, precision_digits=precision):
                     line.transfer_state = "to do"
-                elif not float_is_zero(line.qty_transfered, precision_digits=precision):
+                else:
                     line.transfer_state = "partially"
             elif float_is_zero(line.qty_to_transfer, precision_digits=precision):
+                if float_is_zero(line.product_uom_qty, precision_digits=precision):
+                    line.transfer_state = "done"
+                    continue
+
                 compare = float_compare(
-                    line.qty_transfered, line.product_uom_qty, precision_digits=precision
+                    line.qty_transfered,
+                    line.product_uom_qty,
+                    precision_digits=precision,
                 )
                 if compare == 0:
                     line.transfer_state = "done"
