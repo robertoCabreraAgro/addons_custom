@@ -35,7 +35,6 @@ class AccountMoveOperation(models.Model):
     target_company_id = fields.Many2one(
         comodel_name="res.company",
         string="Target Company",
-        
     )
     operation_type_id = fields.Many2one(
         comodel_name="account.move.operation.type",
@@ -49,6 +48,14 @@ class AccountMoveOperation(models.Model):
     )
     multicompany = fields.Boolean(
         related="operation_type_id.multicompany",
+    )
+    multicompany_id = fields.Many2one(
+        comodel_name="res.company",
+        string="Company",
+        default=lambda self: self.env.company,
+        readonly=True,
+        index=True,
+        help="Leave this field empty if this route is shared between all companies",
     )
     st_line_id = fields.Many2one(
         comodel_name="account.bank.statement.line",

@@ -75,6 +75,17 @@ class AccountMoveTemplateRun(models.TransientModel):
         related="template_id.partner_type",
         readonly=True,
     )
+    diff_partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Different Partner",
+        help="Optional partner different from the operation's main partner.",
+    )
+    multicompany_id = fields.Many2one(
+        comodel_name="res.company",
+        string="Multicompany Target",
+        help="Target company to use when creating the journal entry, if different.",
+    )
+    amount = fields.Float(string="Amount")
 
     @api.onchange("template_id")
     def _onchange_template_id(self):
@@ -110,60 +121,31 @@ class AccountMoveTemplateRun(models.TransientModel):
             "date": self.date,
             "payment_type": self.payment_type,
             "partner_type": self.partner_type,
-            "partner_id": self.partner_id.id,
+            "partner_id": (self.diff_partner_id or self.partner_id).id,
             "journal_id": journal.id,
+            "amount": self.amount or 0.0,
         }
 
         payment = self.env["account.payment"].create(payment_vals)
         payment.action_post()
 
-        result = self.env["ir.actions.actions"]._for_xml_id(
-            "account.action_account_payments"
-        )
-        result.update(
-            {
-                "name": _("Payment from template %s") % self.template_id.name,
-                "res_id": payment.id,
-                "views": [(False, "form")],
-                "view_mode": "form",
-                "context": self.env.context,
-            }
-        )
-
-        return result
+        return payment
 
     def create_move(self):
         self.ensure_one()
         if self.is_payment:
             return self.create_payment()
-        move_vals = self._prepare_move_vals()
+        company = self.multicompany_id or self.env.company
+        move_env = self.env["account.move"].with_company(company)
+        move_vals = self._prepare_move_vals(company)
         for line in self.line_ids:
             move_vals["line_ids"].append(
                 Command.create(self._prepare_move_line_vals(line))
             )
-
-        move = (
-            self.env["account.move"]
-            .with_context(default_move_type=self.move_type)
-            .create(move_vals)
-        )
+        move = move_env.with_context(default_move_type=self.move_type).create(move_vals)
         for line in move.invoice_line_ids:
             line._compute_tax_ids()
-
-        result = self.env["ir.actions.actions"]._for_xml_id(
-            "account.action_move_journal_line"
-        )
-        result.update(
-            {
-                "name": _("Entry from template %s") % self.template_id.name,
-                "res_id": move.id,
-                "views": False,
-                "view_id": False,
-                "view_mode": "form,list",
-                "context": self.env.context,
-            }
-        )
-        return result
+        return move
 
     def _prepare_move_line_vals(self, line):
         vals = {
@@ -182,21 +164,30 @@ class AccountMoveTemplateRun(models.TransientModel):
 
         return vals
 
-    def _prepare_move_vals(self):
-        journal = self.env["account.journal"].search(
-            [("code", "=", self.template_id.journal_code)], limit=1
+    def _prepare_move_vals(self, company):
+        journal = (
+            self.env["account.journal"]
+            .with_company(company)
+            .search([("code", "=", self.template_id.journal_code)], limit=1)
         )
-        vals = {
+
+        if not journal:
+            raise UserError(
+                _(
+                    "No valid journal found for this journal code in the selected company."
+                )
+            )
+
+        return {
             "journal_id": journal.id,
             "move_type": self.template_id.move_type,
-            "partner_id": self.partner_id.id or False,
+            "partner_id": (self.diff_partner_id or self.partner_id).id or False,
             "invoice_payment_term_id": self.template_id.invoice_payment_term_id.id
             or False,
             "date": self.date,
             "ref": self.ref,
             "line_ids": [],
         }
-        return vals
 
     def _prepare_wizard_line(self, tmpl_line):
         account_id = self.env["account.account"].search(

@@ -109,7 +109,7 @@
                                 invisible="not diff_partner"
                             />
                             <field
-                                name="multicompany"
+                                name="multicompany_id"
                                 required="1"
                                 readonly="state in ['in_progress', 'done', 'cancel']"
                                 options="{'no_open': True, 'no_create': True}"
