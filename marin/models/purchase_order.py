@@ -107,28 +107,31 @@ class PurchaseOrder(models.Model):
     def _compute_transfer_state(self):
         confirmed_orders = self.filtered(lambda o: o.state == "purchase")
         (self - confirmed_orders).transfer_state = "no"
+
         if not confirmed_orders:
             return
 
         lines_domain = [
+            ("is_downpayment", "=", False),
             ("display_type", "=", False),
             ("order_id", "in", confirmed_orders.ids),
         ]
-        line_invoice_state_all = [
-            (order.id, invoice_status)
-            for order, invoice_status in self.env["purchase.order.line"]._read_group(
-                lines_domain,
-                ["order_id", "transfer_state"],
-            )
-        ]
+        line_transfer_state_all = {}
+        for order, transfer_state in self.env["purchase.order.line"]._read_group(
+            lines_domain,
+            ["order_id", "transfer_state"],
+        ):
+            if not order in line_transfer_state_all:
+                line_transfer_state_all[order] = set()
+            line_transfer_state_all[order].add(transfer_state)
         for order in confirmed_orders:
-            states = [d[1] for d in line_invoice_state_all if d[0] == order.id]
+            states = line_transfer_state_all[order]
             if not order.picking_ids or all(state == "to do" for state in states):
                 order.transfer_state = "to do"
-            elif all(state == "done" for state in states):
-                order.transfer_state = "done"
             elif any(state == "over done" for state in states):
                 order.transfer_state = "over done"
+            elif all(state == "done" for state in states):
+                order.transfer_state = "done"
             elif any(state == "partially" for state in states) or (
                 not any(state == "partially" for state in states)
                 and any(state in ("to do", "done") for state in states)
@@ -142,6 +145,7 @@ class PurchaseOrder(models.Model):
     def _compute_invoice_state(self):
         confirmed_orders = self.filtered(lambda o: o.state == "purchase")
         (self - confirmed_orders).invoice_state = "no"
+        
         if not confirmed_orders:
             return
 
@@ -150,21 +154,22 @@ class PurchaseOrder(models.Model):
             ("display_type", "=", False),
             ("order_id", "in", confirmed_orders.ids),
         ]
-        line_invoice_state_all = [
-            (order.id, invoice_status)
-            for order, invoice_status in self.env["purchase.order.line"]._read_group(
-                lines_domain,
-                ["order_id", "invoice_state"],
-            )
-        ]
+        line_invoice_state_all = {}
+        for order, invoice_state in self.env["purchase.order.line"]._read_group(
+            lines_domain,
+            ["order_id", "invoice_state"],
+        ):
+            if not order in line_invoice_state_all:
+                line_invoice_state_all[order] = set()
+            line_invoice_state_all[order].add(invoice_state)
         for order in confirmed_orders:
-            states = [d[1] for d in line_invoice_state_all if d[0] == order.id]
+            states = line_invoice_state_all[order]
             if not order.invoice_ids or all(state == "to do" for state in states):
                 order.invoice_state = "to do"
-            elif all(state == "done" for state in states):
-                order.invoice_state = "done"
             elif any(state == "over done" for state in states):
                 order.invoice_state = "over done"
+            elif all(state == "done" for state in states):
+                order.invoice_state = "done"
             elif any(state == "partially" for state in states) or (
                 not any(state == "partially" for state in states)
                 and any(state in ("to do", "done") for state in states)

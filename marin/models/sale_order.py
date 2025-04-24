@@ -96,7 +96,7 @@ class SaleOrder(models.Model):
                 )
 
     # Override original method
-    @api.depends("state", "picking_ids", "order_line_ids.transfer_state")
+    @api.depends("state", "order_line_ids.transfer_state", "picking_ids")
     def _compute_transfer_state(self):
         confirmed_orders = self.filtered(lambda o: o.state == "sale")
         (self - confirmed_orders).transfer_state = "no"
