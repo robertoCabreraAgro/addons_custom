@@ -65,7 +65,6 @@
             <xpath expr="//page[@name='sales_purchases']//field[@name='user_id']" position="after">
                 <field name="team_id" readonly="not user_sale_manager" />
                 <field name="social_style_color" readonly="not user_sale_manager" />
-                <field name="collateral_tolerance" />
             </xpath>
             <xpath expr="//page[@name='sales_purchases']//group[@name='purchase']" position="attributes">
                 <attribute name="groups">marin.group_purchase_readonly</attribute>
@@ -126,9 +125,6 @@
                 <attribute name="invisible">not use_partner_credit_limit</attribute>
                 <attribute name="readonly">not user_debt_manager</attribute>
                 <attribute name="required">use_partner_credit_limit</attribute>
-            </xpath>
-            <xpath expr="//group[@name='credit_limits']/div" position="after">
-                <field name="credit_on_hold" />
             </xpath>
         </field>
     </record>

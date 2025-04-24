@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Document Tags Definition -->
+    <record id="doc_tag_id_document" model="documents.tag">
+        <field name="name">ID Document</field>
+    </record>
+
+    <record id="doc_tag_contract" model="documents.tag">
+        <field name="name">Contract</field>
+    </record>
+
+    <record id="doc_tag_promissory_note" model="documents.tag">
+        <field name="name">Promissory Note</field>
+    </record>
+
+    <record id="doc_tag_warranty" model="documents.tag">
+        <field name="name">Warranty</field>
+    </record>
+</odoo>

@@ -261,41 +261,48 @@ class AccountMove(models.Model):
                     )
                 )
 
-    def _pre_post_invoice_credit_limit_validation(self):
-        for invoice in self.filtered(
-            lambda i: i.move_type == "out_invoice"
-            and i.partner_credit_warning
-            and not i.invoice_payment_term_id.is_immediate
-        ):
-            if invoice.commercial_partner_id.credit_on_hold:
-                raise UserError(
-                    _(
-                        "The Partner's %s credit line has been held. Contact the Credit Manager.",
-                        invoice.commercial_partner_id.name,
-                    )
-                )
+    def _authorize_credit_limit(self):
+        """Validate invoice against credit limits with consistent authorization logic.
 
-            if not self.env.user.has_group("marin.group_account_debt_manager"):
-                raise UserError(
-                    _(
-                        "The Partner %s does not have enough credit line. Contact the Credit Manager.",
-                        invoice.commercial_partner_id.name,
-                    )
-                )
+        Returns:
+            bool|dict: True if authorized, debt wizard action if requires approval
+        Raises:
+            UserError: If credit is on hold or user lacks permissions
+        """
 
-            authorized = self._context.get("debt_authorized")
-            if authorized or self.env["ir.config_parameter"].sudo().get_param(
-                "marin.avoid_authorize_debt"
-            ):
-                return True
+        # User permissions
+        user_authorized = self._context.get("debt_authorized") or (
+            self.env.user.has_group(
+                "partner_credit_checks.allow_to_validate_credit_checks"
+            )
+            and self.env.user.has_group("marin.group_account_debt_manager")
+        )
+        if not user_authorized:
+            return True
 
-            return invoice.action_authorize_debt_wizard()
+        # Financial conditions
+        invoices_elegible = self.filtered(
+            lambda i: (
+                i.move_type == "out_invoice"
+                and not i.invoice_payment_term_id.is_immediate
+            )
+        )
+        for invoice in invoices_elegible:
+
+            # Partner conditions
+            partner_eligible = (
+                invoice.partner_id.credit_status != "legal"
+                and invoice.partner_credit_warning
+            )
+
+            if partner_eligible:
+                return self.action_authorize_debt_wizard()
 
         return True
 
     def action_post(self):
         self._pre_post_invoice_edi_amounts_match_validation()
-        res = self._pre_post_invoice_credit_limit_validation()
+        res = self._authorize_credit_limit()
         if res is not True:
             return res
 

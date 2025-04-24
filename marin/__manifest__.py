@@ -97,7 +97,6 @@
         "views/account_journal_views.xml",
         "views/account_move_views.xml",
         "views/account_move_line_views.xml",
-        "views/account_payment_term_views.xml",
         "views/account_payment_views.xml",
         "views/documents_document_views.xml",
         "views/fleet_vehicle_views.xml",

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem 
+        id="menu_partner_dossier" 
+        name="Dossier Types"
+        parent="contacts.res_partner_menu_config"
+        action="action_partner_dossier"
+        sequence="2"
+    />
+</odoo>

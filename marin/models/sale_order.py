@@ -161,7 +161,7 @@ class SaleOrder(models.Model):
     # ACTION METHODS
     # --------------------------------------------------
 
-    def action_sale_authorize_debt(self):
+    def action_authorize_debt_wizard(self):
         view = self.env.ref("marin.view_authorize_debt_wizard_form")
         return {
             "name": _("Authorize debt"),
@@ -199,34 +199,38 @@ class SaleOrder(models.Model):
         action["domain"] = [("id", "in", self.order_line_ids.ids)]
         return action
 
-    def validate_credit_limit(self):
-        if self.partner_credit_warning and not self.payment_term_id.is_immediate:
-            if self.commercial_partner_id.credit_on_hold:
-                raise UserError(
-                    _(
-                        "The partner's credit line has been held. Contact the Credit Manager."
-                    )
-                )
+    def _authorize_credit_limit(self):
+        """Authorize credit limit based on partner status and user permissions.
 
-            if not self.env.user.has_group("marin.group_account_debt_manager"):
-                raise UserError(
-                    _(
-                        "The Partner %s does not have an authorized credit line. "
-                        "Contact the Credit Manager.",
-                        self.partner_invoice_id.name,
-                    )
-                )
+        Returns:
+            bool|dict: True if authorized automatically,
+                       debt authorization action if requires approval
+        """
+        # User permissions
+        user_authorized = self.env.user.has_group(
+            "partner_credit_checks.allow_to_validate_credit_checks"
+        ) and self.env.user.has_group("marin.group_account_debt_manager")
+        if not user_authorized:
+            return True
 
-            return self.action_sale_authorize_debt()
+        # Partner conditions
+        partner_eligible = (
+            self.partner_id.credit_status != "legal" and self.partner_credit_warning
+        )
+
+        # Financial conditions
+        payment_eligible = not self.payment_term_id.is_immediate
+
+        if partner_eligible and payment_eligible:
+            return self.action_authorize_debt_wizard()
 
         return True
 
     # Extend original method
     def action_confirm(self):
-        res = self.validate_credit_limit()
+        res = self._authorize_credit_limit()
         if res is not True:
             return res
-
         return super().action_confirm()
 
     def action_clean_3_0(self):

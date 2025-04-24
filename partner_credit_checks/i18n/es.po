@@ -1,0 +1,524 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* partner_credit_checks
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~18.2+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-04-24 14:23+0000\n"
+"PO-Revision-Date: 2025-04-24 14:23+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: partner_credit_checks
+#: model:res.partner.dossier,description:partner_credit_checks.dossier_reliable
+msgid ""
+"\n"
+"        Clients with good payment history and documentation in order, but with certain exposure limits. \n"
+"        Require periodic reviews and standard guarantees. \n"
+"        Ideal for recurring clients with moderate operations.\n"
+"        "
+msgstr ""
+"\n"
+"        Clientes con buen historial de pagos y documentación en regla, pero con ciertos límites de exposición. \n"
+"        Requieren revisiones periódicas y garantías estándar. \n"
+"        Ideales para clientes recurrentes con operaciones moderadas.\n"
+"        "
+
+#. module: partner_credit_checks
+#: model:res.partner.dossier,description:partner_credit_checks.dossier_highly_reliable
+msgid ""
+"\n"
+"        Clients with impeccable credit history, updated documents and no incidents. \n"
+"        Access to the highest credit limits and preferential conditions. \n"
+"        Require minimal collateral and are usually strategic or long-standing partners.\n"
+"        "
+msgstr ""
+"\n"
+"        Clientes con historial crediticio impecable, documentos actualizados y sin incidencias. \n"
+"        Acceso a los límites de crédito más altos y condiciones preferenciales. \n"
+"        Requieren garantías mínimas y suelen ser socios estratégicos o de larga trayectoria.\n"
+"        "
+
+#. module: partner_credit_checks
+#: model:res.partner.dossier,description:partner_credit_checks.dossier_low_reliability
+msgid ""
+"\n"
+"        New customers, with limited history or previous incidences (delinquency, overdue documents). \n"
+"        Restricted credits or advance payments. \n"
+"        Require additional guarantees and frequent validations to mitigate risks.\n"
+"        "
+msgstr ""
+"\n"
+"        Clientes nuevos, con historial limitado o incidencias previas (morosidad, documentos vencidos). \n"
+"        Créditos restringidos o pagos por adelantado. \n"
+"        Requieren garantías adicionales y validaciones frecuentes para mitigar riesgos.\n"
+"        "
+
+#. module: partner_credit_checks
+#: model_terms:ir.ui.view,arch_db:partner_credit_checks.view_partner_form_credit_dossier
+msgid "Abrir"
+msgstr ""
+
+#. module: partner_credit_checks
+#: model:ir.model.fields,field_description:partner_credit_checks.field_res_partner_dossier__active
+msgid "Active"
+msgstr "Activo"
+
+#. module: partner_credit_checks
+#: model:ir.model.fields,help:partner_credit_checks.field_res_partner__trusted_amount
+#: model:ir.model.fields,help:partner_credit_checks.field_res_users__trusted_amount
+msgid "Additional amount added to the total guarantees provided"
+msgstr "Monto adicional añadido al total de garantías proporcionadas"
+
+#. module: partner_credit_checks
+#: model:res.groups,name:partner_credit_checks.allow_to_validate_credit_checks
+msgid "Allow to validate credit checks"
+msgstr "Permitir validar verificaciones de crédito"
+
+#. module: partner_credit_checks
+#: model:ir.model.fields,field_description:partner_credit_checks.field_res_partner__allowed_dossier_document_tag_ids
+#: model:ir.model.fields,field_description:partner_credit_checks.field_res_users__allowed_dossier_document_tag_ids
+msgid "Allowed Document Tags"
+msgstr "Etiquetas de documento permitidas"
+
+#. module: partner_credit_checks
+#: model:res.groups,comment:partner_credit_checks.allow_to_validate_credit_checks
+msgid "Allows to bypass customer credit checks (limit, status and compliance)"
+msgstr "Permite omitir las verificaciones de crédito del cliente (límite, estado y cumplimiento)"
+
+#. module: partner_credit_checks
+#: model:ir.model.fields,field_description:partner_credit_checks.field_documents_document__amount
+msgid "Amount"
+msgstr "Monto"
+
+#. module: partner_credit_checks
+#: model:ir.model.fields,help:partner_credit_checks.field_documents_document__amount
+msgid "Amount for promissory notes, guarantees, contracts, etc."
+msgstr "Monto para pagarés, garantías, contratos, etc."
+
+#. module: partner_credit_checks
+#. odoo-python
+#: code:addons/partner_credit_checks/models/res_partner.py:0
+#: model:ir.model.fields.selection,name:partner_credit_checks.selection__res_partner__credit_status__cash
+msgid "Cash Only"
+msgstr "Solo efectivo"
+
+#. module: partner_credit_checks
+#: model:ir.model.fields,help:partner_credit_checks.field_res_partner_dossier_rule__document_expires
+msgid "Check if documents for this rule have expiration dates"
+msgstr "Verificar si los documentos para esta regla tienen fechas de expiración"
+
+#. module: partner_credit_checks
+#: model:ir.model.fields,help:partner_credit_checks.field_res_partner_dossier_rule__requires_collateral_amount
+msgid "Check if documents for this rule must include a collateral amount"
+msgstr "Verificar si los documentos para esta regla deben incluir un monto de garantía"
+
+#. module: partner_credit_checks
+#: model:ir.model.fields,help:partner_credit_checks.field_res_partner_dossier_rule__requires_amount
+msgid "Check if documents for this rule must include an amount"
+msgstr "Verificar si los documentos para esta regla deben incluir un monto"
+
+#. module: partner_credit_checks
+#: model:ir.model.fields,field_description:partner_credit_checks.field_documents_document__collateral_amount
+msgid "Collateral Amount"
+msgstr "Monto de Garantía"
+
+#. module: partner_credit_checks
+#: model:ir.model.fields,help:partner_credit_checks.field_documents_document__collateral_amount
+msgid "Collateral amount for guarantees"
+msgstr "Monto de garantía para avales"
+
+#. module: partner_credit_checks
+#. odoo-python
+#: code:addons/partner_credit_checks/models/res_partner.py:0
+msgid "Compliance issues were found in the dossier:\n"
+msgstr "Se encontraron problemas de cumplimiento en el expediente:\n"
+
+#. module: partner_credit_checks
+#: model:ir.model,name:partner_credit_checks.model_res_partner
+msgid "Contact"
+msgstr "Contacto"
+
+#. module: partner_credit_checks
+#: model:documents.tag,name:partner_credit_checks.doc_tag_contract
+msgid "Contract"
+msgstr "Contrato"
+
+#. module: partner_credit_checks
+#: model:ir.model,website_form_label:partner_credit_checks.model_res_partner
+msgid "Create a Customer"
+msgstr "Crear un cliente"
+
+#. module: partner_credit_checks
+#: model_terms:ir.actions.act_window,help:partner_credit_checks.action_partner_dossier
+msgid "Create new credit dossier types to manage customer credit requirements"
+msgstr "Crear nuevos tipos de expedientes de crédito para gestionar requisitos crediticios de clientes"
+
+#. module: partner_credit_checks
+#: model:ir.model.fields,field_description:partner_credit_checks.field_res_partner_dossier__create_uid
+#: model:ir.model.fields,field_description:partner_credit_checks.field_res_partner_dossier_rule__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: partner_credit_checks
+#: model:ir.model.fields,field_description:partner_credit_checks.field_res_partner_dossier__create_date
+#: model:ir.model.fields,field_description:partner_credit_checks.field_res_partner_dossier_rule__create_date
+msgid "Created on"
+msgstr "Creado el"
+
+#. module: partner_credit_checks
+#: model:ir.model.fields.selection,name:partner_credit_checks.selection__res_partner__credit_status__approved
+msgid "Credit Approved"
+msgstr "Crédito Aprobado"
+
+#. module: partner_credit_checks
+#: model:ir.model.fields,field_description:partner_credit_checks.field_res_partner__dossier_id
+#: model:ir.model.fields,field_description:partner_credit_checks.field_res_users__dossier_id
+#: model_terms:ir.ui.view,arch_db:partner_credit_checks.view_partner_form_credit_dossier
+msgid "Credit Dossier"
+msgstr "Expediente de Crédito"
+
+#. module: partner_credit_checks
+#: model:ir.model.fields,field_description:partner_credit_checks.field_res_partner__credit_limit
+#: model:ir.model.fields,field_description:partner_credit_checks.field_res_users__credit_limit
+msgid "Credit Limit"
+msgstr "Límite de Crédito"
+
+#. module: partner_credit_checks
+#: model:ir.model.fields,field_description:partner_credit_checks.field_res_partner__credit_status
+#: model:ir.model.fields,field_description:partner_credit_checks.field_res_users__credit_status
+msgid "Credit Status"
+msgstr "Estado de Crédito"
+
+#. module: partner_credit_checks
+#: model:ir.model.fields,help:partner_credit_checks.field_res_partner__dossier_id
+#: model:ir.model.fields,help:partner_credit_checks.field_res_users__dossier_id
+msgid "Credit requirements classification for this partner"
+msgstr "Clasificación de requisitos crediticios para este contacto"
+
+#. module: partner_credit_checks
+#: model:ir.model.fields,field_description:partner_credit_checks.field_account_move__display_name
+#: model:ir.model.fields,field_description:partner_credit_checks.field_account_payment_term__display_name
+#: model:ir.model.fields,field_description:partner_credit_checks.field_documents_document__display_name
+#: model:ir.model.fields,field_description:partner_credit_checks.field_res_partner__display_name
+#: model:ir.model.fields,field_description:partner_credit_checks.field_res_partner_dossier__display_name
+#: model:ir.model.fields,field_description:partner_credit_checks.field_res_partner_dossier_rule__display_name
+#: model:ir.model.fields,field_description:partner_credit_checks.field_sale_order__display_name
+msgid "Display Name"
+msgstr "Nombre a Mostrar"
+
+#. module: partner_credit_checks
+#: model:ir.model,name:partner_credit_checks.model_documents_document
+msgid "Document"
+msgstr "Documento"
+
+#. module: partner_credit_checks
+#: model:ir.model.fields,field_description:partner_credit_checks.field_res_partner_dossier_rule__document_expires
+msgid "Document Expires"
+msgstr "Documento Caduca"
+
+#. module: partner_credit_checks
+#: model:ir.model.fields,field_description:partner_credit_checks.field_res_partner_dossier_rule__document_tag_id
+msgid "Document Tag"
+msgstr "Etiqueta de Documento"
+
+#. module: partner_credit_checks
+#: model:ir.model.fields,help:partner_credit_checks.field_res_partner_dossier_rule__document_tag_id
+msgid "Document type required for this rule"
+msgstr "Tipo de documento requerido para esta regla"
+
+#. module: partner_credit_checks
+#: model:ir.model.fields,help:partner_credit_checks.field_res_partner__dossier_document_ids
+#: model:ir.model.fields,help:partner_credit_checks.field_res_users__dossier_document_ids
+msgid "Documents submitted for credit evaluation"
+msgstr "Documentos presentados para evaluación crediticia"
+
+#. module: partner_credit_checks
+#: model:ir.model.fields,field_description:partner_credit_checks.field_res_partner_dossier_rule__dossier_id
+msgid "Dossier"
+msgstr "Expediente"
+
+#. module: partner_credit_checks
+#: model:ir.model.fields,field_description:partner_credit_checks.field_documents_document__dossier_compliance
+msgid "Dossier Compliance"
+msgstr "Cumplimiento de Expediente"
+
+#. module: partner_credit_checks
+#: model:ir.model.fields,field_description:partner_credit_checks.field_res_partner__dossier_document_ids
+#: model:ir.model.fields,field_description:partner_credit_checks.field_res_users__dossier_document_ids
+msgid "Dossier Documents"
+msgstr "Documentos del Expediente"
+
+#. module: partner_credit_checks
+#: model_terms:ir.ui.view,arch_db:partner_credit_checks.view_partner_form_credit_dossier
+msgid "Dossier Type"
+msgstr "Tipo de Expediente"
+
+#. module: partner_credit_checks
+#: model:ir.actions.act_window,name:partner_credit_checks.action_partner_dossier
+#: model:ir.ui.menu,name:partner_credit_checks.menu_partner_dossier
+msgid "Dossier Types"
+msgstr "Tipos de Expediente"
+
+#. module: partner_credit_checks
+#: model:ir.model.fields,field_description:partner_credit_checks.field_res_partner__dossier_warning
+#: model:ir.model.fields,field_description:partner_credit_checks.field_res_users__dossier_warning
+msgid "Dossier Warning"
+msgstr "Advertencia de Expediente"
+
+#. module: partner_credit_checks
+#: model:res.partner.dossier,name:partner_credit_checks.dossier_highly_reliable
+msgid "Highly Reliable"
+msgstr "Altamente confiable"
+
+#. module: partner_credit_checks
+#: model:ir.model.fields,field_description:partner_credit_checks.field_account_move__id
+#: model:ir.model.fields,field_description:partner_credit_checks.field_account_payment_term__id
+#: model:ir.model.fields,field_description:partner_credit_checks.field_documents_document__id
+#: model:ir.model.fields,field_description:partner_credit_checks.field_res_partner__id
+#: model:ir.model.fields,field_description:partner_credit_checks.field_res_partner_dossier__id
+#: model:ir.model.fields,field_description:partner_credit_checks.field_res_partner_dossier_rule__id
+#: model:ir.model.fields,field_description:partner_credit_checks.field_sale_order__id
+msgid "ID"
+msgstr "ID"
+
+#. module: partner_credit_checks
+#: model:documents.tag,name:partner_credit_checks.doc_tag_id_document
+msgid "ID Document"
+msgstr "Documento de Identidad"
+
+#. module: partner_credit_checks
+#: model:ir.model.fields,help:partner_credit_checks.field_documents_document__is_guarantor
+msgid "Indicates if this document acts as a guarantee"
+msgstr "Indica si este documento pertenece a un aval"
+
+#. module: partner_credit_checks
+#: model:ir.model.fields,help:partner_credit_checks.field_account_payment_term__is_immediate
+msgid ""
+"Indicates if this payment term requires immediate payment (single line, 100%"
+" amount, and 0 days due)"
+msgstr "Indica si este plazo de pago requiere pago inmediato (línea única, 100% del monto y 0 días de vencimiento)"
+
+#. module: partner_credit_checks
+#: model:ir.model.fields,help:partner_credit_checks.field_res_partner_dossier_rule__is_guarantor
+msgid "Indicates if this rule is for guarantor documents"
+msgstr "Indica si esta regla es para documentos de aval"
+
+#. module: partner_credit_checks
+#: model:ir.model.fields,help:partner_credit_checks.field_documents_document__dossier_compliance
+msgid ""
+"Indicates whether the document complies with all partner dossier "
+"requirements"
+msgstr "Indica si el documento cumple con todos los requisitos del expediente del contacto"
+
+#. module: partner_credit_checks
+#: model:ir.model.fields,field_description:partner_credit_checks.field_documents_document__is_guarantor
+#: model:ir.model.fields,field_description:partner_credit_checks.field_res_partner_dossier_rule__is_guarantor
+msgid "Is Guarantor"
+msgstr "Es aval"
+
+#. module: partner_credit_checks
+#: model:ir.model.fields,field_description:partner_credit_checks.field_account_payment_term__is_immediate
+msgid "Is Immediate Payment"
+msgstr "Es Pago Inmediato"
+
+#. module: partner_credit_checks
+#: model_terms:ir.ui.view,arch_db:partner_credit_checks.view_partner_form_credit_dossier
+msgid "Is Valid"
+msgstr "Es Válido"
+
+#. module: partner_credit_checks
+#: model:ir.model,name:partner_credit_checks.model_account_move
+msgid "Journal Entry"
+msgstr "Asiento Contable"
+
+#. module: partner_credit_checks
+#: model:ir.model.fields,field_description:partner_credit_checks.field_res_partner_dossier__write_uid
+#: model:ir.model.fields,field_description:partner_credit_checks.field_res_partner_dossier_rule__write_uid
+msgid "Last Updated by"
+msgstr "Última actualización por"
+
+#. module: partner_credit_checks
+#: model:ir.model.fields,field_description:partner_credit_checks.field_res_partner_dossier__write_date
+#: model:ir.model.fields,field_description:partner_credit_checks.field_res_partner_dossier_rule__write_date
+msgid "Last Updated on"
+msgstr "Última actualización el"
+
+#. module: partner_credit_checks
+#: model:ir.model.fields.selection,name:partner_credit_checks.selection__res_partner__credit_status__legal
+msgid "Legal Process"
+msgstr "Proceso Legal"
+
+#. module: partner_credit_checks
+#: model_terms:ir.ui.view,arch_db:partner_credit_checks.view_partner_form_credit_dossier
+msgid "Legal Process Done"
+msgstr "Finalizar Proceso Legal"
+
+#. module: partner_credit_checks
+#: model:res.partner.dossier,name:partner_credit_checks.dossier_low_reliability
+msgid "Low Reliability"
+msgstr "Baja confiabilidad"
+
+#. module: partner_credit_checks
+#: model:ir.model.fields,field_description:partner_credit_checks.field_res_partner_dossier_rule__max_quantity
+msgid "Maximum Quantity"
+msgstr "Cantidad Máxima"
+
+#. module: partner_credit_checks
+#: model:ir.model.fields,help:partner_credit_checks.field_res_partner_dossier_rule__max_quantity
+msgid "Maximum number of allowed documents (0 means unlimited)"
+msgstr "Número máximo de documentos permitidos (0 significa ilimitado)"
+
+#. module: partner_credit_checks
+#: model:ir.model.fields,field_description:partner_credit_checks.field_res_partner_dossier_rule__min_quantity
+msgid "Minimum Quantity"
+msgstr "Cantidad Mínima"
+
+#. module: partner_credit_checks
+#: model:ir.model.fields,help:partner_credit_checks.field_res_partner_dossier_rule__min_quantity
+msgid "Minimum number of required documents (0 means not required)"
+msgstr "Número mínimo de documentos requeridos (0 significa no requerido)"
+
+#. module: partner_credit_checks
+#: model:ir.model.fields,field_description:partner_credit_checks.field_res_partner_dossier__name
+#: model:ir.model.fields,field_description:partner_credit_checks.field_res_partner_dossier_rule__name
+msgid "Name"
+msgstr "Nombre"
+
+#. module: partner_credit_checks
+#. odoo-python
+#: code:addons/partner_credit_checks/models/res_partner.py:0
+msgid "Only immediate payment terms are allowed."
+msgstr "Solo se permiten términos de pago inmediato."
+
+#. module: partner_credit_checks
+#: model:ir.model,name:partner_credit_checks.model_res_partner_dossier
+msgid "Partner Credit Dossier Type"
+msgstr "Tipo de Expediente de Crédito del Contacto"
+
+#. module: partner_credit_checks
+#: model:ir.model,name:partner_credit_checks.model_res_partner_dossier_rule
+msgid "Partner Dossier Rule"
+msgstr "Regla de Expediente del Contacto"
+
+#. module: partner_credit_checks
+#: model:ir.model.fields,help:partner_credit_checks.field_res_partner__credit_status
+#: model:ir.model.fields,help:partner_credit_checks.field_res_users__credit_status
+msgid ""
+"Partner's current credit authorization status: \n"
+"\n"
+"        • Cash Only: No credit allowed - Requires upfront payment. \n"
+"          Triggered when: New customers or those without assigned dossier \n"
+"\n"
+"        • Under Review: Credit temporarily suspended pending resolution  - Requires upfront payment. \n"
+"          Triggered when: Expired or missing documents, overdue invoices, or compliance issues detected.\n"
+"\n"
+"        • Credit Approved: Full credit privileges granted.\n"
+"          Achieved when: All documents valid, payment history clean, and requirements met.\n"
+"\n"
+"        • Legal Process: All transactions blocked.\n"
+"          Activated manually when: Legal disputes, collections process, or court orders.\n"
+"\n"
+"        Status automatically updates when:\n"
+"        - Documents are added/expire\n"
+"        - Payment history changes\n"
+"        - Dossier requirements are modified"
+msgstr ""
+"Estado actual de autorización de crédito del contacto: \n"
+"\n"
+"        • Solo Efectivo: No se permite crédito - Requiere pago por adelantado. \n"
+"          Se activa cuando: Clientes nuevos o sin expediente asignado \n"
+"\n"
+"        • En Revisión: Crédito suspendido temporalmente pendiente de resolución - Requiere pago por adelantado. \n"
+"          Se activa cuando: Documentos vencidos o faltantes, facturas vencidas o problemas de cumplimiento detectados.\n"
+"\n"
+"        • Crédito Aprobado: Privilegios de crédito completos otorgados.\n"
+"          Se logra cuando: Todos los documentos válidos, historial de pagos limpio y requisitos cumplidos.\n"
+"\n"
+"        • Proceso Legal: Todas las transacciones bloqueadas.\n"
+"          Activado manualmente cuando: Disputas legales, proceso de cobranza u órdenes judiciales.\n"
+"\n"
+"        El estado se actualiza automáticamente cuando:\n"
+"        - Se añaden/expiran documentos\n"
+"        - Cambia el historial de pagos\n"
+"        - Se modifican los requisitos del expediente"
+
+#. module: partner_credit_checks
+#: model:documents.tag,name:partner_credit_checks.doc_tag_promissory_note
+msgid "Promissory Note"
+msgstr "Pagaré"
+
+#. module: partner_credit_checks
+#: model:ir.model.fields,help:partner_credit_checks.field_res_partner__credit_limit
+#: model:ir.model.fields,help:partner_credit_checks.field_res_users__credit_limit
+msgid "Receivable limit specific to this partner."
+msgstr "Límite de crédito específico para este contacto."
+
+#. module: partner_credit_checks
+#: model:res.partner.dossier,name:partner_credit_checks.dossier_reliable
+msgid "Reliable"
+msgstr "Confiable"
+
+#. module: partner_credit_checks
+#: model:ir.model.fields,field_description:partner_credit_checks.field_res_partner_dossier_rule__requires_amount
+msgid "Requires Amount"
+msgstr "Requiere Monto"
+
+#. module: partner_credit_checks
+#: model:ir.model.fields,field_description:partner_credit_checks.field_res_partner_dossier_rule__requires_collateral_amount
+msgid "Requires Collateral Amount"
+msgstr "Requiere Monto de Garantía"
+
+#. module: partner_credit_checks
+#: model:ir.model.fields,field_description:partner_credit_checks.field_res_partner_dossier__rule_ids
+#: model_terms:ir.ui.view,arch_db:partner_credit_checks.view_partner_dossier_form
+msgid "Rules"
+msgstr "Reglas"
+
+#. module: partner_credit_checks
+#: model_terms:ir.ui.view,arch_db:partner_credit_checks.view_partner_form_credit_dossier
+msgid "Send to Legal Process"
+msgstr "Enviar a Proceso Legal"
+
+#. module: partner_credit_checks
+#: model:ir.model.fields,help:partner_credit_checks.field_res_partner__dossier_warning
+#: model:ir.model.fields,help:partner_credit_checks.field_res_users__dossier_warning
+msgid ""
+"Shows missing documents and compliance issues when reviewing dossier "
+"requirements"
+msgstr ""
+"Muestra documentos faltantes y problemas de cumplimiento al revisar los "
+"requisitos del expediente"
+
+#. module: partner_credit_checks
+#: model:ir.model.fields,field_description:partner_credit_checks.field_res_partner__trusted_amount
+#: model:ir.model.fields,field_description:partner_credit_checks.field_res_users__trusted_amount
+msgid "Trusted Amount"
+msgstr "Confiabilidad"
+
+#. module: partner_credit_checks
+#. odoo-python
+#: code:addons/partner_credit_checks/models/res_partner.py:0
+msgid "Under Credit Review"
+msgstr "En Revisión de Crédito"
+
+#. module: partner_credit_checks
+#: model:ir.model.fields.selection,name:partner_credit_checks.selection__res_partner__credit_status__review
+msgid "Under Review"
+msgstr "En Revisión"
+
+#. module: partner_credit_checks
+#: model:documents.tag,name:partner_credit_checks.doc_tag_warranty
+msgid "Warranty"
+msgstr "Garantía"
+
+#. module: partner_credit_checks
+#: model_terms:ir.ui.view,arch_db:partner_credit_checks.view_partner_form_credit_dossier
+msgid "⟳ Reset"
+msgstr "⟳ Reestablecer"

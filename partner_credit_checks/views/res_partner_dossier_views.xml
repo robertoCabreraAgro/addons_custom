@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form View -->
+    <record id="view_partner_dossier_form" model="ir.ui.view">
+        <field name="name">partner.dossier.form</field>
+        <field name="model">res.partner.dossier</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+			<group>
+                            <field name="name" string="Nombre del Expediente" required="1"/>
+                            <field name="active" string="Activo" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="description" placeholder="It details the criteria for this type of file..." nolabel="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Rules">
+                            <field name="rule_ids">
+                                <list editable="bottom">
+                                    <field name="name"/>
+                                    <field name="document_tag_id" widget="many2one_tag"/>
+                                    <field name="document_expires"/>
+                                    <field name="is_guarantor"/>
+                                    <field name="requires_amount"/>
+                                    <field name="requires_collateral_amount"/>
+                                    <field name="min_quantity"/>
+                                    <field name="max_quantity"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree View -->
+    <record id="view_partner_dossier_list" model="ir.ui.view">
+        <field name="name">partner.dossier.list</field>
+        <field name="model">res.partner.dossier</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="active" invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Window Action -->
+    <record id="action_partner_dossier" model="ir.actions.act_window">
+        <field name="name">Dossier Types</field>
+        <field name="res_model">res.partner.dossier</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'default_active': True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create new credit dossier types to manage customer credit requirements
+            </p>
+        </field>
+    </record>
+</odoo>

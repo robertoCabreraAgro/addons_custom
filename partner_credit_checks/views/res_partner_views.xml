@@ -1,0 +1,68 @@
+<odoo>
+    <record id="view_partner_form_credit_dossier" model="ir.ui.view">
+        <field name="name">res.partner.form.credit.dossier</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+	    <xpath expr="//div[@name='warning_tax']" position="before">
+                <header>
+                    <button name="action_toggle_legal"
+                        type="object"
+                        string="Legal Process Done"
+                        class="oe_highlight"
+                        invisible="credit_status != 'legal'" />
+                    <button name="action_toggle_legal"
+                        type="object"
+                        string="Send to Legal Process"
+                        class="oe_highlight"
+                        invisible="credit_status == 'legal'" />
+                    <field name="credit_status" widget="statusbar" statusbar_visible="cash,review,approved" />
+                </header>
+		        <div class="alert alert-warning" role="alert" invisible="not dossier_warning">
+                    <field name="dossier_warning" />
+                </div>
+            </xpath>
+            <xpath expr="//group[@name='credit_limits']" position="inside">
+                <label for="trusted_amount" />
+                <div class="o_row">
+                    <field name="trusted_amount" />
+                    <button name="action_reset_trusted_amount" type="object" class="btn-link" string="⟳ Reset" />
+                </div>
+                <field name="dossier_id" string="Dossier Type" />
+                <field name="allowed_dossier_document_tag_ids" invisible="1" />
+            </xpath>
+            <xpath expr="//notebook/page[@name='accounting']" position="after">
+                <page string="Credit Dossier" invisible="not dossier_id">
+                    <field name="dossier_document_ids" context="{'default_partner_id': id}">
+                        <list editable="bottom">
+                            <field name="name"/>
+                            <field name="tag_ids" widget="many2many_tags"
+                                domain="[('id', 'in', parent.allowed_dossier_document_tag_ids)]" />
+                            <field name="amount" optional="hidden" />
+                            <field name="collateral_amount" optional="hidden" />
+                            <field name="is_guarantor" optional="hidden" />
+                            <field name="expiration_date" />
+                            <field name="expired" />
+                            <field name="dossier_compliance" string="Is Valid" />
+                            <button name="action_open_document" string="Abrir" type="object" icon="fa-external-link"/>
+                        </list>
+                        <form>
+                            <sheet>
+                                <group>
+                                    <field name="datas" filename="name"/>
+                                    <field name="name" invisible="1" />
+                                    <field name="tag_ids" widget="many2many_tags"
+                                        domain="[('id', 'in', parent.allowed_dossier_document_tag_ids)]" />
+                                    <field name="amount"/>
+                                    <field name="collateral_amount"/>
+                                    <field name="is_guarantor"/>
+                                    <field name="expiration_date"/>
+                                </group>
+                            </sheet>
+                        </form>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

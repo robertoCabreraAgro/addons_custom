@@ -26,12 +26,10 @@ class ResPartner(models.Model):
 
     # Extend core fields
     category_id = fields.Many2many(domain=_prepare_partner_category_domain)
-    credit_limit = fields.Float(
-        tracking=True, help="Receivable limit specific to this partner."
-    )
 
     # New fields
     mobile = fields.Char()
+
     # Security
     user_account_user = fields.Boolean(compute="_compute_group")
     user_debt_manager = fields.Boolean(compute="_compute_group")
@@ -41,31 +39,15 @@ class ResPartner(models.Model):
     user_sale_manager = fields.Boolean(compute="_compute_group")
     user_stock_user = fields.Boolean(compute="_compute_group")
     user_stock_manager = fields.Boolean(compute="_compute_group")
+
     # Accounting
-    credit_on_hold = fields.Boolean("Credit on hold", company_dependent=True)
     credit_limit_available = fields.Monetary(
         "Available Receivable Limit",
-        compute="_compute_available_debt_limits",
+        compute="_compute_credit_limit_available",
         readonly=True,
         help="Available receivable limit",
     )
-    debit_on_hold = fields.Boolean("Debit on hold", company_dependent=True)
-    collateral_tolerance = fields.Selection(
-        [
-            ("0", "No tolerance"),
-            ("1", "Medium"),
-            ("2", "No collateral required"),
-        ],
-        string="Collateral tolerance",
-        default="0",
-        help="""When sales are done with credit this indicates the tolerance
-        regarding having collaterales to cover the debt.\n
-        -No tolerance: cover the debt in full with collaterals
-        -Medium: cover the debt with a payment note
-        -No collateral required: The customer have high moral and economical
-        solvency so no collateral needed
-        """,
-    )
+
     # Misc
     customer = fields.Boolean()
     supplier = fields.Boolean()
@@ -172,7 +154,7 @@ class ResPartner(models.Model):
         partners = self.search([("birthdate", "!=", False)])
         partners._compute_age_range_id()
 
-    def _compute_available_debt_limits(self):
+    def _compute_credit_limit_available(self):
         for partner in self:
             partner.credit_limit_available = partner.credit_limit - partner.credit
 
