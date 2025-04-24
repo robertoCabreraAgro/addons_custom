@@ -47,6 +47,11 @@ class FleetVehicle(models.Model):
         default=True,
         help="Mark as True if this vehicle was acquired as brand new.",
     )
+    fuel_count = fields.Integer("Fuel", compute="_compute_fuel_count")
+
+    def _compute_fuel_count(self):
+        for vehicle in self:
+            vehicle.fuel_count = len(vehicle.log_ids.filtered(lambda l: l.type == "fuel"))
 
     # Extend original method
     @api.depends(
@@ -92,12 +97,7 @@ class FleetVehicle(models.Model):
         tag = self.env.ref("marin_data.documents_fleet_fuel_card", False)
         for vehicle in self:
             doc = vehicle.fuel_card_id
-            other_docs = (
-                doc.search(
-                    [("vehicle_id", "=", vehicle.id), ("tag_ids", "in", tag.ids)]
-                )
-                - doc
-            )
+            other_docs = doc.search([("vehicle_id", "=", vehicle.id), ("tag_ids", "in", tag.ids)]) - doc
             if doc:
                 doc.write(
                     {
@@ -124,12 +124,7 @@ class FleetVehicle(models.Model):
         tag = self.env.ref("marin_data.documents_fleet_highway_pass", False)
         for vehicle in self:
             doc = vehicle.highway_pass_id
-            other_docs = (
-                doc.search(
-                    [("vehicle_id", "=", vehicle.id), ("tag_ids", "in", tag.ids)]
-                )
-                - doc
-            )
+            other_docs = doc.search([("vehicle_id", "=", vehicle.id), ("tag_ids", "in", tag.ids)]) - doc
             if doc:
                 doc.write(
                     {
@@ -175,3 +170,18 @@ class FleetVehicle(models.Model):
             if vehicle.odometer:
                 gps_vehicles |= vehicle
         return super(FleetVehicle, self - gps_vehicles)._compute_odometer()
+
+    def action_view_fleet_vehicle_log_fuel(self):
+        """
+        This opens the xml view specified in xml_id for the current vehicle
+        """
+        self.ensure_one()
+        xml_id = self.env.context.get("xml_id")
+        if xml_id:
+            res = self.env["ir.actions.act_window"]._for_xml_id(f"marin.action_fleet_vehicle_log_fuel")
+            res.update(
+                context=dict(self.env.context, default_vehicle_id=self.id, group_by=False),
+                domain=[("vehicle_id", "=", self.id)],
+            )
+            return res
+        return False

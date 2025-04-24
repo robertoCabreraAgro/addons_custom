@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="fleet_vehicle_log_list_view" model="ir.ui.view">
+        <field name="name">fleet.vehicle.log.list</field>
+        <field name="model">fleet.vehicle.log</field>
+        <field name="inherit_id" ref="fleet.view_list_fleet_vehicle_log" />
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="inside">
+		<field name="type" column_invisible="True" />
+                <field name="qty_fuel" optional="hidden" />
+                <field name="efficiency" optional="hidden" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_fleet_vehicle_log_fuel" model="ir.actions.act_window">
+        <field name="name">Fuel Logs</field>
+        <field name="res_model">fleet.vehicle.log</field>
+        <field name="view_mode">list,kanban,form,graph,pivot,activity</field>
+        <field name="domain">[('type', '=', 'fuel')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new service entry
+            </p>
+            <p>
+                Track all the fuel activities done on your vehicle.
+            </p>
+        </field>
+    </record>
+
+</odoo>

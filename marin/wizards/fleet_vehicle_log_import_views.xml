@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- Form View for the Import Wizard -->
+    <record id="view_fleet_vehicle_log_import_form" model="ir.ui.view">
+        <field name="name">fleet.vehicle.log.import.form</field>
+        <field name="model">fleet.vehicle.log.import</field>
+        <field name="arch" type="xml">
+            <form string="Import Vehicle Logs">
+                <sheet>
+                    <group>
+                        <field
+                            name="vehicle_ids"
+                            widget="many2many_tags"
+                            options="{'color_field': 'color', 'no_create_edit': True, 'no_quick_create': True}"
+                            placeholder="Import logs for all vehicles"
+                        />
+                    </group>
+                    <group>
+                        <group>
+                            <field name="parser" widget="radio" />
+                        </group>
+                        <group>
+                            <field name="file" filename="filename" />
+                            <field name="filename" invisible="1" />
+                        </group>
+                    </group>
+                    <div class="alert alert-info" role="alert" invisible="parser != 'effectivale'">
+                        <p><strong>Note:</strong> Only XLS files are accepted.</p>
+                        <p>For <strong
+                            >Effectivale</strong> imports, please ensure your file contains the following columns:</p>
+                        <ul>
+                            <li>Cuenta - Fuel Card Number</li>
+                            <li>Fecha - Date of the log</li>
+                            <li>Cargo - Debit amount</li>
+                            <li>Abono - Credit amount</li>
+                            <li>Km FIN - Odometer value</li>
+                            <li>Concepto - Description</li>
+                            <li>Litros - Fuel quantity</li>
+                            <li>Rendimiento - Efficiency</li>
+                        </ul>
+                    </div>
+                    <group>
+                        <field name="test_mode" widget="boolean_toggle" />
+                    </group>
+                    <group>
+                        <group>
+                            <field name="test_display" widget="radio" invisible="not test_mode" />
+                        </group>
+                        <group>
+                            <field name="test_limit" invisible="not test_mode or test_display != 'limit'" />
+                        </group>
+                    </group>
+               </sheet>
+                <footer>
+                    <button
+                        string="Test"
+                        name="action_import"
+                        type="object"
+                        class="btn-primary"
+                        invisible="not test_mode"
+                    />
+                    <button
+                        string="Import"
+                        name="action_import"
+                        type="object"
+                        class="btn-primary"
+                        invisible="test_mode"
+                    />
+                    <button string="Cancel" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action to open the Import Wizard -->
+    <record id="action_fleet_vehicle_log_import" model="ir.actions.act_window">
+        <field name="name">Import Vehicle Logs</field>
+        <field name="res_model">fleet.vehicle.log.import</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="fleet.model_fleet_vehicle" />
+    </record>
+</odoo>

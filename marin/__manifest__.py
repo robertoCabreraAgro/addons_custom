@@ -100,6 +100,7 @@
         "views/account_payment_views.xml",
         "views/documents_document_views.xml",
         "views/fleet_vehicle_views.xml",
+        "views/fleet_vehicle_log_views.xml",
         "views/hr_expense_views.xml",
         "views/hr_contract_views.xml",
         "views/hr_payslip_views.xml",
@@ -145,6 +146,7 @@
         "wizards/purchase_order_line_price_history.xml",
         "wizards/sale_order_line_price_history.xml",
         "wizards/stock_quant_lot_update.xml",
+        "wizards/fleet_vehicle_log_import_views.xml",
     ],
     "pre_init_hook": "_pre_init_marin",
     "assets": {
