@@ -114,11 +114,11 @@ class SaleOrder(models.Model):
             lines_domain,
             ["order_id", "transfer_state"],
         ):
-            if not order in line_transfer_state_all:
-                line_transfer_state_all[order] = set()
-            line_transfer_state_all[order].add(transfer_state)
+            if not order.id in line_transfer_state_all:
+                line_transfer_state_all[order.id] = set()
+            line_transfer_state_all[order.id].add(transfer_state)
         for order in confirmed_orders:
-            states = line_transfer_state_all[order]
+            states = line_transfer_state_all[order._origin.id]
             if not order.picking_ids or all(state == "to do" for state in states):
                 order.transfer_state = "to do"
             elif any(state == "over done" for state in states):
@@ -134,7 +134,7 @@ class SaleOrder(models.Model):
                 order.transfer_state = "no"
 
     # Override original method
-    @api.depends("state", "invoice_ids", "order_line_ids.invoice_state")
+    @api.depends("state", "order_line_ids.invoice_state", "invoice_ids")
     def _compute_invoice_state(self):
         # force logic
         forced_orders = self.filtered("force_fully_invoiced")

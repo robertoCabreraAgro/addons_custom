@@ -131,7 +131,7 @@ class SaleOrderLine(models.Model):
     # VALIDATION METHODS
     # ------------------------------------------------------------
 
-    def _check_line_unlink(self):
+    def _cant_be_unlinked(self):
         if self._context.get("avoid_check_unlink"):
             return False
-        return super()._check_line_unlink()
+        return super()._cant_be_unlinked()
