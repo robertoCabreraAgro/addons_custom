@@ -121,11 +121,11 @@ class PurchaseOrder(models.Model):
             lines_domain,
             ["order_id", "transfer_state"],
         ):
-            if not order in line_transfer_state_all:
-                line_transfer_state_all[order] = set()
-            line_transfer_state_all[order].add(transfer_state)
+            if not order.id in line_transfer_state_all:
+                line_transfer_state_all[order.id] = set()
+            line_transfer_state_all[order.id].add(transfer_state)
         for order in confirmed_orders:
-            states = line_transfer_state_all[order]
+            states = line_transfer_state_all[order._origin.id]
             if not order.picking_ids or all(state == "to do" for state in states):
                 order.transfer_state = "to do"
             elif any(state == "over done" for state in states):
@@ -159,11 +159,11 @@ class PurchaseOrder(models.Model):
             lines_domain,
             ["order_id", "invoice_state"],
         ):
-            if not order in line_invoice_state_all:
-                line_invoice_state_all[order] = set()
-            line_invoice_state_all[order].add(invoice_state)
+            if not order.id in line_invoice_state_all:
+                line_invoice_state_all[order.id] = set()
+            line_invoice_state_all[order.id].add(invoice_state)
         for order in confirmed_orders:
-            states = line_invoice_state_all[order]
+            states = line_invoice_state_all[order._origin.id]
             if not order.invoice_ids or all(state == "to do" for state in states):
                 order.invoice_state = "to do"
             elif any(state == "over done" for state in states):
