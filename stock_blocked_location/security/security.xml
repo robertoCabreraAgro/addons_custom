@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="group_stock_force_blocked_location" model="res.groups">
+        <field name="name">Block Stock Locations</field>
+        <field name="category_id" ref="base.module_category_inventory"/>
+        <field name="implied_ids" eval="[(4, ref('stock.group_stock_user'))]"/>
+        <field name="comment">Users that can block specific stock locations for outgoing operations.</field>
+    </record>
+
+</odoo>
