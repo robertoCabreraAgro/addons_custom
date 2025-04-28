@@ -9,16 +9,7 @@
                 <page name="info_cdfi" string="E-signature">
                     <group cols="4">
                         <group>
-                            <field name="last_sat_fetch_date" />
                             <field name="l10n_mx_edi_folder" />
-                        </group>
-                        <group>
-                            <button
-                                name="download_cfdi_files"
-                                string="Download"
-                                class="oe_stat_button"
-                                type="object"
-                            />
                         </group>
                     </group>
                 </page>

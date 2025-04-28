@@ -1,12 +1,13 @@
 import base64
 import io
-import os
-import zipfile
 import logging
-import pytz
+import os
 import time
-
+import zipfile
 from datetime import datetime, timedelta
+
+import pytz
+
 from odoo import api, fields, models
 
 from .l10n_mx_edi_document import MXWS_ERROR_TYPE
@@ -18,38 +19,110 @@ _logger = logging.getLogger(__name__)
 
 class Session(models.Model):
     _name = "l10n_mx_edi.session"
+    _inherit = ["mail.thread"]
     _description = "MX SAT session"
     _order = "create_date desc"
 
-    name = fields.Date(
-        "Date", required=True, index=True, default=fields.Date.context_today
-    )
+    name = fields.Char(required=True, copy=False, readonly=True, default="/")
     company_id = fields.Many2one(
-        "res.company", "Company", default=lambda self: self.env.company
+        "res.company",
+        "Company",
+        default=lambda self: self.env.company,
+        readonly=True,
     )
-    uuid = fields.Char("UUID")
-    token = fields.Char()
-    token_expiration = fields.Datetime()
-    date_from = fields.Datetime("Date from")
-    date_to = fields.Datetime("Date to")
-    request = fields.Char("Request ID")
-    request_status_code = fields.Char("Request code")
-    request_state = fields.Selection(MXWS_ERROR_TYPE, "Request state")
-    request_message = fields.Char("Request message")
-    file_count = fields.Integer("File count")
-    packages = fields.Char("packages")
+    uuid = fields.Char("UUID", readonly=True, copy=False)
+    token = fields.Char(readonly=True, copy=False)
+    token_expiration = fields.Datetime(readonly=True, copy=False)
+    date_from = fields.Datetime("Date from", required=True)
+    date_to = fields.Datetime("Date to", required=True)
+    request = fields.Char("Request ID", readonly=True, copy=False)
+    request_status_code = fields.Char("Request code", readonly=True, copy=False)
+    request_state = fields.Selection(
+        MXWS_ERROR_TYPE,
+        "Request state",
+        default="0",
+        required=True,
+        readonly=True,
+        copy=False,
+    )
+    request_message = fields.Char("Request message", readonly=True, copy=False)
+    file_count = fields.Integer("File count", readonly=True, copy=False)
+    packages = fields.Char("packages", readonly=True, copy=False)
     document_ids = fields.Many2many(
         "documents.document",
         "document_l10n_mx_edi_session_rel",
         "l10n_mx_edi_session_id",
         "document_id",
         string="Documents",
+        readonly=True,
+        copy=False,
     )
-    count_verify = fields.Integer()
+    count_verify = fields.Integer(readonly=True)
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get("name", "/") == "/":
+                sequence_code = "sat.session"
+                name = self.env["ir.sequence"].next_by_code(sequence_code)
+                if not name:
+                    sequence = (
+                        self.env["ir.sequence"]
+                        .sudo()
+                        .create(
+                            {
+                                "name": self.env._("L10n MX EDI Session Sequence"),
+                                "code": sequence_code,
+                                "prefix": "SAT/SESSION/%(y)s/%(month)s/",
+                                "padding": 4,
+                                "company_id": vals.get("company_id") or self.env.company.id,
+                            }
+                        )
+                    )
+                    name = sequence.next_by_id()
+                vals["name"] = name
+        return super().create(vals_list)
 
     def get_mx_current_datetime(self):
-        return fields.Datetime.context_timestamp(
-            self.with_context(tz="America/Mexico_City"), fields.Datetime.now()
+        return fields.Datetime.context_timestamp(self.with_context(tz="America/Mexico_City"), fields.Datetime.now())
+
+    def action_request_cfdi(self, esignature=None):
+        """Request CFDI download from SAT by a given date range.
+
+        Args:
+            esignature (record): Electronic signature record with certificate data
+
+        Raises:
+            UserError: If dates are missing or invalid
+            Exception: For any SAT communication errors
+        """
+        self.ensure_one()
+        mx_edi_document = self.env["l10n_mx_edi.document"]
+
+        esignature = esignature or self.company_id.l10n_mx_edi_esignature_ids.get_valid_esignature()
+
+        certificate = esignature.get_cert_data()[1]
+        private_key = esignature.get_pk_data()[1]
+        token_res = mx_edi_document.l10n_mx_ws_generate_token(certificate, private_key)
+        self.write(
+            {
+                "token": token_res["token"],
+                "token_expiration": datetime.fromisoformat(token_res["expires"]),
+            }
+        )
+        request_res = mx_edi_document.l10n_mx_ws_request_download(
+            certificate,
+            private_key,
+            self.token,
+            {"date_from": self.date_from, "date_to": self.date_to},
+        )
+        self.write(
+            {
+                "request": request_res["id_solicitud"],
+                "request_status_code": request_res["cod_estatus"],
+                "request_message": request_res["mensaje"],
+                "request_state": "1" if request_res["cod_estatus"] == "5000" else "0",
+            }
         )
 
     def action_verify_cfdi(self, esignature=None, max_retries=2, waiting_sec=0):
@@ -57,27 +130,19 @@ class Session(models.Model):
 
         mx_edi_document = self.env["l10n_mx_edi.document"]
 
-        esignature = (
-            esignature
-            or self.company_id.l10n_mx_edi_esignature_ids.get_valid_esignature()
-        )
+        esignature = esignature or self.company_id.l10n_mx_edi_esignature_ids.get_valid_esignature()
+
         certificate = esignature.get_cert_data()[1]
         private_key = esignature.get_pk_data()[1]
 
         for retry_count in range(max_retries):
-            _logger.info(
-                f"CFDI download request status verification... ({retry_count + 1}/{max_retries})"
-            )
+            _logger.info("CFDI download request status verification... (%s/%s)", (retry_count + 1), max_retries)
             if self.token_expiration < fields.Datetime.now():
-                token_res = mx_edi_document.l10n_mx_ws_generate_token(
-                    certificate, private_key
-                )
+                token_res = mx_edi_document.l10n_mx_ws_generate_token(certificate, private_key)
                 self.write(
                     {
                         "token": token_res["token"],
-                        "token_expiration": datetime.fromisoformat(
-                            token_res["expires"]
-                        ),
+                        "token_expiration": datetime.fromisoformat(token_res["expires"]),
                     }
                 )
             verify_download = mx_edi_document.l10n_mx_ws_verify_package(
@@ -88,20 +153,17 @@ class Session(models.Model):
                     "request_state": verify_download["estado_solicitud"],
                     "file_count": int(verify_download["numero_cfdis"]),
                     "request_message": verify_download["mensaje"],
-                    "packages": (
-                        verify_download["paquetes"][0]
-                        if verify_download["paquetes"]
-                        else ""
-                    ),
+                    "packages": (verify_download["paquetes"][0] if verify_download["paquetes"] else ""),
                 }
             )
             if int(self.request_state) > 2:
                 break
-            elif retry_count < max_retries - 1:  # avoid waiting in the last iteration
-                _logger.info(f"Waiting {waiting_sec} seconds to retry...")
+            if retry_count < max_retries - 1:  # avoid waiting in the last iteration
+                _logger.info("Waiting %s seconds to retry...", waiting_sec)
                 time.sleep(waiting_sec)
                 continue
         self.write({"count_verify": self.count_verify + 1})
+        _logger.info("Was verified request for MX session with ID %s", self.id)
 
     def action_download_cfdi(self, esignature=None):
         self.ensure_one()
@@ -109,19 +171,15 @@ class Session(models.Model):
         docs_document = self.env["documents.document"]
         ir_attachment = self.env["ir.attachment"]
 
-        esignature = (
-            esignature
-            or self.company_id.l10n_mx_edi_esignature_ids.get_valid_esignature()
-        )
+        esignature = esignature or self.company_id.l10n_mx_edi_esignature_ids.get_valid_esignature()
+
         certificate = esignature.get_cert_data()[1]
         private_key = esignature.get_pk_data()[1]
 
         document_ids = []
 
         if self.token_expiration < fields.Datetime.now():
-            token_res = mx_edi_document.l10n_mx_ws_generate_token(
-                certificate, private_key
-            )
+            token_res = mx_edi_document.l10n_mx_ws_generate_token(certificate, private_key)
             self.write(
                 {
                     "token": token_res["token"],
@@ -129,9 +187,7 @@ class Session(models.Model):
                 }
             )
 
-        download_res = mx_edi_document.l10n_mx_ws_download_package(
-            certificate, private_key, self.token, self.packages
-        )
+        download_res = mx_edi_document.l10n_mx_ws_download_package(certificate, private_key, self.token, self.packages)
         self.write(
             {
                 "request_status_code": download_res["cod_estatus"],
@@ -140,41 +196,34 @@ class Session(models.Model):
         )
         if download_res["paquete_b64"]:
             content = download_res["paquete_b64"]
-            folder_id = (
-                self.company_id.l10n_mx_edi_folder.id or False
-            )  # Precompute folder ID once
+            folder_id = self.company_id.l10n_mx_edi_folder.id or False  # Precompute folder ID once
 
             # Batch processing preparation
             att_vals_list = []  # Stores attachment creation values
             doc_vals_list = []  # Stores document creation values
 
             with zipfile.ZipFile(io.BytesIO(base64.b64decode(content))) as container:
-
                 # Filtering only XML files and extract clean names (without extension)
                 xml_files = [
-                    (fname, os.path.splitext(fname)[0].upper())
+                    fname.lower()
                     for fname in container.namelist()
                     if fname.lower().endswith(".xml")
                 ]
 
                 if xml_files:
-                    # Extract just the names for existence check
-                    names = [xml_file[1] for xml_file in xml_files]
-
                     # Find all existing documents
                     existing_docs = docs_document.sudo().search(
-                        [("name", "in", names), ("company_id", "=", self.company_id.id)]
+                        [("name", "in", xml_files), ("company_id", "=", self.company_id.id)]
                     )
 
                     # Existing documents are kept for return
                     document_ids.extend(existing_docs.ids)
 
                     # already processed files
-                    existing_names = set(existing_docs.mapped("name"))
+                    existing_names = list(set(existing_docs.mapped("name")))
 
-                    for fname, name in xml_files:
-
-                        if name in existing_names:
+                    for fname in xml_files:
+                        if fname in existing_names:
                             continue  # Skip already processed files
 
                         with container.open(fname) as file:
@@ -186,7 +235,7 @@ class Session(models.Model):
                             # Prepare for batch creation
                             att_vals_list.append(
                                 {
-                                    "name": f"{name}.xml",
+                                    "name": fname,
                                     "type": "binary",
                                     "datas": file_content,
                                     "mimetype": "text/plain",  # to be able to open file from documents
@@ -194,7 +243,7 @@ class Session(models.Model):
                             )
                             doc_vals_list.append(
                                 {
-                                    "name": f"{name}.xml",
+                                    "name": fname,
                                     "folder_id": folder_id,
                                     "company_id": self.company_id.id,
                                     "l10n_mx_edi_is_cfdi": True,
@@ -203,11 +252,8 @@ class Session(models.Model):
 
             # Bulk create records if we have valid files
             if att_vals_list:
-
                 # Create all attachments in single operation
-                attachments = ir_attachment.with_context(
-                    force_l10n_mx_edi_cfdi_uuid=True
-                ).create(att_vals_list)
+                attachments = ir_attachment.with_context(force_l10n_mx_edi_cfdi_uuid=True).create(att_vals_list)
 
                 # Assign attachment IDs to corresponding documents
                 for attachment, doc_vals in zip(attachments, doc_vals_list):
@@ -219,189 +265,208 @@ class Session(models.Model):
 
         if document_ids:
             self.write({"document_ids": [(6, 0, document_ids)]})
-
-        if not self.env.context.get("view_documents"):
-            return False
-        return self.action_view_documents()
+            _logger.info("Was downloaded documents for MX session with ID %s", self.id)
 
     @api.model
-    def _cron_sync_with_sat(self, company_id):
-        now_mx = datetime.now(pytz.timezone(DEFAULT_TZ))
-        param = self.env["ir.config_parameter"].sudo()
-        hour_start = int(param.get_param("cfdi_cron.hour_start", 8))
-        hour_end = int(param.get_param("cfdi_cron.hour_end", 18))
-        current_hour = now_mx.hour
+    def _get_next_time_block(self, current_time, time_blocks, hour_start, timezone):
+        """Calculate the next time block based on current time.
 
-        if not (hour_start <= current_hour <= hour_end):
-            _logger.info("not in time %s", hour_start)
-            return
-        is_first_run = current_hour == hour_start
-        today = fields.Date.context_today(self.with_context(tz=DEFAULT_TZ))
+        Args:
+            current_time (datetime): Current time in Mexico timezone
+            time_blocks (list): List of time block tuples (start_hour, end_hour)
+            hour_start (int): Starting hour for operations
+            timezone: Mexico timezone object
 
-        if is_first_run:
-            _logger.info("is_first_run %s", is_first_run)
-            date_from = (now_mx - timedelta(hours=24)).replace(
-                minute=0, second=0, microsecond=0
+        Returns:
+            datetime: Next time block in Mexico timezone
+        """
+        current_day = current_time.replace(hour=0, minute=0, second=0, microsecond=0)
+
+        for start_hour, end_hour in time_blocks:
+            if current_time.hour < start_hour:
+                return current_day.replace(hour=start_hour)
+            if start_hour <= current_time.hour < end_hour:
+                return current_day.replace(hour=end_hour)
+
+        # If after last block, move to next day
+        return (current_day + timedelta(days=1)).replace(hour=hour_start)
+
+    @api.model
+    def _generate_time_blocks(self, company_id):
+        """Create scheduled sessions for a specific company in 2-hour blocks.
+
+        Args:
+            company_id (int): ID of the company to create sessions for
+
+        Returns:
+            list: IDs of created sessions or False if outside operating hours
+        """
+        # Timezone setup
+        mexico_tz = pytz.timezone(DEFAULT_TZ)
+        utc_tz = pytz.UTC
+        now_utc = datetime.now(utc_tz)
+        now_mx = now_utc.astimezone(mexico_tz)
+
+        # Get operating hours from system parameters
+        icp = self.env["ir.config_parameter"].sudo()
+        hour_start = int(icp.get_param("documents_l10n_mx_edi.hour_start_download_cfdi", "8"))
+        hour_end = int(icp.get_param("documents_l10n_mx_edi.hour_end_download_cfdi", "18"))
+        hour_interval = int(icp.get_param("documents_l10n_mx_edi.hour_interval_download_cfdi", "2"))
+
+        # Check if within operating hours
+        if not hour_start <= now_mx.hour <= hour_end:
+            _logger.info(
+                "Outside operating hours: current %s, allowed range: %s-%s",
+                now_mx.hour,
+                hour_start,
+                hour_end,
             )
-            _logger.info("date_from %s", date_from)
-        else:
-            date_from = (now_mx - timedelta(hours=2)).replace(
-                minute=0, second=0, microsecond=0
-            )
+            return False
 
-        date_to = now_mx.replace(minute=0, second=0, microsecond=0)
-        _logger.info("date_to %s", date_to)
-        existing_session = self.search(
+        # Get last session or default to 7 days ago
+        last_session = self.search([("company_id", "=", company_id)], order="date_to desc", limit=1)
+        start_date = (
+            last_session.date_to.astimezone(mexico_tz)
+            if last_session and last_session.date_to
+            else now_mx - timedelta(days=7)
+        )
+        # Generate time blocks (2-hour intervals)
+        time_blocks = [(hour, hour + hour_interval) for hour in range(hour_start, hour_end, hour_interval)]
+
+        # Calculate end time (current hour rounded down)
+        today = now_mx.replace(hour=0, minute=0, second=0, microsecond=0)
+        end_time = now_mx.replace(minute=0, second=0, microsecond=0)
+
+        # Adjust end time if outside operating hours
+        if now_mx.hour < hour_start:
+            end_time = today.replace(hour=hour_start)
+        elif now_mx.hour >= hour_end:
+            end_time = today.replace(hour=hour_end)
+
+        # Create sessions in 2-hour blocks
+        current_time = start_date
+        new_sessions = self
+
+        while current_time < end_time:
+            # Find next time block
+            next_time = self._get_next_time_block(current_time, time_blocks, hour_start, mexico_tz)
+
+            if next_time > end_time:
+                break
+
+            # Create session if doesn't exist
+            date_from_utc = current_time.astimezone(utc_tz).replace(tzinfo=None)
+            date_to_utc = next_time.astimezone(utc_tz).replace(tzinfo=None)
+
+            existing_session = self.search(
+                [
+                    ("date_from", "=", date_from_utc),
+                    ("date_to", "=", date_to_utc),
+                    ("company_id", "=", company_id),
+                ],
+                limit=1,
+            )
+            if not existing_session:
+                new_sessions += self.create(
+                    {
+                        "company_id": company_id,
+                        "date_from": date_from_utc,
+                        "date_to": date_to_utc,
+                    }
+                )
+
+            current_time = next_time
+
+        return new_sessions
+
+    @api.model
+    def _get_verify_candidates(self, company_id):
+        """Retrieve active sessions eligible for verification (within max attempts limit).
+
+        Filters sessions that:
+        - Belong to the specified company
+        - Are in states: '0' (Pending), '1' (Processing), or '2' (Verifying)
+        - Haven't exceeded the max verification attempts configured in system parameters
+
+        Args:
+            company_id (int): Target company ID
+
+        Returns:
+            recordset: Sessions ready for verification, ordered by oldest first
+        """
+        max_verify_allowed = int(
+            self.env["ir.config_parameter"].sudo().get_param("documents_l10n_mx_edi.default_max_verify_cfdi", "5")
+        )
+
+        return self.search(
             [
                 ("company_id", "=", company_id),
-                ("date_from", "=", date_from),
-                ("date_to", "=", date_to),
+                ("request_state", "in", ["1", "2"]),
+                ("count_verify", "<=", max_verify_allowed),
             ],
-            limit=1,
+            order="date_from asc",
         )
 
-        if existing_session:
-            _logger.info(
-                "Ya existe una sesión en ese rango de tiempo: ID %s",
-                existing_session.id,
-            )
-            return
+    @api.model
+    def _get_download_candidates(self, company_id):
+        """Retrieve completed sessions ready for CFDI download
 
-        context_with_dates = dict(self.env.context)
-        context_with_dates.update(
-            {
-                "cron_date_from": fields.Datetime.to_string(date_from),
-                "cron_date_to": fields.Datetime.to_string(date_to),
-            }
-        )
-        self = self.with_context(context_with_dates)
-        """Schedule action to check MX SAT sessions not closed or create new one if apply"""
+        Args:
+            company_id (int): Target company ID
+
+        Returns:
+            recordset: Sessions ready for download, ordered by ID ascending
+        """
+        domain = [
+            ("request_status_code", "!=", "5008"),  # Exclude "not found" errors
+            ("request_state", "=", "3"),  # Only completed sessions
+            ("company_id", "=", company_id),  # Filter by company
+            ("document_ids", "=", False),  # Only no documents downloaded
+        ]
+        return self.search(domain, order="id ASC")
+
+    @api.model
+    def _cron_sync_with_sat(self):
+        """Create scheduled sessions in 2-hour blocks and process active sessions.
+
+        This method:
+        1. Creates necessary sessions for all companies in 2-hour blocks
+        2. Processes sessions (request, verification and document download)
+
+        """
         auto_commit = self.env.context.get("auto_commit", True)
-        max_retries = self.env.context.get("max_retries", 5)
-        waiting_sec = self.env.context.get("waiting_sec", 20)
-
-        company = self.env["res.company"].browse(company_id)
-        esignature = company.l10n_mx_edi_esignature_ids.get_valid_esignature()
-        # 1. Sync with SAT (create token & send request)
-        today = fields.Date.context_today(self.with_context(tz=DEFAULT_TZ))
-        cron_user = self.env.ref("base.user_root")
-
-        mx_session_today = self.create(
-            {
-                "name": today,
-                "company_id": company_id,
-            }
+        max_retries = self.env.context.get("max_retries", 2)
+        waiting_sec = self.env.context.get("waiting_sec", 0)
+        today = datetime.datetime.now().date()
+        companies = self.env["res.company"].search([("l10n_mx_edi_certificate_ids", "!=", False)])
+        valid_companies = companies.filtered(
+            lambda c: any(
+                (cert.date_start.date() if isinstance(cert.date_start, datetime.datetime) else cert.date_start)
+                <= today
+                <= (cert.date_end.date() if isinstance(cert.date_end, datetime.datetime) else cert.date_end)
+                for cert in c.l10n_mx_edi_certificate_ids
+            )
         )
-        _logger.info("Was created a new MX session with ID %s", mx_session_today.id)
-        try:
-            mx_session_today.action_sync_with_sat(esignature)
-        except Exception as e:
-            if auto_commit:
-                self.env.cr.rollback()
-            _logger.error(e)
-        finally:
-            if auto_commit:
-                self.env.cr.commit()  # pylint: disable=invalid-commit
-
-        # 2. Verify
-        max_verify_allowed = int(
-            self.env["ir.config_parameter"]
-            .sudo()
-            .get_param("documents_l10n_mx_edi.default_max_verify_cfdi", "5")
-        )
-        domain_verify = [
-            ("count_verify", "<=", max_verify_allowed),
-            ("request_state", "in", ["1", "2"]),
-            ("company_id", "=", company_id),
-        ]
-        mx_sessions_to_verify = self.search(domain_verify, order="id ASC")
-        try:
-            for mx_session_to_verify in mx_sessions_to_verify:
-                mx_session_to_verify.action_verify_cfdi(
-                    esignature, max_retries=max_retries, waiting_sec=waiting_sec
-                )
-                _logger.info(
-                    "Was verified request for MX session with ID %s",
-                    mx_session_to_verify.id,
-                )
-        except Exception as e:
-            if auto_commit:
-                self.env.cr.rollback()
-            _logger.error(e)
-        finally:
-            if auto_commit:
-                self.env.cr.commit()  # pylint: disable=invalid-commit
-
-        # 3. Download
-        domain_download = [
-            ("request_status_code", "!=", "5008"),
-            ("request_state", "=", "3"),
-            ("company_id", "=", company_id),
-            ("document_ids", "=", False),
-        ]
-        mx_sessions_to_download = self.search(domain_download, order="id ASC")
-        try:
-
-            for mx_session_to_download in mx_sessions_to_download:
-                mx_session_to_download.action_download_cfdi(esignature)
-                _logger.info(
-                    "Was downloaded documents for MX session with ID %s",
-                    mx_session_to_download.id,
-                )
-        except Exception as e:
-            if auto_commit:
-                self.env.cr.rollback()
-            _logger.error(e)
-        finally:
-            if auto_commit:
-                self.env.cr.commit()  # pylint: disable=invalid-commit
-
-    def action_sync_with_sat(self, esignature):
-        self.ensure_one()
-        mx_edi_document = self.env["l10n_mx_edi.document"]
-        certificate = esignature.get_cert_data()[1]
-        private_key = esignature.get_pk_data()[1]
-        three_days_ago = self.name - timedelta(days=3)
-        date_from = self.env.context.get("cron_date_from")
-        date_to = self.env.context.get("cron_date_to")
-        token_res = mx_edi_document.l10n_mx_ws_generate_token(certificate, private_key)
-        if date_from:
-            date_from = fields.Datetime.to_datetime(date_from)
-        else:
-            three_days_ago = self.name - timedelta(days=3)
-            date_from = fields.Datetime.to_datetime(three_days_ago)
-
-        if date_to:
-            date_to = fields.Datetime.to_datetime(date_to)
-        else:
-            date_to = fields.Datetime.to_datetime(self.name)
-
-        _logger.info("date_from %s", date_from)
-        _logger.info("date_to %s", date_to)
-        self.write(
-            {
-                "token": token_res["token"],
-                "token_expiration": datetime.fromisoformat(token_res["expires"]),
-                "date_from": date_from,
-                "date_to": date_to,
-            }
-        )
-        request_res = mx_edi_document.l10n_mx_ws_request_download(
-            certificate,
-            private_key,
-            self.token,
-            {"date_from": date_from, "date_to": date_to},
-        )
-        self.write(
-            {
-                "request": request_res["id_solicitud"],
-                "request_status_code": request_res["cod_estatus"],
-                "request_message": request_res["mensaje"],
-                "request_state": "1" if request_res["cod_estatus"] == "5000" else "0",
-            }
-        )
-
-    def action_view_documents(self):
-        action = self.env.ref("documents.document_action").read()[0]
-        action["domain"] = [("id", "in", self.document_ids.ids)]
-        return action
+        for company in valid_companies:
+            esignature = company.l10n_mx_edi_esignature_ids.get_valid_esignature()
+            try:
+                # 1. Generate sessions
+                new_sessions = self._generate_time_blocks(company.id)
+                # 2. Create token & send a request download
+                for session_to_request in new_sessions:
+                    session_to_request.action_request_cfdi(esignature)
+                # 3. Verify request
+                sessions_to_verify = self._get_verify_candidates(company.id)
+                for session_to_verify in sessions_to_verify:
+                    session_to_verify.action_verify_cfdi(esignature, max_retries=max_retries, waiting_sec=waiting_sec)
+                # 4. Download CFDIs
+                sessions_to_download = self._get_download_candidates(company.id)
+                for session_to_download in sessions_to_download:
+                    session_to_download.action_download_cfdi(esignature)
+            except Exception as e:
+                if auto_commit:
+                    self.env.cr.rollback()
+                _logger.error("Error processing sessions for company %s: %s", company.name, e)
+            finally:
+                if auto_commit:
+                    self.env.cr.commit()  # pylint: disable=invalid-commit

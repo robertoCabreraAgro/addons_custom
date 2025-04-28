@@ -4,37 +4,43 @@
         <field name="model">l10n_mx_edi.session</field>
         <field name="arch" type="xml">
             <list string="MX SAT Sessions">
-                <field name="name"/>
-                <field name="uuid"/>
-                <field name="token_expiration"/>
-                <field name="date_from"/>
-                <field name="date_to"/>
-                <field name="file_count"/>
-                <field name="request"/>
-                <field name="request_message"/>
-                <field name="request_status_code"/>
-                <field name="request_state"  widget="badge" decoration-success="request_state=='3'" decoration-info="request_state=='2'" decoration-muted="request_state=='1'" decoration-danger="request_state in ('4', '5', '6')" />
-                <field name="company_id"/>
-                <field name="document_ids" invisible="1" />
-                <button 
-                    name="action_verify_cfdi" 
+                <field name="name" />
+                <field name="token_expiration" />
+                <field name="date_from" />
+                <field name="date_to" />
+                <field name="file_count" />
+                <field name="request" />
+                <field name="request_status_code" />
+                <field
+                    name="request_state"
+                    widget="badge"
+                    decoration-info="request_state=='2'"
+                    decoration-success="request_state=='3'"
+                    decoration-danger="request_state in ('4', '5', '6')"
+                />
+                <field name="company_id" />
+                <field name="document_ids" column_invisible="1" />
+                <button
+                    name="action_request_cfdi"
+                    type="object"
+                    string="Request Download"
+                    class="btn-primary"
+                    invisible="request_state != '0'"
+                />
+                <button
+                    name="action_verify_cfdi"
                     type="object"
                     string="Verify Request"
                     class="btn-primary"
-                    invisible="request_state != '1'"/>
-                <button 
-                    name="action_download_cfdi" 
-                    type="object"
-                    string="Download &amp; View"
-                    class="btn-primary"
-                    context="{'view_documents': True}"
-                    invisible="request_state != '3' or request_status_code == '5008' or document_ids"/>
+                    invisible="request_state != '1'"
+                />
                 <button
-                    name="action_view_documents"
+                    name="action_download_cfdi"
                     type="object"
-                    string="View Documents"
+                    string="Download"
                     class="btn-primary"
-                    invisible="not document_ids"/>
+                    invisible="request_state != '3' or request_status_code == '5008' or document_ids"
+                />
             </list>
         </field>
     </record>
@@ -45,51 +51,157 @@
         <field name="arch" type="xml">
             <form string="MX SAT Session">
                 <header>
-                    <field name="request_state" widget="statusbar" statusbar_visible="1,2,3,4"/>
+                    <button
+                        name="action_request_cfdi"
+                        type="object"
+                        string="Request Download"
+                        class="btn-primary"
+                        invisible="request_state != '0'"
+                    />
+                    <button
+                        name="action_verify_cfdi"
+                        type="object"
+                        string="Verify Request"
+                        class="btn-primary"
+                        invisible="request_state != '1'"
+                    />
+                    <button
+                        name="action_download_cfdi"
+                        type="object"
+                        string="Download"
+                        class="btn-primary"
+                        invisible="request_state != '3' or request_status_code == '5008' or document_ids"
+                    />
+                    <field name="request_state" widget="statusbar" statusbar_visible="1,2,3" />
                 </header>
                 <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1" />
+                        </h1>
+                    </div>
                     <group>
                         <group>
-                            <field name="name"/>
-                            <field name="company_id"/>
-                            <field name="uuid"/>
-                            <field name="token"/>
+                            <field name="date_from" readonly="request_state != '0'" />
+                            <field name="date_to" readonly="request_state != '0'" />
                         </group>
                         <group>
-                            <field name="token_expiration"/>
-                            <field name="date_from"/>
-                            <field name="date_to"/>
+                            <field name="uuid" />
+                            <field name="company_id" />
                         </group>
                     </group>
                     <notebook>
-                        <page string="Request Details" name="request_details">
+                        <page string="Documents">
+                            <field name="document_ids" nolabel="1">
+                                <list>
+                                    <field name="name" />
+                                    <field name="tag_ids" widget="many2many_tags" />
+                                    <field name="partner_id" />
+                                    <field name="show_res_name" string="Related invoice" />
+                                </list>
+                             </field>
+                        </page>
+                        <page string="Information">
                             <group>
-                                <field name="file_count"/>
-                                <field name="request"/>
-                                <field name="request_message"/>
-                                <field name="request_status_code"/>
+                                <group string="Request">
+                                    <field name="file_count" />
+                                    <field name="request" />
+                                    <field name="request_message" />
+                                    <field name="request_status_code" />
+                                </group>
+                                <group string="Token">
+                                    <field name="token_expiration" />
+                                    <field name="token" />
+                                </group>
                             </group>
                         </page>
                     </notebook>
                 </sheet>
+                <chatter />
             </form>
         </field>
     </record>
 
-    <record id="l10n_mx_edi_session_view_search" model="ir.ui.view">
-        <field name="name">l10n_mx_edi.session.view.search</field>
+    <record id="view_l10n_mx_edi_session_search" model="ir.ui.view">
+        <field name="name">l10n_mx_edi.session.search</field>
         <field name="model">l10n_mx_edi.session</field>
         <field name="arch" type="xml">
-            <search string="MX SAT Sessions">
-                <field name="name"/>
-                <field name="company_id"/>
-                <field name="uuid"/>
-                <field name="request_state"/>
+            <search string="SAT Sessions">
+                <!-- Basic search -->
+                <field name="name" filter_domain="[('name', 'ilike', self)]" />
+                <field name="request" filter_domain="[('request', 'ilike', self)]" />
+
+                <!-- Filters by date -->
+                <filter
+                    string="Today"
+                    name="today"
+                    domain="[
+                    ('date_to', '>=', context_today().strftime('%Y-%m-%d 00:00:00')),
+                    ('date_to', '&lt;=', context_today().strftime('%Y-%m-%d 23:59:59'))]"
+                />
+                <separator />
+                <filter
+                    string="Yesterday"
+                    name="yesterday"
+                    domain="[
+                    ('date_to', '>=', (context_today() + relativedelta(days=-1)).strftime('%Y-%m-%d 00:00:00')),
+                    ('date_to', '&lt;=', (context_today() + relativedelta(days=-1)).strftime('%Y-%m-%d 23:59:59'))]"
+                />
+                <filter
+                    string="This Week"
+                    name="this_week"
+                    domain="[
+                    ('date_to', '>=', (context_today() + relativedelta(weeks=-1, days=1, weekday=0)).strftime('%Y-%m-%d 00:00:00')),
+                    ('date_to', '&lt;=', (context_today() + relativedelta(weekday=6)).strftime('%Y-%m-%d 23:59:59'))]"
+                />
+                <filter
+                    string="Last Week"
+                    name="last_week"
+                    domain="[
+                    ('date_to', '>=', (context_today() + relativedelta(weeks=-2, days=1, weekday=0)).strftime('%Y-%m-%d 00:00:00')),
+                    ('date_to', '&lt;=', (context_today() + relativedelta(weeks=-1, weekday=6)).strftime('%Y-%m-%d 23:59:59'))]"
+                />
+                <filter
+                    string="This Month"
+                    name="this_month"
+                    domain="[
+                    ('date_to', '>=', (context_today().replace(day=1)).strftime('%Y-%m-%d 00:00:00')),
+                    ('date_to', '&lt;=', (context_today() + relativedelta(months=1, day=1, days=-1)).strftime('%Y-%m-%d 23:59:59'))]"
+                />
+                <filter
+                    string="Last Month"
+                    name="last_month"
+                    domain="[
+                    ('date_to', '>=', (context_today() + relativedelta(months=-1, day=1)).strftime('%Y-%m-%d 00:00:00')),
+                    ('date_to', '&lt;=', (context_today() + relativedelta(day=1, days=-1)).strftime('%Y-%m-%d 23:59:59'))]"
+                />
+
+                <!-- Filters by state -->
+                <separator />
+                <filter string="Token inválido" name="token_invalid" domain="[('request_state', '=', '0')]" />
+                <filter string="Aceptada" name="accepted" domain="[('request_state', '=', '1')]" />
+                <filter string="En proceso" name="in_process" domain="[('request_state', '=', '2')]" />
+                <filter string="Terminada" name="finished" domain="[('request_state', '=', '3')]" />
+                <filter string="Error" name="error" domain="[('request_state', '=', '4')]" />
+                <filter string="Rechazada" name="rejected" domain="[('request_state', '=', '5')]" />
+                <filter string="Vencida" name="expired" domain="[('request_state', '=', '6')]" />
+
+                <!-- Monitoring -->
+                <separator />
+                <filter string="No documents" name="no_documents" domain="[('document_ids', '=', False)]" />
+                <filter
+                    string="Ready to download"
+                    name="ready_to_download"
+                    domain="[
+                    ('request_state', '=', '3'),
+                    ('request_status_code', '!=', '5008'),
+                    ('document_ids', '=', False)]"
+                />
+
+                <!-- Group -->
                 <group expand="0" string="Group By">
-                    <filter string="Company" name="group_by_company" 
-                            context="{'group_by': 'company_id'}"/>
-                    <filter string="Request State" name="group_by_request_state" 
-                            context="{'group_by': 'request_state'}"/>
+                    <filter string="Date" name="group_by_date_to" context="{'group_by': 'date_to'}" />
+                    <filter string="State" name="group_by_state" context="{'group_by': 'request_state'}" />
                 </group>
             </search>
         </field>
@@ -100,21 +212,22 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">l10n_mx_edi.session</field>
         <field name="view_mode">list,form</field>
-        <field name="context">{'create': False, 'edit': False}</field>
     </record>
 
     <menuitem
-        id="menu_sat_section"
-        name="SAT"
-        parent="documents.Config"
-        sequence="99"
-        groups="documents_l10n_mx_edi.group_documents_l10n_mx_edi_manager"
+        id="menu_sat_sync"
+        name="Sync with SAT"
+        parent="documents.menu_root"
+        sequence="5"
+        groups="documents_l10n_mx_edi.group_documents_l10n_mx_edi"
     />
-    
-    <menuitem id="menu_sat_sessions"
-        name="SAT Sessions"
-        parent="menu_sat_section"
+
+    <menuitem
+        id="menu_sat_sessions"
+        name="Sessions"
+        parent="menu_sat_sync"
         sequence="10"
-        groups="documents_l10n_mx_edi.group_documents_l10n_mx_edi_manager"
-        action="l10n_mx_edi_session_action"/>
+        groups="documents_l10n_mx_edi.group_documents_l10n_mx_edi"
+        action="l10n_mx_edi_session_action"
+    />
 </odoo>
