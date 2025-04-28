@@ -85,7 +85,7 @@
                 />
                 <field name="amount_total" sum="Total amount" widget="monetary" optional="show" decoration-bf="1" />
                 <field name="currency_id" column_invisible="True" readonly="state in ['cancel', 'done', 'purchase']" />
-                <field name="purchase_user_id" widget="many2one_avatar_user" optional="show" />
+                <field name="user_id" widget="many2one_avatar_user" optional="show" />
                 <field name="activity_ids" widget="list_activity" optional="hide" />
                 <field name="activity_exception_decoration" widget="activity_exception" />
                 <field
@@ -146,7 +146,7 @@
             <xpath expr="//field[@name='partner_id']" position="attributes">
                 <attribute name="options">{'no_create': True}</attribute>
             </xpath>
-            <xpath expr="//field[@name='purchase_user_id']" position="attributes">
+            <xpath expr="//field[@name='user_id']" position="attributes">
                 <attribute name="options">{'no_create': True}</attribute>
                 <attribute name="readonly">not is_user_id_editable</attribute>
                 <attribute name="force_save">1</attribute>
@@ -178,7 +178,7 @@
                 <attribute name="decoration-info">not display_type and transfer_state == 'over done'</attribute>
                 <attribute name="decoration-success">not display_type and transfer_state == 'done'</attribute>
 	    </xpath>-->
-            <field name="purchase_user_id" position="before">
+            <field name="user_id" position="before">
                 <field name="is_user_id_editable" invisible="1" />
             </field>
         </field>
