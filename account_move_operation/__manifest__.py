@@ -19,15 +19,16 @@
         "views/account_move_operation_action_views.xml",
         "views/account_move_operation_views.xml",
         "views/account_move_operation_line_views.xml",
+        "views/account_move_views.xml",
         # # "views/bank_rec_widget_views.xml",
         # # Wizard
         # "wizard/account_invoice_template_run_view.xml",
         # "wizard/account_move_operation_partner_view.xml",
         # "wizard/account_move_operation_payment_view.xml",
         # "wizard/account_move_operation_reconcile_view.xml",
-        # "wizard/account_move_operation_operation_view.xml",
+        "wizard/account_move_operation_operation_view.xml",
+        "wizard/account_move_operation_from_entry_view.xml",
         # "wizard/account_bank_statement_operation_view.xml",
-
         # Data
         "data/ir_sequence_data.xml",
     ],
