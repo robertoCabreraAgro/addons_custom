@@ -686,16 +686,20 @@ class L10nMxEdiDocument(models.Model):
         elif import_type == "issued":
             domain.append(("name", "=", self.get_serie_folio(cfdi_etree)))
         partner = self.partner_search_create(cfdi_etree)
-        cfdi_node = self.collect_complemento(cfdi_etree)
-        l10n_mx_edi_cfdi_uuid = cfdi_node.get("UUID").upper() if cfdi_node else None
-        domain.append(("commercial_partner_id", "=", partner.id))
-        domain.append(("l10n_mx_edi_cfdi_uuid", "=", l10n_mx_edi_cfdi_uuid))
+        l10n_mx_edi_cfdi_uuid = self.collect_complemento(cfdi_etree).get("UUID").upper()
+        domain.extend(
+            [
+                ("commercial_partner_id", "=", partner.id),
+                ("l10n_mx_edi_cfdi_uuid", "=", l10n_mx_edi_cfdi_uuid),
+            ]
+        )
         return domain
 
     def check_cfdi_dupli(self, cfdi_etree):
         domain = self.prepare_cfdi_dupli_domain(cfdi_etree)
         fuzzy_domain = domain[:-1]
         exact_move_exist = self.env["account.move"].search(domain)
+        # FIX-ME: improve fuzzy domain because it attachs more than 1 document in the account move
         fuzzy_move_exist = self.env["account.move"].search(fuzzy_domain)
         if (
             exact_move_exist
