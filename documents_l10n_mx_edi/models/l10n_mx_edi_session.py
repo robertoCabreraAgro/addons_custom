@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 
 import pytz
 
+from odoo.osv import expression
 from odoo import api, fields, models
 
 from .l10n_mx_edi_document import MXWS_ERROR_TYPE
@@ -171,7 +172,10 @@ class Session(models.Model):
         docs_document = self.env["documents.document"]
         ir_attachment = self.env["ir.attachment"]
 
-        esignature = esignature or self.company_id.l10n_mx_edi_esignature_ids.get_valid_esignature()
+        esignature = (
+            esignature
+            or self.company_id.l10n_mx_edi_esignature_ids.get_valid_esignature()
+        )
 
         certificate = esignature.get_cert_data()[1]
         private_key = esignature.get_pk_data()[1]
@@ -179,7 +183,9 @@ class Session(models.Model):
         document_ids = []
 
         if self.token_expiration < fields.Datetime.now():
-            token_res = mx_edi_document.l10n_mx_ws_generate_token(certificate, private_key)
+            token_res = mx_edi_document.l10n_mx_ws_generate_token(
+                certificate, private_key
+            )
             self.write(
                 {
                     "token": token_res["token"],
@@ -187,7 +193,9 @@ class Session(models.Model):
                 }
             )
 
-        download_res = mx_edi_document.l10n_mx_ws_download_package(certificate, private_key, self.token, self.packages)
+        download_res = mx_edi_document.l10n_mx_ws_download_package(
+            certificate, private_key, self.token, self.packages
+        )
         self.write(
             {
                 "request_status_code": download_res["cod_estatus"],
@@ -196,7 +204,9 @@ class Session(models.Model):
         )
         if download_res["paquete_b64"]:
             content = download_res["paquete_b64"]
-            folder_id = self.company_id.l10n_mx_edi_folder.id or False  # Precompute folder ID once
+            folder_id = (
+                self.company_id.l10n_mx_edi_folder.id or False
+            )  # Precompute folder ID once
 
             # Batch processing preparation
             att_vals_list = []  # Stores attachment creation values
@@ -205,55 +215,66 @@ class Session(models.Model):
             with zipfile.ZipFile(io.BytesIO(base64.b64decode(content))) as container:
                 # Filtering only XML files and extract clean names (without extension)
                 xml_files = [
-                    fname.lower()
+                    fname
                     for fname in container.namelist()
                     if fname.lower().endswith(".xml")
                 ]
 
-                if xml_files:
-                    # Find all existing documents
-                    existing_docs = docs_document.sudo().search(
-                        [("name", "in", xml_files), ("company_id", "=", self.company_id.id)]
-                    )
+                if not xml_files:
+                    _logger.info("No XML File was found")
+                    return
 
-                    # Existing documents are kept for return
-                    document_ids.extend(existing_docs.ids)
+                # Preparing domain
+                domain = expression.AND([
+                    [('company_id', 'in', [False, self.company_id.id])],
+                    expression.OR([[('name', '=ilike', fname)] for fname in xml_files])
+                ])
 
-                    # already processed files
-                    existing_names = list(set(existing_docs.mapped("name")))
+                # Find all existing documents
+                existing_docs = docs_document.sudo().search(domain)
 
-                    for fname in xml_files:
-                        if fname in existing_names:
-                            continue  # Skip already processed files
+                # Existing documents are kept for return
+                document_ids.extend(existing_docs.ids)
 
-                        with container.open(fname) as file:
-                            file_content = base64.b64encode(file.read())
+                # already processed files
+                existing_names = existing_docs.mapped("name")
 
-                            if not mx_edi_document._l10n_mx_edi_is_cfdi(file_content):
-                                continue  # Skip non-CFDI XMLs
+                for fname in xml_files:
+                    if fname in existing_names:
+                        continue  # Skip already processed files
 
-                            # Prepare for batch creation
-                            att_vals_list.append(
-                                {
-                                    "name": fname,
-                                    "type": "binary",
-                                    "datas": file_content,
-                                    "mimetype": "text/plain",  # to be able to open file from documents
-                                }
-                            )
-                            doc_vals_list.append(
-                                {
-                                    "name": fname,
-                                    "folder_id": folder_id,
-                                    "company_id": self.company_id.id,
-                                    "l10n_mx_edi_is_cfdi": True,
-                                }
-                            )
+                    with container.open(fname) as file:
+                        file_content = base64.b64encode(file.read())
+
+                        if not mx_edi_document._l10n_mx_edi_is_cfdi(file_content):
+                            continue  # Skip non-CFDI XMLs
+
+                        filename = os.path.splitext(fname)[0].upper() + ".xml"
+
+                        # Prepare for batch creation
+                        att_vals_list.append(
+                            {
+                                "name": filename,
+                                "type": "binary",
+                                "datas": file_content,
+                                "mimetype": "text/plain",  # to be able to open file from documents
+                            }
+                        )
+                        doc_vals_list.append(
+                            {
+                                "name": filename,
+                                "folder_id": folder_id,
+                                "company_id": self.company_id.id,
+                                "l10n_mx_edi_is_cfdi": True,
+                            }
+                        )
 
             # Bulk create records if we have valid files
             if att_vals_list:
                 # Create all attachments in single operation
-                attachments = ir_attachment.with_context(force_l10n_mx_edi_cfdi_uuid=True).create(att_vals_list)
+                attachments = ir_attachment.with_context(
+                    force_l10n_mx_edi_cfdi_uuid=True
+                ).create(att_vals_list)
 
                 # Assign attachment IDs to corresponding documents
                 for attachment, doc_vals in zip(attachments, doc_vals_list):
