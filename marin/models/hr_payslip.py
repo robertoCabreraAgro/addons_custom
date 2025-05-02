@@ -37,9 +37,13 @@ class HrPayslip(models.Model):
             return {"error": self.env._("Employee has not a contract and is required")}
         seniority = self.contract_id.get_seniority(date_to=self.date_to)
         str_seniority = ""
-        if seniority["years"] > 0:
+        if seniority["years"] > 0 and seniority["months"] >= 1:
             str_seniority = (
                 f"""P{seniority["years"]}Y{seniority["months"]}M{seniority["days"]}D"""
+            )
+        elif seniority["years"] > 0 and seniority["months"] == 0:
+            str_seniority = (
+                f"""P{seniority["years"]}Y{seniority["days"]}D"""
             )
         elif seniority["years"] == 0 and seniority["months"] >= 1:
             str_seniority = f"""P{seniority["months"]}M{seniority["days"]}D"""
