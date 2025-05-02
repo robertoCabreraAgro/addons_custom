@@ -49,7 +49,7 @@
         "l10n_mx_edi_payslip",
         "account_3way_match",
         "account_budget",
-        "purchase_requisition_stock",
+        # "purchase_requisition_stock",
         "mrp_landed_costs",
         "delivery",
         "stock_dropshipping",
