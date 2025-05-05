@@ -8,7 +8,7 @@
                 <field name="driver_name" />
                 <field name="model_id" />
                 <field name="license_plate" />
-                <field name="imei"/>
+                <field name="imei" />
             </search>
         </field>
     </record>
@@ -22,7 +22,7 @@
                 <field name="driver_name" />
                 <field name="model_id" />
                 <field name="license_plate" />
-                <field name="imei"/>
+                <field name="imei" />
             </list>
         </field>
     </record>
@@ -41,22 +41,22 @@
                 <!-- Plantillas para info_box -->
                 <templates>
                     <t t-name="info_box">
-                        <b>IMEI: <t t-esc="record.imei.value"/></b>
+                        <b>IMEI: <t t-esc="record.imei.value" /></b>
                         <ul>
-                            <li>Timestamp: <t t-esc="record.timestamp.value"/></li>
-                            <li>Speed: <t t-esc="record.speed.value"/></li>
-                            <li>Altitude: <t t-esc="record.altitude.value"/></li>
+                            <li>Timestamp: <t t-esc="record.timestamp.value" /></li>
+                            <li>Speed: <t t-esc="record.speed.value" /></li>
+                            <li>Altitude: <t t-esc="record.altitude.value" /></li>
                         </ul>
                     </t>
                 </templates>
                 <!-- Mostrar la ruta histórica -->
                 <field name="history_route"
-                        string="History Route"
-                        options='{"color": "#0000FF", "strokeWidth": 4}'/>
+                    string="History Route"
+                    options='{"color": "#0000FF", "strokeWidth": 4}' />
                 <!-- Mostrar los puntos de seguimiento -->
-                <field name="the_point" 
-                        string="Current Position" 
-                        options='{"fillColor": "#00FF00", "strokeColor": "#FF0000", "pointRadius": 8}'/>
+                <field name="the_point"
+                    string="Current Position"
+                    options='{"fillColor": "#00FF00", "strokeColor": "#FF0000", "pointRadius": 8}' />
             </geoengine>
         </field>
     </record>
@@ -70,13 +70,13 @@
                 <sheet>
                     <group>
                         <group>
-                            <field name="imei"/>
-                            <field name="vehicle_id"/>
-                            <field name="color"/>
+                            <field name="imei" />
+                            <field name="vehicle_id" />
+                            <field name="color" />
                         </group>
                         <group>
-                            <field name="last_point_id"/>
-                            <field name="timestamp"/>
+                            <field name="last_point_id" />
+                            <field name="timestamp" />
                             <field name="private" />
                         </group>
                     </group>
@@ -152,7 +152,7 @@
         <field name="imei">867060038729378</field>
     </record>
 
-        <!-- Registro del dispositivo GPS -->
+    <!-- Registro del dispositivo GPS -->
     <record id="gps_tracking_device_test2" model="gps.tracking.device">
         <field name="imei">867060038729377</field>
     </record>

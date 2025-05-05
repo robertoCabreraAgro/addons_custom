@@ -5,9 +5,9 @@
         <field name="model">gps.tracking.data.history</field>
         <field name="arch" type="xml">
             <list string="GPS Tracking Data History">
-                <field name="imei"/>
-                <field name="timestamp"/>
-                <field name="speed"/>
+                <field name="imei" />
+                <field name="timestamp" />
+                <field name="speed" />
             </list>
         </field>
     </record>
@@ -20,15 +20,16 @@
             <form string="GPS Tracking Data History">
                 <sheet>
                     <group>
-                        <field name="imei"/>
-                        <field name="timestamp"/>
-                        <field name="altitude"/>
-                        <field name="longitude"/>
-                        <field name="latitude"/>
-                        <field name="angle"/>
-                        <field name="speed"/>
-                        <field name="the_point" widget="geo_point" options='{"color": "#00FF00"}'/>
-                        <field name="history_route" geo_style='{"strokeColor": "#0000FF", "strokeWidth": 4}'/>
+                        <field name="imei" />
+                        <field name="timestamp" />
+                        <field name="altitude" />
+                        <field name="longitude" />
+                        <field name="latitude" />
+                        <field name="angle" />
+                        <field name="speed" />
+                        <field name="the_point" widget="geo_point" options='{"color": "#00FF00"}' />
+                        <field name="history_route"
+                            geo_style='{"strokeColor": "#0000FF", "strokeWidth": 4}' />
                     </group>
                 </sheet>
             </form>
@@ -45,14 +46,14 @@
                 <field name="imei" />
                 <field name="timestamp" />
                 <field name="speed" />
-                <field name="the_point" 
-                       string="Position" 
-                       geo_type="geo_point" 
-                       geo_style='{"fillColor": "#00FF00", "strokeColor": "#FF0000", "pointRadius": 8}'/>
-                <field name="history_route" 
-                       string="History Route" 
-                       geo_type="geo_line" 
-                       geo_style='{"strokeColor": "#0000FF", "strokeWidth": 4}'/>
+                <field name="the_point"
+                    string="Position"
+                    geo_type="geo_point"
+                    geo_style='{"fillColor": "#00FF00", "strokeColor": "#FF0000", "pointRadius": 8}' />
+                <field name="history_route"
+                    string="History Route"
+                    geo_type="geo_line"
+                    geo_style='{"strokeColor": "#0000FF", "strokeWidth": 4}' />
 
                 <!-- Templates de información para el popup en el mapa -->
                 <templates>
@@ -74,7 +75,8 @@
         <field name="name">Google Maps Layer</field>
         <field name="view_id" ref="view_gps_tracking_geoengine" />
         <field name="raster_type">xyz</field>
-        <field name="url">https://mt0.google.com/vt/lyrs=m&amp;x={x}&amp;y={y}&amp;z={z}&amp;key=TU_CLAVE_API</field>        
+        <field name="url">
+            https://mt0.google.com/vt/lyrs=m&amp;x={x}&amp;y={y}&amp;z={z}&amp;key=TU_CLAVE_API</field>
         <field eval="0" name="overlay" />
     </record>
 
@@ -82,7 +84,8 @@
     <record id="action_gps_tracking_history" model="ir.actions.act_window">
         <field name="name">GPS Tracking History</field>
         <field name="res_model">gps.tracking.data.history</field>
-        <field name="view_mode">list,form,geoengine</field> <!-- Permite ver en los modos list, form y geoengine -->
+        <field name="view_mode">list,form,geoengine</field> <!-- Permite ver en los modos list, form
+        y geoengine -->
     </record>
 
     <!-- Capa vectorial para 'the_point' -->

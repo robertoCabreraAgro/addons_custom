@@ -1,12 +1,11 @@
 <odoo>
+    <menuitem id="gps_tracking_menu_root" name="GPS Tracking" sequence="130"
+        groups="group_gps_tracking_user">
 
-    <!-- Menú para acceder a los dispositivos de rastreo GPS -->
-    <menuitem id="gps_tracking_menu_root" name="GPS Tracking" sequence="130" groups="group_gps_tracking_user" >
-
-	<menuitem id="menu_gps_tracking_device"
-	    name="Devices"
-	    action="action_gps_tracking_device"
-	    sequence="10" />
+        <menuitem id="menu_gps_tracking_device"
+            name="Devices"
+            action="action_gps_tracking_device"
+            sequence="10" />
 
         <menuitem id="menu_gps_tracking_dashboard"
             name="Dashboard"
@@ -25,21 +24,24 @@
 
         <menuitem id="menu_gps_tracking_reporting"
             name="Reporting"
-	        groups="group_gps_tracking_manager"
-            sequence="50" >
+            groups="group_gps_tracking_manager"
+            sequence="50">
 
             <menuitem id="menu_gps_tracking_report"
                 name="Daily Perfomance Summary"
                 action="action_gps_tracking_report"
-                sequence="20"/>
+                sequence="20" />
 
             <menuitem id="menu_gps_tracking_point_report"
                 name="Tracking History"
                 action="action_gps_tracking_point_report"
-                sequence="40"/>
+                sequence="40" />
 
-    	</menuitem>
-
+            <!-- Menú para acceder al reporte (AHORA EN GPS TRACKING) -->
+            <menuitem id="menu_fleet_vehicle_loan_report"
+                name="Préstamos de Vehículos"
+                action="action_fleet_vehicle_loan_report"
+                sequence="50" />
+        </menuitem>
     </menuitem>
-
 </odoo>

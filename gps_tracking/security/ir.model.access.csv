@@ -7,4 +7,5 @@ access_gps_tracking_point_user,gps.tracking.point user,model_gps_tracking_point,
 access_gps_tracking_point_manager,gps.tracking.point manager,model_gps_tracking_point,group_gps_tracking_manager,1,1,1,1
 access_gps_geofence_user,gps.geofence user,model_gps_geofence,group_gps_tracking_user,1,0,0,0
 access_gps_geofence_manager,gps.geofence manager,model_gps_geofence,group_gps_tracking_manager,1,1,1,1
+access_fleet_vehicle_loan_report_user,fleet.vehicle.loan.report.user,model_fleet_vehicle_loan_report,group_gps_tracking_user,1,1,1,1
 access_gps_tracking_report_user,gps.tracking.report.user,model_gps_tracking_report,group_gps_tracking_user,1,1,1,1

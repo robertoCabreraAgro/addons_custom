@@ -7,16 +7,16 @@
             <pivot string="GPS Tracking Analysis" display_quantity="true">
 
                 <!-- Time dimensions -->
-                <field name="date" type="row" interval="day"/>
-                <field name="vehicle_id" type="row"/>
-                
+                <field name="date" type="row" interval="day" />
+                <field name="vehicle_id" type="row" />
+
                 <!-- Core metrics -->
-                <field name="avg_speed" type="measure" string="Average Speed"/>
-                <field name="max_speed" type="measure" string="Max Speed"/>
-                <field name="total_distance" type="measure" string="Total Distance"/>
-                <field name="fuel_consumed" type="measure" string="Fuel Consumption"/>
-                <field name="engine_hours" type="measure" string="Engine Hours"/>
-               
+                <field name="avg_speed" type="measure" string="Average Speed" />
+                <field name="max_speed" type="measure" string="Max Speed" />
+                <field name="total_distance" type="measure" string="Total Distance" />
+                <field name="fuel_consumed" type="measure" string="Fuel Consumption" />
+                <field name="engine_hours" type="measure" string="Engine Hours" />
+
             </pivot>
         </field>
     </record>
@@ -26,9 +26,9 @@
         <field name="model">gps.tracking.report</field>
         <field name="arch" type="xml">
             <graph string="GPS Tracking Analysis" type="line">
-                <field name="date" type="x"/>
-                <field name="avg_speed" type="measure"/>
-                <field name="vehicle_id" type="row"/>
+                <field name="date" type="x" />
+                <field name="avg_speed" type="measure" />
+                <field name="vehicle_id" type="row" />
             </graph>
         </field>
     </record>
@@ -43,9 +43,10 @@
                 <field name="avg_speed" />
                 <field name="max_speed" />
                 <field name="total_distance" />
-                <field name="fuel_consumed" /> 
+                <field name="fuel_consumed" />
                 <field name="engine_hours" />
-                <button name="action_view_tracking_points" type="object" string="View Details" class="btn btn-link float-end" />
+                <button name="action_view_tracking_points" type="object" string="View Details"
+                    class="btn btn-link float-end" />
             </list>
         </field>
     </record>
@@ -59,7 +60,7 @@
                 No GPS tracking data found
             </p>
             <p>
-                This report provides aggregated analysis of GPS tracking data. 
+                This report provides aggregated analysis of GPS tracking data.
                 You can view average and maximum values for various metrics
                 grouped by vehicle and date.
             </p>
