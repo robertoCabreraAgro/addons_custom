@@ -6,6 +6,7 @@
         <field name="arch" type="xml">
             <field name="usage" position="after">
                 <field name="block_outgoing" invisible="usage != 'internal'" />
+                <field name="block_incoming" invisible="usage != 'internal'" />
             </field>
         </field>
     </record>
