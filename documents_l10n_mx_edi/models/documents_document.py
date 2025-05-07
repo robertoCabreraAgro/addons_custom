@@ -1,8 +1,9 @@
 import json
+from datetime import datetime
 from os.path import splitext
 
-from odoo import _, api, fields, models, Command
-
+from odoo import Command, api, fields, models
+from odoo.exceptions import ValidationError
 
 STATUS = {
     "No Encontrado": "not_found",
@@ -100,141 +101,121 @@ class Document(models.Model):
         store=True,
         help="Specify if this is a CFDI Payment document.",
     )
-    show_res_name = fields.Char(
-        string="Show Res Name",
-        compute="_compute_show_res_name",
+    vendor_bill_name = fields.Char(
+        string="Vendor Bill",
+        compute="_compute_vendor_bill_name",
     )
 
-    @api.depends("name", "res_name")
-    def _compute_show_res_name(self):
-        for rec in self:
-            rec.show_res_name = rec.res_name if rec.name != rec.res_name else ""
+    @api.depends("res_model", "res_id")
+    def _compute_vendor_bill_name(self):
+        account_move = self.env["account.move"]
+        for document in self:
+            vendor_bill_name = ""
+            if (
+                document.res_model == "account.move"
+                and document.res_id
+                and account_move.browse(document.res_id).is_purchase_document()
+            ):
+                vendor_bill_name = account_move.browse(document.res_id).name
+            document.vendor_bill_name = vendor_bill_name
 
     def check_document_already_linked(self):
-        if documents_link_record := self.filtered(
-            lambda d: d.res_model != "documents.document"
-        ):
+        if documents_link_record := self.filtered(lambda d: d.res_model != "documents.document"):
             return {
                 "type": "ir.actions.client",
                 "tag": "display_notification",
                 "params": {
                     "type": "warning",
-                    "message": _(
+                    "message": self.env._(
                         "Already linked Documents: %s",
                         ", ".join(documents_link_record.mapped("name")),
                     ),
                 },
             }
 
-    def prepare_action_create_from_cfdi(self):
-        action = {
-            "name": _("MX EDI to record"),
+    def create_from_cfdi(self):
+        check = self.check_document_already_linked()
+        if check:
+            return check
+        return {
+            "name": self.env._("MX EDI to record"),
             "type": "ir.actions.act_window",
             "res_model": "documents.mx_edi_to_record_wizard",
             "view_mode": "form",
             "target": "new",
             "views": [(False, "form")],
-            "context": {},
+            "context": {"default_document_ids": self.ids},
         }
-        return action
 
-    def create_from_cfdi(self):
-        check = self.check_document_already_linked()
-        if check:
-            return check
-        action = self.prepare_action_create_from_cfdi()
-        action.update({"context": {"default_document_ids": self.ids}})
-        return action
-
-    def prepare_l10n_mx_edi_common_fields(self, document):
+    def _prepare_l10n_mx_edi_common_fields(self, document):
         vals = {}
         mx_edi_document = self.env["l10n_mx_edi.document"]
-        cfdi_etree = mx_edi_document.check_objectify_xml(document.datas)
-        partner = mx_edi_document.partner_search_create(cfdi_etree)
-        is_cfdi_payment = mx_edi_document.is_payment_complement(cfdi_etree)
-        tfd_node = mx_edi_document.collect_complemento(cfdi_etree)
+        cfdi_infos = mx_edi_document._decode_cfdi_attachment(document.raw)
+        cfdi_node = cfdi_infos["cfdi_node"]
+        partner = mx_edi_document.partner_search_create(cfdi_node)
+        is_cfdi_payment = mx_edi_document._l10n_mx_edi_is_cfdi_payment(cfdi_node)
         product_list = []
-        for line in cfdi_etree.Conceptos.Concepto:
+        for line in cfdi_node.findall("{*}Conceptos/{*}Concepto")[0]:
             product_list += [line.get("Descripcion", "")]
         vals.update(
             {
                 "partner_id": partner.id,
-                "l10n_mx_edi_cfdi_total_amount": float(cfdi_etree.get("Total", 0)),
-                "l10n_mx_edi_stamp_date": mx_edi_document.get_datetime(tfd_node),
+                "l10n_mx_edi_cfdi_total_amount": float(cfdi_infos["amount_total"]),
+                "l10n_mx_edi_stamp_date": cfdi_infos["stamp_date"],
                 "l10n_mx_edi_product_list": json.dumps(product_list),
                 "l10n_mx_edi_is_cfdi_payment": is_cfdi_payment,
+                "l10n_mx_edi_related_cfdi": cfdi_infos["origin"],
             }
         )
-        # if hasattr(cfdi_etree, "CfdiRelacionados"):
-        #     related_uuids = edi_obj.get_related_uuids_dict(cfdi_etree)
-        #     l10n_mx_edi_origin = self.env["account.move"]._l10n_mx_edi_write_cfdi_origin(
-        #         related_uuids["type"], related_uuids["uuids"]
-        #     )
-        #     vals.update({"l10n_mx_edi_related_cfdi": json.dumps(l10n_mx_edi_origin)})
         return vals
 
     @api.depends("datas")
     def _compute_l10n_mx_edi_common_fields(self):
-        for rec in self.filtered(
-            lambda doc: doc.l10n_mx_edi_is_cfdi and doc.attachment_id
-        ):
-            vals = self.prepare_l10n_mx_edi_common_fields(rec)
+        for rec in self.filtered(lambda doc: doc.l10n_mx_edi_is_cfdi and doc.attachment_id):
+            vals = self._prepare_l10n_mx_edi_common_fields(rec)
             rec.update(vals)
 
     def update_l10n_mx_edi_sat_state(self):
-        for rec in self:
-            if not rec.l10n_mx_edi_is_cfdi or not rec.datas:
-                rec.l10n_mx_edi_sat_state = "none"
-                rec.l10n_mx_edi_sat_cancellable = "none"
-                rec.l10n_mx_edi_sat_cancel_state = "none"
+        mx_edi_document = self.env["l10n_mx_edi.document"]
+        for document in self:
+            if not document.l10n_mx_edi_is_cfdi or not document.raw:
+                document.l10n_mx_edi_sat_state = "none"
+                document.l10n_mx_edi_sat_cancellable = "none"
+                document.l10n_mx_edi_sat_cancel_state = "none"
                 continue
 
-            cfdi_etree = self.env["l10n_mx_edi.document"].check_objectify_xml(rec.datas)
-            uuid = (
-                self.env["l10n_mx_edi.document"]
-                .collect_complemento(cfdi_etree)
-                .get("UUID", "")
-                .upper()
-            )
+            cfdi_infos = mx_edi_document._decode_cfdi_attachment(document.raw)
             sat_status = self.env["l10n_mx_edi.document"].l10n_mx_ws_get_cfdi_status(
-                cfdi_etree.Emisor.get("Rfc", ""),
-                cfdi_etree.Receptor.get("Rfc", ""),
-                cfdi_etree.get("Total", "0.00"),
-                uuid,
+                cfdi_infos["supplier_rfc"],
+                cfdi_infos["customer_rfc"],
+                cfdi_infos["amount_total"],
+                cfdi_infos["uuid"],
             )
-            rec.l10n_mx_edi_sat_state = STATUS.get(
-                sat_status["status"] if sat_status else "none", "none"
-            )
-            rec.l10n_mx_edi_sat_cancellable = CANCELLABLE.get(
+            document.l10n_mx_edi_sat_state = STATUS.get(sat_status["status"] if sat_status else "none", "none")
+            document.l10n_mx_edi_sat_cancellable = CANCELLABLE.get(
                 sat_status["is_cancellable"] if sat_status else "", "none"
             )
-            rec.l10n_mx_edi_sat_cancel_state = CANCEL_STATUS.get(
+            document.l10n_mx_edi_sat_cancel_state = CANCEL_STATUS.get(
                 sat_status["cancel_status"] if sat_status else "", "none"
             )
 
     def _get_l10n_mx_edi_type_tag(self, key):
         values = {
-            "I": self.env.ref(
-                "documents_l10n_mx_edi.documents_l10n_mx_edi_tag_ingreso"
-            ),
+            "I": self.env.ref("documents_l10n_mx_edi.documents_l10n_mx_edi_tag_ingreso"),
             "E": self.env.ref("documents_l10n_mx_edi.documents_l10n_mx_edi_tag_egreso"),
-            "T": self.env.ref(
-                "documents_l10n_mx_edi.documents_l10n_mx_edi_tag_traslado"
-            ),
-            "P": self.env.ref(
-                "documents_l10n_mx_edi.documents_l10n_mx_edi_tag_reception"
-            ),
+            "T": self.env.ref("documents_l10n_mx_edi.documents_l10n_mx_edi_tag_traslado"),
+            "P": self.env.ref("documents_l10n_mx_edi.documents_l10n_mx_edi_tag_reception"),
             "N": self.env.ref("documents_l10n_mx_edi.documents_l10n_mx_edi_tag_nomina"),
-            "R": self.env.ref(
-                "documents_l10n_mx_edi.documents_l10n_mx_edi_tag_retencion"
-            ),
+            "R": self.env.ref("documents_l10n_mx_edi.documents_l10n_mx_edi_tag_retencion"),
         }
         return values.get(key, ())
 
-    def _prepare_l10n_mx_edi_tags(self, cfdi_etree):
+    def _prepare_l10n_mx_edi_tags(self, cfdi_infos):
+        cfdi_node = cfdi_infos["cfdi_node"]
+        stamp_date = datetime.strptime(cfdi_infos["stamp_date"], "%Y-%m-%d %H:%M:%S")
         tag_obj = self.env["documents.tag"]
         tags = []
-        tag = self._get_l10n_mx_edi_type_tag(cfdi_etree.get("TipoDeComprobante"))
+        tag = self._get_l10n_mx_edi_type_tag(cfdi_node.get("TipoDeComprobante"))
         if tag:
             tags.append(tag.id)
         tag = tag_obj.search(
@@ -242,7 +223,7 @@ class Document(models.Model):
                 (
                     "name",
                     "=",
-                    str(self.env["l10n_mx_edi.document"].get_datetime(cfdi_etree).year),
+                    str(stamp_date.year),
                 ),
             ],
             limit=1,
@@ -255,9 +236,7 @@ class Document(models.Model):
                 (
                     "name",
                     "=",
-                    str(
-                        self.env["l10n_mx_edi.document"].get_datetime(cfdi_etree).month
-                    ),
+                    str(stamp_date.month),
                 ),
             ],
             limit=1,
@@ -266,18 +245,12 @@ class Document(models.Model):
             tags.append(tag.id)
         return tags
 
-    def _documents_l10n_mx_edi_get_folder(self, cfdi_etree):
-        import_type = (
-            "issued"
-            if self.env.company.vat == cfdi_etree.Emisor.get("Rfc", "")
-            else "received"
-        )
+    def _documents_l10n_mx_edi_get_folder(self, rfc_emisor):
+        import_type = "issued" if self.env.company.vat == rfc_emisor else "received"
         folder = (
             self.env.ref("documents_l10n_mx_edi.documents_l10n_mx_edi_folder_issued")
             if import_type == "issued"
-            else self.env.ref(
-                "documents_l10n_mx_edi.documents_l10n_mx_edi_folder_received"
-            )
+            else self.env.ref("documents_l10n_mx_edi.documents_l10n_mx_edi_folder_received")
         )
         return folder
 
@@ -292,53 +265,7 @@ class Document(models.Model):
         """
         if not rfc:
             return False
-        return self.env["res.company"].search(
-            ["|", ("vat", "=", rfc), ("vat", "=", "MX" + rfc)], limit=1
-        )
-
-    def _l10n_mx_edi_extract_cfdi_data(self, xml_content):
-        """Extracts key data from a CFDI for further processing.
-
-        Args:
-            xml_content (str/binary): XML content of the CFDI
-
-        Returns:
-            dict: Dictionary with:
-                - etree: Parsed XML object
-                - issuer_rfc: RFC of the issuer
-                - receiver_rfc: RFC of the receiver
-                - uuid: UUID of the voucher
-                - is_valid: Boolean indicating if it's a valid CFDI
-        """
-        mx_edi_document = self.env["l10n_mx_edi.document"]
-        result = {
-            "etree": None,
-            "issuer_rfc": "",
-            "receiver_rfc": "",
-            "uuid": "",
-            "is_valid": False,
-        }
-
-        if not mx_edi_document._l10n_mx_edi_is_cfdi(xml_content):
-            return result
-
-        etree = mx_edi_document.check_objectify_xml(xml_content)
-        if etree is None:
-            return result
-
-        result.update(
-            {
-                "etree": etree,
-                "issuer_rfc": etree.Emisor.get("Rfc", ""),
-                "receiver_rfc": etree.Receptor.get("Rfc", ""),
-                "uuid": mx_edi_document.collect_complemento(etree)
-                .get("UUID", "")
-                .upper(),
-                "is_valid": True,
-            }
-        )
-
-        return result
+        return self.env["res.company"].search(["|", ("vat", "=", rfc), ("vat", "=", "MX" + rfc)], limit=1)
 
     def _l10n_mx_edi_assign_cfdi_data(self):
         """Assign tags, folder and company to the document based on CFDI content.
@@ -349,49 +276,41 @@ class Document(models.Model):
         - Assign appropriate tags and folder
         - Link the document to the corresponding company
         """
-        cfdi_data = self._l10n_mx_edi_extract_cfdi_data(self.datas)
-        if not cfdi_data["is_valid"]:
+        mx_edi_document = self.env["l10n_mx_edi.document"]
+        cfdi_infos = mx_edi_document._decode_cfdi_attachment(self.raw)
+        if not cfdi_infos:
             return False
 
         check_duplicate = self.env.context.get("check_duplicate", True)
 
         # Duplicate validation
-        if cfdi_data["uuid"] and check_duplicate:
-            exist_docs = self.env["documents.document"].search(
-                [
-                    ("id", "!=", self.id),
-                    ("name", "ilike", cfdi_data["uuid"] + ".xml"),
-                    ("res_model", "in", ["documents.document", "account.move"]),
-                ]
-            )
-            if exist_docs:
-                message = _("Duplicated CFDI: %s" % cfdi_data["uuid"])
+        if cfdi_infos["uuid"] and check_duplicate:
+            duplicity_result = mx_edi_document._get_cfdi_duplicity(cfdi_infos["uuid"], self)
+
+            if duplicity_result["duplicated"]:
                 self.env["bus.bus"]._sendone(
                     self.env.user.partner_id,
                     "simple_notification",
                     {
                         "title": "Duplicated CFDI",
-                        "message": message,
+                        "message": duplicity_result["message"],
                         "sticky": False,
                         "warning": True,
                     },
                 )
-                return False
+                raise ValidationError(self.env._("Duplicated CFDI, document creation skipped."))
 
         # Company assignment
         company = self._documents_l10n_mx_edi_get_company(
-            cfdi_data["receiver_rfc"]
-        ) or self._documents_l10n_mx_edi_get_company(cfdi_data["issuer_rfc"])
+            cfdi_infos["customer_rfc"]
+        ) or self._documents_l10n_mx_edi_get_company(cfdi_infos["supplier_rfc"])
 
         # Prepare values to update
         update_vals = {
-            "name": cfdi_data["uuid"] + ".xml",
-            "folder_id": self._documents_l10n_mx_edi_get_folder(cfdi_data["etree"]).id,
+            "name": cfdi_infos["uuid"] + ".xml",
+            "folder_id": self._documents_l10n_mx_edi_get_folder(cfdi_infos["supplier_rfc"]).id,
             "l10n_mx_edi_is_cfdi": True,
-            "tag_ids": [
-                Command.link(tag_id)
-                for tag_id in self._prepare_l10n_mx_edi_tags(cfdi_data["etree"])
-            ],
+            "tag_ids": [Command.link(tag_id) for tag_id in self._prepare_l10n_mx_edi_tags(cfdi_infos)],
         }
 
         if company and not self.company_id:

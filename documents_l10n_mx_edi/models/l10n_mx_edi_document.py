@@ -1,17 +1,17 @@
 import base64
 import hashlib
 import logging
+import re
 from datetime import datetime, timedelta
 
 import requests
-from lxml import etree, objectify
+from lxml import etree
 from OpenSSL import crypto
 
 from odoo import models, tools
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.tools.float_utils import float_round
-from odoo.tools.translate import _
 
 TYPE_CFDI22_TO_CFDI33 = {
     "ingreso": "I",
@@ -37,84 +37,28 @@ _logger = logging.getLogger(__name__)
 class L10nMxEdiDocument(models.Model):
     _inherit = "l10n_mx_edi.document"
 
-    def _xml2capitalize(self, xml):
-        """Receive 1 lxml etree object and change all attrib to Capitalize."""
+    def _get_import_type(self, rfc_emisor):
+        return "issued" if self.env.company.vat == rfc_emisor else "received"
 
-        def recursive_lxml(element):
-            for attrib, value in element.attrib.items():
-                new_attrib = "%s%s" % (attrib[0].upper(), attrib[1:])
-                element.attrib.update({new_attrib: value})
-            for child in element.getchildren():
-                child = recursive_lxml(child)
-            return element
+    def _get_move_type(self, cfdi_infos):
+        """Determine invoice type based on CFDI.
 
-        return recursive_lxml(xml)
+        Args:
+            cfdi_infos (dict): Must contain:
+                - 'cfdi_node' (etree): XML node
+                - 'supplier_rfc' (str)
 
-    def _convert_cfdi32_to_cfdi33(self, cfdi_etree):
-        """Convert a xml from cfdi32 to cfdi33
-        :param xml: The xml 32 in lxml.objectify object
-        :return: A xml 33 in lxml.objectify object
+        Returns:
+            str: One of 'in_invoice', 'out_refund', etc.
+
+        Example:
+            >>> _get_move_type({'supplier_rfc': 'XAXX010101000', ...})
+            'out_invoice'
         """
-        if cfdi_etree.get("Version") in ("3.3", "4.0"):
-            return cfdi_etree
-        cfdi_etree = self._xml2capitalize(cfdi_etree)
-        cfdi_etree.attrib.update(
-            {
-                "TipoDeComprobante": TYPE_CFDI22_TO_CFDI33[cfdi_etree.attrib["tipoDeComprobante"]],
-                "MetodoPago": "PPD",
-            }
-        )
-        return cfdi_etree
-
-    def check_objectify_xml(self, xml64):
-        """Helper to decode and lxml objectify an xml b64 file.
-        :param xml64:       An xml b64 file.
-        :return:            etree object or False
-        :rtype:             etree object or False
-        """
-        cfdi_etree = False
-        try:
-            if isinstance(xml64, bytes):
-                xml64 = xml64.decode()
-            xml_str = base64.b64decode(xml64)
-            objectify.fromstring(xml_str)
-        except etree.XMLSyntaxError as e:
-            _logger.warning(str(e))
-            return cfdi_etree
-
-        xml_str = (
-            xml_str.replace(b"xmlns:schemaLocation", b"xsi:schemaLocation")
-            .replace(b"data:text/xml;base64,", b"")
-            .replace(b"o;?", b"")
-            .replace(b"\xef\xbf\xbd", b"")
-        )
-        cfdi_etree = objectify.fromstring(xml_str)
-        return cfdi_etree
-
-    def collect_complemento(
-        self,
-        cfdi_etree,
-        attribute="tfd:TimbreFiscalDigital[1]",
-        namespaces=None,
-    ):
-        """Helper to extract relevant data from CFDI nodes.
-        By default this method will retrieve tfd, Adjust parameters for other nodes
-        :param cfdi_etree:  The cfdi etree object.
-        :param attribute:   tfd.
-        :param namespaces:  tfd.
-        :return:            A python dictionary.
-        """
-        if not namespaces:
-            namespaces = {"tfd": "http://www.sat.gob.mx/TimbreFiscalDigital"}
-        if not hasattr(cfdi_etree, "Complemento"):
-            return None
-        node = cfdi_etree.Complemento.xpath(attribute, namespaces=namespaces)
-        return node[0] if node else None
-
-    def get_import_type(self, cfdi_etree):
-        import_type = "issued" if self.env.company.vat == cfdi_etree.Emisor.get("Rfc", "") else "received"
-        cfdi_type = cfdi_etree.get("TipoDeComprobante", False)
+        cfdi_node = cfdi_infos["cfdi_node"]
+        cfdi_type = cfdi_node.get("TipoDeComprobante", False)
         move_type = None
+        import_type = self._get_import_type(cfdi_infos["supplier_rfc"])
         if import_type == "received":
             received_move_type = {
                 "I": "in_invoice",
@@ -131,34 +75,46 @@ class L10nMxEdiDocument(models.Model):
                 "P": "entry",
             }
             move_type = issued_move_type.get(cfdi_type, "out_invoice")
-        return import_type, move_type
+        return move_type
 
-    def get_serie_folio(self, cfdi_etree):
+    def _get_serie_folio(self, cfdi_node):
         """:return:        Serie + Folio
         :rtype:         str
         """
-        xml_serie = cfdi_etree.get("Serie", False)
-        xml_folio = cfdi_etree.get("Folio", False)
+        xml_serie = cfdi_node.get("Serie", False)
+        xml_folio = cfdi_node.get("Folio", False)
         xml_sefo = ""
         if xml_serie or xml_folio:
             xml_sefo = "%s%s" % (
-                cfdi_etree.get("Serie", ""),
-                cfdi_etree.get("Folio", ""),
+                cfdi_node.get("Serie", ""),
+                cfdi_node.get("Folio", ""),
             )
         return xml_sefo
 
-    def get_datetime(self, cfdi_etree):
+    def _get_datetime(self, cfdi_infos):
         """:return:        CFDI date
         :rtype:         datetime
         """
-        date = cfdi_etree.get("Fecha", cfdi_etree.get("FechaTimbrado", ""))
-        return datetime.strptime(date, "%Y-%m-%dT%H:%M:%S")
+        date = cfdi_infos["emission_date_str"] or cfdi_infos["stamp_date"]
+        return datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
 
-    def get_currency(self, cfdi_etree):
-        """:return:        Currency in ISO? code
-        :rtype:         str
-        """
-        currency = cfdi_etree.get("Moneda", "MXN")
+    def _get_payment_term_id(self, cfdi_node):
+        """Get Payment Term ID from CFDI."""
+        if conditions := cfdi_node.get("CondicionesDePago"):
+            return self.env["account.payment.term"].search([("name", "=ilike", conditions)], limit=1).id
+        return False
+
+    def _get_payment_method_id(self, cfdi_node):
+        """Get MX Payment Method ID from CFDI."""
+        payment_form = cfdi_node.get("FormaDePago") or cfdi_node.get("FormaPago")
+        return (
+            self.env["l10n_mx_edi.payment.method"].search([("code", "=", payment_form)], limit=1).id
+            or self.env.ref("l10n_mx_edi.payment_method_otros").id
+        )
+
+    def _get_currency_id(self, cfdi_node):
+        """Get Currency ID from CFDI."""
+        currency_code = cfdi_node.get("Moneda", "MXN")
         mxn = [
             "mxp",
             "mxn",
@@ -174,27 +130,16 @@ class L10nMxEdiDocument(models.Model):
             "2013",
         ]
         usd = ["dolar", "dólar", "dólares", "dolares"]
-        currency = "MXN" if currency.lower() in mxn else currency
-        currency = "USD" if currency.lower() in usd else currency
-        return currency
+        currency_code = "MXN" if currency_code.lower() in mxn else currency_code
+        currency_code = "USD" if currency_code.lower() in usd else currency_code
 
-    def get_related_uuids_dict(self, cfdi_etree):
-        """:return:        {"type": TipoRelacion code, "uuids": []}
-        :rtype:         dict
-        """
-        res = {
-            "type": cfdi_etree.CfdiRelacionados.get("TipoRelacion", "01"),
-            "uuids": [],
-        }
-        for related_uuid in cfdi_etree.CfdiRelacionados.CfdiRelacionado:
-            res["uuids"].append(related_uuid.get("UUID").upper())
-        return res
+        return self.env["res.currency"].search([("name", "=", currency_code)], limit=1).id
 
-    def get_fuel_codes(self):
+    def _get_fuel_codes(self):
         """Return the codes that can be used in FUEL"""
         return [str(r) for r in range(15101500, 15101515)]
 
-    def get_taxes_to_omit(self):
+    def _get_expense_tax_names(self):
         """Some taxes are not found in the system, but is correct, because those
         taxes should be added in the invoice like expenses.
         To make dynamic this a system parameter can be added with the name:
@@ -205,41 +150,62 @@ class L10nMxEdiDocument(models.Model):
             return taxes.split(",")
         return ["ISH", "TUA", "ISAN"]
 
-    def prepare_search_tax_group_name(self, name, rate):
+    def _get_tax_group_name(self, name, rate):
         """Construct tax group name for further search"""
         return f"{name} {rate}".replace(".0", "")
 
-    def prepare_tax_group(self, name, rate):
+    def _get_tax_group(self, name, rate):
         """Return account.tax.group records"""
-        tax_group_name = self.prepare_search_tax_group_name(name, rate)
+        tax_group_name = self._get_tax_group_name(name, rate)
         tax_group = (
             self.env["account.tax.group"].with_context(lang="es_MX").search([("name", "ilike", tax_group_name)])
         )
         return tax_group
 
-    def prepare_search_tax_name(self, name, rate):
+    def _get_tax_name(self, name, rate):
         """Construct tax name for further search"""
         return f"{name} {rate}".replace(".0", "")
 
-    def prepare_tax_domain(self, name, amount, l10n_mx_factor_type, type_tax_use="purchase"):
+    def _get_tax_domain(self, name, amount, factor_type, type_tax_use="purchase"):
         """Construct tax domain for further search"""
-        tax_name = self.prepare_search_tax_name(name, amount)
+        tax_name = self._get_tax_name(name, amount)
         domain = [
             ("company_id", "=", self.env.company.id),
-            ("active", "=", True),
             ("type_tax_use", "=", type_tax_use),
             ("name", "ilike", tax_name),
-            ("l10n_mx_factor_type", "=", l10n_mx_factor_type),
+            ("l10n_mx_factor_type", "=", factor_type),
         ]
-        # tax_group = self.prepare_tax_group(name, rate)
-        # if tax_group:
-        #     domain.append(("tax_group_id", "in", tax_group.ids))
         if -10.67 <= amount <= -10.66:
             domain.append(("amount", "<=", -10.66))
             domain.append(("amount", ">=", -10.67))
         else:
             domain.append(("amount", "=", amount))
         return domain
+
+    def collect_complemento(
+        self,
+        cfdi_node,
+        attribute="TimbreFiscalDigital",
+        namespace_uri=None,
+    ):
+        """Helper to extract relevant data from CFDI nodes.
+        By default this method will retrieve tfd, Adjust parameters for other nodes
+        :param cfdi_node:   XML node representing 'Comprobante' from CFDI.
+        :param attribute:   tfd.
+        :param namespaces:  tfd.
+        :return:            A python dictionary.
+        """
+        if not namespace_uri:
+            namespace_uri = "http://www.sat.gob.mx/TimbreFiscalDigital"
+        xpath_expr = "//*[local-name()='Complemento']" "/*[local-name()='{}' and namespace-uri()='{}']".format(
+            attribute, namespace_uri
+        )
+        try:
+            node = cfdi_node.xpath(xpath_expr)
+            return node[0] if node else None
+        except Exception as e:
+            _logger.error("Error extracting complemento %s: %s", attribute, str(e))
+        return None
 
     def collect_taxes(self, tax_element):
         """Get tax data of the Impuesto node of the xml and return
@@ -269,22 +235,6 @@ class L10nMxEdiDocument(models.Model):
             tax_vals.append(tax_dict)
         return tax_vals
 
-    def prepare_line_tax_ids(self, line):
-        collected_tax_vals = []
-        if not hasattr(line, "Impuestos"):
-            return collected_tax_vals
-        if hasattr(line.Impuestos, "Traslados"):
-            collected_tax_vals = self.collect_taxes(line.Impuestos.Traslados.Traslado)
-        if hasattr(line.Impuestos, "Retenciones"):
-            collected_tax_vals += self.collect_taxes(line.Impuestos.Retenciones.Retencion)
-        tax_ids = []
-        for tax in collected_tax_vals:
-            tax_domain = self.prepare_tax_domain(tax["name"], tax["amount"], tax["l10n_mx_factor_type"])
-            tax_exist = self.env["account.tax"].with_context(lang="es_MX").search(tax_domain, limit=1, order="id asc")
-            if tax_exist:
-                tax_ids.append(tax_exist.id)
-        return tax_ids
-
     def collect_local_taxes(self, local_tax_node, attrs):
         local_tax_vals = []
         for tax in getattr(local_tax_node, attrs[0]):
@@ -296,7 +246,34 @@ class L10nMxEdiDocument(models.Model):
             local_tax_vals.append(tax_dict)
         return local_tax_vals
 
-    def prepare_local_taxes(self, local_taxes_node):
+    def partner_search_create(self, cfdi_node):
+        partner_obj = self.env["res.partner"]
+        emisor_node = cfdi_node.xpath("//*[local-name()='Emisor']")[0]
+        name = emisor_node.get("Nombre", "")
+        vat = emisor_node.get("Rfc", "")
+        import_type = self._get_import_type(vat)
+        if import_type == "issued":
+            receptor_node = cfdi_node.xpath("//*[local-name()='Receptor']")[0]
+            name = receptor_node.get("Nombre", "")
+            vat = receptor_node.get("Rfc", "")
+        partner = partner_obj.search([("vat", "=", vat)], limit=1, order="id asc")
+        if not partner:
+            partner = partner_obj.sudo().create(
+                {
+                    "company_type": "company",
+                    "name": name,
+                    "vat": vat,
+                    "country_id": self.env.ref("base.mx").id,
+                }
+            )
+            partner.message_post(
+                body=self.env._(
+                    "This partner was created when importing a CFDI file. Please verify that Partner data are correct."
+                )
+            )
+        return partner
+
+    def _prepare_local_taxes(self, local_taxes_node):
         """:param cfdi_etree:  The cfdi etree object.
         :return:            A list of python dictionaries.
         """
@@ -307,10 +284,10 @@ class L10nMxEdiDocument(models.Model):
         if hasattr(local_taxes_node, "TrasladosLocales"):
             attrs = ["TrasladosLocales", "ImpLocTrasladado", "TasadeTraslado", 1]
             local_taxes_vals += self.collect_local_taxes(local_taxes_node, attrs)
-        taxes_to_omit = self.get_taxes_to_omit()
+        expense_taxes = self._get_expense_tax_names()
         local_taxes_lines = []
         for tax in local_taxes_vals:
-            if tax["name"] in taxes_to_omit:
+            if tax["name"] in expense_taxes:
                 local_taxes_lines.append(
                     Command.create(
                         {
@@ -322,17 +299,50 @@ class L10nMxEdiDocument(models.Model):
                 )
         return local_taxes_lines
 
-    def search_vehicle_ecc12(self, line_ecc12_element):
+    def _prepare_invoice_line_tax_ids(self, line):
+        """Prepares tax IDs for an invoice line from CFDI tax data.
+
+        Args:
+            line (etree._Element): XML node representing 'Concepto' from CFDI
+
+        Returns:
+            list: IDs of account.tax to be applied to the invoice line
+        """
+
+        # Helper function to find taxes
+        def find_taxes(tax_type):
+            tax_attribute = "Traslado" if tax_type == "Traslados" else "Retencion"
+            return line.findall("{*}Impuestos/{*}%s/{*}%s" % (tax_type, tax_attribute))
+
+        # Collect all applicable taxes
+        collected_taxes = []
+        for tax_type in ["Traslados", "Retenciones"]:
+            for tax_node in find_taxes(tax_type):
+                collected_taxes.extend(self.collect_taxes([tax_node]))
+
+        # Find matching taxes in the system
+        tax_ids = []
+        mx_taxes = self.env["account.tax"].with_context(lang="es_MX")
+
+        for tax_data in collected_taxes:
+            tax_domain = self._get_tax_domain(tax_data["name"], tax_data["amount"], tax_data["l10n_mx_factor_type"])
+            existing_tax = mx_taxes.search(tax_domain, limit=1, order="id asc")
+            if existing_tax:
+                tax_ids.append(existing_tax.id)
+
+        return tax_ids
+
+    def _search_vehicle_ecc12(self, line_ecc12_element):
         domain_vehicle = [("fuel_card_name", "=", line_ecc12_element.get("Identificador"))]
         vehicle_exist = self.env["fleet.vehicle"].search(domain_vehicle, limit=1, order="id asc")
         return vehicle_exist
 
-    def search_partner_ecc12(self, line_ecc12_element):
-        partner_obj = self.env["res.partner"]
-        domain_partner = [("vat", "=", line_ecc12_element.get("Rfc"))]
-        partner_exist = partner_obj.search(domain_partner, limit=1, order="id asc")
+    def _search_partner_ecc12(self, line_ecc12_element):
+        partner = self.env["res.partner"]
+        partner_domain = [("vat", "=", line_ecc12_element.get("Rfc"))]
+        partner_exist = partner.search(partner_domain, limit=1, order="id asc")
         if not partner_exist:
-            partner_exist = partner_obj.sudo().create(
+            partner_exist = partner.sudo().create(
                 {
                     "name": line_ecc12_element.get("ClaveEstacion"),
                     "vat": line_ecc12_element.get("Rfc"),
@@ -340,133 +350,188 @@ class L10nMxEdiDocument(models.Model):
                     "country_id": self.env.ref("base.mx").id,
                 }
             )
-            msg = _(
+            msg = self.env._(
                 "This partner was created when importing a CFDI file. Please verify that Partner datas are correct."
             )
             partner_exist.message_post(body=msg)
         return partner_exist
 
-    def prepare_invoice_lines_ecc12(self, ecc12_node):
-        tax_exempt = (
-            self.env["account.tax"]
-            .with_context(lang="es_MX")
-            .search(
-                [
-                    ("company_id", "=", self.env.company.id),
-                    ("type_tax_use", "=", "purchase"),
-                    ("name", "=ilike", "IVA exento"),
-                    ("amount_type", "=", "percent"),
-                    ("amount", "=", 0.0),
-                    ("l10n_mx_factor_type", "=", "Exento"),
-                ],
-                limit=1,
-            )
+    def _prepare_ecc12_invoice_line_vals(self, ecc12_node):
+        """Prepares invoice line values from ECC12 (Estado de Cuenta Combustible) CFDI complement.
+
+        Args:
+            ecc12_node (etree._Element): XML node of the ECC12 complement
+
+        Returns:
+            list: List of Command.create dictionaries for invoice lines
+        """
+        # Constants and reusable objects
+        tax_obj = self.env["account.tax"].with_context(lang="es_MX")
+        tax_exempt = tax_obj.search(
+            [
+                ("company_id", "=", self.env.company.id),
+                ("type_tax_use", "=", "purchase"),
+                ("name", "=ilike", "IVA exento"),
+                ("amount_type", "=", "percent"),
+                ("amount", "=", 0.0),
+                ("l10n_mx_factor_type", "=", "Exento"),
+            ],
+            limit=1,
         )
+        ns = {"ecc12": "http://www.sat.gob.mx/EstadoDeCuentaCombustible12"}
         invoice_lines = []
-        for line in ecc12_node.Conceptos.ConceptoEstadoDeCuentaCombustible:
-            taxes = []
-            partner = self.search_partner_ecc12(line)
-            vehicle = self.search_vehicle_ecc12(line)
-            price = float(line.get("ValorUnitario", 0.0))
-            if hasattr(line, "Traslados"):
-                taxes = self.collect_taxes(line.Traslados.Traslado)
-                if taxes:
-                    # Split IEPS if is assigned in the XML
-                    ieps = [tax for tax in taxes if tax.get("tax") == "IEPS"]
-                    taxes = [tax for tax in taxes if tax.get("tax") != "IEPS"]
-                    tax = taxes[0] if taxes else {}
-                    tax_ids = []
-                    tax_domain = self.prepare_tax_domain(tax["name"], tax["amount"], tax["l10n_mx_factor_type"])
-                    tax_exist = (
-                        self.env["account.tax"].with_context(lang="es_MX").search(tax_domain, limit=1, order="id asc")
+
+        # Process each fuel concept line
+        for line in ecc12_node.findall("{*}Conceptos/{*}ConceptoEstadoDeCuentaCombustible", namespaces=ns):
+            # Base data extraction
+            partner = self._search_partner_ecc12(line)
+            vehicle = self._search_vehicle_ecc12(line)
+            quantity = float(line.get("Cantidad", 0.0))
+            total_amount = float(line.get("Importe", 0.0))
+
+            # Tax processing
+            tax_ids = []
+            ieps_amount = 0.0
+            price_unit = float(line.get("ValorUnitario", 0.0))
+
+            # Get and process taxes if they exist
+            tax_nodes = line.findall("{*}Impuestos/{*}Traslados/{*}Traslado", namespaces=ns)
+            if tax_nodes:
+                taxes = self.collect_taxes(tax_nodes)
+                ieps_taxes = [t for t in taxes if t.get("tax") == "IEPS"]
+                other_taxes = [t for t in taxes if t.get("tax") != "IEPS"]
+
+                # Process main tax (non-IEPS)
+                if other_taxes:
+                    main_tax = other_taxes[0]
+                    tax_domain = self.prepare_tax_domain(
+                        main_tax["name"],
+                        main_tax["amount"],
+                        main_tax["l10n_mx_factor_type"],
                     )
-                    if tax_exist:
-                        tax_ids.append(tax_exist.id)
-                    price = round(tax.get("total") / (tax.get("amount") / 100), 2)
+                    existing_tax = tax_obj.search(tax_domain, limit=1, order="id asc")
+                    if existing_tax:
+                        tax_ids.append(existing_tax.id)
+                        price_unit = round(main_tax.get("total", 0.0) / (main_tax.get("amount", 100) / 100, 2))
+
+                # Process IEPS tax if exists
+                if ieps_taxes:
+                    ieps_amount = float(ieps_taxes[0].get("amount", 0.0))
+
+            # Main fuel line
             invoice_lines.append(
                 Command.create(
                     {
-                        "name": _(
+                        "name": self.env._(
                             "Identifier: %s - Operation: %s - Station: %s",
                             line.get("Identificador"),
                             line.get("FolioOperacion"),
                             line.get("ClaveEstacion"),
                         ),
                         "vehicle_id": vehicle.id or False,
-                        "quantity": float(line.get("Cantidad", 0.0)),
-                        "price_unit": price / float(line.get("Cantidad", 0.0)),
+                        "quantity": quantity,
+                        "price_unit": price_unit / quantity if quantity else 0.0,
                         "tax_ids": [Command.set(tax_ids)] if tax_ids else False,
                         "partner_id": partner.id,
-                    },
+                    }
                 )
             )
-            invoice_lines.append(
-                Command.create(
-                    {
-                        "name": _("Fuel - IEPS"),
-                        "vehicle_id": vehicle.id or False,
-                        "quantity": 1.0,
-                        "price_unit": (float(line.get("Importe", 0.0)) - price)
-                        + float(ieps[0].get("amount", 0) if ieps else 0),
-                        "tax_ids": [Command.set([tax_exempt.id])],
-                        "partner_id": partner.id,
-                    },
+
+            # IEPS line if applicable
+            if tax_nodes:  # Only add IEPS line if there were taxes
+                invoice_lines.append(
+                    Command.create(
+                        {
+                            "name": self.env._("Fuel - IEPS"),
+                            "vehicle_id": vehicle.id or False,
+                            "quantity": 1.0,
+                            "price_unit": (total_amount - price_unit) + ieps_amount,
+                            "tax_ids": [Command.set([tax_exempt.id])] if tax_exempt else False,
+                            "partner_id": partner.id,
+                        }
+                    )
                 )
-            )
+
         return invoice_lines
 
-    def prepare_invoice_lines(self, cfdi_etree, can_create_product=False):
-        global_discount = cfdi_etree.get("Descuento", False)
+    def _prepare_invoice_line_vals(self, cfdi_node, can_create_product=False, partner=None):
+        """Prepare invoice line values from CFDI concept nodes.
+
+        Args:
+            cfdi_node (etree._Element): The CFDI XML node containing concept lines
+            can_create_product (bool, optional): Whether to create missing products.
+                Defaults to False.
+            partner (res.partner, optional): Partner to use for product search context.
+                Defaults to None.
+
+        Returns:
+            list: List of Command.create dictionaries ready for invoice_line_ids, each containing:
+                - 'name': Line description
+                - 'product_id': Product ID (if found/created)
+                - 'quantity': Product quantity
+                - 'product_uom_id': Unit of measure ID
+                - 'price_unit': Unit price
+                - 'discount': Discount percentage
+                - 'tax_ids': List of tax IDs applicable to the line
+                Additional fields for special cases like fuel lines.
+
+        Notes:
+            - Handles both regular products and special cases like fuel (IEPS)
+            - Automatically processes global discounts if present in CFDI
+            - Creates products on-the-fly if can_create_product=True
+            - Matches UoM (Unit of Measure) using UNSPSC codes from CFDI
+            - Processes both regular taxes and local taxes from complementos
+        """
+        ns = {"cfdi": "http://www.sat.gob.mx/cfd/4"}
+
+        def get_product_sat_code(unspsc_code):
+            return self.env["product.unspsc.code"].search(
+                [
+                    ("code", "=", unspsc_code),
+                    ("applies_to", "=", "product"),
+                ],
+                limit=1,
+            )
+
+        global_discount = float(cfdi_node.get("Descuento", 0))
         global_line_discount = 0
         if global_discount:
-            global_line_discount = float(cfdi_etree.get("Descuento")) * 100 / float(cfdi_etree.get("SubTotal", 0.0))
+            global_line_discount = global_discount * 100 / float(cfdi_node.get("SubTotal", 0.0))
         invoice_lines = []
-        for line in cfdi_etree.Conceptos.Concepto:
-            # can_create_product = self._context.get("can_create_product", False)
-            # account_id = self._context.get("account_id", False)
-            uom_sat_exist = self.env["product.unspsc.code"].search(
+        for line in cfdi_node.findall("{*}Conceptos/{*}Concepto", namespaces=ns):
+            uom_unspsc_code = self.env["product.unspsc.code"].search(
                 [
                     ("code", "=", line.get("ClaveUnidad", "")),
                     ("applies_to", "=", "uom"),
                 ],
                 limit=1,
             )
-            uom_domain = [
-                ("unspsc_code_id", "=", uom_sat_exist.id),
-                ("name", "=ilike", line.get("Unidad", "")),
-            ]
-            uom_exist = self.env["uom.uom"].with_context(lang="es_MX").search(uom_domain)
-            uom_exist = uom_exist[0] if uom_exist else self.env.ref("uom.product_uom_unit")
+            uom_domain = [("unspsc_code_id", "=", uom_unspsc_code.id)]
+            uom = self.env.ref("uom.product_uom_unit")
+            prefetch_uom = self.env["uom.uom"].with_context(lang="es_MX").search(uom_domain)
+            if prefetch_uom and len(prefetch_uom) == 1:
+                uom = prefetch_uom
+            elif prefetch_uom and len(prefetch_uom) > 1:
+                uom_domain.append(("name", "=ilike", line.get("Unidad", "")))
+                uom = self.env["uom.uom"].with_context(lang="es_MX").search(uom_domain, limit=1) or uom
 
-            line_name = line.get("Descripcion", "")
-            if line_name.splitlines():
-                line_name = line_name.splitlines()[0]
-            product_exist = self.env["product.product"]
-            supinfo_exist = self.env["product.supplierinfo"].search([("product_name", "=ilike", line_name)], limit=1)
-            if supinfo_exist:
-                product_exist = product_exist.browse(supinfo_exist.product_tmpl_id.id)
-            if not product_exist:
-                product_exist = product_exist.search(
-                    [
-                        "|",
-                        ("description_purchase", "=ilike", line_name),
-                        ("name", "=ilike", line_name),
-                    ],
-                    limit=1,
-                )
-            if not product_exist and can_create_product:
-                product_exist = product_exist.create(
-                    {
-                        "name": line_name,
-                        "description_purchase": line_name,
-                        "list_price": float(line.get("ValorUnitario")),
-                        "type": "product",
-                        "detailed_type": "product",
-                        "uom_id": uom_exist.id,
-                        "uom_po_id": uom_exist.id,
-                        "l10n_mx_edi_code_sat_id": (uom_sat_exist.id if uom_sat_exist else False),
-                    }
-                )
+            product_code = line.get("NoIdentificacion")  # default_code if export from Odoo
+            unspsc_code = line.get("ClaveProdServ")  # UNSPSC code
+            description = line.get("Descripcion")  # label of the invoice line "[{p.default_code}] {p.name}"
+            cleaned_name = re.sub(
+                r"^\[.*\] ",
+                "",
+                description.splitlines()[0] if description.splitlines() else description,
+            )
+            product = self.env["product.product"]._retrieve_product(
+                name=cleaned_name,
+                default_code=product_code,
+                extra_domain=[("unspsc_code_id.code", "=", unspsc_code)],
+                company=self.env.company.id,
+                vendor=partner,
+            )
+            if not product:
+                product = self.env["product.product"]._retrieve_product(name=cleaned_name, default_code=product_code)
 
             line_discount = 0.0
             if global_line_discount:
@@ -474,67 +539,86 @@ class L10nMxEdiDocument(models.Model):
             elif line.get("Descuento"):
                 line_discount = (float(line.get("Descuento")) / float(line.get("Importe", "0.0"))) * 100
 
+            if not product and can_create_product:
+                product = product.create(
+                    {
+                        "name": cleaned_name,
+                        "description_purchase": cleaned_name,
+                        "list_price": float(line.get("ValorUnitario")),
+                        "type": "consu",
+                        "is_storable": True,
+                        "uom_id": uom.id,
+                        "uom_po_id": uom.id,
+                        "l10n_mx_edi_code_sat_id": get_product_sat_code(unspsc_code).id,
+                    }
+                )
             invoice_lines.append(
                 Command.create(
                     {
-                        "name": line_name,
-                        "product_id": product_exist.id or False,
+                        "name": cleaned_name,
+                        "product_id": product.id or False,
                         "quantity": float(line.get("Cantidad")),
-                        "product_uom_id": (product_exist.uom_id.id if product_exist else uom_exist.id),
+                        "product_uom_id": product.uom_id.id if product else uom.id,
                         "price_unit": float(line.get("ValorUnitario")),
                         "discount": line_discount,
-                        "tax_ids": [Command.set(self.prepare_line_tax_ids(line))],
+                        "tax_ids": [Command.set(self._prepare_invoice_line_tax_ids(line))],
                     },
                 )
             )
 
             # Case for fuel move line
-            line_product_sat_code = line.get("ClaveProdServ", False)
-            if line_product_sat_code in self.get_fuel_codes():
-                tax = self.collect_taxes(line.Impuestos.Traslados.Traslado)
+            if unspsc_code in self._get_fuel_codes():
+                tax_node = line.findall("{*}Impuestos/{*}Traslados/{*}Traslado")
+                tax = self.collect_taxes(tax_node)
                 fuel_line_price = tax[0].get("amount") / (tax[0].get("rate") / 100)
                 invoice_lines.append(
                     Command.create(
                         {
-                            "name": _("Fuel - IEPS"),
+                            "name": self.env._("Fuel - IEPS"),
                             "quantity": 1,
                             "price_unit": float(line.get("Importe")) - fuel_line_price,
-                            # "tax_ids": [Command.set(self.prepare_line_tax_ids(line))],
                         },
                     )
                 )
+
         return invoice_lines
 
-    def partner_search_create(self, cfdi_etree):
-        partner_obj = self.env["res.partner"]
-        import_type, move_type = self.get_import_type(cfdi_etree)
-        domain_partner = []
-        if import_type == "received":
-            name = cfdi_etree.Emisor.get("Nombre", "")
-            vat = cfdi_etree.Emisor.get("Rfc", "")
-            domain_partner.append(("vat", "=", vat))
-        elif import_type == "issued":
-            name = cfdi_etree.Receptor.get("Nombre", "")
-            vat = cfdi_etree.Receptor.get("Rfc", "")
-            domain_partner.append(("vat", "=", vat))
-        partner = partner_obj.search(domain_partner, limit=1, order="id asc")
-        if not partner:
-            vals = {
-                "company_type": "company",
-                "name": name,
-                "vat": vat,
-                "country_id": self.env.ref("base.mx").id,
-            }
-            partner = partner_obj.sudo().create(vals)
-            msg = _(
-                "This partner was created when importing a CFDI file. Please verify that Partner datas are correct."
-            )
-            partner.message_post(body=msg)
-        return partner
+    def _prepare_invoice_vals(self, cfdi_infos, journal=False):
+        """Prepare the dictionary of values to create a new invoice from CFDI data.
 
-    def prepare_move(self, cfdi_etree, journal=False):
+        Args:
+            cfdi_infos (dict): Dictionary containing CFDI information with:
+                - 'cfdi_node' (etree._Element): The root node of the CFDI XML
+                - 'supplier_rfc' (str): The RFC of the supplier
+                - 'payment_method' (str): The payment method code
+                - 'usage' (str): The CFDI usage code
+                - 'origin' (str): The origin reference if applicable
+                - 'amount_total' (float): The total amount of the CFDI
+            journal (account.journal, optional): Journal to use for the invoice.
+                If not provided, will be determined automatically based on move type.
+
+        Returns:
+            dict: Dictionary of values ready to be passed to account.move.create(), containing:
+                - 'move_type': The invoice type (in_invoice, out_invoice, etc.)
+                - 'journal_id': The journal ID
+                - 'currency_id': The currency ID
+                - 'invoice_date': The invoice date
+                - 'invoice_payment_term_id': Payment term ID if specified in CFDI
+                - 'partner_id': Partner ID (created if doesn't exist)
+                - 'name': Invoice number from Serie+Folio or '/'
+                - 'payment_reference': Payment reference if received invoice
+                - 'posted_before': True if issued invoice
+                - Various l10n_mx_edi specific fields
+                - 'x_check_tax': Total taxes amount for validation
+                - 'x_check_total': Total amount for validation
+                - 'invoice_line_ids': List of invoice line commands
+
+        Raises:
+            UserError: If required CFDI data is missing or invalid
+        """
         move_obj = self.env["account.move"]
-        import_type, move_type = self.get_import_type(cfdi_etree)
+        move_type = self._get_move_type(cfdi_infos)
+        import_type = self._get_import_type(cfdi_infos["supplier_rfc"])
         if not journal:
             journal_types = ["general"]
             if move_type in move_obj.get_sale_types():
@@ -546,117 +630,134 @@ class L10nMxEdiDocument(models.Model):
                 ("type", "in", journal_types),
             ]
             journal = self.env["account.journal"].search(domain, limit=1, order="id asc")
-        currency_exist = self.env["res.currency"].search([("name", "=", self.get_currency(cfdi_etree))], limit=1)
-        payment_form = self.env["l10n_mx_edi.payment.method"].search(
-            [("code", "=", cfdi_etree.get("FormaDePago", cfdi_etree.get("FormaPago")))],
-            limit=1,
-        )
-        payment_term = False
-        if cfdi_etree.get("CondicionesDePago", False):
-            payment_term = self.env["account.payment.term"].search(
-                [("name", "=ilike", cfdi_etree.get("CondicionesDePago"))], limit=1
-            )
-        l10n_mx_edi_origin = False
-        # related_uuids = {}
-        # if hasattr(cfdi_etree, "CfdiRelacionados"):
-        #     related_uuids = self.get_related_uuids_dict(cfdi_etree)
-        # if cfdi_etree.get("TipoDeComprobante", False) == "E" and related_uuids:
-        #     l10n_mx_edi_origin = move_obj._l10n_mx_edi_write_cfdi_origin(related_uuids["type"], related_uuids["uuids"])
-        #     related_moves = move_obj.search([
-        #        ("commercial_partner_id", "=", partner.id), ("move_type", "=", "in_invoice")])
-        #     related_moves = related_moves.filtered(
-        #        lambda inv: inv.l10n_mx_edi_cfdi_uuid in related_uuids["uuids"])
-        #     TODO update core fields: reversed_entry_id, reversal_move_id
-        #     related_moves.write({
-        #        "refund_invoice_ids": [(4, invoice_id.id, 0)]
-        #     })
-        partner = self.partner_search_create(cfdi_etree)
+        cfdi_node = cfdi_infos["cfdi_node"]
+        partner = self.partner_search_create(cfdi_node)
         invoice_lines = []
         ecc12_node = self.collect_complemento(
-            cfdi_etree,
-            "//ecc12:EstadoDeCuentaCombustible",
-            {"ecc12": "http://www.sat.gob.mx/EstadoDeCuentaCombustible12"},
-        )
-        local_taxes_node = self.collect_complemento(
-            cfdi_etree,
-            "implocal:ImpuestosLocales",
-            {"implocal": "http://www.sat.gob.mx/implocal"},
+            cfdi_node,
+            "EstadoDeCuentaCombustible",
+            "http://www.sat.gob.mx/EstadoDeCuentaCombustible12",
         )
         if ecc12_node:
-            ecc12_lines = self.prepare_invoice_lines_ecc12(ecc12_node)
-            invoice_lines.extend(ecc12_lines)
+            invoice_lines.extend(self._prepare_ecc12_invoice_line_vals(ecc12_node))
         else:
-            invoice_lines = self.prepare_invoice_lines(cfdi_etree)
-            if local_taxes_node:
-                local_taxes_lines = self.prepare_local_taxes(local_taxes_node)
-                invoice_lines.extend(local_taxes_lines)
+            invoice_lines.extend(self._prepare_invoice_line_vals(cfdi_node, partner=partner))
+            if local_taxes_node := self.collect_complemento(
+                cfdi_node, "ImpuestosLocales", "http://www.sat.gob.mx/implocal"
+            ):
+                invoice_lines.extend(self._prepare_local_taxes(local_taxes_node))
+        taxes_node = cfdi_node.find("{*}Impuestos") if hasattr(cfdi_node, "find") else None
+        taxes_amount = float(taxes_node.get("TotalImpuestosTrasladados", 0.0)) if taxes_node is not None else 0.0
         vals = {
             "move_type": move_type,
             "journal_id": journal.id,
-            "currency_id": currency_exist.id,
-            "invoice_date": self.get_datetime(cfdi_etree),
-            "invoice_payment_term_id": payment_term.id if payment_term else 1,
+            "currency_id": self._get_currency_id(cfdi_node),
+            "invoice_date": self._get_datetime(cfdi_infos),
+            "invoice_payment_term_id": self._get_payment_term_id(cfdi_node),  # immediate
             "partner_id": partner.id,
-            "name": (self.get_serie_folio(cfdi_etree) if import_type == "issued" else "/"),
-            "payment_reference": (self.get_serie_folio(cfdi_etree) if import_type == "received" else False),
-            "posted_before": bool(import_type == "issued"),
-            "l10n_mx_edi_payment_method_id": (
-                payment_form.id if payment_form else self.env.ref("l10n_mx_edi.payment_method_otros")
-            ),
-            "l10n_mx_edi_payment_policy": cfdi_etree.get("MetodoPago"),
-            "l10n_mx_edi_usage": cfdi_etree.Receptor.get("UsoCFDI", "S01"),
-            "l10n_mx_edi_post_time": self.get_datetime(cfdi_etree),
-            "l10n_mx_edi_cfdi_origin": l10n_mx_edi_origin,
-            "x_check_tax": (
-                float(cfdi_etree.Impuestos.get("TotalImpuestosTrasladados", 0.0))
-                if hasattr(cfdi_etree, "Impuestos")
-                else 0.0
-            ),
-            "x_check_total": float(cfdi_etree.get("Total", 0.0)),
+            "name": self._get_serie_folio(cfdi_node) if import_type == "issued" else "/",
+            "payment_reference": self._get_serie_folio(cfdi_node) if import_type == "received" else False,
+            "posted_before": import_type == "issued",
+            "l10n_mx_edi_payment_method_id": self._get_payment_method_id(cfdi_node),
+            "l10n_mx_edi_payment_policy": cfdi_infos["payment_method"],
+            "l10n_mx_edi_usage": cfdi_infos["usage"],
+            "l10n_mx_edi_post_time": self._get_datetime(cfdi_infos),
+            "l10n_mx_edi_cfdi_origin": cfdi_infos["origin"],
+            "x_check_tax": taxes_amount,
+            "x_check_total": cfdi_infos["amount_total"],
             "invoice_line_ids": invoice_lines,
         }
         return vals
 
-    def prepare_cfdi_dupli_domain(self, cfdi_etree):
-        import_type, move_type = self.get_import_type(cfdi_etree)
-        domain = [
-            ("move_type", "=", move_type),
-            ("invoice_date", "=", self.get_datetime(cfdi_etree)),
-            # TODO l10n_mx_edi does wrong this part
-            # ("l10n_mx_edi_post_time", "=", cfdi_dict["datetime"])
-        ]
-        if import_type == "received":
-            domain.append(("payment_reference", "=", self.get_serie_folio(cfdi_etree)))
-        elif import_type == "issued":
-            domain.append(("name", "=", self.get_serie_folio(cfdi_etree)))
-        partner = self.partner_search_create(cfdi_etree)
-        l10n_mx_edi_cfdi_uuid = self.collect_complemento(cfdi_etree).get("UUID").upper()
-        domain.extend(
+    def _get_cfdi_duplicity(self, uuid, record):
+        """Unified method to check UUID duplicity across documents and invoices.
+
+        This method centralizes the logic to detect if a UUID already exists in the system,
+        avoiding duplications in both documents module and account_move.
+
+        Args:
+            uuid (str): UUID of the CFDI to check for duplicity
+            record (Model): Record to exclude from duplicity check.
+                           Must be a documents.document or account.move record.
+
+        Returns:
+            dict: A dictionary with the following structure:
+                {
+                    'duplicated': (bool) True if UUID is duplicated, False otherwise,
+                    'document_id': (int or False) ID of the duplicate document if exists,
+                    'move_id': (int or False) ID of the duplicate invoice if exists,
+                    'message': (str) Message describing the duplicity if exists
+                }
+
+        Raises:
+            ValueError: If record is not a valid record or not of the expected model types
+        """
+        # Default result
+        result = {
+            "duplicated": False,
+            "document_id": False,
+            "move_id": False,
+            "message": "",
+        }
+
+        if not uuid:
+            return result
+
+        # Validate parameter
+        if not isinstance(record, models.BaseModel) or not record.id:
+            raise ValueError(
+                "You must provide an existing database record, please save before checking for duplicates"
+            )
+
+        if record._name not in ["documents.document", "account.move"]:
+            raise ValueError("Duplicates can only be checked for documents or invoices, please provide a valid record")
+
+        # Common message prefix
+        message_prefix = self.env._("Duplicated CFDI: %s", uuid)
+
+        if record._name == "documents.document":
+            # Check if UUID exists in documents, excluding current record
+            existing_document = self.env["documents.document"].search(
+                [
+                    ("name", "ilike", f"{uuid}.xml"),
+                    ("res_model", "in", ["documents.document", "account.move"]),
+                    ("l10n_mx_edi_is_cfdi", "=", True),
+                    ("id", "!=", record.id),
+                ],
+                limit=1,
+            )
+
+            if existing_document:
+                result.update(
+                    {
+                        "duplicated": True,
+                        "document_id": existing_document.id,
+                        "message": f"{message_prefix}\n{self.env._('Already exists as document: %s', existing_document.name)}",
+                    }
+                )
+                return result
+
+        # Check in account.move (for both document and move)
+        existing_move = self.env["account.move"].search(
             [
-                ("commercial_partner_id", "=", partner.id),
-                ("l10n_mx_edi_cfdi_uuid", "=", l10n_mx_edi_cfdi_uuid),
-            ]
+                ("l10n_mx_edi_cfdi_uuid", "=", uuid),
+                ("state", "in", ["draft", "posted"]),
+                ("id", "!=", record.id),
+            ],
+            limit=1,
         )
-        return domain
 
-    def check_cfdi_dupli(self, cfdi_etree):
-        domain = self.prepare_cfdi_dupli_domain(cfdi_etree)
-        fuzzy_domain = domain[:-1]
-        exact_move_exist = self.env["account.move"].search(domain)
-        # FIX-ME: improve fuzzy domain because it attachs more than 1 document in the account move
-        fuzzy_move_exist = self.env["account.move"].search(fuzzy_domain)
-        if exact_move_exist and len(fuzzy_move_exist) >= 1 or not exact_move_exist and len(fuzzy_move_exist) > 1:
-            raise ValidationError(_("Duplicated: "))
-        if not exact_move_exist and len(fuzzy_move_exist) == 1 and not fuzzy_move_exist.l10n_mx_edi_cfdi_uuid:
-            exact_move_exist = fuzzy_move_exist
-        return exact_move_exist
+        if existing_move:
+            result.update(
+                {
+                    "duplicated": True,
+                    "move_id": existing_move.id,
+                    "message": f"{message_prefix}\n{self.env._('Already exists as invoice: %s', existing_move.name)}",
+                }
+            )
+            return result
 
-    def xml2record(self, cfdi_etree, journal=False):
-        validation = self.check_cfdi_dupli(cfdi_etree)
-        if not validation:
-            vals = self.prepare_move(cfdi_etree, journal)
-            validation = self.env["account.move"].with_context(default_move_type=vals["move_type"]).create(vals)
-        return validation
+        return result
 
     def get_headers(self, soap_action, token=False, condition=True):
         headers = {
@@ -908,7 +1009,7 @@ class L10nMxEdiDocument(models.Model):
 
     def l10n_mx_ws_request_download(self, certificate, private_key, token, args):
         if not isinstance(args, dict):
-            raise ValidationError(_("Validation error"))
+            raise ValidationError(self.env._("Validation error"))
 
         holder_vat = "".join(certificate.get_subject().x500UniqueIdentifier.split(" ")[0])
         sanitized = self.sanitize_args(args)
@@ -1068,49 +1169,9 @@ class L10nMxEdiDocument(models.Model):
         }
         return ret_dict
 
-    def _l10n_mx_edi_is_cfdi(self, xml64):
-        is_cfdi = False
-        try:
-            cfdi_etree = self.env["l10n_mx_edi.document"].check_objectify_xml(xml64)
-            is_cfdi = cfdi_etree.tag in [
-                "{http://www.sat.gob.mx/cfd/3}Comprobante",
-                "{http://www.sat.gob.mx/cfd/4}Comprobante",
-            ]
-        except Exception:
-            pass
-        return is_cfdi
+    def _l10n_mx_edi_is_cfdi(self, cfdi_data):
+        cfdi_infos = self.env["l10n_mx_edi.document"]._decode_cfdi_attachment(cfdi_data)
+        return bool(cfdi_infos)
 
-    def is_payment_complement(self, cfdi_etree):
-        """
-        Uses the provided collect_complemento function to detect if the CFDI
-        includes a payment complement (Pagos 1.0 or 2.0).
-
-        Args:
-            cfdi_etree (etree.Element): Parsed CFDI XML tree.
-            collect_complemento_func (callable): A function that extracts nodes from CFDI Complemento.
-
-        Returns:
-            bool: True if it is a payment complement, False otherwise.
-        """
-        namespaces = {
-            "pago10": "http://www.sat.gob.mx/Pagos10",
-            "pago20": "http://www.sat.gob.mx/Pagos20",
-        }
-
-        # Try with version 2.0
-        pago_node_20 = self.collect_complemento(
-            cfdi_etree,
-            attribute="pago20:Pagos",
-            namespaces=namespaces,
-        )
-
-        if pago_node_20 is not None:
-            return True
-
-        # Try with version 1.0 if 2.0 not found
-        pago_node_10 = self.collect_complemento(
-            cfdi_etree,
-            attribute="pago10:Pagos",
-            namespaces=namespaces,
-        )
-        return bool(pago_node_10)
+    def _l10n_mx_edi_is_cfdi_payment(self, cfdi_node):
+        return cfdi_node.get("TipoDeComprobante", False) == "P"

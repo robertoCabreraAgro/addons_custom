@@ -19,6 +19,7 @@
         "data/ir_config_parameter_data.xml",
         "views/res_config_settings_views.xml",
         "views/documents_views.xml",
+        "views/account_journal_views.xml",
         "views/account_move_views.xml",
         "views/account_move_line_views.xml",
         "views/l10n_mx_edi_esignature_views.xml",

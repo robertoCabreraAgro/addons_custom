@@ -7,9 +7,10 @@ import zipfile
 from datetime import datetime, timedelta
 
 import pytz
+from markupsafe import Markup
 
-from odoo.osv import expression
 from odoo import api, fields, models
+from odoo.osv import expression
 
 from .l10n_mx_edi_document import MXWS_ERROR_TYPE
 
@@ -137,7 +138,11 @@ class Session(models.Model):
         private_key = esignature.get_pk_data()[1]
 
         for retry_count in range(max_retries):
-            _logger.info("CFDI download request status verification... (%s/%s)", (retry_count + 1), max_retries)
+            _logger.info(
+                "CFDI download request status verification... (%s/%s)",
+                (retry_count + 1),
+                max_retries,
+            )
             if self.token_expiration < fields.Datetime.now():
                 token_res = mx_edi_document.l10n_mx_ws_generate_token(certificate, private_key)
                 self.write(
@@ -172,121 +177,200 @@ class Session(models.Model):
         docs_document = self.env["documents.document"]
         ir_attachment = self.env["ir.attachment"]
 
-        esignature = (
-            esignature
-            or self.company_id.l10n_mx_edi_esignature_ids.get_valid_esignature()
-        )
+        # Get valid electronic signature
+        esignature = esignature or self.company_id.l10n_mx_edi_esignature_ids.get_valid_esignature()
+        if not esignature:
+            self.message_post(body=self.env._("No valid electronic signature found"))
+            return
 
         certificate = esignature.get_cert_data()[1]
         private_key = esignature.get_pk_data()[1]
 
         document_ids = []
 
-        if self.token_expiration < fields.Datetime.now():
-            token_res = mx_edi_document.l10n_mx_ws_generate_token(
-                certificate, private_key
+        # Renew token if expired
+        if not self.token or self.token_expiration < fields.Datetime.now():
+            try:
+                token_res = mx_edi_document.l10n_mx_ws_generate_token(certificate, private_key)
+                self.write(
+                    {
+                        "token": token_res["token"],
+                        "token_expiration": datetime.fromisoformat(token_res["expires"]),
+                    }
+                )
+            except Exception as e:
+                self.message_post(body=self.env._("Token generation error: %s") % str(e))
+                return
+
+        # Download the package from the web service
+        try:
+            download_res = mx_edi_document.l10n_mx_ws_download_package(
+                certificate, private_key, self.token, self.packages
             )
             self.write(
                 {
-                    "token": token_res["token"],
-                    "token_expiration": datetime.fromisoformat(token_res["expires"]),
+                    "request_status_code": download_res["cod_estatus"],
+                    "request_message": download_res["mensaje"],
                 }
             )
+        except Exception as e:
+            self.message_post(body=self.env._("Package download error: %s") % str(e))
+            return
 
-        download_res = mx_edi_document.l10n_mx_ws_download_package(
-            certificate, private_key, self.token, self.packages
-        )
-        self.write(
-            {
-                "request_status_code": download_res["cod_estatus"],
-                "request_message": download_res["mensaje"],
-            }
-        )
-        if download_res["paquete_b64"]:
-            content = download_res["paquete_b64"]
-            folder_id = (
-                self.company_id.l10n_mx_edi_folder.id or False
-            )  # Precompute folder ID once
+        # Process the downloaded package if it exists
+        if download_res.get("paquete_b64") is None:
+            self.message_post(body=self.env._("No content found in the downloaded package"))
+            return
 
-            # Batch processing preparation
-            att_vals_list = []  # Stores attachment creation values
-            doc_vals_list = []  # Stores document creation values
+        content = download_res["paquete_b64"]
+        folder_id = self.company_id.l10n_mx_edi_folder.id or False  # Precompute folder ID once
 
-            with zipfile.ZipFile(io.BytesIO(base64.b64decode(content))) as container:
-                # Filtering only XML files and extract clean names (without extension)
-                xml_files = [
-                    fname
-                    for fname in container.namelist()
-                    if fname.lower().endswith(".xml")
+        # Batch processing preparation
+        att_vals_list = []  # Stores attachment creation values
+        doc_vals_list = []  # Stores document creation values
+
+        with zipfile.ZipFile(io.BytesIO(base64.b64decode(content))) as container:
+            # Filtering only XML files and extract clean names (without extension)
+            xml_files = [
+                (fname, os.path.splitext(fname)[0].upper() + ".xml")
+                for fname in container.namelist()
+                if fname.lower().endswith(".xml")
+            ]
+
+            if not xml_files:
+                self.message_post(body=self.env._("No valid XML files found for processing."))
+                return
+
+            # Preparing domain
+            domain = expression.AND(
+                [
+                    [("company_id", "in", [False, self.company_id.id])],
+                    expression.OR([[("name", "=ilike", fname)] for fname, normalized_fname in xml_files]),
                 ]
+            )
 
-                if not xml_files:
-                    _logger.info("No XML File was found")
-                    return
+            _logger.warning("existing_docs domain %s", domain)
 
-                # Preparing domain
-                domain = expression.AND([
-                    [('company_id', 'in', [False, self.company_id.id])],
-                    expression.OR([[('name', '=ilike', fname)] for fname in xml_files])
-                ])
+            # Find all existing documents
+            existing_docs = docs_document.sudo().search(domain, order="name asc, id asc")
 
-                # Find all existing documents
-                existing_docs = docs_document.sudo().search(domain)
+            # Ensure uniqueness
+            unique_existing_docs = docs_document
+            for doc in existing_docs:
+                doc_name = doc.name.split(".")[0].upper() + ".xml"
+                if doc_name not in unique_existing_docs.mapped("name"):
+                    unique_existing_docs += doc
 
-                # Existing documents are kept for return
-                document_ids.extend(existing_docs.ids)
+            # Existing documents are kept for return
+            document_ids.extend(unique_existing_docs.ids)
 
-                # already processed files
-                existing_names = existing_docs.mapped("name")
+            # already processed files
+            existing_names = unique_existing_docs.mapped("name")
 
-                for fname in xml_files:
-                    if fname in existing_names:
-                        continue  # Skip already processed files
+            _logger.warning("existing_docs names %s", existing_names)
 
-                    with container.open(fname) as file:
-                        file_content = base64.b64encode(file.read())
+            _logger.warning("xml_files %s", xml_files)
 
-                        if not mx_edi_document._l10n_mx_edi_is_cfdi(file_content):
-                            continue  # Skip non-CFDI XMLs
+            for fname, normalized_fname in xml_files:
+                _logger.warning("fname in existing_names %s", fname)
 
-                        filename = os.path.splitext(fname)[0].upper() + ".xml"
+                if normalized_fname in existing_names:
+                    continue  # Skip already processed files
 
-                        # Prepare for batch creation
-                        att_vals_list.append(
-                            {
-                                "name": filename,
-                                "type": "binary",
-                                "datas": file_content,
-                                "mimetype": "text/plain",  # to be able to open file from documents
-                            }
-                        )
-                        doc_vals_list.append(
-                            {
-                                "name": filename,
-                                "folder_id": folder_id,
-                                "company_id": self.company_id.id,
-                                "l10n_mx_edi_is_cfdi": True,
-                            }
-                        )
+                with container.open(fname) as file:
+                    file_raw = file.read()
+                    file_content = base64.b64encode(file_raw)
+
+                    if not mx_edi_document._l10n_mx_edi_is_cfdi(file_raw):
+                        continue  # Skip non-CFDI XMLs
+
+                    # Prepare for batch creation
+                    att_vals_list.append(
+                        {
+                            "name": normalized_fname,
+                            "type": "binary",
+                            "datas": file_content,
+                            "mimetype": "text/plain",  # to be able to open file from documents
+                        }
+                    )
+                    doc_vals_list.append(
+                        {
+                            "name": normalized_fname,
+                            "folder_id": folder_id,
+                            "company_id": self.company_id.id,
+                            "l10n_mx_edi_is_cfdi": True,
+                        }
+                    )
+
+            _logger.warning("doc_vals_list %s", doc_vals_list)
+
+            # If there are no new documents to create and no existing ones, we return
+            if not doc_vals_list and not existing_docs:
+                self.message_post(body=self.env._("No valid XML files found for processing."))
+                return
 
             # Bulk create records if we have valid files
-            if att_vals_list:
+            try:
                 # Create all attachments in single operation
-                attachments = ir_attachment.with_context(
-                    force_l10n_mx_edi_cfdi_uuid=True
-                ).create(att_vals_list)
+                attachments = ir_attachment.with_context(force_l10n_mx_edi_cfdi_uuid=True).create(att_vals_list)
 
-                # Assign attachment IDs to corresponding documents
-                for attachment, doc_vals in zip(attachments, doc_vals_list):
-                    doc_vals["attachment_id"] = attachment.id
+                # Prepare documents to create
+                created_documents = docs_document
+                if doc_vals_list:
+                    # Assign attachment IDs to corresponding documents
+                    for attachment, doc_vals in zip(attachments, doc_vals_list):
+                        doc_vals["attachment_id"] = attachment.id
 
-                # Bulk create all documents
-                created_documents = docs_document.create(doc_vals_list)
+                    # Bulk create all documents
+                    created_documents = docs_document.create(doc_vals_list)
+
                 document_ids.extend(created_documents.ids)
 
-        if document_ids:
-            self.write({"document_ids": [(6, 0, document_ids)]})
-            _logger.info("Was downloaded documents for MX session with ID %s", self.id)
+                # Update documents into session
+                if document_ids:
+                    self.write({"document_ids": [(6, 0, document_ids)]})
+
+                created_items = (
+                    "".join([f"<li>{doc.name} (ID: {doc.id})</li>" for doc in created_documents]) or "<li>None</li>"
+                )
+                existing_items = (
+                    "".join(
+                        [
+                            f"<li>{doc.name} (ID: {doc.id})</li>"
+                            for doc in docs_document.browse(document_ids)
+                            if doc.id not in created_documents.ids
+                        ]
+                    )
+                    or "<li>None</li>"
+                )
+
+                # Prepare summary message
+                summary_message = Markup(
+                    f"""
+                <div class="o_mail_note">
+                    <h4>Document Processing Summary</h4>
+                    <p><b>Newly created documents ({len(created_documents)}):</b></p>
+                    <ul>
+                        {created_items}
+                    </ul>
+                    <p><b>Previously existing documents ({len(existing_items)}):</b></p>
+                    <ul>
+                        {existing_items}
+                    </ul>
+
+                    <p><b>Total processed documents:</b> {len(document_ids)}</p>
+                </div>
+                """
+                )
+
+                # Send summary message
+                self.message_post(body=summary_message)
+                _logger.info("Downloaded %s documents for MX session ID %s", len(document_ids), self.id)
+
+            except Exception as e:
+                error_message = self.env._("Document processing error: %s") % str(e)
+                self.message_post(body=error_message)
+                _logger.warning(error_message)
 
     @api.model
     def _get_next_time_block(self, current_time, time_blocks, hour_start, timezone):

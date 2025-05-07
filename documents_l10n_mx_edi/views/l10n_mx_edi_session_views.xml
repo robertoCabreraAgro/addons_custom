@@ -97,7 +97,7 @@
                                     <field name="name" />
                                     <field name="tag_ids" widget="many2many_tags" />
                                     <field name="partner_id" />
-                                    <field name="show_res_name" string="Related invoice" />
+                                    <field name="vendor_bill_name" />
                                 </list>
                              </field>
                         </page>

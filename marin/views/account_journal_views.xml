@@ -5,6 +5,7 @@
         <field name="name">account.journal.form</field>
         <field name="model">account.journal</field>
         <field name="inherit_id" ref="account.view_account_journal_form" />
+        <field name="priority" eval="120" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='default_account_id'][2]" position="after">
                 <field name="default_refund_account_id"
@@ -22,6 +23,9 @@
             </xpath>
             <xpath expr="//field[@name='code']" position="after">
                 <field name="x_treatment" />
+            </xpath>
+            <xpath expr="//field[@name='l10n_mx_edi_require_uuid']" position="attributes">
+                <attribute name="invisible">1</attribute>
             </xpath>
             <xpath expr="//group[@name='group_edi_config']" position="after">
                 <group name="security" string="Security">

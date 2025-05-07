@@ -295,3 +295,12 @@ class AccountJournal(models.Model):
                 raise UserError(_("No attachment was provided"))
             return journal._import_bbva_mx_bank_statement(attachments)
         return super().create_document_from_attachment(attachment_ids)
+
+    @api.onchange("x_treatment")
+    def _onchange_x_treatment(self):
+        """Determine if the UUID is required based on the tax treatment of the journal."""
+        for journal in self:
+            journal.l10n_mx_edi_require_uuid = (
+                journal.x_treatment in ["fiscal_simulated", "fiscal_real"]
+                and journal.type == "purchase"
+            )
