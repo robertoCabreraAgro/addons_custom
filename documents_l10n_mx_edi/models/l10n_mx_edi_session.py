@@ -65,8 +65,9 @@ class Session(models.Model):
     def create(self, vals_list):
         for vals in vals_list:
             if vals.get("name", "/") == "/":
+                company_id = vals.get("company_id") or self.env.company.id
                 sequence_code = "sat.session"
-                name = self.env["ir.sequence"].next_by_code(sequence_code)
+                name = self.env["ir.sequence"].with_company(company_id).next_by_code(sequence_code)
                 if not name:
                     sequence = (
                         self.env["ir.sequence"]
@@ -77,7 +78,7 @@ class Session(models.Model):
                                 "code": sequence_code,
                                 "prefix": "SAT/SESSION/%(y)s/%(month)s/",
                                 "padding": 4,
-                                "company_id": vals.get("company_id") or self.env.company.id,
+                                "company_id": company_id,
                             }
                         )
                     )
@@ -542,13 +543,13 @@ class Session(models.Model):
         auto_commit = self.env.context.get("auto_commit", True)
         max_retries = self.env.context.get("max_retries", 2)
         waiting_sec = self.env.context.get("waiting_sec", 0)
-        today = datetime.datetime.now().date()
+        today = datetime.now().date()
         companies = self.env["res.company"].search([("l10n_mx_edi_certificate_ids", "!=", False)])
         valid_companies = companies.filtered(
             lambda c: any(
-                (cert.date_start.date() if isinstance(cert.date_start, datetime.datetime) else cert.date_start)
+                (cert.date_start.date() if isinstance(cert.date_start, datetime) else cert.date_start)
                 <= today
-                <= (cert.date_end.date() if isinstance(cert.date_end, datetime.datetime) else cert.date_end)
+                <= (cert.date_end.date() if isinstance(cert.date_end, datetime) else cert.date_end)
                 for cert in c.l10n_mx_edi_certificate_ids
             )
         )
