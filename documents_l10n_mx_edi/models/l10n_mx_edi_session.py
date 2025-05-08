@@ -250,8 +250,6 @@ class Session(models.Model):
                 ]
             )
 
-            _logger.warning("existing_docs domain %s", domain)
-
             # Find all existing documents
             existing_docs = docs_document.sudo().search(domain, order="name asc, id asc")
 
@@ -268,12 +266,7 @@ class Session(models.Model):
             # already processed files
             existing_names = unique_existing_docs.mapped("name")
 
-            _logger.warning("existing_docs names %s", existing_names)
-
-            _logger.warning("xml_files %s", xml_files)
-
             for fname, normalized_fname in xml_files:
-                _logger.warning("fname in existing_names %s", fname)
 
                 if normalized_fname in existing_names:
                     continue  # Skip already processed files
@@ -302,8 +295,6 @@ class Session(models.Model):
                             "l10n_mx_edi_is_cfdi": True,
                         }
                     )
-
-            _logger.warning("doc_vals_list %s", doc_vals_list)
 
             # If there are no new documents to create and no existing ones, we return
             if not doc_vals_list and not existing_docs:
@@ -334,15 +325,9 @@ class Session(models.Model):
                 created_items = (
                     "".join([f"<li>{doc.name} (ID: {doc.id})</li>" for doc in created_documents]) or "<li>None</li>"
                 )
+
                 existing_items = (
-                    "".join(
-                        [
-                            f"<li>{doc.name} (ID: {doc.id})</li>"
-                            for doc in docs_document.browse(document_ids)
-                            if doc.id not in created_documents.ids
-                        ]
-                    )
-                    or "<li>None</li>"
+                    "".join([f"<li>{doc.name} (ID: {doc.id})</li>" for doc in unique_existing_docs]) or "<li>None</li>"
                 )
 
                 # Prepare summary message
@@ -354,7 +339,7 @@ class Session(models.Model):
                     <ul>
                         {created_items}
                     </ul>
-                    <p><b>Previously existing documents ({len(existing_items)}):</b></p>
+                    <p><b>Previously existing documents ({len(unique_existing_docs)}):</b></p>
                     <ul>
                         {existing_items}
                     </ul>

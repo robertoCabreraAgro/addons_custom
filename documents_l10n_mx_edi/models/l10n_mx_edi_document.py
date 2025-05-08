@@ -395,7 +395,7 @@ class L10nMxEdiDocument(models.Model):
             price_unit = float(line.get("ValorUnitario", 0.0))
 
             # Get and process taxes if they exist
-            tax_nodes = line.findall("{*}Impuestos/{*}Traslados/{*}Traslado", namespaces=ns)
+            tax_nodes = line.findall("{*}Traslados/{*}Traslado", namespaces=ns)
             if tax_nodes:
                 taxes = self.collect_taxes(tax_nodes)
                 ieps_taxes = [t for t in taxes if t.get("tax") == "IEPS"]
@@ -404,7 +404,7 @@ class L10nMxEdiDocument(models.Model):
                 # Process main tax (non-IEPS)
                 if other_taxes:
                     main_tax = other_taxes[0]
-                    tax_domain = self.prepare_tax_domain(
+                    tax_domain = self._get_tax_domain(
                         main_tax["name"],
                         main_tax["amount"],
                         main_tax["l10n_mx_factor_type"],
@@ -412,7 +412,7 @@ class L10nMxEdiDocument(models.Model):
                     existing_tax = tax_obj.search(tax_domain, limit=1, order="id asc")
                     if existing_tax:
                         tax_ids.append(existing_tax.id)
-                        price_unit = round(main_tax.get("total", 0.0) / (main_tax.get("amount", 100) / 100, 2))
+                        price_unit = round(main_tax.get("total", 0.0) / (main_tax.get("amount", 100) / 100), 2)
 
                 # Process IEPS tax if exists
                 if ieps_taxes:
@@ -638,7 +638,7 @@ class L10nMxEdiDocument(models.Model):
             "EstadoDeCuentaCombustible",
             "http://www.sat.gob.mx/EstadoDeCuentaCombustible12",
         )
-        if ecc12_node:
+        if ecc12_node is not None:
             invoice_lines.extend(self._prepare_ecc12_invoice_line_vals(ecc12_node))
         else:
             invoice_lines.extend(self._prepare_invoice_line_vals(cfdi_node, partner=partner))
