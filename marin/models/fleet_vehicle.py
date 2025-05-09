@@ -18,6 +18,22 @@ class FleetVehicle(models.Model):
         readonly=False,
     )
     fuel_card_name = fields.Char(compute="_compute_fuel_card_name", store=True)
+    fuel_card_balance_suggested = fields.Float(
+        help='Recommended starting balance for the fuel card at the beginning of the period',
+        default=0.0
+    )
+    fuel_card_balance = fields.Float(
+        compute='_compute_fuel_card_balance',
+        store=True,
+        help='Current balance available on fuel card'
+    )
+    
+    fuel_card_balance_to_reload = fields.Float(
+        compute='_compute_fuel_card_balance_to_reload',
+        store=True,
+        help="Amount required to reach the recommended fuel card balance."
+    )
+    fuel_count = fields.Integer("Fuel", compute="_compute_fuel_count")
     highway_pass_id = fields.Many2one(
         comodel_name="documents.document",
         domain=lambda self: [
@@ -47,7 +63,24 @@ class FleetVehicle(models.Model):
         default=True,
         help="Mark as True if this vehicle was acquired as brand new.",
     )
-    fuel_count = fields.Integer("Fuel", compute="_compute_fuel_count")
+
+    @api.depends('fuel_card_balance_suggested', 'fuel_card_balance')
+    def _compute_fuel_card_balance_to_reload(self):
+        """Calculates the balance that needs to be reloaded based on monthly load and current balance"""
+        for vehicle in self:
+            vehicle.fuel_card_balance_to_reload = max(0, vehicle.fuel_card_balance_suggested - vehicle.fuel_card_balance)
+
+    @api.depends('log_ids.amount')
+    def _compute_fuel_card_balance(self):
+        """Calculates the current balance based on fuel credit/debit records"""
+        for vehicle in self:
+            # Find all fuel log records associated with this vehicle
+            fuel_logs = self.env['fleet.vehicle.log'].search([
+                ('vehicle_id', '=', vehicle.id), ('type', '=', 'fuel'),
+            ])
+
+            # Sum all movements (positive credits, negative debits)
+            vehicle.fuel_card_balance = sum(fuel_logs.mapped("amount"))
 
     def _compute_fuel_count(self):
         for vehicle in self:

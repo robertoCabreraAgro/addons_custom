@@ -9,14 +9,22 @@
             <xpath expr="//field[@name='driver_id']" position="after">
                 <field name="department_id" options="{'no_create': True}" />
             </xpath>
-            <xpath expr="//field[@name='location']" position="after">
-                <field name="account_prefix" />
-            </xpath>
-            <xpath expr="//field[@name='mobility_card']" position="after">
-                <field name="fuel_card_id" options="{'no_create': True}" />
-                <field name="fuel_card_name" invisible="True" />
-                <field name="highway_pass_id" options="{'no_create': True}" />
-                <field name="highway_pass_name" invisible="True" />
+            <xpath expr="//page[@name='page_tax_info']" position="after">
+                <page string="Vouchers">
+                    <group>
+                        <group string="Fuel Card">
+                            <field name="fuel_card_id" options="{'no_create': True}" />
+                            <field name="fuel_card_name" invisible="True" />
+                            <field name="fuel_card_balance_suggested" string="Recommended Balance"/>
+                            <field name="fuel_card_balance" string="Current Balance"/>
+                            <field name="fuel_card_balance_to_reload" string="Amount to Reload"/>
+                        </group>
+                        <group string="Highway Pass">
+                            <field name="highway_pass_id" options="{'no_create': True}" />
+                            <field name="highway_pass_name" invisible="True" />
+                        </group>
+                    </group>
+                </page>
             </xpath>
             <xpath expr="//field[@name='vin_sn']" position="before">
                 <field name="l10n_mx_vehicle_code" />
