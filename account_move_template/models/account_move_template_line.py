@@ -87,13 +87,10 @@ class AccountMoveTemplateLine(models.Model):
     python_code = fields.Text(string="Formula")
     note = fields.Char()
 
-    _sql_constraints = [
-        (
-            "sequence_template_uniq",
-            "UNIQUE(template_id, sequence)",
-            "The sequence of the line must be unique per template!",
-        ),
-    ]
+    _unique_template_sequence = models.UniqueIndex(
+        "UNIQUE(template_id, sequence)",
+        "The sequence of the line must be unique per template!",
+    )
 
     @api.constrains("type", "python_code")
     def _check_python_code(self):

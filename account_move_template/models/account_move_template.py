@@ -74,13 +74,10 @@ class AccountMoveTemplate(models.Model):
         help="Determines whether the payment is for a customer or vendor",
     )
 
-    _sql_constraints = [
-        (
-            "name_company_unique",
-            "unique(name, company_id)",
-            "This name is already used by another template!",
-        ),
-    ]
+    _unique_name_company = models.UniqueIndex(
+        "UNIQUE(name, company_id)",
+        "This name is already used by another template!",
+    )
 
     def copy(self, default=None):
         """Override to set a different name when copying a template"""
