@@ -9,7 +9,7 @@
                 <field name="order_id" />
                 <field name="partner_id" operator="child_of" />
                 <field name="product_id" />
-                <field name="sale_user_id" />
+                <field name="user_id" />
                 <filter name="to_invoice" string="To invoice"
                     domain="[('qty_to_invoice', '!=', 0)]"
                     help="Order lines ready to be invoiced" />
@@ -18,7 +18,7 @@
                     help="Order lines ready to be delivered" />
                 <separator />
                 <filter name="my_sales_order_lines" string="My Sale order lines"
-                    domain="[('sale_user_id', '=', uid)]"
+                    domain="[('user_id', '=', uid)]"
                     help="Sale order lines related to a Sale order of mine" />
                 <separator />
                 <filter name="date_order" string="Order Date"
@@ -39,9 +39,9 @@
                     <filter name="group_by_invoice_state" string="Invoice status"
                         domain="[]"
                         context="{'group_by': 'invoice_state'}" />
-                    <filter name="group_by_sale_user_id" string="Salesperson"
+                    <filter name="group_by_user_id" string="Salesperson"
                         domain="[]"
-                        context="{'group_by': 'sale_user_id'}" />
+                        context="{'group_by': 'user_id'}" />
                 </group>
             </search>
         </field>
@@ -168,7 +168,7 @@
                     optional="show"
                 />
                 <field name="qty_to_invoice" string="To invoice Qty" sum="To invoice" optional="hide" />
-                <field name="sale_user_id" optional="show"/>
+                <field name="user_id" optional="show"/>
                 <field name="customer_lead" readonly="state not in ['draft', 'sent', 'sale']" optional="hide" />
                 <field name="force_company_id" readonly="order_id" options="{'no_create': True}" optional="hide" />
                 <button
