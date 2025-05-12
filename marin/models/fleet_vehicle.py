@@ -46,6 +46,22 @@ class FleetVehicle(models.Model):
     )
     highway_pass_name = fields.Char(compute="_compute_highway_pass_name", store=True)
     highway_pass_count = fields.Integer("Highway Pass", compute="_compute_highway_pass_count")
+    highway_card_balance_suggested = fields.Float(
+        string="Monthly Toll Budget", help="Estimated monthly budget for toll usage", default=0.0
+    )
+    highway_card_balance = fields.Float(
+        compute="_compute_highway_card_balance",
+        store=True,
+        string="Current Toll Balance",
+        help="Current available amount in the toll card",
+    )
+    highway_card_balance_to_reload = fields.Float(
+        compute="_compute_highway_card_balance_to_reload",
+        store=True,
+        string="Toll Balance to Reload",
+        help="Amount needed to reach the monthly toll budget",
+    )
+
     l10n_mx_vehicle_code = fields.Char(
         string="Vehicle Code",
         tracking=True,
@@ -92,6 +108,29 @@ class FleetVehicle(models.Model):
     def _compute_highway_pass_count(self):
         for vehicle in self:
             vehicle.highway_pass_count = len(vehicle.log_ids.filtered(lambda l: l.type == "highway_pass"))
+
+    @api.depends("highway_card_balance_suggested", "highway_card_balance")
+    def _compute_highway_card_balance_to_reload(self):
+        """Compute the balance that needs to be reloaded based on monthly budget and current balance"""
+        for vehicle in self:
+            vehicle.highway_card_balance_to_reload = max(
+                0, vehicle.highway_card_balance_suggested - vehicle.highway_card_balance
+            )
+
+    @api.depends("log_ids.amount")
+    def _compute_highway_card_balance(self):
+        """Compute current balance based on toll debit/credit records"""
+        for vehicle in self:
+            # Find all toll records associated with this vehicle
+            highway_logs = self.env["fleet.vehicle.log"].search(
+                [
+                    ("vehicle_id", "=", vehicle.id),
+                    ("type", "=", "highway_pass"),
+                ]
+            )
+
+            # Sum all movements (positive credits, negative debits)
+            vehicle.highway_card_balance = sum(highway_logs.mapped("amount"))
 
     # Extend original method
     @api.depends(

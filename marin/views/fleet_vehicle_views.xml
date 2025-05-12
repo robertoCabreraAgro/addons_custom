@@ -15,13 +15,16 @@
                         <group string="Fuel Card">
                             <field name="fuel_card_id" options="{'no_create': True}" />
                             <field name="fuel_card_name" invisible="True" />
-                            <field name="fuel_card_balance_suggested" string="Recommended Balance"/>
-                            <field name="fuel_card_balance" string="Current Balance"/>
-                            <field name="fuel_card_balance_to_reload" string="Amount to Reload"/>
+                            <field name="fuel_card_balance_suggested" string="Recommended Balance" />
+                            <field name="fuel_card_balance" string="Current Balance" />
+                            <field name="fuel_card_balance_to_reload" string="Amount to Reload" />
                         </group>
                         <group string="Highway Pass">
                             <field name="highway_pass_id" options="{'no_create': True}" />
                             <field name="highway_pass_name" invisible="True" />
+                            <field name="highway_card_balance_suggested" string="Recommended Balance" />
+                            <field name="highway_card_balance" string="Current Balance" />
+                            <field name="highway_card_balance_to_reload" string="Amount to Reload" />
                         </group>
                     </group>
                 </page>
