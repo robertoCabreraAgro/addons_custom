@@ -1,8 +1,10 @@
 import base64
 import logging
 import os
+import re
+from csv import reader as csv_filereader
 from datetime import datetime
-from io import BytesIO
+from io import BytesIO, StringIO
 
 from pyexcel_xls import get_data as get_sheets
 
@@ -21,6 +23,7 @@ class FleetVehicleLogImport(models.TransientModel):
     parser = fields.Selection(
         [
             ("effectivale", "Effectivale"),
+            ("i_d_cross", "I+D Cruces"),
         ],
         string="Type",
         default="effectivale",
@@ -80,6 +83,51 @@ class FleetVehicleLogImport(models.TransientModel):
 
         return False
 
+    def _clean_highway_pass_number(self, number):
+        """
+        Extracts only the numeric part from a tag string
+
+        Args:
+            tag (str): The tag string (e.g. "IMDM29081212..")
+
+        Returns:
+            str: Only the numeric part of the tag
+        """
+        if not number:
+            return False
+
+        # Utiliza expresión regular para extraer solo los dígitos numéricos
+        numeric_part = re.sub(r"[^0-9]", "", str(number))
+
+        if not numeric_part:
+            return False
+
+        return numeric_part
+
+    def _find_vehicle_by_highway_pass(self, highway_pass_number, filter_vehicles=None):
+        """Find a vehicle by highway pass tag number
+
+        Args:
+            highway_pass_number (str): The highway pass tag number to search for
+            filter_vehicles (recordset, optional): Filter to specific vehicles only
+
+        Returns:
+            record: The found vehicle or False
+        """
+        highway_pass_number = self._clean_highway_pass_number(highway_pass_number)
+
+        if not filter_vehicles:
+            # If no filter, search all vehicles with highway pass
+            domain = [("highway_pass_id", "!=", False)]
+            filter_vehicles = self.env["fleet.vehicle"].search(domain)
+
+        # Search for the vehicle with matching highway pass number
+        for v in filter_vehicles:
+            if v.highway_pass_id and highway_pass_number == v.highway_pass_name:
+                return v
+
+        return False
+
     def _parse_effectivale(self, file_content):
         """Parse Effectivale fuel card transactions file in XLS format.
 
@@ -129,6 +177,7 @@ class FleetVehicleLogImport(models.TransientModel):
                     fuel_card_number = str(row[column_map["Cuenta"]]) if row[column_map["Cuenta"]] else False
 
                     if not fuel_card_number:
+                        errors.append(f"Row {row_idx}: Missing fuel card number")
                         continue  # Skip empty rows
 
                     # Parse ISO datetime (format: '2025-04-02 15:38:18')
@@ -184,13 +233,138 @@ class FleetVehicleLogImport(models.TransientModel):
 
         except Exception as e:
             raise UserError(
-                self.env._(
-                    "File structure doesn't match the expected '%(parser)s' format.\n\n%(traceback)s",
-                    {
-                        "parser": dict(self._fields["parser"]._description_selection(self.env))[self.parser],
-                        "traceback": str(e),
-                    },
-                )
+                self.env._("File structure doesn't match the expected '%(parser)s' format.\n\n%(traceback)s")
+                % {
+                    "parser": dict(self._fields["parser"]._description_selection(self.env))[self.parser],
+                    "traceback": str(e),
+                }
+            )
+
+    def _parse_i_d_cross(self, file_content):
+        """Parse I+D highway pass transactions file in CSV format.
+
+        Args:
+            file_content (str): Base64 encoded CSV file content
+
+        Returns:
+            tuple: (list of fleet.vehicle.log values, list of error messages)
+        """
+        fleet_vehicle_log = self.env["fleet.vehicle.log"]
+
+        try:
+            # Decode and load the CSV file
+            file_data = base64.b64decode(file_content)
+
+            csv_file = StringIO(file_data.decode("utf-8"))
+            csv_reader = csv_filereader(csv_file, delimiter=",")
+
+            # Get header (first line)
+            header = next(csv_reader, [])
+
+            # Validate required columns
+            required_columns = ["Tag", "Importe", "Fecha Aplicacion", "Hora Aplicacion", "Caseta", "Clase", "Consecar"]
+
+            column_map = {col: idx for idx, col in enumerate(header) if col in required_columns}
+            if len(column_map) != len(required_columns):
+                missing = set(required_columns) - set(column_map.keys())
+                raise UserError(self.env._("Missing columns: %s", ", ".join(missing)))
+
+            # Define the vehicles to update their logs
+            filter_vehicles = self.vehicle_ids or self.env["fleet.vehicle"].search([("highway_pass_id", "!=", False)])
+
+            logs = []
+            errors = []
+            for row_idx, row in enumerate(csv_reader, 2):  # Start from row 2
+                if not row or len(row) < len(header):  # skip empty/incomplete rows
+                    continue
+
+                try:
+                    # Get the tag number from the row
+                    tag_number = str(row[column_map["Tag"]]) if column_map.get("Tag") < len(row) else False
+
+                    if not tag_number:
+                        errors.append(f"Row {row_idx}: Missing highway pass number")
+                        continue
+
+                    # Parse datetime (format: 'YYYY-MM-DD' + 'HH:MM:SS')
+                    date_str = str(row[column_map["Fecha Aplicacion"]]).strip()
+                    time_str = str(row[column_map["Hora Aplicacion"]]).strip()
+
+                    try:
+                        # Combine date and time
+                        log_datetime = datetime.strptime(f"{date_str} {time_str}", "%d/%m/%Y %H:%M:%S")
+                    except ValueError:
+                        errors.append(f"Row {row_idx}: Invalid date/time format '{date_str} {time_str}'")
+                        continue
+
+                    # Validate vehicle
+                    vehicle = self._find_vehicle_by_highway_pass(tag_number, filter_vehicles)
+                    if not vehicle:
+                        error_msg = f"Row {row_idx}: No vehicle found with highway pass number '{tag_number}'"
+                        errors.append(error_msg)
+                        continue
+
+                    # Get amount and convert to negative
+                    try:
+                        amount_str = row[column_map["Importe"]] if column_map.get("Importe") < len(row) else "0"
+                        # Remove currency symbols and thousand separators
+                        amount_str = re.sub(r"[^\d.-]", "", amount_str)
+                        amount = -abs(float(amount_str)) if amount_str else 0
+                    except ValueError:
+                        errors.append(f"Row {row_idx}: Invalid amount format '{row[column_map['Importe']]}'")
+                        continue
+
+                    # Prepare notes as concatenation of various fields
+                    caseta = row[column_map["Caseta"]] if column_map.get("Caseta") < len(row) else ""
+                    saldo = row[column_map["Clase"]] if column_map.get("Clase") < len(row) else ""
+                    consecar = row[column_map["Consecar"]] if column_map.get("Consecar") < len(row) else ""
+
+                    notes = f"Caseta: {caseta}, Clase: {saldo}, Consecar: {consecar}"
+
+                    # Prepare log values
+                    log_vals = {
+                        "date": log_datetime,
+                        "vehicle_id": vehicle.id,
+                        "amount": amount,
+                        "state": "done",
+                        "notes": notes,
+                        "type": "highway_pass",
+                    }
+
+                    # Check for duplicate records
+                    existing_record = fleet_vehicle_log.search(
+                        [
+                            ("vehicle_id", "=", log_vals["vehicle_id"]),
+                            ("date", "=", log_vals["date"]),
+                            ("amount", "=", log_vals["amount"]),
+                            ("notes", "=", log_vals["notes"]),
+                            ("type", "=", "highway_pass"),
+                        ],
+                        limit=1,
+                    )
+
+                    if existing_record:
+                        errors.append(
+                            f"Row {row_idx}: Duplicate record found for vehicle with highway pass number '{tag_number}'"
+                        )
+                        continue
+
+                    logs.append(log_vals)
+
+                except Exception as e:
+                    errors.append(f"Row {row_idx}: {str(e)}")
+
+            return logs, errors
+
+        except Exception as e:
+            import traceback
+
+            raise UserError(
+                self.env._("File structure doesn't match the expected '%(parser)s' format.\n\n%(traceback)s")
+                % {
+                    "parser": dict(self._fields["parser"]._description_selection(self.env))[self.parser],
+                    "traceback": str(e) + "\n" + traceback.format_exc(),
+                }
             )
 
     def action_import(self):

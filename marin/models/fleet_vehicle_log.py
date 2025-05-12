@@ -18,14 +18,17 @@ class FleetVehiclelog(models.Model):
         help="Fuel efficiency in kilometers per liter",
     )
     type = fields.Selection(
-        selection_add=[('fuel', 'Fuel')],
+        selection_add=[
+            ("fuel", "Fuel"),
+            ("highway_pass", "Highway Pass"),
+        ],
     )
 
     def action_open_upload_wizard(self):
         return {
-            'type': 'ir.actions.act_window',
-            'name': 'Importar Logs',
-            'res_model': 'fleet.vehicle.log.import',
-            'view_mode': 'form',
-            'target': 'new',
+            "type": "ir.actions.act_window",
+            "name": "Importar Logs",
+            "res_model": "fleet.vehicle.log.import",
+            "view_mode": "form",
+            "target": "new",
         }
