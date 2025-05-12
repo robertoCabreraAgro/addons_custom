@@ -29,14 +29,44 @@
                         <p>For <strong
                             >Effectivale</strong> imports, please ensure your file contains the following columns:</p>
                         <ul>
-                            <li>Cuenta - Fuel Card Number</li>
-                            <li>Fecha - Date of the log</li>
-                            <li>Cargo - Debit amount</li>
-                            <li>Abono - Credit amount</li>
-                            <li>Km FIN - Odometer value</li>
-                            <li>Concepto - Description</li>
-                            <li>Litros - Fuel quantity</li>
-                            <li>Rendimiento - Efficiency</li>
+                            <li>Cuenta</li>
+                            <li>Fecha</li>
+                            <li>Cargo</li>
+                            <li>Abono</li>
+                            <li>Km FIN</li>
+                            <li>Concepto</li>
+                            <li>Litros</li>
+                            <li>Rendimiento</li>
+                        </ul>
+                    </div>
+                    <div class="alert alert-info" role="alert" invisible="parser != 'i_d_cross'">
+                        <p><strong>Note:</strong> Only CSV files are accepted.</p>
+                        <p>For <strong>I+D Mexico Crossings</strong> imports, please ensure your file contains the following columns:</p>
+                        <ul>
+                            <li>Tag</li>
+                            <li>No.Economico</li>
+                            <li>Fecha</li>
+                            <li>Hora</li>
+                            <li>Caseta</li>
+                            <li>Carril</li>
+                            <li>Clase</li>
+                            <li>Importe</li>
+                            <li>Saldo</li>
+                            <li>Fecha Aplicacion</li>
+                            <li>Hora Aplicacion</li>
+                            <li>Consecar</li>
+                        </ul>
+                    </div>
+                    <div class="alert alert-info" role="alert" invisible="parser != 'i_d_recharges'">
+                        <p><strong>Note:</strong> Only CSV files are accepted.</p>
+                        <p>For <strong>I+D Mexico Recharges</strong> imports, please ensure your file contains the following columns:</p>
+                        <ul>
+                            <li>Fecha</li>
+                            <li>Hora</li>
+                            <li>Folio</li>
+                            <li>Referencia</li>
+                            <li>Importe</li>
+                            <li>Movimiento</li>
                         </ul>
                     </div>
                     <group>

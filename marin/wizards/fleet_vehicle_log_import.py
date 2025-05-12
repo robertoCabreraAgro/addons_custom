@@ -24,6 +24,7 @@ class FleetVehicleLogImport(models.TransientModel):
         [
             ("effectivale", "Effectivale"),
             ("i_d_cross", "I+D Cruces"),
+            ("i_d_recharges", "I+D Recharges"),
         ],
         string="Type",
         default="effectivale",
@@ -365,6 +366,153 @@ class FleetVehicleLogImport(models.TransientModel):
                     "parser": dict(self._fields["parser"]._description_selection(self.env))[self.parser],
                     "traceback": str(e) + "\n" + traceback.format_exc(),
                 }
+            )
+
+    def _parse_i_d_recharges(self, file_content):
+        """Parse I+D recharges transactions file in CSV format.
+
+        Args:
+            file_content (str): Base64 encoded CSV file content
+
+        Returns:
+            tuple: (list of fleet.vehicle.log values, list of error messages)
+        """
+        fleet_vehicle_log = self.env["fleet.vehicle.log"]
+
+        try:
+            # Decode and load the CSV file
+            file_data = base64.b64decode(file_content)
+
+            csv_file = StringIO(file_data.decode("utf-8"))
+            csv_reader = csv_filereader(csv_file, delimiter=",")
+
+            # Get header (first line)
+            header = next(csv_reader, [])
+
+            # Validate required columns
+            required_columns = ["Fecha", "Hora", "Movimiento", "Folio", "Referencia", "Importe"]
+
+            column_map = {col: idx for idx, col in enumerate(header) if col in required_columns}
+            if len(column_map) != len(required_columns):
+                missing = set(required_columns) - set(column_map.keys())
+                raise UserError(self.env._("Missing columns: %s", ", ".join(missing)))
+
+            # Define the vehicles to update their logs
+            filter_vehicles = self.vehicle_ids or self.env["fleet.vehicle"].search(
+                [("highway_pass_name", "!=", False)]
+            )
+
+            logs = []
+            errors = []
+
+            for row_idx, row in enumerate(csv_reader, 2):  # Start from row 2
+                if not row or len(row) < len(header):  # skip empty/incomplete rows
+                    continue
+
+                try:
+                    # Check if the movement contains the word "RECARGA"
+                    movement = row[column_map["Movimiento"]] if column_map.get("Movimiento") < len(row) else ""
+
+                    # Verify if the movement contains "RECARGA"
+                    if "RECARGA" not in movement.upper():
+                        errors.append(f"Row {row_idx}: Movement '{movement}' does not contain 'RECARGA'")
+                        continue
+
+                    # Get the reference number from the row
+                    reference = (
+                        str(row[column_map["Referencia"]]) if column_map.get("Referencia") < len(row) else False
+                    )
+
+                    # Skip rows with empty Referencia o Importe
+                    if not reference:
+                        errors.append(f"Row {row_idx}: Missing reference")
+                        continue
+
+                    importe_str = row[column_map["Importe"]] if column_map.get("Importe") < len(row) else ""
+                    if not importe_str:
+                        errors.append(f"Row {row_idx}: Missing amount")
+                        continue
+
+                    # Parse datetime (format: 'DD/MM/YYYY' + 'HH:MM:SS')
+                    date_str = str(row[column_map["Fecha"]]).strip()
+                    time_str = str(row[column_map["Hora"]]).strip()
+
+                    try:
+                        # Combine date and time (sometimes time came without seconds)
+                        datetime_format = "%d/%m/%Y %H:%M" if len(time_str) < 6 else "%d/%m/%Y %H:%M:%S"
+                        log_datetime = datetime.strptime(f"{date_str} {time_str}", datetime_format)
+                    except ValueError:
+                        errors.append(f"Row {row_idx}: Invalid date/time format '{date_str} {time_str}'")
+                        continue
+
+                    # Validate vehicle
+                    vehicle = self._find_vehicle_by_highway_pass(reference, filter_vehicles)
+                    if not vehicle:
+                        error_msg = f"Row {row_idx}: No vehicle found with reference '{reference}'"
+                        errors.append(error_msg)
+                        continue
+
+                    # Get amount and convert to value
+                    try:
+                        # Remove currency symbols and thousand separators
+                        amount_str = re.sub(r"[^\d.-]", "", importe_str)
+                        amount = float(amount_str) if amount_str else 0
+                    except ValueError:
+                        errors.append(f"Row {row_idx}: Invalid amount format '{importe_str}'")
+                        continue
+
+                    # Prepare notes as concatenation of various fields
+                    movement = row[column_map["Movimiento"]] if column_map.get("Movimiento") < len(row) else ""
+                    folio = row[column_map["Folio"]] if column_map.get("Folio") < len(row) else ""
+
+                    notes = f"Movimiento: {movement}, Folio: {folio}"
+
+                    # Prepare log values
+                    log_vals = {
+                        "date": log_datetime,
+                        "vehicle_id": vehicle.id,
+                        "amount": amount,
+                        "state": "done",
+                        "notes": notes,
+                        "type": "highway_pass",
+                    }
+
+                    # Check for duplicate records
+                    existing_record = fleet_vehicle_log.search(
+                        [
+                            ("vehicle_id", "=", log_vals["vehicle_id"]),
+                            ("date", "=", log_vals["date"]),
+                            ("amount", "=", log_vals["amount"]),
+                            ("notes", "=", log_vals["notes"]),
+                            ("type", "=", "highway_pass"),
+                        ],
+                        limit=1,
+                    )
+
+                    if existing_record:
+                        errors.append(
+                            f"Row {row_idx}: Duplicate record found for vehicle with reference '{reference}'"
+                        )
+                        continue
+
+                    logs.append(log_vals)
+
+                except Exception as e:
+                    errors.append(f"Row {row_idx}: {str(e)}")
+
+            return logs, errors
+
+        except Exception as e:
+            import traceback
+
+            raise UserError(
+                self.env._(
+                    "File structure doesn't match the expected '%(parser)s' format.\n\n%(traceback)s",
+                    {
+                        "parser": dict(self._fields["parser"]._description_selection(self.env))[self.parser],
+                        "traceback": str(e) + "\n" + traceback.format_exc(),
+                    },
+                )
             )
 
     def action_import(self):
