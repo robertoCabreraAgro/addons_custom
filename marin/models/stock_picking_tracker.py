@@ -76,6 +76,7 @@ class StockPickingTracker(models.Model):
         string="Company",
         default=lambda self: self.env.company,
     )
+    date_planned = fields.Datetime(copy=False)
     scheduled_date = fields.Datetime(copy=False)
     note = fields.Text("Internal Note")
 
