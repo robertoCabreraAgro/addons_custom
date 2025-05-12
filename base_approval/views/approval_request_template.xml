@@ -63,7 +63,7 @@
                     <thead class="o_black_border">
                         <tr>
                             <th name="th_description" class="text-start fw-bold">Product Description</th>
-                            <th name="th_expected_date" class="text-center fw-bold">Quantity</th>
+                            <th name="th_quantity" class="text-center fw-bold">Quantity</th>
                             <th name="th_uom" class="text-center fw-bold">Unit</th>
                         </tr>
                     </thead>
