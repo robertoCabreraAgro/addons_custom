@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <record id="fleet_vehicle_view_form_marin" model="ir.ui.view">
         <field name="name">fleet.vehicle.form</field>
@@ -15,16 +15,16 @@
                         <group string="Fuel Card">
                             <field name="fuel_card_id" options="{'no_create': True}" />
                             <field name="fuel_card_name" invisible="True" />
-                            <field name="fuel_card_balance_suggested" string="Recommended Balance" />
-                            <field name="fuel_card_balance" string="Current Balance" />
-                            <field name="fuel_card_balance_to_reload" string="Amount to Reload" />
+                            <field name="fuel_card_budget" string="Budget" />
+                            <field name="fuel_card_balance" string="Current balance" />
+                            <field name="fuel_card_balance_to_reload" string="Amount to reload" />
                         </group>
                         <group string="Highway Pass">
                             <field name="highway_pass_id" options="{'no_create': True}" />
                             <field name="highway_pass_name" invisible="True" />
-                            <field name="highway_card_balance_suggested" string="Recommended Balance" />
-                            <field name="highway_card_balance" string="Current Balance" />
-                            <field name="highway_card_balance_to_reload" string="Amount to Reload" />
+                            <field name="highway_pass_budget" string="Budget" />
+                            <field name="highway_pass_balance" string="Current balance" />
+                            <field name="highway_pass_balance_to_reload" string="Amount to reload" />
                         </group>
                     </group>
                 </page>

@@ -7,7 +7,11 @@ class FleetVehicle(models.Model):
 
     _inherit = "fleet.vehicle"
 
-    department_id = fields.Many2one(comodel_name="hr.department", string="Department")
+    department_id = fields.Many2one(
+        comodel_name="hr.department",
+        string="Department",
+    )
+
     fuel_card_id = fields.Many2one(
         comodel_name="documents.document",
         domain=lambda self: [
@@ -17,23 +21,39 @@ class FleetVehicle(models.Model):
         store=True,
         readonly=False,
     )
-    fuel_card_name = fields.Char(compute="_compute_fuel_card_name", store=True)
-    fuel_card_balance_suggested = fields.Float(
-        help="Recommended starting balance for the fuel card at the beginning of the period",
+    fuel_card_name = fields.Char(
+        compute="_compute_fuel_card_name",
+        store=True,
+    )
+    fuel_card_openning_balance = fields.Float(
+        digits=2,
         default=0.0,
+        help="Opening balaned used to match the actual balance due differences caused by "
+        "missing transactions and legacy data",
+    )
+    fuel_card_budget = fields.Float(
+        string="Monthly fuel budget",
+        digits=2,
+        default=0.0,
+        help="Recommended starting balance for the fuel card at the beginning of the period",
     )
     fuel_card_balance = fields.Float(
+        digits=2,
         compute="_compute_fuel_card_balance",
         store=True,
         help="Current balance available on fuel card",
     )
-
     fuel_card_balance_to_reload = fields.Float(
+        digits=2,
         compute="_compute_fuel_card_balance_to_reload",
         store=True,
         help="Amount required to reach the recommended fuel card balance.",
     )
-    fuel_count = fields.Integer("Fuel", compute="_compute_fuel_count")
+    fuel_count = fields.Integer(
+        "Fuel",
+        compute="_compute_fuel_count",
+    )
+
     highway_pass_id = fields.Many2one(
         comodel_name="documents.document",
         domain=lambda self: [
@@ -47,26 +67,39 @@ class FleetVehicle(models.Model):
         store=True,
         readonly=False,
     )
-    highway_pass_name = fields.Char(compute="_compute_highway_pass_name", store=True)
-    highway_pass_count = fields.Integer(
-        "Highway Pass", compute="_compute_highway_pass_count"
-    )
-    highway_card_balance_suggested = fields.Float(
-        string="Monthly Toll Budget",
-        help="Estimated monthly budget for toll usage",
-        default=0.0,
-    )
-    highway_card_balance = fields.Float(
-        compute="_compute_highway_card_balance",
+    highway_pass_name = fields.Char(
+        compute="_compute_highway_pass_name",
         store=True,
-        string="Current Toll Balance",
+    )
+    highway_pass_openning_balance = fields.Float(
+        digits=2,
+        default=0.0,
+        help="Opening balaned used to match the actual balance due differences caused by "
+        "missing transactions and legacy data",
+    )
+    highway_pass_budget = fields.Float(
+        string="Monthly highway pass budget",
+        digits=2,
+        default=0.0,
+        help="Estimated monthly budget for toll usage",
+    )
+    highway_pass_balance = fields.Float(
+        string="Current higway pass balance",
+        digits=2,
+        compute="_compute_highway_pass_balance",
+        store=True,
         help="Current available amount in the toll card",
     )
-    highway_card_balance_to_reload = fields.Float(
-        compute="_compute_highway_card_balance_to_reload",
-        store=True,
+    highway_pass_balance_to_reload = fields.Float(
         string="Toll Balance to Reload",
+        digits=2,
+        compute="_compute_highway_pass_balance_to_reload",
+        store=True,
         help="Amount needed to reach the monthly toll budget",
+    )
+    highway_pass_count = fields.Integer(
+        "Highway Pass",
+        compute="_compute_highway_pass_count",
     )
 
     l10n_mx_vehicle_code = fields.Char(
@@ -85,12 +118,12 @@ class FleetVehicle(models.Model):
         help="Mark as True if this vehicle was acquired as brand new.",
     )
 
-    @api.depends("fuel_card_balance_suggested", "fuel_card_balance")
+    @api.depends("fuel_card_budget", "fuel_card_balance")
     def _compute_fuel_card_balance_to_reload(self):
         """Calculates the balance that needs to be reloaded based on monthly load and current balance"""
         for vehicle in self:
             vehicle.fuel_card_balance_to_reload = max(
-                0, vehicle.fuel_card_balance_suggested - vehicle.fuel_card_balance
+                0, vehicle.fuel_card_budget - vehicle.fuel_card_balance
             )
 
     @api.depends("log_ids.amount")
@@ -120,16 +153,16 @@ class FleetVehicle(models.Model):
                 vehicle.log_ids.filtered(lambda l: l.type == "highway_pass")
             )
 
-    @api.depends("highway_card_balance_suggested", "highway_card_balance")
-    def _compute_highway_card_balance_to_reload(self):
+    @api.depends("highway_pass_budget", "highway_pass_balance")
+    def _compute_highway_pass_balance_to_reload(self):
         """Compute the balance that needs to be reloaded based on monthly budget and current balance"""
         for vehicle in self:
-            vehicle.highway_card_balance_to_reload = max(
-                0, vehicle.highway_card_balance_suggested - vehicle.highway_card_balance
+            vehicle.highway_pass_balance_to_reload = max(
+                0, vehicle.highway_pass_budget - vehicle.highway_pass_balance
             )
 
     @api.depends("log_ids.amount")
-    def _compute_highway_card_balance(self):
+    def _compute_highway_pass_balance(self):
         """Compute current balance based on toll debit/credit records"""
         for vehicle in self:
             # Find all toll records associated with this vehicle
@@ -141,7 +174,7 @@ class FleetVehicle(models.Model):
             )
 
             # Sum all movements (positive credits, negative debits)
-            vehicle.highway_card_balance = sum(highway_logs.mapped("amount"))
+            vehicle.highway_pass_balance = sum(highway_logs.mapped("amount"))
 
     # Extend original method
     @api.depends(
