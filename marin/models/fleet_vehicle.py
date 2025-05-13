@@ -26,25 +26,25 @@ class FleetVehicle(models.Model):
         store=True,
     )
     fuel_card_openning_balance = fields.Float(
-        digits=2,
+        digits="Product Price",
         default=0.0,
         help="Opening balaned used to match the actual balance due differences caused by "
         "missing transactions and legacy data",
     )
     fuel_card_budget = fields.Float(
         string="Monthly fuel budget",
-        digits=2,
+        digits="Product Price",
         default=0.0,
         help="Recommended starting balance for the fuel card at the beginning of the period",
     )
     fuel_card_balance = fields.Float(
-        digits=2,
+        digits="Product Price",
         compute="_compute_fuel_card_balance",
         store=True,
         help="Current balance available on fuel card",
     )
     fuel_card_balance_to_reload = fields.Float(
-        digits=2,
+        digits="Product Price",
         compute="_compute_fuel_card_balance_to_reload",
         store=True,
         help="Amount required to reach the recommended fuel card balance.",
@@ -72,27 +72,27 @@ class FleetVehicle(models.Model):
         store=True,
     )
     highway_pass_openning_balance = fields.Float(
-        digits=2,
+        digits="Product Price",
         default=0.0,
         help="Opening balaned used to match the actual balance due differences caused by "
         "missing transactions and legacy data",
     )
     highway_pass_budget = fields.Float(
         string="Monthly highway pass budget",
-        digits=2,
+        digits="Product Price",
         default=0.0,
         help="Estimated monthly budget for toll usage",
     )
     highway_pass_balance = fields.Float(
         string="Current higway pass balance",
-        digits=2,
+        digits="Product Price",
         compute="_compute_highway_pass_balance",
         store=True,
         help="Current available amount in the toll card",
     )
     highway_pass_balance_to_reload = fields.Float(
         string="Toll Balance to Reload",
-        digits=2,
+        digits="Product Price",
         compute="_compute_highway_pass_balance_to_reload",
         store=True,
         help="Amount needed to reach the monthly toll budget",
