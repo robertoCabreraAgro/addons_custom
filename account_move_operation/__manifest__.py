@@ -13,7 +13,6 @@
         # Security
         "security/ir.model.access.csv",
         "security/ir_rule.xml",
-
         # # Views
         "views/account_move_operation_type_views.xml",
         "views/account_move_operation_action_views.xml",

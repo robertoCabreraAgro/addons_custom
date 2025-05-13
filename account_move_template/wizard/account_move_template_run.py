@@ -132,15 +132,15 @@ class AccountMoveTemplateRun(models.TransientModel):
         return payment
 
     def create_move(self):
-        _logger.info("self %s",self.read())
+        _logger.info("self %s", self.read())
         self.ensure_one()
         if self.is_payment:
             return self.create_payment()
         company = self.multicompany_id or self.env.company
-        _logger.info("company %s",company)
+        _logger.info("company %s", company)
         move_env = self.env["account.move"].with_company(company)
         move_vals = self._prepare_move_vals(company)
-        _logger.info("move_vals %s",move_vals)
+        _logger.info("move_vals %s", move_vals)
         for line in self.line_ids:
             move_vals["line_ids"].append(
                 Command.create(self._prepare_move_line_vals(line))
@@ -162,7 +162,9 @@ class AccountMoveTemplateRun(models.TransientModel):
         elif self.template_id.move_type != "entry":
             vals["product_id"] = line.product_id.id
             vals["quantity"] = self.quantity or line.quantity
-            vals["price_unit"] = self.amount or self.price_unit or line.price_unit or 0.0
+            vals["price_unit"] = (
+                self.amount or self.price_unit or line.price_unit or 0.0
+            )
             vals["discount"] = self.discount or line.discount
 
         return vals

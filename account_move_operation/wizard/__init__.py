@@ -5,5 +5,6 @@
 # from . import account_move_operation_payment
 # from . import account_move_operation_reconcile
 from . import account_move_operation_operation
+
 # from . import account_bank_statement_operation
 from . import account_move_operation_from_entry

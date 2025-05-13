@@ -19,10 +19,13 @@ class FleetVehicle(models.Model):
     )
     fuel_card_name = fields.Char(compute="_compute_fuel_card_name", store=True)
     fuel_card_balance_suggested = fields.Float(
-        help="Recommended starting balance for the fuel card at the beginning of the period", default=0.0
+        help="Recommended starting balance for the fuel card at the beginning of the period",
+        default=0.0,
     )
     fuel_card_balance = fields.Float(
-        compute="_compute_fuel_card_balance", store=True, help="Current balance available on fuel card"
+        compute="_compute_fuel_card_balance",
+        store=True,
+        help="Current balance available on fuel card",
     )
 
     fuel_card_balance_to_reload = fields.Float(
@@ -45,9 +48,13 @@ class FleetVehicle(models.Model):
         readonly=False,
     )
     highway_pass_name = fields.Char(compute="_compute_highway_pass_name", store=True)
-    highway_pass_count = fields.Integer("Highway Pass", compute="_compute_highway_pass_count")
+    highway_pass_count = fields.Integer(
+        "Highway Pass", compute="_compute_highway_pass_count"
+    )
     highway_card_balance_suggested = fields.Float(
-        string="Monthly Toll Budget", help="Estimated monthly budget for toll usage", default=0.0
+        string="Monthly Toll Budget",
+        help="Estimated monthly budget for toll usage",
+        default=0.0,
     )
     highway_card_balance = fields.Float(
         compute="_compute_highway_card_balance",
@@ -103,11 +110,15 @@ class FleetVehicle(models.Model):
 
     def _compute_fuel_count(self):
         for vehicle in self:
-            vehicle.fuel_count = len(vehicle.log_ids.filtered(lambda l: l.type == "fuel"))
+            vehicle.fuel_count = len(
+                vehicle.log_ids.filtered(lambda l: l.type == "fuel")
+            )
 
     def _compute_highway_pass_count(self):
         for vehicle in self:
-            vehicle.highway_pass_count = len(vehicle.log_ids.filtered(lambda l: l.type == "highway_pass"))
+            vehicle.highway_pass_count = len(
+                vehicle.log_ids.filtered(lambda l: l.type == "highway_pass")
+            )
 
     @api.depends("highway_card_balance_suggested", "highway_card_balance")
     def _compute_highway_card_balance_to_reload(self):
@@ -176,7 +187,12 @@ class FleetVehicle(models.Model):
         tag = self.env.ref("marin_data.documents_fleet_fuel_card", False)
         for vehicle in self:
             doc = vehicle.fuel_card_id
-            other_docs = doc.search([("vehicle_id", "=", vehicle.id), ("tag_ids", "in", tag.ids)]) - doc
+            other_docs = (
+                doc.search(
+                    [("vehicle_id", "=", vehicle.id), ("tag_ids", "in", tag.ids)]
+                )
+                - doc
+            )
             if doc:
                 doc.write(
                     {
@@ -203,7 +219,12 @@ class FleetVehicle(models.Model):
         tag = self.env.ref("marin_data.documents_fleet_highway_pass", False)
         for vehicle in self:
             doc = vehicle.highway_pass_id
-            other_docs = doc.search([("vehicle_id", "=", vehicle.id), ("tag_ids", "in", tag.ids)]) - doc
+            other_docs = (
+                doc.search(
+                    [("vehicle_id", "=", vehicle.id), ("tag_ids", "in", tag.ids)]
+                )
+                - doc
+            )
             if doc:
                 doc.write(
                     {
@@ -257,9 +278,13 @@ class FleetVehicle(models.Model):
         self.ensure_one()
         xml_id = self.env.context.get("xml_id")
         if xml_id:
-            res = self.env["ir.actions.act_window"]._for_xml_id(f"marin.action_fleet_vehicle_log_fuel")
+            res = self.env["ir.actions.act_window"]._for_xml_id(
+                f"marin.action_fleet_vehicle_log_fuel"
+            )
             res.update(
-                context=dict(self.env.context, default_vehicle_id=self.id, group_by=False),
+                context=dict(
+                    self.env.context, default_vehicle_id=self.id, group_by=False
+                ),
                 domain=[("vehicle_id", "=", self.id), ("type", "=", "fuel")],
             )
             return res
@@ -272,9 +297,13 @@ class FleetVehicle(models.Model):
         self.ensure_one()
         xml_id = self.env.context.get("xml_id")
         if xml_id:
-            res = self.env["ir.actions.act_window"]._for_xml_id(f"marin.action_fleet_vehicle_log_highway_pass")
+            res = self.env["ir.actions.act_window"]._for_xml_id(
+                f"marin.action_fleet_vehicle_log_highway_pass"
+            )
             res.update(
-                context=dict(self.env.context, default_vehicle_id=self.id, group_by=False),
+                context=dict(
+                    self.env.context, default_vehicle_id=self.id, group_by=False
+                ),
                 domain=[("vehicle_id", "=", self.id), ("type", "=", "highway_pass")],
             )
             return res

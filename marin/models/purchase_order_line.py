@@ -71,7 +71,9 @@ class PurchaseOrderLine(models.Model):
                     line.transfer_state = "partially"
             elif float_is_zero(line.qty_to_transfer, precision_digits=precision):
                 compare = float_compare(
-                    line.qty_transfered, line.product_uom_qty, precision_digits=precision
+                    line.qty_transfered,
+                    line.product_uom_qty,
+                    precision_digits=precision,
                 )
                 if compare == 0:
                     line.transfer_state = "done"

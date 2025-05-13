@@ -70,20 +70,31 @@ class MxEdiToRecordWizard(models.TransientModel):
 
         # Preserve existing documents but recompute all other values
         document_ids = self.line_ids.mapped("document_id")
-        self.line_ids = [(5, 0, 0)] + [(0, 0, self._prepare_line_vals(doc)) for doc in document_ids]
+        self.line_ids = [(5, 0, 0)] + [
+            (0, 0, self._prepare_line_vals(doc)) for doc in document_ids
+        ]
 
     @api.model
     def default_get(self, fields_list):
         """Initialize wizard with lines from selected documents."""
         res = super().default_get(fields_list)
         document_ids = self.env["documents.document"]
-        if self._context.get("active_ids") and self._context.get("active_model") == "documents.document":
-            document_ids = self.env["documents.document"].browse(self._context.get("active_ids", []))
+        if (
+            self._context.get("active_ids")
+            and self._context.get("active_model") == "documents.document"
+        ):
+            document_ids = self.env["documents.document"].browse(
+                self._context.get("active_ids", [])
+            )
         elif self._context.get("default_document_ids"):
-            document_ids = self.env["documents.document"].browse(self._context.get("default_document_ids", []))
+            document_ids = self.env["documents.document"].browse(
+                self._context.get("default_document_ids", [])
+            )
 
         if document_ids:
-            res["line_ids"] = [(0, 0, self._prepare_line_vals(doc)) for doc in document_ids]
+            res["line_ids"] = [
+                (0, 0, self._prepare_line_vals(doc)) for doc in document_ids
+            ]
 
         return res
 
@@ -125,17 +136,25 @@ class MxEdiToRecordWizard(models.TransientModel):
                     cfdi_infos = mx_edi_document._decode_cfdi_attachment(document.raw)
                     uuid = cfdi_infos.get("uuid", "").upper()
                     if not uuid:
-                        raise UserError(self.env._("Could not extract UUID from document %s", document.name))
+                        raise UserError(
+                            self.env._(
+                                "Could not extract UUID from document %s", document.name
+                            )
+                        )
 
                     # Step 2: Prepare invoice values from CFDI
-                    vals = mx_edi_document._prepare_invoice_vals(cfdi_infos, self.journal_id)
+                    vals = mx_edi_document._prepare_invoice_vals(
+                        cfdi_infos, self.journal_id
+                    )
                     vals.update({"l10n_mx_edi_cfdi_uuid": uuid})
 
                     # Step 3: Create the account move
                     move = account_move.create(vals)
                 except Exception as e:
                     raise UserError(
-                        self.env._("Error creating invoice from document {}: {}").format(document.name, str(e))
+                        self.env._(
+                            "Error creating invoice from document {}: {}"
+                        ).format(document.name, str(e))
                     )
 
             # Update document and move relationship
@@ -156,7 +175,11 @@ class MxEdiToRecordWizard(models.TransientModel):
 
                 move_ids.append(move.id)
             except Exception as e:
-                raise UserError(self.env._("Error assigning invoice to document {}: {}").format(document.name, str(e)))
+                raise UserError(
+                    self.env._("Error assigning invoice to document {}: {}").format(
+                        document.name, str(e)
+                    )
+                )
 
         # Return appropriate action based on results
         if not move_ids:
@@ -188,11 +211,15 @@ class MxEdiToRecordWizard(models.TransientModel):
 class MxEdiToRecordLine(models.TransientModel):
     _name = "documents.mx_edi_to_record_line"
 
-    wizard_id = fields.Many2one("documents.mx_edi_to_record_wizard", required=True, ondelete="cascade")
+    wizard_id = fields.Many2one(
+        "documents.mx_edi_to_record_wizard", required=True, ondelete="cascade"
+    )
     document_id = fields.Many2one("documents.document", required=True, readonly=True)
     partner_id = fields.Many2one(related="document_id.partner_id", readonly=True)
     journal_id = fields.Many2one(related="wizard_id.journal_id", readonly=True)
-    allowed_move_ids = fields.Many2many("account.move", compute="_compute_allowed_move_ids")
+    allowed_move_ids = fields.Many2many(
+        "account.move", compute="_compute_allowed_move_ids"
+    )
     action = fields.Selection(
         selection=[
             ("create", "Create"),
@@ -215,13 +242,20 @@ class MxEdiToRecordLine(models.TransientModel):
         mx_edi_document = self.env["l10n_mx_edi.document"]
         account_move = self.env["account.move"]
         for line in self:
-            if line.action != "assign" or not line.document_id or not line.document_id.datas or not line.journal_id:
+            if (
+                line.action != "assign"
+                or not line.document_id
+                or not line.document_id.datas
+                or not line.journal_id
+            ):
                 line.allowed_move_ids = False
                 continue
 
             allowed_moves = account_move
             try:
-                cfdi_infos = mx_edi_document._decode_cfdi_attachment(line.document_id.raw)
+                cfdi_infos = mx_edi_document._decode_cfdi_attachment(
+                    line.document_id.raw
+                )
                 existing_move = account_move.search(
                     [
                         ("l10n_mx_edi_cfdi_uuid", "=", cfdi_infos.get("uuid")),
@@ -253,7 +287,9 @@ class MxEdiToRecordLine(models.TransientModel):
 
                     if emission_date_str:
                         try:
-                            emission_date = fields.Date.from_string(emission_date_str.split()[0])
+                            emission_date = fields.Date.from_string(
+                                emission_date_str.split()[0]
+                            )
                             date_domain = [
                                 "|",
                                 "|",
@@ -271,7 +307,9 @@ class MxEdiToRecordLine(models.TransientModel):
                             ]
                             strict_domain = expression.AND([strict_domain, date_domain])
                         except Exception:
-                            _logger.info("CFDI date parsing failed: %s", emission_date_str)
+                            _logger.info(
+                                "CFDI date parsing failed: %s", emission_date_str
+                            )
 
                     allowed_moves = account_move.search(strict_domain, limit=10)
 
@@ -283,7 +321,9 @@ class MxEdiToRecordLine(models.TransientModel):
                             ("amount_total", "<=", amount_total + tolerance),
                         ]
                         if supplier_rfc and line.partner_id:
-                            flexible_domain.append(("partner_id.vat", "=", supplier_rfc))
+                            flexible_domain.append(
+                                ("partner_id.vat", "=", supplier_rfc)
+                            )
                         allowed_moves = account_move.search(flexible_domain, limit=10)
             except Exception as e:
                 _logger.error("Allowed moves computation failed: %s", str(e))

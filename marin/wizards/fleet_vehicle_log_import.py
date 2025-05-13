@@ -60,7 +60,9 @@ class FleetVehicleLogImport(models.TransientModel):
             if record.filename:
                 ext = os.path.splitext(record.filename)[1].lower()
                 if ext not in [".csv", ".xls", ".xlsx"]:
-                    raise UserError(self.env._("Only CSV, XLS, and XLSX files are allowed."))
+                    raise UserError(
+                        self.env._("Only CSV, XLS, and XLSX files are allowed.")
+                    )
 
     def _find_vehicle_by_fuel_card(self, fuel_card_number, filter_vehicles=None):
         """Find a vehicle by fuel card number
@@ -159,13 +161,17 @@ class FleetVehicleLogImport(models.TransientModel):
             ]
             header = sheet[6]  # 7th row (0-indexed)
 
-            column_map = {col: idx for idx, col in enumerate(header) if col in required_columns}
+            column_map = {
+                col: idx for idx, col in enumerate(header) if col in required_columns
+            }
             if len(column_map) != len(required_columns):
                 missing = set(required_columns) - set(column_map.keys())
                 raise UserError(self.env._("Missing columns: %s", ", ".join(missing)))
 
             # Define the vehicles to update their logs
-            filter_vehicles = self.vehicle_ids or self.env["fleet.vehicle"].search([("fuel_card_id", "!=", False)])
+            filter_vehicles = self.vehicle_ids or self.env["fleet.vehicle"].search(
+                [("fuel_card_id", "!=", False)]
+            )
 
             logs = []
             errors = []
@@ -175,7 +181,11 @@ class FleetVehicleLogImport(models.TransientModel):
 
                 try:
                     # Get the account number from the row
-                    fuel_card_number = str(row[column_map["Cuenta"]]) if row[column_map["Cuenta"]] else False
+                    fuel_card_number = (
+                        str(row[column_map["Cuenta"]])
+                        if row[column_map["Cuenta"]]
+                        else False
+                    )
 
                     if not fuel_card_number:
                         errors.append(f"Row {row_idx}: Missing fuel card number")
@@ -184,13 +194,19 @@ class FleetVehicleLogImport(models.TransientModel):
                     # Parse ISO datetime (format: '2025-04-02 15:38:18')
                     date_str = str(row[column_map["Fecha"]]).strip()
                     try:
-                        log_date = datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S").date()
+                        log_date = datetime.strptime(
+                            date_str, "%Y-%m-%d %H:%M:%S"
+                        ).date()
                     except ValueError:
-                        errors.append(f"Row {row_idx}: Invalid date format '{date_str}'")
+                        errors.append(
+                            f"Row {row_idx}: Invalid date format '{date_str}'"
+                        )
                         continue
 
                     # Validate vehicle
-                    vehicle = self._find_vehicle_by_fuel_card(fuel_card_number, filter_vehicles)
+                    vehicle = self._find_vehicle_by_fuel_card(
+                        fuel_card_number, filter_vehicles
+                    )
                     if not vehicle:
                         error_msg = f"Row {row_idx}: No vehicle found with fuel card '{row[column_map['Cuenta']]}'"
                         errors.append(error_msg)
@@ -200,12 +216,32 @@ class FleetVehicleLogImport(models.TransientModel):
                     log_vals = {
                         "date": log_date,
                         "vehicle_id": vehicle.id,
-                        "amount": (float(row[column_map["Abono"]]) if row[column_map["Abono"]] else 0)
-                        - (float(row[column_map["Cargo"]]) if row[column_map["Cargo"]] else 0),
-                        "odometer": float(row[column_map["Km FIN"]]) if row[column_map["Km FIN"]] else 0,
+                        "amount": (
+                            float(row[column_map["Abono"]])
+                            if row[column_map["Abono"]]
+                            else 0
+                        )
+                        - (
+                            float(row[column_map["Cargo"]])
+                            if row[column_map["Cargo"]]
+                            else 0
+                        ),
+                        "odometer": (
+                            float(row[column_map["Km FIN"]])
+                            if row[column_map["Km FIN"]]
+                            else 0
+                        ),
                         "notes": row[column_map["Concepto"]],
-                        "qty_fuel": float(row[column_map["Litros"]]) if row[column_map["Litros"]] else 0,
-                        "efficiency": float(row[column_map["Rendimiento"]]) if row[column_map["Rendimiento"]] else 0,
+                        "qty_fuel": (
+                            float(row[column_map["Litros"]])
+                            if row[column_map["Litros"]]
+                            else 0
+                        ),
+                        "efficiency": (
+                            float(row[column_map["Rendimiento"]])
+                            if row[column_map["Rendimiento"]]
+                            else 0
+                        ),
                         "type": "fuel",
                     }
 
@@ -234,9 +270,13 @@ class FleetVehicleLogImport(models.TransientModel):
 
         except Exception as e:
             raise UserError(
-                self.env._("File structure doesn't match the expected '%(parser)s' format.\n\n%(traceback)s")
+                self.env._(
+                    "File structure doesn't match the expected '%(parser)s' format.\n\n%(traceback)s"
+                )
                 % {
-                    "parser": dict(self._fields["parser"]._description_selection(self.env))[self.parser],
+                    "parser": dict(
+                        self._fields["parser"]._description_selection(self.env)
+                    )[self.parser],
                     "traceback": str(e),
                 }
             )
@@ -263,15 +303,27 @@ class FleetVehicleLogImport(models.TransientModel):
             header = next(csv_reader, [])
 
             # Validate required columns
-            required_columns = ["Tag", "Importe", "Fecha Aplicacion", "Hora Aplicacion", "Caseta", "Clase", "Consecar"]
+            required_columns = [
+                "Tag",
+                "Importe",
+                "Fecha Aplicacion",
+                "Hora Aplicacion",
+                "Caseta",
+                "Clase",
+                "Consecar",
+            ]
 
-            column_map = {col: idx for idx, col in enumerate(header) if col in required_columns}
+            column_map = {
+                col: idx for idx, col in enumerate(header) if col in required_columns
+            }
             if len(column_map) != len(required_columns):
                 missing = set(required_columns) - set(column_map.keys())
                 raise UserError(self.env._("Missing columns: %s", ", ".join(missing)))
 
             # Define the vehicles to update their logs
-            filter_vehicles = self.vehicle_ids or self.env["fleet.vehicle"].search([("highway_pass_id", "!=", False)])
+            filter_vehicles = self.vehicle_ids or self.env["fleet.vehicle"].search(
+                [("highway_pass_id", "!=", False)]
+            )
 
             logs = []
             errors = []
@@ -281,7 +333,11 @@ class FleetVehicleLogImport(models.TransientModel):
 
                 try:
                     # Get the tag number from the row
-                    tag_number = str(row[column_map["Tag"]]) if column_map.get("Tag") < len(row) else False
+                    tag_number = (
+                        str(row[column_map["Tag"]])
+                        if column_map.get("Tag") < len(row)
+                        else False
+                    )
 
                     if not tag_number:
                         errors.append(f"Row {row_idx}: Missing highway pass number")
@@ -293,13 +349,19 @@ class FleetVehicleLogImport(models.TransientModel):
 
                     try:
                         # Combine date and time
-                        log_datetime = datetime.strptime(f"{date_str} {time_str}", "%d/%m/%Y %H:%M:%S")
+                        log_datetime = datetime.strptime(
+                            f"{date_str} {time_str}", "%d/%m/%Y %H:%M:%S"
+                        )
                     except ValueError:
-                        errors.append(f"Row {row_idx}: Invalid date/time format '{date_str} {time_str}'")
+                        errors.append(
+                            f"Row {row_idx}: Invalid date/time format '{date_str} {time_str}'"
+                        )
                         continue
 
                     # Validate vehicle
-                    vehicle = self._find_vehicle_by_highway_pass(tag_number, filter_vehicles)
+                    vehicle = self._find_vehicle_by_highway_pass(
+                        tag_number, filter_vehicles
+                    )
                     if not vehicle:
                         error_msg = f"Row {row_idx}: No vehicle found with highway pass number '{tag_number}'"
                         errors.append(error_msg)
@@ -307,18 +369,36 @@ class FleetVehicleLogImport(models.TransientModel):
 
                     # Get amount and convert to negative
                     try:
-                        amount_str = row[column_map["Importe"]] if column_map.get("Importe") < len(row) else "0"
+                        amount_str = (
+                            row[column_map["Importe"]]
+                            if column_map.get("Importe") < len(row)
+                            else "0"
+                        )
                         # Remove currency symbols and thousand separators
                         amount_str = re.sub(r"[^\d.-]", "", amount_str)
                         amount = -abs(float(amount_str)) if amount_str else 0
                     except ValueError:
-                        errors.append(f"Row {row_idx}: Invalid amount format '{row[column_map['Importe']]}'")
+                        errors.append(
+                            f"Row {row_idx}: Invalid amount format '{row[column_map['Importe']]}'"
+                        )
                         continue
 
                     # Prepare notes as concatenation of various fields
-                    caseta = row[column_map["Caseta"]] if column_map.get("Caseta") < len(row) else ""
-                    saldo = row[column_map["Clase"]] if column_map.get("Clase") < len(row) else ""
-                    consecar = row[column_map["Consecar"]] if column_map.get("Consecar") < len(row) else ""
+                    caseta = (
+                        row[column_map["Caseta"]]
+                        if column_map.get("Caseta") < len(row)
+                        else ""
+                    )
+                    saldo = (
+                        row[column_map["Clase"]]
+                        if column_map.get("Clase") < len(row)
+                        else ""
+                    )
+                    consecar = (
+                        row[column_map["Consecar"]]
+                        if column_map.get("Consecar") < len(row)
+                        else ""
+                    )
 
                     notes = f"Caseta: {caseta}, Clase: {saldo}, Consecar: {consecar}"
 
@@ -361,9 +441,13 @@ class FleetVehicleLogImport(models.TransientModel):
             import traceback
 
             raise UserError(
-                self.env._("File structure doesn't match the expected '%(parser)s' format.\n\n%(traceback)s")
+                self.env._(
+                    "File structure doesn't match the expected '%(parser)s' format.\n\n%(traceback)s"
+                )
                 % {
-                    "parser": dict(self._fields["parser"]._description_selection(self.env))[self.parser],
+                    "parser": dict(
+                        self._fields["parser"]._description_selection(self.env)
+                    )[self.parser],
                     "traceback": str(e) + "\n" + traceback.format_exc(),
                 }
             )
@@ -390,9 +474,18 @@ class FleetVehicleLogImport(models.TransientModel):
             header = next(csv_reader, [])
 
             # Validate required columns
-            required_columns = ["Fecha", "Hora", "Movimiento", "Folio", "Referencia", "Importe"]
+            required_columns = [
+                "Fecha",
+                "Hora",
+                "Movimiento",
+                "Folio",
+                "Referencia",
+                "Importe",
+            ]
 
-            column_map = {col: idx for idx, col in enumerate(header) if col in required_columns}
+            column_map = {
+                col: idx for idx, col in enumerate(header) if col in required_columns
+            }
             if len(column_map) != len(required_columns):
                 missing = set(required_columns) - set(column_map.keys())
                 raise UserError(self.env._("Missing columns: %s", ", ".join(missing)))
@@ -411,16 +504,24 @@ class FleetVehicleLogImport(models.TransientModel):
 
                 try:
                     # Check if the movement contains the word "RECARGA"
-                    movement = row[column_map["Movimiento"]] if column_map.get("Movimiento") < len(row) else ""
+                    movement = (
+                        row[column_map["Movimiento"]]
+                        if column_map.get("Movimiento") < len(row)
+                        else ""
+                    )
 
                     # Verify if the movement contains "RECARGA"
                     if "RECARGA" not in movement.upper():
-                        errors.append(f"Row {row_idx}: Movement '{movement}' does not contain 'RECARGA'")
+                        errors.append(
+                            f"Row {row_idx}: Movement '{movement}' does not contain 'RECARGA'"
+                        )
                         continue
 
                     # Get the reference number from the row
                     reference = (
-                        str(row[column_map["Referencia"]]) if column_map.get("Referencia") < len(row) else False
+                        str(row[column_map["Referencia"]])
+                        if column_map.get("Referencia") < len(row)
+                        else False
                     )
 
                     # Skip rows with empty Referencia o Importe
@@ -428,7 +529,11 @@ class FleetVehicleLogImport(models.TransientModel):
                         errors.append(f"Row {row_idx}: Missing reference")
                         continue
 
-                    importe_str = row[column_map["Importe"]] if column_map.get("Importe") < len(row) else ""
+                    importe_str = (
+                        row[column_map["Importe"]]
+                        if column_map.get("Importe") < len(row)
+                        else ""
+                    )
                     if not importe_str:
                         errors.append(f"Row {row_idx}: Missing amount")
                         continue
@@ -439,14 +544,24 @@ class FleetVehicleLogImport(models.TransientModel):
 
                     try:
                         # Combine date and time (sometimes time came without seconds)
-                        datetime_format = "%d/%m/%Y %H:%M" if len(time_str) < 6 else "%d/%m/%Y %H:%M:%S"
-                        log_datetime = datetime.strptime(f"{date_str} {time_str}", datetime_format)
+                        datetime_format = (
+                            "%d/%m/%Y %H:%M"
+                            if len(time_str) < 6
+                            else "%d/%m/%Y %H:%M:%S"
+                        )
+                        log_datetime = datetime.strptime(
+                            f"{date_str} {time_str}", datetime_format
+                        )
                     except ValueError:
-                        errors.append(f"Row {row_idx}: Invalid date/time format '{date_str} {time_str}'")
+                        errors.append(
+                            f"Row {row_idx}: Invalid date/time format '{date_str} {time_str}'"
+                        )
                         continue
 
                     # Validate vehicle
-                    vehicle = self._find_vehicle_by_highway_pass(reference, filter_vehicles)
+                    vehicle = self._find_vehicle_by_highway_pass(
+                        reference, filter_vehicles
+                    )
                     if not vehicle:
                         error_msg = f"Row {row_idx}: No vehicle found with reference '{reference}'"
                         errors.append(error_msg)
@@ -458,12 +573,22 @@ class FleetVehicleLogImport(models.TransientModel):
                         amount_str = re.sub(r"[^\d.-]", "", importe_str)
                         amount = float(amount_str) if amount_str else 0
                     except ValueError:
-                        errors.append(f"Row {row_idx}: Invalid amount format '{importe_str}'")
+                        errors.append(
+                            f"Row {row_idx}: Invalid amount format '{importe_str}'"
+                        )
                         continue
 
                     # Prepare notes as concatenation of various fields
-                    movement = row[column_map["Movimiento"]] if column_map.get("Movimiento") < len(row) else ""
-                    folio = row[column_map["Folio"]] if column_map.get("Folio") < len(row) else ""
+                    movement = (
+                        row[column_map["Movimiento"]]
+                        if column_map.get("Movimiento") < len(row)
+                        else ""
+                    )
+                    folio = (
+                        row[column_map["Folio"]]
+                        if column_map.get("Folio") < len(row)
+                        else ""
+                    )
 
                     notes = f"Movimiento: {movement}, Folio: {folio}"
 
@@ -509,7 +634,9 @@ class FleetVehicleLogImport(models.TransientModel):
                 self.env._(
                     "File structure doesn't match the expected '%(parser)s' format.\n\n%(traceback)s",
                     {
-                        "parser": dict(self._fields["parser"]._description_selection(self.env))[self.parser],
+                        "parser": dict(
+                            self._fields["parser"]._description_selection(self.env)
+                        )[self.parser],
                         "traceback": str(e) + "\n" + traceback.format_exc(),
                     },
                 )
@@ -525,7 +652,9 @@ class FleetVehicleLogImport(models.TransientModel):
         # Dynamic parser selection
         parser_name = f"_parse_{self.parser}"
         if not hasattr(self, parser_name):
-            raise UserError(self.env._("Selected parser '%s' is not implemented.", self.parser))
+            raise UserError(
+                self.env._("Selected parser '%s' is not implemented.", self.parser)
+            )
 
         log_values_list, errors = getattr(self, parser_name)(self.file)
 
@@ -536,12 +665,19 @@ class FleetVehicleLogImport(models.TransientModel):
                 errors_messages = errors[: self.test_limit]
                 if len(errors) > self.test_limit:
                     errors_messages.append(
-                        self.env._("And %(more_count)s more errors...") % {"more_count": len(errors) - self.test_limit}
+                        self.env._("And %(more_count)s more errors...")
+                        % {"more_count": len(errors) - self.test_limit}
                     )
 
-            message = self.env._("Test Mode Results:\n\n%(error_count)s errors were found.\n\n%(error_details)s") % {
+            message = self.env._(
+                "Test Mode Results:\n\n%(error_count)s errors were found.\n\n%(error_details)s"
+            ) % {
                 "error_count": len(errors),
-                "error_details": "\n".join(f"  • {error}" for error in errors_messages) if errors else "",
+                "error_details": (
+                    "\n".join(f"  • {error}" for error in errors_messages)
+                    if errors
+                    else ""
+                ),
             }
             raise UserError(message)
 

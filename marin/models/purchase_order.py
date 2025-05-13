@@ -145,7 +145,7 @@ class PurchaseOrder(models.Model):
     def _compute_invoice_state(self):
         confirmed_orders = self.filtered(lambda o: o.state == "purchase")
         (self - confirmed_orders).invoice_state = "no"
-        
+
         if not confirmed_orders:
             return
 

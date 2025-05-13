@@ -67,7 +67,11 @@ class Session(models.Model):
             if vals.get("name", "/") == "/":
                 company_id = vals.get("company_id") or self.env.company.id
                 sequence_code = "sat.session"
-                name = self.env["ir.sequence"].with_company(company_id).next_by_code(sequence_code)
+                name = (
+                    self.env["ir.sequence"]
+                    .with_company(company_id)
+                    .next_by_code(sequence_code)
+                )
                 if not name:
                     sequence = (
                         self.env["ir.sequence"]
@@ -87,7 +91,9 @@ class Session(models.Model):
         return super().create(vals_list)
 
     def get_mx_current_datetime(self):
-        return fields.Datetime.context_timestamp(self.with_context(tz="America/Mexico_City"), fields.Datetime.now())
+        return fields.Datetime.context_timestamp(
+            self.with_context(tz="America/Mexico_City"), fields.Datetime.now()
+        )
 
     def action_request_cfdi(self, esignature=None):
         """Request CFDI download from SAT by a given date range.
@@ -102,7 +108,10 @@ class Session(models.Model):
         self.ensure_one()
         mx_edi_document = self.env["l10n_mx_edi.document"]
 
-        esignature = esignature or self.company_id.l10n_mx_edi_esignature_ids.get_valid_esignature()
+        esignature = (
+            esignature
+            or self.company_id.l10n_mx_edi_esignature_ids.get_valid_esignature()
+        )
 
         certificate = esignature.get_cert_data()[1]
         private_key = esignature.get_pk_data()[1]
@@ -133,7 +142,10 @@ class Session(models.Model):
 
         mx_edi_document = self.env["l10n_mx_edi.document"]
 
-        esignature = esignature or self.company_id.l10n_mx_edi_esignature_ids.get_valid_esignature()
+        esignature = (
+            esignature
+            or self.company_id.l10n_mx_edi_esignature_ids.get_valid_esignature()
+        )
 
         certificate = esignature.get_cert_data()[1]
         private_key = esignature.get_pk_data()[1]
@@ -145,11 +157,15 @@ class Session(models.Model):
                 max_retries,
             )
             if self.token_expiration < fields.Datetime.now():
-                token_res = mx_edi_document.l10n_mx_ws_generate_token(certificate, private_key)
+                token_res = mx_edi_document.l10n_mx_ws_generate_token(
+                    certificate, private_key
+                )
                 self.write(
                     {
                         "token": token_res["token"],
-                        "token_expiration": datetime.fromisoformat(token_res["expires"]),
+                        "token_expiration": datetime.fromisoformat(
+                            token_res["expires"]
+                        ),
                     }
                 )
             verify_download = mx_edi_document.l10n_mx_ws_verify_package(
@@ -160,7 +176,11 @@ class Session(models.Model):
                     "request_state": verify_download["estado_solicitud"],
                     "file_count": int(verify_download["numero_cfdis"]),
                     "request_message": verify_download["mensaje"],
-                    "packages": (verify_download["paquetes"][0] if verify_download["paquetes"] else ""),
+                    "packages": (
+                        verify_download["paquetes"][0]
+                        if verify_download["paquetes"]
+                        else ""
+                    ),
                 }
             )
             if int(self.request_state) > 2:
@@ -179,7 +199,10 @@ class Session(models.Model):
         ir_attachment = self.env["ir.attachment"]
 
         # Get valid electronic signature
-        esignature = esignature or self.company_id.l10n_mx_edi_esignature_ids.get_valid_esignature()
+        esignature = (
+            esignature
+            or self.company_id.l10n_mx_edi_esignature_ids.get_valid_esignature()
+        )
         if not esignature:
             self.message_post(body=self.env._("No valid electronic signature found"))
             return
@@ -192,15 +215,21 @@ class Session(models.Model):
         # Renew token if expired
         if not self.token or self.token_expiration < fields.Datetime.now():
             try:
-                token_res = mx_edi_document.l10n_mx_ws_generate_token(certificate, private_key)
+                token_res = mx_edi_document.l10n_mx_ws_generate_token(
+                    certificate, private_key
+                )
                 self.write(
                     {
                         "token": token_res["token"],
-                        "token_expiration": datetime.fromisoformat(token_res["expires"]),
+                        "token_expiration": datetime.fromisoformat(
+                            token_res["expires"]
+                        ),
                     }
                 )
             except Exception as e:
-                self.message_post(body=self.env._("Token generation error: %s") % str(e))
+                self.message_post(
+                    body=self.env._("Token generation error: %s") % str(e)
+                )
                 return
 
         # Download the package from the web service
@@ -220,11 +249,15 @@ class Session(models.Model):
 
         # Process the downloaded package if it exists
         if download_res.get("paquete_b64") is None:
-            self.message_post(body=self.env._("No content found in the downloaded package"))
+            self.message_post(
+                body=self.env._("No content found in the downloaded package")
+            )
             return
 
         content = download_res["paquete_b64"]
-        folder_id = self.company_id.l10n_mx_edi_folder.id or False  # Precompute folder ID once
+        folder_id = (
+            self.company_id.l10n_mx_edi_folder.id or False
+        )  # Precompute folder ID once
 
         # Batch processing preparation
         att_vals_list = []  # Stores attachment creation values
@@ -239,19 +272,28 @@ class Session(models.Model):
             ]
 
             if not xml_files:
-                self.message_post(body=self.env._("No valid XML files found for processing."))
+                self.message_post(
+                    body=self.env._("No valid XML files found for processing.")
+                )
                 return
 
             # Preparing domain
             domain = expression.AND(
                 [
                     [("company_id", "in", [False, self.company_id.id])],
-                    expression.OR([[("name", "=ilike", fname)] for fname, normalized_fname in xml_files]),
+                    expression.OR(
+                        [
+                            [("name", "=ilike", fname)]
+                            for fname, normalized_fname in xml_files
+                        ]
+                    ),
                 ]
             )
 
             # Find all existing documents
-            existing_docs = docs_document.sudo().search(domain, order="name asc, id asc")
+            existing_docs = docs_document.sudo().search(
+                domain, order="name asc, id asc"
+            )
 
             # Ensure uniqueness
             unique_existing_docs = docs_document
@@ -298,13 +340,17 @@ class Session(models.Model):
 
             # If there are no new documents to create and no existing ones, we return
             if not doc_vals_list and not existing_docs:
-                self.message_post(body=self.env._("No valid XML files found for processing."))
+                self.message_post(
+                    body=self.env._("No valid XML files found for processing.")
+                )
                 return
 
             # Bulk create records if we have valid files
             try:
                 # Create all attachments in single operation
-                attachments = ir_attachment.with_context(force_l10n_mx_edi_cfdi_uuid=True).create(att_vals_list)
+                attachments = ir_attachment.with_context(
+                    force_l10n_mx_edi_cfdi_uuid=True
+                ).create(att_vals_list)
 
                 # Prepare documents to create
                 created_documents = docs_document
@@ -323,11 +369,23 @@ class Session(models.Model):
                     self.write({"document_ids": [(6, 0, document_ids)]})
 
                 created_items = (
-                    "".join([f"<li>{doc.name} (ID: {doc.id})</li>" for doc in created_documents]) or "<li>None</li>"
+                    "".join(
+                        [
+                            f"<li>{doc.name} (ID: {doc.id})</li>"
+                            for doc in created_documents
+                        ]
+                    )
+                    or "<li>None</li>"
                 )
 
                 existing_items = (
-                    "".join([f"<li>{doc.name} (ID: {doc.id})</li>" for doc in unique_existing_docs]) or "<li>None</li>"
+                    "".join(
+                        [
+                            f"<li>{doc.name} (ID: {doc.id})</li>"
+                            for doc in unique_existing_docs
+                        ]
+                    )
+                    or "<li>None</li>"
                 )
 
                 # Prepare summary message
@@ -351,7 +409,11 @@ class Session(models.Model):
 
                 # Send summary message
                 self.message_post(body=summary_message)
-                _logger.info("Downloaded %s documents for MX session ID %s", len(document_ids), self.id)
+                _logger.info(
+                    "Downloaded %s documents for MX session ID %s",
+                    len(document_ids),
+                    self.id,
+                )
 
             except Exception as e:
                 error_message = self.env._("Document processing error: %s") % str(e)
@@ -400,9 +462,15 @@ class Session(models.Model):
 
         # Get operating hours from system parameters
         icp = self.env["ir.config_parameter"].sudo()
-        hour_start = int(icp.get_param("documents_l10n_mx_edi.hour_start_download_cfdi", "8"))
-        hour_end = int(icp.get_param("documents_l10n_mx_edi.hour_end_download_cfdi", "18"))
-        hour_interval = int(icp.get_param("documents_l10n_mx_edi.hour_interval_download_cfdi", "2"))
+        hour_start = int(
+            icp.get_param("documents_l10n_mx_edi.hour_start_download_cfdi", "8")
+        )
+        hour_end = int(
+            icp.get_param("documents_l10n_mx_edi.hour_end_download_cfdi", "18")
+        )
+        hour_interval = int(
+            icp.get_param("documents_l10n_mx_edi.hour_interval_download_cfdi", "2")
+        )
 
         # Check if within operating hours
         if not hour_start <= now_mx.hour <= hour_end:
@@ -415,14 +483,19 @@ class Session(models.Model):
             return False
 
         # Get last session or default to 7 days ago
-        last_session = self.search([("company_id", "=", company_id)], order="date_to desc", limit=1)
+        last_session = self.search(
+            [("company_id", "=", company_id)], order="date_to desc", limit=1
+        )
         start_date = (
             last_session.date_to.astimezone(mexico_tz)
             if last_session and last_session.date_to
             else now_mx - timedelta(days=7)
         )
         # Generate time blocks (2-hour intervals)
-        time_blocks = [(hour, hour + hour_interval) for hour in range(hour_start, hour_end, hour_interval)]
+        time_blocks = [
+            (hour, hour + hour_interval)
+            for hour in range(hour_start, hour_end, hour_interval)
+        ]
 
         # Calculate end time (current hour rounded down)
         today = now_mx.replace(hour=0, minute=0, second=0, microsecond=0)
@@ -440,7 +513,9 @@ class Session(models.Model):
 
         while current_time < end_time:
             # Find next time block
-            next_time = self._get_next_time_block(current_time, time_blocks, hour_start, mexico_tz)
+            next_time = self._get_next_time_block(
+                current_time, time_blocks, hour_start, mexico_tz
+            )
 
             if next_time > end_time:
                 break
@@ -486,7 +561,9 @@ class Session(models.Model):
             recordset: Sessions ready for verification, ordered by oldest first
         """
         max_verify_allowed = int(
-            self.env["ir.config_parameter"].sudo().get_param("documents_l10n_mx_edi.default_max_verify_cfdi", "5")
+            self.env["ir.config_parameter"]
+            .sudo()
+            .get_param("documents_l10n_mx_edi.default_max_verify_cfdi", "5")
         )
 
         return self.search(
@@ -529,12 +606,22 @@ class Session(models.Model):
         max_retries = self.env.context.get("max_retries", 2)
         waiting_sec = self.env.context.get("waiting_sec", 0)
         today = datetime.now().date()
-        companies = self.env["res.company"].search([("l10n_mx_edi_certificate_ids", "!=", False)])
+        companies = self.env["res.company"].search(
+            [("l10n_mx_edi_certificate_ids", "!=", False)]
+        )
         valid_companies = companies.filtered(
             lambda c: any(
-                (cert.date_start.date() if isinstance(cert.date_start, datetime) else cert.date_start)
+                (
+                    cert.date_start.date()
+                    if isinstance(cert.date_start, datetime)
+                    else cert.date_start
+                )
                 <= today
-                <= (cert.date_end.date() if isinstance(cert.date_end, datetime) else cert.date_end)
+                <= (
+                    cert.date_end.date()
+                    if isinstance(cert.date_end, datetime)
+                    else cert.date_end
+                )
                 for cert in c.l10n_mx_edi_certificate_ids
             )
         )
@@ -549,7 +636,9 @@ class Session(models.Model):
                 # 3. Verify request
                 sessions_to_verify = self._get_verify_candidates(company.id)
                 for session_to_verify in sessions_to_verify:
-                    session_to_verify.action_verify_cfdi(esignature, max_retries=max_retries, waiting_sec=waiting_sec)
+                    session_to_verify.action_verify_cfdi(
+                        esignature, max_retries=max_retries, waiting_sec=waiting_sec
+                    )
                 # 4. Download CFDIs
                 sessions_to_download = self._get_download_candidates(company.id)
                 for session_to_download in sessions_to_download:
@@ -557,7 +646,9 @@ class Session(models.Model):
             except Exception as e:
                 if auto_commit:
                     self.env.cr.rollback()
-                _logger.error("Error processing sessions for company %s: %s", company.name, e)
+                _logger.error(
+                    "Error processing sessions for company %s: %s", company.name, e
+                )
             finally:
                 if auto_commit:
                     self.env.cr.commit()  # pylint: disable=invalid-commit

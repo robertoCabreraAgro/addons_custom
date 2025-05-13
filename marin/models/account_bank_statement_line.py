@@ -20,18 +20,24 @@ class AccountBankStatementLine(models.Model):
                 absl.partner_id = partner
         return res
 
-    def _compute_st_lines_to_reconcile(self, configured_company, batch_size=None,):
+    def _compute_st_lines_to_reconcile(
+        self,
+        configured_company,
+        batch_size=None,
+    ):
         # Find the bank statement lines that are not reconciled and try to reconcile them automatically.
         # The ones that are never be processed by the CRON before are processed first.
         remaining_line_id = None
         limit = batch_size + 1 if batch_size else None
         start_time = fields.Datetime.now()
         domain = [
-            ('is_reconciled', '=', False),
-            ('create_date', '>', start_time.date() - relativedelta(months=3)),
-            ('company_id', 'in', configured_company.ids),
+            ("is_reconciled", "=", False),
+            ("create_date", ">", start_time.date() - relativedelta(months=3)),
+            ("company_id", "in", configured_company.ids),
         ]
-        st_lines = self.search(domain, limit=limit, order="cron_last_check ASC NULLS FIRST, id")
+        st_lines = self.search(
+            domain, limit=limit, order="cron_last_check ASC NULLS FIRST, id"
+        )
         if batch_size and len(st_lines) > batch_size:
             remaining_line_id = st_lines[batch_size].id
             st_lines = st_lines[:batch_size]
@@ -106,7 +112,9 @@ class AccountBankStatementLine(models.Model):
         # Retrieve the partner from the 'reconcile models'.
         rec_models = self.env["account.reconcile.model"].search(
             [
-                *self.env["account.reconcile.model"]._check_company_domain(self.company_id),
+                *self.env["account.reconcile.model"]._check_company_domain(
+                    self.company_id
+                ),
                 ("rule_type", "!=", "writeoff_button"),
             ]
         )

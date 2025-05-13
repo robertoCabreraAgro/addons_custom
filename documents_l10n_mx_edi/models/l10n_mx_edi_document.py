@@ -101,14 +101,20 @@ class L10nMxEdiDocument(models.Model):
     def _get_payment_term_id(self, cfdi_node):
         """Get Payment Term ID from CFDI."""
         if conditions := cfdi_node.get("CondicionesDePago"):
-            return self.env["account.payment.term"].search([("name", "=ilike", conditions)], limit=1).id
+            return (
+                self.env["account.payment.term"]
+                .search([("name", "=ilike", conditions)], limit=1)
+                .id
+            )
         return False
 
     def _get_payment_method_id(self, cfdi_node):
         """Get MX Payment Method ID from CFDI."""
         payment_form = cfdi_node.get("FormaDePago") or cfdi_node.get("FormaPago")
         return (
-            self.env["l10n_mx_edi.payment.method"].search([("code", "=", payment_form)], limit=1).id
+            self.env["l10n_mx_edi.payment.method"]
+            .search([("code", "=", payment_form)], limit=1)
+            .id
             or self.env.ref("l10n_mx_edi.payment_method_otros").id
         )
 
@@ -133,7 +139,9 @@ class L10nMxEdiDocument(models.Model):
         currency_code = "MXN" if currency_code.lower() in mxn else currency_code
         currency_code = "USD" if currency_code.lower() in usd else currency_code
 
-        return self.env["res.currency"].search([("name", "=", currency_code)], limit=1).id
+        return (
+            self.env["res.currency"].search([("name", "=", currency_code)], limit=1).id
+        )
 
     def _get_fuel_codes(self):
         """Return the codes that can be used in FUEL"""
@@ -145,7 +153,11 @@ class L10nMxEdiDocument(models.Model):
         To make dynamic this a system parameter can be added with the name:
         \"l10n_mx_taxes_for_expense\", then set the tax name. If many taxes split
         the names by \",\" """
-        taxes = self.env["ir.config_parameter"].sudo().get_param("l10n_mx_taxes_for_expense", False)
+        taxes = (
+            self.env["ir.config_parameter"]
+            .sudo()
+            .get_param("l10n_mx_taxes_for_expense", False)
+        )
         if taxes:
             return taxes.split(",")
         return ["ISH", "TUA", "ISAN"]
@@ -158,7 +170,9 @@ class L10nMxEdiDocument(models.Model):
         """Return account.tax.group records"""
         tax_group_name = self._get_tax_group_name(name, rate)
         tax_group = (
-            self.env["account.tax.group"].with_context(lang="es_MX").search([("name", "ilike", tax_group_name)])
+            self.env["account.tax.group"]
+            .with_context(lang="es_MX")
+            .search([("name", "ilike", tax_group_name)])
         )
         return tax_group
 
@@ -197,8 +211,11 @@ class L10nMxEdiDocument(models.Model):
         """
         if not namespace_uri:
             namespace_uri = "http://www.sat.gob.mx/TimbreFiscalDigital"
-        xpath_expr = "//*[local-name()='Complemento']" "/*[local-name()='{}' and namespace-uri()='{}']".format(
-            attribute, namespace_uri
+        xpath_expr = (
+            "//*[local-name()='Complemento']"
+            "/*[local-name()='{}' and namespace-uri()='{}']".format(
+                attribute, namespace_uri
+            )
         )
         try:
             node = cfdi_node.xpath(xpath_expr)
@@ -325,7 +342,9 @@ class L10nMxEdiDocument(models.Model):
         mx_taxes = self.env["account.tax"].with_context(lang="es_MX")
 
         for tax_data in collected_taxes:
-            tax_domain = self._get_tax_domain(tax_data["name"], tax_data["amount"], tax_data["l10n_mx_factor_type"])
+            tax_domain = self._get_tax_domain(
+                tax_data["name"], tax_data["amount"], tax_data["l10n_mx_factor_type"]
+            )
             existing_tax = mx_taxes.search(tax_domain, limit=1, order="id asc")
             if existing_tax:
                 tax_ids.append(existing_tax.id)
@@ -333,8 +352,12 @@ class L10nMxEdiDocument(models.Model):
         return tax_ids
 
     def _search_vehicle_ecc12(self, line_ecc12_element):
-        domain_vehicle = [("fuel_card_name", "=", line_ecc12_element.get("Identificador"))]
-        vehicle_exist = self.env["fleet.vehicle"].search(domain_vehicle, limit=1, order="id asc")
+        domain_vehicle = [
+            ("fuel_card_name", "=", line_ecc12_element.get("Identificador"))
+        ]
+        vehicle_exist = self.env["fleet.vehicle"].search(
+            domain_vehicle, limit=1, order="id asc"
+        )
         return vehicle_exist
 
     def _search_partner_ecc12(self, line_ecc12_element):
@@ -382,7 +405,9 @@ class L10nMxEdiDocument(models.Model):
         invoice_lines = []
 
         # Process each fuel concept line
-        for line in ecc12_node.findall("{*}Conceptos/{*}ConceptoEstadoDeCuentaCombustible", namespaces=ns):
+        for line in ecc12_node.findall(
+            "{*}Conceptos/{*}ConceptoEstadoDeCuentaCombustible", namespaces=ns
+        ):
             # Base data extraction
             partner = self._search_partner_ecc12(line)
             vehicle = self._search_vehicle_ecc12(line)
@@ -412,7 +437,11 @@ class L10nMxEdiDocument(models.Model):
                     existing_tax = tax_obj.search(tax_domain, limit=1, order="id asc")
                     if existing_tax:
                         tax_ids.append(existing_tax.id)
-                        price_unit = round(main_tax.get("total", 0.0) / (main_tax.get("amount", 100) / 100), 2)
+                        price_unit = round(
+                            main_tax.get("total", 0.0)
+                            / (main_tax.get("amount", 100) / 100),
+                            2,
+                        )
 
                 # Process IEPS tax if exists
                 if ieps_taxes:
@@ -446,7 +475,9 @@ class L10nMxEdiDocument(models.Model):
                             "vehicle_id": vehicle.id or False,
                             "quantity": 1.0,
                             "price_unit": (total_amount - price_unit) + ieps_amount,
-                            "tax_ids": [Command.set([tax_exempt.id])] if tax_exempt else False,
+                            "tax_ids": (
+                                [Command.set([tax_exempt.id])] if tax_exempt else False
+                            ),
                             "partner_id": partner.id,
                         }
                     )
@@ -454,7 +485,9 @@ class L10nMxEdiDocument(models.Model):
 
         return invoice_lines
 
-    def _prepare_invoice_line_vals(self, cfdi_node, can_create_product=False, partner=None):
+    def _prepare_invoice_line_vals(
+        self, cfdi_node, can_create_product=False, partner=None
+    ):
         """Prepare invoice line values from CFDI concept nodes.
 
         Args:
@@ -496,7 +529,9 @@ class L10nMxEdiDocument(models.Model):
         global_discount = float(cfdi_node.get("Descuento", 0))
         global_line_discount = 0
         if global_discount:
-            global_line_discount = global_discount * 100 / float(cfdi_node.get("SubTotal", 0.0))
+            global_line_discount = (
+                global_discount * 100 / float(cfdi_node.get("SubTotal", 0.0))
+            )
         invoice_lines = []
         for line in cfdi_node.findall("{*}Conceptos/{*}Concepto", namespaces=ns):
             uom_unspsc_code = self.env["product.unspsc.code"].search(
@@ -508,20 +543,35 @@ class L10nMxEdiDocument(models.Model):
             )
             uom_domain = [("unspsc_code_id", "=", uom_unspsc_code.id)]
             uom = self.env.ref("uom.product_uom_unit")
-            prefetch_uom = self.env["uom.uom"].with_context(lang="es_MX").search(uom_domain)
+            prefetch_uom = (
+                self.env["uom.uom"].with_context(lang="es_MX").search(uom_domain)
+            )
             if prefetch_uom and len(prefetch_uom) == 1:
                 uom = prefetch_uom
             elif prefetch_uom and len(prefetch_uom) > 1:
                 uom_domain.append(("name", "=ilike", line.get("Unidad", "")))
-                uom = self.env["uom.uom"].with_context(lang="es_MX").search(uom_domain, limit=1) or uom
+                uom = (
+                    self.env["uom.uom"]
+                    .with_context(lang="es_MX")
+                    .search(uom_domain, limit=1)
+                    or uom
+                )
 
-            product_code = line.get("NoIdentificacion")  # default_code if export from Odoo
+            product_code = line.get(
+                "NoIdentificacion"
+            )  # default_code if export from Odoo
             unspsc_code = line.get("ClaveProdServ")  # UNSPSC code
-            description = line.get("Descripcion")  # label of the invoice line "[{p.default_code}] {p.name}"
+            description = line.get(
+                "Descripcion"
+            )  # label of the invoice line "[{p.default_code}] {p.name}"
             cleaned_name = re.sub(
                 r"^\[.*\] ",
                 "",
-                description.splitlines()[0] if description.splitlines() else description,
+                (
+                    description.splitlines()[0]
+                    if description.splitlines()
+                    else description
+                ),
             )
             product = self.env["product.product"]._retrieve_product(
                 name=cleaned_name,
@@ -531,13 +581,17 @@ class L10nMxEdiDocument(models.Model):
                 vendor=partner,
             )
             if not product:
-                product = self.env["product.product"]._retrieve_product(name=cleaned_name, default_code=product_code)
+                product = self.env["product.product"]._retrieve_product(
+                    name=cleaned_name, default_code=product_code
+                )
 
             line_discount = 0.0
             if global_line_discount:
                 line_discount = global_line_discount
             elif line.get("Descuento"):
-                line_discount = (float(line.get("Descuento")) / float(line.get("Importe", "0.0"))) * 100
+                line_discount = (
+                    float(line.get("Descuento")) / float(line.get("Importe", "0.0"))
+                ) * 100
 
             if not product and can_create_product:
                 product = product.create(
@@ -561,7 +615,9 @@ class L10nMxEdiDocument(models.Model):
                         "product_uom_id": product.uom_id.id if product else uom.id,
                         "price_unit": float(line.get("ValorUnitario")),
                         "discount": line_discount,
-                        "tax_ids": [Command.set(self._prepare_invoice_line_tax_ids(line))],
+                        "tax_ids": [
+                            Command.set(self._prepare_invoice_line_tax_ids(line))
+                        ],
                     },
                 )
             )
@@ -629,7 +685,9 @@ class L10nMxEdiDocument(models.Model):
                 ("company_id", "=", self.env.company.id),
                 ("type", "in", journal_types),
             ]
-            journal = self.env["account.journal"].search(domain, limit=1, order="id asc")
+            journal = self.env["account.journal"].search(
+                domain, limit=1, order="id asc"
+            )
         cfdi_node = cfdi_infos["cfdi_node"]
         partner = self.partner_search_create(cfdi_node)
         invoice_lines = []
@@ -641,22 +699,36 @@ class L10nMxEdiDocument(models.Model):
         if ecc12_node is not None:
             invoice_lines.extend(self._prepare_ecc12_invoice_line_vals(ecc12_node))
         else:
-            invoice_lines.extend(self._prepare_invoice_line_vals(cfdi_node, partner=partner))
+            invoice_lines.extend(
+                self._prepare_invoice_line_vals(cfdi_node, partner=partner)
+            )
             if local_taxes_node := self.collect_complemento(
                 cfdi_node, "ImpuestosLocales", "http://www.sat.gob.mx/implocal"
             ):
                 invoice_lines.extend(self._prepare_local_taxes(local_taxes_node))
-        taxes_node = cfdi_node.find("{*}Impuestos") if hasattr(cfdi_node, "find") else None
-        taxes_amount = float(taxes_node.get("TotalImpuestosTrasladados", 0.0)) if taxes_node is not None else 0.0
+        taxes_node = (
+            cfdi_node.find("{*}Impuestos") if hasattr(cfdi_node, "find") else None
+        )
+        taxes_amount = (
+            float(taxes_node.get("TotalImpuestosTrasladados", 0.0))
+            if taxes_node is not None
+            else 0.0
+        )
         vals = {
             "move_type": move_type,
             "journal_id": journal.id,
             "currency_id": self._get_currency_id(cfdi_node),
             "invoice_date": self._get_datetime(cfdi_infos),
-            "invoice_payment_term_id": self._get_payment_term_id(cfdi_node),  # immediate
+            "invoice_payment_term_id": self._get_payment_term_id(
+                cfdi_node
+            ),  # immediate
             "partner_id": partner.id,
-            "name": self._get_serie_folio(cfdi_node) if import_type == "issued" else "/",
-            "payment_reference": self._get_serie_folio(cfdi_node) if import_type == "received" else False,
+            "name": (
+                self._get_serie_folio(cfdi_node) if import_type == "issued" else "/"
+            ),
+            "payment_reference": (
+                self._get_serie_folio(cfdi_node) if import_type == "received" else False
+            ),
             "posted_before": import_type == "issued",
             "l10n_mx_edi_payment_method_id": self._get_payment_method_id(cfdi_node),
             "l10n_mx_edi_payment_policy": cfdi_infos["payment_method"],
@@ -710,7 +782,9 @@ class L10nMxEdiDocument(models.Model):
             )
 
         if record._name not in ["documents.document", "account.move"]:
-            raise ValueError("Duplicates can only be checked for documents or invoices, please provide a valid record")
+            raise ValueError(
+                "Duplicates can only be checked for documents or invoices, please provide a valid record"
+            )
 
         # Common message prefix
         message_prefix = self.env._("Duplicated CFDI: %s", uuid)
@@ -841,7 +915,9 @@ class L10nMxEdiDocument(models.Model):
                 if key == "RfcReceptores":
                     for i, rfc_receptor in enumerate(arguments[key]):
                         if not i:
-                            element_receptor = element_root.find(".//des:RfcReceptor", internal_nsmap)
+                            element_receptor = element_root.find(
+                                ".//des:RfcReceptor", internal_nsmap
+                            )
                             element_receptor.text = rfc_receptor
                     continue
 
@@ -850,13 +926,17 @@ class L10nMxEdiDocument(models.Model):
 
         digest_value = element_signature.find(".//DigestValue", internal_nsmap)
         digest_value.text = base64.b64encode(
-            hashlib.sha1(etree.tostring(element_to_digest, method="c14n", exclusive=1)).digest()
+            hashlib.sha1(
+                etree.tostring(element_to_digest, method="c14n", exclusive=1)
+            ).digest()
         )
         element_to_sign = element_signature.find(".//SignedInfo", internal_nsmap)
         element_to_sign = etree.tostring(element_to_sign, method="c14n", exclusive=1)
         element_signed = element_signature.find(".//SignatureValue", internal_nsmap)
         element_signed.text = (
-            base64.b64encode(crypto.sign(private_key, element_to_sign, "sha1")).decode("UTF-8").replace("\n", "")
+            base64.b64encode(crypto.sign(private_key, element_to_sign, "sha1"))
+            .decode("UTF-8")
+            .replace("\n", "")
         )
 
         if not token:
@@ -883,14 +963,23 @@ class L10nMxEdiDocument(models.Model):
             """
         element_key_info = etree.fromstring(key_info, parser)
         if not token:
-            element_certificate = element_root.find(".//o:BinarySecurityToken", internal_nsmap)
-            element_certificate.text = base64.b64encode(crypto.dump_certificate(crypto.FILETYPE_ASN1, certificate))
+            element_certificate = element_root.find(
+                ".//o:BinarySecurityToken", internal_nsmap
+            )
+            element_certificate.text = base64.b64encode(
+                crypto.dump_certificate(crypto.FILETYPE_ASN1, certificate)
+            )
         else:
             element_certificate = element_key_info.find(".//X509Certificate")
-            element_certificate.text = base64.b64encode(crypto.dump_certificate(crypto.FILETYPE_ASN1, certificate))
+            element_certificate.text = base64.b64encode(
+                crypto.dump_certificate(crypto.FILETYPE_ASN1, certificate)
+            )
             cer_issuer = certificate.get_issuer().get_components()
             cer_issuer = ",".join(
-                ["{key}={value}".format(key=key.decode(), value=value.decode()) for key, value in cer_issuer]
+                [
+                    "{key}={value}".format(key=key.decode(), value=value.decode())
+                    for key, value in cer_issuer
+                ]
             )
             element_issuer_name = element_key_info.find(".//X509IssuerName")
             element_issuer_name.text = cer_issuer
@@ -932,12 +1021,18 @@ class L10nMxEdiDocument(models.Model):
             "i": "http://www.w3.org/2001/XMLSchema-instance",
             "s": "http://schemas.xmlsoap.org/soap/envelope/",
         }
-        communication = self.check_comm(url, data, headers, result_xpath, external_nsmap)
+        communication = self.check_comm(
+            url, data, headers, result_xpath, external_nsmap
+        )
         ret_dict = {
             "status": communication.find("a:Estado", external_nsmap).text,
             "is_cancellable": communication.find("a:EsCancelable", external_nsmap).text,
-            "cancel_status": communication.find("a:EstatusCancelacion", external_nsmap).text,
-            "efos_validation": communication.find("a:ValidacionEFOS", external_nsmap).text,
+            "cancel_status": communication.find(
+                "a:EstatusCancelacion", external_nsmap
+            ).text,
+            "efos_validation": communication.find(
+                "a:ValidacionEFOS", external_nsmap
+            ).text,
         }
         return ret_dict
 
@@ -970,7 +1065,9 @@ class L10nMxEdiDocument(models.Model):
             </s:Envelope>
         """
         xpath = "s:Header/o:Security"
-        data = self.prepare_soap_data(certificate, private_key, {"uuid": f"uuid-{uuid}-4"}, envelop, xpath, False)
+        data = self.prepare_soap_data(
+            certificate, private_key, {"uuid": f"uuid-{uuid}-4"}, envelop, xpath, False
+        )
         url = "https://cfdidescargamasivasolicitud.clouda.sat.gob.mx/Autenticacion/Autenticacion.svc"
         soap_action = "http://DescargaMasivaTerceros.gob.mx/IAutenticacion/Autentica"
         headers = self.get_headers(soap_action)
@@ -981,7 +1078,9 @@ class L10nMxEdiDocument(models.Model):
             "u": "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd",
             "o": "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd",
         }
-        communication = self.check_comm(url, data, headers, result_xpath, external_nsmap)
+        communication = self.check_comm(
+            url, data, headers, result_xpath, external_nsmap
+        )
         ret_dict = {
             "expires": date_expires,
             "token": communication.text,
@@ -1011,33 +1110,51 @@ class L10nMxEdiDocument(models.Model):
         if not isinstance(args, dict):
             raise ValidationError(self.env._("Validation error"))
 
-        holder_vat = "".join(certificate.get_subject().x500UniqueIdentifier.split(" ")[0])
+        holder_vat = "".join(
+            certificate.get_subject().x500UniqueIdentifier.split(" ")[0]
+        )
         sanitized = self.sanitize_args(args)
         arguments = {
             "UUID": sanitized["uuid"] if "uuid" in sanitized else None,
             "RfcSolicitante": holder_vat,
             "RfcEmisor": (
-                sanitized["emitter_vat"] if "emitter_vat" in sanitized and "uuid" not in sanitized else None
+                sanitized["emitter_vat"]
+                if "emitter_vat" in sanitized and "uuid" not in sanitized
+                else None
             ),
             "RfcReceptores": (
                 sanitized["receiver_vats"]
                 if "receiver_vats" in sanitized and "uuid" not in sanitized
                 else [holder_vat]
             ),
-            "FechaInicial": (sanitized["date_from"].isoformat() if "date_from" in sanitized else None),
-            "FechaFinal": (sanitized["date_to"].isoformat() if "date_to" in sanitized else None),
-            "TipoSolicitud": (sanitized["request_type"] if "request_type" in sanitized else "CFDI"),
+            "FechaInicial": (
+                sanitized["date_from"].isoformat() if "date_from" in sanitized else None
+            ),
+            "FechaFinal": (
+                sanitized["date_to"].isoformat() if "date_to" in sanitized else None
+            ),
+            "TipoSolicitud": (
+                sanitized["request_type"] if "request_type" in sanitized else "CFDI"
+            ),
             "TipoComprobante": (
-                sanitized["cfdi_type"] if "cfdi_type" in sanitized and "uuid" not in sanitized else None
+                sanitized["cfdi_type"]
+                if "cfdi_type" in sanitized and "uuid" not in sanitized
+                else None
             ),
             "EstadoComprobante": (
-                sanitized["cfdi_state"] if "cfdi_state" in sanitized and "uuid" not in sanitized else None
+                sanitized["cfdi_state"]
+                if "cfdi_state" in sanitized and "uuid" not in sanitized
+                else None
             ),
             "RfcACuentaTerceros": (
-                sanitized["thirthparty_vat"] if "thirthparty_vat" in sanitized and "uuid" not in sanitized else None
+                sanitized["thirthparty_vat"]
+                if "thirthparty_vat" in sanitized and "uuid" not in sanitized
+                else None
             ),
             "Complemento": (
-                sanitized["complement"] if "complement" in sanitized and "uuid" not in sanitized else None
+                sanitized["complement"]
+                if "complement" in sanitized and "uuid" not in sanitized
+                else None
             ),
         }
         envelop = """
@@ -1057,7 +1174,9 @@ class L10nMxEdiDocument(models.Model):
             </s:Envelope>
         """
         xpath = "s:Body/des:SolicitaDescarga/des:solicitud"
-        data = self.prepare_soap_data(certificate, private_key, arguments, envelop, xpath, token)
+        data = self.prepare_soap_data(
+            certificate, private_key, arguments, envelop, xpath, token
+        )
         url = "https://cfdidescargamasivasolicitud.clouda.sat.gob.mx/SolicitaDescargaService.svc"
         soap_action = "http://DescargaMasivaTerceros.sat.gob.mx/ISolicitaDescargaService/SolicitaDescarga"
         headers = self.get_headers(soap_action, token)
@@ -1071,7 +1190,9 @@ class L10nMxEdiDocument(models.Model):
             "xsi": "http://www.w3.org/2001/XMLSchema-instance",
             "xsd": "http://www.w3.org/2001/XMLSchema",
         }
-        communication = self.check_comm(url, data, headers, result_xpath, external_nsmap)
+        communication = self.check_comm(
+            url, data, headers, result_xpath, external_nsmap
+        )
         ret_dict = {
             "id_solicitud": communication.get("IdSolicitud"),
             "cod_estatus": communication.get("CodEstatus"),
@@ -1081,7 +1202,9 @@ class L10nMxEdiDocument(models.Model):
 
     def l10n_mx_ws_verify_package(self, certificate, private_key, token, id_solicitud):
         arguments = {
-            "RfcSolicitante": certificate.get_subject().x500UniqueIdentifier.split(" ")[0],
+            "RfcSolicitante": certificate.get_subject().x500UniqueIdentifier.split(" ")[
+                0
+            ],
             "IdSolicitud": id_solicitud,
         }
         envelop = """
@@ -1097,11 +1220,11 @@ class L10nMxEdiDocument(models.Model):
             </s:Envelope>
         """
         xpath = "s:Body/des:VerificaSolicitudDescarga/des:solicitud"
-        data = self.prepare_soap_data(certificate, private_key, arguments, envelop, xpath, token)
-        url = "https://cfdidescargamasivasolicitud.clouda.sat.gob.mx/VerificaSolicitudDescargaService.svc"
-        soap_action = (
-            "http://DescargaMasivaTerceros.sat.gob.mx/IVerificaSolicitudDescargaService/VerificaSolicitudDescarga"
+        data = self.prepare_soap_data(
+            certificate, private_key, arguments, envelop, xpath, token
         )
+        url = "https://cfdidescargamasivasolicitud.clouda.sat.gob.mx/VerificaSolicitudDescargaService.svc"
+        soap_action = "http://DescargaMasivaTerceros.sat.gob.mx/IVerificaSolicitudDescargaService/VerificaSolicitudDescarga"
         headers = self.get_headers(soap_action, token)
         external_nsmap = {
             "": "http://DescargaMasivaTerceros.sat.gob.mx",
@@ -1112,8 +1235,12 @@ class L10nMxEdiDocument(models.Model):
             "xsi": "http://www.w3.org/2001/XMLSchema-instance",
             "xsd": "http://www.w3.org/2001/XMLSchema",
         }
-        result_xpath = "s:Body/VerificaSolicitudDescargaResponse/VerificaSolicitudDescargaResult"
-        communication = self.check_comm(url, data, headers, result_xpath, external_nsmap)
+        result_xpath = (
+            "s:Body/VerificaSolicitudDescargaResponse/VerificaSolicitudDescargaResult"
+        )
+        communication = self.check_comm(
+            url, data, headers, result_xpath, external_nsmap
+        )
         ret_dict = {
             "cod_estatus": communication.get("CodEstatus"),
             "estado_solicitud": communication.get("EstadoSolicitud"),
@@ -1122,13 +1249,17 @@ class L10nMxEdiDocument(models.Model):
             "mensaje": communication.get("Mensaje"),
             "paquetes": [],
         }
-        for id_paquete in communication.iter("{{{}}}IdsPaquetes".format(external_nsmap[""])):
+        for id_paquete in communication.iter(
+            "{{{}}}IdsPaquetes".format(external_nsmap[""])
+        ):
             ret_dict["paquetes"].append(id_paquete.text)
         return ret_dict
 
     def l10n_mx_ws_download_package(self, certificate, private_key, token, id_paquete):
         arguments = {
-            "RfcSolicitante": certificate.get_subject().x500UniqueIdentifier.split(" ")[0],
+            "RfcSolicitante": certificate.get_subject().x500UniqueIdentifier.split(" ")[
+                0
+            ],
             "IdPaquete": id_paquete,
         }
         envelop = """
@@ -1144,7 +1275,9 @@ class L10nMxEdiDocument(models.Model):
             </s:Envelope>
         """
         xpath = "s:Body/des:PeticionDescargaMasivaTercerosEntrada/des:peticionDescarga"
-        data = self.prepare_soap_data(certificate, private_key, arguments, envelop, xpath, token)
+        data = self.prepare_soap_data(
+            certificate, private_key, arguments, envelop, xpath, token
+        )
         url = "https://cfdidescargamasiva.clouda.sat.gob.mx/DescargaMasivaService.svc"
         soap_action = "http://DescargaMasivaTerceros.sat.gob.mx/IDescargaMasivaTercerosService/Descargar"
         headers = self.get_headers(soap_action, token)
@@ -1158,9 +1291,14 @@ class L10nMxEdiDocument(models.Model):
             "xsd": "http://www.w3.org/2001/XMLSchema",
         }
         result_xpath = "s:Body/RespuestaDescargaMasivaTercerosSalida/Paquete"
-        communication = self.check_comm(url, data, headers, result_xpath, external_nsmap)
+        communication = self.check_comm(
+            url, data, headers, result_xpath, external_nsmap
+        )
         respuesta = (
-            communication.getparent().getparent().getparent().find("s:Header/h:respuesta", namespaces=external_nsmap)
+            communication.getparent()
+            .getparent()
+            .getparent()
+            .find("s:Header/h:respuesta", namespaces=external_nsmap)
         )
         ret_dict = {
             "cod_estatus": respuesta.get("CodEstatus"),

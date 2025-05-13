@@ -21,12 +21,22 @@ class TestAccountMoveTemplate(TestBankRecWidgetCommon):
         cls.company_2 = cls.env.ref("account_move_operation.demo_company")
         cls.env.user.company_ids |= cls.company
         cls.env.user.company_ids |= cls.company_2
-        cls.operation_type = cls.env.ref("account_move_operation.operation_type_cash_return")
-        cls.operation_type_2 = cls.env.ref("account_move_operation.operation_type_cash_return_multicompany")
-        cls.operation_type_3 = cls.env.ref("account_move_operation.operation_type_cash_return_manual")
+        cls.operation_type = cls.env.ref(
+            "account_move_operation.operation_type_cash_return"
+        )
+        cls.operation_type_2 = cls.env.ref(
+            "account_move_operation.operation_type_cash_return_multicompany"
+        )
+        cls.operation_type_3 = cls.env.ref(
+            "account_move_operation.operation_type_cash_return_manual"
+        )
         cls.operation_obj = cls.env["account.move.operation"]
-        cls.partner = cls.env["res.partner"].create({"name": "Test partner", "company_id": False})
-        cls.partner2 = cls.env["res.partner"].create({"name": "Test partner 2", "company_id": False})
+        cls.partner = cls.env["res.partner"].create(
+            {"name": "Test partner", "company_id": False}
+        )
+        cls.partner2 = cls.env["res.partner"].create(
+            {"name": "Test partner 2", "company_id": False}
+        )
         cls.product = cls.env.ref("product.product_product_8")
         cls.payment_term = cls.create_payment_term()
         cls.partner.write({"property_payment_term_id": cls.payment_term.id})
@@ -34,7 +44,9 @@ class TestAccountMoveTemplate(TestBankRecWidgetCommon):
         cls.journal_bank = cls.env["account.journal"].search(
             [("company_id", "=", cls.company.id), ("type", "=", "bank")], limit=1
         )
-        cls.env["ir.config_parameter"].sudo().set_param("marin.avoid_authorize_debt", "True")
+        cls.env["ir.config_parameter"].sudo().set_param(
+            "marin.avoid_authorize_debt", "True"
+        )
 
     @classmethod
     def create_payment_term(cls):
@@ -72,7 +84,10 @@ class TestAccountMoveTemplate(TestBankRecWidgetCommon):
             }
         )
         st_line = self._create_st_line(
-            1000.0, partner_id=self.partner.id, journal_id=self.journal_bank.id, company_id=self.company.id
+            1000.0,
+            partner_id=self.partner.id,
+            journal_id=self.journal_bank.id,
+            company_id=self.company.id,
         )
         with Form(operation) as form_op:
             form_op.st_line_id = st_line
@@ -111,7 +126,9 @@ class TestAccountMoveTemplate(TestBankRecWidgetCommon):
             ],
         )
         action = operation.action_next_step()
-        op_line = self.env["account.move.operation.line"].browse(action.get("context", {}).get("active_ids"))
+        op_line = self.env["account.move.operation.line"].browse(
+            action.get("context", {}).get("active_ids")
+        )
         wizard = (
             self.env["account.invoice.template.run"]
             .with_context(**action.get("context", {}))
@@ -176,7 +193,9 @@ class TestAccountMoveTemplate(TestBankRecWidgetCommon):
             ],
         )
         action = operation.action_next_step()
-        wizard = self.env["bank.rec.widget"].with_context(action.get("context", {})).new({})
+        wizard = (
+            self.env["bank.rec.widget"].with_context(action.get("context", {})).new({})
+        )
         self.assertRecordValues(wizard, [{"state": "valid"}])
         wizard._action_add_new_amls(invoice.invoice_line_ids)
         wizard._action_validate()
@@ -202,7 +221,9 @@ class TestAccountMoveTemplate(TestBankRecWidgetCommon):
             ],
         )
         action = operation.action_next_step()
-        op_line = self.env["account.move.operation.line"].browse(action.get("context", {}).get("active_ids"))
+        op_line = self.env["account.move.operation.line"].browse(
+            action.get("context", {}).get("active_ids")
+        )
         wizard = (
             self.env["account.invoice.template.run"]
             .with_context(**action.get("context", {}))
@@ -243,7 +264,11 @@ class TestAccountMoveTemplate(TestBankRecWidgetCommon):
             ],
         )
         action = operation.action_next_step()
-        wizard = self.env["account.payment.register"].with_context(**action.get("context", {})).create({})
+        wizard = (
+            self.env["account.payment.register"]
+            .with_context(**action.get("context", {}))
+            .create({})
+        )
         wizard._create_payments()
         self.assertRecordValues(
             operation.line_ids,
@@ -398,7 +423,11 @@ class TestAccountMoveTemplate(TestBankRecWidgetCommon):
         wizard.generate_move()
         self.assertEqual(op2_line.state, "in_progress")
         action = operation_2.action_next_step()
-        invoice = self.env["account.move"].with_company(self.company_2).browse(action.get("res_id"))
+        invoice = (
+            self.env["account.move"]
+            .with_company(self.company_2)
+            .browse(action.get("res_id"))
+        )
         invoice.action_post()
         self.assertEqual(op2_line.state, "done")
         self.assertEqual(operation_2.state, "done")
@@ -420,7 +449,9 @@ class TestAccountMoveTemplate(TestBankRecWidgetCommon):
             ],
         )
         action = operation.action_next_step()
-        op_line = self.env["account.move.operation.line"].browse(action.get("context", {}).get("active_ids"))
+        op_line = self.env["account.move.operation.line"].browse(
+            action.get("context", {}).get("active_ids")
+        )
         wizard = (
             self.env["account.invoice.template.run"]
             .with_context(**action.get("context", {}))
@@ -457,7 +488,11 @@ class TestAccountMoveTemplate(TestBankRecWidgetCommon):
             ],
         )
         action = operation.action_next_step()
-        wizard = self.env["account.payment.register"].with_context(**action.get("context", {})).create({})
+        wizard = (
+            self.env["account.payment.register"]
+            .with_context(**action.get("context", {}))
+            .create({})
+        )
         wizard._create_payments()
         self.assertRecordValues(
             operation.line_ids,
@@ -567,7 +602,9 @@ class TestAccountMoveTemplate(TestBankRecWidgetCommon):
                 "currency_id": self.company.currency_id.id,
             }
         )
-        with self.assertRaisesRegex(UserError, "Please set a partner before starting operation."):
+        with self.assertRaisesRegex(
+            UserError, "Please set a partner before starting operation."
+        ):
             operation.action_start()
         self.assertEqual(operation.state, "draft")
         operation.action_done()
@@ -587,7 +624,10 @@ class TestAccountMoveTemplate(TestBankRecWidgetCommon):
             }
         )
         st_line = self._create_st_line(
-            1000.0, partner_id=self.partner.id, journal_id=self.journal_bank.id, company_id=self.company.id
+            1000.0,
+            partner_id=self.partner.id,
+            journal_id=self.journal_bank.id,
+            company_id=self.company.id,
         )
         with Form(operation) as form_op:
             form_op.st_line_id = st_line
@@ -626,7 +666,9 @@ class TestAccountMoveTemplate(TestBankRecWidgetCommon):
             ],
         )
         action = operation.action_next_step()
-        op_line = self.env["account.move.operation.line"].browse(action.get("context", {}).get("active_ids"))
+        op_line = self.env["account.move.operation.line"].browse(
+            action.get("context", {}).get("active_ids")
+        )
         wizard = (
             self.env["account.invoice.template.run"]
             .with_context(**action.get("context", {}))
@@ -691,7 +733,11 @@ class TestAccountMoveTemplate(TestBankRecWidgetCommon):
             ],
         )
         action = operation.action_next_step()
-        wizard = self.env["account.move.operation.reconcile"].with_context(action.get("context", {})).new({})
+        wizard = (
+            self.env["account.move.operation.reconcile"]
+            .with_context(action.get("context", {}))
+            .new({})
+        )
         wizard.update(
             {
                 "partner_id": operation.partner_id.id,
@@ -701,7 +747,9 @@ class TestAccountMoveTemplate(TestBankRecWidgetCommon):
             }
         )
         action = wizard.action_open_reconcile()
-        wizard = self.env["bank.rec.widget"].with_context(action.get("context", {})).new({})
+        wizard = (
+            self.env["bank.rec.widget"].with_context(action.get("context", {})).new({})
+        )
         self.assertRecordValues(wizard, [{"state": "valid"}])
         wizard._action_add_new_amls(invoice.invoice_line_ids)
         wizard._action_validate()
@@ -727,7 +775,9 @@ class TestAccountMoveTemplate(TestBankRecWidgetCommon):
             ],
         )
         action = operation.action_next_step()
-        op_line = self.env["account.move.operation.line"].browse(action.get("context", {}).get("active_ids"))
+        op_line = self.env["account.move.operation.line"].browse(
+            action.get("context", {}).get("active_ids")
+        )
         wizard = (
             self.env["account.invoice.template.run"]
             .with_context(**action.get("context", {}))
@@ -768,7 +818,11 @@ class TestAccountMoveTemplate(TestBankRecWidgetCommon):
             ],
         )
         action = operation.action_next_step()
-        wizard = self.env["account.move.operation.payment"].with_context(action.get("context", {})).new({})
+        wizard = (
+            self.env["account.move.operation.payment"]
+            .with_context(action.get("context", {}))
+            .new({})
+        )
         wizard.update(
             {
                 "move_id": operation.line_ids[2].move_id.id,
@@ -776,7 +830,11 @@ class TestAccountMoveTemplate(TestBankRecWidgetCommon):
             }
         )
         action = wizard.action_open_register_payment()
-        wizard = self.env["account.payment.register"].with_context(**action.get("context", {})).create({})
+        wizard = (
+            self.env["account.payment.register"]
+            .with_context(**action.get("context", {}))
+            .create({})
+        )
         wizard._create_payments()
         self.assertRecordValues(
             operation.line_ids,
