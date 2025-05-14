@@ -77,3 +77,27 @@ class StockQuant(models.Model):
         )
         action["context"] = {"active_model": self._name, "active_ids": self.ids}
         return action
+    
+    def _gather(
+        self,
+        product_id,
+        location_id,
+        lot_id=None,
+        package_id=None,
+        owner_id=None,
+        strict=False,
+        qty=0,
+    ):
+        ctx = dict(self.env.context)
+        if self.env.context.get("with_expiration"):
+            ctx.pop("with_expiration", None) 
+
+        return super(StockQuant, self.with_context(ctx))._gather(
+            product_id,
+            location_id,
+            lot_id=lot_id,
+            package_id=package_id,
+            owner_id=owner_id,
+            strict=strict,
+            qty=qty,
+        )
