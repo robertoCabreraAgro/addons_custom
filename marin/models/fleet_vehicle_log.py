@@ -15,6 +15,7 @@ class FleetVehiclelog(models.Model):
     )
     efficiency = fields.Float(
         string="Efficiency (km/L)",
+        aggregator="avg",
         help="Fuel efficiency in kilometers per liter",
     )
     type = fields.Selection(
