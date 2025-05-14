@@ -24,7 +24,7 @@
 
         <menuitem id="menu_gps_tracking_reporting"
             name="Reporting"
-            groups="group_gps_tracking_manager"
+            groups="group_gps_tracking_reporting"
             sequence="50">
 
             <menuitem id="menu_gps_tracking_report"
