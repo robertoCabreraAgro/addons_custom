@@ -54,12 +54,10 @@ class ApprovalRequest(models.Model):
         for request in self:
             if request.request_owner_id:
                 vehicle = self.env["fleet.vehicle"].search(
-                    [("driver_id", "=", request.request_owner_id.partner_id.id)],
+                    [("driver_id", "=", request.request_owner_id.employee_id.id)],
                     limit=1,
                 )
                 request.vehicle_id = vehicle if vehicle else False
-            else:
-                request.vehicle_id = False
 
     @api.depends("product_line_ids.account_move_id")
     def _compute_count_account_move(self):
