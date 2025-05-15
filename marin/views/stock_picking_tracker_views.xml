@@ -49,7 +49,7 @@
                                     <field name="partner_id"/>
                                     <field name="location_id"/>
                                     <field name="location_dest_id"/>
-                                    <field name="scheduled_date"/>
+                                    <field name="date_planned"/>
                                     <field name="state"/>
                                 </list>
                             </field>
