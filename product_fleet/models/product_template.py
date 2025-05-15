@@ -32,6 +32,10 @@ MODEL_FIELDS_TO_VEHICLE = {
 class FleetVehicle(models.Model):
     _inherit = "product.template"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     manager_id = fields.Many2one(
         comodel_name="hr.employee",
         string="Manager",
@@ -244,6 +248,20 @@ class FleetVehicle(models.Model):
         compute="_compute_vehicle_name",
         store=True,
     )
+    weight_capacity = fields.Float(
+        string="Max Weight",
+    )
+    weight_capacity_uom_name = fields.Char(
+        string="Weight unit of measure label",
+        compute="_compute_weight_capacity_uom_name",
+    )
+    volume_capacity = fields.Float(
+        string="Max Volume",
+    )
+    volume_capacity_uom_name = fields.Char(
+        string="Volume unit of measure label",
+        compute="_compute_volume_capacity_uom_name",
+    )
 
     # Financial fields
     acquisition_date = fields.Date(
@@ -313,6 +331,10 @@ class FleetVehicle(models.Model):
         compute="_compute_contract_reminder",
     )
 
+    # ------------------------------------------------------------
+    # CRUD METHODS
+    # ------------------------------------------------------------
+
     @api.model_create_multi
     def create(self, vals_list):
         ptc_values = [self._clean_vals_internal_user(vals) for vals in vals_list]
@@ -347,6 +369,58 @@ class FleetVehicle(models.Model):
             return self.env.ref("fleet.mt_fleet_driver_updated")
 
         return super()._track_subtype(init_values)
+
+    # ------------------------------------------------------------
+    # COMPUTE METHODS
+    # ------------------------------------------------------------
+
+    def _compute_weight_capacity_uom_name(self):
+        self.weight_capacity_uom_name = self.env[
+            "product.template"
+        ]._get_weight_uom_name_from_ir_config_parameter()
+
+    def _compute_volume_capacity_uom_name(self):
+        self.volume_capacity_uom_name = self.env[
+            "product.template"
+        ]._get_volume_uom_name_from_ir_config_parameter()
+
+    def _compute_count_all(self):
+        Log = self.env["fleet.vehicle.log"].with_context(active_test=False)
+        contract_data = Log._read_group(
+            [
+                ("vehicle_id", "in", self.ids),
+                ("type", "=", "contract"),
+                ("state", "!=", "closed"),
+            ],
+            ["vehicle_id", "active"],
+            ["__count"],
+        )
+        service_data = Log._read_group(
+            [("vehicle_id", "in", self.ids), ("type", "=", "service")],
+            ["vehicle_id", "active"],
+            ["__count"],
+        )
+        history_data = Log._read_group(
+            [("vehicle_id", "in", self.ids), ("type", "=", "driver")],
+            ["vehicle_id"],
+            ["__count"],
+        )
+
+        mapped_contract_data = defaultdict(lambda: defaultdict(lambda: 0))
+        mapped_service_data = defaultdict(lambda: defaultdict(lambda: 0))
+        mapped_history_data = defaultdict(lambda: 0)
+
+        for vehicle, active, count in contract_data:
+            mapped_contract_data[vehicle.id][active] = count
+        for vehicle, active, count in service_data:
+            mapped_service_data[vehicle.id][active] = count
+        for vehicle, count in history_data:
+            mapped_history_data[vehicle.id] = count
+
+        for vehicle in self:
+            vehicle.contract_count = mapped_contract_data[vehicle.id][vehicle.active]
+            vehicle.service_count = mapped_service_data[vehicle.id][vehicle.active]
+            vehicle.assignment_count = mapped_history_data[vehicle.id]
 
     @api.depends("model_id")
     def _compute_image_128(self):
@@ -450,43 +524,9 @@ class FleetVehicle(models.Model):
             else:
                 vehicle.odometer = 0.0
 
-    def _compute_count_all(self):
-        Log = self.env["fleet.vehicle.log"].with_context(active_test=False)
-        contract_data = Log._read_group(
-            [
-                ("vehicle_id", "in", self.ids),
-                ("type", "=", "contract"),
-                ("state", "!=", "closed"),
-            ],
-            ["vehicle_id", "active"],
-            ["__count"],
-        )
-        service_data = Log._read_group(
-            [("vehicle_id", "in", self.ids), ("type", "=", "service")],
-            ["vehicle_id", "active"],
-            ["__count"],
-        )
-        history_data = Log._read_group(
-            [("vehicle_id", "in", self.ids), ("type", "=", "driver")],
-            ["vehicle_id"],
-            ["__count"],
-        )
-
-        mapped_contract_data = defaultdict(lambda: defaultdict(lambda: 0))
-        mapped_service_data = defaultdict(lambda: defaultdict(lambda: 0))
-        mapped_history_data = defaultdict(lambda: 0)
-
-        for vehicle, active, count in contract_data:
-            mapped_contract_data[vehicle.id][active] = count
-        for vehicle, active, count in service_data:
-            mapped_service_data[vehicle.id][active] = count
-        for vehicle, count in history_data:
-            mapped_history_data[vehicle.id] = count
-
-        for vehicle in self:
-            vehicle.contract_count = mapped_contract_data[vehicle.id][vehicle.active]
-            vehicle.service_count = mapped_service_data[vehicle.id][vehicle.active]
-            vehicle.assignment_count = mapped_history_data[vehicle.id]
+    # ------------------------------------------------------------
+    # SEARCH METHODS
+    # ------------------------------------------------------------
 
     def _search_contract_renewal_due_soon(self, operator, value):
         params = self.env["ir.config_parameter"].sudo()
@@ -566,85 +606,9 @@ class FleetVehicle(models.Model):
         res.append(("id", search_operator, vehicle_ids))
         return res
 
-    def _clean_vals_internal_user(self, vals):
-        # Fleet administrator may not have rights to write on partner
-        # related fields when the operator_id is a res.user.
-        # This trick is used to prevent access right error.
-        su_vals = {}
-        if self.env.su:
-            return su_vals
-
-        return su_vals
-
-    def _get_analytic_name(self):
-        # This function is used in fleet_account and is overrided in l10n_be_hr_payroll_fleet
-        return self.license_plate or _("No plate")
-
-    def _get_driver_history_data(self, vals):
-        self.ensure_one()
-        return {
-            "vehicle_id": self.id,
-            "operator_id": vals["operator_id"],
-            "type": "driver",
-            "date_start": fields.Date.today(),
-            "odometer": self.odometer,
-        }
-
-    def create_driver_history(self, vals):
-        for vehicle in self:
-            self.env["fleet.vehicle.log"].create(vehicle._get_driver_history_data(vals))
-
-    def accept_driver_change(self):
-        # Find all the vehicles of the same type for which the driver is the future_operator_id
-        # remove their operator_id and close their history using current date
-        vehicles = self.search(
-            [
-                ("operator_id", "in", self.mapped("future_operator_id").ids),
-                ("vehicle_type", "=", self.vehicle_type),
-            ]
-        )
-        vehicles.write({"operator_id": False})
-        for vehicle in self:
-            vehicle.operator_id = vehicle.future_operator_id
-            vehicle.future_operator_id = False
-
-    def return_action_to_open(self):
-        """
-        This opens the xml view specified in xml_id for the current vehicle
-        """
-        self.ensure_one()
-        xml_id = self.env.context.get("xml_id")
-        if xml_id:
-            res = self.env["ir.actions.act_window"]._for_xml_id(f"fleet.{xml_id}")
-            res.update(
-                context=dict(
-                    self.env.context, default_vehicle_id=self.id, group_by=False
-                ),
-                domain=[("vehicle_id", "=", self.id)],
-            )
-            return res
-        return False
-
-    def act_show_log_cost(self):
-        """
-        This opens log view to view and add new log for this vehicle, groupby default to only show effective costs
-        @return: the costs log view
-        """
-        self.ensure_one()
-        copy_context = dict(self.env.context)
-        copy_context.pop("group_by", None)
-        res = self.env["ir.actions.act_window"]._for_xml_id(
-            "fleet.fleet_vehicle_costs_action"
-        )
-        res.update(
-            context=dict(
-                copy_context,
-                default_vehicle_id=self.id,
-                search_default_parent_false=True,
-            ),
-            domain=[("vehicle_id", "=", self.id)],
-        )
-        return res
+    # ------------------------------------------------------------
+    # ACTION METHODS
+    # ------------------------------------------------------------
 
     def action_open_assignation_logs(self):
         self.ensure_one()
@@ -686,3 +650,87 @@ class FleetVehicle(models.Model):
             }
         )
         return result
+
+    # ------------------------------------------------------------
+    # HELPERS
+    # ------------------------------------------------------------
+
+    def accept_driver_change(self):
+        # Find all the vehicles of the same type for which the driver is the future_operator_id
+        # remove their operator_id and close their history using current date
+        vehicles = self.search(
+            [
+                ("operator_id", "in", self.mapped("future_operator_id").ids),
+                ("vehicle_type", "=", self.vehicle_type),
+            ]
+        )
+        vehicles.write({"operator_id": False})
+        for vehicle in self:
+            vehicle.operator_id = vehicle.future_operator_id
+            vehicle.future_operator_id = False
+
+    def act_show_log_cost(self):
+        """
+        This opens log view to view and add new log for this vehicle, groupby default to only show effective costs
+        @return: the costs log view
+        """
+        self.ensure_one()
+        copy_context = dict(self.env.context)
+        copy_context.pop("group_by", None)
+        res = self.env["ir.actions.act_window"]._for_xml_id(
+            "fleet.fleet_vehicle_costs_action"
+        )
+        res.update(
+            context=dict(
+                copy_context,
+                default_vehicle_id=self.id,
+                search_default_parent_false=True,
+            ),
+            domain=[("vehicle_id", "=", self.id)],
+        )
+        return res
+
+    def _clean_vals_internal_user(self, vals):
+        # Fleet administrator may not have rights to write on partner
+        # related fields when the operator_id is a res.user.
+        # This trick is used to prevent access right error.
+        su_vals = {}
+        if self.env.su:
+            return su_vals
+
+        return su_vals
+
+    def create_driver_history(self, vals):
+        for vehicle in self:
+            self.env["fleet.vehicle.log"].create(vehicle._get_driver_history_data(vals))
+
+    def return_action_to_open(self):
+        """
+        This opens the xml view specified in xml_id for the current vehicle
+        """
+        self.ensure_one()
+        xml_id = self.env.context.get("xml_id")
+        if xml_id:
+            res = self.env["ir.actions.act_window"]._for_xml_id(f"fleet.{xml_id}")
+            res.update(
+                context=dict(
+                    self.env.context, default_vehicle_id=self.id, group_by=False
+                ),
+                domain=[("vehicle_id", "=", self.id)],
+            )
+            return res
+        return False
+
+    def _get_analytic_name(self):
+        # This function is used in fleet_account and is overrided in l10n_be_hr_payroll_fleet
+        return self.license_plate or _("No plate")
+
+    def _get_driver_history_data(self, vals):
+        self.ensure_one()
+        return {
+            "vehicle_id": self.id,
+            "operator_id": vals["operator_id"],
+            "type": "driver",
+            "date_start": fields.Date.today(),
+            "odometer": self.odometer,
+        }
