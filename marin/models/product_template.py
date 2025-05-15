@@ -6,6 +6,12 @@ class ProductTemplate(models.Model):
 
     _inherit = "product.template"
 
+    sale_ok = fields.Boolean(
+        compute="_compute_sale_ok",
+        store=True,
+        readonly=False,
+    )
+
     user_product_cost_readonly = fields.Boolean(compute="_compute_group")
     user_product_cost_manager = fields.Boolean(compute="_compute_group")
     user_purchase_readonly = fields.Boolean(compute="_compute_group")
@@ -30,15 +36,45 @@ class ProductTemplate(models.Model):
         help="Used as default value on the vendor refunds lines. "
         "Leave empty to use the account from the product category.",
     )
-    x_dose_x_ha = fields.Float("Dose per Hectare", digits="Product Price")
-    use_expiration_date = fields.Boolean(
-        compute="_compute_use_expiration_date", store=True
+    x_dose_x_ha = fields.Float(
+        "Dose per Hectare",
+        digits="Product Price",
     )
+    use_expiration_date = fields.Boolean(
+        compute="_compute_use_expiration_date",
+        store=True,
+    )
+
+    def _compute_group(self):
+        for product in self:
+            vals = self._prepare_compute_group()
+            product.update(vals)
+
+    def _compute_sale_ok(self):
+        default_sale_ok = self.env.context.get("default_sale_ok", False)
+        for product in self:
+            if default_sale_ok:
+                product.sale_ok = default_sale_ok
 
     @api.depends("tracking")
     def _compute_use_expiration_date(self):
         for rec in self:
             rec.use_expiration_date = rec.tracking != "none"
+
+    # Extend original method
+    def _get_product_accounts(self):
+        accounts = super()._get_product_accounts()
+        accounts.update(
+            {
+                "income_refund": self.property_account_income_refund_id
+                or self.categ_id.property_account_income_refund_id
+                or accounts.get("expense"),
+                "expense_refund": self.property_account_expense_refund_id
+                or self.categ_id.property_account_expense_refund_id
+                or accounts.get("income"),
+            }
+        )
+        return accounts
 
     def _prepare_compute_group(self):
         return {
@@ -63,23 +99,3 @@ class ProductTemplate(models.Model):
             ),
             "user_stock_manager": self.env.user.has_group("marin.group_stock_manager"),
         }
-
-    def _compute_group(self):
-        for product in self:
-            vals = self._prepare_compute_group()
-            product.update(vals)
-
-    # Extend original method
-    def _get_product_accounts(self):
-        accounts = super()._get_product_accounts()
-        accounts.update(
-            {
-                "income_refund": self.property_account_income_refund_id
-                or self.categ_id.property_account_income_refund_id
-                or accounts.get("expense"),
-                "expense_refund": self.property_account_expense_refund_id
-                or self.categ_id.property_account_expense_refund_id
-                or accounts.get("income"),
-            }
-        )
-        return accounts
