@@ -16,7 +16,8 @@
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_form_view" />
         <field name="arch" type="xml">
-            <page name="general_information" position="inside">
+            <xpath expr="//page[@name='inventory']" position="after">
+                <page name="manufacturer" string="Manufacturer">
                 <group name="manufacturer" string="Manufacturer">
                     <group>
                         <field
@@ -31,7 +32,8 @@
                         <field name="manufacturer_purl" widget="url" />
                     </group>
                 </group>
-            </page>
+                </page>
+            </xpath>
         </field>
     </record>
 </odoo>

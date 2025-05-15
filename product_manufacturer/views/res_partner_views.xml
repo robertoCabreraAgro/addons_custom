@@ -1,5 +1,83 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
+
+   <record id="manufacturer_view_search" model="ir.ui.view">
+        <field name="name">res.partner.view.search</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <separator/>
+                <filter string="Archived" name="active" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id='manufacturer_view_tree' model='ir.ui.view'>
+        <field name="name">res.partner.list</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <list string="Model Make">
+                <field name="name" />
+                <field name="product_count" string="Models"/>
+            </list>
+        </field>
+    </record>
+
+    <record id='manufacturer_view_kanban' model='ir.ui.view'>
+        <field name="name">res.partner.kanban</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <kanban default_order="name">
+                <field name="active"/>
+                <templates>
+                    <t t-name="menu">
+                        <a role="menuitem" type="open" class="dropdown-item">Configuration</a>
+                        <a role="menuitem" type="object" name="toggle_active" class="dropdown-item">
+                            <t t-if="record.active.raw_value">Archive</t>
+                            <t t-else="">Restore</t>
+                        </a>
+                        <a role="menuitem" t-if="widget.deletable" type="delete" class="dropdown-item">Delete</a>
+                    </t>
+                    <t t-name="card" class="flex-row p-1">
+                        <aside>
+                            <field name="image_128" widget="image" options="{'img_class': 'object-fit-contain'}"/>
+                        </aside>
+                        <main class="ms-2 mt-1">
+                            <field class="fw-bold fs-5" name="name"/>
+                            <a type="object" name="action_brand_model" class="mt-2 text-black">
+                                <field name="product_count"/> MODELS
+                            </a>
+                        </main>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id='manufacturer_view_form' model='ir.ui.view'>
+        <field name="name">res.partner.form</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <form string="Model Make">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_brand_model" type="object" icon="fa-car" class="oe_stat_button"
+                            invisible="product_count == 0">
+                            <field name="product_count" widget="statinfo" string="Models"/>
+                        </button>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="image_128" widget="image" class="oe_avatar float-start"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
     <record id="view_partner_form" model="ir.ui.view">
         <field name="name">res.partner.form</field>
         <field name="model">res.partner</field>
@@ -11,4 +89,20 @@
             </xpath>
         </field>
     </record>
+
+    <record id='manufacturer_action' model='ir.actions.act_window'>
+        <field name="name">Manufacturers</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="search_view_id" ref="manufacturer_view_search"/>
+        <field name="view_id" ref="manufacturer_view_kanban"/>
+        <field name="context">{'default_manufacturer': 1}</field>
+        <field name="domain">[('manufacturer', '=', True)]</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Create a new manufacturer
+          </p>
+        </field>
+    </record>
+
 </odoo>
