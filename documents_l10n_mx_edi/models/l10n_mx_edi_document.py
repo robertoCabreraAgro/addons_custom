@@ -1,6 +1,7 @@
 import base64
 import hashlib
 import logging
+import os
 import re
 from datetime import datetime, timedelta
 
@@ -11,8 +12,8 @@ from OpenSSL import crypto
 from odoo import models, tools
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
+from odoo.osv import expression
 from odoo.tools.float_utils import float_round
-from odoo.tools.zeep import Client, Transport
 
 TYPE_CFDI22_TO_CFDI33 = {
     "ingreso": "I",
@@ -37,6 +38,150 @@ _logger = logging.getLogger(__name__)
 
 class L10nMxEdiDocument(models.Model):
     _inherit = "l10n_mx_edi.document"
+
+    def _l10n_mx_edi_is_cfdi(self, cfdi_data):
+        cfdi_infos = self.env["l10n_mx_edi.document"]._decode_cfdi_attachment(cfdi_data)
+        return bool(cfdi_infos)
+
+    def _l10n_mx_edi_is_cfdi_payment(self, cfdi_node):
+        return cfdi_node.get("TipoDeComprobante", False) == "P"
+
+    def _l10n_mx_edi_normalize_cfdi_filename(self, filename):
+        """Normalize a filename for CFDI documents.
+
+        This method ensures consistent filename formatting across the module:
+        - Removes any existing extension
+        - Converts to uppercase
+        - Adds .xml extension
+
+        Args:
+            filename (str): Original filename or UUID
+
+        Returns:
+            str: Normalized filename in format "NAME.xml"
+
+        Examples:
+            >>> self._normalize_cfdi_filename("a3abbd51-8189-4a3e-8d0a-71712ebf1479")
+            "A3ABBD51-8189-4A3E-8D0A-71712EBF1479.xml"
+            >>> self._normalize_cfdi_filename("invoice.xml")
+            "INVOICE.xml"
+            >>> self._normalize_cfdi_filename("a3abbd51.PDF")
+            "A3ABBD51.xml"
+        """
+        if not filename:
+            return ""
+
+        # Strip any existing extension
+        base_name = os.path.splitext(filename)[0]
+
+        # Convert to uppercase and add .XML extension
+        return base_name.upper() + ".xml"
+
+    def _get_duplicate_cfdi_domain(self, filenames, company_id=None):
+        """Build domain to search for duplicate CFDI documents by filename.
+
+        Args:
+            filenames (list): List of normalized filenames to search for
+            company_id (int, optional): Company ID to restrict search to
+
+        Returns:
+            list: Domain expression for document search
+        """
+        if not company_id:
+            company_id = self.env.company.id
+
+        return expression.AND(
+            [
+                [("company_id", "in", [False, company_id])],
+                expression.OR(
+                    [[("name", "=ilike", self._l10n_mx_edi_normalize_cfdi_filename(fname))] for fname in filenames]
+                ),
+            ]
+        )
+
+    def _get_duplicate_cfdi(self, uuid, record):
+        """Unified method to check UUID duplicity across documents and invoices.
+
+        This method centralizes the logic to detect if a UUID already exists in the system,
+        avoiding duplications in both documents module and account_move.
+
+        Args:
+            uuid (str): UUID of the CFDI to check for duplicity
+            record (Model): Record to exclude from duplicity check.
+                           Must be a documents.document or account.move record.
+
+        Returns:
+            dict: A dictionary with the following structure:
+                {
+                    'duplicated': (bool) True if UUID is duplicated, False otherwise,
+                    'document_id': (int or False) ID of the duplicate document if exists,
+                    'move_id': (int or False) ID of the duplicate invoice if exists,
+                    'message': (str) Message describing the duplicity if exists
+                }
+
+        Raises:
+            ValueError: If record is not a valid record or not of the expected model types
+        """
+        # Default result
+        result = {
+            "duplicated": False,
+            "document": self.env["documents.document"],
+            "move": self.env["account.move"],
+            "message": "",
+        }
+
+        if not uuid:
+            return result
+
+        # Validate parameter
+        if not isinstance(record, models.BaseModel) or not record.id:
+            raise ValueError(
+                "You must provide an existing database record, please save before checking for duplicates"
+            )
+
+        if record._name not in ["documents.document", "account.move"]:
+            raise ValueError("Duplicates can only be checked for documents or invoices, please provide a valid record")
+
+        # Common message prefix
+        message_prefix = self.env._("Duplicated CFDI: %s", uuid)
+
+        if record._name == "documents.document":
+            domain = self._get_duplicate_cfdi_domain([uuid], company_id=record.compnay_id.id)
+            domain = expression.AND([[("id", "!=", record.id)], domain])
+
+            # Check if UUID exists in documents, excluding current record
+            existing_document = self.env["documents.document"].search(domain, limit=1)
+            if existing_document:
+                result.update(
+                    {
+                        "duplicated": True,
+                        "document": existing_document,
+                        "message": f"{message_prefix}\n{self.env._('Already exists as document: %s', existing_document.name)}",
+                    }
+                )
+                return result
+
+        # Check in account.move (for both document and move)
+        existing_move = self.env["account.move"].search(
+            [
+                ("l10n_mx_edi_cfdi_uuid", "=", uuid),
+                ("state", "in", ["draft", "posted"]),
+                ("id", "!=", record.id),
+            ],
+            limit=1,
+        )
+
+        if existing_move:
+            result.update(
+                {
+                    "duplicated": True,
+                    "move": existing_move,
+                    "message": f"{message_prefix}\n{self.env._('Already exists as invoice: %s', existing_move.name)}",
+                }
+            )
+            return result
+
+        return result
 
     def _get_import_type(self, rfc_emisor):
         return "issued" if self.env.company.vat == rfc_emisor else "received"
@@ -413,10 +558,7 @@ class L10nMxEdiDocument(models.Model):
                     existing_tax = tax_obj.search(tax_domain, limit=1, order="id asc")
                     if existing_tax:
                         tax_ids.append(existing_tax.id)
-                        price_unit = round(
-                            main_tax.get("total", 0.0) / (main_tax.get("amount", 100) / 100),
-                            2,
-                        )
+                        price_unit = round(main_tax.get("total", 0.0) / (main_tax.get("amount", 100) / 100), 2)
 
                 # Process IEPS tax if exists
                 if ieps_taxes:
@@ -450,7 +592,7 @@ class L10nMxEdiDocument(models.Model):
                             "vehicle_id": vehicle.id or False,
                             "quantity": 1.0,
                             "price_unit": (total_amount - price_unit) + ieps_amount,
-                            "tax_ids": ([Command.set([tax_exempt.id])] if tax_exempt else False),
+                            "tax_ids": [Command.set([tax_exempt.id])] if tax_exempt else False,
                             "partner_id": partner.id,
                         }
                     )
@@ -525,7 +667,7 @@ class L10nMxEdiDocument(models.Model):
             cleaned_name = re.sub(
                 r"^\[.*\] ",
                 "",
-                (description.splitlines()[0] if description.splitlines() else description),
+                description.splitlines()[0] if description.splitlines() else description,
             )
             product = self.env["product.product"]._retrieve_product(
                 name=cleaned_name,
@@ -659,8 +801,8 @@ class L10nMxEdiDocument(models.Model):
             "invoice_date": self._get_datetime(cfdi_infos),
             "invoice_payment_term_id": self._get_payment_term_id(cfdi_node),  # immediate
             "partner_id": partner.id,
-            "name": (self._get_serie_folio(cfdi_node) if import_type == "issued" else "/"),
-            "payment_reference": (self._get_serie_folio(cfdi_node) if import_type == "received" else False),
+            "name": self._get_serie_folio(cfdi_node) if import_type == "issued" else "/",
+            "payment_reference": self._get_serie_folio(cfdi_node) if import_type == "received" else False,
             "posted_before": import_type == "issued",
             "l10n_mx_edi_payment_method_id": self._get_payment_method_id(cfdi_node),
             "l10n_mx_edi_payment_policy": cfdi_infos["payment_method"],
@@ -672,96 +814,6 @@ class L10nMxEdiDocument(models.Model):
             "invoice_line_ids": invoice_lines,
         }
         return vals
-
-    def _get_cfdi_duplicity(self, uuid, record):
-        """Unified method to check UUID duplicity across documents and invoices.
-
-        This method centralizes the logic to detect if a UUID already exists in the system,
-        avoiding duplications in both documents module and account_move.
-
-        Args:
-            uuid (str): UUID of the CFDI to check for duplicity
-            record (Model): Record to exclude from duplicity check.
-                           Must be a documents.document or account.move record.
-
-        Returns:
-            dict: A dictionary with the following structure:
-                {
-                    'duplicated': (bool) True if UUID is duplicated, False otherwise,
-                    'document_id': (int or False) ID of the duplicate document if exists,
-                    'move_id': (int or False) ID of the duplicate invoice if exists,
-                    'message': (str) Message describing the duplicity if exists
-                }
-
-        Raises:
-            ValueError: If record is not a valid record or not of the expected model types
-        """
-        # Default result
-        result = {
-            "duplicated": False,
-            "document_id": False,
-            "move_id": False,
-            "message": "",
-        }
-
-        if not uuid:
-            return result
-
-        # Validate parameter
-        if not isinstance(record, models.BaseModel) or not record.id:
-            raise ValueError(
-                "You must provide an existing database record, please save before checking for duplicates"
-            )
-
-        if record._name not in ["documents.document", "account.move"]:
-            raise ValueError("Duplicates can only be checked for documents or invoices, please provide a valid record")
-
-        # Common message prefix
-        message_prefix = self.env._("Duplicated CFDI: %s", uuid)
-
-        if record._name == "documents.document":
-            # Check if UUID exists in documents, excluding current record
-            existing_document = self.env["documents.document"].search(
-                [
-                    ("name", "ilike", f"{uuid}.xml"),
-                    ("res_model", "in", ["documents.document", "account.move"]),
-                    ("l10n_mx_edi_is_cfdi", "=", True),
-                    ("id", "!=", record.id),
-                ],
-                limit=1,
-            )
-
-            if existing_document:
-                result.update(
-                    {
-                        "duplicated": True,
-                        "document_id": existing_document.id,
-                        "message": f"{message_prefix}\n{self.env._('Already exists as document: %s', existing_document.name)}",
-                    }
-                )
-                return result
-
-        # Check in account.move (for both document and move)
-        existing_move = self.env["account.move"].search(
-            [
-                ("l10n_mx_edi_cfdi_uuid", "=", uuid),
-                ("state", "in", ["draft", "posted"]),
-                ("id", "!=", record.id),
-            ],
-            limit=1,
-        )
-
-        if existing_move:
-            result.update(
-                {
-                    "duplicated": True,
-                    "move_id": existing_move.id,
-                    "message": f"{message_prefix}\n{self.env._('Already exists as invoice: %s', existing_move.name)}",
-                }
-            )
-            return result
-
-        return result
 
     def get_headers(self, soap_action, token=False, condition=True):
         headers = {
@@ -905,33 +957,43 @@ class L10nMxEdiDocument(models.Model):
         element.append(element_signature)
         return etree.tostring(element_root, method="c14n", exclusive=1)
 
-    def l10n_mx_ws_get_cfdi_status(self, supplier_rfc, customer_rfc, total, uuid):
-        url = "https://consultaqr.facturaelectronica.sat.gob.mx/ConsultaCFDIService.svc?wsdl"
-        params = (
-            f'?id={uuid or ""}'
-            f'&re={tools.html_escape(supplier_rfc or "")}'
-            f'&rr={tools.html_escape(customer_rfc or "")}'
-            f"&tt={total or 0.0}"
+    def l10n_mx_ws_get_cfdi_status(self, emmiter_vat, receiver_vat, total, uuid):
+        expression = "?re=%s&amp;rr=%s&amp;tt=%s&amp;id=%s" % (
+            tools.html_escape(emmiter_vat or ""),
+            tools.html_escape(receiver_vat or ""),
+            total or 0.0,
+            uuid or "",
         )
-        transport = Transport(timeout=20)
-
-        try:
-            client = Client(wsdl=url, transport=transport)
-            response = client.service.Consulta(params)
-            fetched_state = response["Estado"] if hasattr(response, "Estado") else ""
-            fetched_cancellable = response["EsCancelable"] if hasattr(response, "EsCancelable") else ""
-            fetched_cancel_state = response["EstatusCancelacion"] if hasattr(response, "EstatusCancelacion") else ""
-            fetched_efos_validation = response["ValidacionEFOS"] if hasattr(response, "ValidacionEFOS") else ""
-        except Exception as e:
-            return {
-                "error": ("Failure during update of the SAT status: %s", str(e)),
-                "value": "error",
-            }
+        data = f"""
+            <?xml version="1.0" encoding="UTF-8"?>
+            <s:Envelope
+                xmlns:ns0="http://tempuri.org/"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+                <s:Header/>
+                <s:Body>
+                    <ns0:Consulta>
+                        <ns0:expresionImpresa>${expression}</ns0:expresionImpresa>
+                    </ns0:Consulta>
+                </s:Body>
+            </s:Envelope>
+        """
+        url = "https://consultaqr.facturaelectronica.sat.gob.mx/ConsultaCFDIService.svc?wsdl"
+        soap_action = "http://tempuri.org/IConsultaCFDIService/Consulta"
+        headers = self.get_headers(soap_action, condition=False)
+        result_xpath = "s:Body/ConsultaResponse/ConsultaResult"
+        external_nsmap = {
+            "": "http://tempuri.org/",
+            "a": "http://schemas.datacontract.org/2004/07/Sat.Cfdi.Negocio.ConsultaCfdi.Servicio",
+            "i": "http://www.w3.org/2001/XMLSchema-instance",
+            "s": "http://schemas.xmlsoap.org/soap/envelope/",
+        }
+        communication = self.check_comm(url, data, headers, result_xpath, external_nsmap)
         ret_dict = {
-            "status": fetched_state,
-            "is_cancellable": fetched_cancellable,
-            "cancel_status": fetched_cancel_state,
-            "efos_validation": fetched_efos_validation,
+            "status": communication.find("a:Estado", external_nsmap).text,
+            "is_cancellable": communication.find("a:EsCancelable", external_nsmap).text,
+            "cancel_status": communication.find("a:EstatusCancelacion", external_nsmap).text,
+            "efos_validation": communication.find("a:ValidacionEFOS", external_nsmap).text,
         }
         return ret_dict
 
@@ -1162,10 +1224,3 @@ class L10nMxEdiDocument(models.Model):
             "paquete_b64": communication.text,
         }
         return ret_dict
-
-    def _l10n_mx_edi_is_cfdi(self, cfdi_data):
-        cfdi_infos = self.env["l10n_mx_edi.document"]._decode_cfdi_attachment(cfdi_data)
-        return bool(cfdi_infos)
-
-    def _l10n_mx_edi_is_cfdi_payment(self, cfdi_node):
-        return cfdi_node.get("TipoDeComprobante", False) == "P"

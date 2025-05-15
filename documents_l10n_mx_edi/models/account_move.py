@@ -81,7 +81,7 @@ class AccountMove(models.Model):
                         continue
 
                     # Check for UUID duplication before assignment
-                    duplicity_result = mx_edi_document._get_cfdi_duplicity(cfdi_infos["uuid"], move)
+                    duplicity_result = mx_edi_document._get_duplicate_cfdi(cfdi_infos["uuid"], move)
 
                     if duplicity_result["duplicated"]:
                         # If duplicated, notify but continue searching
@@ -99,21 +99,13 @@ class AccountMove(models.Model):
 
                     # Assign UUID to the invoice
                     move.with_context(no_validate_uuid=True).write({"l10n_mx_edi_cfdi_uuid": cfdi_infos["uuid"]})
-                    _logger.info(
-                        "UUID %s extracted and assigned to invoice %s",
-                        cfdi_infos["uuid"],
-                        move.name,
-                    )
+                    _logger.info("UUID %s extracted and assigned to invoice %s", cfdi_infos["uuid"], move.name)
 
                     # Stop after finding the first valid UUID
                     return True
 
                 except Exception as e:
-                    _logger.warning(
-                        "Failed to extract UUID from XML attachment %s: %s",
-                        attachment.name,
-                        str(e),
-                    )
+                    _logger.warning("Failed to extract UUID from XML attachment %s: %s", attachment.name, str(e))
                     continue
 
         return False
@@ -153,7 +145,7 @@ class AccountMove(models.Model):
 
             # Check for UUID duplication
             if move.l10n_mx_edi_cfdi_uuid:
-                duplicity_result = self.env["l10n_mx_edi.document"]._get_cfdi_duplicity(
+                duplicity_result = self.env["l10n_mx_edi.document"]._get_duplicate_cfdi(
                     move.l10n_mx_edi_cfdi_uuid, move
                 )
 

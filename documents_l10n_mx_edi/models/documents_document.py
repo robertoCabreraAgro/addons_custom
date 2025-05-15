@@ -1,9 +1,8 @@
 import json
-from datetime import datetime, timedelta
+from datetime import datetime
 from os.path import splitext
 
 from odoo import Command, api, fields, models
-from odoo.exceptions import ValidationError
 
 STATUS = {
     "No Encontrado": "not_found",
@@ -180,19 +179,14 @@ class Document(models.Model):
         """Update SAT status of fiscal documents that:
         1. Are stamped
         2. Don't have a related account move
-        3. Are as recent as the parameter sat_dias_aviles.
+        3. Are as recent as 60 days.
         """
-        dias_habiles = int(
-            self.env["ir.config_parameter"].sudo().get_param("l10n_mx_edi_marin.sat_dias_aviles", default=60)
-        )
-        max_date = datetime.now() - timedelta(days=dias_habiles)
-        docs = self.env["documents.document"].search(
-            [
-                ("l10n_mx_edi_is_cfdi", "=", True),
-                ("res_model", "!=", "account.move"),
-                ("l10n_mx_edi_stamp_date", ">=", max_date),
-            ]
-        )
+        max_date = datetime.now() - timedelta(days=60)
+        docs = self.env["documents.document"].search([
+            ("l10n_mx_edi_is_cfdi", "=", True),
+            ("res_model", "!=", "account.move"),
+            ("l10n_mx_edi_stamp_date", ">=", max_date)
+        ])
         docs.update_l10n_mx_edi_sat_state()
 
     def update_l10n_mx_edi_sat_state(self):
@@ -301,25 +295,6 @@ class Document(models.Model):
         if not cfdi_infos:
             return False
 
-        check_duplicate = self.env.context.get("check_duplicate", True)
-
-        # Duplicate validation
-        if cfdi_infos["uuid"] and check_duplicate:
-            duplicity_result = mx_edi_document._get_cfdi_duplicity(cfdi_infos["uuid"], self)
-
-            if duplicity_result["duplicated"]:
-                self.env["bus.bus"]._sendone(
-                    self.env.user.partner_id,
-                    "simple_notification",
-                    {
-                        "title": "Duplicated CFDI",
-                        "message": duplicity_result["message"],
-                        "sticky": False,
-                        "warning": True,
-                    },
-                )
-                raise ValidationError(self.env._("Duplicated CFDI, document creation skipped."))
-
         # Company assignment
         company = self._documents_l10n_mx_edi_get_company(
             cfdi_infos["customer_rfc"]
@@ -327,7 +302,7 @@ class Document(models.Model):
 
         # Prepare values to update
         update_vals = {
-            "name": cfdi_infos["uuid"] + ".xml",
+            "name": mx_edi_document._l10n_mx_edi_normalize_cfdi_filename(cfdi_infos["uuid"]),
             "folder_id": self._documents_l10n_mx_edi_get_folder(cfdi_infos["supplier_rfc"]).id,
             "l10n_mx_edi_is_cfdi": True,
             "tag_ids": [Command.link(tag_id) for tag_id in self._prepare_l10n_mx_edi_tags(cfdi_infos)],
@@ -340,7 +315,31 @@ class Document(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        documents = super().create(vals_list)
-        for doc in documents.filtered(lambda r: splitext(r.name)[1].upper() == ".XML"):
+        mx_edi_document = self.env["l10n_mx_edi.document"]
+        check_duplicate = self.env.context.get("check_duplicate", True)
+        existing_documents = self
+        new_vals_list = []
+        for vals in vals_list:
+            name = vals.get("name")
+            if name and name.lower().endswith(".xml") and check_duplicate:
+                duplicity_result = mx_edi_document._get_duplicate_cfdi(name, self)
+                if duplicity_result["duplicated"]:
+                    existing_documents |= duplicity_result["document"]
+                    self.env["bus.bus"]._sendone(
+                        self.env.user.partner_id,
+                        "simple_notification",
+                        {
+                            "title": "Duplicated CFDI",
+                            "message": duplicity_result["message"],
+                            "sticky": False,
+                            "warning": True,
+                        },
+                    )
+                    continue
+
+            new_vals_list.append(vals)
+
+        created_documents = super().create(new_vals_list)
+        for doc in created_documents.filtered(lambda r: splitext(r.name)[1].upper() == ".XML"):
             doc._l10n_mx_edi_assign_cfdi_data()
-        return documents
+        return created_documents | existing_documents
