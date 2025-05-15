@@ -19,4 +19,9 @@
         <field name="name">First Expiry First Out(FEFO) + Priority</field>
         <field name="method">fefo + priority</field>
     </record>
+    
+    <record id="removal_refurbished_fefo_priority" model="product.removal">
+        <field name="name">Refurbished + First Expiry First Out(FEFO) + Priority</field>
+        <field name="method">refurbished + fefo + priority</field>
+    </record>
 </odoo>

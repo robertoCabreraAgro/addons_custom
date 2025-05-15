@@ -17,6 +17,22 @@ class StockQuant(models.Model):
         related="location_id.removal_priority", store=True
     )
 
+    is_reconditioned = fields.Boolean(
+        string='Reconditioned',
+        related='lot_id.is_reconditioned',
+        help='Indicates if this lot has been reconditioned to extend its shelf life'
+    )
+    recondition_date = fields.Date(
+        string='Recondition Date',
+        related='lot_id.recondition_date',
+        help='Date when the product was reconditioned'
+    )
+    original_expiration_date = fields.Date(
+        string='Original Expiration Date',
+        related='lot_id.original_expiration_date',
+        help='Original expiration date before reconditioning'
+    )
+
     def _apply_inventory_group_validate(self):
         if not self.env.user.has_group("marin.group_stock_inventory_adjustment"):
             raise UserError(
@@ -35,7 +51,7 @@ class StockQuant(models.Model):
             not product_id.categ_id.removal_strategy_id
             and not location_id.removal_strategy_id
         ):
-            return "fefo + priority"
+            return "refurbished + fefo + priority"
         return super()._get_removal_strategy(product_id, location_id)
 
     # Extend original method
@@ -47,6 +63,8 @@ class StockQuant(models.Model):
             return "in_date DESC, removal_priority ASC, id DESC"
         if removal_strategy == "fefo + priority":
             return "removal_date, removal_priority ASC, id"
+        if removal_strategy == "refurbished + fefo + priority":
+            return "is_reconditioned DESC, original_expiration_date ASC, removal_date, removal_priority ASC, id"
         return super()._get_removal_strategy_order(removal_strategy)
 
     def action_stock_quant_lot_update(self):

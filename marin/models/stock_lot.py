@@ -10,6 +10,26 @@ class StockLot(models.Model):
     _inherit = "stock.lot"
 
     active = fields.Boolean(default=True)
+    
+    is_reconditioned = fields.Boolean(
+        string='Reconditioned',
+        default=False,
+        help='Indicates if this lot has been reconditioned to extend its shelf life'
+    )
+    recondition_date = fields.Date(
+        string='Recondition Date',
+        help='Date when the product was reconditioned'
+    )
+    original_expiration_date = fields.Date(
+        string='Original Expiration Date',
+        help='Original expiration date before reconditioning'
+    )
+
+    @api.onchange('is_reconditioned')
+    def _onchange_is_reconditioned(self):
+        if not self.is_reconditioned:
+            self.recondition_date = False
+            self.original_expiration_date = False
 
     # OVERRIDE
     @api.model
