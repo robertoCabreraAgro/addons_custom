@@ -132,6 +132,12 @@ class FleetVehicleModel(models.Model):
         default=False,
         tracking=True,
     )
+    weight_capacity = fields.Float(
+        string="Max Weight",
+    )
+    volume_capacity = fields.Float(
+        string="Max Volume",
+    )
     vehicle_count = fields.Integer(
         compute="_compute_product_count",
         search="_search_product_count",
