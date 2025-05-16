@@ -56,7 +56,7 @@ class FleetVehicleLog(models.Model):
     )
     active = fields.Boolean(default=True)
     type = fields.Selection(
-        [
+        selection=[
             ("service", "Service"),
             ("contract", "Contract"),
             ("driver", "driver change"),
@@ -67,7 +67,7 @@ class FleetVehicleLog(models.Model):
         help="Technical name used to classify the log types",
     )
     state = fields.Selection(
-        [
+        selection=[
             ("new", "New"),
             ("running", "Running"),
             ("done", "Done"),

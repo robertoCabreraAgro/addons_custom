@@ -2,7 +2,7 @@ from collections import defaultdict
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, Command, fields, models, _
-from odoo.addons.fleet.models.fleet_vehicle_model import FUEL_TYPES
+from odoo.addons.product_asset.models.product_model_model import FUEL_TYPES
 
 
 # Some fields don"t have the exact same name
@@ -64,7 +64,9 @@ class FleetVehicle(models.Model):
         copy=False,
         help="Next Driver Address of the vehicle",
     )
-    location = fields.Char(help="Location of the vehicle (garage, ...)")
+    location = fields.Char(
+        help="Location of the vehicle (garage, ...)",
+    )
 
     # Technical fields
     model_id = fields.Many2one(
@@ -72,18 +74,18 @@ class FleetVehicle(models.Model):
         string="Model",
         tracking=True,
     )
-    vehicle_type = fields.Selection(
-        related="model_id.vehicle_type",
+    asset_type = fields.Selection(
+        related="model_id.asset_type",
         store=True,
+    )
+    image_128 = fields.Image(
+        compute="_compute_image_128",
+        readonly=True,
     )
     manufacturer_id = fields.Many2one(
         compute="_compute_model_fields",
         store=True,
         readonly=False,
-    )
-    image_128 = fields.Image(
-        compute="_compute_image_128",
-        readonly=True,
     )
     doors = fields.Integer(
         string="Doors Number",
@@ -141,7 +143,7 @@ class FleetVehicle(models.Model):
         readonly=False,
     )
     power_unit = fields.Selection(
-        [
+        selection=[
             ("power", "kW"),
             ("horsepower", "Horsepower"),
         ],
@@ -227,6 +229,20 @@ class FleetVehicle(models.Model):
         help="Odometer measure of the vehicle",
     )
     vehicle_range = fields.Integer(string="Range")
+    weight_capacity = fields.Float(
+        string="Max Weight",
+    )
+    weight_capacity_uom_name = fields.Char(
+        string="Weight unit of measure label",
+        compute="_compute_weight_capacity_uom_name",
+    )
+    volume_capacity = fields.Float(
+        string="Max Volume",
+    )
+    volume_capacity_uom_name = fields.Char(
+        string="Volume unit of measure label",
+        compute="_compute_volume_capacity_uom_name",
+    )
 
     # Identification fields
     license_plate = fields.Char(
@@ -247,20 +263,6 @@ class FleetVehicle(models.Model):
     vehicle_name = fields.Char(
         compute="_compute_vehicle_name",
         store=True,
-    )
-    weight_capacity = fields.Float(
-        string="Max Weight",
-    )
-    weight_capacity_uom_name = fields.Char(
-        string="Weight unit of measure label",
-        compute="_compute_weight_capacity_uom_name",
-    )
-    volume_capacity = fields.Float(
-        string="Max Volume",
-    )
-    volume_capacity_uom_name = fields.Char(
-        string="Volume unit of measure label",
-        compute="_compute_volume_capacity_uom_name",
     )
 
     # Financial fields
@@ -375,14 +377,14 @@ class FleetVehicle(models.Model):
     # ------------------------------------------------------------
 
     def _compute_weight_capacity_uom_name(self):
-        self.weight_capacity_uom_name = self.env[
-            "product.template"
-        ]._get_weight_uom_name_from_ir_config_parameter()
+        self.weight_capacity_uom_name = (
+            self._get_weight_uom_name_from_ir_config_parameter()
+        )
 
     def _compute_volume_capacity_uom_name(self):
-        self.volume_capacity_uom_name = self.env[
-            "product.template"
-        ]._get_volume_uom_name_from_ir_config_parameter()
+        self.volume_capacity_uom_name = (
+            self._get_volume_uom_name_from_ir_config_parameter()
+        )
 
     def _compute_count_all(self):
         Log = self.env["fleet.vehicle.log"].with_context(active_test=False)
@@ -661,7 +663,7 @@ class FleetVehicle(models.Model):
         vehicles = self.search(
             [
                 ("operator_id", "in", self.mapped("future_operator_id").ids),
-                ("vehicle_type", "=", self.vehicle_type),
+                ("asset_type", "=", self.asset_type),
             ]
         )
         vehicles.write({"operator_id": False})

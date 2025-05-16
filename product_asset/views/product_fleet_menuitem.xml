@@ -3,7 +3,7 @@
     <menuitem
         id="menu_root"
         name="Fleet"
-        web_icon="product_fleet,static/description/icon.png"
+        web_icon="product_asset,static/description/icon.png"
         sequence="220"
          />
 

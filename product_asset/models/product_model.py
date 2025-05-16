@@ -42,8 +42,7 @@ class FleetVehicleModel(models.Model):
         string="Tags",
         tracking=True,
     )
-
-    vehicle_type = fields.Selection(
+    asset_type = fields.Selection(
         [
             ("car", "Car"),
             ("bike", "Bike"),
@@ -120,6 +119,16 @@ class FleetVehicleModel(models.Model):
     vehicle_range = fields.Integer(
         string="Range",
     )
+    weight_capacity = fields.Float(
+        string="Max Weight",
+    )
+    volume_capacity = fields.Float(
+        string="Max Volume",
+    )
+    vehicle_count = fields.Integer(
+        compute="_compute_product_count",
+        search="_search_product_count",
+    )
     vehicle_properties_definition = fields.PropertiesDefinition(
         "Vehicle Properties",
     )
@@ -131,16 +140,6 @@ class FleetVehicleModel(models.Model):
         string="Trailer Hitch",
         default=False,
         tracking=True,
-    )
-    weight_capacity = fields.Float(
-        string="Max Weight",
-    )
-    volume_capacity = fields.Float(
-        string="Max Volume",
-    )
-    vehicle_count = fields.Integer(
-        compute="_compute_product_count",
-        search="_search_product_count",
     )
 
     def _compute_product_count(self):
@@ -181,6 +180,7 @@ class FleetVehicleModel(models.Model):
     def _search_product_count(self, operator, value):
         if operator not in ["=", "!=", "<", ">"] or not isinstance(value, int):
             raise NotImplementedError(_("Operation not supported."))
+
         fleet_models = self.env["product.model"].search([])
         if operator == "=":
             fleet_models = fleet_models.filtered(lambda m: m.vehicle_count == value)
