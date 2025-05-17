@@ -53,7 +53,6 @@ class FleetVehicle(models.Model):
         "Fuel",
         compute="_compute_fuel_count",
     )
-
     highway_pass_id = fields.Many2one(
         comodel_name="documents.document",
         domain=lambda self: [
@@ -129,28 +128,31 @@ class FleetVehicle(models.Model):
     @api.depends("log_ids.amount")
     def _compute_fuel_card_balance(self):
         """Calculates the current balance based on fuel credit/debit records"""
+        fuel_product_category = self.env.ref("marin.product_category_vehicle_fuel")
         for vehicle in self:
             # Find all fuel log records associated with this vehicle
             fuel_logs = self.env["fleet.vehicle.log"].search(
                 [
                     ("vehicle_id", "=", vehicle.id),
-                    ("type", "=", "fuel"),
+                    ("product_category_id", "=", fuel_product_category.id),
                 ]
             )
 
             # Sum all movements (positive credits, negative debits)
-            vehicle.fuel_card_balance = sum(fuel_logs.mapped("amount"))
+            vehicle.fuel_card_balance = vehicle.fuel_card_openning_balance + sum(fuel_logs.mapped("amount"))
 
     def _compute_fuel_count(self):
+        fuel_product_category = self.env.ref("marin.product_category_vehicle_fuel")
         for vehicle in self:
             vehicle.fuel_count = len(
-                vehicle.log_ids.filtered(lambda l: l.type == "fuel")
+                vehicle.log_ids.filtered(lambda l: l.product_category_id == fuel_product_category)
             )
 
     def _compute_highway_pass_count(self):
+        highway_pass_product_category = self.env.ref("marin.product_category_vehicle_highway_pass")
         for vehicle in self:
             vehicle.highway_pass_count = len(
-                vehicle.log_ids.filtered(lambda l: l.type == "highway_pass")
+                vehicle.log_ids.filtered(lambda l: l.product_category_id == highway_pass_category)
             )
 
     @api.depends("highway_pass_budget", "highway_pass_balance")
@@ -164,17 +166,18 @@ class FleetVehicle(models.Model):
     @api.depends("log_ids.amount")
     def _compute_highway_pass_balance(self):
         """Compute current balance based on toll debit/credit records"""
+        highway_pass_product_category = self.env.ref("marin.product_category_vehicle_highway_pass")
         for vehicle in self:
             # Find all toll records associated with this vehicle
             highway_logs = self.env["fleet.vehicle.log"].search(
                 [
                     ("vehicle_id", "=", vehicle.id),
-                    ("type", "=", "highway_pass"),
+                    ("product_category_id", "=", highway_pass_product_category.id),
                 ]
             )
 
             # Sum all movements (positive credits, negative debits)
-            vehicle.highway_pass_balance = sum(highway_logs.mapped("amount"))
+            vehicle.highway_pass_balance = vehicle.highway_pass_openning_balance  sum(highway_logs.mapped("amount"))
 
     # Extend original method
     @api.depends(
@@ -304,40 +307,36 @@ class FleetVehicle(models.Model):
                 gps_vehicles |= vehicle
         return super(FleetVehicle, self - gps_vehicles)._compute_odometer()
 
-    def action_view_fleet_vehicle_log_fuel(self):
-        """
-        This opens the xml view specified in xml_id for the current vehicle
-        """
+    def action_view_fuel_logs(self):
         self.ensure_one()
-        xml_id = self.env.context.get("xml_id")
-        if xml_id:
-            res = self.env["ir.actions.act_window"]._for_xml_id(
-                f"marin.action_fleet_vehicle_log_fuel"
-            )
-            res.update(
-                context=dict(
-                    self.env.context, default_vehicle_id=self.id, group_by=False
-                ),
-                domain=[("vehicle_id", "=", self.id), ("type", "=", "fuel")],
-            )
-            return res
-        return False
+        fuel_product_category = self.env.ref("marin.product_category_vehicle_fuel")
+        action = self.env['ir.actions.act_window']._for_xml_id('fleet.action_fleet_vehicle_log')
+        action["domain"] = [
+            ("vehicle_id", "=", self.id),
+            ("product_category_id", "=", fuel_product_category.id),
+        ]
+        action['context'] = {
+            "default_vehicle_id": self.id,
+            "default_product_category_id": fuel_product_category.id,
+            "hide_product_category": True,
+            "show_vendor": True,
+            "search_default_groupby_product_category_id": False,
+        }
+        return action
 
-    def action_view_fleet_vehicle_log_highway_pass(self):
-        """
-        This opens the xml view specified in xml_id for the current vehicle
-        """
+    def action_view_highway_pass_logs(self):
         self.ensure_one()
-        xml_id = self.env.context.get("xml_id")
-        if xml_id:
-            res = self.env["ir.actions.act_window"]._for_xml_id(
-                f"marin.action_fleet_vehicle_log_highway_pass"
-            )
-            res.update(
-                context=dict(
-                    self.env.context, default_vehicle_id=self.id, group_by=False
-                ),
-                domain=[("vehicle_id", "=", self.id), ("type", "=", "highway_pass")],
-            )
-            return res
-        return False
+        highway_pass_product_category = self.env.ref("marin.product_category_vehicle_highway_pass")
+        action = self.env['ir.actions.act_window']._for_xml_id('fleet.action_fleet_vehicle_log')
+        action["domain"] = [
+            ("vehicle_id", "=", self.id),
+            ("product_category_id", "=", highway_pass_product_category.id),
+        ]
+        action['context'] = {
+            "default_vehicle_id": self.id,
+            "default_product_category_id": highway_pass_product_category.id,
+            "hide_product_category": True,
+            "show_vendor": True,
+            "search_default_groupby_product_category_id": False,
+        }
+        return action

@@ -596,7 +596,7 @@ class ProductTemplate(models.Model):
     # ACTION METHODS
     # ------------------------------------------------------------
 
-    def action_open_assignation_logs(self):
+    def action_view_assignation_logs(self):
         self.ensure_one()
         return {
             "name": _("Assignment Logs"),

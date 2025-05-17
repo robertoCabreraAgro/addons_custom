@@ -141,7 +141,9 @@ class FleetVehicleLogImport(models.TransientModel):
             tuple: (list of fleet.vehicle.log values, list of error messages)
         """
         fleet_vehicle_log = self.env["fleet.vehicle.log"]
-
+        fuel_category = self.env.ref("marin.product_category_vehicle_fuel")
+        fuel_debit_product = self.env.ref("marin.product_product_fuel_debit") 
+        fuel_credit_product = self.env.ref("marin.product_product_fuel_credit") 
         try:
             # Decode and load the Excel file
             file_data = base64.b64decode(file_content)
@@ -186,7 +188,6 @@ class FleetVehicleLogImport(models.TransientModel):
                         if row[column_map["Cuenta"]]
                         else False
                     )
-
                     if not fuel_card_number:
                         errors.append(f"Row {row_idx}: Missing fuel card number")
                         continue  # Skip empty rows
@@ -212,25 +213,29 @@ class FleetVehicleLogImport(models.TransientModel):
                         errors.append(error_msg)
                         continue
 
+                    amount = (
+                        float(row[column_map["Abono"]])
+                        if row[column_map["Abono"]]
+                        else 0
+                    )
+                    - (
+                        float(row[column_map["Cargo"]])
+                        if row[column_map["Cargo"]]
+                        else 0
+                    )
+                    fuel_product = fuel_credit_product if amount > 0 else fuel_debit_product
+
                     # Prepare log values
                     log_vals = {
                         "date": log_date,
                         "vehicle_id": vehicle.id,
-                        "amount": (
-                            float(row[column_map["Abono"]])
-                            if row[column_map["Abono"]]
-                            else 0
-                        )
-                        - (
-                            float(row[column_map["Cargo"]])
-                            if row[column_map["Cargo"]]
-                            else 0
-                        ),
+                        "amount": amount,
                         "odometer": (
                             float(row[column_map["Km FIN"]])
                             if row[column_map["Km FIN"]]
                             else 0
                         ),
+                        "state": "done",
                         "notes": row[column_map["Concepto"]],
                         "qty_fuel": (
                             float(row[column_map["Litros"]])
@@ -242,7 +247,8 @@ class FleetVehicleLogImport(models.TransientModel):
                             if row[column_map["Rendimiento"]]
                             else 0
                         ),
-                        "type": "fuel",
+                        "product_category_id": fuel_category.id,
+                        "product_id": fuel_product.id,
                     }
 
                     # Check for duplicate records
@@ -252,6 +258,8 @@ class FleetVehicleLogImport(models.TransientModel):
                             ("date", "=", log_vals["date"]),
                             ("amount", "=", log_vals["amount"]),
                             ("qty_fuel", "=", log_vals["qty_fuel"]),
+                            ("product_category_id", "=", fuel_category.id),
+                            ("product_id", "=", fuel_product.id),
                         ],
                         limit=1,
                     )
@@ -291,7 +299,9 @@ class FleetVehicleLogImport(models.TransientModel):
             tuple: (list of fleet.vehicle.log values, list of error messages)
         """
         fleet_vehicle_log = self.env["fleet.vehicle.log"]
-
+        highway_pass_category = self.env.ref("marin.product_category_vehicle_highway_pass")
+        highway_pass_debit_product = self.env.ref("marin.product_product_highway_pass_debit") 
+        highway_pass_credit_product = self.env.ref("marin.product_product_highway_pass_credit") 
         try:
             # Decode and load the CSV file
             file_data = base64.b64decode(file_content)
@@ -401,6 +411,7 @@ class FleetVehicleLogImport(models.TransientModel):
                     )
 
                     notes = f"Caseta: {caseta}, Clase: {saldo}, Consecar: {consecar}"
+                    highway_pass_product = highway_pass_credit_product if amount > 0 else highway_pass_debit_product
 
                     # Prepare log values
                     log_vals = {
@@ -409,7 +420,8 @@ class FleetVehicleLogImport(models.TransientModel):
                         "amount": amount,
                         "state": "done",
                         "notes": notes,
-                        "type": "highway_pass",
+                        "product_category_id": highway_pass_category.id,
+                        "product_id": highway_pass_product.id,
                     }
 
                     # Check for duplicate records
@@ -419,7 +431,8 @@ class FleetVehicleLogImport(models.TransientModel):
                             ("date", "=", log_vals["date"]),
                             ("amount", "=", log_vals["amount"]),
                             ("notes", "=", log_vals["notes"]),
-                            ("type", "=", "highway_pass"),
+                            ("product_category_id", "=", highway_pass_category.id),
+                            ("product_id", "=", highway_pass_product.id),
                         ],
                         limit=1,
                     )
@@ -462,7 +475,9 @@ class FleetVehicleLogImport(models.TransientModel):
             tuple: (list of fleet.vehicle.log values, list of error messages)
         """
         fleet_vehicle_log = self.env["fleet.vehicle.log"]
-
+        highway_pass_category = self.env.ref("marin.product_category_vehicle_highway_pass")
+        highway_pass_debit_product = self.env.ref("marin.product_product_highway_pass_debit") 
+        highway_pass_credit_product = self.env.ref("marin.product_product_highway_pass_credit") 
         try:
             # Decode and load the CSV file
             file_data = base64.b64decode(file_content)
@@ -591,6 +606,7 @@ class FleetVehicleLogImport(models.TransientModel):
                     )
 
                     notes = f"Movimiento: {movement}, Folio: {folio}"
+                    highway_pass_product = highway_pass_credit_product if amount > 0 else highway_pass_debit_product
 
                     # Prepare log values
                     log_vals = {
@@ -599,7 +615,8 @@ class FleetVehicleLogImport(models.TransientModel):
                         "amount": amount,
                         "state": "done",
                         "notes": notes,
-                        "type": "highway_pass",
+                        "product_category_id": highway_pass_category.id,
+                        "product_id": highway_pass_product.id,
                     }
 
                     # Check for duplicate records
@@ -609,7 +626,8 @@ class FleetVehicleLogImport(models.TransientModel):
                             ("date", "=", log_vals["date"]),
                             ("amount", "=", log_vals["amount"]),
                             ("notes", "=", log_vals["notes"]),
-                            ("type", "=", "highway_pass"),
+                            ("product_category_id", "=", highway_pass_category.id),
+                            ("product_id", "=", highway_pass_product.id),
                         ],
                         limit=1,
                     )
