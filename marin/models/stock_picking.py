@@ -69,7 +69,7 @@ class StockPicking(models.Model):
 
     def _compute_custom_permissions(self):
         for picking in self:
-            vals = self._prepare_compute_custom_permissions()
+            vals = picking._prepare_compute_custom_permissions()
             picking.update(vals)
 
     @api.depends("state")
@@ -233,6 +233,7 @@ class StockPicking(models.Model):
     # -------------------------------------------------------------------------
 
     def _prepare_compute_custom_permissions(self):
+        self.ensure_one()
         show_mark_as_todo = (
             self.state == "draft"
             and self.env.user in self.picking_type_id.can_todo_user_ids
