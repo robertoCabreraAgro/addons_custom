@@ -2,7 +2,7 @@ from collections import defaultdict
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, Command, fields, models, _
-from odoo.addons.product_asset.models.product_model_model import FUEL_TYPES
+from odoo.addons.product_asset.models.product_model import FUEL_TYPES
 
 
 # Some fields don"t have the exact same name
@@ -13,7 +13,6 @@ MODEL_FIELDS_TO_VEHICLE = {
     "co2": "co2",
     "co2_standard": "co2_standard",
     "doors": "doors",
-    "electric_assistance": "electric_assistance",
     "fuel_efficiency": "fuel_efficiency",
     "fuel_tank_capacity": "fuel_tank_capacity",
     "fuel_type": "fuel_type",
@@ -29,7 +28,7 @@ MODEL_FIELDS_TO_VEHICLE = {
 }
 
 
-class FleetVehicle(models.Model):
+class ProductTemplate(models.Model):
     _inherit = "product.template"
 
     # ------------------------------------------------------------
@@ -75,8 +74,15 @@ class FleetVehicle(models.Model):
         tracking=True,
     )
     asset_type = fields.Selection(
-        related="model_id.asset_type",
+        selection=[
+            ("machinery", "Machinery"),
+            ("product", "Product"),
+            ("property", "Property"),
+            ("vehicle", "Vehicle"),
+        ],
+        compute="_compute_model_fields",
         store=True,
+        readonly=False,
     )
     image_128 = fields.Image(
         compute="_compute_image_128",
@@ -184,11 +190,6 @@ class FleetVehicle(models.Model):
         store=True,
         readonly=False,
     )
-    electric_assistance = fields.Boolean(
-        compute="_compute_model_fields",
-        store=True,
-        readonly=False,
-    )
     model_year = fields.Char(
         string="Model Year",
         compute="_compute_model_fields",
@@ -196,12 +197,12 @@ class FleetVehicle(models.Model):
         readonly=False,
         help="Year of the model",
     )
-    color = fields.Char(
-        compute="_compute_model_fields",
-        store=True,
-        readonly=False,
-        help="Color of the vehicle",
-    )
+    # color = fields.Char(
+    #     compute="_compute_model_fields",
+    #     store=True,
+    #     readonly=False,
+    #     help="Color of the vehicle",
+    # )
     service_activity = fields.Selection(
         selection=[
             ("none", "None"),

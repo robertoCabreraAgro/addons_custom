@@ -31,9 +31,14 @@
 
     <!-- fleet_configuration subitems -->
     <menuitem
-        id="fleet_vehicle_model_brand_menu"
+        id="fleet_vehicle_brand_menu"
         parent="fleet_configuration"
         sequence="1"
         action="product_manufacturer.manufacturer_action" />
+    <menuitem
+        id="fleet_vehicle_model_menu"
+        parent="fleet_configuration"
+        sequence="1"
+        action="product_asset.product_model_action" />
 
 </odoo>

@@ -10,14 +10,14 @@
                     filter_domain="['|', ('name', 'ilike', self), ('license_plate', 'ilike', self)]" />
                 <field name="model_id" string="Model" />
                 <field name="license_plate" string="License Plate" />
-                <field name="mobility_card" invisible="1"/>
+                <field name="mobility_card" invisible="1" />
                 <field name="product_tag_ids" />
                 <filter name="available" string="Available"
                     domain="['&amp;', ('future_operator_id', '=', False), ('operator_id', '=', False)]" />
                 <filter name="bikes" string="Bikes"
                     domain="[('asset_type', '=', 'bike')]" />
                 <filter name="cars" string="Cars"
-                    domain="[('asset_type', '=', 'car')]" />
+                    domain="[('asset_type', '=', 'vehicle')]" />
                 <filter name="trailer_hook" string="Trailer Hook"
                     domain="[('trailer_hook', '=', True)]" />
                 <separator />
@@ -27,12 +27,15 @@
                 <filter name="inactive" string="Archived"
                     domain="[('active', '=', False)]" />
                 <separator />
-                <filter name="activities_overdue" string="Late Activities" invisible="1"
+                <filter name="activities_overdue" string="Late Activities"
+                    invisible="1"
                     domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                     help="Show all records which has next action date is before today" />
-                <filter name="activities_today" string="Today Activities" invisible="1"
+                <filter name="activities_today" string="Today Activities"
+                    invisible="1"
                     domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]" />
-                <filter name="activities_upcoming_all" string="Future Activities" invisible="1"
+                <filter name="activities_upcoming_all" string="Future Activities"
+                    invisible="1"
                     domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]" />
                 <group string="Group By" expand="1">
                     <filter name="groupby_model" string="Model"
@@ -59,7 +62,8 @@
                 <field name="license_plate" readonly="1" />
                 <field name="model_id" widget="many2one_avatar" readonly="1" />
                 <field name="operator_id" widget="many2one_avatar_user" readonly="1" optional="show" />
-                <field name="future_operator_id" widget="many2one_avatar_user" readonly="1" optional="hide" />
+                <field name="future_operator_id" widget="many2one_avatar_user" readonly="1"
+                    optional="hide" />
                 <field name="manager_id" widget="many2one_avatar_user" optional="hide" />
                 <field name="odometer" readonly="1" optional="hide" />
                 <field name="vin_sn" readonly="1" optional="hide" />
@@ -175,7 +179,8 @@
                         <button name="action_open_assignation_logs"
                             type="object" class="oe_stat_button"
                             icon="fa-history">
-                            <field name="assignment_count" string="Drivers History" widget="statinfo" />
+                            <field name="assignment_count" string="Drivers History"
+                                widget="statinfo" />
                         </button>
                         <button name="return_action_to_open"
                             type="object" class="oe_stat_button"
@@ -215,8 +220,8 @@
                     <div name="title" class="oe_title">
                         <label for="vehicle_name" />
                         <h1>
-                            <field name="vehicle_name" invisible="not id"/>
-                            <field name="name" invisible="id"/>
+                            <field name="vehicle_name" invisible="not id" />
+                            <field name="name" invisible="id" />
                         </h1>
                         <label for="model_id" />
                         <h2>
@@ -239,16 +244,16 @@
                             <field name="manager_id"
                                 widget="many2one_avatar_user"
                                 domain="[('share', '=', False), ('company_id', '=', company_id)]" />
-                            <field name="acquisition_date" invisible="asset_type != 'car'" />
-                            <field name="write_off_date" invisible="asset_type != 'car'" />
+                            <field name="acquisition_date" invisible="asset_type != 'vehicle'" />
+                            <field name="write_off_date" invisible="asset_type != 'vehicle'" />
                             <field name="next_assignation_date" />
                             <field name="company_id" groups="base.group_multi_company" />
                         </group>
                         <group string="Vehicle">
                             <field name="location" />
-                            <field name="mobility_card" readonly="1" invisible="1"/>
-                            <label for="odometer" invisible="asset_type != 'car'" />
-                            <div invisible="asset_type != 'car'">
+                            <field name="mobility_card" readonly="1" invisible="1" />
+                            <label for="odometer" invisible="asset_type != 'vehicle'" />
+                            <div invisible="asset_type != 'vehicle'">
                                 <field name="odometer" class="oe_inline" />
                                 <span> in </span>
                                 <field name="odometer_uom_id" class="oe_inline"
@@ -263,18 +268,21 @@
                                     <field name="vin_sn" />
                                     <field name="model_year" />
                                     <field name="transmission"
-                                        invisible="asset_type != 'car'" />
+                                        invisible="asset_type != 'vehicle'" />
                                     <field name="color" />
                                     <field name="seats"
-                                        invisible="asset_type != 'car'" />
+                                        invisible="asset_type != 'vehicle'" />
                                     <field name="doors"
-                                        invisible="asset_type != 'car'" />
+                                        invisible="asset_type != 'vehicle'" />
+                                    <label for="fuel_tank_capacity" />
+                                    <div class="o_row">
+                                        <field name="fuel_tank_capacity" />
+                                        <span>L</span>
+                                    </div>
                                     <field name="trailer_hook"
-                                        invisible="asset_type != 'car'" />
-                                    <field name="electric_assistance"
-                                        invisible="asset_type != 'bike'" />
+                                        invisible="asset_type != 'vehicle'" />
                                 </group>
-                                <group string="Engine" invisible="asset_type != 'car'">
+                                <group string="Engine" invisible="asset_type != 'vehicle'">
                                     <field name="engine_sn" />
                                     <field name="power_unit" />
                                     <label for="power"
@@ -286,20 +294,17 @@
                                     </div>
                                     <field name="horsepower"
                                         invisible="power_unit != 'horsepower'" />
+                                    <field name="fuel_type" />
+                                    <field name="cilinders" />
+                                    <label for="fuel_efficiency" />
+                                    <div class="o_row">
+                                        <field name="fuel_efficiency" />
+                                        <span>km/L</span>
+                                    </div>
                                     <label for="vehicle_range" />
                                     <div class="o_row">
                                         <field name="vehicle_range" />
                                         <span>km</span>
-                                    </div>
-                                    <field name="fuel_type" />
-                                    <label for="fuel_tank_capacity" />
-                                    <div class="o_row">
-                                        <field name="fuel_tank_capacity" /><span>L</span>
-                                    </div>
-                                    <field name="cilinders" />
-                                    <label for="fuel_efficiency" />
-                                    <div class="o_row">
-                                        <field name="fuel_efficiency" /><span>km/L</span>
                                     </div>
                                     <label for="co2" />
                                     <div class="o_row" name="co2">
@@ -367,7 +372,7 @@
         <field name="path">vehicles</field>
         <field name="res_model">product.template</field>
         <field name="view_mode">list,kanban,form,pivot,activity</field>
-        <field name="search_view_id" ref="fleet_vehicle_view_search"/>
+        <field name="search_view_id" ref="fleet_vehicle_view_search" />
         <field name="context">{'default_sale_ok': False}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">

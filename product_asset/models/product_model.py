@@ -15,7 +15,7 @@ FUEL_TYPES = [
 ]
 
 
-class FleetVehicleModel(models.Model):
+class ProductModel(models.Model):
     _name = "product.model"
     _description = "Model of a product"
     _inherit = ["avatar.mixin"]
@@ -37,18 +37,15 @@ class FleetVehicleModel(models.Model):
         related="manufacturer_id.image_128",
         readonly=True,
     )
-    product_tag_ids = fields.Many2many(
-        comodel_name="product.tag",
-        string="Tags",
-        tracking=True,
-    )
     asset_type = fields.Selection(
-        [
-            ("car", "Car"),
-            ("bike", "Bike"),
+        selection=[
+            ("machinery", "Machinery"),
+            ("product", "Product"),
+            ("property", "Property"),
+            ("vehicle", "Vehicle"),
         ],
         required=True,
-        default="car",
+        default="product",
         tracking=True,
     )
     doors = fields.Integer(
@@ -125,21 +122,14 @@ class FleetVehicleModel(models.Model):
     volume_capacity = fields.Float(
         string="Max Volume",
     )
-    vehicle_count = fields.Integer(
-        compute="_compute_product_count",
-        search="_search_product_count",
-    )
-    vehicle_properties_definition = fields.PropertiesDefinition(
-        "Vehicle Properties",
-    )
-    electric_assistance = fields.Boolean(
-        default=False,
-        tracking=True,
-    )
     trailer_hook = fields.Boolean(
         string="Trailer Hitch",
         default=False,
         tracking=True,
+    )
+    vehicle_count = fields.Integer(
+        compute="_compute_product_count",
+        search="_search_product_count",
     )
 
     def _compute_product_count(self):
