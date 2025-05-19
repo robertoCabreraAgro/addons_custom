@@ -112,7 +112,6 @@
                                         <field name="co2" />
                                         <span>g/km</span>
                                     </div>
-                                    <field name="co2_standard" />
                                     <field name="transmission" />
                                     <field name="power_unit" />
                                     <label for="power" invisible="power_unit != 'power'" />
@@ -120,9 +119,6 @@
                                         <field name="power" />
                                         <span>kW</span>
                                     </div>
-                                    <field name="horsepower" invisible="power_unit != 'horsepower'" />
-                                    <field name="horsepower_tax"
-                                        invisible="power_unit != 'horsepower'" />
                                 </group>
                             </group>
                         </page>

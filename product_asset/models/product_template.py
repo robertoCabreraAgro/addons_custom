@@ -63,16 +63,6 @@ class ProductTemplate(models.Model):
         copy=False,
         help="Next Driver Address of the vehicle",
     )
-    location = fields.Char(
-        help="Location of the vehicle (garage, ...)",
-    )
-
-    # Technical fields
-    model_id = fields.Many2one(
-        comodel_name="product.model",
-        string="Model",
-        tracking=True,
-    )
     asset_type = fields.Selection(
         selection=[
             ("machinery", "Machinery"),
@@ -84,6 +74,16 @@ class ProductTemplate(models.Model):
         store=True,
         readonly=False,
     )
+    location = fields.Char(
+        help="Location of the vehicle (garage, ...)",
+    )
+
+    # Technical fields
+    model_id = fields.Many2one(
+        comodel_name="product.model",
+        string="Model",
+        tracking=True,
+    )
     image_128 = fields.Image(
         compute="_compute_image_128",
         readonly=True,
@@ -93,22 +93,11 @@ class ProductTemplate(models.Model):
         store=True,
         readonly=False,
     )
-    doors = fields.Integer(
-        string="Doors Number",
-        compute="_compute_model_fields",
-        store=True,
-        readonly=False,
-        help="Number of doors of the vehicle",
-    )
-    seats = fields.Integer(
-        string="Seats Number",
-        compute="_compute_model_fields",
-        store=True,
-        readonly=False,
-        help="Number of seats of the vehicle",
-    )
     transmission = fields.Selection(
-        [("manual", "Manual"), ("automatic", "Automatic")],
+        selection=[
+            ("manual", "Manual"),
+            ("automatic", "Automatic"),
+        ],
         string="Transmission",
         compute="_compute_model_fields",
         store=True,
@@ -121,32 +110,13 @@ class ProductTemplate(models.Model):
         store=True,
         readonly=False,
     )
-    fuel_tank_capacity = fields.Integer(
-        string="Tank capacity",
-        compute="_compute_model_fields",
-        store=True,
-        readonly=False,
-        help="Fuel tank capacity in liters",
-    )
-    fuel_efficiency = fields.Float(
-        compute="_compute_model_fields",
-        store=True,
-        readonly=False,
-        aggregator="avg",
-        help="Fuel efficiency in kilometers per liter (km/L)",
-    )
-    cilinders = fields.Integer(
-        string="Cilinders Number",
-        compute="_compute_model_fields",
-        store=True,
-        readonly=False,
-    )
-    trailer_hook = fields.Boolean(
-        string="Trailer Hitch",
-        default=False,
-        compute="_compute_model_fields",
-        store=True,
-        readonly=False,
+    service_activity = fields.Selection(
+        selection=[
+            ("none", "None"),
+            ("overdue", "Overdue"),
+            ("today", "Today"),
+        ],
+        compute="_compute_service_activity",
     )
     power_unit = fields.Selection(
         selection=[
@@ -154,7 +124,6 @@ class ProductTemplate(models.Model):
             ("horsepower", "Horsepower"),
         ],
         string="Power Unit",
-        required=True,
         default="power",
     )
     power = fields.Integer(
@@ -164,57 +133,9 @@ class ProductTemplate(models.Model):
         readonly=False,
         help="Power in kW of the vehicle",
     )
-    horsepower = fields.Integer(
-        compute="_compute_model_fields",
-        store=True,
-        readonly=False,
-    )
-    horsepower_tax = fields.Float(
-        string="Horsepower Taxation",
-        compute="_compute_model_fields",
-        store=True,
-        readonly=False,
-    )
-    co2 = fields.Float(
-        string="CO2 Emissions",
-        compute="_compute_model_fields",
-        store=True,
-        readonly=False,
-        tracking=True,
-        aggregator=None,
-        help="CO2 emissions of the vehicle",
-    )
-    co2_standard = fields.Char(
-        string="CO2 Standard",
-        compute="_compute_model_fields",
-        store=True,
-        readonly=False,
-    )
-    model_year = fields.Char(
-        string="Model Year",
-        compute="_compute_model_fields",
-        store=True,
-        readonly=False,
-        help="Year of the model",
-    )
-    # color = fields.Char(
-    #     compute="_compute_model_fields",
-    #     store=True,
-    #     readonly=False,
-    #     help="Color of the vehicle",
-    # )
-    service_activity = fields.Selection(
-        selection=[
-            ("none", "None"),
-            ("overdue", "Overdue"),
-            ("today", "Today"),
-        ],
-        compute="_compute_service_activity",
-    )
     odometer_uom_id = fields.Many2one(
         comodel_name="uom.uom",
         string="Odometer Unit",
-        required=True,
         default=lambda self: self.env.ref("uom.product_uom_km").id,
         # TODO implement domain for new uom logic
         # domain=lambda self: [
@@ -229,7 +150,63 @@ class ProductTemplate(models.Model):
         readonly=True,
         help="Odometer measure of the vehicle",
     )
-    vehicle_range = fields.Integer(string="Range")
+    model_year = fields.Char(
+        string="Model Year",
+        compute="_compute_model_fields",
+        store=True,
+        readonly=False,
+        help="Year of the model",
+    )
+    # color = fields.Char(
+    #     compute="_compute_model_fields",
+    #     store=True,
+    #     readonly=False,
+    #     help="Color of the vehicle",
+    # )
+    doors = fields.Integer(
+        string="Doors Number",
+        compute="_compute_model_fields",
+        store=True,
+        readonly=False,
+        help="Number of doors of the vehicle",
+    )
+    seats = fields.Integer(
+        string="Seats Number",
+        compute="_compute_model_fields",
+        store=True,
+        readonly=False,
+        help="Number of seats of the vehicle",
+    )
+    fuel_tank_capacity = fields.Integer(
+        string="Tank capacity",
+        compute="_compute_model_fields",
+        store=True,
+        readonly=False,
+        help="Fuel tank capacity in liters",
+    )
+    cilinders = fields.Integer(
+        string="Cilinders Number",
+        compute="_compute_model_fields",
+        store=True,
+        readonly=False,
+    )
+    co2 = fields.Float(
+        string="CO2 Emissions",
+        compute="_compute_model_fields",
+        store=True,
+        readonly=False,
+        tracking=True,
+        aggregator=None,
+        help="CO2 emissions of the vehicle",
+    )
+    fuel_efficiency = fields.Float(
+        compute="_compute_model_fields",
+        store=True,
+        readonly=False,
+        aggregator="avg",
+        help="Fuel efficiency in kilometers per liter (km/L)",
+    )
+    vehicle_range = fields.Float(string="Range")
     weight_capacity = fields.Float(
         string="Max Weight",
     )
@@ -243,6 +220,13 @@ class ProductTemplate(models.Model):
     volume_capacity_uom_name = fields.Char(
         string="Volume unit of measure label",
         compute="_compute_volume_capacity_uom_name",
+    )
+    trailer_hook = fields.Boolean(
+        string="Trailer Hitch",
+        default=False,
+        compute="_compute_model_fields",
+        store=True,
+        readonly=False,
     )
 
     # Identification fields
@@ -267,14 +251,13 @@ class ProductTemplate(models.Model):
     )
 
     # Financial fields
-    acquisition_date = fields.Date(
+    date_acquisition = fields.Date(
         string="Registration Date",
-        required=False,
         default=fields.Date.today,
         tracking=True,
         help="Date of vehicle registration",
     )
-    write_off_date = fields.Date(
+    date_write_off = fields.Date(
         string="Cancellation Date",
         tracking=True,
         help='Date when the vehicle"s license plate has been cancelled/removed.',

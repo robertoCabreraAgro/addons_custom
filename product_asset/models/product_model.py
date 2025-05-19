@@ -48,14 +48,6 @@ class ProductModel(models.Model):
         default="product",
         tracking=True,
     )
-    doors = fields.Integer(
-        string="Doors Number",
-        tracking=True,
-    )
-    seats = fields.Integer(
-        string="Seats Number",
-        tracking=True,
-    )
     transmission = fields.Selection(
         [
             ("manual", "Manual"),
@@ -70,18 +62,26 @@ class ProductModel(models.Model):
         default="electric",
         tracking=True,
     )
+    doors = fields.Integer(
+        string="Doors Number",
+        tracking=True,
+    )
+    seats = fields.Integer(
+        string="Seats Number",
+        tracking=True,
+    )
     fuel_tank_capacity = fields.Integer(
         string="Tank capacity",
         help="Fuel tank capacity in liters",
     )
-    fuel_efficiency = fields.Float(
-        help="Fuel efficiency in kilometers per liter (km/L)"
-    )
     cilinders = fields.Integer(
         string="Cilinders Number",
     )
+    fuel_efficiency = fields.Float(
+        help="Fuel efficiency in kilometers per liter (km/L)"
+    )
     power_unit = fields.Selection(
-        [
+        selection=[
             ("power", "kW"),
             ("horsepower", "Horsepower"),
         ],
@@ -93,18 +93,8 @@ class ProductModel(models.Model):
         string="Power",
         tracking=True,
     )
-    horsepower = fields.Integer(
-        tracking=True,
-    )
-    horsepower_tax = fields.Float(
-        "Horsepower Taxation",
-        tracking=True,
-    )
     co2 = fields.Float(
         "CO2 Emissions",
-        tracking=True,
-    )
-    co2_standard = fields.Char(
         tracking=True,
     )
     model_year = fields.Integer(

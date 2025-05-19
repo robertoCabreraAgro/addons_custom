@@ -68,7 +68,7 @@
                 <field name="odometer" readonly="1" optional="hide" />
                 <field name="vin_sn" readonly="1" optional="hide" />
                 <field name="engine_sn" readonly="1" optional="hide" />
-                <field name="acquisition_date" readonly="1" />
+                <field name="date_acquisition" readonly="1" />
                 <field name="product_tag_ids" widget="many2many_tags"
                     readonly="1"
                     options="{'color_field': 'color'}" />
@@ -244,8 +244,8 @@
                             <field name="manager_id"
                                 widget="many2one_avatar_user"
                                 domain="[('share', '=', False), ('company_id', '=', company_id)]" />
-                            <field name="acquisition_date" invisible="asset_type != 'vehicle'" />
-                            <field name="write_off_date" invisible="asset_type != 'vehicle'" />
+                            <field name="date_acquisition" invisible="asset_type != 'vehicle'" />
+                            <field name="date_write_off" invisible="asset_type != 'vehicle'" />
                             <field name="next_assignation_date" />
                             <field name="company_id" groups="base.group_multi_company" />
                         </group>
@@ -292,8 +292,6 @@
                                         <field name="power" />
                                         <span>kW</span>
                                     </div>
-                                    <field name="horsepower"
-                                        invisible="power_unit != 'horsepower'" />
                                     <field name="fuel_type" />
                                     <field name="cilinders" />
                                     <label for="fuel_efficiency" />
@@ -311,7 +309,6 @@
                                         <field name="co2" />
                                         <span>g/km</span>
                                     </div>
-                                    <field name="co2_standard" />
                                 </group>
                             </group>
                         </page>
@@ -329,7 +326,6 @@
                             <group>
                                 <group col="1" name="fiscality_group" string="Fiscality">
                                     <group col="1" name="fiscality_first_group">
-                                        <field name="horsepower_tax" widget="monetary" />
                                     </group>
                                 </group>
                             </group>
