@@ -68,7 +68,6 @@
         <field name="auth_signup_reset_password" eval="False" />
         <field name="auth_signup_uninvited">b2b</field>
         <field name="use_event_barcode" eval="True" />
-        <field name="po_order_approval" eval="True" />
     </record>
 
     <function model="res.config.settings" name="execute">

@@ -66,7 +66,7 @@ class ApprovalApprover(models.Model):
                 | self.request_id.request_owner_id._origin
             )
 
-    @api.depends("category_approver", "user_id")
+    @api.depends("user_id", "category_approver")
     def _compute_category_approver(self):
         for approval in self:
             approval.category_approver = (

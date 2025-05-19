@@ -999,7 +999,6 @@ def _post_init_marin(env):
         UPDATE res_company SET extract_out_invoice_digitalization_mode='manual_send';
         UPDATE res_company SET documents_account_settings='t';
         UPDATE res_company SET expense_extract_show_ocr_option_selection='manual_send';
-        UPDATE res_company SET po_double_validation='two_step';
         UPDATE res_company SET portal_confirmation_sign='f';
         UPDATE res_company SET quotation_validity_days=7;
         UPDATE res_company SET l10n_mx_edi_minimum_wage=248.93;
