@@ -1,32 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <menuitem
-        id="menu_root"
+        id="fleet_root"
         name="Fleet"
         web_icon="product_asset,static/description/icon.png"
         sequence="220"
          />
 
     <!-- Main menus -->
-    <menuitem
-        id="fleet_vehicles"
-        name="Fleet"
-        parent="menu_root"
-        sequence="2"
-         />
+
     <menuitem
         id="fleet_vehicle_menu"
-        name="Fleet"
-        parent="fleet_vehicles"
-        sequence="0"
+        parent="fleet_root"
+        sequence="100"
         action="product_vehicle_action"
+         />
+
+    <menuitem
+        id="fleet_vehicle_log_menu"
+        parent="fleet_root"
+        sequence="200"
+        action="action_fleet_vehicle_log"
          />
 
     <menuitem
         id="fleet_configuration"
         name="Configuration"
-        parent="menu_root"
-        sequence="100"
+        parent="fleet_root"
+        sequence="1000"
          />
 
     <!-- fleet_configuration subitems -->
@@ -35,6 +36,7 @@
         parent="fleet_configuration"
         sequence="1"
         action="product_manufacturer.manufacturer_action" />
+
     <menuitem
         id="fleet_vehicle_model_menu"
         parent="fleet_configuration"
