@@ -14,8 +14,8 @@
                 <group expand="1" string="Group By">
                     <filter name="groupby_product_id" string="Service Type"
                         context="{'group_by': 'product_id'}" />
-                    <filter name="groupby_manager_id" string="Fleet Manager"
-                        context="{'group_by': 'manager_id'}" />
+                    <filter name="groupby_fleet_manager_id" string="Fleet Manager"
+                        context="{'group_by': 'fleet_manager_id'}" />
                 </group>
             </search>
         </field>

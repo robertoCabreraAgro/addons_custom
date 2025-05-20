@@ -31,8 +31,8 @@ class FleetVehicleLog(models.Model):
         related="vehicle_id.operator_id",
         string="Driver",
     )
-    manager_id = fields.Many2one(
-        related="vehicle_id.manager_id",
+    fleet_manager_id = fields.Many2one(
+        related="vehicle_id.fleet_manager_id",
         string="Fleet Manager",
     )
     odometer_uom_id = fields.Many2one(

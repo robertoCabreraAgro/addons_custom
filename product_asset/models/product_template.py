@@ -35,7 +35,7 @@ class ProductTemplate(models.Model):
     # FIELDS
     # ------------------------------------------------------------
 
-    manager_id = fields.Many2one(
+    fleet_manager_id = fields.Many2one(
         comodel_name="hr.employee",
         string="Manager",
         domain=lambda self: [
@@ -118,6 +118,18 @@ class ProductTemplate(models.Model):
         ],
         compute="_compute_service_activity",
     )
+    # TODO make power unit a many2one
+    power_uom_id = fields.Many2one(
+        comodel_name="uom.uom",
+        string="Power Unit",
+        # default=lambda self: self.env.ref("uom.product_uom_km").id,
+        # TODO implement domain for new uom logic
+        # domain=lambda self: [
+        #     ("model_category_id", "=", self.env.ref("uom.uom_categ_length").id),
+        # ],
+        copy=True,
+        help="Odometer measure of the vehicle",
+    )
     power_unit = fields.Selection(
         selection=[
             ("power", "kW"),
@@ -142,7 +154,7 @@ class ProductTemplate(models.Model):
         #     ("model_category_id", "=", self.env.ref("uom.uom_categ_length").id),
         # ],
         copy=True,
-        help="Odometer measure of the vehicle",
+        help="Odometer unit of measure of the vehicle",
     )
     odometer = fields.Float(
         string="Odometer",
@@ -157,7 +169,7 @@ class ProductTemplate(models.Model):
         readonly=False,
         help="Year of the model",
     )
-    # color = fields.Char(
+    # color_name = fields.Char(
     #     compute="_compute_model_fields",
     #     store=True,
     #     readonly=False,
@@ -262,12 +274,12 @@ class ProductTemplate(models.Model):
         tracking=True,
         help='Date when the vehicle"s license plate has been cancelled/removed.',
     )
-    car_value = fields.Float(
+    value_original = fields.Float(
         string="Catalog Value (VAT Incl.)",
         tracking=True,
     )
-    net_car_value = fields.Float(string="Purchase Value")
-    residual_value = fields.Float()
+    value_residual = fields.Float()
+
     log_ids = fields.One2many(
         "fleet.vehicle.log",
         "vehicle_id",
@@ -285,12 +297,12 @@ class ProductTemplate(models.Model):
         "Contracts",
         compute="_compute_count_all",
     )
-    first_contract_date = fields.Date(
+    date_first_contract = fields.Date(
         string="First Contract Date",
         default=fields.Date.today,
         tracking=True,
     )
-    next_assignation_date = fields.Date(
+    date_next_assignation = fields.Date(
         string="Assignment Date",
         help="This is the date at which the car will be available, "
         "if not set it means available instantly",

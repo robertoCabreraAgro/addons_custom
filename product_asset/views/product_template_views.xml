@@ -64,7 +64,7 @@
                 <field name="operator_id" widget="many2one_avatar_user" readonly="1" optional="show" />
                 <field name="future_operator_id" widget="many2one_avatar_user" readonly="1"
                     optional="hide" />
-                <field name="manager_id" widget="many2one_avatar_user" optional="hide" />
+                <field name="fleet_manager_id" widget="many2one_avatar_user" optional="hide" />
                 <field name="odometer" readonly="1" optional="hide" />
                 <field name="vin_sn" readonly="1" optional="hide" />
                 <field name="engine_sn" readonly="1" optional="hide" />
@@ -241,12 +241,12 @@
                                 widget="many2one_avatar"
                                 domain="['|', ('company_id', '=', False ), ('company_id', '=', company_id)]" />
                             <field name="future_operator_id" widget="many2one_avatar" />
-                            <field name="manager_id"
+                            <field name="fleet_manager_id"
                                 widget="many2one_avatar_user"
                                 domain="[('share', '=', False), ('company_id', '=', company_id)]" />
                             <field name="date_acquisition" invisible="asset_type != 'vehicle'" />
                             <field name="date_write_off" invisible="asset_type != 'vehicle'" />
-                            <field name="next_assignation_date" />
+                            <field name="date_next_assignation" />
                             <field name="company_id" groups="base.group_multi_company" />
                         </group>
                         <group string="Vehicle">
@@ -315,10 +315,9 @@
                         <page name="page_contract_info" string="Contract Info">
                             <group>
                                 <group string="Contract">
-                                    <field name="first_contract_date" />
-                                    <field name="car_value" widget="monetary" />
-                                    <field name="net_car_value" widget="monetary" />
-                                    <field name="residual_value" widget="monetary" />
+                                    <field name="date_first_contract" />
+                                    <field name="value_original" widget="monetary" />
+                                    <field name="value_residual" widget="monetary" />
                                 </group>
                             </group>
                         </page>
