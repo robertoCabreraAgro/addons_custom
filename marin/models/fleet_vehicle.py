@@ -177,7 +177,7 @@ class FleetVehicle(models.Model):
             )
 
             # Sum all movements (positive credits, negative debits)
-            vehicle.highway_pass_balance = vehicle.highway_pass_openning_balance  sum(highway_logs.mapped("amount"))
+            vehicle.highway_pass_balance = vehicle.highway_pass_openning_balance + sum(highway_logs.mapped("amount"))
 
     # Extend original method
     @api.depends(
