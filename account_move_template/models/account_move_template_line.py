@@ -88,7 +88,7 @@ class AccountMoveTemplateLine(models.Model):
     note = fields.Char()
 
     _unique_template_sequence = models.UniqueIndex(
-        "UNIQUE(template_id, sequence)",
+        "(template_id, sequence)",
         "The sequence of the line must be unique per template!",
     )
 
