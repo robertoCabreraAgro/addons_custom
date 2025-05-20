@@ -32,7 +32,7 @@ class FleetVehicleLoanReport(models.Model):
                     FROM approval_request ar2 
                     WHERE ar2.request_owner_id = ar.request_owner_id 
                     AND ar2.vehicle_id = ar.vehicle_id 
-                    AND ar2.odometer > ar.odometer
+                    AND ar2.odometer >= ar.odometer
                 ) AS odometer_end,
                 ar.date_start AT TIME ZONE 'UTC' AT TIME ZONE 'America/Mexico_City' AS date_start, 
                 CASE EXTRACT(DOW FROM ar.date_start AT TIME ZONE 'UTC' AT TIME ZONE 'America/Mexico_City') 
@@ -60,7 +60,7 @@ class FleetVehicleLoanReport(models.Model):
                         FROM approval_request ar2 
                         WHERE ar2.request_owner_id = ar.request_owner_id 
                         AND ar2.vehicle_id = ar.vehicle_id 
-                        AND ar2.odometer > ar.odometer
+                        AND ar2.odometer >= ar.odometer
                     ) - ar.odometer,
                     0
                 ) AS distance
