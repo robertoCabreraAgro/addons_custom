@@ -159,7 +159,7 @@ class FleetVehicle(models.Model):
         for vehicle in self:
             vehicle.highway_pass_count = len(
                 vehicle.log_ids.filtered(
-                    lambda l: l.product_category_id == highway_pass_category
+                    lambda l: l.product_category_id == highway_pass_product_category
                 )
             )
 
