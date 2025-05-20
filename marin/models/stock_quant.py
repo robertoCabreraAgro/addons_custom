@@ -9,8 +9,14 @@ class StockQuant(models.Model):
     _inherit = "stock.quant"
 
     # Extend core fields
-    product_categ_id = fields.Many2one(store=True, readonly=True)
-    warehouse_id = fields.Many2one(store=True, readonly=True)
+    product_categ_id = fields.Many2one(
+        store=True,
+        readonly=True,
+    )
+    warehouse_id = fields.Many2one(
+        store=True,
+        readonly=True,
+    )
 
     # New fields
     removal_priority = fields.Integer(
@@ -18,18 +24,18 @@ class StockQuant(models.Model):
         store=True,
     )
     is_reconditioned = fields.Boolean(
-        string="Reconditioned",
         related="lot_id.is_reconditioned",
+        string="Reconditioned",
         help="Indicates if this lot has been reconditioned to extend its shelf life",
     )
     recondition_date = fields.Date(
-        string="Recondition Date",
         related="lot_id.recondition_date",
+        string="Recondition Date",
         help="Date when the product was reconditioned",
     )
     original_expiration_date = fields.Date(
-        string="Original Expiration Date",
         related="lot_id.original_expiration_date",
+        string="Original Expiration Date",
         help="Original expiration date before reconditioning",
     )
 
@@ -59,19 +65,25 @@ class StockQuant(models.Model):
     def _get_removal_strategy_order(self, removal_strategy):
         if removal_strategy == "fifo + priority":
             return "in_date ASC, removal_priority ASC, id"
+
         if removal_strategy == "lifo + priority":
             return "in_date DESC, removal_priority ASC, id DESC"
+
         if removal_strategy == "fefo + priority":
             return "removal_date, removal_priority ASC, id"
+
         if removal_strategy == "refurbished + fefo + priority":
             return "is_reconditioned DESC, original_expiration_date ASC, removal_date, removal_priority ASC, id"
+
         return super()._get_removal_strategy_order(removal_strategy)
 
     def action_stock_quant_lot_update(self):
         if len(self.company_id) > 1 or any(not q.company_id.id for q in self):
             raise UserError(_("You can only change lots used by a single company."))
+
         if len(self) > 1:
             raise UserError(_("You can only change lot of one quant at a time."))
+
         action = self.env["ir.actions.act_window"]._for_xml_id(
             "marin.action_stock_quant_lot_update"
         )

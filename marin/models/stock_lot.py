@@ -1,7 +1,6 @@
 import datetime
 
 from odoo import api, fields, models
-from odoo.tools import float_is_zero
 
 
 class StockLot(models.Model):
@@ -9,87 +8,27 @@ class StockLot(models.Model):
 
     _inherit = "stock.lot"
 
-    active = fields.Boolean(default=True)
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     is_reconditioned = fields.Boolean(
         string="Reconditioned",
         default=False,
         help="Indicates if this lot has been reconditioned to extend its shelf life",
     )
     recondition_date = fields.Date(
-        string="Recondition Date", help="Date when the product was reconditioned"
+        string="Recondition Date",
+        help="Date when the product was reconditioned",
     )
     original_expiration_date = fields.Date(
         string="Original Expiration Date",
         help="Original expiration date before reconditioning",
     )
 
-    @api.onchange("is_reconditioned")
-    def _onchange_is_reconditioned(self):
-        if not self.is_reconditioned:
-            self.recondition_date = False
-            self.original_expiration_date = False
-
-    # OVERRIDE
-    @api.model
-    def get_available_lots_for_pos(self, product_id, company_id, config_id):
-        """Override the parent function  from module 'pos_lot_selection'
-        so the lots appear ordered by their removal strategy."""
-        config = self.env["pos.config"].browse(config_id)
-        location = config.picking_type_id.default_location_src_id
-        lots = self.sudo().search(
-            [
-                "&",
-                ["product_id", "=", product_id],
-                "|",
-                ["company_id", "=", company_id],
-                ["company_id", "=", False],
-            ]
-        )
-
-        lots = lots.filtered(
-            lambda ln: not float_is_zero(
-                ln.product_qty, precision_digits=ln.product_uom_id.rounding
-            )
-        )
-
-        quant = self.env["stock.quant"]
-        product = self.env["product.product"].browse(product_id)
-
-        removal_strategy = quant._get_removal_strategy(product, product.location_id)
-        domain = quant._get_gather_domain(product, product.location_id)
-        # TODO thi is no longer correct
-        domain, removal_strategy_order = quant._get_removal_strategy_domain_order(
-            domain, removal_strategy, 0
-        )
-
-        quants = lots.quant_ids
-        ordered_quants = quant.search(
-            [("id", "in", quants.ids), ("location_id", "child_of", location.id)],
-            order=removal_strategy_order,
-        )
-        ordered_lots = ordered_quants.lot_id
-
-        res = []
-        for lot in ordered_lots:
-            available_qty = sum(
-                lot.quant_ids.filtered(
-                    lambda quant: quant.location_id.usage == "internal"
-                    or (
-                        quant.location_id.usage == "transit"
-                        and quant.location_id.company_id
-                    )
-                ).mapped("available_quantity")
-            )
-            res.append(
-                {
-                    "id": lot.id,
-                    "name": lot.name,
-                    "on_hand_qty": lot.product_qty,
-                    "available_qty": available_qty,
-                    "expiration_date": lot.expiration_date,
-                }
-            )
-        return res
+    # ------------------------------------------------------------
+    # COMPUTE METHODS
+    # ------------------------------------------------------------
 
     @api.depends("product_id")
     def _compute_expiration_date(self):
@@ -145,3 +84,13 @@ class StockLot(models.Model):
                     lot.alert_date = (
                         lot._origin.alert_date and lot._origin.alert_date + time_delta
                     )
+
+    # ------------------------------------------------------------
+    # ONCHANGE METHODS
+    # ------------------------------------------------------------
+
+    @api.onchange("is_reconditioned")
+    def _onchange_is_reconditioned(self):
+        if not self.is_reconditioned:
+            self.recondition_date = False
+            self.original_expiration_date = False
