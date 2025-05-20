@@ -142,8 +142,8 @@ class FleetVehicleLogImport(models.TransientModel):
         """
         fleet_vehicle_log = self.env["fleet.vehicle.log"]
         fuel_category = self.env.ref("marin.product_category_vehicle_fuel")
-        fuel_debit_product = self.env.ref("marin.product_product_fuel_debit") 
-        fuel_credit_product = self.env.ref("marin.product_product_fuel_credit") 
+        fuel_debit_product = self.env.ref("marin.product_product_fuel_debit")
+        fuel_credit_product = self.env.ref("marin.product_product_fuel_credit")
         try:
             # Decode and load the Excel file
             file_data = base64.b64decode(file_content)
@@ -218,12 +218,14 @@ class FleetVehicleLogImport(models.TransientModel):
                         if row[column_map["Abono"]]
                         else 0
                     )
-                    - (
+                    -(
                         float(row[column_map["Cargo"]])
                         if row[column_map["Cargo"]]
                         else 0
                     )
-                    fuel_product = fuel_credit_product if amount > 0 else fuel_debit_product
+                    fuel_product = (
+                        fuel_credit_product if amount > 0 else fuel_debit_product
+                    )
 
                     # Prepare log values
                     log_vals = {
@@ -299,9 +301,15 @@ class FleetVehicleLogImport(models.TransientModel):
             tuple: (list of fleet.vehicle.log values, list of error messages)
         """
         fleet_vehicle_log = self.env["fleet.vehicle.log"]
-        highway_pass_category = self.env.ref("marin.product_category_vehicle_highway_pass")
-        highway_pass_debit_product = self.env.ref("marin.product_product_highway_pass_debit") 
-        highway_pass_credit_product = self.env.ref("marin.product_product_highway_pass_credit") 
+        highway_pass_category = self.env.ref(
+            "marin.product_category_vehicle_highway_pass"
+        )
+        highway_pass_debit_product = self.env.ref(
+            "marin.product_product_highway_pass_debit"
+        )
+        highway_pass_credit_product = self.env.ref(
+            "marin.product_product_highway_pass_credit"
+        )
         try:
             # Decode and load the CSV file
             file_data = base64.b64decode(file_content)
@@ -411,7 +419,11 @@ class FleetVehicleLogImport(models.TransientModel):
                     )
 
                     notes = f"Caseta: {caseta}, Clase: {saldo}, Consecar: {consecar}"
-                    highway_pass_product = highway_pass_credit_product if amount > 0 else highway_pass_debit_product
+                    highway_pass_product = (
+                        highway_pass_credit_product
+                        if amount > 0
+                        else highway_pass_debit_product
+                    )
 
                     # Prepare log values
                     log_vals = {
@@ -452,7 +464,6 @@ class FleetVehicleLogImport(models.TransientModel):
 
         except Exception as e:
             import traceback
-
             raise UserError(
                 self.env._(
                     "File structure doesn't match the expected '%(parser)s' format.\n\n%(traceback)s"
@@ -475,9 +486,15 @@ class FleetVehicleLogImport(models.TransientModel):
             tuple: (list of fleet.vehicle.log values, list of error messages)
         """
         fleet_vehicle_log = self.env["fleet.vehicle.log"]
-        highway_pass_category = self.env.ref("marin.product_category_vehicle_highway_pass")
-        highway_pass_debit_product = self.env.ref("marin.product_product_highway_pass_debit") 
-        highway_pass_credit_product = self.env.ref("marin.product_product_highway_pass_credit") 
+        highway_pass_category = self.env.ref(
+            "marin.product_category_vehicle_highway_pass"
+        )
+        highway_pass_debit_product = self.env.ref(
+            "marin.product_product_highway_pass_debit"
+        )
+        highway_pass_credit_product = self.env.ref(
+            "marin.product_product_highway_pass_credit"
+        )
         try:
             # Decode and load the CSV file
             file_data = base64.b64decode(file_content)
@@ -606,7 +623,11 @@ class FleetVehicleLogImport(models.TransientModel):
                     )
 
                     notes = f"Movimiento: {movement}, Folio: {folio}"
-                    highway_pass_product = highway_pass_credit_product if amount > 0 else highway_pass_debit_product
+                    highway_pass_product = (
+                        highway_pass_credit_product
+                        if amount > 0
+                        else highway_pass_debit_product
+                    )
 
                     # Prepare log values
                     log_vals = {
@@ -647,7 +668,6 @@ class FleetVehicleLogImport(models.TransientModel):
 
         except Exception as e:
             import traceback
-
             raise UserError(
                 self.env._(
                     "File structure doesn't match the expected '%(parser)s' format.\n\n%(traceback)s",

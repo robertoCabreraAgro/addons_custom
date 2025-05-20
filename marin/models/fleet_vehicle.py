@@ -139,20 +139,28 @@ class FleetVehicle(models.Model):
             )
 
             # Sum all movements (positive credits, negative debits)
-            vehicle.fuel_card_balance = vehicle.fuel_card_openning_balance + sum(fuel_logs.mapped("amount"))
+            vehicle.fuel_card_balance = vehicle.fuel_card_openning_balance + sum(
+                fuel_logs.mapped("amount")
+            )
 
     def _compute_fuel_count(self):
         fuel_product_category = self.env.ref("marin.product_category_vehicle_fuel")
         for vehicle in self:
             vehicle.fuel_count = len(
-                vehicle.log_ids.filtered(lambda l: l.product_category_id == fuel_product_category)
+                vehicle.log_ids.filtered(
+                    lambda l: l.product_category_id == fuel_product_category
+                )
             )
 
     def _compute_highway_pass_count(self):
-        highway_pass_product_category = self.env.ref("marin.product_category_vehicle_highway_pass")
+        highway_pass_product_category = self.env.ref(
+            "marin.product_category_vehicle_highway_pass"
+        )
         for vehicle in self:
             vehicle.highway_pass_count = len(
-                vehicle.log_ids.filtered(lambda l: l.product_category_id == highway_pass_category)
+                vehicle.log_ids.filtered(
+                    lambda l: l.product_category_id == highway_pass_category
+                )
             )
 
     @api.depends("highway_pass_budget", "highway_pass_balance")
@@ -166,7 +174,9 @@ class FleetVehicle(models.Model):
     @api.depends("log_ids.amount")
     def _compute_highway_pass_balance(self):
         """Compute current balance based on toll debit/credit records"""
-        highway_pass_product_category = self.env.ref("marin.product_category_vehicle_highway_pass")
+        highway_pass_product_category = self.env.ref(
+            "marin.product_category_vehicle_highway_pass"
+        )
         for vehicle in self:
             # Find all toll records associated with this vehicle
             highway_logs = self.env["fleet.vehicle.log"].search(
@@ -177,7 +187,9 @@ class FleetVehicle(models.Model):
             )
 
             # Sum all movements (positive credits, negative debits)
-            vehicle.highway_pass_balance = vehicle.highway_pass_openning_balance + sum(highway_logs.mapped("amount"))
+            vehicle.highway_pass_balance = vehicle.highway_pass_openning_balance + sum(
+                highway_logs.mapped("amount")
+            )
 
     # Extend original method
     @api.depends(
@@ -310,12 +322,14 @@ class FleetVehicle(models.Model):
     def action_view_fuel_logs(self):
         self.ensure_one()
         fuel_product_category = self.env.ref("marin.product_category_vehicle_fuel")
-        action = self.env['ir.actions.act_window']._for_xml_id('fleet.action_fleet_vehicle_log')
+        action = self.env["ir.actions.act_window"]._for_xml_id(
+            "fleet.action_fleet_vehicle_log"
+        )
         action["domain"] = [
             ("vehicle_id", "=", self.id),
             ("product_category_id", "=", fuel_product_category.id),
         ]
-        action['context'] = {
+        action["context"] = {
             "default_vehicle_id": self.id,
             "default_product_category_id": fuel_product_category.id,
             "hide_product_category": True,
@@ -326,13 +340,17 @@ class FleetVehicle(models.Model):
 
     def action_view_highway_pass_logs(self):
         self.ensure_one()
-        highway_pass_product_category = self.env.ref("marin.product_category_vehicle_highway_pass")
-        action = self.env['ir.actions.act_window']._for_xml_id('fleet.action_fleet_vehicle_log')
+        highway_pass_product_category = self.env.ref(
+            "marin.product_category_vehicle_highway_pass"
+        )
+        action = self.env["ir.actions.act_window"]._for_xml_id(
+            "fleet.action_fleet_vehicle_log"
+        )
         action["domain"] = [
             ("vehicle_id", "=", self.id),
             ("product_category_id", "=", highway_pass_product_category.id),
         ]
-        action['context'] = {
+        action["context"] = {
             "default_vehicle_id": self.id,
             "default_product_category_id": highway_pass_product_category.id,
             "hide_product_category": True,

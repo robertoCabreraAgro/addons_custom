@@ -14,23 +14,23 @@ class StockQuant(models.Model):
 
     # New fields
     removal_priority = fields.Integer(
-        related="location_id.removal_priority", store=True
+        related="location_id.removal_priority",
+        store=True,
     )
-
     is_reconditioned = fields.Boolean(
-        string='Reconditioned',
-        related='lot_id.is_reconditioned',
-        help='Indicates if this lot has been reconditioned to extend its shelf life'
+        string="Reconditioned",
+        related="lot_id.is_reconditioned",
+        help="Indicates if this lot has been reconditioned to extend its shelf life",
     )
     recondition_date = fields.Date(
-        string='Recondition Date',
-        related='lot_id.recondition_date',
-        help='Date when the product was reconditioned'
+        string="Recondition Date",
+        related="lot_id.recondition_date",
+        help="Date when the product was reconditioned",
     )
     original_expiration_date = fields.Date(
-        string='Original Expiration Date',
-        related='lot_id.original_expiration_date',
-        help='Original expiration date before reconditioning'
+        string="Original Expiration Date",
+        related="lot_id.original_expiration_date",
+        help="Original expiration date before reconditioning",
     )
 
     def _apply_inventory_group_validate(self):
@@ -77,7 +77,7 @@ class StockQuant(models.Model):
         )
         action["context"] = {"active_model": self._name, "active_ids": self.ids}
         return action
-    
+
     def _gather(
         self,
         product_id,
@@ -90,7 +90,7 @@ class StockQuant(models.Model):
     ):
         ctx = dict(self.env.context)
         if self.env.context.get("with_expiration"):
-            ctx.pop("with_expiration", None) 
+            ctx.pop("with_expiration", None)
 
         return super(StockQuant, self.with_context(ctx))._gather(
             product_id,
