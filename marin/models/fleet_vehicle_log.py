@@ -18,12 +18,6 @@ class FleetVehiclelog(models.Model):
         aggregator="avg",
         help="Fuel efficiency in kilometers per liter",
     )
-    type = fields.Selection(
-        selection_add=[
-            ("fuel", "Fuel"),
-            ("highway_pass", "Highway Pass"),
-        ],
-    )
 
     def action_open_upload_wizard(self):
         return {

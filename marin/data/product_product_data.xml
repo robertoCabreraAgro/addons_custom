@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="product_product_fuel_debit" model="product.product">
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+        <field name="name">Fuel Recharge</field>
+        <field name="categ_id" ref="marin.product_category_vehicle_fuel" />
+        <field name="type">service</field>
+	<field name="vehicle_service" eval="True" />
+    </record>
+    <record id="product_product_fuel_credit" model="product.product">
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+        <field name="name">Fuel Credit</field>
+        <field name="categ_id" ref="marin.product_category_vehicle_fuel" />
+        <field name="type">service</field>
+	<field name="vehicle_service" eval="True" />
+    </record>
+    <record id="product_product_highway_pass_debit" model="product.product">
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+        <field name="name">Highway Pass Recharge</field>
+        <field name="categ_id" ref="marin.product_category_vehicle_highway_pass" />
+        <field name="type">service</field>
+	<field name="vehicle_service" eval="True" />
+    </record>
+    <record id="product_product_highway_pass_credit" model="product.product">
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+        <field name="name">Highway Pass Credit</field>
+        <field name="categ_id" ref="marin.product_category_vehicle_highway_pass" />
+        <field name="type">service</field>
+	<field name="vehicle_service" eval="True" />
+    </record>
+</odoo>

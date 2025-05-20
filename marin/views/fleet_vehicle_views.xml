@@ -36,26 +36,16 @@
                 <field name="brand_new" />
             </xpath>
             <xpath expr="//div[@name='button_box']" position="inside">
-                <button
-                    name="action_view_fleet_vehicle_log_fuel"
-                    type="object"
-                    class="oe_stat_button"
+                <button name="action_view_fuel_logs"
+                    type="object" class="oe_stat_button"
                     icon="fa-tint"
-                    context="{'xml_id':'action_fleet_vehicle_log_fuel', 'search_default_inactive': not active}"
-                    help="show the fuel logs for this vehicle"
-                >
+                    help="show the fuel logs for this vehicle">
                     <field name="fuel_count" string="Fuel" widget="statinfo" />
                 </button>
-            </xpath>
-            <xpath expr="//div[@name='button_box']" position="inside">
-                <button
-                    name="action_view_fleet_vehicle_log_highway_pass"
-                    type="object"
-                    class="oe_stat_button"
+                <button name="action_view_highway_pass_logs"
+                    type="object" class="oe_stat_button"
                     icon="fa-road"
-                    context="{'xml_id':'action_fleet_vehicle_log_highway_pass', 'search_default_inactive': not active}"
-                    help="show the highway pass logs for this vehicle"
-                >
+                    help="show the highway pass logs for this vehicle">
                     <field name="highway_pass_count" string="Highway" widget="statinfo" />
                 </button>
             </xpath>
