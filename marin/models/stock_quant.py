@@ -1,6 +1,8 @@
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools.translate import _
+from odoo.osv import expression
+
 
 
 class StockQuant(models.Model):
@@ -89,6 +91,27 @@ class StockQuant(models.Model):
         )
         action["context"] = {"active_model": self._name, "active_ids": self.ids}
         return action
+
+    def _get_gather_domain(
+        self,
+        product_id,
+        location_id,
+        lot_id=None,
+        package_id=None,
+        owner_id=None,
+        strict=False,
+    ):
+        domain = super()._get_gather_domain(
+            product_id, location_id, lot_id, package_id, owner_id, strict
+        )
+        if not self.env.user.has_group(
+            "stock_blocked_location.group_stock_force_blocked_location_in"
+            ):
+                domain = expression.AND(
+                        [[("location_id.block_outgoing", "=", False)], domain]
+                    )
+
+        return domain
 
     def _gather(
         self,
