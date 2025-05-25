@@ -151,28 +151,28 @@
                 <attribute name="readonly">not is_user_id_editable</attribute>
                 <attribute name="force_save">1</attribute>
             </xpath>
-            <xpath expr="//page/field[@name='order_line_ids']/list/field[@name='product_id']" position="attributes">
+            <xpath expr="//page/field[@name='line_ids']/list/field[@name='product_id']" position="attributes">
                 <attribute name="options">{'no_create': True}</attribute>
             </xpath>
-            <xpath expr="//page/field[@name='order_line_ids']/list/field[@name='product_uom_id'][2]" position="attributes">
+            <xpath expr="//page/field[@name='line_ids']/list/field[@name='product_uom_id'][2]" position="attributes">
                 <attribute name="options">{'no_create': True}</attribute>
             </xpath>
             <xpath
-                expr="//page/field[@name='order_line_ids']/list/field[@name='price_unit']"
+                expr="//page/field[@name='line_ids']/list/field[@name='price_unit']"
                 position="after"
             >
                 <field name="partner_id" column_invisible="1" />
                 <widget name="purchase_line_price_history_widget" width="20px" />
             </xpath>
-            <xpath expr="//page/field[@name='order_line_ids']/list/field[@name='qty_invoiced']" position="after">
+            <xpath expr="//page/field[@name='line_ids']/list/field[@name='qty_invoiced']" position="after">
                 <field name="transfer_state" column_invisible="1" />
             </xpath>
-	    <!--<xpath expr="//page/field[@name='order_line_ids']/list/field[@name='qty_invoiced']" position="attributes">
+	    <!--<xpath expr="//page/field[@name='line_ids']/list/field[@name='qty_invoiced']" position="attributes">
                 <attribute name="decoration-danger">not display_type and invoice_state == 'over done'</attribute>
                 <attribute name="decoration-warning">not display_type and invoice_state == 'to do'</attribute>
                 <attribute name="decoration-success">not display_type and invoice_state == 'done'</attribute>
             </xpath>
-            <xpath expr="//page/field[@name='order_line_ids']/list/field[@name='qty_transfered']" position="attributes">
+            <xpath expr="//page/field[@name='line_ids']/list/field[@name='qty_transfered']" position="attributes">
                 <attribute name="decoration-danger">not display_type and transfer_state == 'to do'</attribute>
                 <attribute name="decoration-warning">not display_type and transfer_state == 'partially'</attribute>
                 <attribute name="decoration-info">not display_type and transfer_state == 'over done'</attribute>

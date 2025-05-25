@@ -130,7 +130,7 @@ class ApprovalRequest(models.Model):
             #        new_po_line = self.env["purchase.order.line"].create(po_line_vals)
             #        line._compute_tax_id()
             #        line.purchase_order_line_id = new_po_line.id
-            #        purchase_order.order_line_ids = [(4, new_po_line.id)]
+            #        purchase_order.line_ids = [(4, new_po_line.id)]
             #    # Add the request name on the purchase order `origin` field.
             #    new_origin = set([self.name])
             #    if purchase_order.origin:
@@ -149,7 +149,7 @@ class ApprovalRequest(models.Model):
             new_purchase_order = self.env["purchase.order"].create(
                 line._prepare_purchase_order_values_from_approval()
             )
-            line.purchase_order_line_id = new_purchase_order.order_line_ids[0].id
+            line.purchase_order_line_id = new_purchase_order.line_ids[0].id
 
     def action_create_fleet_vehicle_log(self):
         self.ensure_one()

@@ -63,7 +63,7 @@ class ApprovalProductLine(models.Model):
             ._get_fiscal_position(self.partner_id)
             .id,
             "origin": self.approval_request_id.name,
-            "order_line_ids": [
+            "line_ids": [
                 Command.create(
                     {
                         "product_id": self.product_id.id,

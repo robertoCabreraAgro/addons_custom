@@ -10,8 +10,8 @@
                     filter_domain="['|', '|', ('name', 'ilike', self), ('client_order_ref', 'ilike', self), ('partner_id', 'child_of', self)]"
                 />
                 <field name="partner_id" operator="child_of" />
-                <field name="order_line_ids" string="Product"
-                    filter_domain="[('order_line_ids.product_id', 'ilike', self)]" />
+                <field name="line_ids" string="Product"
+                    filter_domain="[('line_ids.product_id', 'ilike', self)]" />
                 <field name="tag_ids" string="Tag" />
                 <field name="team_id" string="Sales Team" />
                 <field name="user_id" />
@@ -212,24 +212,24 @@
                     required="state == 'draft'"
                 />
             </xpath>
-            <xpath expr="//page/field[@name='order_line_ids']/list/field[@name='tax_ids']" position="attributes">
+            <xpath expr="//page/field[@name='line_ids']/list/field[@name='tax_ids']" position="attributes">
                 <attribute name="optional">hide</attribute>
             </xpath>
-            <xpath expr="//page/field[@name='order_line_ids']/list/field[@name='discount']" position="attributes">
+            <xpath expr="//page/field[@name='line_ids']/list/field[@name='discount']" position="attributes">
                 <attribute name="optional">hide</attribute>
             </xpath>
-            <xpath expr="//page/field[@name='order_line_ids']/list/field[@name='qty_transfered']" position="attributes">
+            <xpath expr="//page/field[@name='line_ids']/list/field[@name='qty_transfered']" position="attributes">
                 <attribute name="decoration-danger">not display_type and transfer_state == 'over done'</attribute>
                 <attribute name="decoration-warning">not display_type and transfer_state == 'partially'</attribute>
                 <attribute name="decoration-info">not display_type and transfer_state == 'to do'</attribute>
                 <attribute name="decoration-success">not display_type and transfer_state == 'done'</attribute>
             </xpath>
-            <xpath expr="//page/field[@name='order_line_ids']/list/field[@name='qty_invoiced']" position="attributes">
+            <xpath expr="//page/field[@name='line_ids']/list/field[@name='qty_invoiced']" position="attributes">
                 <attribute name="decoration-danger">not display_type and invoice_state == 'to do'</attribute>
                 <attribute name="decoration-info">not display_type and invoice_state == 'over done'</attribute>
                 <attribute name="decoration-success">not display_type and invoice_state == 'done'</attribute>
             </xpath>
-            <xpath expr="//page/field[@name='order_line_ids']/list/field[@name='price_unit']" position="after">
+            <xpath expr="//page/field[@name='line_ids']/list/field[@name='price_unit']" position="after">
                 <field name="partner_id" column_invisible="1" />
                 <field name="transfer_state" column_invisible="1" />
                 <widget name="sale_line_price_history_widget" width="20px" />

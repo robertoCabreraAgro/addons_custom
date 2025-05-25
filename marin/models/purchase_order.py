@@ -103,7 +103,7 @@ class PurchaseOrder(models.Model):
                 return super()._compute_journal_id()
 
     # Override original method
-    @api.depends("state", "order_line_ids.transfer_state", "picking_ids")
+    @api.depends("state", "line_ids.transfer_state", "picking_ids")
     def _compute_transfer_state(self):
         confirmed_orders = self.filtered(lambda o: o.state == "purchase")
         (self - confirmed_orders).transfer_state = "no"
@@ -141,7 +141,7 @@ class PurchaseOrder(models.Model):
                 order.transfer_state = "no"
 
     # Override original method
-    @api.depends("state", "order_line_ids.invoice_state", "invoice_ids")
+    @api.depends("state", "line_ids.invoice_state", "invoice_ids")
     def _compute_invoice_state(self):
         confirmed_orders = self.filtered(lambda o: o.state == "purchase")
         (self - confirmed_orders).invoice_state = "no"

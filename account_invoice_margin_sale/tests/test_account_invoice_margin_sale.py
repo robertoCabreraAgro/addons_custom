@@ -45,7 +45,7 @@ class TestAccountInvoiceMargin(TransactionCase):
             {
                 "partner_id": cls.partner.id,
                 "pricelist_id": pricelist.id,
-                "order_line_ids": [
+                "line_ids": [
                     (
                         0,
                         0,
@@ -63,7 +63,7 @@ class TestAccountInvoiceMargin(TransactionCase):
 
     def test_invoice_sale_order(self):
         self.sale_order.action_confirm()
-        self.sale_order.order_line_ids.purchase_price = 500.00
+        self.sale_order.line_ids.purchase_price = 500.00
         invoice = self.sale_order._create_invoices()
         self.assertAlmostEqual(invoice.invoice_line_ids.purchase_price, 500.00, 2)
 
@@ -84,7 +84,7 @@ class TestAccountInvoiceMargin(TransactionCase):
         self.order = self.env["sale.order"].create(
             {
                 "partner_id": self.partner.id,
-                "order_line_ids": [
+                "line_ids": [
                     (
                         0,
                         False,
