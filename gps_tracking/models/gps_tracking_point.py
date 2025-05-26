@@ -130,7 +130,7 @@ class GpsTrackingPoint(models.Model):
     #         else:
 
     @api.model_create_multi
-    def create(self, vals_list):
+    def create_tracking_point(self, vals_list):
         records = super().create(vals_list)
         records._update_week_flags()
         return records
