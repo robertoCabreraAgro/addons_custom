@@ -1,6 +1,7 @@
 import logging
 
 import requests
+from datetime import timedelta
 from pyproj import Transformer
 
 from odoo import api, fields, models
@@ -81,6 +82,9 @@ class GpsTrackingPoint(models.Model):
     auto_geofence = fields.Integer(string="Auto Geofence")
     event_type = fields.Char(string="Event Type")
 
+    is_week_start = fields.Boolean(string="Week Start", default=False)
+    is_week_end = fields.Boolean(string="Week End", default=False)
+
     @api.depends("device_id")
     def _compute_driver_name(self):
         for point in self:
@@ -124,5 +128,54 @@ class GpsTrackingPoint(models.Model):
     #                 _logger.exception(f"Excepción al consultar la API de Google Maps para ID {point.id}: {e}")
     #                 point.address = "Error fetching address"
     #         else:
-    #             point.address = "Coordinates not set"
-    #             _logger.warning(f"Coordenadas no establecidas para ID {point.id}")
+
+    @api.model_create_multi
+    def create_tracking_point(self, vals_list):
+        records = super().create(vals_list)
+        records._update_week_flags()
+        return records
+
+    def _update_week_flags(self):
+        for record in self:
+            if not record.vehicle_id or not record.timestamp:
+                continue
+            timestamp = fields.Datetime.from_string(record.timestamp)
+            monday = (timestamp - timedelta(days=timestamp.weekday())).replace(
+                hour=0, minute=0, second=0, microsecond=0
+            )
+            week_end = monday + timedelta(days=7)
+            start_target = monday + timedelta(hours=8)
+            end_target = monday + timedelta(days=5, hours=13)
+
+            domain = [
+                ("vehicle_id", "=", record.vehicle_id.id),
+                ("timestamp", ">=", monday),
+                ("timestamp", "<", week_end),
+            ]
+            week_points = self.search(domain)
+            if not week_points:
+                continue
+
+            # reset flags for the week
+            week_points.write({"is_week_start": False, "is_week_end": False})
+
+            nearest_start = min(
+                week_points,
+                key=lambda p: abs(
+                    fields.Datetime.from_string(p.timestamp) - start_target
+                ),
+            )
+            nearest_end = min(
+                week_points,
+                key=lambda p: abs(
+                    fields.Datetime.from_string(p.timestamp) - end_target
+                ),
+            )
+            nearest_start.write({"is_week_start": True})
+            nearest_end.write({"is_week_end": True})
+
+    @api.model
+    def cron_update_week_flags(self):
+        points = self.search([])
+        points._update_week_flags()
+
