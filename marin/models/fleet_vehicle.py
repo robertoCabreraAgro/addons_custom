@@ -7,6 +7,10 @@ class FleetVehicle(models.Model):
 
     _inherit = "fleet.vehicle"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     department_id = fields.Many2one(
         comodel_name="hr.department",
         string="Department",
@@ -117,31 +121,17 @@ class FleetVehicle(models.Model):
         help="Mark as True if this vehicle was acquired as brand new.",
     )
 
-    @api.depends("fuel_card_budget", "fuel_card_balance")
-    def _compute_fuel_card_balance_to_reload(self):
-        """Calculates the balance that needs to be reloaded based on monthly load and current balance"""
-        for vehicle in self:
-            vehicle.fuel_card_balance_to_reload = max(
-                0, vehicle.fuel_card_budget - vehicle.fuel_card_balance
-            )
+    # ------------------------------------------------------------
+    # COMPUTE METHODS
+    # ------------------------------------------------------------
 
-    @api.depends("log_ids.amount")
-    def _compute_fuel_card_balance(self):
-        """Calculates the current balance based on fuel credit/debit records"""
-        fuel_product_category = self.env.ref("marin.product_category_vehicle_fuel")
+    def _compute_odometer(self):
+        gps_vehicles = self.env["fleet.vehicle"]
         for vehicle in self:
-            # Find all fuel log records associated with this vehicle
-            fuel_logs = self.env["fleet.vehicle.log"].search(
-                [
-                    ("vehicle_id", "=", vehicle.id),
-                    ("product_category_id", "=", fuel_product_category.id),
-                ]
-            )
-
-            # Sum all movements (positive credits, negative debits)
-            vehicle.fuel_card_balance = vehicle.fuel_card_openning_balance + sum(
-                fuel_logs.mapped("amount")
-            )
+            vehicle.odometer = vehicle._get_gps_odometer()
+            if vehicle.odometer:
+                gps_vehicles |= vehicle
+        return super(FleetVehicle, self - gps_vehicles)._compute_odometer()
 
     def _compute_fuel_count(self):
         fuel_product_category = self.env.ref("marin.product_category_vehicle_fuel")
@@ -161,34 +151,6 @@ class FleetVehicle(models.Model):
                 vehicle.log_ids.filtered(
                     lambda l: l.product_category_id == highway_pass_product_category
                 )
-            )
-
-    @api.depends("highway_pass_budget", "highway_pass_balance")
-    def _compute_highway_pass_balance_to_reload(self):
-        """Compute the balance that needs to be reloaded based on monthly budget and current balance"""
-        for vehicle in self:
-            vehicle.highway_pass_balance_to_reload = max(
-                0, vehicle.highway_pass_budget - vehicle.highway_pass_balance
-            )
-
-    @api.depends("log_ids.amount")
-    def _compute_highway_pass_balance(self):
-        """Compute current balance based on toll debit/credit records"""
-        highway_pass_product_category = self.env.ref(
-            "marin.product_category_vehicle_highway_pass"
-        )
-        for vehicle in self:
-            # Find all toll records associated with this vehicle
-            highway_logs = self.env["fleet.vehicle.log"].search(
-                [
-                    ("vehicle_id", "=", vehicle.id),
-                    ("product_category_id", "=", highway_pass_product_category.id),
-                ]
-            )
-
-            # Sum all movements (positive credits, negative debits)
-            vehicle.highway_pass_balance = vehicle.highway_pass_openning_balance + sum(
-                highway_logs.mapped("amount")
             )
 
     # Extend original method
@@ -226,6 +188,64 @@ class FleetVehicle(models.Model):
                 name = vehicle.highway_pass_id.name.split(".", 1)[0]
                 name = name.replace("IMDM ", "")
             vehicle.highway_pass_name = name
+
+    @api.depends("log_ids.amount")
+    def _compute_fuel_card_balance(self):
+        """Calculates the current balance based on fuel credit/debit records"""
+        fuel_product_category = self.env.ref("marin.product_category_vehicle_fuel")
+        for vehicle in self:
+            # Find all fuel log records associated with this vehicle
+            fuel_logs = self.env["fleet.vehicle.log"].search(
+                [
+                    ("vehicle_id", "=", vehicle.id),
+                    ("product_category_id", "=", fuel_product_category.id),
+                ]
+            )
+
+            # Sum all movements (positive credits, negative debits)
+            vehicle.fuel_card_balance = vehicle.fuel_card_openning_balance + sum(
+                fuel_logs.mapped("amount")
+            )
+
+    @api.depends("log_ids.amount")
+    def _compute_highway_pass_balance(self):
+        """Compute current balance based on toll debit/credit records"""
+        highway_pass_product_category = self.env.ref(
+            "marin.product_category_vehicle_highway_pass"
+        )
+        for vehicle in self:
+            # Find all toll records associated with this vehicle
+            highway_logs = self.env["fleet.vehicle.log"].search(
+                [
+                    ("vehicle_id", "=", vehicle.id),
+                    ("product_category_id", "=", highway_pass_product_category.id),
+                ]
+            )
+
+            # Sum all movements (positive credits, negative debits)
+            vehicle.highway_pass_balance = vehicle.highway_pass_openning_balance + sum(
+                highway_logs.mapped("amount")
+            )
+
+    @api.depends("fuel_card_budget", "fuel_card_balance")
+    def _compute_fuel_card_balance_to_reload(self):
+        """Calculates the balance that needs to be reloaded based on monthly load and current balance"""
+        for vehicle in self:
+            vehicle.fuel_card_balance_to_reload = max(
+                0, vehicle.fuel_card_budget - vehicle.fuel_card_balance
+            )
+
+    @api.depends("highway_pass_budget", "highway_pass_balance")
+    def _compute_highway_pass_balance_to_reload(self):
+        """Compute the balance that needs to be reloaded based on monthly budget and current balance"""
+        for vehicle in self:
+            vehicle.highway_pass_balance_to_reload = max(
+                0, vehicle.highway_pass_budget - vehicle.highway_pass_balance
+            )
+
+    # ------------------------------------------------------------
+    # INVERSE METHODS
+    # ------------------------------------------------------------
 
     def _inverse_fuel_card_id(self):
         """
@@ -291,33 +311,9 @@ class FleetVehicle(models.Model):
                     }
                 )
 
-    def _get_gps_tracking_device(self, date=False):
-        self.ensure_one()
-        domain = [("vehicle_id", "=", self.id)]
-        if date:
-            domain += [("timestamp", "<", date)]
-
-        return self.env["gps.tracking.device"].search(domain, order="id desc", limit=1)
-
-    def _get_gps_odometer(self, date=False):
-        """Get odometer reading from GPS"""
-        self.ensure_one()
-        gps_device = self._get_gps_tracking_device(date=date)
-        return round(gps_device.last_point_id.odometer / 1000, 2)
-
-    def _get_gps_fuel_level(self, date=False):
-        """Get fuel level reading from GPS"""
-        self.ensure_one()
-        gps_device = self._get_gps_tracking_device(date=date)
-        return round(gps_device.last_point_id.fuel_level, 2)
-
-    def _compute_odometer(self):
-        gps_vehicles = self.env["fleet.vehicle"]
-        for vehicle in self:
-            vehicle.odometer = vehicle._get_gps_odometer()
-            if vehicle.odometer:
-                gps_vehicles |= vehicle
-        return super(FleetVehicle, self - gps_vehicles)._compute_odometer()
+    # ------------------------------------------------------------
+    #  ACTIONS
+    # ------------------------------------------------------------
 
     def action_view_fuel_logs(self):
         self.ensure_one()
@@ -358,3 +354,26 @@ class FleetVehicle(models.Model):
             "search_default_groupby_product_category_id": False,
         }
         return action
+
+    # ------------------------------------------------------------
+    #  HELPERS
+    # ------------------------------------------------------------
+
+    def _get_gps_tracking_device(self, date=False):
+        self.ensure_one()
+        domain = [("vehicle_id", "=", self.id)]
+        if date:
+            domain += [("timestamp", "<", date)]
+        return self.env["gps.tracking.device"].search(domain, order="id desc", limit=1)
+
+    def _get_gps_odometer(self, date=False):
+        """Get odometer reading from GPS"""
+        self.ensure_one()
+        gps_device = self._get_gps_tracking_device(date=date)
+        return round(gps_device.last_point_id.odometer / 1000, 2)
+
+    def _get_gps_fuel_level(self, date=False):
+        """Get fuel level reading from GPS"""
+        self.ensure_one()
+        gps_device = self._get_gps_tracking_device(date=date)
+        return round(gps_device.last_point_id.fuel_level, 2)
