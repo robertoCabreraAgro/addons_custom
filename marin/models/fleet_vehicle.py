@@ -203,9 +203,10 @@ class FleetVehicle(models.Model):
             )
 
             # Sum all movements (positive credits, negative debits)
-            vehicle.fuel_card_balance = vehicle.fuel_card_openning_balance + sum(
-                fuel_logs.mapped("amount")
-            )
+            vehicle.fuel_card_balance = (
+                vehicle.fuel_card_openning_balance
+                + sum(fuel_logs.mapped("amount")) * -1
+            )  # logs are considered cost of the vehicle, the balance in favor is negative
 
     @api.depends("log_ids.amount")
     def _compute_highway_pass_balance(self):
@@ -223,9 +224,10 @@ class FleetVehicle(models.Model):
             )
 
             # Sum all movements (positive credits, negative debits)
-            vehicle.highway_pass_balance = vehicle.highway_pass_openning_balance + sum(
-                highway_logs.mapped("amount")
-            )
+            vehicle.highway_pass_balance = (
+                vehicle.highway_pass_openning_balance
+                + sum(highway_logs.mapped("amount")) * -1
+            )  # logs are considered cost of the vehicle, the balance in favor is negative
 
     @api.depends("fuel_card_budget", "fuel_card_balance")
     def _compute_fuel_card_balance_to_reload(self):
