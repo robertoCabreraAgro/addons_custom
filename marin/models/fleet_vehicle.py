@@ -139,7 +139,7 @@ class FleetVehicle(models.Model):
             )
 
             # Sum all movements (positive credits, negative debits)
-            vehicle.fuel_card_balance = vehicle.fuel_card_openning_balance + sum(
+            vehicle.fuel_card_balance = vehicle.fuel_card_openning_balance - sum(
                 fuel_logs.mapped("amount")
             )
 
