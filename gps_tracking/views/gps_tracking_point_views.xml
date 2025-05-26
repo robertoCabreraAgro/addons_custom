@@ -45,6 +45,8 @@
                 <field name="event_type" optional="hide" />
                 <field name="priority" optional="hide" />
                 <field name="address" optional="hide" />
+                <field name="is_week_start" optional="hide" />
+                <field name="is_week_end" optional="hide" />
             </list>
         </field>
     </record>
