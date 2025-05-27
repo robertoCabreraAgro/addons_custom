@@ -326,7 +326,7 @@ class FleetVehicleLogImport(models.TransientModel):
                         amount_str = row[column_map["Importe"]] if column_map.get("Importe") < len(row) else "0"
                         # Remove currency symbols and thousand separators
                         amount_str = re.sub(r"[^\d.-]", "", amount_str)
-                        amount = -abs(float(amount_str)) if amount_str else 0
+                        amount = abs(float(amount_str)) if amount_str else 0
                     except ValueError:
                         errors.append(f"Row {row_idx}: Invalid amount format '{row[column_map['Importe']]}'")
                         continue
@@ -482,7 +482,7 @@ class FleetVehicleLogImport(models.TransientModel):
                     try:
                         # Remove currency symbols and thousand separators
                         amount_str = re.sub(r"[^\d.-]", "", importe_str)
-                        amount = float(amount_str) if amount_str else 0
+                        amount = float(amount_str) * -1 if amount_str else 0
                     except ValueError:
                         errors.append(f"Row {row_idx}: Invalid amount format '{importe_str}'")
                         continue
