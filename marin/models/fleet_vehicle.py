@@ -264,7 +264,7 @@ class FleetVehicle(models.Model):
                 - doc
             )
             if doc:
-                doc.write(
+                doc.sudo().write(
                     {
                         "res_model": vehicle._name,
                         "res_id": vehicle.id,
@@ -273,7 +273,7 @@ class FleetVehicle(models.Model):
                     }
                 )
             for od in other_docs:
-                od.write(
+                od.sudo().write(
                     {
                         "res_model": od._name,
                         "res_id": od.id,
@@ -296,7 +296,7 @@ class FleetVehicle(models.Model):
                 - doc
             )
             if doc:
-                doc.write(
+                doc.sudo().write(
                     {
                         "res_model": vehicle._name,
                         "res_id": vehicle.id,
@@ -305,7 +305,7 @@ class FleetVehicle(models.Model):
                     }
                 )
             for od in other_docs:
-                od.write(
+                od.sudo().write(
                     {
                         "res_model": od._name,
                         "res_id": od.id,
