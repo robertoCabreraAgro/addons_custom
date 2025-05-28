@@ -10,7 +10,6 @@
                 <field name="odometer_start" />
                 <field name="odometer_end" />
                 <field name="distance" />
-                <field name="duration_hours"/>
                 <field name="date_start" />
                 <field name="date_end" />
                 <field name="weekday_start" optional="hide" />
@@ -31,7 +30,6 @@
                             <field name="vehiculo" />
                             <field name="odometer_start" />
                             <field name="odometer_end" />
-                            <field name="duration_hours" />
                         </group>
                         <group>
                             <field name="date_start" />

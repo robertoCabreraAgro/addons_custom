@@ -19,51 +19,64 @@ class FleetVehicleLoanReport(models.Model):
     date_end = fields.Datetime(string="Fecha fin", readonly=True)
     weekday_end = fields.Char(string="Día fin", readonly=True)
     distance = fields.Float(string="Distancia Recorrida", readonly=True)
-    duration_hours = fields.Float(string="Duración (h)", readonly=True)
 
     def _query(self):
         return """
-            SELECT
-                ROW_NUMBER() OVER (ORDER BY start_p.timestamp) AS id,
-                start_p.driver_name AS username,
-                fv.name AS vehiculo,
-                start_p.odometer AS odometer_start,
-                end_p.odometer AS odometer_end,
-                start_p.timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'America/Mexico_City' AS date_start,
-                CASE EXTRACT(DOW FROM start_p.timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'America/Mexico_City')
-                    WHEN 0 THEN 'Domingo'
-                    WHEN 1 THEN 'Lunes'
-                    WHEN 2 THEN 'Martes'
-                    WHEN 3 THEN 'Miércoles'
-                    WHEN 4 THEN 'Jueves'
-                    WHEN 5 THEN 'Viernes'
-                    WHEN 6 THEN 'Sábado'
-                END AS weekday_start,
-                end_p.timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'America/Mexico_City' AS date_end,
-                CASE EXTRACT(DOW FROM end_p.timestamp AT TIME ZONE 'UTC' AT TIME ZONE 'America/Mexico_City')
-                    WHEN 0 THEN 'Domingo'
-                    WHEN 1 THEN 'Lunes'
-                    WHEN 2 THEN 'Martes'
-                    WHEN 3 THEN 'Miércoles'
-                    WHEN 4 THEN 'Jueves'
-                    WHEN 5 THEN 'Viernes'
-                    WHEN 6 THEN 'Sábado'
+            SELECT 
+                ar.id, 
+                rp.name AS username, 
+                fv.name AS vehiculo, 
+                ar.odometer AS odometer_start,
+                (
+                    SELECT MIN(ar2.odometer) 
+                    FROM approval_request ar2 
+                    WHERE ar2.request_owner_id = ar.request_owner_id 
+                    AND ar2.vehicle_id = ar.vehicle_id 
+                    AND ar2.odometer >= ar.odometer
+                ) AS odometer_end,
+                ar.date_start AT TIME ZONE 'UTC' AT TIME ZONE 'America/Mexico_City' AS date_start, 
+                CASE EXTRACT(DOW FROM ar.date_start AT TIME ZONE 'UTC' AT TIME ZONE 'America/Mexico_City') 
+                    WHEN 0 THEN 'Domingo' 
+                    WHEN 1 THEN 'Lunes' 
+                    WHEN 2 THEN 'Martes' 
+                    WHEN 3 THEN 'Miércoles' 
+                    WHEN 4 THEN 'Jueves' 
+                    WHEN 5 THEN 'Viernes' 
+                    WHEN 6 THEN 'Sábado' 
+                END AS weekday_start, 
+                ar.date_end AT TIME ZONE 'UTC' AT TIME ZONE 'America/Mexico_City' AS date_end, 
+                CASE EXTRACT(DOW FROM ar.date_end AT TIME ZONE 'UTC' AT TIME ZONE 'America/Mexico_City') 
+                    WHEN 0 THEN 'Domingo' 
+                    WHEN 1 THEN 'Lunes' 
+                    WHEN 2 THEN 'Martes' 
+                    WHEN 3 THEN 'Miércoles' 
+                    WHEN 4 THEN 'Jueves' 
+                    WHEN 5 THEN 'Viernes' 
+                    WHEN 6 THEN 'Sábado' 
                 END AS weekday_end,
-                end_p.odometer - start_p.odometer AS distance,
-                EXTRACT(EPOCH FROM (end_p.timestamp - start_p.timestamp)) / 3600.0 AS duration_hours
-            FROM
-                gps_tracking_point start_p
-            JOIN
-                gps_tracking_point end_p
-                    ON end_p.device_id = start_p.device_id
-                    AND end_p.driver_name = start_p.driver_name
-                    AND start_p.is_week_start
-                    AND end_p.is_week_end
-                    AND DATE_TRUNC('week', start_p.timestamp) = DATE_TRUNC('week', end_p.timestamp)
-            LEFT JOIN
-                fleet_vehicle fv ON start_p.vehicle_id = fv.id
-            ORDER BY
-                start_p.timestamp DESC
+                COALESCE(
+                    (
+                        SELECT MIN(ar2.odometer) 
+                        FROM approval_request ar2 
+                        WHERE ar2.request_owner_id = ar.request_owner_id 
+                        AND ar2.vehicle_id = ar.vehicle_id 
+                        AND ar2.odometer >= ar.odometer
+                    ) - ar.odometer,
+                    0
+                ) AS distance
+            FROM 
+                approval_request ar 
+            JOIN 
+                res_users ru ON ar.request_owner_id = ru.id 
+            JOIN 
+                res_partner rp ON ru.partner_id = rp.id 
+            LEFT JOIN 
+                fleet_vehicle fv ON ar.vehicle_id = fv.id 
+            WHERE 
+                ar.category_id = 108 
+                AND ar.request_status = 'approved'
+            ORDER BY 
+                ar.date_start DESC
         """
 
     def refresh_data(self):
