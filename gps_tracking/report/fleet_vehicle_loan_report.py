@@ -19,6 +19,7 @@ class FleetVehicleLoanReport(models.Model):
     date_end = fields.Datetime(string="Fecha fin", readonly=True)
     weekday_end = fields.Char(string="Día fin", readonly=True)
     distance = fields.Float(string="Distancia Recorrida", readonly=True)
+    date = fields.Datetime(string="Fecha de Aprobación", readonly=True)
 
     def _query(self):
         return """
@@ -27,6 +28,7 @@ class FleetVehicleLoanReport(models.Model):
             rp.name AS username,
             fv.name AS vehiculo,
             ar.odometer AS odometer_start,
+            ar.date AT TIME ZONE 'UTC' AT TIME ZONE 'America/Mexico_City' AS date,
             LEAD(ar.odometer) OVER (
                 PARTITION BY ar.vehicle_id, ar.request_owner_id 
                 ORDER BY ar.date_start
