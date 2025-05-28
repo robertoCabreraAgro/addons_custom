@@ -35,7 +35,7 @@
         <field name="view_mode">list,form,kanban</field>
         <field name="domain">[
             ('approver_ids.user_id', '=', uid),
-            ('request_status', '=', 'pending'),
+            ('state', '=', 'pending'),
             ('category_id', '=', active_id)
         ]</field>
         <field name="help" type="html">

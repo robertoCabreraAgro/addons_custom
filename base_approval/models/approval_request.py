@@ -66,6 +66,21 @@ class ApprovalRequest(models.Model):
         compute="_compute_user_ids",
         readonly=True,
     )
+    state = fields.Selection(
+        [
+            ("new", "To Submit"),
+            ("pending", "Submitted"),
+            ("approved", "Approved"),
+            ("refused", "Refused"),
+            ("cancel", "Canceled"),
+        ],
+        default="new",
+        # compute="_compute_state",
+        # store=True,
+        # tracking=True,
+        # group_expand=True,
+        # index=True,
+    )
     request_status = fields.Selection(
         [
             ("new", "To Submit"),
@@ -75,13 +90,13 @@ class ApprovalRequest(models.Model):
             ("cancel", "Canceled"),
         ],
         default="new",
-        compute="_compute_request_status",
+        compute="_compute_state",
         store=True,
         tracking=True,
         group_expand=True,
         index=True,
     )
-    user_status = fields.Selection(
+    user_state = fields.Selection(
         [
             ("new", "New"),
             ("pending", "To Approve"),
@@ -90,7 +105,7 @@ class ApprovalRequest(models.Model):
             ("refused", "Refused"),
             ("cancel", "Canceled"),
         ],
-        compute="_compute_user_status",
+        compute="_compute_user_state",
     )
 
     attachment_ids = fields.One2many(
@@ -135,6 +150,10 @@ class ApprovalRequest(models.Model):
     approve_sequentially = fields.Boolean(related="category_id.approve_sequentially")
     automated_sequence = fields.Boolean(related="category_id.automated_sequence")
 
+    # ------------------------------------------------------------
+    # CONSTRAINTS
+    # ------------------------------------------------------------
+
     @api.constrains("date_start", "date_end")
     def _check_dates(self):
         for request in self:
@@ -155,6 +174,10 @@ class ApprovalRequest(models.Model):
                         "You cannot assign the same approver multiple times on the same request."
                     )
                 )
+
+    # ------------------------------------------------------------
+    # CRUD METHODS
+    # ------------------------------------------------------------
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -197,7 +220,7 @@ class ApprovalRequest(models.Model):
             to_resequence = self.filtered_domain(
                 [
                     ("approve_sequentially", "=", True),
-                    ("request_status", "=", "pending"),
+                    ("state", "=", "pending"),
                 ]
             )
             for approval in to_resequence:
@@ -228,10 +251,14 @@ class ApprovalRequest(models.Model):
 
     def _track_subtype(self, init_values):
         self.ensure_one()
-        if "request_status" in init_values:
-            return self.env.ref("base_approval.mt_approval_request_status")
+        if "state" in init_values:
+            return self.env.ref("base_approval.mt_approval_state")
 
         return super()._track_subtype(init_values)
+
+    # ------------------------------------------------------------
+    # COMPUTE METHODS
+    # ------------------------------------------------------------
 
     def _compute_attachment_number(self):
         domain = [("res_model", "=", "approval.request"), ("res_id", "in", self.ids)]
@@ -310,14 +337,14 @@ class ApprovalRequest(models.Model):
 
     @api.depends_context("uid")
     @api.depends("approver_ids.status")
-    def _compute_user_status(self):
+    def _compute_user_state(self):
         for approval in self:
-            approval.user_status = approval.approver_ids.filtered(
+            approval.user_state = approval.approver_ids.filtered(
                 lambda approver: approver.user_id == self.env.user
             ).status
 
     @api.depends("approver_ids.status", "approver_ids.required")
-    def _compute_request_status(self):
+    def _compute_state(self):
         for request in self:
             status_lst = request.mapped("approver_ids.status")
             required_approved = all(
@@ -345,11 +372,15 @@ class ApprovalRequest(models.Model):
                     status = "pending"
             else:
                 status = "new"
-            request.request_status = status
+            request.state = status
 
         self.filtered_domain(
-            [("request_status", "in", ["approved", "refused", "cancel"])]
+            [("state", "in", ["approved", "refused", "cancel"])]
         )._cancel_activities()
+
+    # ------------------------------------------------------------
+    # ACTION METHODS
+    # ------------------------------------------------------------
 
     def action_get_attachment_view(self):
         self.ensure_one()
@@ -464,6 +495,10 @@ class ApprovalRequest(models.Model):
         self.sudo()._get_user_approval_activities(user=self.env.user).unlink()
         self.mapped("approver_ids").write({"status": "cancel"})
 
+    # ------------------------------------------------------------
+    # HELPERS
+    # ------------------------------------------------------------
+
     def _get_user_approval_activities(self, user):
         domain = [
             ("res_model", "=", "approval.request"),
@@ -542,6 +577,10 @@ class ApprovalRequest(models.Model):
                 approver_id_vals, current_approver, required, sequence
             )
 
+    # ------------------------------------------------------------
+    # VALIDATIONS
+    # ------------------------------------------------------------
+
     def _check_enough_approvers(self):
         if len(self.approver_ids) < self.approval_minimum:
             raise UserError(
@@ -592,5 +631,5 @@ class ApprovalRequest(models.Model):
                 )
 
     def _check_approve_sequentially_can_approve(self):
-        if self.approve_sequentially and self.user_status == "waiting":
+        if self.approve_sequentially and self.user_state == "waiting":
             raise ValidationError(_("You cannot approve before the previous approver."))

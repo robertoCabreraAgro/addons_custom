@@ -20,7 +20,7 @@ class IrAttachment(models.Model):
 
         approval_requests = self.env["approval.request"].browse(approval_request_ids)
         for approval_request in approval_requests:
-            if approval_request.request_status in ["approved", "refused", "cancel"]:
+            if approval_request.state in ["approved", "refused", "cancel"]:
                 raise UserError(
                     _(
                         "You cannot unlink an attachment which is linked to a validated, refused or cancelled approval request."

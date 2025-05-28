@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+
     <record id="fleet_vehicle_view_form_marin" model="ir.ui.view">
         <field name="name">fleet.vehicle.form</field>
         <field name="model">fleet.vehicle</field>
@@ -51,6 +52,7 @@
             </xpath>
         </field>
     </record>
+
     <record id="fleet_vehicle_view_list_marin" model="ir.ui.view">
         <field name="name">fleet.vehicle.list</field>
         <field name="model">fleet.vehicle</field>
@@ -79,12 +81,15 @@
                 <field name="fuel_card_name" optional="show" string="Fuel Card" />
                 <field name="fuel_card_budget" optional="show" string="Budget (FC)" />
                 <field name="fuel_card_balance" optional="show" string="Balance (FC)" />
-                <field name="fuel_card_balance_to_reload" optional="show" string="To Reload (FC)" sum="Total to reload" />
+                <field name="fuel_card_balance_to_reload" optional="show" string="To Reload (FC)"
+                    sum="Total to reload" />
                 <field name="highway_pass_name" optional="show" string="Highway Pass" />
                 <field name="highway_pass_budget" string="Budget (HWP)" optional="show" />
                 <field name="highway_pass_balance" string="Balance (HWP)" optional="show" />
-                <field name="highway_pass_balance_to_reload" string="To Reload (HWP)" optional="show" sum="Total to reload" />
+                <field name="highway_pass_balance_to_reload" string="To Reload (HWP)"
+                    optional="show" sum="Total to reload" />
             </xpath>
         </field>
     </record>
+
 </odoo>

@@ -23,7 +23,7 @@
                     </div>
                     <div class="row">
                         <h6 class="col-3 fw-bold">Status:</h6>
-                        <h6 t-field="o.request_status">Approved</h6>
+                        <h6 t-field="o.state">Approved</h6>
                     </div>
                 </div>
                 <div class="col-6">

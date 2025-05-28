@@ -77,7 +77,7 @@
             <field name="perm_read" eval="0" />
             <field name="perm_write" eval="0" />
             <field name="perm_unlink" eval="1" />
-            <field name="domain_force">[('request_owner_id', '=', user.id), ('request_status', 'in', ['cancel', 'new'])]</field>
+            <field name="domain_force">[('request_owner_id', '=', user.id), ('state', 'in', ['cancel', 'new'])]</field>
         </record>
 
         <record id="approval_approver_user_create" model="ir.rule">
@@ -88,7 +88,7 @@
             <field name="perm_read" eval="0" />
             <field name="perm_write" eval="0" />
             <field name="perm_unlink" eval="1" />
-            <field name="domain_force">[('request_id.request_owner_id', '=', user.id), ('request_id.request_status', 'in', ('new', 'cancel'))]</field>
+            <field name="domain_force">[('request_id.request_owner_id', '=', user.id), ('request_id.state', 'in', ('new', 'cancel'))]</field>
         </record>
 
         <record id="approval_approver_user_read_own" model="ir.rule">
@@ -121,7 +121,7 @@
             <field name="perm_read" eval="0" />
             <field name="perm_write" eval="0" />
             <field name="perm_unlink" eval="1" />
-            <field name="domain_force">['|', ('request_id.request_owner_id', '=', user.id), ('user_id', '=', user.id), ('request_id.request_status', '=', 'new')]</field>
+            <field name="domain_force">['|', ('request_id.request_owner_id', '=', user.id), ('user_id', '=', user.id), ('request_id.state', '=', 'new')]</field>
         </record>
 
         <record id="approval_request_product_line_approver_rule" model="ir.rule">
@@ -162,7 +162,7 @@
             <field name="perm_read" eval="0" />
             <field name="perm_write" eval="0" />
             <field name="perm_unlink" eval="1" />
-            <field name="domain_force">[('request_status', '=', 'cancel')]</field>
+            <field name="domain_force">[('state', '=', 'cancel')]</field>
         </record>
 
         <record id="approval_approver_manager" model="ir.rule">
@@ -184,7 +184,7 @@
             <field name="perm_read" eval="0" />
             <field name="perm_write" eval="0" />
             <field name="perm_unlink" eval="1" />
-            <field name="domain_force">[('request_id.request_status', 'in', ['new', 'pending', 'cancel'])]</field>
+            <field name="domain_force">[('request_id.state', 'in', ['new', 'pending', 'cancel'])]</field>
         </record>
 
         <record id="approval_product_line_user" model="ir.rule">
@@ -206,7 +206,7 @@
             <field name="perm_read" eval="0" />
             <field name="perm_write" eval="0" />
             <field name="perm_unlink" eval="1" />
-            <field name="domain_force">[('approval_request_id.request_status', '=', 'cancel')]</field>
+            <field name="domain_force">[('approval_request_id.state', '=', 'cancel')]</field>
         </record>
 
         <!-- Approval Administrator -->
@@ -236,6 +236,6 @@
 
     <function model="ir.rule" name="write">
         <value eval="[ref('base_approval.approval_request_unlink_request_owner_rule')]" />
-        <value eval="{'domain_force': '[(\'request_owner_id.id\', \'=\', user.id), (\'request_status\', \'in\', (\'new\', \'cancel\'))]'}" />
+        <value eval="{'domain_force': '[(\'request_owner_id.id\', \'=\', user.id), (\'state\', \'in\', (\'new\', \'cancel\'))]'}" />
     </function>
 </odoo>

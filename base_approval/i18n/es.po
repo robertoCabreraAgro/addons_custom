@@ -177,8 +177,8 @@ msgid "Approval Request"
 msgstr "Solicitud de aprobación"
 
 #. module: approvals
-#: model:mail.message.subtype,description:approvals.mt_approval_request_status
-#: model:mail.message.subtype,name:approvals.mt_approval_request_status
+#: model:mail.message.subtype,description:approvals.mt_approval_state
+#: model:mail.message.subtype,name:approvals.mt_approval_state
 msgid "Approval Status Change"
 msgstr "Cambio de estado de aprobación"
 
@@ -219,8 +219,8 @@ msgstr "Aprobar"
 
 #. module: approvals
 #: model:ir.model.fields.selection,name:approvals.selection__approval_approver__status__approved
-#: model:ir.model.fields.selection,name:approvals.selection__approval_request__request_status__approved
-#: model:ir.model.fields.selection,name:approvals.selection__approval_request__user_status__approved
+#: model:ir.model.fields.selection,name:approvals.selection__approval_request__state__approved
+#: model:ir.model.fields.selection,name:approvals.selection__approval_request__user_state__approved
 #: model_terms:ir.ui.view,arch_db:approvals.approval_search_view_search
 #: model_terms:ir.ui.view,arch_db:approvals.report_aprroval_request_document
 msgid "Approved"
@@ -358,8 +358,8 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 #. module: approvals
-#: model:ir.model.fields.selection,name:approvals.selection__approval_request__request_status__cancel
-#: model:ir.model.fields.selection,name:approvals.selection__approval_request__user_status__cancel
+#: model:ir.model.fields.selection,name:approvals.selection__approval_request__state__cancel
+#: model:ir.model.fields.selection,name:approvals.selection__approval_request__user_state__cancel
 #: model_terms:ir.ui.view,arch_db:approvals.approval_search_view_search
 msgid "Canceled"
 msgstr "Cancelado"
@@ -887,7 +887,7 @@ msgstr "Nombre"
 #. odoo-python
 #: code:addons/approvals/models/approval_category.py:0
 #: model:ir.model.fields.selection,name:approvals.selection__approval_approver__status__new
-#: model:ir.model.fields.selection,name:approvals.selection__approval_request__user_status__new
+#: model:ir.model.fields.selection,name:approvals.selection__approval_request__user_state__new
 msgid "New"
 msgstr "Nuevo"
 
@@ -1116,8 +1116,8 @@ msgstr "Rechazar"
 
 #. module: approvals
 #: model:ir.model.fields.selection,name:approvals.selection__approval_approver__status__refused
-#: model:ir.model.fields.selection,name:approvals.selection__approval_request__request_status__refused
-#: model:ir.model.fields.selection,name:approvals.selection__approval_request__user_status__refused
+#: model:ir.model.fields.selection,name:approvals.selection__approval_request__state__refused
+#: model:ir.model.fields.selection,name:approvals.selection__approval_request__user_state__refused
 #: model_terms:ir.ui.view,arch_db:approvals.approval_search_view_search
 msgid "Refused"
 msgstr "Rechazado"
@@ -1150,7 +1150,7 @@ msgid "Request Start"
 msgstr "Inicio de la solicitud"
 
 #. module: approvals
-#: model:ir.model.fields,field_description:approvals.field_approval_request__request_status
+#: model:ir.model.fields,field_description:approvals.field_approval_request__state
 msgid "Request Status"
 msgstr "Estado de la solicitud"
 
@@ -1242,7 +1242,7 @@ msgid "Submit"
 msgstr "Enviar"
 
 #. module: approvals
-#: model:ir.model.fields.selection,name:approvals.selection__approval_request__request_status__pending
+#: model:ir.model.fields.selection,name:approvals.selection__approval_request__state__pending
 msgid "Submitted"
 msgstr "Enviado"
 
@@ -1344,7 +1344,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/approvals/static/src/web/activity/approval.xml:0
 #: model:ir.model.fields.selection,name:approvals.selection__approval_approver__status__pending
-#: model:ir.model.fields.selection,name:approvals.selection__approval_request__user_status__pending
+#: model:ir.model.fields.selection,name:approvals.selection__approval_request__user_state__pending
 msgid "To Approve"
 msgstr "A aprobar"
 
@@ -1354,7 +1354,7 @@ msgid "To Review:"
 msgstr "A revisar:"
 
 #. module: approvals
-#: model:ir.model.fields.selection,name:approvals.selection__approval_request__request_status__new
+#: model:ir.model.fields.selection,name:approvals.selection__approval_request__state__new
 msgid "To Submit"
 msgstr "A enviar"
 
@@ -1386,7 +1386,7 @@ msgid "User"
 msgstr "Usuario"
 
 #. module: approvals
-#: model:ir.model.fields,field_description:approvals.field_approval_request__user_status
+#: model:ir.model.fields,field_description:approvals.field_approval_request__user_state
 msgid "User Status"
 msgstr "Estado del usuario"
 
@@ -1397,7 +1397,7 @@ msgstr "Usuarios"
 
 #. module: approvals
 #: model:ir.model.fields.selection,name:approvals.selection__approval_approver__status__waiting
-#: model:ir.model.fields.selection,name:approvals.selection__approval_request__user_status__waiting
+#: model:ir.model.fields.selection,name:approvals.selection__approval_request__user_state__waiting
 msgid "Waiting"
 msgstr "En espera"
 

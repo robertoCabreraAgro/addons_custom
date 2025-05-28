@@ -233,7 +233,7 @@ class ApprovalCategory(models.Model):
 
     def _compute_count_request_to_validate(self):
         domain = [
-            ("request_status", "=", "pending"),
+            ("state", "=", "pending"),
             ("approver_ids.user_id", "=", self.env.user.id),
         ]
         requests_data = self.env["approval.request"]._read_group(
@@ -278,7 +278,7 @@ class ApprovalCategory(models.Model):
                 "default_name": _("New") if self.automated_sequence else self.name,
                 "default_category_id": self.id,
                 "default_request_owner_id": self.env.user.id,
-                "default_request_status": "new",
+                "default_state": "new",
             },
         }
 
