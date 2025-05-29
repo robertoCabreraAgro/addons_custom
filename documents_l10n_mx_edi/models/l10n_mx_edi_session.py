@@ -90,11 +90,6 @@ class Session(models.Model):
                 vals["name"] = name
         return super().create(vals_list)
 
-    def get_mx_current_datetime(self):
-        return fields.Datetime.context_timestamp(
-            self.with_context(tz="America/Mexico_City"), fields.Datetime.now()
-        )
-
     def action_request_cfdi(self, esignature=None):
         """Request CFDI download from SAT by a given date range.
 
@@ -421,127 +416,69 @@ class Session(models.Model):
                 _logger.warning(error_message)
 
     @api.model
-    def _get_next_time_block(self, current_time, time_blocks, hour_start, timezone):
-        """Calculate the next time block based on current time.
-
-        Args:
-            current_time (datetime): Current time in Mexico timezone
-            time_blocks (list): List of time block tuples (start_hour, end_hour)
-            hour_start (int): Starting hour for operations
-            timezone: Mexico timezone object
-
-        Returns:
-            datetime: Next time block in Mexico timezone
-        """
-        current_day = current_time.replace(hour=0, minute=0, second=0, microsecond=0)
-
-        for start_hour, end_hour in time_blocks:
-            if current_time.hour < start_hour:
-                return current_day.replace(hour=start_hour)
-            if start_hour <= current_time.hour < end_hour:
-                return current_day.replace(hour=end_hour)
-
-        # If after last block, move to next day
-        return (current_day + timedelta(days=1)).replace(hour=hour_start)
-
-    @api.model
     def _generate_time_blocks(self, company_id):
-        """Create scheduled sessions for a specific company in 2-hour blocks.
+        """Create scheduled sessions for a specific company.
 
         Args:
             company_id (int): ID of the company to create sessions for
 
         Returns:
-            list: IDs of created sessions or False if outside operating hours
+            recordset or False: New sessions created or last session if pending
         """
+        user_root = self.env.ref("base.user_root")
+
         # Timezone setup
         mexico_tz = pytz.timezone(DEFAULT_TZ)
         utc_tz = pytz.UTC
         now_utc = datetime.now(utc_tz)
         now_mx = now_utc.astimezone(mexico_tz)
-
-        # Get operating hours from system parameters
-        icp = self.env["ir.config_parameter"].sudo()
-        hour_start = int(
-            icp.get_param("documents_l10n_mx_edi.hour_start_download_cfdi", "8")
-        )
-        hour_end = int(
-            icp.get_param("documents_l10n_mx_edi.hour_end_download_cfdi", "18")
-        )
-        hour_interval = int(
-            icp.get_param("documents_l10n_mx_edi.hour_interval_download_cfdi", "2")
-        )
-
-        # Check if within operating hours
-        if not hour_start <= now_mx.hour <= hour_end:
-            _logger.info(
-                "Outside operating hours: current %s, allowed range: %s-%s",
-                now_mx.hour,
-                hour_start,
-                hour_end,
-            )
-            return False
-
-        # Get last session or default to 7 days ago
-        last_session = self.search(
-            [("company_id", "=", company_id)], order="date_to desc", limit=1
-        )
-        start_date = (
-            last_session.date_to.astimezone(mexico_tz)
-            if last_session and last_session.date_to
-            else now_mx - timedelta(days=7)
-        )
-        # Generate time blocks (2-hour intervals)
-        time_blocks = [
-            (hour, hour + hour_interval)
-            for hour in range(hour_start, hour_end, hour_interval)
-        ]
-
-        # Calculate end time (current hour rounded down)
         today = now_mx.replace(hour=0, minute=0, second=0, microsecond=0)
-        end_time = now_mx.replace(minute=0, second=0, microsecond=0)
+        start_date = today - timedelta(days=7)
+        end_date = today
 
-        # Adjust end time if outside operating hours
-        if now_mx.hour < hour_start:
-            end_time = today.replace(hour=hour_start)
-        elif now_mx.hour >= hour_end:
-            end_time = today.replace(hour=hour_end)
+        # Get last session
+        last_session = self.search([
+            ("company_id", "=", company_id),
+            ("create_uid", "=", user_root.id),
+        ], order="date_to desc, id desc", limit=1)
 
-        # Create sessions in 2-hour blocks
-        current_time = start_date
-        new_sessions = self
+        if last_session:
+            if last_session.request_state in ['0', '1', '2']:  # To Verify
+                return last_session
 
-        while current_time < end_time:
-            # Find next time block
-            next_time = self._get_next_time_block(
-                current_time, time_blocks, hour_start, mexico_tz
-            )
+            if last_session.request_state in ['4', '5', '6']:  # Rejected
+                start_date = last_session.date_from.astimezone(mexico_tz)
+            else:  # Finished
+                start_date = last_session.date_to.astimezone(mexico_tz)
 
-            if next_time > end_time:
-                break
+        current_date = start_date
+        new_sessions = self.browse()
 
-            # Create session if doesn't exist
-            date_from_utc = current_time.astimezone(utc_tz).replace(tzinfo=None)
-            date_to_utc = next_time.astimezone(utc_tz).replace(tzinfo=None)
+        while current_date < end_date:
 
-            existing_session = self.search(
-                [
-                    ("date_from", "=", date_from_utc),
-                    ("date_to", "=", date_to_utc),
-                    ("company_id", "=", company_id),
-                ],
-                limit=1,
-            )
+            next_date = min(end_date, current_date + timedelta(days=1))
+
+            # Convert to UTC and remove tzinfo for storage
+            date_from_utc = current_date.astimezone(utc_tz).replace(tzinfo=None)
+            date_to_utc = next_date.astimezone(utc_tz).replace(tzinfo=None)
+
+            # Check if session already exists
+            existing_session = self.search([
+                ("date_from", "=", date_from_utc),
+                ("date_to", "=", date_to_utc),
+                ("company_id", "=", company_id),
+                ("create_uid", "=", user_root.id),
+            ], limit=1)
+
             if not existing_session:
-                new_sessions += self.create(
-                    {
-                        "company_id": company_id,
-                        "date_from": date_from_utc,
-                        "date_to": date_to_utc,
-                    }
-                )
+                new_session = self.create({
+                    "company_id": company_id,
+                    "date_from": date_from_utc,
+                    "date_to": date_to_utc,
+                })
+                new_sessions += new_session
 
-            current_time = next_time
+            current_date = next_date
 
         return new_sessions
 
