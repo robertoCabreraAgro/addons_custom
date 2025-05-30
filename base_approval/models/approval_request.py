@@ -153,7 +153,7 @@ class ApprovalRequest(models.Model):
     approval_type = fields.Selection(related="category_id.approval_type")
     approve_sequentially = fields.Boolean(related="category_id.approve_sequentially")
     automated_sequence = fields.Boolean(related="category_id.automated_sequence")
-    manager_approval = fields.Boolean(related="category_id.manager_approval")
+    manager_approval = fields.Selection(related="category_id.manager_approval")
 
     # ------------------------------------------------------------
     # CONSTRAINTS
