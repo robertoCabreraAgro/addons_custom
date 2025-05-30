@@ -292,7 +292,7 @@ class Document(models.Model):
         """
         mx_edi_document = self.env["l10n_mx_edi.document"]
         cfdi_infos = mx_edi_document._decode_cfdi_attachment(self.raw)
-        if not cfdi_infos:
+        if not cfdi_infos or not cfdi_infos.get("uuid"):
             return False
 
         # Company assignment
