@@ -7,6 +7,10 @@ class ApprovalApprover(models.Model):
     _order = "sequence, id"
     _check_company_auto = True
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     request_id = fields.Many2one(
         comodel_name="approval.request",
         string="Request",
@@ -58,6 +62,10 @@ class ApprovalApprover(models.Model):
         "because they will lose access to the record if they misclick.",
     )
 
+    # ------------------------------------------------------------
+    # COMPUTE METHODS
+    # ------------------------------------------------------------
+
     @api.depends("request_id.request_owner_id", "request_id.approver_ids.user_id")
     def _compute_existing_request_user_ids(self):
         for approver in self:
@@ -87,11 +95,19 @@ class ApprovalApprover(models.Model):
                 or not approval.user_id
             )
 
+    # ------------------------------------------------------------
+    # ACTIONS
+    # ------------------------------------------------------------
+
     def action_approve(self):
         self.request_id.action_approve(self)
 
     def action_refuse(self):
         self.request_id.action_refuse(self)
+
+    # ------------------------------------------------------------
+    # HELPERS
+    # ------------------------------------------------------------
 
     def _create_activity(self):
         for approver in self:

@@ -10,6 +10,10 @@ class ApprovalCategoryApprover(models.Model):
     _order = "sequence"
     _rec_name = "user_id"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     category_id = fields.Many2one(
         comodel_name="approval.category",
         string="Approval Category",
@@ -30,6 +34,10 @@ class ApprovalCategoryApprover(models.Model):
     )
     sequence = fields.Integer("Sequence", default=10)
     required = fields.Boolean(default=False)
+
+    # ------------------------------------------------------------
+    # COMPUTE METHODS
+    # ------------------------------------------------------------
 
     @api.depends("category_id")
     def _compute_existing_user_ids(self):

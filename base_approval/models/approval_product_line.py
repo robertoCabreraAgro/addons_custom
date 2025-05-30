@@ -7,6 +7,10 @@ class ApprovalProductLine(models.Model):
     _description = "Product Line"
     _check_company_auto = True
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     approval_request_id = fields.Many2one(
         comodel_name="approval.request",
         required=True,
@@ -58,6 +62,10 @@ class ApprovalProductLine(models.Model):
         default=1.0,
     )
 
+    # ------------------------------------------------------------
+    # COMPUTE METHODS
+    # ------------------------------------------------------------
+
     @api.depends("product_id")
     def _compute_description(self):
         for line in self:
@@ -69,6 +77,10 @@ class ApprovalProductLine(models.Model):
     def _compute_product_uom_id(self):
         for line in self:
             line.product_uom_id = line.product_id.uom_id
+
+    # ------------------------------------------------------------
+    # ONCHANGE METHODS
+    # ------------------------------------------------------------
 
     @api.onchange("approval_request_id")
     def _onchange_approval_request_id(self):

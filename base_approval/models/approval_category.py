@@ -18,6 +18,10 @@ class ApprovalCategory(models.Model):
     _check_company_auto = True
     _order = "sequence, id"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     company_id = fields.Many2one(
         comodel_name="res.company",
         string="Company",
@@ -149,10 +153,9 @@ class ApprovalCategory(models.Model):
         inverse_name="category_id",
         string="Approvers",
     )
-    user_ids = fields.Many2many(
-        comodel_name="res.users",
-        string="Approver Users",
-        compute="_compute_user_ids",
+    group_ids = fields.Many2many(
+        comodel_name="res.groups",
+        string="Groups",
     )
     invalid_minimum = fields.Boolean(compute="_compute_invalid_minimum")
     invalid_minimum_warning = fields.Char(compute="_compute_invalid_minimum")
@@ -160,6 +163,10 @@ class ApprovalCategory(models.Model):
         string="Number of requests to validate",
         compute="_compute_count_request_to_validate",
     )
+
+    # ------------------------------------------------------------
+    # CONSTRAINTS
+    # ------------------------------------------------------------
 
     @api.constrains("approval_minimum", "approver_ids")
     def _constrains_approval_minimum(self):
@@ -193,6 +200,10 @@ class ApprovalCategory(models.Model):
                     "Approver Sequence can only be activated with at least 1 minimum approver."
                 )
             )
+
+    # ------------------------------------------------------------
+    # CRUD METHODS
+    # ------------------------------------------------------------
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -231,6 +242,10 @@ class ApprovalCategory(models.Model):
                     category.sequence_id.company_id = vals.get("company_id")
         return super().write(vals)
 
+    # ------------------------------------------------------------
+    # COMPUTE METHODS
+    # ------------------------------------------------------------
+
     def _compute_count_request_to_validate(self):
         domain = [
             ("state", "=", "pending"),
@@ -261,10 +276,9 @@ class ApprovalCategory(models.Model):
                 "Your minimum approval exceeds the total of default approvers."
             )
 
-    @api.depends("approver_ids")
-    def _compute_user_ids(self):
-        for category in self:
-            category.user_ids = category.approver_ids.user_id
+    # ------------------------------------------------------------
+    # HELPERS
+    # ------------------------------------------------------------
 
     def create_request(self):
         self.ensure_one()

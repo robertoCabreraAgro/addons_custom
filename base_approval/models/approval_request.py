@@ -6,11 +6,15 @@ from odoo.tools.translate import _
 
 class ApprovalRequest(models.Model):
     _name = "approval.request"
-    _inherit = ["mail.thread.main.attachment", "mail.activity.mixin"]
     _description = "Approval Request"
+    _inherit = ["mail.thread.main.attachment", "mail.activity.mixin"]
     _check_company_auto = True
     _mail_post_access = "read"
     _order = "name"
+
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
 
     company_id = fields.Many2one(
         comodel_name="res.company",
@@ -149,6 +153,7 @@ class ApprovalRequest(models.Model):
     approval_type = fields.Selection(related="category_id.approval_type")
     approve_sequentially = fields.Boolean(related="category_id.approve_sequentially")
     automated_sequence = fields.Boolean(related="category_id.automated_sequence")
+    manager_approval = fields.Boolean(related="category_id.manager_approval")
 
     # ------------------------------------------------------------
     # CONSTRAINTS
@@ -194,13 +199,6 @@ class ApprovalRequest(models.Model):
             )
         return created_requests
 
-    def copy_data(self, default=None):
-        vals_list = super().copy_data(default=default)
-        return [
-            dict(vals, name=self.env._("%s (copy)", request.name))
-            for request, vals in zip(self, vals_list)
-        ]
-
     def write(self, vals):
         if "request_owner_id" in vals:
             for approval in self:
@@ -233,6 +231,13 @@ class ApprovalRequest(models.Model):
                         approver[0]._create_activity()
 
         return res
+
+    def copy_data(self, default=None):
+        vals_list = super().copy_data(default=default)
+        return [
+            dict(vals, name=self.env._("%s (copy)", request.name))
+            for request, vals in zip(self, vals_list)
+        ]
 
     def unlink(self):
         self.filtered(lambda a: a.has_product).product_line_ids.unlink()
@@ -292,14 +297,14 @@ class ApprovalRequest(models.Model):
 
             approver_id_vals = []
 
-            if request.category_id.manager_approval:
+            if request.manager_approval:
                 employee = self.env["hr.employee"].search(
                     [("user_id", "=", request.request_owner_id.id)], limit=1
                 )
                 if employee.parent_id.user_id:
                     manager_user_id = employee.parent_id.user_id.id
                     manager_required = (
-                        request.category_id.manager_approval == "required"
+                        request.manager_approval == "required"
                     )
                     # We set the manager sequence to be lower than all others (9) so they are the first to approve.
                     self._create_or_update_approver(
@@ -325,7 +330,7 @@ class ApprovalRequest(models.Model):
                 # Reset sequence and required for the remaining approvers that are no (longer) part of the category approvers or managers.
                 # Set the sequence of these manually added approvers to 1000, so that they always appear after the category approvers.
                 self._update_approver_vals(
-                    approver_id_vals, current_approver, False, 1000
+                    current_approver, approver_id_vals, False, 1000
                 )
 
             request.update({"approver_ids": approver_id_vals})
@@ -499,26 +504,44 @@ class ApprovalRequest(models.Model):
     # HELPERS
     # ------------------------------------------------------------
 
-    def _get_user_approval_activities(self, user):
-        domain = [
-            ("res_model", "=", "approval.request"),
-            ("res_id", "in", self.ids),
-            (
-                "activity_type_id",
-                "=",
-                self.env.ref("base_approval.mail_activity_data_approval").id,
-            ),
-            ("user_id", "=", user.id),
-        ]
-        activities = self.env["mail.activity"].search(domain)
-        return activities
-
     def _cancel_activities(self):
         approval_activity = self.env.ref("base_approval.mail_activity_data_approval")
         activities = self.activity_ids.filtered(
             lambda a: a.activity_type_id == approval_activity
         )
         activities.unlink()
+
+    @api.model
+    def _create_or_update_approver(
+        self, user_id, users_to_approver, approver_id_vals, required, sequence
+    ):
+        if user_id not in users_to_approver.keys():
+            approver_id_vals.append(
+                Command.create(
+                    {
+                        "user_id": user_id,
+                        "status": "new",
+                        "required": required,
+                        "sequence": sequence,
+                    }
+                )
+            )
+        else:
+            current_approver = users_to_approver.pop(user_id)
+            self._update_approver_vals(
+                current_approver, approver_id_vals, required, sequence
+            )
+
+    @api.model
+    def _update_approver_vals(
+        self, approver, approver_id_vals, new_required, new_sequence
+    ):
+        if approver.required != new_required or approver.sequence != new_sequence:
+            approver_id_vals.append(
+                Command.update(
+                    approver.id, {"required": new_required, "sequence": new_sequence}
+                )
+            )
 
     def _update_next_approvers_status(
         self, approver, new_status, only_next_approver, cancel_activities=False
@@ -545,37 +568,19 @@ class ApprovalRequest(models.Model):
         if cancel_activities:
             approvers_updated.request_id._cancel_activities()
 
-    @api.model
-    def _update_approver_vals(
-        self, approver_id_vals, approver, new_required, new_sequence
-    ):
-        if approver.required != new_required or approver.sequence != new_sequence:
-            approver_id_vals.append(
-                Command.update(
-                    approver.id, {"required": new_required, "sequence": new_sequence}
-                )
-            )
-
-    @api.model
-    def _create_or_update_approver(
-        self, user_id, users_to_approver, approver_id_vals, required, sequence
-    ):
-        if user_id not in users_to_approver.keys():
-            approver_id_vals.append(
-                Command.create(
-                    {
-                        "user_id": user_id,
-                        "status": "new",
-                        "required": required,
-                        "sequence": sequence,
-                    }
-                )
-            )
-        else:
-            current_approver = users_to_approver.pop(user_id)
-            self._update_approver_vals(
-                approver_id_vals, current_approver, required, sequence
-            )
+    def _get_user_approval_activities(self, user):
+        domain = [
+            ("res_model", "=", "approval.request"),
+            ("res_id", "in", self.ids),
+            (
+                "activity_type_id",
+                "=",
+                self.env.ref("base_approval.mail_activity_data_approval").id,
+            ),
+            ("user_id", "=", user.id),
+        ]
+        activities = self.env["mail.activity"].search(domain)
+        return activities
 
     # ------------------------------------------------------------
     # VALIDATIONS
@@ -595,7 +600,7 @@ class ApprovalRequest(models.Model):
             raise UserError(_("You have to attach at least one document."))
 
     def _check_manager_approval_constraints(self):
-        if self.category_id.manager_approval == "required":
+        if self.manager_approval == "required":
             employee = self.env["hr.employee"].search(
                 [
                     ("user_id", "=", self.request_owner_id.id),

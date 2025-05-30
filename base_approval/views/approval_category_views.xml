@@ -28,7 +28,7 @@
         </field>
     </record>
 
-    <!-- Procedence -->
+    <!-- Precedence -->
     <record id="approval_request_action_to_review_category" model="ir.actions.act_window">
         <field name="name">Approvals to review</field>
         <field name="res_model">approval.request</field>
@@ -37,7 +37,7 @@
             ('approver_ids.user_id', '=', uid),
             ('state', '=', 'pending'),
             ('category_id', '=', active_id)
-        ]</field>
+            ]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 No new approvals to review
@@ -50,13 +50,13 @@
         <field name="model_id" ref="model_approval_category" />
         <field name="state">code</field>
         <field name="code">
-action = {
-    "type": "ir.actions.act_window",
-    "res_model": "approval.category",
-    "views": [[False, "form"]],
-    "target": "new",
-    "res_id": records.id,
-}
+            action = {
+            "type": "ir.actions.act_window",
+            "res_model": "approval.category",
+            "views": [[False, "form"]],
+            "target": "new",
+            "res_id": records.id,
+            }
         </field>
     </record>
 
@@ -96,7 +96,8 @@ action = {
                                 <button name="create_request"
                                     type="object" class="btn btn-primary btn-sm"
                                     context="{'category_id':id}">New Request</button>
-                                <button name="%(base_approval.approval_request_action_to_review_category)d"
+                                <button
+                                    name="%(base_approval.approval_request_action_to_review_category)d"
                                     type="action" class="btn btn-sm btn-secondary ms-auto"
                                     groups="base_approval.group_approval_user">To Review: <field
                                         name="count_request_to_validate" /></button>
@@ -155,7 +156,8 @@ action = {
                                         options="{'horizontal': true}" />
                                     <field name="has_date" string="Date" widget="radio"
                                         options="{'horizontal': true}" />
-                                    <field name="has_date_deadline" string="Date Deadline" widget="radio"
+                                    <field name="has_date_deadline" string="Date Deadline"
+                                        widget="radio"
                                         options="{'horizontal': true}" />
                                     <field name="has_period" string="Period" widget="radio"
                                         options="{'horizontal': true}" />
@@ -176,6 +178,7 @@ action = {
                                     <field name="manager_approval" />
                                     <separator colspan="2" />
                                     <field name="approver_ids" />
+                                    <field name="group_ids" />
                                     <field name="approve_sequentially"
                                         invisible="approval_minimum == 0" />
                                     <field name="approval_minimum" />
