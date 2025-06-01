@@ -8,6 +8,10 @@ class ApprovalCategory(models.Model):
 
     _inherit = "approval.category"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     # Inherited fields
     approval_type = fields.Selection(
         selection_add=[
@@ -40,6 +44,10 @@ class ApprovalCategory(models.Model):
         required=True,
         default="no",
     )
+
+    # ------------------------------------------------------------
+    # ONCHANGE METHODS
+    # ------------------------------------------------------------
 
     @api.onchange("approval_type")
     def _onchange_approval_type(self):

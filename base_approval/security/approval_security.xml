@@ -238,4 +238,5 @@
         <value eval="[ref('base_approval.approval_request_unlink_request_owner_rule')]" />
         <value eval="{'domain_force': '[(\'request_owner_id.id\', \'=\', user.id), (\'state\', \'in\', (\'new\', \'cancel\'))]'}" />
     </function>
+
 </odoo>

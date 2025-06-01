@@ -6,6 +6,10 @@ from odoo.tools.translate import _
 class IrAttachment(models.Model):
     _inherit = "ir.attachment"
 
+    # ------------------------------------------------------------
+    # CRUD METHODS
+    # ------------------------------------------------------------
+
     @api.ondelete(at_uninstall=False)
     def _unlink_approved_approval_request(self):
         """Prevent attachment deletion for an approval request

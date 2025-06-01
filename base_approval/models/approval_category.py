@@ -57,64 +57,64 @@ class ApprovalCategory(models.Model):
     has_date = fields.Selection(
         CATEGORY_SELECTION,
         string="Has Date",
-        default="no",
         required=True,
+        default="no",
     )
     has_date_deadline = fields.Selection(
         CATEGORY_SELECTION,
         string="Has Date Deadline",
-        default="no",
         required=True,
+        default="no",
     )
     has_period = fields.Selection(
         CATEGORY_SELECTION,
         string="Has Period",
-        default="no",
         required=True,
+        default="no",
     )
     has_partner = fields.Selection(
         CATEGORY_SELECTION,
         string="Has Contact",
-        default="no",
         required=True,
+        default="no",
     )
     has_payment_method = fields.Selection(
         CATEGORY_SELECTION,
         string="Has Payment",
-        default="no",
         required=True,
+        default="no",
     )
     has_product = fields.Selection(
         CATEGORY_SELECTION,
         string="Has Product",
-        default="no",
         required=True,
+        default="no",
         help="Additional products that should be specified on the request.",
     )
     has_quantity = fields.Selection(
         CATEGORY_SELECTION,
         string="Has Quantity",
-        default="no",
         required=True,
+        default="no",
     )
     has_amount = fields.Selection(
         CATEGORY_SELECTION,
         string="Has Amount",
-        default="no",
         required=True,
+        default="no",
     )
     has_reference = fields.Selection(
         CATEGORY_SELECTION,
         string="Has Reference",
-        default="no",
         required=True,
+        default="no",
         help="An additional reference that should be specified on the request.",
     )
     has_location = fields.Selection(
         CATEGORY_SELECTION,
         string="Has Location",
-        default="no",
         required=True,
+        default="no",
     )
     requirer_document = fields.Selection(
         [("required", "Required"), ("optional", "Optional")],
@@ -124,8 +124,8 @@ class ApprovalCategory(models.Model):
     )
     approval_minimum = fields.Integer(
         string="Minimum Approval",
-        default="1",
         required=True,
+        default="1",
     )
     manager_approval = fields.Selection(
         [("approver", "Is Approver"), ("required", "Is Required Approver")],

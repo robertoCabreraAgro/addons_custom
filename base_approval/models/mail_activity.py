@@ -5,6 +5,10 @@ from odoo.addons.mail.tools.discuss import Store
 class MailActivity(models.Model):
     _inherit = "mail.activity"
 
+    # ------------------------------------------------------------
+    # HELPERS
+    # ------------------------------------------------------------
+
     def _to_store_defaults(self):
         return super()._to_store_defaults() + ["approver"]
 
