@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
+
     <record id="view_sales_order_filter_marin" model="ir.ui.view">
         <field name="name">sale.order.list.select.marin</field>
         <field name="model">sale.order</field>
@@ -140,36 +141,6 @@
         <field name="inherit_id" ref="sale.view_order_form" />
         <field name="priority" eval="20" />
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='partner_id']" position="attributes">
-                <attribute name="options">{'no_create': True, 'always_reload': True}</attribute>
-            </xpath>
-            <xpath expr="//field[@name='partner_invoice_id']" position="attributes">
-                <attribute name="options">{'no_create': True, 'always_reload': True}</attribute>
-            </xpath>
-            <xpath expr="//field[@name='partner_shipping_id']" position="attributes">
-                <attribute name="options">{'no_create': True, 'always_reload': True}</attribute>
-            </xpath>
-            <xpath expr="//page[@name='order_lines']//form//field[@name='product_id']" position="attributes">
-                <attribute name="options">{'no_create': True}</attribute>
-            </xpath>
-            <xpath expr="//page[@name='order_lines']//form//field[@name='product_uom_id'][2]" position="attributes">
-                <attribute name="options">{'no_create': True}</attribute>
-            </xpath>
-            <xpath expr="//page[@name='order_lines']//list/field[@name='product_id']" position="attributes">
-                <attribute name="options">{'no_open': True, 'no_create': True}</attribute>
-            </xpath>
-            <xpath expr="//page[@name='order_lines']//list/field[@name='product_template_id']" position="attributes">
-                <attribute name="options">{'no_open': True, 'no_create': True}</attribute>
-            </xpath>
-            <xpath expr="//page[@name='order_lines']//list/field[@name='product_uom_id'][2]" position="attributes">
-                <attribute name="options">{'no_open': True, 'no_create': True}</attribute>
-            </xpath>
-            <xpath expr="//field[@name='journal_id']" position="attributes">
-                <attribute name="options">{'no_create': True}</attribute>
-            </xpath>
-            <xpath expr="//field[@name='user_id']" position="attributes">
-                <attribute name="options">{'no_create': True}</attribute>
-            </xpath>
             <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
                 <button
                     name="action_view_order_lines"
@@ -179,6 +150,23 @@
                     icon="fa-list-ul"
                     invisible="not id"
                 />
+            </xpath>
+            <!-- group partner_details -->
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="options">{'no_create': True, 'always_reload': True}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='partner_invoice_id']" position="attributes">
+                <attribute name="options">{'no_create': True, 'always_reload': True}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='partner_shipping_id']" position="attributes">
+                <attribute name="options">{'no_create': True, 'always_reload': True}</attribute>
+            </xpath>
+            <!-- group order_details -->
+            <xpath expr="//field[@name='user_id']" position="attributes">
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='journal_id']" position="attributes">
+                <attribute name="options">{'no_create': True}</attribute>
             </xpath>
             <xpath expr="//field[@name='sale_order_template_id']" position="after">
                 <field
@@ -201,16 +189,31 @@
             <xpath expr="//field[@name='payment_term_id']" position="after">
                 <field
                     name="journal_id"
-                    options="{'no_create': True}"
-                    readonly="state in ['sale', 'cancel']"
                     required="state == 'draft'"
+                    readonly="state in ['sale', 'cancel']"
+                    options="{'no_create': True}"
                 />
                 <field
                     name="season_id"
-                    options="{'no_create': True}"
-                    readonly="state in ['sale', 'cancel']"
                     required="state == 'draft'"
+                    readonly="state in ['sale', 'cancel']"
+                    options="{'no_create': True}"
                 />
+            </xpath>
+            <xpath expr="//page[@name='order_lines']//form//field[@name='product_id']" position="attributes">
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+            <xpath expr="//page[@name='order_lines']//form//field[@name='product_uom_id'][2]" position="attributes">
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+            <xpath expr="//page[@name='order_lines']//list/field[@name='product_id']" position="attributes">
+                <attribute name="options">{'no_open': True, 'no_create': True}</attribute>
+            </xpath>
+            <xpath expr="//page[@name='order_lines']//list/field[@name='product_template_id']" position="attributes">
+                <attribute name="options">{'no_open': True, 'no_create': True}</attribute>
+            </xpath>
+            <xpath expr="//page[@name='order_lines']//list/field[@name='product_uom_id'][2]" position="attributes">
+                <attribute name="options">{'no_open': True, 'no_create': True}</attribute>
             </xpath>
             <xpath expr="//page/field[@name='line_ids']/list/field[@name='tax_ids']" position="attributes">
                 <attribute name="optional">hide</attribute>
@@ -426,4 +429,5 @@
         <field name="code">if records:
     action = records.action_sale_authorize_debt()</field>
     </record>
+
 </odoo>
