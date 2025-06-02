@@ -103,19 +103,37 @@ class Session(models.Model):
 
         certificate = esignature.get_cert_data()[1]
         private_key = esignature.get_pk_data()[1]
-        token_res = mx_edi_document.l10n_mx_ws_generate_token(certificate, private_key)
-        self.write(
-            {
-                "token": token_res["token"],
-                "token_expiration": datetime.fromisoformat(token_res["expires"]),
-            }
-        )
-        request_res = mx_edi_document.l10n_mx_ws_request_download(
-            certificate,
-            private_key,
-            self.token,
-            {"date_from": self.date_from, "date_to": self.date_to},
-        )
+        try:
+            token_res = mx_edi_document.l10n_mx_ws_generate_token(
+                certificate, private_key
+            )
+            self.write(
+                {
+                    "token": token_res["token"],
+                    "token_expiration": datetime.fromisoformat(
+                        token_res["expires"]
+                    ),
+                }
+            )
+        except Exception as e:
+            self.message_post(
+                body=self.env._("Token generation error: %s") % str(e)
+            )
+            return
+
+        try:
+            request_res = mx_edi_document.l10n_mx_ws_request_download(
+                certificate,
+                private_key,
+                self.token,
+                {"date_from": self.date_from, "date_to": self.date_to},
+            )
+        except Exception as e:
+            self.message_post(
+                body=self.env._("Request Download error: %s") % str(e)
+            )
+            return
+
         self.write(
             {
                 "request": request_res["id_solicitud"],

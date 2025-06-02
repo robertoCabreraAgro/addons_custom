@@ -868,7 +868,7 @@ class L10nMxEdiDocument(models.Model):
             "s": "http://schemas.xmlsoap.org/soap/envelope/",
             "u": "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd",
             "o": "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd",
-            "des": "http://DescargaMasivaTerceros.sat.gob.mx",
+            "des": "http://DescargaMasivaTerceros.gob.mx",
         }
         parser = etree.XMLParser(remove_blank_text=True)
         element_root = etree.fromstring(envelop, parser)
@@ -1099,7 +1099,7 @@ class L10nMxEdiDocument(models.Model):
         envelop = """
             <s:Envelope
                 xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"
-                xmlns:des="http://DescargaMasivaTerceros.sat.gob.mx">
+                xmlns:des="http://DescargaMasivaTerceros.gob.mx">
                 <s:Header/>
                 <s:Body>
                     <des:SolicitaDescarga>
@@ -1115,7 +1115,7 @@ class L10nMxEdiDocument(models.Model):
         xpath = "s:Body/des:SolicitaDescarga/des:solicitud"
         data = self.prepare_soap_data(certificate, private_key, arguments, envelop, xpath, token)
         url = "https://cfdidescargamasivasolicitud.clouda.sat.gob.mx/SolicitaDescargaService.svc"
-        soap_action = "http://DescargaMasivaTerceros.sat.gob.mx/ISolicitaDescargaService/SolicitaDescarga"
+        soap_action = "http://DescargaMasivaTerceros.gob.mx/ISolicitaDescargaService/SolicitaDescarga"
         headers = self.get_headers(soap_action, token)
         result_xpath = "s:Body/SolicitaDescargaResponse/SolicitaDescargaResult"
         external_nsmap = {
@@ -1128,6 +1128,8 @@ class L10nMxEdiDocument(models.Model):
             "xsd": "http://www.w3.org/2001/XMLSchema",
         }
         communication = self.check_comm(url, data, headers, result_xpath, external_nsmap)
+        _logger.warning("data >>>>>>>>>> %s", data)
+        _logger.warning("communication >>>>>>>>>> %s", communication)
         ret_dict = {
             "id_solicitud": communication.get("IdSolicitud"),
             "cod_estatus": communication.get("CodEstatus"),
@@ -1143,7 +1145,7 @@ class L10nMxEdiDocument(models.Model):
         envelop = """
             <s:Envelope
                 xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"
-                xmlns:des="http://DescargaMasivaTerceros.sat.gob.mx">
+                xmlns:des="http://DescargaMasivaTerceros.gob.mx">
                 <s:Header/>
                 <s:Body>
                     <des:VerificaSolicitudDescarga>
@@ -1156,15 +1158,15 @@ class L10nMxEdiDocument(models.Model):
         data = self.prepare_soap_data(certificate, private_key, arguments, envelop, xpath, token)
         url = "https://cfdidescargamasivasolicitud.clouda.sat.gob.mx/VerificaSolicitudDescargaService.svc"
         soap_action = (
-            "http://DescargaMasivaTerceros.sat.gob.mx/IVerificaSolicitudDescargaService/VerificaSolicitudDescarga"
+            "http://DescargaMasivaTerceros.gob.mx/IVerificaSolicitudDescargaService/VerificaSolicitudDescarga"
         )
         headers = self.get_headers(soap_action, token)
         external_nsmap = {
-            "": "http://DescargaMasivaTerceros.sat.gob.mx",
+            "": "http://DescargaMasivaTerceros.gob.mx",
             "s": "http://schemas.xmlsoap.org/soap/envelope/",
             "u": "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd",
             "o": "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd",
-            "h": "http://DescargaMasivaTerceros.sat.gob.mx",
+            "h": "http://DescargaMasivaTerceros.gob.mx",
             "xsi": "http://www.w3.org/2001/XMLSchema-instance",
             "xsd": "http://www.w3.org/2001/XMLSchema",
         }
@@ -1190,7 +1192,7 @@ class L10nMxEdiDocument(models.Model):
         envelop = """
             <s:Envelope
                 xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"
-                xmlns:des="http://DescargaMasivaTerceros.sat.gob.mx">
+                xmlns:des="http://DescargaMasivaTerceros.gob.mx">
                 <s:Header/>
                 <s:Body>
                     <des:PeticionDescargaMasivaTercerosEntrada>
@@ -1202,14 +1204,14 @@ class L10nMxEdiDocument(models.Model):
         xpath = "s:Body/des:PeticionDescargaMasivaTercerosEntrada/des:peticionDescarga"
         data = self.prepare_soap_data(certificate, private_key, arguments, envelop, xpath, token)
         url = "https://cfdidescargamasiva.clouda.sat.gob.mx/DescargaMasivaService.svc"
-        soap_action = "http://DescargaMasivaTerceros.sat.gob.mx/IDescargaMasivaTercerosService/Descargar"
+        soap_action = "http://DescargaMasivaTerceros.gob.mx/IDescargaMasivaTercerosService/Descargar"
         headers = self.get_headers(soap_action, token)
         external_nsmap = {
             "": "http://DescargaMasivaTerceros.sat.gob.mx",
             "s": "http://schemas.xmlsoap.org/soap/envelope/",
             "u": "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd",
             "o": "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd",
-            "h": "http://DescargaMasivaTerceros.sat.gob.mx",
+            "h": "http://DescargaMasivaTerceros.gob.mx",
             "xsi": "http://www.w3.org/2001/XMLSchema-instance",
             "xsd": "http://www.w3.org/2001/XMLSchema",
         }
