@@ -141,6 +141,7 @@
         "report/invoice_line_out_team_yearly_views.xml",
         "report/pos_line_product_report_views.xml",
         "report/stock_need_report_views.xml",
+        "report/purchase_bill_line_match_views.xml",
         "wizards/authorize_debt.xml",
         "wizards/invoice_cash_discount.xml",
         "wizards/invoice_line_price_history.xml",

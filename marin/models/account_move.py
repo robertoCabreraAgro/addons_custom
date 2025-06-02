@@ -40,7 +40,16 @@ class AccountMove(models.Model):
         help="If this checkbox is ticked, it means that a management representative has "
         "received and stored a printed invoice on credit signed by the customer. ",
     )
-    show_update_line_account = fields.Boolean(string="Has Journal Changed", store=False)
+    x_ignore_purchase_bill_matching = fields.Boolean(
+        string="Ignore Purchase Bill Matching",
+        tracking=True,
+        help="If this checkbox is ticked, it means when launching the reconciliation "
+        "of the vendor bill with purchase lines, the lines belonging to this entry will be ignored.",
+    )
+    show_update_line_account = fields.Boolean(
+        string="Has Journal Changed",
+        store=False,
+    )
     pos_session_origin_id = fields.Many2one(
         comodel_name="pos.session",
         string="POS session",

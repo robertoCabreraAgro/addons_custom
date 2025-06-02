@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="purchase_bill_line_match_tree" model="ir.ui.view">
+        <field name="name">purchase.bill.line.match.list</field>
+        <field name="model">purchase.bill.line.match</field>
+        <field name="inherit_id" ref="purchase.purchase_bill_line_match_tree" />
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_add_to_po']" position="after">
+                <button name="action_mark_ignore_purchase_bill_matching" string="Mark to ignore"
+                    type="object"
+                    groups="account.group_account_invoice" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
