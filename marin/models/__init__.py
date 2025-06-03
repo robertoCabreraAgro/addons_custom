@@ -49,3 +49,4 @@ from . import stock_scrap
 from . import stock_picking_tracker
 from . import bbva_parser
 from . import res_config_settings
+from . import l10n_mx_edi_document
