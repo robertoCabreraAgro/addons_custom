@@ -321,6 +321,9 @@ class Document(models.Model):
         new_vals_list = []
         for vals in vals_list:
             name = vals.get("name")
+            attachment_id = vals.get('attachment_id')
+            if not name and attachment_id:
+                name = self.env["ir.attachment"].browse(attachment_id).name
             if name and name.lower().endswith(".xml") and check_duplicate:
                 duplicity_result = mx_edi_document._get_duplicate_cfdi(name, self)
                 if duplicity_result["duplicated"]:

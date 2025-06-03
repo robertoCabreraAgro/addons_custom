@@ -100,7 +100,7 @@ class L10nMxEdiDocument(models.Model):
         )
 
     def _get_duplicate_cfdi(self, uuid, record):
-        """Unified method to check UUID duplicity across documents and invoices.
+        """Check UUID duplicity across documents and invoices.
 
         This method centralizes the logic to detect if a UUID already exists in the system,
         avoiding duplications in both documents module and account_move.
@@ -114,15 +114,15 @@ class L10nMxEdiDocument(models.Model):
             dict: A dictionary with the following structure:
                 {
                     'duplicated': (bool) True if UUID is duplicated, False otherwise,
-                    'document_id': (int or False) ID of the duplicate document if exists,
-                    'move_id': (int or False) ID of the duplicate invoice if exists,
+                    'document': (recordset) documents.document recordset (empty if not found),
+                    'move': (recordset) account.move recordset (empty if not found),
                     'message': (str) Message describing the duplicity if exists
                 }
 
         Raises:
-            ValueError: If record is not a valid record or not of the expected model types
+            ValueError: If record is not a valid record or not of expected model types
         """
-        # Default result
+        # Default result with empty recordsets
         result = {
             "duplicated": False,
             "document": self.env["documents.document"],
@@ -133,53 +133,59 @@ class L10nMxEdiDocument(models.Model):
         if not uuid:
             return result
 
-        # Validate parameter
-        if not isinstance(record, models.BaseModel) or not record.id:
-            raise ValueError(
-                "You must provide an existing database record, please save before checking for duplicates"
-            )
+        # Validate record parameter
+        if not isinstance(record, models.BaseModel):
+            raise ValidationError("Record parameter must be a valid Odoo model instance")
 
         if record._name not in ["documents.document", "account.move"]:
-            raise ValueError("Duplicates can only be checked for documents or invoices, please provide a valid record")
+            raise ValidationError(
+                "Duplicates can only be checked for documents or invoices, "
+                f"received: {record._name}"
+            )
 
-        # Common message prefix
+        # Common message prefix using self.env._ for better performance
         message_prefix = self.env._("Duplicated CFDI: %s", uuid)
 
         if record._name == "documents.document":
-            domain = self._get_duplicate_cfdi_domain([uuid], company_id=record.compnay_id.id)
-            domain = expression.AND([[("id", "!=", record.id)], domain])
+            domain = self._get_duplicate_cfdi_domain([uuid])
+            if record.exists():
+                domain = self._get_duplicate_cfdi_domain(
+                    [uuid],
+                    company_id=record.company_id.id
+                )
+                domain = expression.AND([[("id", "!=", record.id)], domain])
 
             # Check if UUID exists in documents, excluding current record
             existing_document = self.env["documents.document"].search(domain, limit=1)
             if existing_document:
-                result.update(
-                    {
-                        "duplicated": True,
-                        "document": existing_document,
-                        "message": f"{message_prefix}\n{self.env._('Already exists as document: %s', existing_document.name)}",
-                    }
-                )
-                return result
+                result.update({
+                    "duplicated": True,
+                    "document": existing_document,
+                    "message": (
+                        f"{message_prefix}\n"
+                        f"{self.env._('Already exists as document: %s', existing_document.name)}"
+                    ),
+                })
 
-        # Check in account.move (for both document and move)
-        existing_move = self.env["account.move"].search(
-            [
+        elif record._name == "account.move":
+            # Check in account.move
+            domain = [
                 ("l10n_mx_edi_cfdi_uuid", "=", uuid),
                 ("state", "in", ["draft", "posted"]),
-                ("id", "!=", record.id),
-            ],
-            limit=1,
-        )
+            ]
+            if record.exists():
+                domain = expression.AND([[("id", "!=", record.id)], domain])
 
-        if existing_move:
-            result.update(
-                {
+            existing_move = self.env["account.move"].search(domain, limit=1)
+            if existing_move:
+                result.update({
                     "duplicated": True,
                     "move": existing_move,
-                    "message": f"{message_prefix}\n{self.env._('Already exists as invoice: %s', existing_move.name)}",
-                }
-            )
-            return result
+                    "message": (
+                        f"{message_prefix}\n"
+                        f"{self.env._('Already exists as invoice: %s', existing_move.name)}"
+                    ),
+                })
 
         return result
 
