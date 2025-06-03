@@ -72,7 +72,8 @@
                 <field name="journal_id"
                     required="has_journal == 'required'"
                     readonly="state != 'new'"
-                    invisible="has_journal == 'no'" />
+                    invisible="has_journal == 'no'"
+                    domain="[('type', '=', 'purchase'), ('x_treatment', 'in', ['fiscal_real', 'not_fiscal_real'])]" />
                 <field name="vehicle_id"
                     required="has_vehicle == 'required'"
                     readonly="state != 'new'"
