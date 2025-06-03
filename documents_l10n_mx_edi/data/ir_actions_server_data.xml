@@ -1,12 +1,22 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo noupdate="1">
-    <record id="ir_actions_server_create_from_cfdi" model="ir.actions.server" forcecreate="0">
+    <record id="ir_actions_server_create_from_cfdi" model="ir.actions.server">
         <field name="name">Create from CFDI</field>
         <field name="model_id" ref="documents.model_documents_document" />
         <field name="group_ids" eval="[Command.link(ref('base.group_user'))]" />
         <field name="state">code</field>
         <field name="code">
-            action = records.create_from_cfdi()
+action = records.create_from_cfdi()
+        </field>
+    </record>
+
+    <record id="ir_actions_server_update_sat_status" model="ir.actions.server">
+        <field name="name">Update SAT status</field>
+        <field name="model_id" ref="documents.model_documents_document" />
+        <field name="group_ids" eval="[Command.link(ref('base.group_user'))]" />
+        <field name="state">code</field>
+        <field name="code">
+action = records.update_l10n_mx_edi_sat_state()
         </field>
     </record>
 

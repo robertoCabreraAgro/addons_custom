@@ -8,6 +8,8 @@ import requests
 from lxml import etree
 from OpenSSL import crypto
 
+from odoo.tools.zeep import Client, Transport
+
 from odoo import models, tools
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
@@ -990,49 +992,31 @@ class L10nMxEdiDocument(models.Model):
         element.append(element_signature)
         return etree.tostring(element_root, method="c14n", exclusive=1)
 
-    def l10n_mx_ws_get_cfdi_status(self, emmiter_vat, receiver_vat, total, uuid):
-        expression = "?re=%s&amp;rr=%s&amp;tt=%s&amp;id=%s" % (
-            tools.html_escape(emmiter_vat or ""),
-            tools.html_escape(receiver_vat or ""),
-            total or 0.0,
-            uuid or "",
-        )
-        data = f"""
-            <?xml version="1.0" encoding="UTF-8"?>
-            <s:Envelope
-                xmlns:ns0="http://tempuri.org/"
-                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
-                <s:Header/>
-                <s:Body>
-                    <ns0:Consulta>
-                        <ns0:expresionImpresa>${expression}</ns0:expresionImpresa>
-                    </ns0:Consulta>
-                </s:Body>
-            </s:Envelope>
-        """
-        url = "https://consultaqr.facturaelectronica.sat.gob.mx/ConsultaCFDIService.svc?wsdl"
-        soap_action = "http://tempuri.org/IConsultaCFDIService/Consulta"
-        headers = self.get_headers(soap_action, condition=False)
-        result_xpath = "s:Body/ConsultaResponse/ConsultaResult"
-        external_nsmap = {
-            "": "http://tempuri.org/",
-            "a": "http://schemas.datacontract.org/2004/07/Sat.Cfdi.Negocio.ConsultaCfdi.Servicio",
-            "i": "http://www.w3.org/2001/XMLSchema-instance",
-            "s": "http://schemas.xmlsoap.org/soap/envelope/",
-        }
-        communication = self.check_comm(
-            url, data, headers, result_xpath, external_nsmap
-        )
+    def l10n_mx_ws_get_cfdi_status(self, supplier_rfc, customer_rfc, total, uuid):
+        url = 'https://consultaqr.facturaelectronica.sat.gob.mx/ConsultaCFDIService.svc?wsdl'
+        params = f'?id={uuid or ""}' \
+                 f'&re={tools.html_escape(supplier_rfc or "")}' \
+                 f'&rr={tools.html_escape(customer_rfc or "")}' \
+                 f'&tt={total or 0.0}'
+        transport = Transport(timeout=20)
+
+        try:
+            client = Client(wsdl=url, transport=transport)
+            response = client.service.Consulta(params)
+            fetched_state = response["Estado"] if hasattr(response, "Estado") else ""
+            fetched_cancellable = response["EsCancelable"] if hasattr(response, "EsCancelable") else ""
+            fetched_cancel_state = response["EstatusCancelacion"] if hasattr(response, "EstatusCancelacion") else ""
+            fetched_efos_validation = response["ValidacionEFOS"] if hasattr(response, "ValidacionEFOS") else ""
+        except Exception as e:
+            return {
+                'error': ("Failure during update of the SAT status: %s", str(e)),
+                'value': 'error',
+            }
         ret_dict = {
-            "status": communication.find("a:Estado", external_nsmap).text,
-            "is_cancellable": communication.find("a:EsCancelable", external_nsmap).text,
-            "cancel_status": communication.find(
-                "a:EstatusCancelacion", external_nsmap
-            ).text,
-            "efos_validation": communication.find(
-                "a:ValidacionEFOS", external_nsmap
-            ).text,
+            "status": fetched_state,
+            "is_cancellable": fetched_cancellable,
+            "cancel_status": fetched_cancel_state,
+            "efos_validation": fetched_efos_validation,
         }
         return ret_dict
 

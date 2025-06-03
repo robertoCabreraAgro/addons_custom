@@ -1,5 +1,5 @@
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 from os.path import splitext
 
 from odoo import Command, api, fields, models
@@ -178,6 +178,21 @@ class Document(models.Model):
         ):
             vals = self._prepare_l10n_mx_edi_common_fields(rec)
             rec.update(vals)
+
+    @api.model
+    def _cron_sync_with_sat(self):
+        """Update SAT status of fiscal documents that:
+        1. Are stamped
+        2. Don't have a related account move
+        3. Are as recent as 60 days.
+        """
+        max_date = datetime.now() - timedelta(days=60)
+        docs = self.env["documents.document"].search([
+            ("l10n_mx_edi_is_cfdi", "=", True),
+            ("res_model", "!=", "account.move"),
+            ("l10n_mx_edi_stamp_date", ">=", max_date)
+        ])
+        docs.update_l10n_mx_edi_sat_state()
 
     def update_l10n_mx_edi_sat_state(self):
         mx_edi_document = self.env["l10n_mx_edi.document"]
