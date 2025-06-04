@@ -5,6 +5,8 @@ from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.osv import expression
 
+from ..models.documents_document import STATUS
+
 _logger = logging.getLogger(__name__)
 
 
@@ -118,6 +120,9 @@ class MxEdiToRecordWizard(models.TransientModel):
                     )
                 )
 
+            # Update document SAT status
+            document.update_l10n_mx_edi_sat_state()
+
             # Create new move if required
             if line.action == "create":
                 try:
@@ -133,6 +138,17 @@ class MxEdiToRecordWizard(models.TransientModel):
 
                     # Step 3: Create the account move
                     move = account_move.create(vals)
+                    sat_status = self.env["l10n_mx_edi.document"].l10n_mx_ws_get_cfdi_status(
+                        cfdi_infos["supplier_rfc"],
+                        cfdi_infos["customer_rfc"],
+                        cfdi_infos["amount_total"],
+                        cfdi_infos["uuid"],
+                    )
+                    # Step 4: If cancelled CFDI cancel account move
+                    cfdi_cancelled = STATUS.get(sat_status["status"], False) == "cancelled"
+                    if cfdi_cancelled:
+                        move.action_post()
+                        move.button_cancel()
                 except Exception as e:
                     raise UserError(
                         self.env._("Error creating invoice from document {}: {}").format(document.name, str(e))
