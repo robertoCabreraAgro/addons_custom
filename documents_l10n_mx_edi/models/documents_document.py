@@ -120,9 +120,7 @@ class Document(models.Model):
             document.vendor_bill_name = vendor_bill_name
 
     def check_document_already_linked(self):
-        if documents_link_record := self.filtered(
-            lambda d: d.res_model != "documents.document"
-        ):
+        if documents_link_record := self.filtered(lambda d: d.res_model != "documents.document"):
             return {
                 "type": "ir.actions.client",
                 "tag": "display_notification",
@@ -173,9 +171,7 @@ class Document(models.Model):
 
     @api.depends("datas")
     def _compute_l10n_mx_edi_common_fields(self):
-        for rec in self.filtered(
-            lambda doc: doc.l10n_mx_edi_is_cfdi and doc.attachment_id
-        ):
+        for rec in self.filtered(lambda doc: doc.l10n_mx_edi_is_cfdi and doc.attachment_id):
             vals = self._prepare_l10n_mx_edi_common_fields(rec)
             rec.update(vals)
 
@@ -184,14 +180,19 @@ class Document(models.Model):
         """Update SAT status of fiscal documents that:
         1. Are stamped
         2. Don't have a related account move
-        3. Are as recent as 60 days.
+        3. Are as recent as the parameter sat_dias_aviles.
         """
-        max_date = datetime.now() - timedelta(days=60)
-        docs = self.env["documents.document"].search([
-            ("l10n_mx_edi_is_cfdi", "=", True),
-            ("res_model", "!=", "account.move"),
-            ("l10n_mx_edi_stamp_date", ">=", max_date)
-        ])
+        dias_habiles = int(
+            self.env["ir.config_parameter"].sudo().get_param("l10n_mx_edi_marin.sat_dias_aviles", default=60)
+        )
+        max_date = datetime.now() - timedelta(days=dias_habiles)
+        docs = self.env["documents.document"].search(
+            [
+                ("l10n_mx_edi_is_cfdi", "=", True),
+                ("res_model", "!=", "account.move"),
+                ("l10n_mx_edi_stamp_date", ">=", max_date),
+            ]
+        )
         docs.update_l10n_mx_edi_sat_state()
 
     def update_l10n_mx_edi_sat_state(self):
@@ -210,9 +211,7 @@ class Document(models.Model):
                 cfdi_infos["amount_total"],
                 cfdi_infos["uuid"],
             )
-            document.l10n_mx_edi_sat_state = STATUS.get(
-                sat_status["status"] if sat_status else "none", "none"
-            )
+            document.l10n_mx_edi_sat_state = STATUS.get(sat_status["status"] if sat_status else "none", "none")
             document.l10n_mx_edi_sat_cancellable = CANCELLABLE.get(
                 sat_status["is_cancellable"] if sat_status else "", "none"
             )
@@ -222,20 +221,12 @@ class Document(models.Model):
 
     def _get_l10n_mx_edi_type_tag(self, key):
         values = {
-            "I": self.env.ref(
-                "documents_l10n_mx_edi.documents_l10n_mx_edi_tag_ingreso"
-            ),
+            "I": self.env.ref("documents_l10n_mx_edi.documents_l10n_mx_edi_tag_ingreso"),
             "E": self.env.ref("documents_l10n_mx_edi.documents_l10n_mx_edi_tag_egreso"),
-            "T": self.env.ref(
-                "documents_l10n_mx_edi.documents_l10n_mx_edi_tag_traslado"
-            ),
-            "P": self.env.ref(
-                "documents_l10n_mx_edi.documents_l10n_mx_edi_tag_reception"
-            ),
+            "T": self.env.ref("documents_l10n_mx_edi.documents_l10n_mx_edi_tag_traslado"),
+            "P": self.env.ref("documents_l10n_mx_edi.documents_l10n_mx_edi_tag_reception"),
             "N": self.env.ref("documents_l10n_mx_edi.documents_l10n_mx_edi_tag_nomina"),
-            "R": self.env.ref(
-                "documents_l10n_mx_edi.documents_l10n_mx_edi_tag_retencion"
-            ),
+            "R": self.env.ref("documents_l10n_mx_edi.documents_l10n_mx_edi_tag_retencion"),
         }
         return values.get(key, ())
 
@@ -279,9 +270,7 @@ class Document(models.Model):
         folder = (
             self.env.ref("documents_l10n_mx_edi.documents_l10n_mx_edi_folder_issued")
             if import_type == "issued"
-            else self.env.ref(
-                "documents_l10n_mx_edi.documents_l10n_mx_edi_folder_received"
-            )
+            else self.env.ref("documents_l10n_mx_edi.documents_l10n_mx_edi_folder_received")
         )
         return folder
 
@@ -296,9 +285,7 @@ class Document(models.Model):
         """
         if not rfc:
             return False
-        return self.env["res.company"].search(
-            ["|", ("vat", "=", rfc), ("vat", "=", "MX" + rfc)], limit=1
-        )
+        return self.env["res.company"].search(["|", ("vat", "=", rfc), ("vat", "=", "MX" + rfc)], limit=1)
 
     def _l10n_mx_edi_assign_cfdi_data(self):
         """Assign tags, folder and company to the document based on CFDI content.
@@ -318,9 +305,7 @@ class Document(models.Model):
 
         # Duplicate validation
         if cfdi_infos["uuid"] and check_duplicate:
-            duplicity_result = mx_edi_document._get_cfdi_duplicity(
-                cfdi_infos["uuid"], self
-            )
+            duplicity_result = mx_edi_document._get_cfdi_duplicity(cfdi_infos["uuid"], self)
 
             if duplicity_result["duplicated"]:
                 self.env["bus.bus"]._sendone(
@@ -333,9 +318,7 @@ class Document(models.Model):
                         "warning": True,
                     },
                 )
-                raise ValidationError(
-                    self.env._("Duplicated CFDI, document creation skipped.")
-                )
+                raise ValidationError(self.env._("Duplicated CFDI, document creation skipped."))
 
         # Company assignment
         company = self._documents_l10n_mx_edi_get_company(
@@ -345,14 +328,9 @@ class Document(models.Model):
         # Prepare values to update
         update_vals = {
             "name": cfdi_infos["uuid"] + ".xml",
-            "folder_id": self._documents_l10n_mx_edi_get_folder(
-                cfdi_infos["supplier_rfc"]
-            ).id,
+            "folder_id": self._documents_l10n_mx_edi_get_folder(cfdi_infos["supplier_rfc"]).id,
             "l10n_mx_edi_is_cfdi": True,
-            "tag_ids": [
-                Command.link(tag_id)
-                for tag_id in self._prepare_l10n_mx_edi_tags(cfdi_infos)
-            ],
+            "tag_ids": [Command.link(tag_id) for tag_id in self._prepare_l10n_mx_edi_tags(cfdi_infos)],
         }
 
         if company and not self.company_id:

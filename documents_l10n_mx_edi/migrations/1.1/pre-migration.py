@@ -1,6 +1,6 @@
 import logging
 
-from odoo import api, SUPERUSER_ID
+from odoo import SUPERUSER_ID, api
 from odoo.tools import convert_file
 
 _logger = logging.getLogger(__name__)
@@ -8,6 +8,7 @@ _logger = logging.getLogger(__name__)
 
 def migrate(cr, version):
     update_crons_and_server_actions(cr)
+
 
 def update_crons_and_server_actions(cr):
     env = api.Environment(cr, SUPERUSER_ID, {})
