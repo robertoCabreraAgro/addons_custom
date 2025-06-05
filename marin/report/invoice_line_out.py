@@ -11,6 +11,12 @@ class InvoiceLineOut(models.Model):
     _order = "date DESC"
 
     company_id = fields.Many2one("res.company", readonly=True)
+    journal_id = fields.Many2one("account.journal", readonly=True)
+    partner_id = fields.Many2one("res.partner", readonly=True)
+    commercial_partner_id = fields.Many2one("res.partner", readonly=True)
+    team_id = fields.Many2one("crm.team", readonly=True)
+    invoice_user_id = fields.Many2one("res.users", readonly=True)
+    invoice_payment_term_id = fields.Many2one("account.payment.term", readonly=True)
     move_id = fields.Many2one("account.move", readonly=True)
     move_type = fields.Selection(
         selection=[
@@ -25,7 +31,6 @@ class InvoiceLineOut(models.Model):
         string="Type",
         readonly=True,
     )
-    journal_id = fields.Many2one("account.journal", readonly=True)
     x_treatment = fields.Selection(
         [
             ("not_fiscal_simulated", "Not Fiscal simulated"),
@@ -36,10 +41,12 @@ class InvoiceLineOut(models.Model):
         "Treatment",
         readonly=True,
     )
-    partner_id = fields.Many2one("res.partner", readonly=True)
-    commercial_partner_id = fields.Many2one("res.partner", readonly=True)
-    invoice_user_id = fields.Many2one("res.users", readonly=True)
-    team_id = fields.Many2one("crm.team", readonly=True)
+    payment_state = fields.Selection(
+        selection=PAYMENT_STATE_SELECTION,
+        string="Payment Status",
+        readonly=True,
+    )
+
     date = fields.Date(readonly=True)
     year = fields.Integer(readonly=True)
     quarter = fields.Integer(readonly=True)
@@ -49,20 +56,20 @@ class InvoiceLineOut(models.Model):
     day_of_year = fields.Integer(readonly=True)
     day_of_month = fields.Integer(readonly=True)
     day_of_week = fields.Integer(readonly=True)
-    invoice_payment_term_id = fields.Many2one("account.payment.term", readonly=True)
-    payment_state = fields.Selection(
-        selection=PAYMENT_STATE_SELECTION,
-        string="Payment Status",
-        readonly=True,
-    )
+
     product_id = fields.Many2one("product.product", readonly=True)
     product_categ_id = fields.Many2one("product.category", readonly=True)
     parent_categ_id = fields.Many2one(
-        "product.category", string="Parent Category", readonly=True
+        "product.category",
+        string="Parent Category",
+        readonly=True,
     )
     root_categ_id = fields.Many2one(
-        "product.category", string="Root Category", readonly=True
+        "product.category",
+        string="Root Category",
+        readonly=True,
     )
+
     quantity = fields.Float(readonly=True)
     price_unit = fields.Float(readonly=True, aggregator="avg")
     discount = fields.Float(readonly=True, aggregator="avg")
@@ -73,18 +80,33 @@ class InvoiceLineOut(models.Model):
     margin = fields.Float(readonly=True)
     margin_percent = fields.Float(readonly=True)
 
+    def init(self):
+        table = AsIs(self._table)
+        query = AsIs(self._query())
+        self._cr.execute(f"DROP MATERIALIZED view IF EXISTS {table} CASCADE")
+        if self._context.get("with_data"):
+            # When calling with that context it will create the view and populate it
+            self._cr.execute(f"CREATE MATERIALIZED VIEW {table} AS ({query})")
+        else:
+            # To avoid long time to update the module we create the view without data
+            # and later be populated by the cron that executes the method refresh_concurrently()
+            self._cr.execute(
+                f"CREATE MATERIALIZED VIEW {table} AS ({query}) WITH NO DATA"
+            )
+        self._cr.execute(f"CREATE UNIQUE INDEX id_{table} ON {table} (id)")
+
     def _query(self):
         return """
             SELECT
                 aml.id,
                 move.company_id,
-                aml.move_id,
-                move.move_type,
-                aml.journal_id,
-                journal.x_treatment,
                 move.commercial_partner_id,
                 move.partner_id,
+                aml.journal_id,
+                journal.x_treatment,
+                move.invoice_payment_term_id,
                 move.invoice_user_id,
+                move.payment_state,
                 move.team_id,
                 move.invoice_date AS date, 
                 EXTRACT(YEAR FROM move.invoice_date) AS year,
@@ -95,15 +117,14 @@ class InvoiceLineOut(models.Model):
                 EXTRACT(DAY FROM move.invoice_date) AS day_of_month,
                 EXTRACT(DOW FROM move.invoice_date) AS day_of_week,
                 EXTRACT(DOY FROM move.invoice_date) AS day_of_year,
-                move.invoice_payment_term_id,
-                move.payment_state,
-                aml.sequence,
+                aml.move_id,
+                move.move_type,
                 aml.product_id,
                 pc.id AS product_categ_id,
                 CASE
                     WHEN pc.parent_id = pc.root_categ_id THEN pc.id
                     ELSE pc.parent_id
-                    END AS parent_categ_id,
+                END AS parent_categ_id,
                 pc.root_categ_id,
                 aml.quantity,
                 aml.price_unit,
@@ -144,18 +165,3 @@ class InvoiceLineOut(models.Model):
             return
 
         self._cr.execute(f"REFRESH MATERIALIZED VIEW CONCURRENTLY {table}")
-
-    def init(self):
-        table = AsIs(self._table)
-        query = AsIs(self._query())
-        self._cr.execute(f"DROP MATERIALIZED view IF EXISTS {table} CASCADE")
-        if self._context.get("with_data"):
-            # When calling with that context it will create the view and populate it
-            self._cr.execute(f"CREATE MATERIALIZED VIEW {table} AS ({query})")
-        else:
-            # To avoid long time to update the module we create the view without data
-            # and later be populated by the cron that executes the method refresh_concurrently()
-            self._cr.execute(
-                f"CREATE MATERIALIZED VIEW {table} AS ({query}) WITH NO DATA"
-            )
-        self._cr.execute(f"CREATE UNIQUE INDEX id_{table} ON {table} (id)")
