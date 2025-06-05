@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- Invoice Form View Extension -->
+    <record id="view_move_form_fiscal_regime" model="ir.ui.view">
+        <field name="name">account.move.form.fiscal.regime</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form" />
+        <field name="arch" type="xml">
+            <!-- Add fiscal regime field in the Mexican fiscal information group -->
+            <field name="l10n_mx_edi_usage" position="after">
+                <field name="l10n_mx_edi_fiscal_regime_ids" invisible="1" />
+                <field
+                    name="l10n_mx_edi_fiscal_regime_id"
+                    invisible="country_code != 'MX' or not l10n_mx_edi_is_cfdi_needed"
+                    readonly="state != 'draft'"
+                    options="{'no_create': True, 'no_open': True}"
+                />
+                <!-- Hidden field for domain computation -->
+                <field name="l10n_mx_edi_fiscal_regime_ids" invisible="1" />
+            </field>
+        </field>
+    </record>
+
+    <!-- Invoice Search View Extension -->
+    <record id="view_account_invoice_filter_fiscal_regime" model="ir.ui.view">
+        <field name="name">account.move.search.fiscal.regime</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter" />
+        <field name="arch" type="xml">
+            <field name="invoice_user_id" position="after">
+                <field name="l10n_mx_edi_fiscal_regime_id" />
+            </field>
+            <group position="inside">
+                <filter
+                    string="Fiscal Regime"
+                    name="group_by_fiscal_regime"
+                    context="{'group_by': 'l10n_mx_edi_fiscal_regime_id'}"
+                />
+            </group>
+        </field>
+    </record>
+</odoo>

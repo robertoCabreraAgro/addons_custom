@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- Fiscal Regime Tree View -->
+    <record id="view_l10n_mx_edi_fiscal_regime_list" model="ir.ui.view">
+        <field name="name">l10n_mx_edi.fiscal.regime.list</field>
+        <field name="model">l10n_mx_edi.fiscal.regime</field>
+        <field name="arch" type="xml">
+            <list string="Fiscal Regimes">
+                <field name="code" />
+                <field name="name" />
+            </list>
+        </field>
+    </record>
+
+    <!-- Fiscal Regime Form View -->
+    <record id="view_l10n_mx_edi_fiscal_regime_form" model="ir.ui.view">
+        <field name="name">l10n_mx_edi.fiscal.regime.form</field>
+        <field name="model">l10n_mx_edi.fiscal.regime</field>
+        <field name="arch" type="xml">
+            <form string="Fiscal Regime">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="code" placeholder="e.g. 601" />
+                            <field name="name" placeholder="e.g. General de Ley Personas Morales" />
+                        </group>
+                        <group>
+                            <field name="active" widget="boolean_toggle" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Fiscal Regime Search View -->
+    <record id="view_l10n_mx_edi_fiscal_regime_search" model="ir.ui.view">
+        <field name="name">l10n_mx_edi.fiscal.regime.search</field>
+        <field name="model">l10n_mx_edi.fiscal.regime</field>
+        <field name="arch" type="xml">
+            <search string="Search Fiscal Regimes">
+                <field name="code" />
+                <field name="name" />
+                <filter string="Active" name="active" domain="[('active', '=', True)]" />
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]" />
+                <group expand="0" string="Group By">
+                    <filter string="Active" name="group_by_active" context="{'group_by': 'active'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Fiscal Regime Action -->
+    <record id="action_l10n_mx_edi_fiscal_regime" model="ir.actions.act_window">
+        <field name="name">Fiscal Regimes</field>
+        <field name="res_model">l10n_mx_edi.fiscal.regime</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new fiscal regime
+            </p>
+            <p>
+                Fiscal regimes are used to classify partners and invoices according to SAT requirements.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem
+        id="menu_l10n_mx_edi_fiscal_regime"
+        name="Fiscal Regimes"
+        parent="account.account_invoicing_menu"
+        action="action_l10n_mx_edi_fiscal_regime"
+        sequence="10"
+    />
+</odoo>
