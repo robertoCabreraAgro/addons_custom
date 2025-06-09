@@ -126,7 +126,7 @@ class Session(models.Model):
                 certificate,
                 private_key,
                 self.token,
-                {"date_from": self.date_from, "date_to": self.date_to},
+                {"date_from": self.date_from, "date_to": self.date_to, "cfdi_state": "Vigente"},
             )
         except Exception as e:
             self.message_post(
@@ -136,10 +136,10 @@ class Session(models.Model):
 
         self.write(
             {
-                "request": request_res["id_solicitud"],
-                "request_status_code": request_res["cod_estatus"],
-                "request_message": request_res["mensaje"],
-                "request_state": "1" if request_res["cod_estatus"] == "5000" else "0",
+                "request": request_res["request_id"],
+                "request_status_code": request_res["status_code"],
+                "request_message": request_res["message"],
+                "request_state": "1" if request_res["status_code"] == "5000" else "0",
             }
         )
 
@@ -170,6 +170,7 @@ class Session(models.Model):
             verify_download = mx_edi_document.l10n_mx_ws_verify_package(
                 certificate, private_key, self.token, self.request
             )
+            _logger.info("Verification response %s", verify_download)
             self.write(
                 {
                     "request_state": verify_download["estado_solicitud"],
@@ -178,6 +179,14 @@ class Session(models.Model):
                     "packages": (verify_download["paquetes"][0] if verify_download["paquetes"] else ""),
                 }
             )
+            #self.write(
+            #    {
+            #        "request_state": verify_download["request_status"],
+            #        "file_count": int(verify_download["cfdi_count"]),
+            #        "request_message": verify_download["message"],
+            #        "packages": (verify_download["packages"][0] if verify_download["packages"] else ""),
+            #    }
+            #)
             if int(self.request_state) > 2:
                 break
             if retry_count < max_retries - 1:  # avoid waiting in the last iteration
@@ -201,8 +210,6 @@ class Session(models.Model):
 
         certificate = esignature.get_cert_data()[1]
         private_key = esignature.get_pk_data()[1]
-
-        document_ids = []
 
         # Renew token if expired
         if not self.token or self.token_expiration < fields.Datetime.now():
@@ -257,32 +264,14 @@ class Session(models.Model):
                 self.message_post(body=self.env._("No valid XML files found for processing."))
                 return
 
-            # Preparing domain
-            domain = expression.AND(
-                [
-                    [("company_id", "in", [False, self.company_id.id])],
-                    expression.OR([[("name", "=ilike", fname)] for fname, normalized_fname in xml_files]),
-                ]
-            )
-
-            # Find all existing documents
-            existing_docs = docs_document.sudo().search(domain, order="name asc, id asc")
-
-            # Ensure uniqueness
-            unique_existing_docs = docs_document
-            for doc in existing_docs:
-                doc_name = doc.name.split(".")[0].upper() + ".xml"
-                if doc_name not in unique_existing_docs.mapped("name"):
-                    unique_existing_docs += doc
-
-            # Existing documents are kept for return
-            document_ids.extend(unique_existing_docs.ids)
-
-            # already processed files
-            existing_names = unique_existing_docs.mapped("name")
+            existing_docs = docs_document
+            session_docs = docs_document
 
             for fname, normalized_fname in xml_files:
-                if normalized_fname in existing_names:
+                duplicity_result = mx_edi_document._get_duplicate_cfdi(fname, docs_document)
+
+                if duplicity_result["duplicated"]:
+                    existing_docs |= duplicity_result["document"]
                     continue  # Skip already processed files
 
                 with container.open(fname) as file:
@@ -330,18 +319,18 @@ class Session(models.Model):
                     # Bulk create all documents
                     created_documents = docs_document.create(doc_vals_list)
 
-                document_ids.extend(created_documents.ids)
+                session_docs |= created_documents
 
                 # Update documents into session
-                if document_ids:
-                    self.write({"document_ids": [(6, 0, document_ids)]})
+                if session_docs:
+                    self.write({"document_ids": [(6, 0, session_docs.ids)]})
 
                 created_items = (
                     "".join([f"<li>{doc.name} (ID: {doc.id})</li>" for doc in created_documents]) or "<li>None</li>"
                 )
 
                 existing_items = (
-                    "".join([f"<li>{doc.name} (ID: {doc.id})</li>" for doc in unique_existing_docs]) or "<li>None</li>"
+                    "".join([f"<li>{doc.name} (ID: {doc.id})</li>" for doc in existing_docs]) or "<li>None</li>"
                 )
 
                 # Prepare summary message
@@ -353,12 +342,12 @@ class Session(models.Model):
                     <ul>
                         {created_items}
                     </ul>
-                    <p><b>Previously existing documents ({len(unique_existing_docs)}):</b></p>
+                    <p><b>Previously existing documents ({len(existing_docs)}):</b></p>
                     <ul>
                         {existing_items}
                     </ul>
 
-                    <p><b>Total processed documents:</b> {len(document_ids)}</p>
+                    <p><b>Total processed documents:</b> {len(session_docs)}</p>
                 </div>
                 """
                 )
@@ -367,7 +356,7 @@ class Session(models.Model):
                 self.message_post(body=summary_message)
                 _logger.info(
                     "Downloaded %s documents for MX session ID %s",
-                    len(document_ids),
+                    len(session_docs),
                     self.id,
                 )
 

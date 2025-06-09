@@ -1,13 +1,18 @@
 import base64
 import hashlib
 import logging
-import os
-import re
-from datetime import datetime, timedelta
-
 import requests
+import re
+
+from datetime import datetime, timedelta
 from lxml import etree
-from OpenSSL import crypto
+
+from cryptography.x509.oid import ObjectIdentifier
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives.asymmetric import padding
+
+from os.path import splitext
 
 from odoo import models, tools
 from odoo.exceptions import ValidationError
@@ -22,6 +27,7 @@ TYPE_CFDI22_TO_CFDI33 = {
     "nomina": "N",
     "pago": "P",
 }
+
 MXWS_ERROR_TYPE = [
     ("0", "Token invalido."),
     ("1", "Aceptada"),
@@ -31,6 +37,8 @@ MXWS_ERROR_TYPE = [
     ("5", "Rechazada"),
     ("6", "Vencida"),
 ]
+
+OID_RFC = ObjectIdentifier("2.5.4.45")
 
 
 _logger = logging.getLogger(__name__)
@@ -46,7 +54,7 @@ class L10nMxEdiDocument(models.Model):
     def _l10n_mx_edi_is_cfdi_payment(self, cfdi_node):
         return cfdi_node.get("TipoDeComprobante", False) == "P"
 
-    def _l10n_mx_edi_normalize_cfdi_filename(self, filename):
+    def _l10n_mx_edi_normalize_cfdi_filename(self, filename, extension=True):
         """Normalize a filename for CFDI documents.
 
         This method ensures consistent filename formatting across the module:
@@ -72,41 +80,22 @@ class L10nMxEdiDocument(models.Model):
             return ""
 
         # Strip any existing extension
-        base_name = os.path.splitext(filename)[0]
+        base_name = splitext(filename)[0]
+
+        if not extension:
+            return base_name.upper()
 
         # Convert to uppercase and add .XML extension
         return base_name.upper() + ".xml"
 
-    def _get_duplicate_cfdi_domain(self, filenames, company_id=None):
-        """Build domain to search for duplicate CFDI documents by filename.
-
-        Args:
-            filenames (list): List of normalized filenames to search for
-            company_id (int, optional): Company ID to restrict search to
-
-        Returns:
-            list: Domain expression for document search
-        """
-        if not company_id:
-            company_id = self.env.company.id
-
-        return expression.AND(
-            [
-                [("company_id", "in", [False, company_id])],
-                expression.OR(
-                    [[("name", "=ilike", self._l10n_mx_edi_normalize_cfdi_filename(fname))] for fname in filenames]
-                ),
-            ]
-        )
-
-    def _get_duplicate_cfdi(self, uuid, record):
+    def _get_duplicate_cfdi(self, cfdi_name, record):
         """Check UUID duplicity across documents and invoices.
 
         This method centralizes the logic to detect if a UUID already exists in the system,
         avoiding duplications in both documents module and account_move.
 
         Args:
-            uuid (str): UUID of the CFDI to check for duplicity
+            cfdi_name (str): name of the CFDI file to check for duplicity
             record (Model): Record to exclude from duplicity check.
                            Must be a documents.document or account.move record.
 
@@ -130,8 +119,9 @@ class L10nMxEdiDocument(models.Model):
             "message": "",
         }
 
-        if not uuid:
+        if not cfdi_name:
             return result
+
 
         # Validate record parameter
         if not isinstance(record, models.BaseModel):
@@ -143,17 +133,27 @@ class L10nMxEdiDocument(models.Model):
                 f"received: {record._name}"
             )
 
+
         # Common message prefix using self.env._ for better performance
-        message_prefix = self.env._("Duplicated CFDI: %s", uuid)
+        message_prefix = self.env._("Duplicated CFDI: %s", cfdi_name)
 
         if record._name == "documents.document":
-            domain = self._get_duplicate_cfdi_domain([uuid])
+            domain = [("name", "=ilike", self._l10n_mx_edi_normalize_cfdi_filename(cfdi_name))] 
             if record.exists():
-                domain = self._get_duplicate_cfdi_domain(
-                    [uuid],
-                    company_id=record.company_id.id
+                domain = expression.AND(
+                    [
+                        [("id", "!=", record.id)], 
+                        [("company_id", "in", [False, record.company.id])],
+                        domain,
+                    ]
                 )
-                domain = expression.AND([[("id", "!=", record.id)], domain])
+            else:
+                domain = expression.AND(
+                    [
+                        [("company_id", "in", [False, self.env.company.id])],
+                        domain
+                    ]
+                )
 
             # Check if UUID exists in documents, excluding current record
             existing_document = self.env["documents.document"].search(domain, limit=1)
@@ -169,12 +169,27 @@ class L10nMxEdiDocument(models.Model):
 
         elif record._name == "account.move":
             # Check in account.move
-            domain = [
-                ("l10n_mx_edi_cfdi_uuid", "=", uuid),
-                ("state", "in", ["draft", "posted"]),
-            ]
+            domain = expression.AND(
+                [
+                    [("state", "in", ["draft", "posted"])],
+                    [("l10n_mx_edi_cfdi_uuid", "=ilike", self._l10n_mx_edi_normalize_cfdi_filename(cfdi_name, extension=False))],
+                ]
+            )
             if record.exists():
-                domain = expression.AND([[("id", "!=", record.id)], domain])
+                domain = expression.AND(
+                    [
+                        [("id", "!=", record.id)], 
+                        [("company_id", "in", [False, record.company.id])],
+                        domain,
+                    ]
+                )
+            else:
+                domain = expression.AND(
+                    [
+                        [("company_id", "in", [False, self.env.company.id])],
+                        domain,
+                    ]
+                )
 
             existing_move = self.env["account.move"].search(domain, limit=1)
             if existing_move:
@@ -333,6 +348,13 @@ class L10nMxEdiDocument(models.Model):
         else:
             domain.append(("amount", "=", amount))
         return domain
+
+    def _get_requester_vat(self, certificate):
+        for attr in certificate.subject:
+            if attr.oid == OID_RFC:
+                return attr.value
+
+        raise ValidationError("RFC (OID 2.5.4.45) was not found in the certificate")
 
     def collect_complemento(
         self,
@@ -862,8 +884,8 @@ class L10nMxEdiDocument(models.Model):
 
     def prepare_soap_data(
         self,
-        certificate: crypto.X509,
-        private_key: crypto.PKey,
+        certificate,  # cryptography.x509.Certificate
+        private_key,  # RSAPrivateKey
         arguments: dict,
         envelop: str,
         xpath: str,
@@ -874,29 +896,48 @@ class L10nMxEdiDocument(models.Model):
             "s": "http://schemas.xmlsoap.org/soap/envelope/",
             "u": "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd",
             "o": "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd",
-            "des": "http://DescargaMasivaTerceros.gob.mx",
+            "des": "http://DescargaMasivaTerceros.sat.gob.mx",
         }
         parser = etree.XMLParser(remove_blank_text=True)
         element_root = etree.fromstring(envelop, parser)
         element = element_root.find(xpath, internal_nsmap)
-        signature = """
-            <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
-                <SignedInfo>
-                    <CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
-                    <SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
-                    <Reference URI="#_0">
-                        <Transforms>
-                            <Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
-                        </Transforms>
-                        <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
-                        <DigestValue></DigestValue>
-                    </Reference>
-                </SignedInfo>
-                <SignatureValue></SignatureValue>
-            </Signature>
-        """
+        if not token: 
+            signature = """
+                <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+                    <SignedInfo>
+                        <CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+                        <SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+                        <Reference URI="#_0">
+                            <Transforms>
+                                <Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+                            </Transforms>
+                            <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+                            <DigestValue></DigestValue>
+                        </Reference>
+                    </SignedInfo>
+                    <SignatureValue></SignatureValue>
+                </Signature>
+            """
+        else:
+            signature = """
+                <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+                    <SignedInfo>
+                        <CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+                        <SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+                        <Reference URI="">
+                            <Transforms>
+                                <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+                            </Transforms>
+                            <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+                            <DigestValue></DigestValue>
+                        </Reference>
+                    </SignedInfo>
+                    <SignatureValue></SignatureValue>
+                </Signature>
+            """
         element_signature = etree.fromstring(signature, parser)
         element_to_digest = element_root.find(".//u:Timestamp", internal_nsmap)
+
         if not etree.iselement(element_to_digest):
             element_to_digest = element.getparent()
             for key in arguments:
@@ -916,10 +957,13 @@ class L10nMxEdiDocument(models.Model):
         )
         element_to_sign = element_signature.find(".//SignedInfo", internal_nsmap)
         element_to_sign = etree.tostring(element_to_sign, method="c14n", exclusive=1)
-        element_signed = element_signature.find(".//SignatureValue", internal_nsmap)
-        element_signed.text = (
-            base64.b64encode(crypto.sign(private_key, element_to_sign, "sha1")).decode("UTF-8").replace("\n", "")
+        signature_value = private_key.sign(
+            element_to_sign,
+            padding.PKCS1v15(),
+            hashes.SHA1()
         )
+        element_signed = element_signature.find(".//SignatureValue", internal_nsmap)
+        element_signed.text = base64.b64encode(signature_value).decode()
 
         if not token:
             key_info = """
@@ -944,23 +988,32 @@ class L10nMxEdiDocument(models.Model):
                 </KeyInfo>
             """
         element_key_info = etree.fromstring(key_info, parser)
+
+        # Insert certificate
+        cert_der = certificate.public_bytes(encoding=serialization.Encoding.DER)
+        cert_b64 = base64.b64encode(cert_der).decode()
+
         if not token:
             element_certificate = element_root.find(".//o:BinarySecurityToken", internal_nsmap)
-            element_certificate.text = base64.b64encode(crypto.dump_certificate(crypto.FILETYPE_ASN1, certificate))
+            element_certificate.text = cert_b64
+
         else:
+            # X509IssuerName and Serial
+            cert_issuer = certificate.issuer.rfc4514_string()
+            cert_serial = certificate.serial_number
+
             element_certificate = element_key_info.find(".//X509Certificate")
-            element_certificate.text = base64.b64encode(crypto.dump_certificate(crypto.FILETYPE_ASN1, certificate))
-            cer_issuer = certificate.get_issuer().get_components()
-            cer_issuer = ",".join(
-                ["{key}={value}".format(key=key.decode(), value=value.decode()) for key, value in cer_issuer]
-            )
+            element_certificate.text = cert_b64 
+
             element_issuer_name = element_key_info.find(".//X509IssuerName")
-            element_issuer_name.text = cer_issuer
+            element_issuer_name.text = cert_issuer
+
             element_serial_number = element_key_info.find(".//X509SerialNumber")
-            element_serial_number.text = str(certificate.get_serial_number())
+            element_serial_number.text = str(cert_serial)
 
         element_signature.append(element_key_info)
         element.append(element_signature)
+
         return etree.tostring(element_root, method="c14n", exclusive=1)
 
     def l10n_mx_ws_get_cfdi_status(self, emmiter_vat, receiver_vat, total, uuid):
@@ -1068,62 +1121,86 @@ class L10nMxEdiDocument(models.Model):
             if key in args_allowed:
                 sanitized_arg[key] = value
         return sanitized_arg
-
+        
     def l10n_mx_ws_request_download(self, certificate, private_key, token, args):
-        if not isinstance(args, dict):
-            raise ValidationError(self.env._("Validation error"))
+        """
+        Creates and sends a mass download request to SAT for RECEIVED invoices.
 
-        holder_vat = "".join(certificate.get_subject().x500UniqueIdentifier.split(" ")[0])
-        sanitized = self.sanitize_args(args)
-        arguments = {
-            "UUID": sanitized["uuid"] if "uuid" in sanitized else None,
-            "RfcSolicitante": holder_vat,
-            "RfcEmisor": (
-                sanitized["emitter_vat"] if "emitter_vat" in sanitized and "uuid" not in sanitized else None
-            ),
-            "RfcReceptores": (
-                sanitized["receiver_vats"]
-                if "receiver_vats" in sanitized and "uuid" not in sanitized
-                else [holder_vat]
-            ),
-            "FechaInicial": (sanitized["date_from"].isoformat() if "date_from" in sanitized else None),
-            "FechaFinal": (sanitized["date_to"].isoformat() if "date_to" in sanitized else None),
-            "TipoSolicitud": (sanitized["request_type"] if "request_type" in sanitized else "CFDI"),
-            "TipoComprobante": (
-                sanitized["cfdi_type"] if "cfdi_type" in sanitized and "uuid" not in sanitized else None
-            ),
-            "EstadoComprobante": (
-                sanitized["cfdi_state"] if "cfdi_state" in sanitized and "uuid" not in sanitized else None
-            ),
-            "RfcACuentaTerceros": (
-                sanitized["thirthparty_vat"] if "thirthparty_vat" in sanitized and "uuid" not in sanitized else None
-            ),
-            "Complemento": (
-                sanitized["complement"] if "complement" in sanitized and "uuid" not in sanitized else None
-            ),
-        }
+        This method specializes in building the SOAP request to download CFDI documents
+        where the requester's RFC (certificate owner) appears as the invoice recipient.
+        It's based on SAT's Mass Download Web Service documentation.
+
+        Args:
+            certificate: X509 certificate object
+            private_key: Private key object
+            token: Valid SAT authentication token
+            args: Dictionary with filtering parameters.
+                  Example: {'date_from': date, 'date_to': date, 'emitter_vat': 'RFCEMISOR'}
+        
+        Returns:
+            Dictionary containing the request ID, status, and SAT response message.
+        
+        Raises:
+            ValidationError: If arguments are not provided as a dictionary.
+        """
+        if not isinstance(args, dict):
+            raise ValidationError("Request arguments must be provided as a dictionary.")
+
+        # Extract requester's VAT from certificate
+        requester_vat = self._get_requester_vat(certificate) 
+
+        # Sanitizes/validates input arguments
+        sanitized_args = self.sanitize_args(args)
+
+        # If searching by UUID, other filters are ignored
+        if uuid := sanitized_args.get("uuid"):
+            request_params = {
+                "RfcSolicitante": requester_vat,
+                "UUID": uuid,
+                "TipoSolicitud": sanitized_args.get("request_type", "CFDI"),
+            }
+        # For general received invoices search
+        else:
+            request_params = {
+                "RfcReceptor": requester_vat,
+                "RfcEmisor": sanitized_args.get("emitter_vat"),
+                "FechaInicial": sanitized_args["date_from"].isoformat() if "date_from" in sanitized_args else None,
+                "FechaFinal": sanitized_args["date_to"].isoformat() if "date_to" in sanitized_args else None,
+                "TipoSolicitud": sanitized_args.get("request_type", "CFDI"),
+                "TipoComprobante": sanitized_args.get("cfdi_type"),
+                "EstadoComprobante": sanitized_args.get("cfdi_state"),
+                "RfcACuentaTerceros": sanitized_args.get("thirdparty_vat"),
+                "Complemento": sanitized_args.get("complement"),
+            }
+
+        # Remove empty parameters to avoid sending empty nodes in SOAP
+        final_params = {k: v for k, v in request_params.items() if v}
+
+        # SOAP envelope template
         envelop = """
             <s:Envelope
                 xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"
-                xmlns:des="http://DescargaMasivaTerceros.gob.mx">
+                xmlns:des="http://DescargaMasivaTerceros.sat.gob.mx">
                 <s:Header/>
                 <s:Body>
-                    <des:SolicitaDescarga>
-                        <des:solicitud>
-                            <des:RfcReceptores>
-                                <des:RfcReceptor/>
-                                </des:RfcReceptores>
-                        </des:solicitud>
-                    </des:SolicitaDescarga>
+                    <des:SolicitaDescargaRecibidos>
+                        <des:solicitud/>
+                    </des:SolicitaDescargaRecibidos>
                 </s:Body>
             </s:Envelope>
         """
-        xpath = "s:Body/des:SolicitaDescarga/des:solicitud"
-        data = self.prepare_soap_data(certificate, private_key, arguments, envelop, xpath, token)
+        # XPath where request parameters will be injected
+        xpath = "s:Body/des:SolicitaDescargaRecibidos/des:solicitud"
+
+        # Builds XML request
+        data = self.prepare_soap_data(certificate, private_key, final_params, envelop, xpath, token)
+
+        # Configure service endpoint and headers
         url = "https://cfdidescargamasivasolicitud.clouda.sat.gob.mx/SolicitaDescargaService.svc"
-        soap_action = "http://DescargaMasivaTerceros.gob.mx/ISolicitaDescargaService/SolicitaDescarga"
+        soap_action = "http://DescargaMasivaTerceros.sat.gob.mx/ISolicitaDescargaService/SolicitaDescargaRecibidos" 
         headers = self.get_headers(soap_action, token)
-        result_xpath = "s:Body/SolicitaDescargaResponse/SolicitaDescargaResult"
+
+        # Namespace mapping for XML parsing
         external_nsmap = {
             "": "http://DescargaMasivaTerceros.sat.gob.mx",
             "s": "http://schemas.xmlsoap.org/soap/envelope/",
@@ -1133,25 +1210,29 @@ class L10nMxEdiDocument(models.Model):
             "xsi": "http://www.w3.org/2001/XMLSchema-instance",
             "xsd": "http://www.w3.org/2001/XMLSchema",
         }
+
+        # XPath to find the response in the SOAP reply
+        result_xpath = "s:Body/SolicitaDescargaRecibidosResponse/SolicitaDescargaRecibidosResult"
+        _logger.warning(">>>>>> DATA %s", data)
+
+        # Execute the SOAP request
         communication = self.check_comm(url, data, headers, result_xpath, external_nsmap)
-        _logger.warning("data >>>>>>>>>> %s", data)
-        _logger.warning("communication >>>>>>>>>> %s", communication)
-        ret_dict = {
-            "id_solicitud": communication.get("IdSolicitud"),
-            "cod_estatus": communication.get("CodEstatus"),
-            "mensaje": communication.get("Mensaje"),
+
+        return {
+            "request_id": communication.get("IdSolicitud"),
+            "status_code": communication.get("CodEstatus"),
+            "message": communication.get("Mensaje"),
         }
-        return ret_dict
 
     def l10n_mx_ws_verify_package(self, certificate, private_key, token, id_solicitud):
         arguments = {
-            "RfcSolicitante": certificate.get_subject().x500UniqueIdentifier.split(" ")[0],
+            "RfcSolicitante": self._get_requester_vat(certificate),
             "IdSolicitud": id_solicitud,
         }
         envelop = """
             <s:Envelope
                 xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"
-                xmlns:des="http://DescargaMasivaTerceros.gob.mx">
+                xmlns:des="http://DescargaMasivaTerceros.sat.gob.mx">
                 <s:Header/>
                 <s:Body>
                     <des:VerificaSolicitudDescarga>
@@ -1164,19 +1245,20 @@ class L10nMxEdiDocument(models.Model):
         data = self.prepare_soap_data(certificate, private_key, arguments, envelop, xpath, token)
         url = "https://cfdidescargamasivasolicitud.clouda.sat.gob.mx/VerificaSolicitudDescargaService.svc"
         soap_action = (
-            "http://DescargaMasivaTerceros.gob.mx/IVerificaSolicitudDescargaService/VerificaSolicitudDescarga"
+            "http://DescargaMasivaTerceros.sat.gob.mx/IVerificaSolicitudDescargaService/VerificaSolicitudDescarga"
         )
         headers = self.get_headers(soap_action, token)
         external_nsmap = {
-            "": "http://DescargaMasivaTerceros.gob.mx",
+            "": "http://DescargaMasivaTerceros.sat.gob.mx",
             "s": "http://schemas.xmlsoap.org/soap/envelope/",
             "u": "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd",
             "o": "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd",
-            "h": "http://DescargaMasivaTerceros.gob.mx",
+            "h": "http://DescargaMasivaTerceros.sat.gob.mx",
             "xsi": "http://www.w3.org/2001/XMLSchema-instance",
             "xsd": "http://www.w3.org/2001/XMLSchema",
         }
         result_xpath = "s:Body/VerificaSolicitudDescargaResponse/VerificaSolicitudDescargaResult"
+        _logger.warning(">>>>>> DATA %s", data)
         communication = self.check_comm(url, data, headers, result_xpath, external_nsmap)
         ret_dict = {
             "cod_estatus": communication.get("CodEstatus"),
@@ -1192,7 +1274,7 @@ class L10nMxEdiDocument(models.Model):
 
     def l10n_mx_ws_download_package(self, certificate, private_key, token, id_paquete):
         arguments = {
-            "RfcSolicitante": certificate.get_subject().x500UniqueIdentifier.split(" ")[0],
+            "RfcSolicitante": self._get_requester_vat(certificate),
             "IdPaquete": id_paquete,
         }
         envelop = """

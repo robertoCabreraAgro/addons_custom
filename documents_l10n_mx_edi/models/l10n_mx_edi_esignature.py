@@ -4,7 +4,10 @@ import subprocess
 import tempfile
 from datetime import datetime
 
-from OpenSSL import crypto
+from cryptography import x509
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.backends import default_backend
+from cryptography.x509.oid import NameOID
 from pytz import timezone
 
 from odoo import api, fields, models, tools
@@ -16,13 +19,9 @@ DEFAULT_TZ = timezone("America/Mexico_City")
 
 def convert_key_cer_to_pem(key, password):
     # TODO compute it from a python way
-    with tempfile.NamedTemporaryFile(
-        "wb", suffix=".key", prefix="edi.mx.tmp."
-    ) as key_file, tempfile.NamedTemporaryFile(
-        "wb", suffix=".txt", prefix="edi.mx.tmp."
-    ) as pwd_file, tempfile.NamedTemporaryFile(
-        "rb", suffix=".key", prefix="edi.mx.tmp."
-    ) as keypem_file:
+    with tempfile.NamedTemporaryFile("wb", suffix=".key", prefix="edi.mx.tmp.") as key_file, \
+         tempfile.NamedTemporaryFile("wb", suffix=".txt", prefix="edi.mx.tmp.") as pwd_file, \
+         tempfile.NamedTemporaryFile("rb", suffix=".key", prefix="edi.mx.tmp.") as keypem_file:
         key_file.write(key)
         key_file.flush()
         pwd_file.write(password)
@@ -37,7 +36,6 @@ def convert_key_cer_to_pem(key, password):
     return key_pem
 
 
-# pylint: disable=invalid-name
 def str_to_datetime(dt_str, tz=DEFAULT_TZ):
     return tz.localize(fields.Datetime.from_string(dt_str))
 
@@ -96,38 +94,49 @@ class Esignature(models.Model):
 
     @tools.ormcache("content")
     def get_pem_cer(self, content):
-        """Get the current content in PEM format"""
         self.ensure_one()
         return ssl.DER_cert_to_PEM_cert(base64.decodebytes(content)).encode("UTF-8")
 
     @tools.ormcache("key", "password")
     def get_pem_key(self, key, password):
-        """Get the current key in PEM format"""
         self.ensure_one()
         return convert_key_cer_to_pem(base64.decodebytes(key), password.encode("UTF-8"))
 
     def get_cert_data(self):
-        """Return the content (b64 encoded) and the certificate decrypted"""
         self.ensure_one()
-        cer_pem = self.get_pem_cer(self.content)
-        certificate = crypto.load_certificate(crypto.FILETYPE_PEM, cer_pem)
-        for to_del in ["\n", ssl.PEM_HEADER, ssl.PEM_FOOTER]:
-            cer_pem = cer_pem.replace(to_del.encode("UTF-8"), b"")
+        cer_pem_dirty = self.get_pem_cer(self.content)
+        certificate = x509.load_pem_x509_certificate(cer_pem_dirty, backend=default_backend())
+        cer_pem = b"".join([
+            line for line in cer_pem_dirty.splitlines()
+            if not line.startswith(b"-----")
+        ])
         return cer_pem, certificate
 
     def get_pk_data(self):
-        """Return the content (b64 encoded) and the certificate decrypted"""
         self.ensure_one()
-        key_pem = convert_key_cer_to_pem(base64.decodebytes(self.key), self.password.encode("UTF-8"))
-        private_key = crypto.load_privatekey(crypto.FILETYPE_PEM, key_pem)
+        password = self.password.encode("UTF-8")
+        key_pem = convert_key_cer_to_pem(base64.decodebytes(self.key), password)
+        try:
+            private_key = serialization.load_pem_private_key(
+                key_pem,
+                password=password,
+                backend=default_backend(),
+            )
+        except TypeError as e:
+            if "Password was given but private key is not encrypted" in str(e):
+                private_key = serialization.load_pem_private_key(
+                    key_pem,
+                    password=None,
+                    backend=default_backend(),
+                )
+            else:
+                raise ValidationError("Invalid Password")
         return key_pem, private_key
 
     def get_mx_current_datetime(self):
-        """Get the current datetime with the Mexican timezone."""
         return fields.Datetime.context_timestamp(self.with_context(tz="America/Mexico_City"), fields.Datetime.now())
 
     def get_valid_esignature(self):
-        """Search for a valid esignature that is available and not expired."""
         mexican_dt = self.get_mx_current_datetime()
         for record in self:
             date_start = str_to_datetime(record.date_start)
@@ -138,36 +147,33 @@ class Esignature(models.Model):
 
     @api.constrains("content", "key", "password")
     def _check_credentials(self):
-        """Check the validity of content/key/password and fill the fields
-        with the certificate values.
-        """
-        mexican_tz = timezone("America/Mexico_City")
         mexican_dt = self.get_mx_current_datetime()
-        date_format = "%Y%m%d%H%M%SZ"
         for record in self:
-            # Try to decrypt the certificate
             try:
                 _cer_pem, certificate = record.get_cert_data()
-                before = mexican_tz.localize(
-                    datetime.strptime(certificate.get_notBefore().decode("utf-8"), date_format)
-                )
-                after = mexican_tz.localize(datetime.strptime(certificate.get_notAfter().decode("utf-8"), date_format))
-                serial_number = certificate.get_serial_number()
-                holder = certificate.get_subject().CN
-                holder_vat = certificate.get_subject().x500UniqueIdentifier.split(" ")[0]
-            except UserError as exc_orm:
-                raise exc_orm
+                not_before = certificate.not_valid_before.replace(tzinfo=DEFAULT_TZ)
+                not_after = certificate.not_valid_after.replace(tzinfo=DEFAULT_TZ)
+                serial_number = certificate.serial_number
+
+                subject = certificate.subject
+                cn_attr = subject.get_attributes_for_oid(NameOID.COMMON_NAME)
+                holder = cn_attr[0].value if cn_attr else None
+
+                x500_attr = subject.get_attributes_for_oid(NameOID.X500_UNIQUE_IDENTIFIER)
+                holder_vat = x500_attr[0].value.split(" ")[0] if x500_attr else None
+
             except Exception:
                 raise ValidationError(self.env._("The esignature content is invalid."))
-            # Assign extracted values from the certificate
+
             record.holder = holder
             record.holder_vat = holder_vat
             record.serial_number = ("%x" % serial_number)[1::2]
-            record.date_start = before.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-            record.date_end = after.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-            if mexican_dt > after:
+            record.date_start = not_before.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+            record.date_end = not_after.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+
+            if mexican_dt > not_after:
                 raise ValidationError(self.env._("The certificate is expired since %s", record.date_end))
-            # Check the pair key/password
+
             try:
                 record.get_pk_data()
             except Exception:
