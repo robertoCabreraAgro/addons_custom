@@ -23,9 +23,13 @@ class AccountMove(models.Model):
         """Compute the allowed fiscal regimes based on partner configuration."""
         for move in self:
             if move.partner_id and move.partner_id.l10n_mx_edi_fiscal_regime_ids:
-                move.l10n_mx_edi_fiscal_regime_ids = move.partner_id.l10n_mx_edi_fiscal_regime_ids
+                move.l10n_mx_edi_fiscal_regime_ids = (
+                    move.partner_id.l10n_mx_edi_fiscal_regime_ids
+                )
             else:
-                move.l10n_mx_edi_fiscal_regime_ids = self.env["l10n_mx_edi.fiscal.regime"]
+                move.l10n_mx_edi_fiscal_regime_ids = self.env[
+                    "l10n_mx_edi.fiscal.regime"
+                ]
 
     @api.depends("partner_id", "partner_id.l10n_mx_edi_fiscal_regime_id")
     def _compute_l10n_mx_edi_fiscal_regime_id(self):
@@ -33,8 +37,13 @@ class AccountMove(models.Model):
         for move in self:
             if move.partner_id and move.partner_id.l10n_mx_edi_fiscal_regime_id:
                 # Only set if not already set or if partner changed
-                if not move.l10n_mx_edi_fiscal_regime_id or move._origin.partner_id != move.partner_id:
-                    move.l10n_mx_edi_fiscal_regime_id = move.partner_id.l10n_mx_edi_fiscal_regime_id
+                if (
+                    not move.l10n_mx_edi_fiscal_regime_id
+                    or move._origin.partner_id != move.partner_id
+                ):
+                    move.l10n_mx_edi_fiscal_regime_id = (
+                        move.partner_id.l10n_mx_edi_fiscal_regime_id
+                    )
             elif not move.partner_id:
                 move.l10n_mx_edi_fiscal_regime_id = False
 
@@ -59,8 +68,18 @@ class AccountMove(models.Model):
             if self.partner_id.l10n_mx_edi_fiscal_regime_id:
                 return self.partner_id.l10n_mx_edi_fiscal_regime_id.code
             customer = self.partner_id or self.env["res.partner"]
-            invoice_customer = customer if customer.type == "invoice" else customer.commercial_partner_id
+            invoice_customer = (
+                customer
+                if customer.type == "invoice"
+                else customer.commercial_partner_id
+            )
             return invoice_customer.l10n_mx_edi_fiscal_regime or "616"
+        return False
+
+    def _l10n_mx_edi_get_emitter_fiscal_regime(self):
+        self.ensure_one()
+        if self.journal_id.l10n_mx_edi_fiscal_regime_id:
+            return self.journal_id.l10n_mx_edi_fiscal_regime_id.code
         return False
 
     def _l10n_mx_edi_add_invoice_cfdi_values(self, cfdi_values):
@@ -70,7 +89,15 @@ class AccountMove(models.Model):
 
         # Update fiscal regime for customer in CFDI values
         customer_fiscal_regime_code = self._l10n_mx_edi_get_customer_fiscal_regime()
-        if customer_fiscal_regime_code and customer_values.get("regimen_fiscal_receptor"):
+        if customer_fiscal_regime_code and customer_values.get(
+            "regimen_fiscal_receptor"
+        ):
             customer_values["regimen_fiscal_receptor"] = customer_fiscal_regime_code
         cfdi_values.update({"receptor": customer_values})
+
+        # Update emisor
+        emitter_code = self._l10n_mx_edi_get_emitter_fiscal_regime()
+        if emitter_code:
+            cfdi_values.setdefault("emisor", {})["regimen_fiscal"] = emitter_code
+
         return res
