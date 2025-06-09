@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_account_journal_form_emitter_regime" model="ir.ui.view">
+        <field name="name">account.journal.form.emitter.regime</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.view_account_journal_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='l10n_latam_identification_type_id']" position="after">
+                <field name="default_emitter_fiscal_regime" options="{'no_create': True, 'no_open': True}" invisible="type != 'sale'"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+

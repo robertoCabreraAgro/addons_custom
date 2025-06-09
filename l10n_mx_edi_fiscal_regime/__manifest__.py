@@ -26,6 +26,7 @@
         "data/l10n_mx_edi_fiscal_regime_data.xml",
         "views/l10n_mx_edi_fiscal_regime_views.xml",
         "views/res_partner_views.xml",
+        "views/account_journal_views.xml",
         "views/account_move_views.xml",
     ],
     "post_init_hook": "post_init_hook",

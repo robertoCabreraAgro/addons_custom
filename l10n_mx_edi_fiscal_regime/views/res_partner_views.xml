@@ -19,6 +19,13 @@
                     options="{'no_create': True, 'no_open': True}"
                 />
                 <field
+                    name="allowed_fiscal_regimes"
+                    widget="many2many_tags"
+                    placeholder="Select emitter fiscal regimes..."
+                    options="{'no_create': True, 'no_open': True}"
+                    groups="base.group_system"
+                />
+                <field
                     name="l10n_mx_edi_fiscal_regime_id"
                     placeholder="Select default fiscal regime..."
                     options="{'no_create': True, 'no_open': True}"

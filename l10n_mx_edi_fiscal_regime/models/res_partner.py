@@ -15,6 +15,15 @@ class ResPartner(models.Model):
         string="Allowed Fiscal Regimes",
         help="Fiscal regimes that this partner can use for invoicing",
     )
+
+    allowed_fiscal_regimes = fields.Many2many(
+        "l10n_mx_edi.fiscal.regime",
+        "partner_allowed_fiscal_regime_rel",
+        "partner_id",
+        "fiscal_regime_id",
+        string="Allowed Emitter Fiscal Regimes",
+        help="Fiscal regimes that this company can use as issuer",
+    )
     l10n_mx_edi_fiscal_regime_id = fields.Many2one(
         "l10n_mx_edi.fiscal.regime",
         string="Fiscal Regime",
