@@ -1,25 +1,4 @@
-# -*- coding: utf-8 -*-
-#############################################################################
-#
-#    Cybrosys Technologies Pvt. Ltd.
-#
-#    Copyright (C) 2024-TODAY Cybrosys Technologies(<https://www.cybrosys.com>)
-#    Author: Cybrosys Techno Solutions(<https://www.cybrosys.com>)
-#
-#    You can modify it under the terms of the GNU AFFERO
-#    GENERAL PUBLIC LICENSE (AGPL v3), Version 3.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU AFFERO GENERAL PUBLIC LICENSE (AGPL v3) for more details.
-#
-#    You should have received a copy of the GNU AFFERO GENERAL PUBLIC LICENSE
-#    (AGPL v3) along with this program.
-#    If not, see <http://www.gnu.org/licenses/>.
-#
-#############################################################################
-from odoo import api, fields, models
+from odoo import fields, models
 
 
 class ResConfigSettings(models.TransientModel):
@@ -29,6 +8,7 @@ class ResConfigSettings(models.TransientModel):
     _inherit = ["res.config.settings", "pos.load.mixin"]
 
     display_stock = fields.Boolean(
+        related="pos_config_id.display_stock_setting",
         string="Display Stock",
         readonly=False,
         help="By enabling you can " "view quantity in Point Of Sale",
@@ -55,13 +35,3 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
         help="This field helps to hold the location",
     )
-
-    @api.model
-    def _load_pos_data_fields(self, config_id):
-        """Returns the list of fields to be loaded for POS data."""
-        result = super()._load_pos_data_fields(config_id)
-        result.append("display_stock")
-        result.append("stock_type")
-        result.append("stock_from")
-        result.append("stock_location_id")
-        return result
