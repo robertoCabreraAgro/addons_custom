@@ -7,7 +7,7 @@ import re
 from datetime import datetime, timedelta
 from lxml import etree
 
-from cryptography.x509.oid import ObjectIdentifier
+from cryptography.x509.oid import NameOID, ObjectIdentifier
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import padding
@@ -446,6 +446,48 @@ class L10nMxEdiDocument(models.Model):
                 )
             )
         return partner
+
+    def build_sat_issuer_string(self, certificate):
+        oid_map = {
+            ObjectIdentifier("1.2.840.113549.1.9.2"): "OID.1.2.840.113549.1.9.2",
+            ObjectIdentifier("2.5.4.45"): "OID.2.5.4.45",
+            NameOID.LOCALITY_NAME: "L",
+            NameOID.STATE_OR_PROVINCE_NAME: "S",
+            NameOID.COUNTRY_NAME: "C",
+            ObjectIdentifier("2.5.4.17"): "PostalCode",
+            NameOID.STREET_ADDRESS: "STREET",
+            NameOID.EMAIL_ADDRESS: "E",
+            NameOID.ORGANIZATIONAL_UNIT_NAME: "OU",
+            NameOID.ORGANIZATION_NAME: "O",
+            NameOID.COMMON_NAME: "CN",
+        } 
+        attr_dict = {attr.oid: attr.value for attr in certificate.issuer}
+
+        # Ordering according to SAT
+        oid_order = [
+            ObjectIdentifier("1.2.840.113549.1.9.2"),
+            ObjectIdentifier("2.5.4.45"),
+            NameOID.LOCALITY_NAME,
+            NameOID.STATE_OR_PROVINCE_NAME,
+            NameOID.COUNTRY_NAME,
+            ObjectIdentifier("2.5.4.17"),
+            NameOID.STREET_ADDRESS,
+            NameOID.EMAIL_ADDRESS,
+            NameOID.ORGANIZATIONAL_UNIT_NAME,
+            NameOID.ORGANIZATION_NAME,
+            NameOID.COMMON_NAME,
+        ]
+
+        parts = []
+        for oid in oid_order:
+            if oid in attr_dict:
+                name = oid_map.get(oid, f"OID.{oid.dotted_string}")
+                value = attr_dict[oid]
+                if ',' in value and not value.startswith('"'):
+                    value = f'"{value}"'
+                parts.append(f"{name}={value}")
+
+        return ', '.join(parts)
 
     def _prepare_local_taxes(self, local_taxes_node):
         """:param cfdi_etree:  The cfdi etree object.
@@ -999,7 +1041,7 @@ class L10nMxEdiDocument(models.Model):
 
         else:
             # X509IssuerName and Serial
-            cert_issuer = certificate.issuer.rfc4514_string()
+            cert_issuer = self.build_sat_issuer_string(certificate)
             cert_serial = certificate.serial_number
 
             element_certificate = element_key_info.find(".//X509Certificate")

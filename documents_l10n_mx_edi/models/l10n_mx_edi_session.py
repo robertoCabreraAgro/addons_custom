@@ -60,6 +60,13 @@ class Session(models.Model):
         copy=False,
     )
     count_verify = fields.Integer(readonly=True)
+    request_type = fields.Selection(
+        selection=[
+            ('CFDI', 'CFDI'),
+            ('Metadata', 'Metadata'),
+        ],
+        default="CFDI",
+    )
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -126,7 +133,7 @@ class Session(models.Model):
                 certificate,
                 private_key,
                 self.token,
-                {"date_from": self.date_from, "date_to": self.date_to, "cfdi_state": "Vigente"},
+                {"date_from": self.date_from, "date_to": self.date_to, "cfdi_state": "Vigente", "request_type": self.request_type},
             )
         except Exception as e:
             self.message_post(
