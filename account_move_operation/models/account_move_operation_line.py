@@ -217,16 +217,6 @@ class AccountMoveOperationLine(models.Model):
         get_action_method = getattr(self, method_name)
         return get_action_method()
 
-    def _get_action_diff_partner(self):
-        if self.diff_partner and not self._context.get("default_partner_id"):
-            action = self.env["ir.actions.actions"]._for_xml_id(
-                "account_move_operation.account_move_operation_partner_action"
-            )
-            action = self._update_action_context(action)
-            return action
-
-        return False
-
     def _get_action_info(self):
         return self.action_done()
 

@@ -168,16 +168,25 @@ class AccountMoveOperation(models.Model):
         return self.st_line_id.action_open_recon_st_line()
 
     def _create_lines(self):
-        line = self.env["account.move.operation.line"]
-        vals_list = []
-        for action in self.operation_type_id.action_ids:
-            vals_list.append(self._get_line_vals(action))
-        for vals in vals_list:
-            if line:
-                vals["orig_line_id"] = line.id
-            else:
-                vals["state"] = "ready"
-            line = line.create(vals)
+        """Create operation lines in a single batch and chain them sequentially."""
+
+        line_model = self.env["account.move.operation.line"]
+        vals_list = [
+            self._get_line_vals(action)
+            for action in self.operation_type_id.action_ids
+        ]
+
+        if not vals_list:
+            return
+
+        vals_list[0]["state"] = "ready"
+        lines = line_model.create(vals_list)
+
+        prev_line = None
+        for line in lines:
+            if prev_line:
+                line.orig_line_id = prev_line.id
+            prev_line = line
 
     def _get_line_vals(self, rule):
         vals = {
@@ -194,9 +203,18 @@ class AccountMoveOperation(models.Model):
         return vals
 
     def _get_next_action(self):
-        in_progress_line = self.line_ids.filtered(
-            lambda line: line.state == "in_progress"
-        )[:1]
+        """Return the next action to execute for this operation."""
+
+        in_progress_line = None
+        ready_line = None
+        for line in self.line_ids:
+            if not in_progress_line and line.state == "in_progress":
+                in_progress_line = line
+            elif not ready_line and line.state == "ready":
+                ready_line = line
+            if in_progress_line and ready_line:
+                break
+
         if in_progress_line:
             operation = in_progress_line.created_operation_id
             if operation and operation.company_id != self.env.company:
@@ -207,18 +225,16 @@ class AccountMoveOperation(models.Model):
                         operation.company_id.name,
                     )
                 )
-
             return in_progress_line.action_view_document()
 
-        nxt_line = self.line_ids.filtered(lambda line: line.state == "ready")
-        if not nxt_line:
+        if not ready_line:
             raise UserError(_("There is no available action to execute."))
 
         context = self._context.copy()
         context.update(
             {
                 "operation_id": self.id,
-                "operation_line_id": nxt_line.id,
+                "operation_line_id": ready_line.id,
             }
         )
-        return nxt_line.with_context(**context)._get_action()
+        return ready_line.with_context(**context)._get_action()
