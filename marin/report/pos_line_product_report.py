@@ -10,7 +10,7 @@ class PosLineProductReport(models.Model):
 
     config_id = fields.Many2one("pos.config", string="Terminal", readonly=True)
     product_id = fields.Many2one("product.product", readonly=True)
-    product_categ_id = fields.Many2one("product.category", readonly=True)
+    product_category_id = fields.Many2one("product.category", readonly=True)
     quarter = fields.Integer(readonly=True)
     quarter_str = fields.Selection(
         [("1", "1"), ("2", "2"), ("3", "3"), ("4", "4")], readonly=True
@@ -42,7 +42,7 @@ class PosLineProductReport(models.Model):
             grouped_lines AS (
                 SELECT
                     config_id,
-                    product_categ_id,
+                    product_category_id,
                     product_id,
                     quarter,
                     CAST(quarter AS text) AS quarter_str,
@@ -54,7 +54,7 @@ class PosLineProductReport(models.Model):
                     filtered_lines
                 GROUP BY
                     config_id,
-                    product_categ_id,
+                    product_category_id,
                     product_id,
                     quarter
             ),
@@ -84,7 +84,7 @@ class PosLineProductReport(models.Model):
                 quarter ASC
         """
 
-    def _check_is_populated(self, table):
+    def _is_populated(self, table):
         self._cr.execute(
             f"SELECT relispopulated FROM pg_class WHERE relname = '{table}' and relkind = 'm'"
         )
@@ -93,7 +93,7 @@ class PosLineProductReport(models.Model):
 
     def refresh_concurrently(self):
         table = AsIs(self._table)
-        if not self._check_is_populated(table):
+        if not self._is_populated(table):
             self._cr.execute(f"REFRESH MATERIALIZED VIEW {table}")
             return
 

@@ -41,7 +41,7 @@
                     <filter
                         name="group_by_product_categ"
                         string="Product Category"
-                        context="{'group_by':'product_categ_id'}"
+                        context="{'group_by':'product_category_id'}"
                     />
                     <filter
                         name="group_by_parent_categ"
@@ -158,7 +158,7 @@
         <field name="name">Invoice Line In Report</field>
         <field name="res_model">invoice.line.in.report</field>
         <field name="view_mode">list,form,pivot</field>
-        <field name="context">{'group_by': ['root_categ_id', 'parent_categ_id', 'product_categ_id', 'product_id']}</field>
+        <field name="context">{'group_by': ['root_categ_id', 'parent_categ_id', 'product_category_id', 'product_id']}</field>
     </record>
 
     <menuitem

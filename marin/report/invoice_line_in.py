@@ -16,7 +16,7 @@ class InvoiceLineIn(models.Model):
     company_id = fields.Many2one("res.company", readonly=True)
     partner_id = fields.Many2one("res.partner", readonly=True)
     product_id = fields.Many2one("product.product", readonly=True)
-    product_categ_id = fields.Many2one(
+    product_category_id = fields.Many2one(
         "product.category", string="Product Category", readonly=True
     )
     parent_categ_id = fields.Many2one(
@@ -135,7 +135,7 @@ class InvoiceLineIn(models.Model):
                 SELECT
                     inv_amls.*,
                     pt.name AS product_name,
-                    pt.categ_id AS product_categ_id,
+                    pt.categ_id AS product_category_id,
                     CASE
                         WHEN pc.parent_id = pc.root_categ_id THEN pc.id
                         ELSE pc.parent_id
@@ -193,7 +193,7 @@ class InvoiceLineIn(models.Model):
                 date
         """
 
-    def _check_is_populated(self, table):
+    def _is_populated(self, table):
         self._cr.execute(
             f"SELECT relispopulated FROM pg_class WHERE relname = '{table}' and relkind = 'm'"
         )
@@ -202,7 +202,7 @@ class InvoiceLineIn(models.Model):
 
     def refresh_concurrently(self):
         table = AsIs(self._table)
-        if not self._check_is_populated(table):
+        if not self._is_populated(table):
             self._cr.execute(f"REFRESH MATERIALIZED VIEW {table}")
             return
 

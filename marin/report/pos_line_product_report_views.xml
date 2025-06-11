@@ -35,7 +35,7 @@
                     <group name="name">
                         <field name="config_id" />
                         <field name="product_id" />
-                        <field name="product_categ_id" />
+                        <field name="product_category_id" />
                     </group>
                     <notebook>
                         <page name="values" string="Values">
@@ -76,14 +76,14 @@
             <search>
                 <field name="config_id" />
                 <field name="product_id" />
-                <field name="product_categ_id" />
+                <field name="product_category_id" />
                 <group expand="0" string="Group By">
                     <filter name="group_by_config_id" string="Terminal" context="{'group_by':'config_id'}" />
                     <filter name="group_by_product" string="Product" context="{'group_by':'product_id'}" />
                     <filter
                         name="group_by_product_categ"
                         string="Product Category"
-                        context="{'group_by':'product_categ_id'}"
+                        context="{'group_by':'product_category_id'}"
                     />
                     <filter
                         name="group_by_quarter"

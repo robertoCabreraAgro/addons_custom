@@ -12,7 +12,7 @@ class InvoiceLineOutTeam(models.Model):
     partner_id = fields.Many2one("res.partner", readonly=True)
     commercial_partner_id = fields.Many2one("res.partner", readonly=True)
     product_id = fields.Many2one("product.product", readonly=True)
-    product_categ_id = fields.Many2one("product.category", readonly=True)
+    product_category_id = fields.Many2one("product.category", readonly=True)
     parent_categ_id = fields.Many2one(
         "product.category", string="Parent Category", readonly=True
     )
@@ -87,8 +87,8 @@ class InvoiceLineOutTeam(models.Model):
                 FROM
                     filtered_lines
                 WHERE
-                    date >= MAKE_DATE(CAST(EXTRACT(YEAR FROM now()) AS integer), 1, 1)
-                    AND date <= MAKE_DATE(CAST(EXTRACT(YEAR FROM now()) AS integer), 12, 31)
+                    invoice_date >= MAKE_DATE(CAST(EXTRACT(YEAR FROM now()) AS integer), 1, 1)
+                    AND invoice_date <= MAKE_DATE(CAST(EXTRACT(YEAR FROM now()) AS integer), 12, 31)
             ),
             filtered_lines_last_year AS (
                 SELECT
@@ -96,15 +96,15 @@ class InvoiceLineOutTeam(models.Model):
                 FROM
                     filtered_lines
                 WHERE
-                    date >= MAKE_DATE(CAST(EXTRACT(YEAR FROM now()) AS integer) - 1, 1, 1)
-                    AND date <= MAKE_DATE(CAST(EXTRACT(YEAR FROM now()) AS integer) - 1, 12, 31)
+                    invoice_date >= MAKE_DATE(CAST(EXTRACT(YEAR FROM now()) AS integer) - 1, 1, 1)
+                    AND invoice_date <= MAKE_DATE(CAST(EXTRACT(YEAR FROM now()) AS integer) - 1, 12, 31)
             ),
             grouped_lines_current_year AS (
                 SELECT
                     team_id,
                     commercial_partner_id,
                     partner_id,
-                    product_categ_id,
+                    product_category_id,
                     parent_categ_id,
                     root_categ_id,
                     product_id,
@@ -119,7 +119,7 @@ class InvoiceLineOutTeam(models.Model):
                     team_id,
                     commercial_partner_id,
                     partner_id,
-                    product_categ_id,
+                    product_category_id,
                     parent_categ_id,
                     root_categ_id,
                     product_id,
@@ -130,7 +130,7 @@ class InvoiceLineOutTeam(models.Model):
                     team_id,
                     commercial_partner_id,
                     partner_id,
-                    product_categ_id,
+                    product_category_id,
                     parent_categ_id,
                     root_categ_id,
                     product_id,
@@ -145,7 +145,7 @@ class InvoiceLineOutTeam(models.Model):
                     team_id,
                     commercial_partner_id,
                     partner_id,
-                    product_categ_id,
+                    product_category_id,
                     parent_categ_id,
                     root_categ_id,
                     product_id,
@@ -192,7 +192,7 @@ class InvoiceLineOutTeam(models.Model):
                     COALESCE(glcy.team_id, glly.team_id) AS team_id,
                     COALESCE(glcy.commercial_partner_id, glly.commercial_partner_id) AS commercial_partner_id,
                     COALESCE(glcy.partner_id, glly.partner_id) AS partner_id,
-                    COALESCE(glcy.product_categ_id, glly.product_categ_id) AS product_categ_id,
+                    COALESCE(glcy.product_category_id, glly.product_category_id) AS product_category_id,
                     COALESCE(glcy.parent_categ_id, glly.parent_categ_id) AS parent_categ_id,
                     COALESCE(glcy.root_categ_id, glly.root_categ_id) AS root_categ_id,
                     COALESCE(glcy.product_id, glly.product_id) AS product_id,
@@ -278,7 +278,7 @@ class InvoiceLineOutTeam(models.Model):
                 gl.quarter ASC
         """
 
-    def _check_is_populated(self, table):
+    def _is_populated(self, table):
         self._cr.execute(
             f"SELECT relispopulated FROM pg_class WHERE relname = '{table}' and relkind = 'm'"
         )
@@ -287,7 +287,7 @@ class InvoiceLineOutTeam(models.Model):
 
     def refresh_concurrently(self):
         table = AsIs(self._table)
-        if not self._check_is_populated(table):
+        if not self._is_populated(table):
             self._cr.execute(f"REFRESH MATERIALIZED VIEW {table}")
             return
 

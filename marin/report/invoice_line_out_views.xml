@@ -1,22 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
     <record id="view_invoice_line_out_report_search_view" model="ir.ui.view">
         <field name="name">invoice.line.out.report.search.view</field>
         <field name="model">invoice.line.out.report</field>
         <field name="arch" type="xml">
             <search>
+                <field name="partner_id" operator="child_of" />
                 <field name="product_id" />
-                <field name="partner_id" />
-                <field name="commercial_partner_id" />
-                <field name="product_categ_id" />
-                <field name="journal_id" />
+                <field name="product_category_id"
+                    filter_domain="[('product_category_id', 'child_of', self)]" />
+                <field name="manufacturer_id" />
                 <field name="move_id" />
+                <field name="journal_id" />
                 <filter name="out_invoices"
                     domain="[('move_type', '=', 'out_invoice')]"
                     help="Invoices" />
                 <filter name="out_refunds"
                     domain="[('move_type', '=', 'out_refund')]"
                     help="Credit Notes" />
+                <separator />
+                <filter name="fiscal" string="Fiscal"
+                    domain="[('x_treatment', 'in', ('fiscal_real', 'fiscal_simulated'))]" />
+                <filter name="not_fiscal" string="Not fiscal"
+                    domain="[('x_treatment', 'in', ('not_fiscal_real', 'not_fiscal_simulated'))]" />
                 <separator />
                 <filter name="paid_invoices"
                     domain="[('payment_state', '=', 'paid')]"
@@ -25,13 +32,11 @@
                     domain="[('payment_state', '=', 'in_payment')]"
                     help="In Payment Invoices" />
                 <separator />
-                <filter name="fiscal" string="Fiscal"
-                    domain="[('journal_id.x_treatment', 'in', ('fiscal_real', 'fiscal_simulated'))]" />
-                <filter name="not_fiscal" string="Not Fiscal"
-                    domain="[('journal_id.x_treatment', 'in', ('not_fiscal_real', 'not_fiscal_simulated'))]" />
-                <separator />
-                <filter name="date" string="Date" date="date" />
-                <group expand="0" string="Group By">
+                <filter name="invoice_date" string="Invoice date"
+                    date="invoice_date" />
+                <filter name="later_than_a_year_ago" string="Invoice date: Last 365 days"
+                    domain="[('invoice_date', '&gt;=', (datetime.datetime.combine(context_today() + relativedelta(days=-365), datetime.time(0,0,0))).strftime('%Y-%m-%d %H:%M:%S'))]" />
+                <group expand="1" string="Group By">
                     <filter name="group_by_team" string="Team"
                         context="{'group_by': 'team_id'}" />
                     <filter name="group_by_user" string="Salesperson"
@@ -41,30 +46,57 @@
                     <filter name="group_by_commercial_partner" string="Commercial Partner"
                         context="{'group_by': 'commercial_partner_id'}" />
                     <separator />
-                    <filter name="group_by_move_product" string="Product"
-                        context="{'group_by':'product_id'}" />
                     <filter name="group_by_product_categ" string="Product Category"
-                        context="{'group_by':'product_categ_id'}" />
+                        context="{'group_by': 'product_category_id'}" />
                     <filter name="group_by_parent_categ" string="Parent Category"
-                        context="{'group_by':'parent_categ_id'}" />
+                        context="{'group_by': 'parent_categ_id'}" />
                     <filter name="group_by_root_categ" string="Root Category"
-                        context="{'group_by':'root_categ_id'}" />
-                    <separator />
-                    <filter name="group_by_date" string="Date"
-                        context="{'group_by':'date'}" />
+                        context="{'group_by': 'root_categ_id'}" />
+                    <filter name="group_by_move_product" string="Product"
+                        context="{'group_by': 'product_id'}" />
                     <separator />
                     <filter name="group_by_move_type" string="Invoice Type"
-                        context="{'group_by':'move_type'}" />
+                        context="{'group_by': 'move_type'}" />
                     <filter name="group_by_payment_state" string="Payment State"
-                        context="{'group_by':'payment_state'}" />
+                        context="{'group_by': 'payment_state'}" />
                     <filter name="group_by_move" string="Invoice"
-                        context="{'group_by':'move_id'}" />
+                        context="{'group_by': 'move_id'}" />
                     <filter name="group_by_journal" string="Journal"
                         context="{'group_by': 'journal_id'}" />
-                    <filter name="group_by_treatment" string="Treatment"
-                        context="{'group_by':'x_treatment'}" />
+                    <separator />
+                    <filter name="group_by_invoice_date" string="Invoice date"
+                        context="{'group_by': 'invoice_date'}" />
                 </group>
             </search>
+        </field>
+    </record>
+
+    <record id="view_invoice_line_out_report_pivot" model="ir.ui.view">
+        <field name="name">invoice.line.out.report.pivot</field>
+        <field name="model">invoice.line.out.report</field>
+        <field name="arch" type="xml">
+            <pivot string="Invoices Analysis" sample="1">
+                <field name="invoice_date" type="row" />
+                <field name="quantity" type="measure" />
+                <field name="price_unit" type="measure" />
+                <field name="price_subtotal" type="measure" />
+                <field name="price_total" type="measure" />
+                <field name="purchase_price" type="measure" />
+                <field name="purchase_price_total" type="measure" />
+                <field name="margin" type="measure" />
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_invoice_line_out_report_graph" model="ir.ui.view">
+        <field name="name">invoice.line.out.report.graph</field>
+        <field name="model">invoice.line.out.report</field>
+        <field name="arch" type="xml">
+            <graph string="Invoices Analysis" type="line" sample="1">
+                <field name="invoice_date" interval="day" />
+                <field name="price_subtotal" type="measure" operator="+" />
+                <field name="margin" type="measure" operator="+" />
+            </graph>
         </field>
     </record>
 
@@ -73,24 +105,27 @@
         <field name="model">invoice.line.out.report</field>
         <field name="arch" type="xml">
             <list>
+                <field name="invoice_date" optional="show" />
                 <field name="journal_id" optional="show" />
-                <field name="move_type" optional="show" />
-                <field name="date" optional="show" />
+                <field name="move_type" optional="hide" />
                 <field name="move_id" optional="show" />
                 <field name="partner_id" optional="show" />
-                <field name="payment_state" optional="show" />
+                <field name="manufacturer_id" optional="hide" />
+                <field name="product_category_id" optional="hide" />
                 <field name="product_id" optional="show" />
                 <field name="quantity" sum="Total qty" optional="show" />
                 <field name="price_unit" avg="Avg price" optional="show" />
-                <field name="discount" string="Disc(%)" avg="Avg discount" optional="show" />
+                <field name="discount" string="Disc(%)" avg="Avg discount" optional="hide" />
                 <field name="price_subtotal" sum="Subtotal" optional="show" />
                 <field name="price_total" sum="Total" optional="show" />
-                <field name="purchase_price" avg="Avg purchase" optional="show" />
-                <field name="purchase_price_total" sum="Total purchase" optional="show" />
+                <field name="purchase_price" avg="Avg purchase" optional="hide" />
+                <field name="purchase_price_total" sum="Total purchase" optional="hide" />
                 <field name="margin" sum="Total margin" optional="show" />
                 <field name="margin_percent" avg="Avg margin" optional="show" />
-                <field name="invoice_payment_term_id" optional="show" />
-                <field name="company_id" optional="show" />
+                <field name="invoice_payment_term_id" optional="hide" />
+                <field name="payment_state" widget="badge" optional="hide" />
+                <field name="invoice_user_id" optional="hide" widget="many2one_avatar_user" />
+                <field name="company_id" optional="hide" groups="base.group_multi_company" />
             </list>
         </field>
     </record>
@@ -122,7 +157,7 @@
                         <page name="values" string="Values">
                             <group>
                                 <group string="Invoice">
-                                    <field name="date" />
+                                    <field name="invoice_date" />
                                     <field name="quantity" />
                                     <field name="price_unit" />
                                     <field name="price_subtotal" />
@@ -146,27 +181,10 @@
         </field>
     </record>
 
-    <record id="view_invoice_line_out_report_pivot" model="ir.ui.view">
-        <field name="name">invoice.line.out.report.pivot</field>
-        <field name="model">invoice.line.out.report</field>
-        <field name="arch" type="xml">
-            <pivot>
-                <field name="quantity" type="measure" />
-                <field name="price_unit" type="measure" />
-                <field name="price_subtotal" type="measure" />
-                <field name="price_total" type="measure" />
-                <field name="purchase_price" type="measure" />
-                <field name="purchase_price_total" type="measure" />
-                <field name="margin" type="measure" />
-                <field name="margin_percent" type="measure" />
-            </pivot>
-        </field>
-    </record>
-
     <record id="action_invoice_line_out_report" model="ir.actions.act_window">
-        <field name="name">Invoice Line Out Report</field>
+        <field name="name">Invoices Analysis</field>
         <field name="res_model">invoice.line.out.report</field>
-        <field name="view_mode">list,form,pivot</field>
+        <field name="view_mode">list,form,pivot,graph</field>
     </record>
 
     <menuitem

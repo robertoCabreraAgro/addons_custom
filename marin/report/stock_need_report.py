@@ -7,10 +7,10 @@ class StockNeed(models.Model):
     _name = "stock.need.report"
     _description = "Stock Need"
     _auto = False
-    _order = "root_categ_id ASC, product_categ_id ASC, product_id ASC"
+    _order = "root_categ_id ASC, product_category_id ASC, product_id ASC"
 
     product_id = fields.Many2one("product.product", string="Product", readonly=True)
-    product_categ_id = fields.Many2one(
+    product_category_id = fields.Many2one(
         "product.category", string="Product Category", readonly=True
     )
     parent_categ_id = fields.Many2one(
@@ -188,7 +188,7 @@ class StockNeed(models.Model):
                 pp.id AS id,
                 pp.id AS product_id,
                 pp.name,
-                pp.categ_id AS product_categ_id,
+                pp.categ_id AS product_category_id,
                 pp.parent_categ_id,
                 pp.root_categ_id,
                 COALESCE(sq.quantity, 0.0) - COALESCE(sq.reserved_quantity, 0.0) AS available_quantity, -- Field 1

@@ -15,7 +15,7 @@ class PosLineReport(models.Model):
     partner_id = fields.Many2one("res.partner", readonly=True)
     commercial_partner_id = fields.Many2one("res.partner", readonly=True)
     product_id = fields.Many2one("product.product", readonly=True)
-    product_categ_id = fields.Many2one("product.category", readonly=True)
+    product_category_id = fields.Many2one("product.category", readonly=True)
     config_id = fields.Many2one("pos.config", readonly=True)
     parent_state = fields.Selection(
         selection=[
@@ -73,7 +73,7 @@ class PosLineReport(models.Model):
                     pol.margin,
                     pol.margin_percent,
                     po.config_id,
-                    pt.categ_id AS product_categ_id,
+                    pt.categ_id AS product_category_id,
                     EXTRACT(YEAR FROM po.date_order) AS year,
                     EXTRACT(MONTH FROM po.date_order) AS month,
                     TO_CHAR(po.date_order, 'Month') AS month_name,
@@ -104,7 +104,7 @@ class PosLineReport(models.Model):
                 line_id ASC
         """
 
-    def _check_is_populated(self, table):
+    def _is_populated(self, table):
         self._cr.execute(
             f"SELECT relispopulated FROM pg_class WHERE relname = '{table}' and relkind = 'm'"
         )
@@ -113,7 +113,7 @@ class PosLineReport(models.Model):
 
     def refresh_concurrently(self):
         table = AsIs(self._table)
-        if not self._check_is_populated(table):
+        if not self._is_populated(table):
             self._cr.execute(f"REFRESH MATERIALIZED VIEW {table}")
             return
 

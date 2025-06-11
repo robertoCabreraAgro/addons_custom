@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <list>
                 <field name="product_id" />
-                <field name="product_categ_id" optional="show" />
+                <field name="product_category_id" optional="show" />
                 <field name="parent_categ_id" optional="show" />
                 <field name="root_categ_id" optional="hide" />
                 <field name="available_quantity" optional="show" />
@@ -39,7 +39,7 @@
                     </div>
                     <group name="name">
                         <field name="product_id" />
-                        <field name="product_categ_id" />
+                        <field name="product_category_id" />
                         <field name="parent_categ_id" />
                         <field name="root_categ_id" invisible="1" />
                     </group>
@@ -97,7 +97,7 @@
         <field name="arch" type="xml">
             <search>
                 <field name="product_id" />
-                <field name="product_categ_id" />
+                <field name="product_category_id" />
                 <field name="parent_categ_id" />
                 <field name="root_categ_id" />
                 <group expand="0" string="Group By">
@@ -105,7 +105,7 @@
                     <filter
                         name="group_by_product_categ"
                         string="Product Category"
-                        context="{'group_by':'product_categ_id'}"
+                        context="{'group_by':'product_category_id'}"
                     />
                     <filter
                         name="group_by_parent_categ"
@@ -126,7 +126,7 @@
         <field name="name">Stock Need Report</field>
         <field name="res_model">stock.need.report</field>
         <field name="view_mode">list,form,pivot</field>
-        <field name="context">{'group_by': ['root_categ_id', 'parent_categ_id', 'product_categ_id', 'product_id']}</field>
+        <field name="context">{'group_by': ['root_categ_id', 'parent_categ_id', 'product_category_id', 'product_id']}</field>
     </record>
 
     <menuitem

@@ -1,6 +1,9 @@
 from psycopg2.extensions import AsIs
 
 from odoo import fields, models
+from odoo.tools import SQL
+from odoo.tools.query import Query
+
 from odoo.addons.account.models.account_move import PAYMENT_STATE_SELECTION
 
 
@@ -8,16 +11,50 @@ class InvoiceLineOut(models.Model):
     _name = "invoice.line.out.report"
     _description = "Invoice Line Out"
     _auto = False
-    _order = "date DESC"
+    _order = "invoice_date DESC"
 
-    company_id = fields.Many2one("res.company", readonly=True)
-    journal_id = fields.Many2one("account.journal", readonly=True)
-    partner_id = fields.Many2one("res.partner", readonly=True)
-    commercial_partner_id = fields.Many2one("res.partner", readonly=True)
-    team_id = fields.Many2one("crm.team", readonly=True)
-    invoice_user_id = fields.Many2one("res.users", readonly=True)
-    invoice_payment_term_id = fields.Many2one("account.payment.term", readonly=True)
-    move_id = fields.Many2one("account.move", readonly=True)
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        string="Company",
+        readonly=True,
+    )
+    journal_id = fields.Many2one(
+        comodel_name="account.journal",
+        string="Journal",
+        readonly=True,
+    )
+    partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Partner",
+        readonly=True,
+    )
+    commercial_partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Main Partner",
+        readonly=True,
+    )
+    invoice_payment_term_id = fields.Many2one(
+        comodel_name="account.payment.term",
+        readonly=True,
+    )
+    invoice_user_id = fields.Many2one(
+        comodel_name="res.users",
+        readonly=True,
+    )
+    team_id = fields.Many2one(
+        comodel_name="crm.team",
+        string="Team",
+        readonly=True,
+    )
+    move_id = fields.Many2one(
+        comodel_name="account.move",
+        string="Entry",
+        readonly=True,
+    )
     move_type = fields.Selection(
         selection=[
             ("entry", "Journal Entry"),
@@ -38,7 +75,7 @@ class InvoiceLineOut(models.Model):
             ("fiscal_simulated", "Fiscal simulated"),
             ("fiscal_real", "Fiscal real"),
         ],
-        "Treatment",
+        string="Treatment",
         readonly=True,
     )
     payment_state = fields.Selection(
@@ -46,8 +83,7 @@ class InvoiceLineOut(models.Model):
         string="Payment Status",
         readonly=True,
     )
-
-    date = fields.Date(readonly=True)
+    invoice_date = fields.Date(readonly=True)
     year = fields.Integer(readonly=True)
     quarter = fields.Integer(readonly=True)
     month = fields.Integer(readonly=True)
@@ -56,20 +92,29 @@ class InvoiceLineOut(models.Model):
     day_of_year = fields.Integer(readonly=True)
     day_of_month = fields.Integer(readonly=True)
     day_of_week = fields.Integer(readonly=True)
-
-    product_id = fields.Many2one("product.product", readonly=True)
-    product_categ_id = fields.Many2one("product.category", readonly=True)
+    product_id = fields.Many2one(
+        comodel_name="product.product",
+        readonly=True,
+    )
+    product_category_id = fields.Many2one(
+        comodel_name="product.category",
+        readonly=True,
+    )
     parent_categ_id = fields.Many2one(
-        "product.category",
+        comodel_name="product.category",
         string="Parent Category",
         readonly=True,
     )
     root_categ_id = fields.Many2one(
-        "product.category",
+        comodel_name="product.category",
         string="Root Category",
         readonly=True,
     )
-
+    manufacturer_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Manufacturer",
+        readonly=True,
+    )
     quantity = fields.Float(readonly=True)
     price_unit = fields.Float(readonly=True, aggregator="avg")
     discount = fields.Float(readonly=True, aggregator="avg")
@@ -78,90 +123,127 @@ class InvoiceLineOut(models.Model):
     purchase_price = fields.Float(readonly=True, aggregator="avg")
     purchase_price_total = fields.Float("Total Purchase", readonly=True)
     margin = fields.Float(readonly=True)
-    margin_percent = fields.Float(readonly=True)
+    margin_percent = fields.Float(readonly=True, aggregator="avg")
 
     def init(self):
         table = AsIs(self._table)
         query = AsIs(self._query())
-        self._cr.execute(f"DROP MATERIALIZED view IF EXISTS {table} CASCADE")
-        if self._context.get("with_data"):
+        self._cr.execute(f"DROP MATERIALIZED VIEW IF EXISTS {table} CASCADE")
+        command = f"CREATE MATERIALIZED VIEW {table} AS ({query})"
+        if not self._context.get("with_data"):
             # When calling with that context it will create the view and populate it
-            self._cr.execute(f"CREATE MATERIALIZED VIEW {table} AS ({query})")
-        else:
             # To avoid long time to update the module we create the view without data
             # and later be populated by the cron that executes the method refresh_concurrently()
-            self._cr.execute(
-                f"CREATE MATERIALIZED VIEW {table} AS ({query}) WITH NO DATA"
-            )
+            command += " WITH NO DATA"
+        self._cr.execute(command)
         self._cr.execute(f"CREATE UNIQUE INDEX id_{table} ON {table} (id)")
 
     def _query(self):
+        return f"SELECT {self._select()} FROM {self._from()} WHERE {self._where()}"
+
+    def _select(self):
         return """
-            SELECT
-                aml.id,
-                move.company_id,
-                move.commercial_partner_id,
-                move.partner_id,
-                aml.journal_id,
-                journal.x_treatment,
-                move.invoice_payment_term_id,
-                move.invoice_user_id,
-                move.payment_state,
-                move.team_id,
-                move.invoice_date AS date, 
-                EXTRACT(YEAR FROM move.invoice_date) AS year,
-                EXTRACT(MONTH FROM move.invoice_date) AS month,
-                TO_CHAR(move.invoice_date, 'Month') AS month_name,
-                EXTRACT(QUARTER FROM move.invoice_date) AS quarter,
-                EXTRACT(WEEK FROM move.invoice_date) AS week_of_year,
-                EXTRACT(DAY FROM move.invoice_date) AS day_of_month,
-                EXTRACT(DOW FROM move.invoice_date) AS day_of_week,
-                EXTRACT(DOY FROM move.invoice_date) AS day_of_year,
-                aml.move_id,
-                move.move_type,
-                aml.product_id,
-                pc.id AS product_categ_id,
-                CASE
-                    WHEN pc.parent_id = pc.root_categ_id THEN pc.id
-                    ELSE pc.parent_id
-                END AS parent_categ_id,
-                pc.root_categ_id,
-                aml.quantity,
-                aml.price_unit,
-                aml.discount,
-                aml.price_subtotal,
-                aml.price_total,
-                aml.purchase_price,
-                ROUND((aml.purchase_price * quantity), 2) AS purchase_price_total,
-                aml.margin,aml.margin_percent
-            FROM
-                account_move_line aml
-                INNER JOIN account_move move ON move.id = aml.move_id
-                LEFT JOIN account_journal journal ON journal.id = aml.journal_id
-                LEFT JOIN product_product pp ON pp.id = aml.product_id
-                LEFT JOIN product_template pt ON pt.id = pp.product_tmpl_id
-                LEFT JOIN product_category pc ON pc.id = pt.categ_id
-            WHERE
-                move.move_type IN ('out_invoice', 'out_refund')
-                AND move."state" = 'posted'
-                AND journal.x_treatment IN ('fiscal_real', 'not_fiscal_real')
-                AND aml.display_type = 'product'
-                AND aml.quantity != 0.0
-            ORDER BY
-                move.invoice_date, move.id
+            aml.id,
+            move.company_id,
+            move.commercial_partner_id,
+            move.partner_id,
+            move.journal_id,
+            journal.x_treatment,
+            move.invoice_payment_term_id,
+            move.invoice_user_id,
+            move.team_id,
+            move.payment_state,
+            move.invoice_date, 
+            EXTRACT(YEAR FROM move.invoice_date) AS year,
+            EXTRACT(MONTH FROM move.invoice_date) AS month,
+            TO_CHAR(move.invoice_date, 'Month') AS month_name,
+            EXTRACT(QUARTER FROM move.invoice_date) AS quarter,
+            EXTRACT(WEEK FROM move.invoice_date) AS week_of_year,
+            EXTRACT(DAY FROM move.invoice_date) AS day_of_month,
+            EXTRACT(DOW FROM move.invoice_date) AS day_of_week,
+            EXTRACT(DOY FROM move.invoice_date) AS day_of_year,
+            aml.move_id,
+            move.move_type,
+            aml.product_id,
+            pc.id AS product_category_id,
+            CASE
+                WHEN pc.parent_id = pc.root_categ_id
+                THEN pc.id
+                ELSE pc.parent_id
+            END AS parent_categ_id,
+            pc.root_categ_id,
+            partner.id AS manufacturer_id,
+            aml.quantity,
+            aml.price_unit,
+            aml.discount,
+            aml.price_subtotal,
+            aml.price_total,
+            aml.purchase_price,
+            ROUND((aml.purchase_price * quantity), 2) AS purchase_price_total,
+            aml.margin,
+            aml.margin_percent
         """
 
-    def _check_is_populated(self, table):
-        self._cr.execute(
-            f"SELECT relispopulated FROM pg_class WHERE relname = '{table}' and relkind = 'm'"
-        )
-        res = self._cr.fetchone()
-        return res and res[0]
+    def _from(self):
+        return """
+            account_move_line aml
+            INNER JOIN account_move move
+                ON aml.move_id=move.id
+                LEFT JOIN account_journal journal
+                    ON move.journal_id=journal.id
+            LEFT JOIN product_product pp
+                ON aml.product_id=pp.id
+                LEFT JOIN product_template pt
+                    ON pp.product_tmpl_id=pt.id
+                    LEFT JOIN product_category pc
+                        ON pt.categ_id=pc.id
+                    LEFT JOIN res_partner partner
+                        ON pt.manufacturer_id=partner.id
+        """
+
+    def _where(self):
+        return """
+            move.move_type IN ('out_invoice', 'out_refund')
+            AND move."state" = 'posted'
+            AND journal.x_treatment IN ('fiscal_real', 'not_fiscal_real')
+            AND aml.display_type = 'product'
+        """
+
+    def _read_group_select(self, aggregate_spec: str, query: Query) -> SQL:
+        """This override allows us to correctly calculate the average price of products."""
+        if aggregate_spec == "price_unit:avg":
+            return SQL(
+                """COALESCE(
+                    SUM(%(f_price)s) / NULLIF(SUM(%(f_qty)s), 0.0),
+                    0
+                )""",
+                f_price=self._field_to_sql(self._table, "price_subtotal", query),
+                f_qty=self._field_to_sql(self._table, "quantity", query),
+            )
+        elif aggregate_spec == "margin_percent:avg":
+            return SQL(
+                """COALESCE(
+                    SUM(%(f_margin)s) / NULLIF(SUM(%(f_subtotal)s), 0.0),
+                    0
+                )""",
+                f_margin=self._field_to_sql(self._table, "margin", query),
+                f_subtotal=self._field_to_sql(self._table, "price_subtotal", query),
+            )
+        else:
+            return super()._read_group_select(aggregate_spec, query)
+
 
     def refresh_concurrently(self):
         table = AsIs(self._table)
-        if not self._check_is_populated(table):
-            self._cr.execute(f"REFRESH MATERIALIZED VIEW {table}")
-            return
+        command = f"REFRESH MATERIALIZED VIEW {table}"
+        if self._is_populated():
+            command += " CONCURRENTLY"
+        self._cr.execute(command)
 
-        self._cr.execute(f"REFRESH MATERIALIZED VIEW CONCURRENTLY {table}")
+    def _is_populated(self):
+        table = AsIs(self._table)
+        self._cr.execute(
+            f"SELECT ispopulated FROM pg_matviews WHERE matviewname='{table}'"
+        )
+        res = self._cr.fetchone()
+        return res and res[0]
