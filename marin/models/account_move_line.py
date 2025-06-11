@@ -1,3 +1,6 @@
+import re
+from collections import Counter
+
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import frozendict
@@ -18,9 +21,48 @@ class AccountMoveLine(models.Model):
         string="Allowed sale lines to be related",
         compute="_compute_allowed_sale_line_ids",
     )
+    name = fields.Char(
+        string="Label",
+        compute="_compute_name",
+        inverse="_inverse_name",
+        store=True,
+        readonly=False,
+        precompute=True,
+        tracking=True,
+    )
+
+    @api.onchange("name")
+    def _inverse_name(self):
+        for line in self:
+            if line.name and not line.product_id:
+                line._conditional_add_to_compute(
+                    "account_id",
+                    lambda aml: (
+                        aml.display_type == "product" and aml.move_id.is_invoice(True)
+                    ),
+                )
 
     # Override original method
     def _compute_account_id(self):
+        """Compute the appropriate account for account move lines.
+
+        This method overrides the original implementation to determine the correct
+        account_id for different types of move lines based on various business rules
+        and fallback mechanisms.
+
+        The computation follows this priority order:
+        1. Payment term lines: Uses partner/journal properties with fallbacks
+        2. Product lines:
+           2.1. Uses product accounts based on move type
+           2.2. Lines without products: tokenize line description
+           2.3. Lines without products: Uses most frequent account for partner
+        4. Final fallback: Uses previous similar lines or journal default
+
+        Note:
+            This method processes lines in batches by display_type for efficiency
+            and applies company-specific context when needed.
+        """
+        # 1. Process payment term lines (receivable/payable accounts)
         term_lines = self.filtered(lambda l: l.display_type == "payment_term")
         if term_lines:
             for line in term_lines:
@@ -38,9 +80,9 @@ class AccountMoveLine(models.Model):
                 )
                 move = line.move_id
                 previous_two_accounts = move.line_ids.filtered(
-                    lambda line: line.account_id
-                    and line.display_type == "payment_term"
-                    and line._origin.id not in line.ids
+                    lambda l: l.account_id
+                    and l.display_type == "payment_term"
+                    and l._origin.id not in line.ids
                 )[-2:].account_id
                 account_id = (
                     getattr(journal, journal_prop)
@@ -55,12 +97,15 @@ class AccountMoveLine(models.Model):
                     )
                 line.account_id = account_id
 
+        # 2. Process product lines
         product_lines = self.filtered(
             lambda l: l.display_type == "product" and l.move_id.is_invoice(True)
         )
         if product_lines:
             for line in product_lines:
                 journal = line.move_id.journal_id
+
+                # 2.1. Use product accounts
                 if line.product_id:
                     fiscal_position = line.move_id.fiscal_position_id
                     accounts = line.with_company(
@@ -68,31 +113,75 @@ class AccountMoveLine(models.Model):
                     ).product_id.product_tmpl_id.get_product_accounts(
                         fiscal_pos=fiscal_position
                     )
+                    account_id = False
                     if line.move_id.move_type in ("out_invoice", "out_receipt"):
-                        line.account_id = (
+                        account_id = (
                             accounts["income"]
                             or journal.default_account_id
                             or line.account_id
                         )
                     elif line.move_id.move_type == "out_refund":
-                        line.account_id = (
+                        account_id = (
                             accounts["income_refund"]
                             or journal.default_refund_account_id
                             or line.account_id
                         )
                     elif line.move_id.move_type in ("in_invoice", "in_receipt"):
-                        line.account_id = (
+                        account_id = (
                             accounts["expense"]
                             or journal.default_account_id
                             or line.account_id
                         )
-                    elif line.move_id.move_type == "in_refund":
-                        line.account_id = (
+                    if line.move_id.move_type == "in_refund":
+                        account_id = (
                             accounts["expense_refund"]
                             or journal.default_refund_account_id
                             or line.account_id
                         )
-                if not line.product_id and line.partner_id:
+                    if account_id:
+                        line.account_id = account_id
+                        continue
+
+                # 2.2. Tokenize line description
+                if line.name:
+
+                    def _tokenize(text):
+                        return re.findall(r"\b\w{3,}\b", text.lower())
+
+                    desc_tokens = set(_tokenize(line.name))
+                    account_type = "expense"
+                    if line.move_id.move_type in (
+                        "out_invoice",
+                        "out_receipt",
+                        "out_refund",
+                    ):
+                        account_type = "income"
+                    candidate_accounts = self.env["account.account"].search(
+                        [
+                            ("company_ids", "in", line.company_id.ids),
+                            ("account_type", "=", account_type),
+                            ("deprecated", "=", False),
+                            ("id", "in", line.journal_id.account_control_ids.ids),
+                        ]
+                    )
+                    similarity_scores = Counter()
+                    for account in candidate_accounts:
+                        account_tokens = set(
+                            _tokenize(f"{account.code or ''} {account.name or ''}")
+                        )
+                        common_tokens = desc_tokens & account_tokens
+                        if common_tokens:
+                            similarity_scores[account.id] += len(common_tokens)
+
+                    if similarity_scores:
+                        best_account_id = similarity_scores.most_common(1)[0][0]
+                        line.account_id = self.env["account.account"].browse(
+                            best_account_id
+                        )
+                        continue  # Account assigned based on token similarity
+
+                # 2.3. Most frequent account for the partner
+                if line.partner_id:
                     account_id = self.env[
                         "account.account"
                     ]._get_most_frequent_account_for_partner(
@@ -103,6 +192,7 @@ class AccountMoveLine(models.Model):
                     if account_id:
                         line.account_id = account_id
 
+        # 4. Use previous similar lines or journal default
         for line in self.filtered(
             lambda l: not l.account_id
             and l.display_type not in ("line_section", "line_note")
@@ -110,6 +200,7 @@ class AccountMoveLine(models.Model):
             previous_two_accounts = line.move_id.line_ids.filtered(
                 lambda x: x.account_id and x.display_type == line.display_type
             )[-2:].account_id
+
             if len(previous_two_accounts) == 1 and len(line.move_id.line_ids) > 2:
                 line.account_id = previous_two_accounts
             else:
