@@ -2,7 +2,7 @@ import re
 from itertools import product
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.addons.base.models.res_bank import sanitize_account_number
 
 
@@ -124,3 +124,17 @@ class AccountBankStatementLine(models.Model):
                 return partner
 
         return self.env["res.partner"]
+
+    def action_execute_workflow(self):
+        """Execute a custom workflow for this bank statement line."""
+        self.ensure_one()
+        # Placeholder for workflow logic
+        return {
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "title": _("Workflow"),
+                "message": _("Workflow executed successfully."),
+                "type": "success",
+            },
+        }

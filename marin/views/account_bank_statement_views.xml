@@ -10,4 +10,16 @@
             </xpath>
         </field>
     </record>
+
+    <record id="view_bank_statement_line_form_workflow" model="ir.ui.view">
+        <field name="name">account.bank.statement.line.form.workflow</field>
+        <field name="model">account.bank.statement.line</field>
+        <field name="inherit_id" ref="account.view_bank_statement_line_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_execute_workflow" string="Execute Workflow"
+                        type="object" class="btn-primary"/>
+            </xpath>
+        </field>
+    </record>
 </odoo>
