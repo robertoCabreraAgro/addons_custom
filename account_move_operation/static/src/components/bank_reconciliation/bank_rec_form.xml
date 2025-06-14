@@ -1,16 +1,8 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<templates xml:space="preserve">
-    <t t-inherit="account_accountant.BankRecRecordFormButtonsHeaderLeft" t-inherit-mode="extension">
-        <xpath expr="//div" position="inside">
-            <!-- <button
-                name="button_operation"
-                string="Operation"
-                class="btn btn-secondary"
-                type="object"
-                accesskey="o"
-            /> -->
-            <button accesskey="o" class="btn btn-secondary" t-on-click="(ev) => this.actionOperation()">
-                <span>Operation</span>
+<templates id="template" xml:space="preserve">
+    <t t-name="marin.BankRecRecordFormButtonsHeaderLeft" t-inherit="account_accountant.BankRecRecordFormButtonsHeaderLeft" t-inherit-mode="extension">
+        <xpath expr="//div[@class='o_statusbar_buttons o_bank_rec_stats_buttons_aside_left py-1 ps-1']" position="inside">
+            <button class="btn btn-secondary" t-on-click="() => this.actionOpenOperationWizard()">
+                Flujo
             </button>
         </xpath>
     </t>

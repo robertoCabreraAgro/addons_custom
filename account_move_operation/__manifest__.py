@@ -39,10 +39,10 @@
         "demo/account_move_template.xml",
         "demo/account_move_operation_type.xml",
     ],
-    # "assets": {
-    #     "web.assets_backend": [
-    #         "account_move_operation/static/src/components/**/*",
-    #     ],
-    # },
+    "assets": {
+        "web.assets_backend": [
+            "account_move_operation/static/src/components/**/*",
+        ],
+    },
     "installable": True,
 }
