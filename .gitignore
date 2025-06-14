@@ -34,6 +34,10 @@ package.json
 /share/
 /src/
 
-#PyDev
+# PyDev
 .project
 .pydevproject
+
+# pre-commit
+doc8.ini
+pyproject.toml
