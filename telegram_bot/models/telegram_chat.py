@@ -13,6 +13,18 @@ class TelegramChat(models.Model):
     telegram_username = fields.Char(index=True, readonly=True)
     bot_id = fields.Many2one("telegram.bot", string="Bot", required=True, readonly=True, ondelete="cascade")
     partner_id = fields.Many2one("res.partner", string="Odoo Contact")
+    state = fields.Selection(
+        [
+            ("idle", "Idle"),
+            ("awaiting_payment_details", "Awaiting Payment Details"),
+            ("awaiting_payment_proof", "Awaiting Payment Proof"),
+            ("awaiting_confirmation", "Awaiting Confirmation"),
+        ],
+        string="Status",
+        default="idle",
+        required=True,
+    )
+    pending_payment_data = fields.Json(string="Pending Payment Data (JSON)")
 
     _chat_id_bot_id_uniq = models.Constraint(
         "UNIQUE (chat_id, bot_id)",
@@ -84,3 +96,7 @@ class TelegramChat(models.Model):
                     chat.id,
                 )
         return res
+
+    def reset_state(self):
+        """Resets the chat state to idle."""
+        self.write({"state": "idle", "pending_payment_data": False})

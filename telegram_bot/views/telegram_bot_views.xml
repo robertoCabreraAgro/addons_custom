@@ -9,6 +9,7 @@
                     <group>
                         <field name="name" />
                         <field name="token" password="True" />
+                        <field name="payment_approval_category_id" />
                     </group>
                     <notebook>
                         <page string="Chats Vinculados">
