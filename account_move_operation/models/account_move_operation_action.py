@@ -35,7 +35,7 @@ class AccountMoveOperationActions(models.Model):
     )
     action = fields.Selection(
         selection=[
-            ("move", "Create Journal Entry"),
+            ("move", "Create Move"),
             ("pay", "Create Payment"),
             ("reconcile", "Reconcile Payment"),
             ("operation", "Create Operation"),
