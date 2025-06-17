@@ -9,14 +9,50 @@ class PosLineReport(models.Model):
     _auto = False
     _order = "date ASC"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        string="Company",
+        readonly=True,
+    )
+    partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Partner",
+        readonly=True,
+    )
+    commercial_partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Main Partner",
+        readonly=True,
+    )
     line_id = fields.Many2one("pos.order.line", readonly=True)
     order_id = fields.Many2one("pos.order", readonly=True)
-    company_id = fields.Many2one("res.company", readonly=True)
-    partner_id = fields.Many2one("res.partner", readonly=True)
-    commercial_partner_id = fields.Many2one("res.partner", readonly=True)
-    product_id = fields.Many2one("product.product", readonly=True)
-    product_category_id = fields.Many2one("product.category", readonly=True)
     config_id = fields.Many2one("pos.config", readonly=True)
+    date = fields.Date(readonly=True)
+    year = fields.Integer(readonly=True)
+    quarter = fields.Integer(readonly=True)
+    month = fields.Integer(readonly=True)
+    month_name = fields.Char(readonly=True)
+    week_of_year = fields.Integer(readonly=True)
+    day_of_month = fields.Integer(readonly=True)
+    day_of_week = fields.Integer(readonly=True)
+    day_of_year = fields.Integer(readonly=True)
+    product_id = fields.Many2one(
+        comodel_name="product.product",
+        readonly=True,
+    )
+    product_category_id = fields.Many2one(
+        comodel_name="product.category",
+        readonly=True,
+    )
+    manufacturer_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Manufacturer",
+        readonly=True,
+    )
     parent_state = fields.Selection(
         selection=[
             ("draft", "New"),
@@ -28,26 +64,42 @@ class PosLineReport(models.Model):
         string="State",
         readonly=True,
     )
+
     ref = fields.Char(readonly=True)
     name = fields.Char(readonly=True)
-    date = fields.Date(readonly=True)
+
     quantity = fields.Float(readonly=True)
     price_unit = fields.Float(readonly=True)
+    discount = fields.Float(readonly=True)
     price_subtotal = fields.Float("Subtotal", readonly=True)
     price_total = fields.Float("Total", readonly=True)
-    discount = fields.Float(readonly=True)
     purchase_price = fields.Float(readonly=True)
     purchase_price_total = fields.Float("Total Purchase", readonly=True)
     margin = fields.Float(readonly=True)
     margin_percent = fields.Float(readonly=True)
-    year = fields.Integer(readonly=True)
-    month = fields.Integer(readonly=True)
-    month_name = fields.Char(readonly=True)
-    quarter = fields.Integer(readonly=True)
-    week_of_year = fields.Integer(readonly=True)
-    day_of_month = fields.Integer(readonly=True)
-    day_of_week = fields.Integer(readonly=True)
-    day_of_year = fields.Integer(readonly=True)
+
+    # ------------------------------------------------------------
+    # INITIALIZATION
+    # ------------------------------------------------------------
+
+    def init(self):
+        table = AsIs(self._table)
+        query = AsIs(self._query())
+        self._cr.execute(f"DROP MATERIALIZED view IF EXISTS {table} CASCADE")
+        if self._context.get("with_data"):
+            # When calling with that context it will create the view and populate it
+            self._cr.execute(f"CREATE MATERIALIZED VIEW {table} AS ({query})")
+        else:
+            # To avoid long time to update the module we create the view without data
+            # and later be populated by the cron that executes the method refresh_concurrently()
+            self._cr.execute(
+                f"CREATE MATERIALIZED VIEW {table} AS ({query}) WITH NO DATA"
+            )
+        self._cr.execute(f"CREATE UNIQUE INDEX id_{table} ON {table} (line_id)")
+
+    # ------------------------------------------------------------
+    # SQL
+    # ------------------------------------------------------------
 
     def _query(self):
         return """
@@ -104,32 +156,25 @@ class PosLineReport(models.Model):
                 line_id ASC
         """
 
-    def _is_populated(self, table):
-        self._cr.execute(
-            f"SELECT relispopulated FROM pg_class WHERE relname = '{table}' and relkind = 'm'"
-        )
-        res = self._cr.fetchone()
-        return res and res[0]
+    # ------------------------------------------------------------
+    # HELPERS
+    # ------------------------------------------------------------
 
     def refresh_concurrently(self):
         table = AsIs(self._table)
-        if not self._is_populated(table):
-            self._cr.execute(f"REFRESH MATERIALIZED VIEW {table}")
-            return
+        command = f"REFRESH MATERIALIZED VIEW {table}"
+        if self._is_populated():
+            command += " CONCURRENTLY"
+        self._cr.execute(command)
 
-        self._cr.execute(f"REFRESH MATERIALIZED VIEW CONCURRENTLY {table}")
+    # ------------------------------------------------------------
+    # VALIDATIONS
+    # ------------------------------------------------------------
 
-    def init(self):
+    def _is_populated(self):
         table = AsIs(self._table)
-        query = AsIs(self._query())
-        self._cr.execute(f"DROP MATERIALIZED view IF EXISTS {table} CASCADE")
-        if self._context.get("with_data"):
-            # When calling with that context it will create the view and populate it
-            self._cr.execute(f"CREATE MATERIALIZED VIEW {table} AS ({query})")
-        else:
-            # To avoid long time to update the module we create the view without data
-            # and later be populated by the cron that executes the method refresh_concurrently()
-            self._cr.execute(
-                f"CREATE MATERIALIZED VIEW {table} AS ({query}) WITH NO DATA"
-            )
-        self._cr.execute(f"CREATE UNIQUE INDEX id_{table} ON {table} (line_id)")
+        self._cr.execute(
+            f"SELECT ispopulated FROM pg_matviews WHERE matviewname='{table}'"
+        )
+        res = self._cr.fetchone()
+        return res and res[0]

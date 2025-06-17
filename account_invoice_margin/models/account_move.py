@@ -4,6 +4,10 @@ from odoo import api, fields, models
 class AccountMove(models.Model):
     _inherit = "account.move"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     margin = fields.Monetary(
         currency_field="currency_id",
         compute="_compute_margin",
@@ -21,9 +25,9 @@ class AccountMove(models.Model):
         store=True,
     )
 
-    def _get_margin_applicable_lines(self):
-        self.ensure_one()
-        return self.invoice_line_ids
+    # ------------------------------------------------------------
+    # COMPUTE METHODS
+    # ------------------------------------------------------------
 
     @api.depends(
         "invoice_line_ids.margin",
@@ -34,6 +38,7 @@ class AccountMove(models.Model):
         for invoice in self:
             if not invoice.is_invoice():
                 continue
+
             margin = 0.0
             margin_signed = 0.0
             price_subtotal = 0.0
@@ -46,3 +51,11 @@ class AccountMove(models.Model):
             invoice.margin_percent = (
                 price_subtotal and margin_signed / price_subtotal * 100 or 0.0
             )
+
+    # ------------------------------------------------------------
+    # HELPERS
+    # ------------------------------------------------------------
+
+    def _get_margin_applicable_lines(self):
+        self.ensure_one()
+        return self.invoice_line_ids

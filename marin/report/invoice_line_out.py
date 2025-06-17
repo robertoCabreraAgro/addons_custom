@@ -125,6 +125,10 @@ class InvoiceLineOut(models.Model):
     margin = fields.Float(readonly=True)
     margin_percent = fields.Float(readonly=True, aggregator="avg")
 
+    # ------------------------------------------------------------
+    # INITIALIZATION
+    # ------------------------------------------------------------
+
     def init(self):
         table = AsIs(self._table)
         query = AsIs(self._query())
@@ -137,6 +141,10 @@ class InvoiceLineOut(models.Model):
             command += " WITH NO DATA"
         self._cr.execute(command)
         self._cr.execute(f"CREATE UNIQUE INDEX id_{table} ON {table} (id)")
+
+    # ------------------------------------------------------------
+    # SQL
+    # ------------------------------------------------------------
 
     def _query(self):
         return f"SELECT {self._select()} FROM {self._from()} WHERE {self._where()}"
@@ -209,6 +217,10 @@ class InvoiceLineOut(models.Model):
             AND aml.display_type = 'product'
         """
 
+    # ------------------------------------------------------------
+    # HELPERS
+    # ------------------------------------------------------------
+
     def _read_group_select(self, aggregate_spec: str, query: Query) -> SQL:
         """This override allows us to correctly calculate the average price of products."""
         if aggregate_spec == "price_unit:avg":
@@ -232,13 +244,16 @@ class InvoiceLineOut(models.Model):
         else:
             return super()._read_group_select(aggregate_spec, query)
 
-
     def refresh_concurrently(self):
         table = AsIs(self._table)
         command = f"REFRESH MATERIALIZED VIEW {table}"
         if self._is_populated():
             command += " CONCURRENTLY"
         self._cr.execute(command)
+
+    # ------------------------------------------------------------
+    # VALIDATIONS
+    # ------------------------------------------------------------
 
     def _is_populated(self):
         table = AsIs(self._table)

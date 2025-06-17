@@ -55,7 +55,6 @@
                     groups="account_invoice_margin.group_account_invoice_margin_security"
                 />
             </xpath>
-            <!-- Add fields to embed invoice line form view  -->
             <xpath
                 expr="//field[@name='invoice_line_ids']/form//field[@name='discount']"
                 position="after"

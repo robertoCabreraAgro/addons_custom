@@ -4,6 +4,10 @@ from odoo import api, fields, models
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     purchase_price = fields.Float(
         string="Cost",
         digits="Product Price",
@@ -29,15 +33,16 @@ class AccountMoveLine(models.Model):
         readonly=True,
     )
 
-    def _get_purchase_price(self):
-        self.ensure_one()
-        return self.product_id.standard_price
+    # ------------------------------------------------------------
+    # COMPUTE METHODS
+    # ------------------------------------------------------------
 
     @api.depends("product_id", "product_uom_id")
     def _compute_purchase_price(self):
         for line in self:
             if not line.move_id.is_invoice():
                 continue
+
             if line.move_id.is_sale_document():
                 purchase_price = line._get_purchase_price()
                 if line.product_uom_id != line.product_id.uom_id:
@@ -74,3 +79,11 @@ class AccountMoveLine(models.Model):
                     ),
                 }
             )
+
+    # ------------------------------------------------------------
+    # HELPERS
+    # ------------------------------------------------------------
+
+    def _get_purchase_price(self):
+        self.ensure_one()
+        return self.product_id.standard_price
