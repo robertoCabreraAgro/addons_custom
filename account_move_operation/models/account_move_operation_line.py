@@ -1,6 +1,9 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools.safe_eval import safe_eval
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class AccountMoveOperationLine(models.Model):
@@ -209,13 +212,19 @@ class AccountMoveOperationLine(models.Model):
 
     def _get_action(self):
         self.ensure_one()
-        action = self._get_action_move()
-        if action:
-            return action
 
-        method_name = "_get_action_%s" % self.action
-        get_action_method = getattr(self, method_name)
-        return get_action_method()
+        if self.action == "move":
+            return self._get_action_move()
+        elif self.action == "reconcile":
+            return self._get_action_reconcile()
+        elif self.action == "pay":
+            return self._get_action_pay()
+        elif self.action == "operation":
+            return self._get_action_operation()
+        elif self.action == "info":
+            return self._get_action_info()
+        else:
+            raise UserError(_("No action handler defined for '%s'") % self.action)
 
     def _get_action_diff_partner(self):
         if self.diff_partner and not self._context.get("default_partner_id"):
@@ -312,26 +321,47 @@ class AccountMoveOperationLine(models.Model):
         return action
 
     def _get_action_reconcile(self):
-        if self.action_id.auto:
-            move = self._get_latest_move()
-            if not move:
-                raise UserError(_("Missing invoice to reconcile"))
+        self.ensure_one()
 
-            wiz = self.env["account.move.operation.reconcile"].create(
-                {
-                    "partner_id": self.operation_id.partner_id.id,
-                    "move_id": move.id,
-                    "line_id": self.id,
-                    "st_line_id": self.operation_id.st_line_id.id,
-                }
-            )
-            return wiz.action_open_reconcile()
-
-        action = self.env["ir.actions.actions"]._for_xml_id(
-            "account_move_operation.account_move_operation_reconcile_action"
+        st_line = self.st_line_id or self.env["account.bank.statement.line"].browse(
+            self._context.get("st_line_id")
         )
-        action = self._update_action_context(action)
-        return action
+
+        move = self._get_latest_move()
+
+        _logger.info(
+            "Reconcile action called for line %s, st_line %s, move %s",
+            self.name,
+            st_line,
+            move,
+        )
+
+        if not st_line:
+            raise UserError(_("Missing bank statement line to reconcile."))
+
+        if not move or move.state != "posted":
+            raise UserError(_("The invoice must be posted to reconcile."))
+
+        bank_lines = st_line.move_id.line_ids.filtered(
+            lambda l: l.account_id == st_line.journal_id.default_account_id
+            and not l.reconciled
+        )
+
+        counterpart_lines = self.env["account.move.line"].search(
+            [
+                ("account_id", "=", st_line.journal_id.default_account_id.id),
+                ("reconciled", "=", False),
+                # filtros adicionales según lógica de negocio
+            ]
+        )
+
+        if bank_lines and counterpart_lines:
+            (bank_lines + counterpart_lines).reconcile()
+        else:
+            raise UserError(_("No lines available to reconcile."))
+        st_line.move_id.checked = True
+        self.action_done()
+        return True
 
     def _update_action_context(self, action):
         context = self._context.copy()

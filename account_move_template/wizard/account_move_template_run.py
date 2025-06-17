@@ -97,10 +97,11 @@ class AccountMoveTemplateRun(models.TransientModel):
         lines = [
             (0, 0, self._prepare_wizard_line(tmpl_line))
             for tmpl_line in self.template_id.line_ids.filtered(
-                lambda line: line.type == "input"
+                lambda line: line.type == "input" or line.type == "computed"
             )
         ]
         self.line_ids = [(5, 0, 0)] + lines
+
 
     def _hook_create_move(self, move_vals):
         move = 1
@@ -162,9 +163,7 @@ class AccountMoveTemplateRun(models.TransientModel):
         elif self.template_id.move_type != "entry":
             vals["product_id"] = line.product_id.id
             vals["quantity"] = self.quantity or line.quantity
-            vals["price_unit"] = (
-                self.amount or self.price_unit or line.price_unit or 0.0
-            )
+            vals["price_unit"] = self.price_unit or line.price_unit or 0.0
             vals["discount"] = self.discount or line.discount
 
         return vals
@@ -199,6 +198,17 @@ class AccountMoveTemplateRun(models.TransientModel):
         account_id = self.env["account.account"].search(
             [("code_store", "=", tmpl_line.account_code)], limit=1
         )
+    
+        price_unit = tmpl_line.price_unit or 1.0
+        _logger.info("price_unit %s, amount %s",
+            price_unit,
+            self.amount,
+        )
+        quantity = tmpl_line.quantity
+
+        if self.amount and price_unit:
+            quantity = self.amount / price_unit
+
         vals = {
             "wizard_id": self.id,
             "name": tmpl_line.name,
@@ -208,8 +218,8 @@ class AccountMoveTemplateRun(models.TransientModel):
             "analytic_distribution": tmpl_line.analytic_distribution or False,
             "product_id": tmpl_line.product_id.id or False,
             "product_uom_id": tmpl_line.product_uom_id.id or False,
-            "quantity": tmpl_line.quantity or False,
-            "price_unit": tmpl_line.price_unit or False,
+            "quantity": quantity,
+            "price_unit": price_unit,
             "discount": tmpl_line.discount or False,
             "balance": tmpl_line.balance or False,
             "python_code": (
@@ -217,4 +227,6 @@ class AccountMoveTemplateRun(models.TransientModel):
             ),
             "note": tmpl_line.note,
         }
+
         return vals
+

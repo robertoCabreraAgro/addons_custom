@@ -1,6 +1,7 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
-
+import logging
+_logger = logging.getLogger(__name__)
 
 class AccountMoveOperation(models.Model):
     _name = "account.move.operation"
@@ -158,6 +159,7 @@ class AccountMoveOperation(models.Model):
         self.state = "done"
 
     def action_next_step(self):
+        _logger.info("action_next_step called for operation %s", self.name)
         self.ensure_one()
         if self.state != "in_progress":
             return
@@ -210,7 +212,7 @@ class AccountMoveOperation(models.Model):
 
             return in_progress_line.action_view_document()
 
-        nxt_line = self.line_ids.filtered(lambda line: line.state == "ready")
+        nxt_line = self.line_ids.filtered(lambda line: line.state == "ready")[:1]
         if not nxt_line:
             raise UserError(_("There is no available action to execute."))
 
@@ -220,5 +222,8 @@ class AccountMoveOperation(models.Model):
                 "operation_id": self.id,
                 "operation_line_id": nxt_line.id,
             }
+        )
+        _logger.info(
+            "context for next action: %s", context
         )
         return nxt_line.with_context(**context)._get_action()
