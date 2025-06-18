@@ -76,6 +76,10 @@ class AccountMoveTemplateLine(models.Model):
         string="Unit Price",
         digits="Product Price",
     )
+    tax_ids = fields.Many2many(
+        comodel_name="account.tax",
+        string="Taxes",
+    )
     discount = fields.Float(
         string="Discount (%)",
         digits="Discount",
@@ -129,3 +133,13 @@ class AccountMoveTemplateLine(models.Model):
 
         self.account_code = self.account_id.code_store
         self.account_id = False
+
+    @api.onchange("product_id")
+    def _onchange_product_id_values(self):
+        for line in self:
+            if not line.product_id:
+                line.price_unit = 0.0
+                line.tax_ids = False
+                continue
+            line.price_unit = line.product_id.list_price
+            line.tax_ids = line.product_id.taxes_id

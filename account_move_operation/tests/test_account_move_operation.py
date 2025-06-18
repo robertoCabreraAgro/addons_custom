@@ -293,6 +293,26 @@ class TestAccountMoveTemplate(TestBankRecWidgetCommon):
         )
         self.assertEqual(operation.state, "done")
 
+    def test_01b_lines_have_st_line_id(self):
+        operation = self.operation_obj.create(
+            {
+                "operation_type_id": self.operation_type.id,
+                "currency_id": self.company.currency_id.id,
+                "company_id": self.company.id,
+            }
+        )
+        st_line = self._create_st_line(
+            500.0,
+            partner_id=self.partner.id,
+            journal_id=self.journal_bank.id,
+            company_id=self.company.id,
+        )
+        with Form(operation) as form_op:
+            form_op.st_line_id = st_line
+        form_op.save()
+        operation.action_start()
+        self.assertTrue(all(l.st_line_id == st_line for l in operation.line_ids))
+
     def test_02_cancel_operation(self):
         operation = self.operation_obj.create(
             {

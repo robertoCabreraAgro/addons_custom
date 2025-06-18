@@ -203,3 +203,17 @@ class TestAccountMoveTemplate(TransactionCase):
         self.assertEqual(aml.tax_ids[0], self.tax)
         with self.assertRaises(IntegrityError), mute_logger("odoo.sql_db"):
             template_2.name = template.name
+
+    def test_onchange_product_sets_price_and_taxes(self):
+        line = self.env['account.move.template.line'].new({})
+        line.product_id = self.env.ref('product.product_product_8')
+        line._onchange_product_id_values()
+        self.assertEqual(line.price_unit, line.product_id.list_price)
+        self.assertEqual(line.tax_ids, line.product_id.taxes_id)
+
+    def test_wizard_line_onchange_product_sets_price_and_taxes(self):
+        wizard = self.env['account.move.template.line.run'].new({})
+        wizard.product_id = self.env.ref('product.product_product_8')
+        wizard._onchange_product_id_values()
+        self.assertEqual(wizard.price_unit, wizard.product_id.list_price)
+        self.assertEqual(wizard.tax_ids, wizard.product_id.taxes_id)

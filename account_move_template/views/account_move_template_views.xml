@@ -105,6 +105,9 @@
                                         column_invisible="parent.move_type == 'entry'" />
                                     <field name="price_unit" string="Price"
                                         column_invisible="parent.move_type == 'entry'" />
+                                    <field name="tax_ids" widget="many2many_tags"
+                                        domain="[('company_id', '=', parent.company_id)]"
+                                        column_invisible="parent.move_type == 'entry'"/>
                                     <field name="discount" width="50px" string="Disc.%"
                                         optional="hide"
                                         column_invisible="parent.move_type == 'entry'" />
