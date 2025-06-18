@@ -165,6 +165,7 @@ class AccountMoveTemplateRun(models.TransientModel):
             vals["quantity"] = self.quantity or line.quantity
             vals["price_unit"] = self.price_unit or line.price_unit or 0.0
             vals["discount"] = self.discount or line.discount
+            vals["tax_ids"] = [(6, 0, line.tax_ids.ids)]
 
         return vals
 
@@ -220,6 +221,7 @@ class AccountMoveTemplateRun(models.TransientModel):
             "product_uom_id": tmpl_line.product_uom_id.id or False,
             "quantity": quantity,
             "price_unit": price_unit,
+            "tax_ids": [(6, 0, tmpl_line.tax_ids.ids)],
             "discount": tmpl_line.discount or False,
             "balance": tmpl_line.balance or False,
             "python_code": (
