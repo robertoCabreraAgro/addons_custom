@@ -120,7 +120,7 @@ class AccountMoveTemplateLine(models.Model):
             if not line.product_id:
                 continue
             line.price_unit = line.product_id.list_price
-            line.tax_ids = line.product_id.taxes_id
+            line.tax_ids = line.product_id.suppliers_taxes_id
 
     # @api.onchange("product_id")
     # def _onchange_product_id(self):
