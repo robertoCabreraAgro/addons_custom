@@ -27,6 +27,21 @@ class InvoiceLineOut(models.Model):
         string="Journal",
         readonly=True,
     )
+    x_treatment = fields.Selection(
+        [
+            ("not_fiscal_simulated", "Not Fiscal simulated"),
+            ("not_fiscal_real", "Not Fiscal real"),
+            ("fiscal_simulated", "Fiscal simulated"),
+            ("fiscal_real", "Fiscal real"),
+        ],
+        string="Treatment",
+        readonly=True,
+    )
+    currency_id = fields.Many2one(
+        comodel_name="res.currency",
+        string="Currency",
+        readonly=True,
+    )
     partner_id = fields.Many2one(
         comodel_name="res.partner",
         string="Partner",
@@ -68,14 +83,13 @@ class InvoiceLineOut(models.Model):
         string="Type",
         readonly=True,
     )
-    x_treatment = fields.Selection(
-        [
-            ("not_fiscal_simulated", "Not Fiscal simulated"),
-            ("not_fiscal_real", "Not Fiscal real"),
-            ("fiscal_simulated", "Fiscal simulated"),
-            ("fiscal_real", "Fiscal real"),
+    state = fields.Selection(
+        selection=[
+            ("draft", "Draft"),
+            ("posted", "Open"),
+            ("cancel", "Cancelled"),
         ],
-        string="Treatment",
+        string="Invoice Status",
         readonly=True,
     )
     payment_state = fields.Selection(
@@ -152,11 +166,13 @@ class InvoiceLineOut(models.Model):
     def _select(self):
         return """
             aml.id,
+            aml.move_id,
             move.company_id,
-            move.commercial_partner_id,
-            move.partner_id,
             move.journal_id,
             journal.x_treatment,
+            move.currency_id,
+            move.commercial_partner_id,
+            move.partner_id,
             move.invoice_payment_term_id,
             move.invoice_user_id,
             move.team_id,
@@ -170,8 +186,8 @@ class InvoiceLineOut(models.Model):
             EXTRACT(DAY FROM move.invoice_date) AS day_of_month,
             EXTRACT(DOW FROM move.invoice_date) AS day_of_week,
             EXTRACT(DOY FROM move.invoice_date) AS day_of_year,
-            aml.move_id,
             move.move_type,
+            move.state,
             aml.product_id,
             pc.id AS product_category_id,
             CASE
@@ -180,7 +196,7 @@ class InvoiceLineOut(models.Model):
                 ELSE pc.parent_id
             END AS parent_categ_id,
             pc.root_categ_id,
-            partner.id AS manufacturer_id,
+            manufacturer.id AS manufacturer_id,
             aml.quantity,
             aml.price_unit,
             aml.discount,
@@ -205,8 +221,8 @@ class InvoiceLineOut(models.Model):
                     ON pp.product_tmpl_id=pt.id
                     LEFT JOIN product_category pc
                         ON pt.categ_id=pc.id
-                    LEFT JOIN res_partner partner
-                        ON pt.manufacturer_id=partner.id
+                    LEFT JOIN res_partner manufacturer
+                        ON pt.manufacturer_id=manufacturer.id
         """
 
     def _where(self):

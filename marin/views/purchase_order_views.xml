@@ -143,6 +143,12 @@
             <xpath expr="//field[@name='partner_id']" position="attributes">
                 <attribute name="options">{'no_create': True}</attribute>
             </xpath>
+            <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field name="journal_id"
+                    required="state == 'draft'"
+                    readonly="state in ['sale', 'cancel']"
+                    options="{'no_create': True}" />
+            </xpath>
             <xpath expr="//field[@name='user_id']" position="attributes">
                 <attribute name="options">{'no_create': True}</attribute>
                 <attribute name="readonly">not is_user_id_editable</attribute>
