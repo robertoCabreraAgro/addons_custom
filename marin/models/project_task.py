@@ -52,6 +52,30 @@ class Task(models.Model):
         "AG season",
         help="Since every farmer can have several growing seasons the specific one can be selected.",
     )
+    #Fields KPI
+    kpi_optime_predev_min = fields.Float("Time before development", help="Estimated time the operation took before development")
+    kpi_optime_postdev_min = fields.Float("Time after development", help="Estimated time the operation took after development")
+    kpi_optime_frequency_type = fields.Selection(
+    [
+        ("event", "Per event"),
+        ("daily", "Daily"),
+        ("weekly", "Weekly"),
+        ("monthly", "Monthly"),
+        ("quarterly", "Quarterly"),
+        ("yearly", "Yearly"),
+        ("no", "None"),
+    ],
+    string="Frequency Type",
+    help="Frequency with which this operation occurs",
+    )
+    kpi_optime_frequency_interval = fields.Integer(string="Interval frequency", help="Number that indicates how many times the event occurs in the selected period")
+    use_kpi_optime = fields.Boolean(
+    related="project_id.use_kpi_optime",
+    string="Use KPI time operative",
+    store=False,
+    )
+
+
 
     @api.depends("company_id")
     def _compute_company_currency(self):

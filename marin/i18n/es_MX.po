@@ -5759,3 +5759,4 @@ msgstr "amarillo"
 #: model_terms:ir.ui.view,arch_db:marin.view_stock_picking_tracker_form
 msgid "⟳ Update"
 msgstr "⟳ Actualizar"
+
