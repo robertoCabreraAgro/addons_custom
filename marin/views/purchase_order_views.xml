@@ -146,7 +146,7 @@
             <xpath expr="//field[@name='payment_term_id']" position="after">
                 <field name="journal_id"
                     required="state == 'draft'"
-                    readonly="state in ['sale', 'cancel']"
+                    readonly="state in ['purchase', 'cancel']"
                     options="{'no_create': True}" />
             </xpath>
             <xpath expr="//field[@name='user_id']" position="attributes">
