@@ -2,6 +2,8 @@ from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools.translate import _
 
+import logging
+_logger = logging.getLogger(__name__)   
 
 class AccountMoveTemplateLine(models.Model):
     _name = "account.move.template.line"
@@ -76,6 +78,11 @@ class AccountMoveTemplateLine(models.Model):
         string="Unit Price",
         digits="Product Price",
     )
+    tax_ids = fields.Many2many(
+        comodel_name="account.tax",
+        string="Taxes",
+        check_company=True,
+    )
     discount = fields.Float(
         string="Discount (%)",
         digits="Discount",
@@ -109,23 +116,41 @@ class AccountMoveTemplateLine(models.Model):
             else:
                 line.product_uom_id = False
 
-    # @api.onchange("product_id")
-    # def _onchange_product_id(self):
-    #     """Actualiza campos relacionados cuando cambia el producto"""
-    #     for line in self:
-    #         if line.product_id:
-    #             accounts = line.product_id.product_tmpl_id.get_product_accounts(
-    #                 fiscal_pos=None
-    #             )
-    #             if accounts.get("expense") and line.move_line_type == "dr":
-    #                 line.account_id = accounts["expense"].id
-    #             elif accounts.get("income") and line.move_line_type == "cr":
-    #                 line.account_id = accounts["income"].id
+    @api.onchange("product_id")
+    def _onchange_product_id(self):
+        for line in self:
+            _logger.info("amtl values for product_id: %s", line.product_id.read())
+            if line.product_id:
+                line.price_unit = line.product_id.list_price
+                line.tax_ids = line.product_id.supplier_taxes_id
+            else:
+                line.price_unit = 0.0
+                line.tax_ids = False
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            product_id = vals.get("product_id")
+            if product_id:
+                product = self.env["product.product"].browse(product_id)
+                vals.setdefault("price_unit", product.list_price)
+                if not vals.get("tax_ids"):
+                    vals["tax_ids"] = [
+                        Command.set(product.supplier_taxes_id.ids)
+                    ]
+        return super().create(vals_list)
+
+    def write(self, vals):
+        if vals.get("product_id"):
+            product = self.env["product.product"].browse(vals["product_id"])
+            vals.setdefault("price_unit", product.list_price)
+            if not vals.get("tax_ids"):
+                vals["tax_ids"] = [Command.set(product.supplier_taxes_id.ids)]
+        return super().write(vals)
 
     @api.onchange("account_id")
     def _onchange_account_id(self):
         if not self.account_id:
             return
-
-        self.account_code = self.account_id.code_store
+        self.account_code = self.account_id.code
         self.account_id = False

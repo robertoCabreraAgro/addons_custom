@@ -42,6 +42,8 @@
                                 column_invisible="parent.move_type == 'entry'" />
                             <field name="price_unit" string="Price"
                                 column_invisible="parent.move_type == 'entry'" />
+                            <field name="tax_ids" widget="many2many_tags"
+                                column_invisible="parent.move_type == 'entry'" />
                             <field name="discount" string="Disc.%"
                                 width="50px"
                                 column_invisible="parent.move_type == 'entry'" />

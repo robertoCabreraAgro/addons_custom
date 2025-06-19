@@ -131,14 +131,12 @@ class AccountMoveTemplateRun(models.TransientModel):
         payment.action_post()
 
         return payment
-
+    
     def create_move(self):
-        _logger.info("self %s", self.read())
         self.ensure_one()
         if self.is_payment:
             return self.create_payment()
         company = self.multicompany_id or self.env.company
-        _logger.info("company %s", company)
         move_env = self.env["account.move"].with_company(company)
         move_vals = self._prepare_move_vals(company)
         _logger.info("move_vals %s", move_vals)
@@ -165,7 +163,8 @@ class AccountMoveTemplateRun(models.TransientModel):
             vals["quantity"] = self.quantity or line.quantity
             vals["price_unit"] = self.price_unit or line.price_unit or 0.0
             vals["discount"] = self.discount or line.discount
-
+            vals["tax_ids"] = [Command.set(line.product_id.suppliers_taxes_id.ids)]
+        _logger.info("vals %s", vals)
         return vals
 
     def _prepare_move_vals(self, company):
@@ -181,7 +180,7 @@ class AccountMoveTemplateRun(models.TransientModel):
                     "No valid journal found for this journal code in the selected company."
                 )
             )
-
+        _logger.info("journal %s", journal.read(['id', 'name', 'code']))
         return {
             "journal_id": journal.id,
             "move_type": self.template_id.move_type,
@@ -189,6 +188,7 @@ class AccountMoveTemplateRun(models.TransientModel):
             "invoice_payment_term_id": self.template_id.invoice_payment_term_id.id
             or False,
             "date": self.date,
+            "invoice_date": self.date if self.template_id.move_type in ('in_invoice', 'out_invoice') else False,
             "ref": self.ref,
             "company_id": company.id,
             "line_ids": [],
@@ -196,16 +196,22 @@ class AccountMoveTemplateRun(models.TransientModel):
 
     def _prepare_wizard_line(self, tmpl_line):
         account_id = self.env["account.account"].search(
-            [("code_store", "=", tmpl_line.account_code)], limit=1
+            [("code", "=", tmpl_line.account_code)], limit=1
         )
-    
-        price_unit = tmpl_line.price_unit or 1.0
-        _logger.info("price_unit %s, amount %s",
-            price_unit,
-            self.amount,
-        )
-        quantity = tmpl_line.quantity
+      
+        price_unit = tmpl_line.price_unit
+        tax_ids = tmpl_line.tax_ids
 
+        if tmpl_line.product_id and (not tmpl_line.price_unit or not tmpl_line.tax_ids):
+            product = tmpl_line.product_id
+            if self.move_type in ('in_invoice', 'in_refund'):
+                price_unit = product.standard_price
+                tax_ids = product.supplier_taxes_id
+            elif self.move_type in ('out_invoice', 'out_refund'):
+                price_unit = product.lst_price
+                tax_ids = product.taxes_id
+
+        quantity = tmpl_line.quantity
         if self.amount and price_unit:
             quantity = self.amount / price_unit
 
@@ -222,6 +228,7 @@ class AccountMoveTemplateRun(models.TransientModel):
             "price_unit": price_unit,
             "discount": tmpl_line.discount or False,
             "balance": tmpl_line.balance or False,
+            "tax_ids": [(6, 0, tax_ids.ids)],
             "python_code": (
                 tmpl_line.python_code if tmpl_line.type == "computed" else False
             ),
@@ -229,4 +236,3 @@ class AccountMoveTemplateRun(models.TransientModel):
         }
 
         return vals
-
