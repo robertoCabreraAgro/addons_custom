@@ -142,6 +142,6 @@ class ApprovalRequest(models.Model):
         for request in self:
             # Check if this is the final approval
             if request.has_operation_type != "no" and request.has_bsl != "no":
-                request.bank_statement_line_id.partner_id = request.partner_id
                 request._create_accounting_operation()
+                request.bank_statement_line_id.partner_id = request.partner_id
         return res
