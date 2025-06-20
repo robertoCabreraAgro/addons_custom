@@ -335,11 +335,11 @@ class AccountMoveOperationLine(models.Model):
             move,
         )
 
-        # if not st_line:
-        #     raise UserError(_("Missing bank statement line to reconcile."))
+        if not st_line:
+            raise UserError(_("Missing bank statement line to reconcile."))
 
-        # if not move or move.state != "posted":
-        #     raise UserError(_("The invoice must be posted to reconcile."))
+        if not move or move.state != "posted":
+            raise UserError(_("The invoice must be posted to reconcile."))
 
         bank_rec_wizard = self.env['bank.rec.widget'].with_context(
             default_st_line_id=st_line.id

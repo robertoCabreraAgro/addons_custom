@@ -33,10 +33,10 @@ class AccountMoveTemplateRun(models.TransientModel):
     )
     overwrite = fields.Text(
         help="""
-              Valid dictionary to overwrite template lines:
-              {'L1': {'partner_id': 1, 'amount': 100, 'name': 'some label'},
-              'L2': {'partner_id': 2, 'amount': 200, 'name': 'some label 2'}, }
-              """
+             Valid dictionary to overwrite template lines:
+             {'L1': {'partner_id': 1, 'amount': 100, 'name': 'some label'},
+             'L2': {'partner_id': 2, 'amount': 200, 'name': 'some label 2'}, }
+             """
     )
     quantity = fields.Float(
         string="Quantity",
@@ -103,10 +103,14 @@ class AccountMoveTemplateRun(models.TransientModel):
         """
         self.ensure_one()
         lines_to_create = []
-        for tmpl_line in self.template_id.line_ids.filtered(lambda l: l.display_type == 'product'):
+        for tmpl_line in self.template_id.line_ids.filtered(
+            lambda l: l.display_type == "product"
+        ):
             lines_to_create.extend(self._prepare_wizard_line(tmpl_line))
 
-        self.line_ids = [Command.clear()] + [Command.create(vals) for vals in lines_to_create]
+        self.line_ids = [Command.clear()] + [
+            Command.create(vals) for vals in lines_to_create
+        ]
 
     def create_payment(self):
         """Create a payment instead of a journal entry"""
@@ -144,7 +148,7 @@ class AccountMoveTemplateRun(models.TransientModel):
         company = self.multicompany_id or self.env.company
         move_env = self.env["account.move"].with_company(company)
         move_vals = self._prepare_move_vals(company)
-        
+
         for line in self.line_ids:
             move_line_vals = self._prepare_move_line_vals(line)
             move_vals["line_ids"].append(Command.create(move_line_vals))
@@ -161,15 +165,15 @@ class AccountMoveTemplateRun(models.TransientModel):
             "name": line.name,
             "account_id": line.account_id.id,
             "analytic_distribution": line.analytic_distribution,
-            "partner_id": line.partner_id.id,
+            "partner_id": line.partner_id.id or self.partner_id.id,
         }
 
         if self.template_id.move_type == "entry":
             vals["balance"] = self.balance or line.balance
         else:
             vals["product_id"] = line.product_id.id
-            vals["quantity"] = line.quantity # No global override
-            vals["price_unit"] = line.price_unit # No global override
+            vals["quantity"] = line.quantity
+            vals["price_unit"] = line.price_unit
             vals["discount"] = line.discount
             vals["tax_ids"] = [Command.set(line.tax_ids.ids)]
 
@@ -198,38 +202,78 @@ class AccountMoveTemplateRun(models.TransientModel):
             "invoice_payment_term_id": self.template_id.invoice_payment_term_id.id
             or False,
             "date": self.date,
+            "invoice_date": (
+                self.date
+                if self.template_id.move_type in ("in_invoice", "out_invoice")
+                else False
+            ),
             "ref": self.ref,
             "company_id": company.id,
             "line_ids": [],
         }
 
     def _prepare_wizard_line(self, tmpl_line):
-
+        """
+        Prepare one or more wizard line values from a single template line.
+        Handles random product selection and splitting lines to match a total amount.
+        """
         account_id = self.env["account.account"].search(
             [("code_store", "=", tmpl_line.account_code)], limit=1
         )
+        if not account_id:
+            raise UserError(
+                _("No account found with code '%s' for company '%s'")
+                % (tmpl_line.account_code, self.template_id.company_id.name)
+            )
 
-        price_unit, product, tax_ids = tmpl_line.price_unit, tmpl_line.product_id, tmpl_line.tax_ids
-        
-        if not product and tmpl_line.product_category_id:
+        # Initialize from template line, these might be overridden
+        product = tmpl_line.product_id
+        price_unit = tmpl_line.price_unit
+        tax_ids = tmpl_line.tax_ids
+
+        # Case 1: Random product from category
+        if tmpl_line.product_category_id:
             try:
-                product = tmpl_line.get_random_product_for_category(tmpl_line.product_category_id)
-                if not tmpl_line.price_unit:
-                    price_unit = product.lst_price
-                if not tmpl_line.tax_ids:
-                    tax_ids = product.supplier_taxes_id
+                product = tmpl_line.get_random_product_for_category(
+                    tmpl_line.product_category_id
+                )
             except UserError as e:
-                _logger.warning(e)
+                _logger.warning(
+                    "Could not find a random product for template line '%s': %s",
+                    tmpl_line.name,
+                    e,
+                )
+                product = None  # Ensure product is None if not found
 
-        final_price_unit = price_unit or (product.lst_price if product else 1.0)
+        # If a product is determined (either from line or category), update details
+        if product:
+            # If template line has no taxes, get them from the product based on move type
+            if not tmpl_line.tax_ids:
+                if self.move_type in ("in_invoice", "in_refund"):
+                    tax_ids = product.supplier_taxes_id
+                elif self.move_type in ("out_invoice", "out_refund"):
+                    tax_ids = product.taxes_id
+
+            # If template line has no price, get it from the product based on move type
+            if not tmpl_line.price_unit:
+                if self.move_type in ("in_invoice", "in_refund"):
+                    price_unit = product.standard_price
+                elif self.move_type in ("out_invoice", "out_refund"):
+                    price_unit = product.lst_price
+
+        final_price_unit = price_unit or (
+            product.standard_price
+            if product and self.move_type in ("in_invoice", "in_refund")
+            else (product.lst_price if product else 1.0)
+        )
         lines_to_return = []
-        
+
         base_vals = {
             "wizard_id": self.id,
             "template_line_id": tmpl_line.id,
             "name": product.name if product else tmpl_line.name,
             "sequence": tmpl_line.sequence,
-            "partner_id": tmpl_line.partner_id.id or False,
+            "partner_id": tmpl_line.partner_id.id or self.partner_id.id,
             "account_id": account_id.id,
             "analytic_distribution": tmpl_line.analytic_distribution or None,
             "product_id": product.id if product else False,
@@ -241,47 +285,50 @@ class AccountMoveTemplateRun(models.TransientModel):
 
         if self.amount and final_price_unit > 0:
             currency = self.env.company.currency_id
-            
+
             quantity_int = math.floor(self.amount / final_price_unit)
 
             if quantity_int > 0:
-                # First line with the integer quantity
                 first_line_vals = base_vals.copy()
-                first_line_vals.update({
-                    "quantity": quantity_int,
-                    "price_unit": final_price_unit,
-                })
+                first_line_vals.update(
+                    {
+                        "quantity": quantity_int,
+                        "price_unit": final_price_unit,
+                    }
+                )
                 lines_to_return.append(first_line_vals)
 
-                # Calculate remainder without intermediate rounding
                 subtotal1 = quantity_int * final_price_unit
                 remainder = self.amount - subtotal1
 
-                # Check if remainder is significant before creating a new line
                 if not currency.is_zero(remainder):
                     second_line_vals = base_vals.copy()
-                    second_line_vals.update({
-                        "name": f"{base_vals['name']} (promotion)",
-                        "quantity": 1,
-                        "price_unit": remainder,
-                        "sequence": tmpl_line.sequence + 1,
-                    })
+                    second_line_vals.update(
+                        {
+                            "name": f"{base_vals['name']} (adjustment)",
+                            "quantity": 1,
+                            "price_unit": remainder,
+                            "sequence": tmpl_line.sequence + 1,
+                        }
+                    )
                     lines_to_return.append(second_line_vals)
             else:
-                # If amount is less than one unit, create one line for the total amount
                 single_line_vals = base_vals.copy()
-                single_line_vals.update({
-                    "quantity": 1,
-                    "price_unit": self.amount,
-                })
+                single_line_vals.update(
+                    {
+                        "quantity": 1,
+                        "price_unit": self.amount,
+                    }
+                )
                 lines_to_return.append(single_line_vals)
         else:
-            # Fallback if amount is not set
             fallback_vals = base_vals.copy()
-            fallback_vals.update({
-                "quantity": tmpl_line.quantity,
-                "price_unit": final_price_unit,
-            })
+            fallback_vals.update(
+                {
+                    "quantity": tmpl_line.quantity,
+                    "price_unit": final_price_unit,
+                }
+            )
             lines_to_return.append(fallback_vals)
 
         return lines_to_return
