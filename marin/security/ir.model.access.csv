@@ -34,4 +34,4 @@ access_product_product_account_user_marin,access.product.product.account.user,pr
 access_purchase_bill_union_account_bookkeeper,access.purchase.bill.union.account.bookkeeper,purchase.model_purchase_bill_union,account.group_account_user,1,0,0,0
 access_stock_picking_tracker_manager,stock.picking.tracker.manager,model_stock_picking_tracker,group_stock_picking_tracker_manager,1,1,1,1
 access_fleet_vehicle_log_import_manager,fleet.vehicle.log.import manager,model_fleet_vehicle_log_import,fleet.fleet_group_manager,1,1,1,1
-access_project_project,acces.project.project,marin.model_project_project,base.group_user,1,0,0,0
+

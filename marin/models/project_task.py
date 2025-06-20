@@ -56,15 +56,12 @@ class Task(models.Model):
     kpi_optime_predev_min = fields.Float("Time before development", help="Estimated time the operation took before development")
     kpi_optime_postdev_min = fields.Float("Time after development", help="Estimated time the operation took after development")
     kpi_optime_frequency_type = fields.Selection(
-    [
-        ("event", "Per event"),
+    [        
         ("daily", "Daily"),
         ("weekly", "Weekly"),
-        ("monthly", "Monthly"),
-        ("quarterly", "Quarterly"),
-        ("yearly", "Yearly"),
-        ("no", "None"),
-    ],
+        ("monthly", "Monthly"),        
+        ("yearly", "Yearly"),        
+    ],    
     string="Frequency Type",
     help="Frequency with which this operation occurs",
     )
@@ -74,7 +71,6 @@ class Task(models.Model):
     string="Use KPI time operative",
     store=False,
     )
-
 
 
     @api.depends("company_id")

@@ -5,7 +5,7 @@ class Task(models.Model):
     """Inherit Project"""
 
     _inherit = "project.project"
-    
+        
    
     use_kpi_optime = fields.Boolean(string="Use KPI time operative", help="Activate the operational time fields in the tasks of this project")
     

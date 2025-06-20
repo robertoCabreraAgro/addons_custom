@@ -59,16 +59,16 @@
                 <attribute name="options">{'no_create': True}</attribute>
             </xpath>
 
-        <!-- Page KPI --> 
-        <xpath expr="//page[@name='extra_info']/group" position="inside">        
-    <group string="KPI operation time" invisible="use_kpi_optime == False">
-        <field name="use_kpi_optime" invisible="1"/>
-        <field name="kpi_optime_predev_min" />
-        <field name="kpi_optime_postdev_min"/>
-        <field name="kpi_optime_frequency_type"/>
-        <field name="kpi_optime_frequency_interval"/>                
-    </group>
-</xpath>
+            <!-- Page KPI --> 
+            <xpath expr="//page[@name='extra_info']/group" position="inside">        
+                <group string="KPI operation time" invisible="use_kpi_optime == False">
+                    <field name="use_kpi_optime" invisible="1"/>
+                    <field name="kpi_optime_predev_min" />
+                    <field name="kpi_optime_postdev_min"/>
+                    <field name="kpi_optime_frequency_type"/>
+                    <field name="kpi_optime_frequency_interval"/>                
+                </group>
+            </xpath>
         </field>
     </record>
 </odoo>
