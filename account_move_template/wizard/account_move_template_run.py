@@ -32,10 +32,10 @@ class AccountMoveTemplateRun(models.TransientModel):
     )
     overwrite = fields.Text(
         help="""
-             Valid dictionary to overwrite template lines:
-             {'L1': {'partner_id': 1, 'amount': 100, 'name': 'some label'},
-             'L2': {'partner_id': 2, 'amount': 200, 'name': 'some label 2'}, }
-             """
+              Valid dictionary to overwrite template lines:
+              {'L1': {'partner_id': 1, 'amount': 100, 'name': 'some label'},
+              'L2': {'partner_id': 2, 'amount': 200, 'name': 'some label 2'}, }
+              """
     )
     quantity = fields.Float(
         string="Quantity",
@@ -87,25 +87,25 @@ class AccountMoveTemplateRun(models.TransientModel):
     )
     amount = fields.Float(string="Amount")
 
-    @api.onchange("template_id")
-    def _onchange_template_id(self):
+    @api.onchange("template_id", "amount")
+    def _onchange_template_or_amount(self):
+        """
+        Recalculate lines when the template or the total amount changes.
+        """
         if self.template_id:
             self.load_lines()
 
     def load_lines(self):
+        """
+        Load and prepare the wizard lines from the selected template.
+        The random product selection and quantity calculation happens here.
+        """
         self.ensure_one()
-        lines = [
-            (0, 0, self._prepare_wizard_line(tmpl_line))
-            for tmpl_line in self.template_id.line_ids.filtered(
-                lambda line: line.type == "input" or line.type == "computed"
-            )
-        ]
-        self.line_ids = [(5, 0, 0)] + lines
+        lines_to_create = []
+        for tmpl_line in self.template_id.line_ids.filtered(lambda l: l.display_type == 'product'):
+            lines_to_create.append(self._prepare_wizard_line(tmpl_line))
 
-
-    def _hook_create_move(self, move_vals):
-        move = 1
-        return move
+        self.line_ids = [Command.clear()] + [Command.create(vals) for vals in lines_to_create]
 
     def create_payment(self):
         """Create a payment instead of a journal entry"""
@@ -131,43 +131,53 @@ class AccountMoveTemplateRun(models.TransientModel):
         payment.action_post()
 
         return payment
-    
+
     def create_move(self):
+        """
+        Create the account.move record from the wizard data.
+        """
         self.ensure_one()
         if self.is_payment:
             return self.create_payment()
+
         company = self.multicompany_id or self.env.company
         move_env = self.env["account.move"].with_company(company)
         move_vals = self._prepare_move_vals(company)
-        _logger.info("move_vals %s", move_vals)
+        
         for line in self.line_ids:
-            move_vals["line_ids"].append(
-                Command.create(self._prepare_move_line_vals(line))
-            )
+            move_line_vals = self._prepare_move_line_vals(line)
+            move_vals["line_ids"].append(Command.create(move_line_vals))
+
         move = move_env.with_context(default_move_type=self.move_type).create(move_vals)
-        for line in move.invoice_line_ids:
-            line._compute_tax_ids()
         return move
 
     def _prepare_move_line_vals(self, line):
+        """
+        Prepare move line values from a wizard line.
+        This method now trusts the data from the wizard line completely,
+        as the product selection and calculations have already been done.
+        """
         vals = {
             "name": line.name,
             "account_id": line.account_id.id,
             "analytic_distribution": line.analytic_distribution,
+            "partner_id": line.partner_id.id,
         }
+
         if self.template_id.move_type == "entry":
             vals["balance"] = self.balance or line.balance
-
-        elif self.template_id.move_type != "entry":
+        else:
             vals["product_id"] = line.product_id.id
             vals["quantity"] = self.quantity or line.quantity
             vals["price_unit"] = self.price_unit or line.price_unit or 0.0
             vals["discount"] = self.discount or line.discount
-            vals["tax_ids"] = [Command.set(line.product_id.suppliers_taxes_id.ids)]
-        _logger.info("vals %s", vals)
+            vals["tax_ids"] = [Command.set(line.tax_ids.ids)]
+
+        _logger.info("Prepared move line vals: %s", vals)
         return vals
 
     def _prepare_move_vals(self, company):
+        """Prepare the values for the account.move record itself."""
         journal = (
             self.env["account.journal"]
             .with_company(company)
@@ -180,7 +190,7 @@ class AccountMoveTemplateRun(models.TransientModel):
                     "No valid journal found for this journal code in the selected company."
                 )
             )
-        _logger.info("journal %s", journal.read(['id', 'name', 'code']))
+
         return {
             "journal_id": journal.id,
             "move_type": self.template_id.move_type,
@@ -188,51 +198,62 @@ class AccountMoveTemplateRun(models.TransientModel):
             "invoice_payment_term_id": self.template_id.invoice_payment_term_id.id
             or False,
             "date": self.date,
-            "invoice_date": self.date if self.template_id.move_type in ('in_invoice', 'out_invoice') else False,
             "ref": self.ref,
             "company_id": company.id,
             "line_ids": [],
         }
 
     def _prepare_wizard_line(self, tmpl_line):
+        """
+        Prepares a line for the wizard.
+        CORRECTED LOGIC:
+        1. Determine the product and its price/taxes FIRST.
+        2. Calculate the quantity based on the correct price.
+        """
         account_id = self.env["account.account"].search(
-            [("code", "=", tmpl_line.account_code)], limit=1
+            [("code_store", "=", tmpl_line.account_code)], limit=1
         )
-      
+
         price_unit = tmpl_line.price_unit
+        quantity = tmpl_line.quantity
+        product = tmpl_line.product_id
         tax_ids = tmpl_line.tax_ids
 
-        if tmpl_line.product_id and (not tmpl_line.price_unit or not tmpl_line.tax_ids):
-            product = tmpl_line.product_id
-            if self.move_type in ('in_invoice', 'in_refund'):
-                price_unit = product.standard_price
-                tax_ids = product.supplier_taxes_id
-            elif self.move_type in ('out_invoice', 'out_refund'):
-                price_unit = product.lst_price
-                tax_ids = product.taxes_id
+        if not product and tmpl_line.product_category_id:
+            try:
+                random_product = tmpl_line.get_random_product_for_category(
+                    tmpl_line.product_category_id
+                )
+                product = random_product
+                if not tmpl_line.price_unit:
+                    price_unit = product.lst_price
+                if not tmpl_line.tax_ids:
+                    tax_ids = product.supplier_taxes_id
+            except UserError as e:
+                _logger.warning(e)
+                pass
 
-        quantity = tmpl_line.quantity
-        if self.amount and price_unit:
-            quantity = self.amount / price_unit
+        final_price_unit = price_unit or (product.lst_price if product else 1.0)
+
+        if self.amount and final_price_unit > 0:
+            quantity = self.amount / final_price_unit
+        elif self.amount and final_price_unit == 0:
+            quantity = 0
 
         vals = {
             "wizard_id": self.id,
-            "name": tmpl_line.name,
+            "template_line_id": tmpl_line.id,
+            "name": product.name if product else tmpl_line.name,
             "sequence": tmpl_line.sequence,
             "partner_id": tmpl_line.partner_id.id or False,
             "account_id": account_id.id,
             "analytic_distribution": tmpl_line.analytic_distribution or False,
-            "product_id": tmpl_line.product_id.id or False,
-            "product_uom_id": tmpl_line.product_uom_id.id or False,
+            "product_id": product.id if product else False,
+            "product_uom_id": product.uom_id.id if product else False,
             "quantity": quantity,
-            "price_unit": price_unit,
+            "price_unit": final_price_unit,
             "discount": tmpl_line.discount or False,
             "balance": tmpl_line.balance or False,
-            "tax_ids": [(6, 0, tax_ids.ids)],
-            "python_code": (
-                tmpl_line.python_code if tmpl_line.type == "computed" else False
-            ),
-            "note": tmpl_line.note,
+            "tax_ids": [Command.set(tax_ids.ids)],
         }
-
         return vals

@@ -108,7 +108,6 @@ class AccountMoveTemplate(models.Model):
         wizard.load_lines()
         return {
             "name": _("Create Entry from Template"),
-            "type": "ir.actions.act_window",
             "res_model": "account.move.template.run",
             "view_mode": "form",
             "target": "new",
@@ -142,7 +141,6 @@ class AccountMoveTemplate(models.Model):
 
         return {
             "name": _("Create Entry from Template"),
-            "type": "ir.actions.act_window",
             "res_model": "account.move.template.run",
             "view_mode": "form",
             "target": "new",
