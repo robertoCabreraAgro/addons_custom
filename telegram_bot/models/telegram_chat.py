@@ -50,9 +50,10 @@ class TelegramChat(models.Model):
                     "telegram_username": telegram_username,
                 }
             )
-        else:
-            if chat.partner_id and chat.partner_id.telegram_username != telegram_username:
-                chat.partner_id.sudo().write({"telegram_username": telegram_username})
+        elif chat.telegram_username != telegram_username:
+            chat.telegram_username = telegram_username
+        elif chat.partner_id and chat.partner_id.telegram_username != telegram_username:
+            chat.partner_id.sudo().write({"telegram_username": telegram_username})
         return chat
 
     @api.model_create_multi
