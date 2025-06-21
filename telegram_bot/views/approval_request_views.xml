@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="approval_request_view_form_inherit_accounting_link" model="ir.ui.view">
+        <field name="name">approval.request.form.inherit.accounting</field>
+        <field name="model">approval.request</field>
+        <field name="inherit_id" ref="base_approval.approval_request_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page
+                    string="Accounting Details"
+                    name="accounting_details"
+                    invisible="has_bsl == 'no' and has_operation_type == 'no'"
+                >
+                    <group>
+                        <group string="Bank Reconciliation">
+                            <field
+                                name="bank_statement_line_id"
+                                invisible="has_bsl == 'no'"
+                                required="has_bsl == 'required'"
+                                readonly="state != 'new' and state != 'pending'"
+                            />
+                        </group>
+                        <group string="Operation Generation">
+                            <field
+                                name="operation_type_id"
+                                invisible="has_operation_type == 'no'"
+                                required="has_operation_type == 'required'"
+                                readonly="state != 'new' and state != 'pending'"
+                            />
+                            <field name="account_move_operation_id" readonly="1" />
+                        </group>
+                    </group>
+                    <group string="Telegram Data">
+                        <group>
+                            <field name="telegram_data_formatted" nolabel="1" readonly="1" />
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

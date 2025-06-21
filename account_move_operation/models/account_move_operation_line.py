@@ -322,7 +322,6 @@ class AccountMoveOperationLine(models.Model):
 
     def _get_action_reconcile(self):
         self.ensure_one()
-
         st_line = self.st_line_id or self.env["account.bank.statement.line"].browse(
             self._context.get("st_line_id")
         )
@@ -342,23 +341,16 @@ class AccountMoveOperationLine(models.Model):
         if not move or move.state != "posted":
             raise UserError(_("The invoice must be posted to reconcile."))
 
-        bank_lines = st_line.move_id.line_ids.filtered(
-            lambda l: l.account_id == st_line.journal_id.default_account_id
-            and not l.reconciled
+        bank_rec_wizard = self.env['bank.rec.widget'].with_context(
+            default_st_line_id=st_line.id
+        ).new({})
+        invoice_line = move.line_ids.filtered(
+            lambda l: l.account_id.account_type == 'asset_receivable'
         )
-
-        counterpart_lines = self.env["account.move.line"].search(
-            [
-                ("account_id", "=", st_line.journal_id.default_account_id.id),
-                ("reconciled", "=", False),
-                # filtros adicionales según lógica de negocio
-            ]
-        )
-
-        if bank_lines and counterpart_lines:
-            (bank_lines + counterpart_lines).reconcile()
-        else:
-            raise UserError(_("No lines available to reconcile."))
+        bank_rec_wizard._action_add_new_amls(invoice_line)
+        if bank_rec_wizard.state != 'valid':
+            raise ValueError("Reconciliation is not in valid status")
+        bank_rec_wizard._action_validate()
         st_line.move_id.checked = True
         self.action_done()
         return True

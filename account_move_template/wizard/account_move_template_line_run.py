@@ -1,12 +1,4 @@
-from ast import literal_eval
-import logging
-
-from odoo import api, fields, models
-from odoo.exceptions import UserError, ValidationError
-from odoo.tools.safe_eval import safe_eval
-from odoo.tools.translate import _
-
-_logger = logging.getLogger(__name__)
+from odoo import fields, models
 
 
 class AccountMoveTemplateLineRun(models.TransientModel):
@@ -19,16 +11,13 @@ class AccountMoveTemplateLineRun(models.TransientModel):
         comodel_name="account.move.template.run",
         ondelete="cascade",
     )
-    name = fields.Char()
-    sequence = fields.Integer()
-    template_type = fields.Selection(
-        selection=[
-            ("input", "User input"),
-            ("computed", "Computed"),
-        ],
-        string="Template Type",
-        readonly=True,
+    template_line_id = fields.Many2one(
+        comodel_name="account.move.template.line",
+        string="Template Line",
+        help="Reference to the original template line"
     )
+    name = fields.Char(string="Label")
+    sequence = fields.Integer()
     partner_id = fields.Many2one(
         comodel_name="res.partner",
         string="Partner",
@@ -52,6 +41,10 @@ class AccountMoveTemplateLineRun(models.TransientModel):
         string="Unit Price",
         digits="Product Price",
     )
+    tax_ids = fields.Many2many(
+        comodel_name="account.tax",
+        string="Taxes",
+    )
     discount = fields.Float(
         string="Discount (%)",
         digits="Discount",
@@ -60,5 +53,4 @@ class AccountMoveTemplateLineRun(models.TransientModel):
         string="Balance",
         digits="Product Price",
     )
-    python_code = fields.Text(string="Formula", readonly=True)
     note = fields.Char()

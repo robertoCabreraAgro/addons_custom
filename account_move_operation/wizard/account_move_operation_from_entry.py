@@ -90,65 +90,48 @@ class AccountMoveOperationFromEntry(models.TransientModel):
 
     @api.onchange("operation_type_id")
     def _onchange_operation_type_id(self):
-        """Load action lines based on operation type"""
+        """
+        Load action lines. If starting from a BSL, mark the first step as executed for traceability.
+        """
         self.ensure_one()
-        self.action_line_ids = [(5, 0, 0)]
+        self.action_line_ids = [(5, 0, 0)]  # Clear existing lines
 
         if not self.operation_type_id:
             return
 
         actions = self.operation_type_id.action_ids.filtered(lambda a: a.active)
-
-        # For bank statement lines, we typically start with reconcile or payment actions
-        matched_action = self._identify_matching_action(actions)
-
         vals_list = []
+        is_first_action = True
         for action in actions:
-            _logger.info("action %s", action.read())
-            is_source = action == matched_action
-            vals_list.append(
-                {
-                    "action_id": action.id,
-                    "name": action.name,
-                    "executed": is_source,
-                    "document_id": self.st_line_id.id if is_source else False,
-                }
-            )
-        _logger.info("Action lines to assign: %s", vals_list)
+            # If this is the very first step AND we started from a bank statement line,
+            # mark it as executed to maintain traceability.
+            if is_first_action and self.st_line_id:
+                vals_list.append(
+                    {
+                        "action_id": action.id,
+                        "name": action.name,
+                        "executed": True,
+                        "document_id": self.st_line_id.id,
+                    }
+                )
+                is_first_action = False
+            else:
+                # All other steps start as not executed.
+                vals_list.append(
+                    {
+                        "action_id": action.id,
+                        "name": action.name,
+                        "executed": False,
+                        "document_id": False,
+                    }
+                )
 
-        self.action_line_ids = [(0, 0, vals) for vals in vals_list]
-
-    def _identify_matching_action(self, actions):
-        """Try to identify which action matches our bank statement line"""
-        self.ensure_one()
-        st_line = self.st_line_id
-
-        if not st_line:
-            return actions.filtered(lambda a: a.action == "reconcile")[:1]
-
-        # If the amount is positive (credit), it's likely a payment received
-        if st_line.amount > 0:
-            # Look for reconcile actions first (most common for incoming payments)
-            reconcile_actions = actions.filtered(lambda a: a.action == "reconcile")
-            if reconcile_actions:
-                return reconcile_actions[:1]
-        else:
-            # If negative (debit), it's likely a payment made
-            pay_actions = actions.filtered(lambda a: a.action == "pay")
-            if pay_actions:
-                return pay_actions[:1]
-
-        # Default to first action if nothing matches
-        return actions[:1] if actions else self.env["account.move.operation.action"]
+        if vals_list:
+            self.action_line_ids = [(0, 0, vals) for vals in vals_list]
 
     def action_create_operation(self):
         """Create an operation and initialize it with our bank statement line"""
         self.ensure_one()
-
-        if all(line.executed for line in self.action_line_ids):
-            raise ValidationError(
-                _("All actions are already executed. No need to create an operation.")
-            )
 
         operation_vals = {
             "name": _("New"),
@@ -171,21 +154,22 @@ class AccountMoveOperationFromEntry(models.TransientModel):
 
         operation.action_start()
 
-        # Mark executed actions as done and link documents
+        # Mark user-selected executed actions as done and link documents
         for wizard_line in self.action_line_ids.filtered(lambda l: l.executed):
             operation_line = operation.line_ids.filtered(
                 lambda l: l.action_id.id == wizard_line.action_id.id
             )
             if operation_line:
-                # For reconcile actions, link the bank statement line
-                if wizard_line.action_id.action == "reconcile":
-                    operation_line.st_line_id = wizard_line.document_id.id
-                elif wizard_line.action_id.action == "move":
-                    # If somehow we have a move linked
-                    operation_line.move_id = wizard_line.document_id.id
-                elif wizard_line.action_id.action == "pay":
-                    # If we have a payment linked
-                    operation_line.payment_id = wizard_line.document_id.id
+                # Based on the action type, link the correct document from the wizard.
+                # NOTE: This assumes document_id is an account.bank.statement.line.
+                # If other document types are needed, this logic should be expanded.
+                if wizard_line.document_id:
+                    if wizard_line.action_id.action == "reconcile":
+                        operation_line.st_line_id = wizard_line.document_id.id
+                    # Add elif for 'move' and 'pay' if they can also be source documents.
+                    # For example:
+                    # elif wizard_line.action_id.action == "move":
+                    #     operation_line.move_id = wizard_line.document_id.id # This would require document_id to be a reference field.
 
                 operation_line.state = "done"
 
@@ -202,6 +186,7 @@ class AccountMoveOperationFromEntry(models.TransientModel):
             "res_model": "account.move.operation",
             "res_id": operation.id,
             "type": "ir.actions.act_window",
+            "target": "current", # Open in the same window
         }
 
 
@@ -227,7 +212,7 @@ class AccountMoveOperationFromEntryLine(models.TransientModel):
     executed = fields.Boolean(
         string="Already Executed",
         help="""Mark the steps that have already been executed manually or through other processes.
-                Only the remaining steps will be executed when creating the operation.""",
+                 Only the remaining steps will be executed when creating the operation.""",
     )
     document_id = fields.Many2one(
         "account.bank.statement.line",

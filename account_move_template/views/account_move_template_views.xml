@@ -92,6 +92,9 @@
                                     <field name="product_id"
                                         widget="product_label_section_and_note_field"
                                         column_invisible="parent.move_type == 'entry'" />
+                                    <field name="product_category_id"
+                                        column_invisible="parent.move_type == 'entry'"
+                                        string="Random Product Category" />
                                     <field name="name" widget="section_and_note_text" />
                                     <field name="account_id" />
                                     <field name="account_code" />
@@ -105,35 +108,17 @@
                                         column_invisible="parent.move_type == 'entry'" />
                                     <field name="price_unit" string="Price"
                                         column_invisible="parent.move_type == 'entry'" />
+                                    <field name="tax_ids" widget="many2many_tags"
+                                        column_invisible="parent.move_type == 'entry'"/>
                                     <field name="discount" width="50px" string="Disc.%"
                                         optional="hide"
                                         column_invisible="parent.move_type == 'entry'" />
                                     <field name="balance"
                                         column_invisible="parent.move_type != 'entry'" />
                                 </list>
-                                <!--                                 <form string="Journal Entry Template Line">
-                                    <sheet>
-                                        <group name="main">
-                                            <group name="main-left">
-                                                <field name="partner_id" />
-                                                <field name="product_id" />
-                                                <field name="product_uom_id" string="UoM" />
-                                                <field name="quantity" string="Qty" />
-                                                <field name="name" />
-                                                <field name="balance" />
-                                                <field name="account_id" />
-                                                <field name="account_code" />
-                                            </group>
-                                            <group name="main-right">
-                                                <field name="move_type" invisible="1" />
-                                            </group>
-                                        </group>
-                                    </sheet>
-                                </form>
- -->
                             </field>
                         </page>
-                        <page name="other_info" string="Other Information">
+                        <page name="other_info" string="Other Information"> 
                             <group>
                                 <group>
                                 </group>
