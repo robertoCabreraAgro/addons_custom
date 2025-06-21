@@ -13,7 +13,7 @@ class ProductProduct(models.Model):
                 "Product Unit of Measure"
             )
             for record in self:
-                name = "{} {:.{}f} {}".format(
+                name = "{} -- {:.{}f} {}".format(
                     record.display_name,
                     availability[record.id][0],
                     precision,
