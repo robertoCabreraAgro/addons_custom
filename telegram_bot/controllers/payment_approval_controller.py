@@ -336,7 +336,15 @@ class PaymentApprovalTelegramController(TelegramController):
             approval.action_confirm()
 
             # 5. Notify the user and clean state
-            bot.send_message(chat.chat_id, f"¡Éxito! Se ha creado la solicitud de aprobación `{approval.name}`.")
+            base_url = internal_user.env["ir.config_parameter"].sudo().get_param("web.base.url")
+            message = f"¡Éxito! Se ha creado la solicitud de aprobación `{approval.name}`. /ayuda"
+
+            if base_url:
+                approval_url = f"{base_url}/web#id={approval.id}&" f"model=approval.request&view_type=form"
+                markdown_link = f"[{approval.name}]({approval_url})"
+                message = f"¡Éxito! Se ha creado la solicitud de aprobación: {markdown_link}. /ayuda"
+
+            bot.send_message(chat.chat_id, message)
             chat.reset_state()
 
         except AccessError:
