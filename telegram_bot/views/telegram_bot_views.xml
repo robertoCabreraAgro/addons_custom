@@ -43,7 +43,12 @@
         <field name="view_mode">list,form</field>
     </record>
 
-    <menuitem id="menu_telegram_root" name="Telegram" sequence="10" />
+    <menuitem
+        id="menu_telegram_root"
+        name="Telegram"
+        sequence="10"
+        web_icon="telegram_bot,static/description/icon.png"
+    />
 
     <menuitem
         id="menu_telegram_bots"
