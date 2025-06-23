@@ -71,7 +71,7 @@ class PaymentApprovalTelegramController(TelegramController):
                 "1.  *A quién se factura*: Nombre (o parte del nombre) de un cliente existente.\n"
                 "2.  *Categoría de producto*: `Agroquimicos` o `Papas`.\n"
                 "3.  *Uso CFDI*: `Adquisicion de mercancias` o `Gastos en general`.\n"
-                "4.  *Método de pago*: `Transferencia`, `Efectivo`, `TC` o `TD`.\n"
+                "4.  *Método de pago*: `Transferencia`, `Efectivo`.\n"
                 "5.  *Compañía*: `LMMR` o `LMMG`.\n"
                 "6.  *A quién se aplica el pago*: Nombre (o parte del nombre) de un cliente existente.\n"
                 "7.  *Fecha de pago*: En formato `AAAA-MM-DD`.\n"
@@ -195,8 +195,8 @@ class PaymentApprovalTelegramController(TelegramController):
 
         err = self._validate_choice(
             method,
-            ["transferencia", "efectivo", "tc", "td"],
-            f"Método de pago inválido: '{method}'. Opciones: Transferencia, Efectivo, TC, TD.",
+            ["transferencia", "efectivo"],
+            f"Método de pago inválido: '{method}'. Opciones: Transferencia, Efectivo.",
         )
         if err:
             errors.append(err)
