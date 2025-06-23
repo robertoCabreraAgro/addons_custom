@@ -11,7 +11,6 @@
     "depends": ["base", "web"],
     "data": [
         "security/data.xml",
-        "views/base_geoengine_view.xml",
         "views/ir_model_view.xml",
         "views/ir_view_view.xml",
         "views/geo_raster_layer_view.xml",

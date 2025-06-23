@@ -23,9 +23,9 @@
         </field>
     </record>
     <menuitem
-        name="Configuration"
+        name="GeoEngine Services"
         id="geoengine_base_view_menu"
-        parent="geoengine_base_menu"
+        parent="base.menu_custom"
         groups="group_geoengine_admin"
     />
 
