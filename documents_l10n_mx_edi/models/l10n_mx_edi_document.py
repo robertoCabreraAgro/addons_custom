@@ -1,5 +1,6 @@
 import base64
 import hashlib
+import json
 import logging
 import re
 from datetime import datetime, timedelta
@@ -11,8 +12,8 @@ from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.x509.oid import NameOID, ObjectIdentifier
 from lxml import etree
 
-from odoo import models, tools
-from odoo.exceptions import ValidationError
+from odoo import _, models, tools
+from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
 from odoo.osv import expression
 from odoo.tools.float_utils import float_round
@@ -121,7 +122,7 @@ class L10nMxEdiDocument(models.Model):
 
         # Validate record parameter
         if not isinstance(record, models.BaseModel):
-            raise ValidationError("Record parameter must be a valid Odoo model instance")
+            raise ValidationError(_("Record parameter must be a valid Odoo model instance"))
 
         if record._name not in ["documents.document", "account.move"]:
             raise ValidationError(
@@ -352,7 +353,7 @@ class L10nMxEdiDocument(models.Model):
             if attr.oid == OID_RFC:
                 return attr.value
 
-        raise ValidationError("RFC (OID 2.5.4.45) was not found in the certificate")
+        raise ValidationError(_("RFC (OID 2.5.4.45) was not found in the certificate"))
 
     def collect_complemento(
         self,
@@ -1159,8 +1160,7 @@ class L10nMxEdiDocument(models.Model):
         return sanitized_arg
 
     def l10n_mx_ws_request_download(self, certificate, private_key, token, args):
-        """
-        Creates and sends a mass download request to SAT for RECEIVED invoices.
+        """Creates and sends a mass download request to SAT for RECEIVED invoices.
 
         This method specializes in building the SOAP request to download CFDI documents
         where the requester's RFC (certificate owner) appears as the invoice recipient.
@@ -1180,7 +1180,7 @@ class L10nMxEdiDocument(models.Model):
             ValidationError: If arguments are not provided as a dictionary.
         """
         if not isinstance(args, dict):
-            raise ValidationError("Request arguments must be provided as a dictionary.")
+            raise ValidationError(_("Request arguments must be provided as a dictionary."))
 
         # Extract requester's VAT from certificate
         requester_vat = self._get_requester_vat(certificate)
@@ -1350,3 +1350,82 @@ class L10nMxEdiDocument(models.Model):
             "paquete_b64": communication.text,
         }
         return ret_dict
+
+    def l10n_mx_ws_request_download_playwright(self, esignature, date_from, date_to, request_type):
+        """Executes the CFDI download request by calling the dedicated EC2 service.
+        Reads the raw file content directly from the model fields to ensure data integrity.
+        """
+        params = self.env["ir.config_parameter"].sudo()
+        ec2_url = params.get_param("cfdi_downloader.ec2.url")
+
+        if not ec2_url:
+            raise UserError(
+                _(
+                    "The EC2 service URL is not configured.\n"
+                    "Please set the URL in the system parameters (key: 'cfdi_downloader.ec2.url')."
+                )
+            )
+
+        cert_b64_content = esignature.content
+        key_b64_content = esignature.key
+        key_password = esignature.password
+
+        if not all([cert_b64_content, key_b64_content, key_password]):
+            raise UserError(
+                _(
+                    "The selected e-signature is missing the file content for the certificate, private key, or password."
+                )
+            )
+
+        # The content is already base64 encoded, so we just need to ensure it's a string.
+        # Odoo's Binary fields can sometimes be bytes, so we decode if necessary.
+        if isinstance(cert_b64_content, bytes):
+            cert_b64_content = cert_b64_content.decode("utf-8")
+        if isinstance(key_b64_content, bytes):
+            key_b64_content = key_b64_content.decode("utf-8")
+
+        payload = {
+            "certificate": cert_b64_content,
+            "private_key": key_b64_content,
+            "password": key_password,
+            "date_from": str(date_from),
+            "date_to": str(date_to),
+        }
+
+        headers = {"Content-Type": "application/json"}
+
+        _logger.info("Sending request to EC2 endpoint with direct field data.")
+
+        try:
+            # The Gunicorn service on EC2 has a 5-minute timeout.
+            response = requests.post(ec2_url, headers=headers, data=json.dumps(payload), timeout=320)
+
+            response.raise_for_status()
+
+            response_data = response.json()
+            folio_id = response_data.get("request_id")
+
+            if not folio_id:
+                raise UserError(_("The EC2 service succeeded but did not return a 'request_id'."))
+
+            _logger.info("Successfully received Folio ID from EC2 service: %s", folio_id)
+
+            return {"request_id": folio_id, "status_code": "5000", "message": "Solicitud Aceptada (via EC2)."}
+
+        except requests.exceptions.HTTPError as e:
+            error_body = e.response.text
+            _logger.error("HTTP error calling EC2 service: %s - Body: %s", e, error_body)
+            try:
+                error_json = e.response.json()
+                error_message = error_json.get("error", error_body)
+            except json.JSONDecodeError:
+                error_message = error_body
+            raise UserError(_("The CFDI download service returned an error: %s", error_message))
+
+        except requests.exceptions.RequestException as e:
+            _logger.error("Network error calling EC2 service: %s", e)
+            raise UserError(_("Could not connect to the CFDI download service: %s", e))
+
+        except Exception as e:
+            _logger.error("An unexpected error occurred when calling the EC2 service.", exc_info=True)
+            raise UserError(_("An unexpected error occurred: %s", e))

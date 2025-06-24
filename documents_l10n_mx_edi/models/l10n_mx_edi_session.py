@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 import pytz
 from markupsafe import Markup
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 
 from .l10n_mx_edi_document import MXWS_ERROR_TYPE
 
@@ -65,6 +65,12 @@ class Session(models.Model):
             ("Metadata", "Metadata"),
         ],
         default="CFDI",
+    )
+    request_mode = fields.Selection(
+        selection=[
+            ("playwright", "Playwright"),
+            ("api", "API"),
+        ],
     )
 
     @api.model_create_multi
@@ -122,20 +128,40 @@ class Session(models.Model):
             return
 
         try:
-            request_res = mx_edi_document.l10n_mx_ws_request_download(
-                certificate,
-                private_key,
-                self.token,
-                {
-                    "date_from": self.date_from,
-                    "date_to": self.date_to,
-                    "cfdi_state": "Vigente",
-                    "request_type": self.request_type,
-                },
+            # 1. First attempt with Playwright
+            request_res = mx_edi_document.l10n_mx_ws_request_download_playwright(
+                esignature, self.date_from, self.date_to, self.request_type
             )
-        except Exception as e:
-            self.message_post(body=self.env._("Request Download error: %s") % str(e))
-            return
+            request_mode = "playwright"
+
+        except Exception as e_playwright:
+            # 2. Fallback to standard web service
+            _logger.warning("Playwright request failed: %s. Falling back to SAT web service.", e_playwright)
+            try:
+                request_res = mx_edi_document.l10n_mx_ws_request_download(
+                    certificate,
+                    private_key,
+                    self.token,
+                    {
+                        "date_from": self.date_from,
+                        "date_to": self.date_to,
+                        "cfdi_state": "Vigente",
+                        "request_type": self.request_type,
+                    },
+                )
+                request_mode = "api"
+            except Exception as e_ws:
+                # If both methods fail, post the final error and stop.
+                _logger.error("Standard web service request also failed.", exc_info=True)
+                error_message = _(
+                    "Both browser automation and the standard web service failed.\n\n"
+                    "Browser automation error: %s\n\nStandard web service error: %s",
+                    str(e_playwright),
+                    str(e_ws),
+                )
+                self.message_post(body=error_message)
+                self.write({"request_state": "4"})  # Set state to Error
+                return
 
         self.write(
             {
@@ -143,6 +169,7 @@ class Session(models.Model):
                 "request_status_code": request_res["status_code"],
                 "request_message": request_res["message"],
                 "request_state": "1" if request_res["status_code"] == "5000" else "0",
+                "request_mode": request_mode,
             }
         )
 
@@ -385,8 +412,8 @@ class Session(models.Model):
         utc_tz = pytz.UTC
         now_utc = datetime.now(utc_tz)
         now_mx = now_utc.astimezone(mexico_tz)
-        today = now_mx.replace(hour=0, minute=0, second=0, microsecond=0)
-        start_date = today - timedelta(days=7)
+        today = now_mx.replace(hour=0, minute=0, second=1, microsecond=0)
+        start_date = today - timedelta(days=1)
         end_date = today
 
         # Get last session
