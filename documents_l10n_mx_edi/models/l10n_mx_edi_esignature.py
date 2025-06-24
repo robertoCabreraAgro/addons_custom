@@ -9,7 +9,7 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.x509.oid import NameOID
 from pytz import timezone
 
-from odoo import api, fields, models, tools
+from odoo import _, api, fields, models, tools
 from odoo.exceptions import ValidationError
 from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 
@@ -39,8 +39,8 @@ def convert_key_cer_to_pem(key, password):
     return key_pem
 
 
-def str_to_datetime(dt_str, tz=DEFAULT_TZ):
-    return tz.localize(fields.Datetime.from_string(dt_str))
+def str_to_datetime(dt_str, timez=DEFAULT_TZ):
+    return timez.localize(fields.Datetime.from_string(dt_str))
 
 
 class Esignature(models.Model):
@@ -130,7 +130,7 @@ class Esignature(models.Model):
                     backend=default_backend(),
                 )
             else:
-                raise ValidationError("Invalid Password")
+                raise ValidationError(_("Invalid Password"))
         return key_pem, private_key
 
     def get_mx_current_datetime(self):
