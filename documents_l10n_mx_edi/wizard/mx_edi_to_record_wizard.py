@@ -106,7 +106,6 @@ class MxEdiToRecordWizard(models.TransientModel):
         move_ids = []
         account_move = self.env["account.move"]
         mx_edi_document = self.env["l10n_mx_edi.document"]
-
         # Process only lines that require action (filter out 'none' actions)
         for line in self.line_ids.filtered(lambda ln: ln.action != "none"):
             document = line.document_id
@@ -119,9 +118,6 @@ class MxEdiToRecordWizard(models.TransientModel):
                         document.name,
                     )
                 )
-
-            # Update document SAT status
-            document.update_l10n_mx_edi_sat_state()
 
             # Create new move if required
             if line.action == "create":
@@ -138,17 +134,6 @@ class MxEdiToRecordWizard(models.TransientModel):
 
                     # Step 3: Create the account move
                     move = account_move.create(vals)
-                    sat_status = self.env["l10n_mx_edi.document"].l10n_mx_ws_get_cfdi_status(
-                        cfdi_infos["supplier_rfc"],
-                        cfdi_infos["customer_rfc"],
-                        cfdi_infos["amount_total"],
-                        cfdi_infos["uuid"],
-                    )
-                    # Step 4: If cancelled CFDI cancel account move
-                    cfdi_cancelled = STATUS.get(sat_status["status"], False) == "cancelled"
-                    if cfdi_cancelled:
-                        move.action_post()
-                        move.button_cancel()
                 except Exception as e:
                     raise UserError(
                         self.env._("Error creating invoice from document {}: {}").format(document.name, str(e))
@@ -157,6 +142,7 @@ class MxEdiToRecordWizard(models.TransientModel):
             # Update document and move relationship
             try:
                 attachment = document.attachment_id
+
                 # Link the attachment to the account move
                 attachment.with_context(no_document=True).write(
                     {
@@ -171,6 +157,21 @@ class MxEdiToRecordWizard(models.TransientModel):
                     move.l10n_mx_edi_cfdi_uuid = cfdi_infos.get("uuid", "").upper()
 
                 move_ids.append(move.id)
+
+                # Create MX Document for Vendor Bills
+                file_data_list = attachment._unwrap_edi_attachments()
+                for file_data in file_data_list:
+                    # Import CFDI if it's a valid CFDI file and no documents exist yet
+                    if file_data.get("is_cfdi", False) and not move.l10n_mx_edi_invoice_document_ids:
+                        account_move._l10n_mx_edi_import_cfdi_invoice(move, file_data)
+
+                move.l10n_mx_edi_cfdi_try_sat()
+
+                # If cancelled CFDI cancel account move
+                if move.l10n_mx_edi_cfdi_sat_state == "cancelled":
+                    move.action_post()
+                    move.button_cancel()
+
             except Exception as e:
                 raise UserError(self.env._("Error assigning invoice to document {}: {}").format(document.name, str(e)))
 
