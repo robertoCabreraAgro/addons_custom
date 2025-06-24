@@ -36,8 +36,8 @@
                         <div class="col-12 col-lg-6 o_setting_box">
                             <div class="o_setting_left_pane" />
                             <div class="o_setting_right_pane">
-                                <label for="sat_dias_aviles" />
-                                <field name="sat_dias_aviles" />
+                                <label for="sat_status_max_days" />
+                                <field name="sat_status_max_days" />
                                 <div class="text-muted">Días hábiles máximos hacia atrás para
                                     revisión SAT.</div>
                             </div>

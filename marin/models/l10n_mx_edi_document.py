@@ -76,26 +76,18 @@ class L10nMxEdiDocument(models.Model):
     def _fetch_and_update_sat_status(self, batch_size=None, extra_domain=None):
         """Override para usar parámetros configurables en res.config.settings."""
         ir_config = self.env["ir.config_parameter"].sudo()
-
-        # Obtener valores desde configuración
         batch_size = batch_size or int(
             ir_config.get_param("l10n_mx_edi_marin.sat_batch_size", default=100)
         )
-        dias_aviles = int(
-            ir_config.get_param("l10n_mx_edi_marin.sat_dias_aviles", default=60)
+        max_days = int(
+            ir_config.get_param("l10n_mx_edi_marin.sat_status_max_days", default=60)
         )
-
-        # Construir dominio extendido
         extra_domain = extra_domain or []
-        fecha_limite = datetime.today() - timedelta(days=dias_aviles)
-        extra_domain.append(("create_date", ">=", fecha_limite.strftime("%Y-%m-%d")))
-
-        # Buscar documentos según dominio final
+        start_date = datetime.today() - timedelta(days=max_days)
+        extra_domain.append(("create_date", ">=", start_date.strftime("%Y-%m-%d")))
         domain = self._get_update_sat_status_domain(extra_domain=extra_domain)
-
         documents = self.search(domain, limit=batch_size + 1)
 
-        # Procesar documentos, reagendar cron si hay más
         for counter, document in enumerate(documents):
             if counter == batch_size:
                 self.env.ref("l10n_mx_edi.ir_cron_update_pac_status_invoice")._trigger()
