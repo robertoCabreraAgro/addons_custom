@@ -1,18 +1,15 @@
 import base64
 import hashlib
 import logging
-import requests
 import re
-
 from datetime import datetime, timedelta
-from lxml import etree
-
-from cryptography.x509.oid import NameOID, ObjectIdentifier
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives import serialization
-from cryptography.hazmat.primitives.asymmetric import padding
-
 from os.path import splitext
+
+import requests
+from cryptography.hazmat.primitives import hashes, serialization
+from cryptography.hazmat.primitives.asymmetric import padding
+from cryptography.x509.oid import NameOID, ObjectIdentifier
+from lxml import etree
 
 from odoo import models, tools
 from odoo.exceptions import ValidationError
@@ -122,63 +119,63 @@ class L10nMxEdiDocument(models.Model):
         if not cfdi_name:
             return result
 
-
         # Validate record parameter
         if not isinstance(record, models.BaseModel):
             raise ValidationError("Record parameter must be a valid Odoo model instance")
 
         if record._name not in ["documents.document", "account.move"]:
             raise ValidationError(
-                "Duplicates can only be checked for documents or invoices, "
-                f"received: {record._name}"
+                "Duplicates can only be checked for documents or invoices, " f"received: {record._name}"
             )
-
 
         # Common message prefix using self.env._ for better performance
         message_prefix = self.env._("Duplicated CFDI: %s", cfdi_name)
 
         if record._name == "documents.document":
-            domain = [("name", "=ilike", self._l10n_mx_edi_normalize_cfdi_filename(cfdi_name))] 
+            domain = [("name", "=ilike", self._l10n_mx_edi_normalize_cfdi_filename(cfdi_name))]
             if record.exists():
                 domain = expression.AND(
                     [
-                        [("id", "!=", record.id)], 
+                        [("id", "!=", record.id)],
                         [("company_id", "in", [False, record.company.id])],
                         domain,
                     ]
                 )
             else:
-                domain = expression.AND(
-                    [
-                        [("company_id", "in", [False, self.env.company.id])],
-                        domain
-                    ]
-                )
+                domain = expression.AND([[("company_id", "in", [False, self.env.company.id])], domain])
 
             # Check if UUID exists in documents, excluding current record
             existing_document = self.env["documents.document"].search(domain, limit=1)
             if existing_document:
-                result.update({
-                    "duplicated": True,
-                    "document": existing_document,
-                    "message": (
-                        f"{message_prefix}\n"
-                        f"{self.env._('Already exists as document: %s', existing_document.name)}"
-                    ),
-                })
+                result.update(
+                    {
+                        "duplicated": True,
+                        "document": existing_document,
+                        "message": (
+                            f"{message_prefix}\n"
+                            f"{self.env._('Already exists as document: %s', existing_document.name)}"
+                        ),
+                    }
+                )
 
         elif record._name == "account.move":
             # Check in account.move
             domain = expression.AND(
                 [
                     [("state", "in", ["draft", "posted"])],
-                    [("l10n_mx_edi_cfdi_uuid", "=ilike", self._l10n_mx_edi_normalize_cfdi_filename(cfdi_name, extension=False))],
+                    [
+                        (
+                            "l10n_mx_edi_cfdi_uuid",
+                            "=ilike",
+                            self._l10n_mx_edi_normalize_cfdi_filename(cfdi_name, extension=False),
+                        )
+                    ],
                 ]
             )
             if record.exists():
                 domain = expression.AND(
                     [
-                        [("id", "!=", record.id)], 
+                        [("id", "!=", record.id)],
                         [("company_id", "in", [False, record.company.id])],
                         domain,
                     ]
@@ -193,14 +190,15 @@ class L10nMxEdiDocument(models.Model):
 
             existing_move = self.env["account.move"].search(domain, limit=1)
             if existing_move:
-                result.update({
-                    "duplicated": True,
-                    "move": existing_move,
-                    "message": (
-                        f"{message_prefix}\n"
-                        f"{self.env._('Already exists as invoice: %s', existing_move.name)}"
-                    ),
-                })
+                result.update(
+                    {
+                        "duplicated": True,
+                        "move": existing_move,
+                        "message": (
+                            f"{message_prefix}\n" f"{self.env._('Already exists as invoice: %s', existing_move.name)}"
+                        ),
+                    }
+                )
 
         return result
 
@@ -460,7 +458,7 @@ class L10nMxEdiDocument(models.Model):
             NameOID.ORGANIZATIONAL_UNIT_NAME: "OU",
             NameOID.ORGANIZATION_NAME: "O",
             NameOID.COMMON_NAME: "CN",
-        } 
+        }
         attr_dict = {attr.oid: attr.value for attr in certificate.issuer}
 
         # Ordering according to SAT
@@ -483,11 +481,11 @@ class L10nMxEdiDocument(models.Model):
             if oid in attr_dict:
                 name = oid_map.get(oid, f"OID.{oid.dotted_string}")
                 value = attr_dict[oid]
-                if ',' in value and not value.startswith('"'):
+                if "," in value and not value.startswith('"'):
                     value = f'"{value}"'
                 parts.append(f"{name}={value}")
 
-        return ', '.join(parts)
+        return ", ".join(parts)
 
     def _prepare_local_taxes(self, local_taxes_node):
         """:param cfdi_etree:  The cfdi etree object.
@@ -943,7 +941,7 @@ class L10nMxEdiDocument(models.Model):
         parser = etree.XMLParser(remove_blank_text=True)
         element_root = etree.fromstring(envelop, parser)
         element = element_root.find(xpath, internal_nsmap)
-        if not token: 
+        if not token:
             signature = """
                 <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
                     <SignedInfo>
@@ -999,11 +997,7 @@ class L10nMxEdiDocument(models.Model):
         )
         element_to_sign = element_signature.find(".//SignedInfo", internal_nsmap)
         element_to_sign = etree.tostring(element_to_sign, method="c14n", exclusive=1)
-        signature_value = private_key.sign(
-            element_to_sign,
-            padding.PKCS1v15(),
-            hashes.SHA1()
-        )
+        signature_value = private_key.sign(element_to_sign, padding.PKCS1v15(), hashes.SHA1())
         element_signed = element_signature.find(".//SignatureValue", internal_nsmap)
         element_signed.text = base64.b64encode(signature_value).decode()
 
@@ -1045,7 +1039,7 @@ class L10nMxEdiDocument(models.Model):
             cert_serial = certificate.serial_number
 
             element_certificate = element_key_info.find(".//X509Certificate")
-            element_certificate.text = cert_b64 
+            element_certificate.text = cert_b64
 
             element_issuer_name = element_key_info.find(".//X509IssuerName")
             element_issuer_name.text = cert_issuer
@@ -1163,7 +1157,7 @@ class L10nMxEdiDocument(models.Model):
             if key in args_allowed:
                 sanitized_arg[key] = value
         return sanitized_arg
-        
+
     def l10n_mx_ws_request_download(self, certificate, private_key, token, args):
         """
         Creates and sends a mass download request to SAT for RECEIVED invoices.
@@ -1178,10 +1172,10 @@ class L10nMxEdiDocument(models.Model):
             token: Valid SAT authentication token
             args: Dictionary with filtering parameters.
                   Example: {'date_from': date, 'date_to': date, 'emitter_vat': 'RFCEMISOR'}
-        
+
         Returns:
             Dictionary containing the request ID, status, and SAT response message.
-        
+
         Raises:
             ValidationError: If arguments are not provided as a dictionary.
         """
@@ -1189,7 +1183,7 @@ class L10nMxEdiDocument(models.Model):
             raise ValidationError("Request arguments must be provided as a dictionary.")
 
         # Extract requester's VAT from certificate
-        requester_vat = self._get_requester_vat(certificate) 
+        requester_vat = self._get_requester_vat(certificate)
 
         # Sanitizes/validates input arguments
         sanitized_args = self.sanitize_args(args)
@@ -1239,7 +1233,7 @@ class L10nMxEdiDocument(models.Model):
 
         # Configure service endpoint and headers
         url = "https://cfdidescargamasivasolicitud.clouda.sat.gob.mx/SolicitaDescargaService.svc"
-        soap_action = "http://DescargaMasivaTerceros.sat.gob.mx/ISolicitaDescargaService/SolicitaDescargaRecibidos" 
+        soap_action = "http://DescargaMasivaTerceros.sat.gob.mx/ISolicitaDescargaService/SolicitaDescargaRecibidos"
         headers = self.get_headers(soap_action, token)
 
         # Namespace mapping for XML parsing

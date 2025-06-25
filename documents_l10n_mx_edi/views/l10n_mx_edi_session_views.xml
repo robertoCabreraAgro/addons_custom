@@ -86,7 +86,7 @@
                             <field name="date_to" readonly="request_state != '0'" />
                         </group>
                         <group>
-                            <field name="uuid" invisible="1"/>
+                            <field name="uuid" invisible="1" />
                             <field name="request_type" />
                             <field name="company_id" />
                         </group>

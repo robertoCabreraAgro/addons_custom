@@ -81,9 +81,7 @@ class AccountMove(models.Model):
                         continue
 
                     # Check for UUID duplication before assignment
-                    duplicity_result = mx_edi_document._get_duplicate_cfdi(
-                        cfdi_infos["uuid"], move
-                    )
+                    duplicity_result = mx_edi_document._get_duplicate_cfdi(cfdi_infos["uuid"], move)
 
                     if duplicity_result["duplicated"]:
                         # If duplicated, notify but continue searching
@@ -100,9 +98,7 @@ class AccountMove(models.Model):
                         continue
 
                     # Assign UUID to the invoice
-                    move.with_context(no_validate_uuid=True).write(
-                        {"l10n_mx_edi_cfdi_uuid": cfdi_infos["uuid"]}
-                    )
+                    move.with_context(no_validate_uuid=True).write({"l10n_mx_edi_cfdi_uuid": cfdi_infos["uuid"]})
                     _logger.info(
                         "UUID %s extracted and assigned to invoice %s",
                         cfdi_infos["uuid"],
@@ -141,18 +137,13 @@ class AccountMove(models.Model):
             ValidationError: If UUID is missing when required or if UUID is duplicated
         """
         # Extract UUID and validate only for purchase invoices about to be posted
-        for move in self.filtered(
-            lambda m: m.is_purchase_document() and m.state == "draft"
-        ):
+        for move in self.filtered(lambda m: m.is_purchase_document() and m.state == "draft"):
             # Try to extract UUID from attachments if missing
             if not move.l10n_mx_edi_cfdi_uuid:
                 move._extract_uuid_from_attachments()
 
             # Validate UUID presence if required by journal
-            if (
-                not move.l10n_mx_edi_cfdi_uuid
-                and move.journal_id.l10n_mx_edi_require_uuid
-            ):
+            if not move.l10n_mx_edi_cfdi_uuid and move.journal_id.l10n_mx_edi_require_uuid:
                 raise ValidationError(
                     self.env._(
                         "Invoice %s cannot be posted. This journal requires a CFDI UUID because its treatment is set as fiscal.",
@@ -169,4 +160,4 @@ class AccountMove(models.Model):
                 if duplicity_result["duplicated"]:
                     raise ValidationError(duplicity_result["message"])
 
-        return super()._post(soft=soft) 
+        return super()._post(soft=soft)

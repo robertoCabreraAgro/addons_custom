@@ -2,16 +2,15 @@ import base64
 import ssl
 import subprocess
 import tempfile
-from datetime import datetime
 
 from cryptography import x509
-from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import serialization
 from cryptography.x509.oid import NameOID
 from pytz import timezone
 
 from odoo import api, fields, models, tools
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import ValidationError
 from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 
 DEFAULT_TZ = timezone("America/Mexico_City")
@@ -19,9 +18,13 @@ DEFAULT_TZ = timezone("America/Mexico_City")
 
 def convert_key_cer_to_pem(key, password):
     # TODO compute it from a python way
-    with tempfile.NamedTemporaryFile("wb", suffix=".key", prefix="edi.mx.tmp.") as key_file, \
-         tempfile.NamedTemporaryFile("wb", suffix=".txt", prefix="edi.mx.tmp.") as pwd_file, \
-         tempfile.NamedTemporaryFile("rb", suffix=".key", prefix="edi.mx.tmp.") as keypem_file:
+    with tempfile.NamedTemporaryFile(
+        "wb", suffix=".key", prefix="edi.mx.tmp."
+    ) as key_file, tempfile.NamedTemporaryFile(
+        "wb", suffix=".txt", prefix="edi.mx.tmp."
+    ) as pwd_file, tempfile.NamedTemporaryFile(
+        "rb", suffix=".key", prefix="edi.mx.tmp."
+    ) as keypem_file:
         key_file.write(key)
         key_file.flush()
         pwd_file.write(password)
@@ -106,10 +109,7 @@ class Esignature(models.Model):
         self.ensure_one()
         cer_pem_dirty = self.get_pem_cer(self.content)
         certificate = x509.load_pem_x509_certificate(cer_pem_dirty, backend=default_backend())
-        cer_pem = b"".join([
-            line for line in cer_pem_dirty.splitlines()
-            if not line.startswith(b"-----")
-        ])
+        cer_pem = b"".join([line for line in cer_pem_dirty.splitlines() if not line.startswith(b"-----")])
         return cer_pem, certificate
 
     def get_pk_data(self):

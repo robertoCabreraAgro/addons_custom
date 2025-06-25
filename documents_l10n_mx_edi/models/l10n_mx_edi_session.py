@@ -10,7 +10,6 @@ import pytz
 from markupsafe import Markup
 
 from odoo import api, fields, models
-from odoo.osv import expression
 
 from .l10n_mx_edi_document import MXWS_ERROR_TYPE
 
@@ -62,8 +61,8 @@ class Session(models.Model):
     count_verify = fields.Integer(readonly=True)
     request_type = fields.Selection(
         selection=[
-            ('CFDI', 'CFDI'),
-            ('Metadata', 'Metadata'),
+            ("CFDI", "CFDI"),
+            ("Metadata", "Metadata"),
         ],
         default="CFDI",
     )
@@ -111,21 +110,15 @@ class Session(models.Model):
         certificate = esignature.get_cert_data()[1]
         private_key = esignature.get_pk_data()[1]
         try:
-            token_res = mx_edi_document.l10n_mx_ws_generate_token(
-                certificate, private_key
-            )
+            token_res = mx_edi_document.l10n_mx_ws_generate_token(certificate, private_key)
             self.write(
                 {
                     "token": token_res["token"],
-                    "token_expiration": datetime.fromisoformat(
-                        token_res["expires"]
-                    ),
+                    "token_expiration": datetime.fromisoformat(token_res["expires"]),
                 }
             )
         except Exception as e:
-            self.message_post(
-                body=self.env._("Token generation error: %s") % str(e)
-            )
+            self.message_post(body=self.env._("Token generation error: %s") % str(e))
             return
 
         try:
@@ -133,12 +126,15 @@ class Session(models.Model):
                 certificate,
                 private_key,
                 self.token,
-                {"date_from": self.date_from, "date_to": self.date_to, "cfdi_state": "Vigente", "request_type": self.request_type},
+                {
+                    "date_from": self.date_from,
+                    "date_to": self.date_to,
+                    "cfdi_state": "Vigente",
+                    "request_type": self.request_type,
+                },
             )
         except Exception as e:
-            self.message_post(
-                body=self.env._("Request Download error: %s") % str(e)
-            )
+            self.message_post(body=self.env._("Request Download error: %s") % str(e))
             return
 
         self.write(
@@ -186,14 +182,14 @@ class Session(models.Model):
                     "packages": (verify_download["paquetes"][0] if verify_download["paquetes"] else ""),
                 }
             )
-            #self.write(
+            # self.write(
             #    {
             #        "request_state": verify_download["request_status"],
             #        "file_count": int(verify_download["cfdi_count"]),
             #        "request_message": verify_download["message"],
             #        "packages": (verify_download["packages"][0] if verify_download["packages"] else ""),
             #    }
-            #)
+            # )
             if int(self.request_state) > 2:
                 break
             if retry_count < max_retries - 1:  # avoid waiting in the last iteration

@@ -26,8 +26,6 @@ class AccountJournal(models.Model):
 
         if duplicated_attachments:
             duplicated_list = "\n".join(duplicated_attachments)
-            raise UserError(self.env._(
-                "Duplicated CFDI files detected:\n%s", duplicated_list)
-            )
+            raise UserError(self.env._("Duplicated CFDI files detected:\n%s", duplicated_list))
 
         return super().create_document_from_attachment(attachment_ids)
