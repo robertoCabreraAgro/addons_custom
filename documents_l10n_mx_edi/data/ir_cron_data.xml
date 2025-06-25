@@ -12,15 +12,15 @@ model._cron_sync_with_sat()
         </field>
     </record>
 
-    <record id="ir_cron_automatic_sync_sat_status" model="ir.cron">
-        <field name="name">Auto Sync SAT status</field>
+    <record id="ir_cron_update_sat_status" model="ir.cron">
+        <field name="name">Update SAT status (documents)</field>
         <field name="model_id" ref="model_documents_document" />
         <field name="user_id" ref="base.user_root" />
         <field name="interval_number">1</field>
         <field name="interval_type">days</field>
         <field name="state">code</field>
         <field name="code">
-model._cron_sync_with_sat()
+model._cron_update_sat_status()
         </field>
     </record>
 </odoo>

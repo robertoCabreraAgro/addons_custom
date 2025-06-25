@@ -1,75 +1,26 @@
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 from os.path import splitext
 
 from odoo import Command, api, fields, models
-
-STATUS = {
-    "No Encontrado": "not_found",
-    "Cancelado": "cancelled",
-    "Vigente": "valid",
-}
-CANCELLABLE = {
-    "No Cancelable": "not_cancellable",
-    "Cancelable sin aceptación": "cancellable_no_auth",
-    "Cancelable con aceptación": "cancellable_auth",
-}
-CANCEL_STATUS = {
-    "En proceso": "in_process",
-    "Cancelado sin aceptación": "cancelled_no_auth",
-    "Cancelado con aceptación": "cancelled_auth",
-    "Plazo vencido": "cancelled_timeout",
-    "Solicitud rechazada": "rejected",
-}
 
 
 class Document(models.Model):
     _inherit = "documents.document"
 
     l10n_mx_edi_is_cfdi = fields.Boolean(help="Specify if this is a CFDI document.")
-    l10n_mx_edi_sat_state = fields.Selection(
-        [
-            ("none", "State not defined"),
-            ("not_found", "Not Found"),
+    l10n_mx_edi_cfdi_sat_state = fields.Selection(
+        string="SAT status",
+        selection=[
+            ("valid", "Validated"),
             ("cancelled", "Cancelled"),
-            ("valid", "Valid"),
+            ("not_found", "Not Found"),
+            ("not_defined", "Not Defined"),
+            ("error", "Error"),
         ],
-        string="SAT Status",
-        default="none",
-        tracking=True,
-        readonly=True,
+        store=True,
         copy=False,
-        help="Refers to the status of the invoice inside the SAT system.",
-    )
-    l10n_mx_edi_sat_cancellable = fields.Selection(
-        [
-            ("none", "State not defined"),
-            ("not_cancellable", "Not Cancellable"),
-            ("cancellable_auth", "Cancellable with authorization"),
-            ("cancellable_no_auth", "Cancellable without authorization"),
-        ],
-        string="Cancellable",
-        default="none",
         tracking=True,
-        readonly=True,
-        copy=False,
-        help="Indicate wheter the document can be cancelled or not.",
-    )
-    l10n_mx_edi_sat_cancel_state = fields.Selection(
-        [
-            ("none", "State not defined"),
-            ("in_process", "In Process"),
-            ("cancelled_no_auth", "Cancelled without authorization"),
-            ("cancelled_auth", "Cancelled with authorization"),
-            ("cancelled_timeout", "Cancelled because timeout"),
-            ("rejected", "Cancellation Rejected"),
-        ],
-        string="Cancellation Status",
-        default="none",
-        tracking=True,
-        readonly=True,
-        copy=False,
-        help="Refers to the status of the cancellation in the SAT system.",
     )
     l10n_mx_edi_stamp_date = fields.Datetime(
         string="CFDI stamp date",
@@ -175,43 +126,61 @@ class Document(models.Model):
             rec.update(vals)
 
     @api.model
-    def _cron_sync_with_sat(self):
+    def _get_update_sat_status_domain(self, start_date=None):
+        domain = [
+            ("l10n_mx_edi_is_cfdi", "=", True),
+            ("res_model", "=", "documents.document"),
+        ]
+        if start_date:
+            domain.append(("l10n_mx_edi_stamp_date", ">=", start_date.strftime("%Y-%m-%d")))
+
+        return domain
+
+    @api.model
+    def _cron_update_sat_status(self):
         """Update SAT status of fiscal documents that:
         1. Are stamped
         2. Don't have a related account move
         3. Are as recent as 60 days.
         """
-        max_date = datetime.now() - timedelta(days=60)
-        docs = self.env["documents.document"].search([
-            ("l10n_mx_edi_is_cfdi", "=", True),
-            ("res_model", "!=", "account.move"),
-            ("l10n_mx_edi_stamp_date", ">=", max_date)
-        ])
-        docs.update_l10n_mx_edi_sat_state()
+        ir_config = self.env["ir.config_parameter"].sudo()
+        batch_size = int(ir_config.get_param("l10n_mx_edi_marin.sat_batch_size", default=100))
+        max_days = int(ir_config.get_param("l10n_mx_edi_marin.sat_status_max_days", default=60))
+        start_date = datetime.now() - timedelta(days=max_days)
+        domain = self._get_update_sat_status_domain(start_date=start_date)
+        documents = self.search(domain, limit=batch_size + 1)
 
-    def update_l10n_mx_edi_sat_state(self):
+        for counter, document in enumerate(documents):
+            if counter == batch_size:
+                self.env.ref("documents_l10n_mx_edi.ir_cron_update_sat_status")._trigger()
+            else:
+                document._update_sat_state()
+
+    def _update_sat_state(self):
+        self.ensure_one()
         mx_edi_document = self.env["l10n_mx_edi.document"]
-        for document in self:
-            if not document.l10n_mx_edi_is_cfdi or not document.raw:
-                document.l10n_mx_edi_sat_state = "none"
-                document.l10n_mx_edi_sat_cancellable = "none"
-                document.l10n_mx_edi_sat_cancel_state = "none"
-                continue
+        if not self.l10n_mx_edi_is_cfdi or not self.raw:
+            self.l10n_mx_edi_cfdi_sat_state = None
+            return
 
-            cfdi_infos = mx_edi_document._decode_cfdi_attachment(document.raw)
-            sat_status = self.env["l10n_mx_edi.document"].l10n_mx_ws_get_cfdi_status(
-                cfdi_infos["supplier_rfc"],
-                cfdi_infos["customer_rfc"],
-                cfdi_infos["amount_total"],
-                cfdi_infos["uuid"],
-            )
-            document.l10n_mx_edi_sat_state = STATUS.get(sat_status["status"] if sat_status else "none", "none")
-            document.l10n_mx_edi_sat_cancellable = CANCELLABLE.get(
-                sat_status["is_cancellable"] if sat_status else "", "none"
-            )
-            document.l10n_mx_edi_sat_cancel_state = CANCEL_STATUS.get(
-                sat_status["cancel_status"] if sat_status else "", "none"
-            )
+        cfdi_infos = mx_edi_document._decode_cfdi_attachment(self.raw)
+        if not cfdi_infos:
+            self.l10n_mx_edi_cfdi_sat_state = None
+            return
+
+        sat_results = mx_edi_document._fetch_sat_status(
+            cfdi_infos["supplier_rfc"],
+            cfdi_infos["customer_rfc"],
+            cfdi_infos["amount_total"],
+            cfdi_infos["uuid"],
+        )
+
+        sat_state = sat_results.get("value")
+        sat_error = sat_results.get("error")
+        if sat_state == "error" and sat_error:
+            self.message_post(body=sat_error)
+
+        self.l10n_mx_edi_cfdi_sat_state = sat_state
 
     def _get_l10n_mx_edi_type_tag(self, key):
         values = {
@@ -321,7 +290,7 @@ class Document(models.Model):
         new_vals_list = []
         for vals in vals_list:
             name = vals.get("name")
-            attachment_id = vals.get('attachment_id')
+            attachment_id = vals.get("attachment_id")
             if not name and attachment_id:
                 name = self.env["ir.attachment"].browse(attachment_id).name
             if name and name.lower().endswith(".xml") and check_duplicate:

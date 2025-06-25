@@ -5,8 +5,6 @@ from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.osv import expression
 
-from ..models.documents_document import STATUS
-
 _logger = logging.getLogger(__name__)
 
 
