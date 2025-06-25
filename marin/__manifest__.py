@@ -87,6 +87,7 @@
         "data/approval_category_data.xml",
         "data/product_category_data.xml",
         "data/product_product_data.xml",
+        "data/discuss_channel_data.xml",
         # "report/report_deliveryslip.xml",
         # "report/report_stock_picking_operations.xml",
         # "report/report_invoice.xml",

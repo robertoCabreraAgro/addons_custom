@@ -87,10 +87,28 @@ class L10nMxEdiDocument(models.Model):
 
         return new_domain
 
+    def _get_sat_status_cancellation_message(self):
+        """Generate the message body for cancellation notification."""
+        self.ensure_one()
+        message = f"""
+        <div class="o_mail_notification">
+            <strong>Cancelación Detectada en SAT</strong><br/>
+            <strong>Factura:</strong> {self.name or 'N/A'}<br/>
+            <strong>Folio Fiscal:</strong> {self.l10n_mx_edi_cfdi_uuid or 'N/A'}<br/>
+            <strong>Cliente:</strong> {self.partner_id.name}<br/>
+            <strong>Fecha:</strong> {self.invoice_date}<br/>
+            <strong>Estado SAT:</strong> Cancelado<br/>
+            <br/>
+            <em>Por favor, revisar y tomar las acciones correspondientes.</em>
+        </div>
+        """
+        return message
+
     @api.model
     def _fetch_and_update_sat_status(self, batch_size=None, extra_domain=None):
         """Override para usar parámetros configurables en res.config.settings."""
         ir_config = self.env["ir.config_parameter"].sudo()
+        sat_cancellations_channel = self.env.ref("marin.sat_status_cancellation_channel")
         batch_size = batch_size or int(ir_config.get_param("l10n_mx_edi_marin.sat_batch_size", default=100))
         max_days = int(ir_config.get_param("l10n_mx_edi_marin.sat_status_max_days", default=60))
         extra_domain = extra_domain or []
@@ -103,4 +121,14 @@ class L10nMxEdiDocument(models.Model):
             if counter == batch_size:
                 self.env.ref("l10n_mx_edi.ir_cron_update_pac_status_invoice")._trigger()
             else:
+                last_sat_state = document.l10n_mx_edi_cfdi_sat_state
                 document._update_sat_state()
+                if last_sat_state == "valid" and document.l10n_mx_edi_cfdi_sat_state == "cancelled":
+                    # Create notification message
+                    message = document._get_sat_status_cancellation_message()
+                    # Post message to the channel
+                    sat_cancellations_channel.message_post(
+                        body=message,
+                        message_type='notification',
+                        subtype_xmlid='mail.mt_comment'
+                    )
