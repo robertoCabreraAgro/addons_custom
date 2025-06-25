@@ -83,4 +83,26 @@ action["domain"] = ["|", ("partner_id", "in", partners.ids), ("partner_id.commer
         <field name="state">code</field>
         <field name="code">action = records._print_picking_operation()</field>
     </record>
+
+    <record id="action_manual_update_sat_status" model="ir.actions.server">
+        <field name="name">Manual update of state on the SAT (for invoices)</field>
+        <field name="model_id" ref="account.model_account_move" />
+        <field name="binding_model_id" ref="account.model_account_move" />
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">for invoice in records:
+    # Check if the invoice doesn't already have an associated CFDI (MX electronic invoice)
+    if not invoice.l10n_mx_edi_invoice_document_ids:
+        for attachment in invoice.attachment_ids:
+            file_data_list = attachment._unwrap_edi_attachments()
+            for file_data in file_data_list:
+                # If is valid CFDI, import data into the invoice
+                if file_data.get('is_cfdi', False):
+                    env["account.move"]._l10n_mx_edi_import_cfdi_invoice(invoice, file_data)
+
+    # Trigger SAT status verification for the invoice
+    invoice.l10n_mx_edi_cfdi_try_sat()
+        </field>
+    </record>
+
 </odoo>
