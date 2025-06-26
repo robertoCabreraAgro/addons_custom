@@ -1,9 +1,9 @@
-import logging
 import json
-
-from requests.exceptions import ConnectTimeout, HTTPError, RequestException
+import logging
 from datetime import datetime, timedelta
 from os.path import splitext
+
+from requests.exceptions import ConnectTimeout, HTTPError, RequestException
 
 from odoo import Command, api, fields, models
 
@@ -61,9 +61,7 @@ class Document(models.Model):
         compute="_compute_vendor_bill_name",
     )
     last_sat_state_sync_date = fields.Datetime(
-        string="Last SAT Status Sync",
-        readonly=True,
-        default=fields.Datetime.now
+        string="Last SAT Status Sync", readonly=True, default=fields.Datetime.now
     )
 
     @api.depends("res_model", "res_id")
@@ -161,7 +159,7 @@ class Document(models.Model):
 
         documents = self.search(domain, limit=batch_size + 1, order="last_sat_state_sync_date, id")
         sync_date = fields.Datetime.now()
-        auto_commit = self.env.context.get('auto_commit', True)
+        auto_commit = self.env.context.get("auto_commit", True)
         processed_documents = self.browse()
 
         for document in documents:
@@ -170,28 +168,29 @@ class Document(models.Model):
                 if auto_commit:
                     self.env.cr.commit()
 
-            except (ConnectTimeout, HTTPError, RequestException) as error:
+            except (ConnectTimeout, HTTPError, RequestException):
                 # Network/SAT service errors - propagate to trigger retry mechanism
                 _logger.info(
                     "Network error occurred while updating SAT status for document %s. "
-                    "Operation will be retried later.", document.name
+                    "Operation will be retried later.",
+                    document.name,
                 )
                 raise
 
-            except Exception as error:
+            except Exception:
                 # Business errors - log and continue with next document
                 _logger.warning(
                     "Business error occurred while updating SAT status for document %s. "
                     "Skipping document and moving to next one.",
                     document.name,
-                    exc_info=True
+                    exc_info=True,
                 )
                 self.env.cr.rollback()
                 continue
 
-            processed_documents |= document 
+            processed_documents |= document
 
-        processed_documents.write({'last_sat_state_sync_date': sync_date})
+        processed_documents.write({"last_sat_state_sync_date": sync_date})
 
     def _update_sat_state(self):
         self.ensure_one()
