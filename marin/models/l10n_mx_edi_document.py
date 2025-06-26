@@ -1,14 +1,23 @@
-from odoo import models, api, tools, _
+import logging
+
+from requests.exceptions import ConnectTimeout, HTTPError, RequestException
+
+from odoo import api, fields, models, tools
 from odoo.osv import expression
 from datetime import datetime, timedelta
 from zeep import Client, Transport
-import logging
 
 _logger = logging.getLogger(__name__)
 
 
 class L10nMxEdiDocument(models.Model):
     _inherit = "l10n_mx_edi.document"
+
+    last_sat_state_sync_date = fields.Datetime(
+        string="Last SAT Status Sync",
+        readonly=True,
+        default=fields.Datetime.now
+    )
 
     def _fetch_sat_status(self, supplier_rfc, customer_rfc, total, uuid):
         """Override the SAT web service to check the status of an electronic invoice to implement EstadoCancelacion
@@ -50,7 +59,7 @@ class L10nMxEdiDocument(models.Model):
         except Exception as e:
             # Return error information if the query fails
             return {
-                "error": _("Failure during update of the SAT status: %s", str(e)),
+                "error": self.env._("Failure during update of the SAT status: %s", str(e)),
                 "value": "error",
             }
 
@@ -70,65 +79,92 @@ class L10nMxEdiDocument(models.Model):
 
     @api.model
     def _get_update_sat_status_domains(self, from_cron=True):
-
-        base_domains = super()._get_update_sat_status_domains(from_cron=from_cron)
-
-        treatment_filter = [
-            (
-                "move_id.journal_id.x_treatment",
-                "in",
-                ("fiscal_real", "fiscal_simulated"),
-            )
+        """Override to ensure that can be handle cases from valid to cancel, also treatment filter"""
+        base_domains = [
+            [
+                ('state', 'in', ('ginvoice_sent', 'ginvoice_cancel')),
+                ('invoice_ids', 'any', [('l10n_mx_edi_cfdi_state', '=', 'global_sent')]),
+            ],  # Global invoices
+            [
+                ('state', 'in', ('invoice_sent', 'invoice_cancel_requested', 'invoice_cancel', 'invoice_received')),
+                ('move_id.l10n_mx_edi_cfdi_state', 'in', ('sent', 'cancel_requested', 'cancel', 'received')),
+                ("move_id.journal_id.x_treatment", "in", ("fiscal_real", "fiscal_simulated")),
+            ],  # Regular invoices
+            [
+                ('state', 'in', ('picking_sent', 'picking_cancel')),
+                ('picking_id.l10n_mx_edi_cfdi_state', 'in', ('sent', 'cancel_requested', 'cancel', 'received')),
+            ],  # Carta Porte
         ]
-        new_domain = []
+
+        # Main filter
+        sat_state_filter = [('sat_state', 'not in', ('cancelled', 'skip'))]
+
+        # Add main filter to each subdomain 
+        results = []
         for domain in base_domains:
-            combined = expression.AND([domain, treatment_filter])
-            new_domain.append(combined)
-
-        return new_domain
-
-    def _get_sat_status_cancellation_message(self):
-        """Generate the message body for cancellation notification."""
-        self.ensure_one()
-        message = f"""
-        <div class="o_mail_notification">
-            <strong>Cancelación Detectada en SAT</strong><br/>
-            <strong>Factura:</strong> {self.name or 'N/A'}<br/>
-            <strong>Folio Fiscal:</strong> {self.l10n_mx_edi_cfdi_uuid or 'N/A'}<br/>
-            <strong>Cliente:</strong> {self.partner_id.name}<br/>
-            <strong>Fecha:</strong> {self.invoice_date}<br/>
-            <strong>Estado SAT:</strong> Cancelado<br/>
-            <br/>
-            <em>Por favor, revisar y tomar las acciones correspondientes.</em>
-        </div>
-        """
-        return message
+            combined = domain + sat_state_filter
+            results.append(combined)
+        return results
 
     @api.model
     def _fetch_and_update_sat_status(self, batch_size=None, extra_domain=None):
-        """Override para usar parámetros configurables en res.config.settings."""
+        """Override fetch and update SAT status for documents with robust transaction handling.
+
+        :param int batch_size: Number of documents to process in this batch
+        :param list extra_domain: Additional domain filters
+        :return: None
+        """
         ir_config = self.env["ir.config_parameter"].sudo()
         sat_cancellations_channel = self.env.ref("marin.sat_status_cancellation_channel")
         batch_size = batch_size or int(ir_config.get_param("l10n_mx_edi_marin.sat_batch_size", default=100))
         max_days = int(ir_config.get_param("l10n_mx_edi_marin.sat_status_max_days", default=60))
         extra_domain = extra_domain or []
+
         start_date = datetime.today() - timedelta(days=max_days)
         extra_domain.append(("create_date", ">=", start_date.strftime("%Y-%m-%d")))
         domain = self._get_update_sat_status_domain(extra_domain=extra_domain)
-        documents = self.search(domain, limit=batch_size + 1)
 
-        for counter, document in enumerate(documents):
-            if counter == batch_size:
-                self.env.ref("l10n_mx_edi.ir_cron_update_pac_status_invoice")._trigger()
-            else:
-                last_sat_state = document.l10n_mx_edi_cfdi_sat_state
+        documents = self.search(domain, limit=batch_size, order="last_sat_state_sync_date, id")
+        sync_date = fields.Datetime.now()
+        auto_commit = self.env.context.get('auto_commit', True)
+        processed_documents = self.browse()
+
+        for document in documents:
+            invoice = document.move_id
+            last_sat_state = invoice.l10n_mx_edi_cfdi_sat_state
+            try:
                 document._update_sat_state()
-                if last_sat_state == "valid" and document.l10n_mx_edi_cfdi_sat_state == "cancelled":
-                    # Create notification message
-                    message = document._get_sat_status_cancellation_message()
-                    # Post message to the channel
-                    sat_cancellations_channel.message_post(
-                        body=message,
-                        message_type='notification',
-                        subtype_xmlid='mail.mt_comment'
-                    )
+                if auto_commit:
+                    self.env.cr.commit()
+            except (ConnectTimeout, HTTPError, RequestException) as error:
+                # Network/SAT service errors - propagate to trigger retry mechanism
+                _logger.info(
+                    "Network error occurred while updating SAT status for document %s. "
+                    "Operation will be retried later.", invoice.name
+                )
+                raise
+
+            except Exception as error:
+                # Business errors - log and continue with next document
+                _logger.warning(
+                    "Business error occurred while updating SAT status for document %s. "
+                    "Skipping document and moving to next one.",
+                    invoice.name,
+                    exc_info=True
+                )
+                self.env.cr.rollback()
+                continue
+
+            processed_documents |= document 
+
+            # Recently cancelled
+            if last_sat_state == "valid" and invoice.l10n_mx_edi_cfdi_sat_state == "cancelled":
+                message = invoice._get_sat_status_cancellation_message()
+                # Post message to the cancellation channel
+                sat_cancellations_channel.message_post(
+                    body=message,
+                    message_type='comment',
+                    subtype_xmlid='mail.mt_comment'
+                )
+
+        processed_documents.write({'last_sat_state_sync_date': sync_date})

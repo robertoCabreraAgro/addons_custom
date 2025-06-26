@@ -1,3 +1,5 @@
+from markupsafe import Markup
+
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Command
@@ -472,3 +474,17 @@ class AccountMove(models.Model):
         for move in purchase_moves:
             move.l10n_mx_edi_update_sat_needed = True
         return super(AccountMove, self - purchase_moves)._compute_l10n_mx_edi_update_sat_needed()
+
+    def _get_sat_status_cancellation_message(self):
+        """Generate the message body for cancellation notification."""
+        self.ensure_one()
+        # Create clickable link to the document
+        document_link = f'<a href="#" data-oe-model="{self._name}" data-oe-id="{self.id}">{self.name or "N/A"}</a>'
+
+        # Simple message with just alert and clickable document link
+        html_content = (
+            f"<p>🚨 <strong>Cancelación detectada en SAT</strong></p>"
+            f"<ul><li><strong>Factura:</strong> {document_link}</li></ul>"
+            f"<p><em>Por favor, revisar y tomar las acciones correspondientes.</em></p>"
+        )
+        return Markup(html_content)
