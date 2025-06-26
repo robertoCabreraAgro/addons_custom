@@ -397,13 +397,22 @@ class Session(models.Model):
 
     @api.model
     def _generate_time_blocks(self, company_id):
-        """Create scheduled sessions for a specific company.
+        """Create scheduled sessions, handling gaps, rejections, and stuck sessions.
+
+        This method implements a robust logic to avoid time gaps:
+        1. It checks the last two sessions to detect complex states.
+        2. If a session is 'Finished' or 'Rejected' but its predecessor is stuck
+        'To Verify', it consolidates the time range of both into a new session.
+        3. If two consecutive sessions are 'To Verify', it treats them as stuck,
+        rejects them, and creates a new session covering their entire period.
+        4. If a session was 'Rejected', it retries that time block.
+        5. If everything is clear, it proceeds to the next time block.
 
         Args:
-            company_id (int): ID of the company to create sessions for
+            company_id (int): ID of the company to create sessions for.
 
         Returns:
-            recordset or False: New sessions created or last session if pending
+            recordset: New sessions created for processing.
         """
         user_root = self.env.ref("base.user_root")
 
@@ -412,51 +421,104 @@ class Session(models.Model):
         utc_tz = pytz.UTC
         now_utc = datetime.now(utc_tz)
         now_mx = now_utc.astimezone(mexico_tz)
-        today = now_mx.replace(hour=0, minute=0, second=1, microsecond=0)
-        start_date = today - timedelta(days=1)
+        today = now_mx.replace(hour=0, minute=0, second=0, microsecond=0)
         end_date = today
 
-        # Get last session
-        last_session = self.search(
+        # Get the last two sessions to understand the state of the queue
+        sessions = self.search(
             [
                 ("company_id", "=", company_id),
                 ("create_uid", "=", user_root.id),
             ],
             order="date_to desc, id desc",
-            limit=1,
+            limit=2,
         )
+        last_session = sessions and sessions[0] or self.browse()
+        previous_session = len(sessions) > 1 and sessions[1] or self.browse()
 
-        if last_session:
-            if last_session.request_state in ["0", "1", "2"]:  # To Verify
-                return last_session
+        # Default start date is yesterday, used if no history exists.
+        start_date = today - timedelta(days=1)
 
-            if last_session.request_state in ["4", "5", "6"]:  # Rejected
+        # Determine the status of the last two sessions
+        last_is_verifying = last_session and last_session.request_state in ["0", "1", "2"]
+        prev_is_verifying = previous_session and previous_session.request_state in ["0", "1", "2"]
+
+        # --- State Evaluation Logic ---
+        if prev_is_verifying:
+            # Scenario 1: Both sessions are stuck verifying. Reject both.
+            if last_is_verifying:
+                _logger.warning(
+                    "Company %d: Found two consecutive 'To Verify' sessions (IDs: %s, %s). "
+                    "Forcing rejection on both to clear the blockage.",
+                    company_id,
+                    previous_session.id,
+                    last_session.id,
+                )
+                start_date = previous_session.date_from.astimezone(mexico_tz)
+                (previous_session | last_session).write(
+                    {
+                        "request_state": "6",
+                        "state_msg": "Forcibly rejected by cron due to consecutive pending sessions.",
+                    }
+                )
+            # Scenario 2: Only the previous session is stuck. Reject only that one.
+            else:
+                _logger.warning(
+                    "Company %d: Previous session (ID %d) is 'To Verify' while the last session (ID %s) is not. "
+                    "Rejecting the orphaned session to fill the data gap.",
+                    company_id,
+                    previous_session.id,
+                    last_session.id,
+                )
+                start_date = previous_session.date_from.astimezone(mexico_tz)
+                previous_session.write(
+                    {
+                        "request_state": "6",
+                        "state_msg": "Forcibly rejected by cron to consolidate a prior stuck session.",
+                    }
+                )
+        elif last_session:
+            # Scenario 3: Previous session is clean, evaluate the last session.
+            if last_is_verifying:
+                # "Create the next one": Start the new block after the one being verified.
+                # The main cron loop will continue to attempt verification on the pending session.
+                _logger.info(
+                    "Company %d: Last session (ID %d) is 'To Verify'. Creating next time block while verification continues.",
+                    company_id,
+                    last_session.id,
+                )
+                start_date = last_session.date_to.astimezone(mexico_tz)
+            elif last_session.request_state in ["4", "5", "6"]:
+                _logger.info(
+                    "Company %d: Last session (ID %d) was 'Rejected'. Retrying this time block.",
+                    company_id,
+                    last_session.id,
+                )
                 start_date = last_session.date_from.astimezone(mexico_tz)
-            else:  # Finished
+            else:  # Assumed '3' (Finished)
                 start_date = last_session.date_to.astimezone(mexico_tz)
 
+        # --- Session Creation Loop ---
         current_date = start_date
         new_sessions = self.browse()
 
+        # The cron docstring mentions 2-hour blocks.
         while current_date < end_date:
             next_date = min(end_date, current_date + timedelta(days=1))
 
-            # Convert to UTC and remove tzinfo for storage
+            # Convert to UTC and remove tzinfo for database storage
             date_from_utc = current_date.astimezone(utc_tz).replace(tzinfo=None)
             date_to_utc = next_date.astimezone(utc_tz).replace(tzinfo=None)
 
-            # Check if session already exists
-            existing_session = self.search(
+            # Check if an identical session already exists to avoid duplicates
+            if not self.search_count(
                 [
                     ("date_from", "=", date_from_utc),
                     ("date_to", "=", date_to_utc),
                     ("company_id", "=", company_id),
                     ("create_uid", "=", user_root.id),
-                ],
-                limit=1,
-            )
-
-            if not existing_session:
+                ]
+            ):
                 new_session = self.create(
                     {
                         "company_id": company_id,
@@ -467,6 +529,9 @@ class Session(models.Model):
                 new_sessions += new_session
 
             current_date = next_date
+
+        if new_sessions:
+            _logger.info("Company %d: Created %d new session(s) to process.", company_id, len(new_sessions))
 
         return new_sessions
 
