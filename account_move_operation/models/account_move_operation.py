@@ -1,7 +1,11 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.addons.l10n_mx_edi.models.l10n_mx_edi_document import USAGE_SELECTION
+
 import logging
+
 _logger = logging.getLogger(__name__)
+
 
 class AccountMoveOperation(models.Model):
     _name = "account.move.operation"
@@ -91,6 +95,14 @@ class AccountMoveOperation(models.Model):
     )
     line_ids = fields.One2many(
         "account.move.operation.line", "operation_id", readonly=True
+    )
+    l10n_mx_edi_payment_method_id = fields.Many2one(
+        "l10n_mx_edi.payment.method",
+        string="Método de pago SAT",
+    )
+    l10n_mx_edi_usage = fields.Selection(
+        selection=USAGE_SELECTION,
+        string="Uso del CFDI",
     )
 
     @api.model_create_multi
@@ -224,7 +236,5 @@ class AccountMoveOperation(models.Model):
                 "operation_line_id": nxt_line.id,
             }
         )
-        _logger.info(
-            "context for next action: %s", context
-        )
+        _logger.info("context for next action: %s", context)
         return nxt_line.with_context(**context)._get_action()

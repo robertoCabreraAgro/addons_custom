@@ -91,7 +91,14 @@
                                 readonly="state in ['in_progress', 'done', 'cancel']"
                                 options="{'no_open': True, 'no_create': True}" />
                             <field name="reference" />
+                            <field name="l10n_mx_edi_payment_method_id"
+                                options="{'no_create': True}"
+                                readonly="state in ['in_progress', 'done', 'cancel']" />
+                            <field name="l10n_mx_edi_usage"
+                                options="{'no_create': True}"
+                                readonly="state in ['in_progress', 'done', 'cancel']" />
                         </group>
+
                         <group name="main-right">
                             <field name="from_bank_statement" invisible="1" />
                             <field name="diff_partner" invisible="1" />

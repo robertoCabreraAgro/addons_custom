@@ -7,6 +7,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.tools.safe_eval import safe_eval
 from odoo.tools.translate import _
 from odoo.fields import Command
+from odoo.addons.l10n_mx_edi.models.l10n_mx_edi_document import USAGE_SELECTION
 
 _logger = logging.getLogger(__name__)
 
@@ -87,6 +88,15 @@ class AccountMoveTemplateRun(models.TransientModel):
         help="Target company to use when creating the journal entry, if different.",
     )
     amount = fields.Float(string="Amount")
+    l10n_mx_edi_usage = fields.Selection(
+        selection=USAGE_SELECTION,
+        string="Uso del CFDI",
+    )
+
+    l10n_mx_edi_payment_method_id = fields.Many2one(
+        "l10n_mx_edi.payment.method",
+        string="Método de pago SAT",
+    )
 
     @api.onchange("template_id", "amount")
     def _onchange_template_or_amount(self):
@@ -210,6 +220,8 @@ class AccountMoveTemplateRun(models.TransientModel):
             "ref": self.ref,
             "company_id": company.id,
             "line_ids": [],
+            "l10n_mx_edi_payment_method_id": self.l10n_mx_edi_payment_method_id.id,
+            "l10n_mx_edi_usage": self.l10n_mx_edi_usage,
         }
 
     def _prepare_wizard_line(self, tmpl_line):

@@ -8,6 +8,7 @@
     "depends": [
         "account_accountant",
         "account_move_template",
+        "l10n_mx_edi",
     ],
     "data": [
         # Security

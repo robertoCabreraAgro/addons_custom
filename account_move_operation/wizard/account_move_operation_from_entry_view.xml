@@ -10,7 +10,7 @@
                         <group>
                             <field name="st_line_id" readonly="1"
                                 options="{'no_open': True, 'no_create': True}" />
-                            <field name="move_id" readonly="1"/>
+                            <field name="move_id" readonly="1" />
                             <field name="operation_type_id"
                                 options="{'no_open': True, 'no_create': True}" />
                             <field name="partner_id" options="{'no_open': True, 'no_create': True}" />
@@ -31,6 +31,9 @@
                                 invisible="multicompany == False"
                                 required="multicompany == True"
                                 options="{'no_open': True, 'no_create': True}" />
+                            <field name="l10n_mx_edi_payment_method_id"
+                                options="{'no_create': True, 'no_open': True}" />
+                            <field name="l10n_mx_edi_usage" />
                         </group>
                     </group>
                     <field name="action_line_ids" nolabel="1">

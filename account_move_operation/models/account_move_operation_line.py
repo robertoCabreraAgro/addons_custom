@@ -242,9 +242,14 @@ class AccountMoveOperationLine(models.Model):
     def _get_action_move(self):
         self.ensure_one()
         ctx = self._context.copy()
+        _logger.info("Creating move for operation line %s with context %s", self.name, ctx)
 
         if self.action_id.auto and self.operation_id.amount:
             ctx.update({"amount": self.operation_id.amount})
+
+        diff_partner_id = ctx.get("diff_partner_id")
+        edi_usage = ctx.get("l10n_mx_edi_usage")
+        payment_method_id = ctx.get("l10n_mx_edi_payment_method")
 
         wizard_vals = {
             "template_id": self.template_id.id,
@@ -254,14 +259,25 @@ class AccountMoveOperationLine(models.Model):
             "amount": self.operation_id.amount,
         }
 
-        if self.diff_partner and self.operation_id.diff_partner_id:
+        if diff_partner_id:
+            wizard_vals["diff_partner_id"] = diff_partner_id
+        elif self.diff_partner and self.operation_id.diff_partner_id:
             wizard_vals["diff_partner_id"] = self.operation_id.diff_partner_id.id
+
+        if edi_usage:
+            wizard_vals["l10n_mx_edi_usage"] = edi_usage
+        elif self.operation_id.l10n_mx_edi_usage:
+            wizard_vals["l10n_mx_edi_usage"] = self.operation_id.l10n_mx_edi_usage
+
+        if payment_method_id:
+            wizard_vals["l10n_mx_edi_payment_method_id"] = payment_method_id
+        elif self.operation_id.l10n_mx_edi_payment_method_id:
+            wizard_vals["l10n_mx_edi_payment_method_id"] = self.operation_id.l10n_mx_edi_payment_method_id.id
+
         if self.multicompany and self.operation_id.multicompany_id:
             wizard_vals["multicompany_id"] = self.operation_id.multicompany_id.id
 
-        wizard = (
-            self.env["account.move.template.run"].with_context(ctx).create(wizard_vals)
-        )
+        wizard = self.env["account.move.template.run"].with_context(ctx).create(wizard_vals)
         wizard.load_lines()
         result = wizard.create_move()
 
@@ -280,6 +296,7 @@ class AccountMoveOperationLine(models.Model):
             self.operation_id.action_done()
 
         return True
+
 
     def _get_action_operation(self):
         if self.action_id.auto:
