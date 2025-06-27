@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 import pytz
 from markupsafe import Markup
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 from .l10n_mx_edi_document import MXWS_ERROR_TYPE
 
@@ -153,7 +153,7 @@ class Session(models.Model):
             except Exception as e_ws:
                 # If both methods fail, post the final error and stop.
                 _logger.error("Standard web service request also failed.", exc_info=True)
-                error_message = _(
+                error_message = self.env._(
                     "Both browser automation and the standard web service failed.\n\n"
                     "Browser automation error: %s\n\nStandard web service error: %s",
                     str(e_playwright),

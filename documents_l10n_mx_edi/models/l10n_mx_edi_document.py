@@ -12,7 +12,7 @@ from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.x509.oid import NameOID, ObjectIdentifier
 from lxml import etree
 
-from odoo import _, models, tools
+from odoo import models, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
 from odoo.osv import expression
@@ -122,11 +122,11 @@ class L10nMxEdiDocument(models.Model):
 
         # Validate record parameter
         if not isinstance(record, models.BaseModel):
-            raise ValidationError(_("Record parameter must be a valid Odoo model instance"))
+            raise ValidationError(self.env._("Record parameter must be a valid Odoo model instance"))
 
         if record._name not in ["documents.document", "account.move"]:
             raise ValidationError(
-                "Duplicates can only be checked for documents or invoices, " f"received: {record._name}"
+                self.env._("Duplicates can only be checked for documents or invoices, " f"received: {record._name}")
             )
 
         # Common message prefix using self.env._ for better performance
@@ -138,7 +138,7 @@ class L10nMxEdiDocument(models.Model):
                 domain = expression.AND(
                     [
                         [("id", "!=", record.id)],
-                        [("company_id", "in", [False, record.company.id])],
+                        [("company_id", "in", [False, record.company_id.id])],
                         domain,
                     ]
                 )
@@ -177,7 +177,7 @@ class L10nMxEdiDocument(models.Model):
                 domain = expression.AND(
                     [
                         [("id", "!=", record.id)],
-                        [("company_id", "in", [False, record.company.id])],
+                        [("company_id", "in", [False, record.company_id.id])],
                         domain,
                     ]
                 )
@@ -353,7 +353,7 @@ class L10nMxEdiDocument(models.Model):
             if attr.oid == OID_RFC:
                 return attr.value
 
-        raise ValidationError(_("RFC (OID 2.5.4.45) was not found in the certificate"))
+        raise ValidationError(self.env._("RFC (OID 2.5.4.45) was not found in the certificate"))
 
     def collect_complemento(
         self,
@@ -1180,7 +1180,7 @@ class L10nMxEdiDocument(models.Model):
             ValidationError: If arguments are not provided as a dictionary.
         """
         if not isinstance(args, dict):
-            raise ValidationError(_("Request arguments must be provided as a dictionary."))
+            raise ValidationError(self.env._("Request arguments must be provided as a dictionary."))
 
         # Extract requester's VAT from certificate
         requester_vat = self._get_requester_vat(certificate)
@@ -1360,7 +1360,7 @@ class L10nMxEdiDocument(models.Model):
 
         if not ec2_url:
             raise UserError(
-                _(
+                self.env._(
                     "The EC2 service URL is not configured.\n"
                     "Please set the URL in the system parameters (key: 'cfdi_downloader.ec2.url')."
                 )
@@ -1372,7 +1372,7 @@ class L10nMxEdiDocument(models.Model):
 
         if not all([cert_b64_content, key_b64_content, key_password]):
             raise UserError(
-                _(
+                self.env._(
                     "The selected e-signature is missing the file content for the certificate, private key, or password."
                 )
             )
@@ -1406,7 +1406,7 @@ class L10nMxEdiDocument(models.Model):
             folio_id = response_data.get("request_id")
 
             if not folio_id:
-                raise UserError(_("The EC2 service succeeded but did not return a 'request_id'."))
+                raise UserError(self.env._("The EC2 service succeeded but did not return a 'request_id'."))
 
             _logger.info("Successfully received Folio ID from EC2 service: %s", folio_id)
 
@@ -1420,12 +1420,12 @@ class L10nMxEdiDocument(models.Model):
                 error_message = error_json.get("error", error_body)
             except json.JSONDecodeError:
                 error_message = error_body
-            raise UserError(_("The CFDI download service returned an error: %s", error_message))
+            raise UserError(self.env._("The CFDI download service returned an error: %s", error_message))
 
         except requests.exceptions.RequestException as e:
             _logger.error("Network error calling EC2 service: %s", e)
-            raise UserError(_("Could not connect to the CFDI download service: %s", e))
+            raise UserError(self.env._("Could not connect to the CFDI download service: %s", e))
 
         except Exception as e:
             _logger.error("An unexpected error occurred when calling the EC2 service.", exc_info=True)
-            raise UserError(_("An unexpected error occurred: %s", e))
+            raise UserError(self.env._("An unexpected error occurred: %s", e))

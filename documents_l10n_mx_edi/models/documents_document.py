@@ -166,7 +166,7 @@ class Document(models.Model):
             try:
                 document._update_sat_state()
                 if auto_commit:
-                    self.env.cr.commit()
+                    self.env.cr.commit()  # pylint: disable=invalid-commit
 
             except (ConnectTimeout, HTTPError, RequestException):
                 # Network/SAT service errors - propagate to trigger retry mechanism
