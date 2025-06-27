@@ -116,7 +116,9 @@ class PaymentApprovalTelegramController(TelegramController):
         """Finds a unique partner based on a name."""
         try:
             partner_model = internal_user.env["res.partner"].with_user(internal_user)
-            partners = partner_model.search([("name", "ilike", partner_name)])
+            partners = partner_model.search([("name", "=ilike", partner_name)])
+            if not partners:
+                partners = partner_model.search([("name", "ilike", partner_name)])
             if not partners:
                 return None, f"{error_prefix}: No se encontró ningún cliente que coincida con '{partner_name}'."
             if len(partners) > 1:
