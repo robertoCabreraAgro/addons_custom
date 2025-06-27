@@ -10,6 +10,13 @@ from .telegram_controller import TelegramController
 _logger = logging.getLogger(__name__)
 
 
+CFDI_MAP = {
+    "g01": "adquisicion de mercancias",
+    "g03": "gastos en general",
+}
+CFDI_NAME_MAP = {v: k for k, v in CFDI_MAP.items()}
+
+
 class PaymentApprovalTelegramController(TelegramController):
     def __init__(self):
         """Extend the parent controller's handlers."""
@@ -70,7 +77,7 @@ class PaymentApprovalTelegramController(TelegramController):
                 "solo mensaje, con cada dato en una nueva línea, en el siguiente orden:\n\n"
                 "1.  *A quién se factura*: Nombre (o parte del nombre) de un cliente existente.\n"
                 "2.  *Categoría de producto*: `Agroquimicos` o `Papas`.\n"
-                "3.  *Uso CFDI*: `Adquisicion de mercancias` o `Gastos en general`.\n"
+                "3.  *Uso CFDI*: `Adquisicion de mercancias` (`G01`) o `Gastos en general` (`G03`).\n"
                 "4.  *Método de pago*: `Transferencia`, `Efectivo`.\n"
                 "5.  *Compañía*: `LMMR` o `LMMG`.\n"
                 "6.  *A quién se aplica el pago*: Nombre (o parte del nombre) de un cliente existente.\n"
@@ -141,6 +148,28 @@ class PaymentApprovalTelegramController(TelegramController):
             return error_msg
         return None
 
+    def _resolve_cfdi_use(self, cfdi_input):
+        """Resolves CFDI input to its normalized name and code.
+        Accepts either the code (e.g., 'g01') or the name (e.g., 'Gastos en General').
+        Returns (normalized_name, code) or (None, None) if invalid.
+        """
+        normalized_input = self._normalize_string(cfdi_input)
+
+        # Case 1: User provided a code (e.g., "g01")
+        if normalized_input in self.CFDI_MAP:
+            code = normalized_input
+            name = self.CFDI_MAP[code]
+            return name, code
+
+        # Case 2: User provided a name (e.g., "adquisicion de mercancias")
+        if normalized_input in self.CFDI_NAME_MAP:
+            name = normalized_input
+            code = self.CFDI_NAME_MAP[name]
+            return name, code
+
+        # Case 3: Invalid input
+        return None, None
+
     def _validate_date(self, date_str):
         """Validates a string is in YYYY-MM-DD format."""
         try:
@@ -187,12 +216,11 @@ class PaymentApprovalTelegramController(TelegramController):
         if err:
             errors.append(err)
 
-        err = self._validate_choice(
-            cfdi,
-            ["adquisicion de mercancias", "gastos en general"],
-            f"Uso de CFDI inválido: '{cfdi}'. Opciones: Adquisicion de mercancias, Gastos en general.",
-        )
-        if err:
+        cfdi_name, cfdi_code = self._resolve_cfdi_use(cfdi)
+        if not cfdi_name:
+            err = (
+                f"Uso de CFDI inválido: '{cfdi}'. Opciones: Adquisicion de mercancias (G01), Gastos en general (G03).",
+            )
             errors.append(err)
 
         err = self._validate_choice(
@@ -227,7 +255,8 @@ class PaymentApprovalTelegramController(TelegramController):
             "partner_fx_id": partner_fx.id,
             "partner_fx_name": partner_fx.name,
             "product_category": self._normalize_string(category).upper(),
-            "cfdi_use": self._normalize_string(cfdi).upper(),
+            "cfdi_use": cfdi_name.upper(),
+            "cfdi_use_code": cfdi_code.upper(),
             "payment_method": self._normalize_string(method).upper(),
             "company": self._normalize_string(company).upper(),
             "partner_cn_id": partner_cn.id,
