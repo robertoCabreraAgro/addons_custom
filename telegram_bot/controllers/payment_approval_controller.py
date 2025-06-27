@@ -304,7 +304,7 @@ class PaymentApprovalTelegramController(TelegramController):
         approval_vals = {
             "category_id": bot.payment_approval_category_id.id,
             "request_owner_id": internal_user.id,
-            "partner_id": data["partner_cn_id"],
+            "partner_id": data["partner_fx_id"],
             "date": data["date"],
             "amount": data["amount"],
             "telegram_data": telegram_data,
