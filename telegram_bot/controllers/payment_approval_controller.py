@@ -79,7 +79,7 @@ class PaymentApprovalTelegramController(TelegramController):
                 "2.  *Categoría de producto*: `Agroquimicos` o `Papas`.\n"
                 "3.  *Uso CFDI*: `Adquisicion de mercancias` (`G01`) o `Gastos en general` (`G03`).\n"
                 "4.  *Método de pago*: `Transferencia`, `Efectivo`, `TC`, `TD`.\n"
-                "5.  *Compañía*: `LMMR` o `LMMG`.\n"
+                "5.  *Compañía*: `LMMR`, `LMMG` o `N/A`.\n"
                 "6.  *A quién se aplica el pago*: Nombre (o parte del nombre) de un cliente existente.\n"
                 "7.  *Fecha de pago*: En formato `AAAA-MM-DD`.\n"
                 "8.  *Monto*: Importe numérico (ej. `1500.50`).\n\n"
@@ -232,7 +232,7 @@ class PaymentApprovalTelegramController(TelegramController):
             errors.append(err)
 
         err = self._validate_choice(
-            company, ["lmmr", "lmmg"], f"Compañía inválida: '{company}'. Opciones: LMMR, LMMG."
+            company, ["lmmr", "lmmg", "n/a"], f"Compañía inválida: '{company}'. Opciones: LMMR, LMMG, N/A."
         )
         if err:
             errors.append(err)
