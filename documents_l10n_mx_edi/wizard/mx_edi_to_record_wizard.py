@@ -37,7 +37,7 @@ class MxEdiToRecordWizard(models.TransientModel):
 
         line_vals = {"document_id": document.id, "action": "create", "move_id": False}
 
-        if not document.datas or document.l10n_mx_edi_is_cfdi_payment:
+        if not document.datas or document.l10n_mx_edi_is_cfdi_payment or document.l10n_mx_edi_is_cfdi_payroll:
             line_vals["action"] = "none"
             return line_vals
 

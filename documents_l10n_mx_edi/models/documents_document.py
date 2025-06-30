@@ -56,6 +56,12 @@ class Document(models.Model):
         store=True,
         help="Specify if this is a CFDI Payment document.",
     )
+    l10n_mx_edi_is_cfdi_payroll = fields.Boolean(
+        string="Is a Payroll CFDI",
+        compute="_compute_l10n_mx_edi_common_fields",
+        store=True,
+        help="Specify if this is a CFDI Payroll document.",
+    )
     vendor_bill_name = fields.Char(
         string="Vendor Bill",
         compute="_compute_vendor_bill_name",
@@ -112,6 +118,7 @@ class Document(models.Model):
         cfdi_node = cfdi_infos["cfdi_node"]
         partner = mx_edi_document.partner_search_create(cfdi_node)
         is_cfdi_payment = mx_edi_document._l10n_mx_edi_is_cfdi_payment(cfdi_node)
+        is_cfdi_payroll = mx_edi_document._l10n_mx_edi_is_cfdi_payroll(cfdi_node)
         product_list = []
         for line in cfdi_node.findall("{*}Conceptos/{*}Concepto")[0]:
             product_list += [line.get("Descripcion", "")]
@@ -122,6 +129,7 @@ class Document(models.Model):
                 "l10n_mx_edi_stamp_date": cfdi_infos["stamp_date"],
                 "l10n_mx_edi_product_list": json.dumps(product_list),
                 "l10n_mx_edi_is_cfdi_payment": is_cfdi_payment,
+                "l10n_mx_edi_is_cfdi_payroll": is_cfdi_payroll,
                 "l10n_mx_edi_related_cfdi": cfdi_infos["origin"],
             }
         )
@@ -322,8 +330,9 @@ class Document(models.Model):
     def create(self, vals_list):
         mx_edi_document = self.env["l10n_mx_edi.document"]
         check_duplicate = self.env.context.get("check_duplicate", True)
-        existing_documents = self
         new_vals_list = []
+
+        # check to ignore duplicates
         for vals in vals_list:
             name = vals.get("name")
             attachment_id = vals.get("attachment_id")
@@ -332,17 +341,6 @@ class Document(models.Model):
             if name and name.lower().endswith(".xml") and check_duplicate:
                 duplicity_result = mx_edi_document._get_duplicate_cfdi(name, self)
                 if duplicity_result["duplicated"]:
-                    existing_documents |= duplicity_result["document"]
-                    self.env["bus.bus"]._sendone(
-                        self.env.user.partner_id,
-                        "simple_notification",
-                        {
-                            "title": "Duplicated CFDI",
-                            "message": duplicity_result["message"],
-                            "sticky": False,
-                            "warning": True,
-                        },
-                    )
                     continue
 
             new_vals_list.append(vals)
@@ -350,4 +348,5 @@ class Document(models.Model):
         created_documents = super().create(new_vals_list)
         for doc in created_documents.filtered(lambda r: splitext(r.name)[1].upper() == ".XML"):
             doc._l10n_mx_edi_assign_cfdi_data()
-        return created_documents | existing_documents
+
+        return created_documents

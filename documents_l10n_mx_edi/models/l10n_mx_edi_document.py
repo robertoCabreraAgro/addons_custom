@@ -52,6 +52,9 @@ class L10nMxEdiDocument(models.Model):
     def _l10n_mx_edi_is_cfdi_payment(self, cfdi_node):
         return cfdi_node.get("TipoDeComprobante", False) == "P"
 
+    def _l10n_mx_edi_is_cfdi_payroll(self, cfdi_node):
+        return cfdi_node.get("TipoDeComprobante", False) == "N"
+
     def _l10n_mx_edi_normalize_cfdi_filename(self, filename, extension=True):
         """Normalize a filename for CFDI documents.
 
@@ -942,6 +945,8 @@ class L10nMxEdiDocument(models.Model):
         parser = etree.XMLParser(remove_blank_text=True)
         element_root = etree.fromstring(envelop, parser)
         element = element_root.find(xpath, internal_nsmap)
+        if element is None:
+            raise ValidationError(self.env._("XPath '%s' not found in SOAP envelope. Check namespace mapping.", xpath))
         if not token:
             signature = """
                 <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
@@ -1316,7 +1321,7 @@ class L10nMxEdiDocument(models.Model):
         envelop = """
             <s:Envelope
                 xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"
-                xmlns:des="http://DescargaMasivaTerceros.gob.mx">
+                xmlns:des="http://DescargaMasivaTerceros.sat.gob.mx">
                 <s:Header/>
                 <s:Body>
                     <des:PeticionDescargaMasivaTercerosEntrada>
@@ -1328,14 +1333,14 @@ class L10nMxEdiDocument(models.Model):
         xpath = "s:Body/des:PeticionDescargaMasivaTercerosEntrada/des:peticionDescarga"
         data = self.prepare_soap_data(certificate, private_key, arguments, envelop, xpath, token)
         url = "https://cfdidescargamasiva.clouda.sat.gob.mx/DescargaMasivaService.svc"
-        soap_action = "http://DescargaMasivaTerceros.gob.mx/IDescargaMasivaTercerosService/Descargar"
+        soap_action = "http://DescargaMasivaTerceros.sat.gob.mx/IDescargaMasivaTercerosService/Descargar"
         headers = self.get_headers(soap_action, token)
         external_nsmap = {
             "": "http://DescargaMasivaTerceros.sat.gob.mx",
             "s": "http://schemas.xmlsoap.org/soap/envelope/",
             "u": "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd",
             "o": "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd",
-            "h": "http://DescargaMasivaTerceros.gob.mx",
+            "h": "http://DescargaMasivaTerceros.sat.gob.mx",
             "xsi": "http://www.w3.org/2001/XMLSchema-instance",
             "xsd": "http://www.w3.org/2001/XMLSchema",
         }

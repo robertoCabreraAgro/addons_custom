@@ -254,7 +254,6 @@ class Session(models.Model):
             except Exception as e:
                 self.message_post(body=self.env._("Token generation error: %s") % str(e))
                 return
-
         # Download the package from the web service
         try:
             download_res = mx_edi_document.l10n_mx_ws_download_package(
@@ -295,8 +294,6 @@ class Session(models.Model):
                 return
 
             existing_docs = docs_document
-            session_docs = docs_document
-
             for fname, normalized_fname in xml_files:
                 duplicity_result = mx_edi_document._get_duplicate_cfdi(fname, docs_document)
 
@@ -349,7 +346,7 @@ class Session(models.Model):
                     # Bulk create all documents
                     created_documents = docs_document.create(doc_vals_list)
 
-                session_docs |= created_documents
+                session_docs = created_documents | existing_docs
 
                 # Update documents into session
                 if session_docs:
