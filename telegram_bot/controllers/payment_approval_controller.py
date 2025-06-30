@@ -9,15 +9,14 @@ from .telegram_controller import TelegramController
 
 _logger = logging.getLogger(__name__)
 
-
-CFDI_MAP = {
-    "g01": "adquisicion de mercancias",
-    "g03": "gastos en general",
-}
-CFDI_NAME_MAP = {v: k for k, v in CFDI_MAP.items()}
-
-
 class PaymentApprovalTelegramController(TelegramController):
+
+    CFDI_MAP = {
+        "g01": "adquisicion de mercancias",
+        "g03": "gastos en general",
+    }
+    CFDI_NAME_MAP = {v: k for k, v in CFDI_MAP.items()}
+
     def __init__(self):
         """Extend the parent controller's handlers."""
         super().__init__()
