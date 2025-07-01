@@ -6,6 +6,7 @@
             <list string="MX SAT Sessions">
                 <field name="name" />
                 <field name="token_expiration" />
+                <field name="range_type" />
                 <field name="date_from" />
                 <field name="date_to" />
                 <field name="file_count" />
@@ -82,8 +83,20 @@
                     </div>
                     <group>
                         <group>
-                            <field name="date_from" readonly="request_state != '0'" />
-                            <field name="date_to" readonly="request_state != '0'" />
+                            <field name="request_mode" readonly="request_state != '0'" />
+                            <field
+                                name="range_type"
+                                invisible="request_mode != 'playwright'"
+                                readonly="request_state != '0'"
+                                required="request_mode == 'playwright'"
+                            />
+                            <field
+                                name="date_from"
+                                invisible="request_mode != 'api'"
+                                readonly="request_state != '0'"
+                                required="request_mode == 'api'"
+                            />
+                            <field name="date_to" invisible="request_mode == False" readonly="request_state != '0'" />
                         </group>
                         <group>
                             <field name="uuid" invisible="1" />

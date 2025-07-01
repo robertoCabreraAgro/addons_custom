@@ -34,7 +34,7 @@ class Session(models.Model):
     uuid = fields.Char("UUID", readonly=True, copy=False)
     token = fields.Char(readonly=True, copy=False)
     token_expiration = fields.Datetime(readonly=True, copy=False)
-    date_from = fields.Datetime("Date from", required=True)
+    date_from = fields.Datetime("Date from")
     date_to = fields.Datetime("Date to", required=True)
     request = fields.Char("Request ID", readonly=True, copy=False)
     request_status_code = fields.Char("Request code", readonly=True, copy=False)
@@ -70,6 +70,12 @@ class Session(models.Model):
         selection=[
             ("playwright", "Playwright"),
             ("api", "API"),
+        ],
+    )
+    range_type = fields.Selection(
+        selection=[
+            ("day", "By day"),
+            ("month", "By month"),
         ],
     )
 
@@ -127,41 +133,97 @@ class Session(models.Model):
             self.message_post(body=self.env._("Token generation error: %s") % str(e))
             return
 
-        try:
-            # 1. First attempt with Playwright
-            request_res = mx_edi_document.l10n_mx_ws_request_download_playwright(
-                esignature, self.date_from, self.date_to, self.request_type
-            )
-            request_mode = "playwright"
-
-        except Exception as e_playwright:
-            # 2. Fallback to standard web service
-            _logger.warning("Playwright request failed: %s. Falling back to SAT web service.", e_playwright)
+        if self.request_mode:
+            if self.request_mode == "playwright":
+                try:
+                    request_res = mx_edi_document.l10n_mx_ws_request_download_playwright(
+                        esignature, self.date_to, self.request_type, self.range_type
+                    )
+                    if request_res["request_id"] == "00000000-0000-0000-0000-000000000000":
+                        self.write(
+                            {
+                                "request": request_res["request_id"],
+                                "request_status_code": request_res["status_code"],
+                                "request_message": request_res["message"],
+                                "request_state": "3",
+                                "request_mode": self.request_mode,
+                                "range_type": self.range_type,
+                            }
+                        )
+                        return
+                    request_mode = self.request_mode
+                    range_type = self.range_type
+                except Exception as e_playwright:
+                    _logger.error("Playwright request failed: %s.", e_playwright)
+                    return
+            else:
+                try:
+                    request_res = mx_edi_document.l10n_mx_ws_request_download(
+                        certificate,
+                        private_key,
+                        self.token,
+                        {
+                            "date_from": self.date_from,
+                            "date_to": self.date_to,
+                            "cfdi_state": "Vigente",
+                            "request_type": self.request_type,
+                        },
+                    )
+                    request_mode = self.request_mode
+                    range_type = False
+                except Exception:
+                    _logger.error("Standard web service request failed.", exc_info=True)
+                    return
+        else:
             try:
-                request_res = mx_edi_document.l10n_mx_ws_request_download(
-                    certificate,
-                    private_key,
-                    self.token,
-                    {
-                        "date_from": self.date_from,
-                        "date_to": self.date_to,
-                        "cfdi_state": "Vigente",
-                        "request_type": self.request_type,
-                    },
+                # 1. First attempt with Playwright
+                request_res = mx_edi_document.l10n_mx_ws_request_download_playwright(
+                    esignature, self.date_from, self.date_to, self.request_type
                 )
-                request_mode = "api"
-            except Exception as e_ws:
-                # If both methods fail, post the final error and stop.
-                _logger.error("Standard web service request also failed.", exc_info=True)
-                error_message = self.env._(
-                    "Both browser automation and the standard web service failed.\n\n"
-                    "Browser automation error: %s\n\nStandard web service error: %s",
-                    str(e_playwright),
-                    str(e_ws),
-                )
-                self.message_post(body=error_message)
-                self.write({"request_state": "4"})  # Set state to Error
-                return
+                if request_res["request_id"] == "00000000-0000-0000-0000-000000000000":
+                    self.write(
+                        {
+                            "request": request_res["request_id"],
+                            "request_status_code": request_res["status_code"],
+                            "request_message": request_res["message"],
+                            "request_state": "3",
+                            "request_mode": "playwright",
+                            "range_type": "month",
+                        }
+                    )
+                    return
+                request_mode = "playwright"
+                range_type = "month"
+
+            except Exception as e_playwright:
+                # 2. Fallback to standard web service
+                _logger.warning("Playwright request failed: %s. Falling back to SAT web service.", e_playwright)
+                try:
+                    request_res = mx_edi_document.l10n_mx_ws_request_download(
+                        certificate,
+                        private_key,
+                        self.token,
+                        {
+                            "date_from": self.date_from,
+                            "date_to": self.date_to,
+                            "cfdi_state": "Vigente",
+                            "request_type": self.request_type,
+                        },
+                    )
+                    request_mode = "api"
+                    range_type = False
+                except Exception as e_ws:
+                    # If both methods fail, post the final error and stop.
+                    _logger.error("Standard web service request also failed.", exc_info=True)
+                    error_message = self.env._(
+                        "Both browser automation and the standard web service failed.\n\n"
+                        "Browser automation error: %s\n\nStandard web service error: %s",
+                        str(e_playwright),
+                        str(e_ws),
+                    )
+                    self.message_post(body=error_message)
+                    self.write({"request_state": "4"})  # Set state to Error
+                    return
 
         self.write(
             {
@@ -170,6 +232,7 @@ class Session(models.Model):
                 "request_message": request_res["message"],
                 "request_state": "1" if request_res["status_code"] == "5000" else "0",
                 "request_mode": request_mode,
+                "range_type": range_type,
             }
         )
 
@@ -394,143 +457,74 @@ class Session(models.Model):
 
     @api.model
     def _generate_time_blocks(self, company_id):
-        """Create scheduled sessions, handling gaps, rejections, and stuck sessions.
+        """Creates a single download session spanning from the beginning of the
+        current month to the end of yesterday.
 
-        This method implements a robust logic to avoid time gaps:
-        1. It checks the last two sessions to detect complex states.
-        2. If a session is 'Finished' or 'Rejected' but its predecessor is stuck
-        'To Verify', it consolidates the time range of both into a new session.
-        3. If two consecutive sessions are 'To Verify', it treats them as stuck,
-        rejects them, and creates a new session covering their entire period.
-        4. If a session was 'Rejected', it retries that time block.
-        5. If everything is clear, it proceeds to the next time block.
+        This simplified strategy ensures that an up-to-date request for the
+        current month (up to yesterday) always exists, regardless of the
+        status of previous requests.
 
         Args:
-            company_id (int): ID of the company to create sessions for.
+            company_id (int): ID of the company to create the session for.
 
         Returns:
-            recordset: New sessions created for processing.
+            recordset: The new session created for processing.
         """
         user_root = self.env.ref("base.user_root")
 
-        # Timezone setup
+        # --- Timezone and Date Setup ---
         mexico_tz = pytz.timezone(DEFAULT_TZ)
         utc_tz = pytz.UTC
         now_utc = datetime.now(utc_tz)
         now_mx = now_utc.astimezone(mexico_tz)
-        today = now_mx.replace(hour=0, minute=0, second=0, microsecond=0)
-        end_date = today
 
-        # Get the last two sessions to understand the state of the queue
-        sessions = self.search(
+        # The base date is calculated as yesterday.
+        yesterday_mx = now_mx - timedelta(days=1)
+
+        # The end date is the end of yesterday (23:59:59).
+        end_date = yesterday_mx.replace(hour=23, minute=59, second=59, microsecond=0)
+
+        # The start date is the first day of the month corresponding to the end date (yesterday).
+        # This prevents logical errors if the cron runs on the 1st of a new month.
+        start_date = yesterday_mx.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+
+        _logger.info(
+            "Company %d: Generating new request for range: %s to %s.",
+            company_id,
+            start_date.strftime("%Y-%m-%d %H:%M:%S"),
+            end_date.strftime("%Y-%m-%d %H:%M:%S"),
+        )
+
+        # --- Session Creation ---
+        new_session = self.browse()
+
+        # Convert to UTC and remove tzinfo for database storage.
+        date_from_utc = start_date.astimezone(utc_tz).replace(tzinfo=None)
+        date_to_utc = end_date.astimezone(utc_tz).replace(tzinfo=None)
+
+        # Avoid creating an identical request if one for the exact same range already exists.
+        if not self.search_count(
             [
                 ("company_id", "=", company_id),
                 ("create_uid", "=", user_root.id),
-            ],
-            order="date_to desc, id desc",
-            limit=2,
-        )
-        last_session = sessions and sessions[0] or self.browse()
-        previous_session = len(sessions) > 1 and sessions[1] or self.browse()
+                ("date_from", "=", date_from_utc),
+                ("date_to", "=", date_to_utc),
+            ]
+        ):
+            new_session = self.create(
+                {
+                    "company_id": company_id,
+                    "date_from": date_from_utc,
+                    "date_to": date_to_utc,
+                }
+            )
+            _logger.info("Company %d: Created new session (ID %d) to process.", company_id, new_session.id)
+        else:
+            _logger.info(
+                "Company %d: A session for the exact same range already exists. Skipping creation.", company_id
+            )
 
-        # Default start date is yesterday, used if no history exists.
-        start_date = today - timedelta(days=1)
-
-        # Determine the status of the last two sessions
-        last_is_verifying = last_session and last_session.request_state in ["0", "1", "2"]
-        prev_is_verifying = previous_session and previous_session.request_state in ["0", "1", "2"]
-
-        # --- State Evaluation Logic ---
-        if prev_is_verifying:
-            # Scenario 1: Both sessions are stuck verifying. Reject both.
-            if last_is_verifying:
-                _logger.warning(
-                    "Company %d: Found two consecutive 'To Verify' sessions (IDs: %s, %s). "
-                    "Forcing rejection on both to clear the blockage.",
-                    company_id,
-                    previous_session.id,
-                    last_session.id,
-                )
-                start_date = previous_session.date_from.astimezone(mexico_tz)
-                (previous_session | last_session).write(
-                    {
-                        "request_state": "6",
-                        "state_msg": "Forcibly rejected by cron due to consecutive pending sessions.",
-                    }
-                )
-            # Scenario 2: Only the previous session is stuck. Reject only that one.
-            else:
-                _logger.warning(
-                    "Company %d: Previous session (ID %d) is 'To Verify' while the last session (ID %s) is not. "
-                    "Rejecting the orphaned session to fill the data gap.",
-                    company_id,
-                    previous_session.id,
-                    last_session.id,
-                )
-                start_date = previous_session.date_from.astimezone(mexico_tz)
-                previous_session.write(
-                    {
-                        "request_state": "6",
-                        "state_msg": "Forcibly rejected by cron to consolidate a prior stuck session.",
-                    }
-                )
-        elif last_session:
-            # Scenario 3: Previous session is clean, evaluate the last session.
-            if last_is_verifying:
-                # "Create the next one": Start the new block after the one being verified.
-                # The main cron loop will continue to attempt verification on the pending session.
-                _logger.info(
-                    "Company %d: Last session (ID %d) is 'To Verify'. Creating next time block while verification continues.",
-                    company_id,
-                    last_session.id,
-                )
-                start_date = last_session.date_to.astimezone(mexico_tz)
-            elif last_session.request_state in ["4", "5", "6"]:
-                _logger.info(
-                    "Company %d: Last session (ID %d) was 'Rejected'. Retrying this time block.",
-                    company_id,
-                    last_session.id,
-                )
-                start_date = last_session.date_from.astimezone(mexico_tz)
-            else:  # Assumed '3' (Finished)
-                start_date = last_session.date_to.astimezone(mexico_tz)
-
-        # --- Session Creation Loop ---
-        current_date = start_date
-        new_sessions = self.browse()
-
-        # The cron docstring mentions 2-hour blocks.
-        while current_date < end_date:
-            next_date = min(end_date, current_date + timedelta(days=1))
-
-            # Convert to UTC and remove tzinfo for database storage
-            date_from_utc = current_date.astimezone(utc_tz).replace(tzinfo=None)
-            date_to_utc = next_date.astimezone(utc_tz).replace(tzinfo=None)
-
-            # Check if an identical session already exists to avoid duplicates
-            if not self.search_count(
-                [
-                    ("date_from", "=", date_from_utc),
-                    ("date_to", "=", date_to_utc),
-                    ("company_id", "=", company_id),
-                    ("create_uid", "=", user_root.id),
-                ]
-            ):
-                new_session = self.create(
-                    {
-                        "company_id": company_id,
-                        "date_from": date_from_utc,
-                        "date_to": date_to_utc,
-                    }
-                )
-                new_sessions += new_session
-
-            current_date = next_date
-
-        if new_sessions:
-            _logger.info("Company %d: Created %d new session(s) to process.", company_id, len(new_sessions))
-
-        return new_sessions
+        return new_session
 
     @api.model
     def _get_verify_candidates(self, company_id):

@@ -1356,7 +1356,7 @@ class L10nMxEdiDocument(models.Model):
         }
         return ret_dict
 
-    def l10n_mx_ws_request_download_playwright(self, esignature, date_from, date_to, request_type):
+    def l10n_mx_ws_request_download_playwright(self, esignature, date_to, request_type, range_type):
         """Executes the CFDI download request by calling the dedicated EC2 service.
         Reads the raw file content directly from the model fields to ensure data integrity.
         """
@@ -1393,8 +1393,9 @@ class L10nMxEdiDocument(models.Model):
             "certificate": cert_b64_content,
             "private_key": key_b64_content,
             "password": key_password,
-            "date_from": str(date_from),
             "date_to": str(date_to),
+            "request_type": request_type,
+            "range_type": range_type,
         }
 
         headers = {"Content-Type": "application/json"}
@@ -1402,8 +1403,8 @@ class L10nMxEdiDocument(models.Model):
         _logger.info("Sending request to EC2 endpoint with direct field data.")
 
         try:
-            # The Gunicorn service on EC2 has a 5-minute timeout.
-            response = requests.post(ec2_url, headers=headers, data=json.dumps(payload), timeout=320)
+            # The Gunicorn service on EC2 has a 7-minute timeout.
+            response = requests.post(ec2_url, headers=headers, data=json.dumps(payload), timeout=420)
 
             response.raise_for_status()
 
