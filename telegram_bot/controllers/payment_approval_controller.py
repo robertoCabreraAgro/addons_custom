@@ -2,21 +2,24 @@ import base64
 import logging
 from datetime import datetime
 
-from odoo import _
+import pytz
+
+from odoo import _, fields
 from odoo.exceptions import AccessError
 
 from .telegram_controller import TelegramController
 
 _logger = logging.getLogger(__name__)
 
+DEFAULT_TZ = "America/Mexico_City"
+CFDI_MAP = {
+    "g01": "adquisicion de mercancias",
+    "g03": "gastos en general",
+}
+CFDI_NAME_MAP = {v: k for k, v in CFDI_MAP.items()}
+
+
 class PaymentApprovalTelegramController(TelegramController):
-
-    CFDI_MAP = {
-        "g01": "adquisicion de mercancias",
-        "g03": "gastos en general",
-    }
-    CFDI_NAME_MAP = {v: k for k, v in CFDI_MAP.items()}
-
     def __init__(self):
         """Extend the parent controller's handlers."""
         super().__init__()
@@ -155,15 +158,15 @@ class PaymentApprovalTelegramController(TelegramController):
         normalized_input = self._normalize_string(cfdi_input)
 
         # Case 1: User provided a code (e.g., "g01")
-        if normalized_input in self.CFDI_MAP:
+        if normalized_input in CFDI_MAP:
             code = normalized_input
-            name = self.CFDI_MAP[code]
+            name = CFDI_MAP[code]
             return name, code
 
         # Case 2: User provided a name (e.g., "adquisicion de mercancias")
-        if normalized_input in self.CFDI_NAME_MAP:
+        if normalized_input in CFDI_NAME_MAP:
             name = normalized_input
-            code = self.CFDI_NAME_MAP[name]
+            code = CFDI_NAME_MAP[name]
             return name, code
 
         # Case 3: Invalid input
@@ -329,11 +332,16 @@ class PaymentApprovalTelegramController(TelegramController):
         telegram_data.pop("file_b64", None)
         telegram_data.pop("file_mimetype", None)
 
+        date_str = data["date"]
+        naive_dt = datetime.strptime(date_str, "%Y-%m-%d").replace(hour=12)
+        mexico_tz = pytz.timezone(DEFAULT_TZ)
+        localized_dt = mexico_tz.localize(naive_dt, is_dst=None)
+
         approval_vals = {
             "category_id": bot.payment_approval_category_id.id,
             "request_owner_id": internal_user.id,
             "partner_id": data["partner_fx_id"],
-            "date": data["date"],
+            "date": fields.Datetime.to_string(localized_dt),
             "amount": data["amount"],
             "telegram_data": telegram_data,
         }

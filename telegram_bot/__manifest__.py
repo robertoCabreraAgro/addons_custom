@@ -17,5 +17,5 @@
         "views/telegram_bot_views.xml",
     ],
     "installable": True,
-    "application": True,
+    "application": False,
 }

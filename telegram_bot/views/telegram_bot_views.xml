@@ -44,18 +44,9 @@
     </record>
 
     <menuitem
-        id="menu_telegram_root"
-        name="Telegram"
-        sequence="10"
-        web_icon="telegram_bot,static/description/icon.png"
-        groups="base.group_no_one"
-    />
-
-    <menuitem
         id="menu_telegram_bots"
-        name="Bots"
-        parent="menu_telegram_root"
+        name="Telegram Bots"
+        parent="phone_validation.phone_menu_main"
         action="action_telegram_bot"
-        sequence="10"
     />
 </odoo>
