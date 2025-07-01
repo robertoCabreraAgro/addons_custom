@@ -208,6 +208,11 @@
         <field name="name">Allow POS session cash transfer</field>
         <field name="category_id" ref="base.module_category_usability" />
     </record>
+    <!-- Project -->
+    <record id="group_project_kpi" model="res.groups">
+        <field name="name">Track Project KPIs</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
     <!-- Misc -->
     <record id="group_security_compliance" model="res.groups">
         <field name="name">Security and compliance</field>

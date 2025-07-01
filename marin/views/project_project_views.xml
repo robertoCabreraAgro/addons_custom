@@ -7,13 +7,13 @@
         <field name="arch" type="xml">
             <!-- Agregar al final de la pestaña settings -->
             <xpath expr="//page[@name='settings']/group" position="inside">
-
-                <group name="group_kpi_management" string="KPI Management" col="1" class="row mt16 o_settings_container">
+                <group name="group_kpi_management" string="KPI Management" col="1" class="row mt16 o_settings_container" groups="marin.group_project_kpi">
                     <div>
-                        <field name="use_kpi_optime"/>  
+                        <setting class="col-lg-12" id="project_kpi_setting" help="Compare task execution times before and after process changes.">
+                            <field name="use_kpi_optime"/>
+                        </setting>
                     </div>
                 </group>
-
             </xpath>           
         </field>
     </record>
