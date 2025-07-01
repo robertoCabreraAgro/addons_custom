@@ -143,7 +143,7 @@ class Session(models.Model):
                         self.write(
                             {
                                 "request": request_res["request_id"],
-                                "request_status_code": request_res["status_code"],
+                                "request_status_code": "5008",
                                 "request_message": request_res["message"],
                                 "request_state": "3",
                                 "request_mode": self.request_mode,
@@ -184,7 +184,7 @@ class Session(models.Model):
                     self.write(
                         {
                             "request": request_res["request_id"],
-                            "request_status_code": request_res["status_code"],
+                            "request_status_code": "5008",
                             "request_message": request_res["message"],
                             "request_state": "3",
                             "request_mode": "playwright",
