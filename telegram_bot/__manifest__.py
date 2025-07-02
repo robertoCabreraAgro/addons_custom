@@ -11,6 +11,7 @@
     ],
     "data": [
         "security/ir.model.access.csv",
+        "data/telegram_command_data.xml",
         "views/approval_category_views.xml",
         "views/approval_request_views.xml",
         "views/res_partner_views.xml",

@@ -79,7 +79,8 @@ class TelegramController(http.Controller):
     def _dispatch_command(self, bot, chat, command, args, partner, internal_user):
         """Finds and calls the appropriate command handler based on user permissions."""
         handler_name = self._command_handlers.get(command)
-        if not handler_name:
+        available_cmds = [cmd.name for cmd in bot.command_ids] + ["/start", "/ayuda", "/quiensoy"]
+        if not handler_name or command not in available_cmds:
             bot.send_message(chat.chat_id, f"Comando desconocido: `{command}`. Escribe /ayuda para más información.")
             return
 

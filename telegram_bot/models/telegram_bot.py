@@ -21,11 +21,24 @@ class TelegramBot(models.Model):
         string="Payment Approval Category",
         help="Category to be used for payment approval requests created from Telegram.",
     )
+    command_ids = fields.Many2many(
+        "telegram.command",
+        string="Extra commands",
+    )
+    has_pago_command = fields.Boolean(
+        compute="_compute_has_pago_command",
+        store=True,
+    )
 
     _token_uniq = models.Constraint(
         "UNIQUE (token)",
         "The bot token must be unique!",
     )
+
+    @api.depends("command_ids")
+    def _compute_has_pago_command(self):
+        for bot in self:
+            bot.has_pago_command = "/pago" in bot.command_ids.mapped("name")
 
     @api.constrains("token")
     def _onchange_token(self):

@@ -9,7 +9,9 @@
                     <group>
                         <field name="name" />
                         <field name="token" password="True" />
-                        <field name="payment_approval_category_id" />
+                        <field name="command_ids" widget="many2many_tags" options="{'no_create': True}" />
+                        <field name="has_pago_command" invisible="1" />
+                        <field name="payment_approval_category_id" invisible="not has_pago_command" />
                     </group>
                     <notebook>
                         <page string="Chats Vinculados">

@@ -71,8 +71,9 @@ class PaymentApprovalTelegramController(TelegramController):
     def _handle_help_command(self, bot, chat, args, partner=False, internal_user=False):
         """Override the help handler to add the new command. Now is /ayuda"""
         super()._handle_help_command(bot, chat, args, partner=partner, internal_user=internal_user)
+        available_cmds = [cmd.name for cmd in bot.command_ids]
 
-        if internal_user:
+        if internal_user and "/pago" in available_cmds:
             pago_help = (
                 "*/pago* - Inicia el registro de un pago.\n"
                 "Después de enviar el comando, el bot te pedirá que envíes los detalles del pago en un "
