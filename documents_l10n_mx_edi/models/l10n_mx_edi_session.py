@@ -178,7 +178,7 @@ class Session(models.Model):
             try:
                 # 1. First attempt with Playwright
                 request_res = mx_edi_document.l10n_mx_ws_request_download_playwright(
-                    esignature, self.date_from, self.date_to, self.request_type
+                    esignature, self.date_to, self.request_type, "month"
                 )
                 if request_res["request_id"] == "00000000-0000-0000-0000-000000000000":
                     self.write(
