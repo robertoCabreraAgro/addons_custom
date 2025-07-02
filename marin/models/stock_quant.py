@@ -1,8 +1,7 @@
 from odoo import api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools.translate import _
 from odoo.osv import expression
-
+from odoo.tools.translate import _
 
 
 class StockQuant(models.Model):
@@ -11,16 +10,22 @@ class StockQuant(models.Model):
     _inherit = "stock.quant"
 
     # Extend core fields
-    product_categ_id = fields.Many2one(
+    warehouse_id = fields.Many2one(
         store=True,
         readonly=True,
     )
-    warehouse_id = fields.Many2one(
+    product_categ_id = fields.Many2one(
         store=True,
         readonly=True,
     )
 
     # New fields
+    value_standard = fields.Monetary(
+        "Value standard",
+        compute="_compute_value_standard",
+        store=True,
+        groups="stock.group_stock_manager",
+    )
     removal_priority = fields.Integer(
         related="location_id.removal_priority",
         store=True,
@@ -41,16 +46,43 @@ class StockQuant(models.Model):
         help="Original expiration date before reconditioning",
     )
 
-    def _apply_inventory_group_validate(self):
-        if not self.env.user.has_group("marin.group_stock_inventory_adjustment"):
-            raise UserError(
-                _("Only a inventory manager can validate an inventory adjustment.")
-            )
+    # ------------------------------------------------------------
+    # COMPUTE METHODS
+    # ------------------------------------------------------------
+
+    @api.depends("company_id", "location_id", "owner_id", "product_id", "quantity")
+    def _compute_value_standard(self):
+        for quant in self:
+            if quant.cost_method == "standard":
+                quant.value_standard = quant.product_id.standard_price * quant.quantity
+            else:
+                quant.value_standard = 0.0
+
+    # ------------------------------------------------------------
+    # ACTION METHODS
+    # ------------------------------------------------------------
 
     # Extend original method
     def _apply_inventory(self):
-        self._apply_inventory_group_validate()
+        self._can_apply_inventory()
         super()._apply_inventory()
+
+    def action_stock_quant_lot_update(self):
+        if len(self.company_id) > 1 or any(not q.company_id.id for q in self):
+            raise UserError(_("You can only change lots used by a single company."))
+
+        if len(self) > 1:
+            raise UserError(_("You can only change lot of one quant at a time."))
+
+        action = self.env["ir.actions.act_window"]._for_xml_id(
+            "marin.action_stock_quant_lot_update"
+        )
+        action["context"] = {"active_model": self._name, "active_ids": self.ids}
+        return action
+
+    # ------------------------------------------------------------
+    # HELPERS
+    # ------------------------------------------------------------
 
     # Extend original method
     @api.model
@@ -79,19 +111,6 @@ class StockQuant(models.Model):
 
         return super()._get_removal_strategy_order(removal_strategy)
 
-    def action_stock_quant_lot_update(self):
-        if len(self.company_id) > 1 or any(not q.company_id.id for q in self):
-            raise UserError(_("You can only change lots used by a single company."))
-
-        if len(self) > 1:
-            raise UserError(_("You can only change lot of one quant at a time."))
-
-        action = self.env["ir.actions.act_window"]._for_xml_id(
-            "marin.action_stock_quant_lot_update"
-        )
-        action["context"] = {"active_model": self._name, "active_ids": self.ids}
-        return action
-
     def _get_gather_domain(
         self,
         product_id,
@@ -106,10 +125,10 @@ class StockQuant(models.Model):
         )
         if not self.env.user.has_group(
             "stock_blocked_location.group_stock_force_blocked_location_in"
-            ):
-                domain = expression.AND(
-                        [[("location_id.block_outgoing", "=", False)], domain]
-                    )
+        ):
+            domain = expression.AND(
+                [[("location_id.block_outgoing", "=", False)], domain]
+            )
 
         return domain
 
@@ -136,3 +155,13 @@ class StockQuant(models.Model):
             strict=strict,
             qty=qty,
         )
+
+    # ------------------------------------------------------------
+    # VALIDATIONS
+    # ------------------------------------------------------------
+
+    def _can_apply_inventory(self):
+        if not self.env.user.has_group("marin.group_stock_inventory_adjustment"):
+            raise UserError(
+                _("Only a inventory manager can validate an inventory adjustment.")
+            )
