@@ -50,7 +50,14 @@ class StockQuant(models.Model):
     # COMPUTE METHODS
     # ------------------------------------------------------------
 
-    @api.depends("company_id", "location_id", "owner_id", "product_id", "quantity")
+    @api.depends(
+        "company_id",
+        "location_id",
+        "owner_id",
+        "product_id",
+        "product_id.standard_price",
+        "quantity",
+    )
     def _compute_value_standard(self):
         for quant in self:
             if quant.cost_method == "standard":
