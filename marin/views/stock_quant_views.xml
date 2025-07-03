@@ -6,13 +6,16 @@
         <field name="model">stock.quant</field>
         <field name="inherit_id" ref="stock.quant_search_view" />
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='productcategorygroup']" position="after">
-                <field name="product_id" string="Manufacturer"
-                    filter_domain="[('product_id.product_tmpl_id.manufacturer_id','ilike',self)]" />
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field name="manufacturer_id" />
                 <field name="product_id" string="Tags"
-                    filter_domain="[('product_id.product_tmpl_id.product_tag_ids','ilike',self)]" />
+                    filter_domain="[('product_id.product_tmpl_id.product_tag_ids', 'ilike', self)]" />
             </xpath>
-            <xpath expr="//filter[@name='productgroup']" position="before">
+            <xpath expr="//filter[@name='productcategorygroup']" position="after">
+                <filter name="manufacturergroup" string='Manufacturer'
+                    context="{'group_by': 'manufacturer_id'}" />
+            </xpath>
+            <xpath expr="//filter[@name='storagecategorygroup']" position="before">
                 <filter name="warehousegroup" string='Warehouse'
                     context="{'group_by': 'warehouse_id'}" />
             </xpath>

@@ -20,6 +20,10 @@ class StockQuant(models.Model):
     )
 
     # New fields
+    manufacturer_id = fields.Many2one(
+        related="product_tmpl_id.manufacturer_id",
+        store=True,
+    )
     value_standard = fields.Monetary(
         "Value standard",
         compute="_compute_value_standard",
