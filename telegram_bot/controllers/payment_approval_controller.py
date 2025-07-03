@@ -52,7 +52,7 @@ class PaymentApprovalTelegramController(TelegramController):
                 bot.send_message(chat.chat_id, "Porfavor envia una imagen (JPEG/PNG) o un PDF.")
         else:
             # If not in a specific state, use the parent's logic
-            super()._handle_non_command_message(bot, chat, message, partner, internal_user)
+            return super()._handle_non_command_message(bot, chat, message, partner, internal_user)
 
     def _handle_callback_query(self, bot, chat, callback_query, partner, internal_user):
         """Handles the confirmation/cancellation buttons."""
@@ -70,7 +70,7 @@ class PaymentApprovalTelegramController(TelegramController):
 
     def _handle_help_command(self, bot, chat, args, partner=False, internal_user=False):
         """Override the help handler to add the new command. Now is /ayuda"""
-        super()._handle_help_command(bot, chat, args, partner=partner, internal_user=internal_user)
+        res = super()._handle_help_command(bot, chat, args, partner=partner, internal_user=internal_user)
         available_cmds = [cmd.name for cmd in bot.command_ids]
 
         if internal_user and "/pago" in available_cmds:
@@ -89,6 +89,7 @@ class PaymentApprovalTelegramController(TelegramController):
                 "*/cancelarpago* - Cancela el proceso actual de registro de pago."
             )
             bot.send_message(chat.chat_id, pago_help)
+        return res
 
     # --- Specific logic of /pago command ---
     def _handle_payment_command(self, bot, chat, args, partner=False, internal_user=False):
