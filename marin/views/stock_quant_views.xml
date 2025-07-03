@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 
-    <record id="quant_search_view_marin" model="ir.ui.view">
-        <field name="name">stock.quant.search.marin</field>
+    <record id="quant_search_view" model="ir.ui.view">
+        <field name="name">stock.quant.search</field>
         <field name="model">stock.quant</field>
         <field name="inherit_id" ref="stock.quant_search_view" />
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='product_id']" position="after">
+            <xpath expr="//field[@name='productcategorygroup']" position="after">
                 <field name="product_id" string="Manufacturer"
                     filter_domain="[('product_id.product_tmpl_id.manufacturer_id','ilike',self)]" />
                 <field name="product_id" string="Tags"
@@ -15,8 +15,6 @@
             <xpath expr="//filter[@name='productgroup']" position="before">
                 <filter name="warehousegroup" string='Warehouse'
                     context="{'group_by': 'warehouse_id'}" />
-                <filter name="categorygroup" string='Category'
-                    context="{'group_by': 'product_categ_id'}" />
             </xpath>
         </field>
     </record>
