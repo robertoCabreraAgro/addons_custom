@@ -11,9 +11,11 @@
     ],
     "data": [
         "security/ir.model.access.csv",
+        "data/ir_cron_data.xml",
         "data/telegram_command_data.xml",
         "views/approval_category_views.xml",
         "views/approval_request_views.xml",
+        "views/hr_attendance_views.xml",
         "views/res_partner_views.xml",
         "views/telegram_bot_views.xml",
     ],

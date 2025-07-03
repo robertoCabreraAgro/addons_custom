@@ -6,4 +6,16 @@
     <record id="command_cancelarpago" model="telegram.command">
         <field name="name">/cancelarpago</field>
     </record>
+    <record id="command_entrada" model="telegram.command">
+        <field name="name">/entrada</field>
+    </record>
+    <record id="command_salida" model="telegram.command">
+        <field name="name">/salida</field>
+    </record>
+    <record id="command_comida" model="telegram.command">
+        <field name="name">/comida</field>
+    </record>
+    <record id="command_regresocomida" model="telegram.command">
+        <field name="name">/regresocomida</field>
+    </record>
 </odoo>
