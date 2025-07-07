@@ -31,6 +31,11 @@ class GpsTrackingDevice(models.Model):
         compute="_compute_driver_name",
         store=True,
     )
+    location = fields.Char(
+        related="vehicle_id.location",
+        store=True,
+        string="Location",
+    )
     model_id = fields.Many2one(
         related="vehicle_id.model_id",
         store=True,
@@ -105,6 +110,9 @@ class GpsTrackingDevice(models.Model):
     total_odometer = fields.Integer(
         related="last_point_id.total_odometer", store=True, string="Total Odometer"
     )
+    odometer = fields.Integer(
+        related="last_point_id.odometer", store=True, string="Odometer"
+    )
     color = fields.Selection(
         selection=[
             ("#FF0000", "Rojo"),
@@ -139,7 +147,7 @@ class GpsTrackingDevice(models.Model):
                 order="timestamp desc",
             )
 
-    @api.depends("vehicle_id.driver_id")
+    @api.depends("vehicle_id.driver_id", "vehicle_id.location")
     def _compute_driver_name(self):
         for device in self:
             device.driver_name = (

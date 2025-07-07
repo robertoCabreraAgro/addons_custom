@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Extend GPS tracking device search view to add department filters -->
+    <record id="view_gps_tracking_device_search_inherit" model="ir.ui.view">
+        <field name="name">gps.tracking.device.search.inherit</field>
+        <field name="model">gps.tracking.device</field>
+        <field name="inherit_id" ref="gps_tracking.view_gps_tracking_device_search"/>
+        <field name="arch" type="xml">
+            <field name="location" position="after">
+                <field name="department_id" />
+            </field>
+            <filter name="without_location" position="after">
+                <filter string="Con Departamento" name="with_department" domain="[('department_id', '!=', False)]"/>
+                <filter string="Sin Departamento" name="without_department" domain="[('department_id', '=', False)]"/>
+            </filter>
+            <filter name="group_by_location" position="before">
+                <filter string="Departamento" name="group_by_department" context="{'group_by': 'department_id'}"/>
+            </filter>
+        </field>
+    </record>
+
+    <!-- Extend GPS tracking device list view to add department field -->
+    <record id="view_gps_tracking_device_list_inherit" model="ir.ui.view">
+        <field name="name">gps.tracking.device.list.inherit</field>
+        <field name="model">gps.tracking.device</field>
+        <field name="inherit_id" ref="gps_tracking.view_gps_tracking_device_list"/>
+        <field name="arch" type="xml">
+            <field name="driver_name" position="after">
+                <field name="department_id" optional="show" />
+            </field>
+        </field>
+    </record>
+
+    <!-- Extend GPS tracking device form view to add department field -->
+    <record id="view_gps_tracking_device_form_inherit" model="ir.ui.view">
+        <field name="name">gps.tracking.device.form.inherit</field>
+        <field name="model">gps.tracking.device</field>
+        <field name="inherit_id" ref="gps_tracking.view_gps_tracking_device_form"/>
+        <field name="arch" type="xml">
+            <field name="location" position="before">
+                <field name="department_id" />
+            </field>
+        </field>
+    </record>
+
+</odoo>

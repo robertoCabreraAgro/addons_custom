@@ -9,6 +9,13 @@
                 <field name="model_id" />
                 <field name="license_plate" />
                 <field name="imei" />
+                <field name="location" />
+                <filter string="Con Ubicación" name="with_location" domain="[('location', '!=', False)]"/>
+                <filter string="Sin Ubicación" name="without_location" domain="[('location', '=', False)]"/>
+                <group expand="0" string="Agrupar por">
+                    <filter string="Ubicación" name="group_by_location" context="{'group_by': 'location'}"/>
+                    <filter string="Modelo de Vehículo" name="group_by_model" context="{'group_by': 'model_id'}"/>
+                </group>
             </search>
         </field>
     </record>
@@ -19,10 +26,14 @@
         <field name="model">gps.tracking.device</field>
         <field name="arch" type="xml">
             <list string="GPS Tracking Devices">
-                <field name="driver_name" />
-                <field name="model_id" />
-                <field name="license_plate" />
                 <field name="imei" />
+                <field name="license_plate" />
+                <field name="driver_name" />
+                <field name="location" optional="hide" />
+                <field name="model_id" />
+                <field name="odometer" />
+                <field name="speed" />
+                <field name="timestamp" />
             </list>
         </field>
     </record>
@@ -72,11 +83,15 @@
                         <group>
                             <field name="imei" />
                             <field name="vehicle_id" />
+                            <field name="license_plate" />
+                            <field name="driver_name" />
                             <field name="color" />
                         </group>
                         <group>
+                            <field name="location" />
                             <field name="last_point_id" />
                             <field name="timestamp" />
+                            <field name="odometer" />
                             <field name="private" />
                         </group>
                     </group>

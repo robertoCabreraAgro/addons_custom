@@ -66,6 +66,7 @@
         # "website_tiledesk",
         # "users_working_hours",
         "syngenta_edi",
+        "gps_tracking",
     ],
     "data": [
         "security/res_groups.xml",
@@ -104,6 +105,7 @@
         "views/documents_document_views.xml",
         "views/fleet_vehicle_views.xml",
         "views/fleet_vehicle_log_views.xml",
+        "views/gps_tracking_device_views.xml",
         "views/hr_expense_views.xml",
         "views/hr_contract_views.xml",
         "views/hr_payslip_views.xml",
@@ -157,6 +159,8 @@
     "assets": {
         "web.assets_backend": [
             "marin/static/src/widgets/**/*",
+            "marin/static/src/js/**/*",
+            "marin/static/src/xml/**/*",
         ],
         # "point_of_sale._assets_pos": [
         #     "marin/static/src/pos/app/**/*",

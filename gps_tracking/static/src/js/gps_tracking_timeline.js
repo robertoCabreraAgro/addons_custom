@@ -459,18 +459,17 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
         const timestamp = closestFeature.get("timestamp") || "Desconocido";
         const movement = closestFeature.get("movement") || "Desconocido";
         const ignition = closestFeature.get("ignition") || "Desconocido";
-        const plate = closestFeature.get("device_id") || closestFeature.get("imei") || "Desconocido";
+        const imei = closestFeature.get("device");
         const speed = closestFeature.get("speed") || 0;
         const currentOdometer = closestFeature.get("odometer") || 0;
         const currentFuel = closestFeature.get("fuel_consumed_counted") || 0;
-        console.log("currentOdometer",currentOdometer)
-        console.log("currentFuel",currentFuel)
-        const imei = closestFeature.get("device");
+        
+        // Get vehicle plate from the selected device
+        const selectedDevice = this.state.devices.find(d => d.imei === imei);
+        const plate = selectedDevice?.license_plate || imei || "Desconocido";
 
         const initialOdometer = this.state.firstOdometers;
         const initialFuel = this.state.firstFuel;
-        console.log("initialOdometer",initialOdometer)
-        console.log("initialFuel",initialFuel)
         const consumedFuel = currentFuel - initialFuel;
         const distanceTraveled = currentOdometer - initialOdometer;
         tooltipElement.style.visibility = "visible";
@@ -481,15 +480,16 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
         : "";
         tooltipElement.innerHTML = `
             <div style="min-width: 200px;">
-                <strong>Plate:</strong> ${plate}<br/>
+                <strong>Placa:</strong> ${plate}<br/>
                 <strong>Velocidad:</strong> ${speed} km/h<br/>
                 <strong>Encendido:</strong>
                 <span style="color: ${ignition == 1 ? 'green' : 'red'};">
                     <i class="fa fa-power-off" style="margin-right: 5px;"></i>
                     ${ignition == 1 ? 'Encendido' : 'Apagado'}
                 </span><br/>
-                <strong>Odómetro:</strong> ${distanceTraveled.toFixed(2)} km<br/>
-                <strong>Fuel:</strong> ${consumedFuel.toFixed(2)} km<br/>
+                <strong>Odómetro Actual:</strong> ${currentOdometer} km<br/>
+                <strong>Distancia Recorrida:</strong> ${distanceTraveled.toFixed(2)} km<br/>
+                <strong>Combustible Consumido:</strong> ${consumedFuel.toFixed(2)} L<br/>
                 <strong>Hora:</strong> ${formattedTime}<br/>
                 <button id="btn-street" class="btn btn-sm btn-info" style="margin-top:5px;">
                     Ver Street View

@@ -61,11 +61,14 @@
                             <div t-if="device.vehicle_id">
                                 <span>Vehículo: <t t-esc="device.vehicle_id[1]"/></span> <!-- Mostrar el nombre del vehículo -->
                             </div>
-                            <div t-if="device.vehicle_id">
+                            <div t-if="device.driver_name">
                                 <span>Conductor: <t t-esc="device.driver_name"/></span>
                             </div>
+                            <div t-if="device.location" class="kanban_info">
+                                <span>Ubicación: <t t-esc="device.location"/></span>
+                            </div>
                             <div class="kanban_info">
-                                <span>Odometro:</span> <t t-esc="device.total_odometer"/>
+                                <span>Odómetro:</span> <t t-esc="device.odometer"/>
                             </div>
                             <!-- <div class="kanban_info">
                                 <i class="fa fa-map"></i>
