@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Stock Lot Rules</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            color: #333;
+        }
+        .header {
+            text-align: center;
+            background: #f4f4f4;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        .feature {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .example {
+            background: #e8f4fd;
+            border-left: 4px solid #007bff;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        code {
+            background: #f8f9fa;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        ul {
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Stock Lot Rules</h1>
+        <p>Automate lot date calculations with configurable nomenclature rules</p>
+    </div>
+
+    <div class="feature">
+        <h2>🎯 Overview</h2>
+        <p>
+            The <strong>Stock Lot Rules</strong> module implements an automated system for calculating lot expiration dates
+            based on the lot name nomenclature. This eliminates manual date entry and reduces human errors in inventory management.
+        </p>
+    </div>
+
+    <div class="feature">
+        <h2>✨ Key Features</h2>
+        <ul>
+            <li><strong>Automatic Date Calculation:</strong> Extracts manufacturing dates from lot names and calculates all related dates</li>
+            <li><strong>Multiple Nomenclatures:</strong> Supports AAMM-PROD_CODE and AAMMDD-PROD_CODE formats</li>
+            <li><strong>Configurable Rules:</strong> Define custom rules for different product categories</li>
+            <li><strong>Validation:</strong> Ensures lot names follow the configured format</li>
+            <li><strong>Industry Templates:</strong> Pre-configured rules for food, pharmaceutical, and standard industries</li>
+            <li><strong>Extensible:</strong> Easy to add new nomenclature types in the future</li>
+        </ul>
+    </div>
+
+    <div class="feature">
+        <h2>📋 Flexible Format Patterns</h2>
+        
+        <p>The module uses a flexible format pattern system similar to <code>ir.sequence</code> that allows you to define custom lot nomenclatures using placeholders:</p>
+        
+        <h3>Available Placeholders</h3>
+        <ul>
+            <li><strong>%(yy)s</strong>: 2-digit year (e.g., 25 for 2025)</li>
+            <li><strong>%(yyyy)s</strong>: 4-digit year (e.g., 2025)</li>
+            <li><strong>%(mm)s</strong>: 2-digit month (e.g., 02 for February)</li>
+            <li><strong>%(dd)s</strong>: 2-digit day (e.g., 15)</li>
+            <li><strong>%(product_code)s</strong>: Product code placeholder</li>
+        </ul>
+        
+        <h3>Format Examples</h3>
+        <div class="example">
+            <strong>%(yy)s%(mm)s-%(product_code)s</strong><br>
+            Creates: <code>2502-ABC123</code> (February 2025)
+        </div>
+        
+        <div class="example">
+            <strong>%(yy)s%(mm)s%(dd)s-%(product_code)s</strong><br>
+            Creates: <code>250215-ABC123</code> (February 15, 2025)
+        </div>
+        
+        <div class="example">
+            <strong>%(yyyy)s/%(mm)s/%(dd)s_%(product_code)s</strong><br>
+            Creates: <code>2025/02/15_ABC123</code> (February 15, 2025)
+        </div>
+        
+        <div class="example">
+            <strong>%(dd)s.%(mm)s.%(yy)s.%(product_code)s</strong><br>
+            Creates: <code>15.02.25.ABC123</code> (February 15, 2025)
+        </div>
+    </div>
+
+    <div class="feature">
+        <h2>🚀 How It Works</h2>
+        <ol>
+            <li><strong>Configure Rules:</strong> Go to Inventory → Configuration → Lot Rules</li>
+            <li><strong>Assign to Products:</strong> Select a lot rule in the product's inventory tab</li>
+            <li><strong>Create Lots:</strong> When creating lots, dates are automatically calculated from the lot name</li>
+            <li><strong>Validation:</strong> The system validates that lot names follow the configured format</li>
+        </ol>
+    </div>
+
+    <div class="feature">
+        <h2>📊 Date Calculations</h2>
+        <p>For each lot rule, you can configure:</p>
+        <ul>
+            <li><strong>Expiration Days:</strong> Days until the product expires</li>
+            <li><strong>Use Days:</strong> Days for best consumption period</li>
+            <li><strong>Removal Days:</strong> Days until product should be removed from inventory</li>
+            <li><strong>Alert Days:</strong> Days to trigger alerts before expiration</li>
+        </ul>
+    </div>
+
+    <div class="feature">
+        <h2>🏭 Industry Templates</h2>
+        <p>The module includes pre-configured rules for different industries:</p>
+        <ul>
+            <li><strong>Food Industry:</strong> 90-day expiration with early consumption warnings</li>
+            <li><strong>Pharmaceutical:</strong> 3-year expiration with extended alert periods</li>
+            <li><strong>Standard:</strong> 1-year expiration for general products</li>
+        </ul>
+    </div>
+
+    <div class="warning">
+        <h3>⚠️ Important Notes</h3>
+        <ul>
+            <li>Once a lot rule is assigned to a product, the date fields become read-only</li>
+            <li>Manufacturing dates cannot be in the future</li>
+            <li>Lot names must follow the exact format specified in the rule</li>
+            <li>The module requires products to have lot tracking enabled</li>
+        </ul>
+    </div>
+
+    <div class="feature">
+        <h2>🔧 Configuration</h2>
+        <ol>
+            <li>Install the module</li>
+            <li>Navigate to <strong>Inventory → Configuration → Lot Rules</strong></li>
+            <li>Create or modify lot rules according to your needs</li>
+            <li>Assign rules to products in their inventory configuration</li>
+            <li>Start creating lots with automatic date calculation</li>
+        </ol>
+    </div>
+
+    <div class="feature">
+        <h2>👥 Security</h2>
+        <ul>
+            <li><strong>Stock Users:</strong> Can view lot rules</li>
+            <li><strong>Stock Managers:</strong> Can create, modify, and delete lot rules</li>
+        </ul>
+    </div>
+
+    <div class="feature">
+        <h2>📈 Benefits</h2>
+        <ul>
+            <li>Reduces manual data entry errors</li>
+            <li>Ensures consistent date calculations</li>
+            <li>Improves inventory management efficiency</li>
+            <li>Supports regulatory compliance</li>
+            <li>Standardizes lot nomenclature across the organization</li>
+        </ul>
+    </div>
+
+    <div style="text-align: center; margin-top: 40px; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+        <p><strong>Stock Lot Rules v18.0.1.0.0</strong></p>
+        <p>Part of the Agromarin ERP Suite</p>
+    </div>
+</body>
+</html>

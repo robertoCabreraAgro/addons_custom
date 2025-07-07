@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo> 
+    <!-- Product Template Form View - Add Lot Rule Field -->
+    <record id="product_template_form_view_lot_rule" model="ir.ui.view">
+        <field name="name">product.template.form.lot.rule</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product_expiry.view_product_form_expiry"/>
+        <field name="arch" type="xml">
+            <xpath expr="//label[@for='expiration_time']" position="before">
+                <label for="lot_rule_id"/>
+                <div>
+                    <field name="lot_rule_id" invisible="tracking == 'none'" class="oe_inline"/>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='expiration_time']" position="attributes">
+                <attribute name="readonly">lot_rule_id</attribute>
+            </xpath>
+            <xpath expr="//field[@name='use_time']" position="attributes">
+                <attribute name="readonly">lot_rule_id</attribute>
+            </xpath>
+            <xpath expr="//field[@name='removal_time']" position="attributes">
+                <attribute name="readonly">lot_rule_id</attribute>
+            </xpath>
+            <xpath expr="//field[@name='alert_time']" position="attributes">
+                <attribute name="readonly">lot_rule_id</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

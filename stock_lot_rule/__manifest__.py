@@ -1,0 +1,20 @@
+{
+    "name": "Stock Lot Rules",
+    "summary": "Configure lot nomenclature rules with automatic date calculation",
+    "version": "saas~18.2.0.0.1",
+    "category": "Inventory",
+    "website": "https://www.agromarin.mx",
+    "author": "Agro Marin",
+    "license": "OPL-1",
+    "depends": ["stock", "product_expiry", "mail"],
+    "data": [
+        "security/ir.model.access.csv",
+        "data/stock_lot_rule_data.xml",
+        "views/stock_lot_rule_views.xml",
+        "views/product_template_views.xml",
+        "views/stock_lot_views.xml",
+    ],
+    "installable": True,
+    "application": False,
+    "auto_install": False,
+}

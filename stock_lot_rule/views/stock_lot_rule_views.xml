@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Stock Lot Rule List View -->
+    <record id="stock_lot_rule_list_view" model="ir.ui.view">
+        <field name="name">stock.lot.rule.list</field>
+        <field name="model">stock.lot.rule</field>
+        <field name="arch" type="xml">
+            <list string="Stock Lot Rules">
+                <field name="name"/>
+                <field name="format_pattern"/>
+                <field name="product_count" string="Products"/>
+                <field name="expiration_time"/>
+                <field name="use_time"/>
+                <field name="removal_time"/>
+                <field name="alert_time"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Stock Lot Rule Form View -->
+    <record id="stock_lot_rule_form_view" model="ir.ui.view">
+        <field name="name">stock.lot.rule.form</field>
+        <field name="model">stock.lot.rule</field>
+        <field name="arch" type="xml">
+            <form string="Stock Lot Rule">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_products" type="object" class="oe_stat_button" icon="fa-cube">
+                            <field name="product_count" widget="statinfo" string="Products"/>
+                        </button>
+                    </div>
+                    
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Standard Lot Rule"/>
+                        </h1>
+                    </div>
+                    
+                    <group>
+                        <group>
+                            <field name="format_pattern" widget="text" placeholder="e.g. 2503-12345"/>
+                        </group>
+                        <group>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Lot Nomenclature" name="nomenclature">
+                            <group col="3" string="Legend (for format pattern)">
+                                <group>
+                                    <span colspan="2">2-digit Year: %%(yy)s</span>
+                                    <span colspan="2">4-digit Year: %%(yyyy)s</span>
+                                    <span colspan="2">Month: %%(mm)s</span>
+                                    <span colspan="2">Day: %%(dd)s</span>
+                                </group>
+                                <group>
+                                    <span colspan="2">Product Code: %%(product_code)s</span>
+                                    <span colspan="2">Product ID: %%(product_id)s</span>
+                                    <span colspan="2">Vendor Lot Number: %%(ref)s</span>
+                                </group>
+                                <group>
+                                    <span colspan="2">Example: %%(yy)s%%(mm)s%%(dd)s|%%(product_id)s - %%(ref)s</span>
+                                    <span colspan="2">Creates: 250315|12345 - AYE5AT009A</span>
+                                </group>
+                            </group>
+                            <group>
+                                <div colspan="2">
+                                    Use Python string formatting syntax with the placeholders above.
+                                    The %%(ref)s placeholder is useful for vendor lot numbers or manual identifiers.
+                                </div>
+                            </group>
+                        </page>
+                        <page string="Date Calculations" name="dates">
+                            <group>
+                                <group string="Expiration Management (in days)">
+                                    <field name="expiration_time"/>
+                                    <field name="use_time"/>
+                                </group>
+                                <group string="Stock Management (in days)">
+                                    <field name="removal_time"/>
+                                    <field name="alert_time"/>
+                                </group>
+                            </group>
+                            <group>
+                                <div colspan="2">
+                                    <strong>Date Calculation Information:</strong><br/>
+                                    • <strong>Expiration Date:</strong> Days after receipt when products become dangerous<br/>
+                                    • <strong>Best Before Date:</strong> Days before expiration when products start deteriorating<br/>
+                                    • <strong>Removal Date:</strong> Days before expiration when products should be removed from stock<br/>
+                                    • <strong>Alert Date:</strong> Days before expiration when alerts should be raised
+                                </div>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter />
+            </form>
+        </field>
+    </record>
+
+    <!-- Stock Lot Rule Search View -->
+    <record id="stock_lot_rule_search_view" model="ir.ui.view">
+        <field name="name">stock.lot.rule.search</field>
+        <field name="model">stock.lot.rule</field>
+        <field name="arch" type="xml">
+            <search string="Stock Lot Rules">
+                <field name="name"/>
+                <field name="format_pattern"/>
+                <separator/>
+                <filter name="active" string="Active" domain="[('active', '=', True)]"/>
+                <filter name="inactive" string="Inactive" domain="[('active', '=', False)]"/>
+                <separator/>
+                <filter name="yy_format" string="2-digit Year" domain="[('format_pattern', 'ilike', '%%(yy)s')]"/>
+                <filter name="yyyy_format" string="4-digit Year" domain="[('format_pattern', 'ilike', '%%(yyyy)s')]"/>
+                <filter name="with_day" string="With Day" domain="[('format_pattern', 'ilike', '%%(dd)s')]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_active" string="Active" context="{'group_by': 'active'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Stock Lot Rule Action -->
+    <record id="stock_lot_rule_action" model="ir.actions.act_window">
+        <field name="name">Stock Lot Rules</field>
+        <field name="res_model">stock.lot.rule</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first lot rule!
+            </p>
+            <p>
+                Lot rules allow you to automatically calculate lot dates based on the lot name.
+                Configure nomenclature patterns and date calculations to automate your inventory management.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem id="stock_lot_rule_menu"
+              name="Lot Rules"
+              parent="stock.menu_product_in_config_stock"
+              action="stock_lot_rule_action"
+              sequence="15"/>
+
+</odoo>

@@ -1,0 +1,917 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* stock_lot_rule
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~18.2+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-07-07 18:51+0000\n"
+"PO-Revision-Date: 2025-07-07 18:51+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: stock_lot_rule
+#: model_terms:ir.ui.view,arch_db:stock_lot_rule.stock_lot_rule_search_view
+msgid "2-digit Year"
+msgstr "Año de 2 dígitos"
+
+#. module: stock_lot_rule
+#: model_terms:ir.ui.view,arch_db:stock_lot_rule.stock_lot_rule_search_view
+msgid "4-digit Year"
+msgstr "Año de 4 dígitos"
+
+#. module: stock_lot_rule
+#: model_terms:ir.ui.view,arch_db:stock_lot_rule.stock_lot_rule_form_view
+msgid "<strong>Available Placeholders:</strong>"
+msgstr "<strong>Marcadores Disponibles:</strong>"
+
+#. module: stock_lot_rule
+#: model_terms:ir.ui.view,arch_db:stock_lot_rule.stock_lot_rule_form_view
+msgid ""
+"<strong>Note:</strong> Use these placeholders with Python string formatting "
+"syntax."
+msgstr "<strong>Nota:</strong> Use estos marcadores con la sintaxis de formato de cadenas de Python."
+
+#. module: stock_lot_rule
+#: model_terms:ir.ui.view,arch_db:stock_lot_rule.stock_lot_rule_form_view
+msgid "<strong>dd:</strong> 2-digit day (e.g., 15)"
+msgstr "<strong>dd:</strong> día de 2 dígitos (ej., 15)"
+
+#. module: stock_lot_rule
+#: model_terms:ir.ui.view,arch_db:stock_lot_rule.stock_lot_rule_form_view
+msgid "<strong>mm:</strong> 2-digit month (e.g., 02 for February)"
+msgstr "<strong>mm:</strong> mes de 2 dígitos (ej., 02 para febrero)"
+
+#. module: stock_lot_rule
+#: model_terms:ir.ui.view,arch_db:stock_lot_rule.stock_lot_rule_form_view
+msgid "<strong>product_code:</strong> Product code part"
+msgstr "<strong>product_code:</strong> Parte del código de producto"
+
+#. module: stock_lot_rule
+#: model_terms:ir.ui.view,arch_db:stock_lot_rule.stock_lot_rule_form_view
+msgid "<strong>product_id:</strong> Product ID part"
+msgstr "<strong>product_id:</strong> Parte del ID de producto"
+
+#. module: stock_lot_rule
+#: model_terms:ir.ui.view,arch_db:stock_lot_rule.stock_lot_rule_form_view
+msgid "<strong>ref:</strong> Vendor lot number part"
+msgstr "<strong>ref:</strong> Parte del número de lote del proveedor"
+
+#. module: stock_lot_rule
+#: model:stock.lot,_onchange_name_autocomplete:stock_lot_rule.stock_lot
+msgid "Lot name pattern requires a vendor lot number. Please fill the 'Reference' field and complete the lot name manually."
+msgstr "El patrón del lote requiere un número de lote del proveedor. Por favor complete el campo 'Referencia' y termine el nombre del lote manualmente."
+
+#. module: stock_lot_rule
+#: model:stock.lot,_onchange_name_autocomplete:stock_lot_rule.stock_lot
+msgid "Lot name was auto-completed to: %s"
+msgstr "El nombre del lote se autocompletó a: %s"
+
+#. module: stock_lot_rule
+#: code:addons/stock_lot_rule/models/stock_lot_rule.py:0
+msgid "Could not extract year from lot name '%s'"
+msgstr "No se pudo extraer el año del nombre del lote '%s'"
+
+#. module: stock_lot_rule
+#: code:addons/stock_lot_rule/models/stock_lot_rule.py:0
+msgid "Days must be positive integers"
+msgstr "Los días deben ser enteros positivos"
+
+#. module: stock_lot_rule
+#: code:addons/stock_lot_rule/models/stock_lot_rule.py:0
+msgid "Error parsing lot name '%s': %s"
+msgstr "Error al analizar el nombre del lote '%s': %s"
+
+#. module: stock_lot_rule
+#: code:addons/stock_lot_rule/models/stock_lot_rule.py:0
+msgid "Format pattern cannot be empty"
+msgstr "El patrón de formato no puede estar vacío"
+
+#. module: stock_lot_rule
+#: code:addons/stock_lot_rule/models/stock_lot_rule.py:0
+msgid "Format pattern must contain at least one date placeholder: %s"
+msgstr "El patrón de formato debe contener al menos un marcador de fecha: %s"
+
+#. module: stock_lot_rule
+#: code:addons/stock_lot_rule/models/stock_lot_rule.py:0
+msgid "Format pattern with separators should contain %(product_code)s, %(product_id)s or %(ref)s placeholder"
+msgstr "El patrón de formato con separadores debe contener un marcador %(product_code)s, %(product_id)s o %(ref)s"
+
+#. module: stock_lot_rule
+#: code:addons/stock_lot_rule/models/stock_lot_rule.py:0
+msgid "Invalid day in lot name '%s'. Day must be between 01 and 31"
+msgstr "Día inválido en el nombre del lote '%s'. El día debe estar entre 01 y 31"
+
+#. module: stock_lot_rule
+#: code:addons/stock_lot_rule/models/stock_lot_rule.py:0
+msgid "Invalid format pattern: %s"
+msgstr "Patrón de formato inválido: %s"
+
+#. module: stock_lot_rule
+#: code:addons/stock_lot_rule/models/stock_lot_rule.py:0
+msgid "Invalid month in lot name '%s'. Month must be between 01 and 12"
+msgstr "Mes inválido en el nombre del lote '%s'. El mes debe estar entre 01 y 12"
+
+#. module: stock_lot_rule
+#: code:addons/stock_lot_rule/models/stock_lot.py:0
+msgid "Lot Rule Warning"
+msgstr "Advertencia de Regla de Lote"
+
+#. module: stock_lot_rule
+#: code:addons/stock_lot_rule/models/stock_lot_rule.py:0
+msgid "Lot name '%s' doesn't match the expected format pattern: %s"
+msgstr "El nombre del lote '%s' no coincide con el patrón de formato esperado: %s"
+
+#. module: stock_lot_rule
+#: code:addons/stock_lot_rule/models/stock_lot.py:0
+msgid "Lot rule '%s' is not compatible with product '%s' rule '%s'"
+msgstr "La regla de lote '%s' no es compatible con la regla '%s' del producto '%s'"
+
+#. module: stock_lot_rule
+#: code:addons/stock_lot_rule/models/stock_lot.py:0
+msgid "Notification"
+msgstr "Notificación"
+
+#. module: stock_lot_rule
+#: model_terms:ir.ui.view,arch_db:stock_lot_rule.stock_lot_rule_form_view
+msgid "<strong>yy:</strong> 2-digit year (e.g., 25 for 2025)"
+msgstr "<strong>yy:</strong> año de 2 dígitos (ej., 25 para 2025)"
+
+#. module: stock_lot_rule
+#: model_terms:ir.ui.view,arch_db:stock_lot_rule.stock_lot_rule_form_view
+msgid "<strong>yyyy:</strong> 4-digit year (e.g., 2025)"
+msgstr "<strong>yyyy:</strong> año de 4 dígitos (ej., 2025)"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,field_description:stock_lot_rule.field_stock_lot_rule__message_needaction
+msgid "Action Needed"
+msgstr "Acción Requerida"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,field_description:stock_lot_rule.field_stock_lot_rule__active
+#: model_terms:ir.ui.view,arch_db:stock_lot_rule.stock_lot_rule_search_view
+msgid "Active"
+msgstr "Activo"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,field_description:stock_lot_rule.field_stock_lot_rule__activity_ids
+msgid "Activities"
+msgstr "Actividades"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,field_description:stock_lot_rule.field_stock_lot_rule__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Decoración de Excepción de Actividad"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,field_description:stock_lot_rule.field_stock_lot_rule__activity_state
+msgid "Activity State"
+msgstr "Estado de Actividad"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,field_description:stock_lot_rule.field_stock_lot_rule__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Icono de Tipo de Actividad"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,field_description:stock_lot_rule.field_product_product__alert_time
+#: model:ir.model.fields,field_description:stock_lot_rule.field_product_template__alert_time
+#: model:ir.model.fields,field_description:stock_lot_rule.field_stock_lot_rule__alert_time
+msgid "Alert Date"
+msgstr "Fecha de alerta"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,field_description:stock_lot_rule.field_stock_lot_rule__message_attachment_count
+msgid "Attachment Count"
+msgstr "Conteo de Adjuntos"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,field_description:stock_lot_rule.field_product_product__use_time
+#: model:ir.model.fields,field_description:stock_lot_rule.field_product_template__use_time
+#: model:ir.model.fields,field_description:stock_lot_rule.field_stock_lot_rule__use_time
+msgid "Best Before Date"
+msgstr "Consumir preferentemente antes de"
+
+#. module: stock_lot_rule
+#. odoo-python
+#: code:addons/stock_lot_rule/models/stock_lot_rule.py:0
+msgid "Could not extract year from lot name '%s'"
+msgstr "No se pudo extraer el año del nombre del lote '%s'"
+
+#. module: stock_lot_rule
+#: model_terms:ir.actions.act_window,help:stock_lot_rule.stock_lot_rule_action
+msgid "Create your first lot rule!"
+msgstr "¡Crea tu primera regla de lote!"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,field_description:stock_lot_rule.field_stock_lot_rule__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,field_description:stock_lot_rule.field_stock_lot_rule__create_date
+msgid "Created on"
+msgstr "Creado el"
+
+#. module: stock_lot_rule
+#: model_terms:ir.ui.view,arch_db:stock_lot_rule.stock_lot_rule_form_view
+msgid "Date Calculations (in days)"
+msgstr "Cálculos de Fechas (en días)"
+
+#. module: stock_lot_rule
+#. odoo-python
+#: code:addons/stock_lot_rule/models/stock_lot_rule.py:0
+msgid "Days must be positive integers"
+msgstr "Los días deben ser enteros positivos"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,field_description:stock_lot_rule.field_product_template__display_name
+#: model:ir.model.fields,field_description:stock_lot_rule.field_stock_lot__display_name
+#: model:ir.model.fields,field_description:stock_lot_rule.field_stock_lot_rule__display_name
+msgid "Display Name"
+msgstr "Nombre en pantalla"
+
+#. module: stock_lot_rule
+#. odoo-python
+#: code:addons/stock_lot_rule/models/stock_lot_rule.py:0
+msgid "Error parsing lot name '%s': %s"
+msgstr "Error al analizar el nombre del lote '%s': %s"
+
+#. module: stock_lot_rule
+#. odoo-python
+#: code:addons/stock_lot_rule/models/stock_lot.py:0
+msgid "Error validating lot name format for '%s': %s"
+msgstr "Error al validar el formato del nombre del lote para '%s': %s"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,field_description:stock_lot_rule.field_product_product__expiration_time
+#: model:ir.model.fields,field_description:stock_lot_rule.field_product_template__expiration_time
+#: model:ir.model.fields,field_description:stock_lot_rule.field_stock_lot_rule__expiration_time
+msgid "Expiration Date"
+msgstr "Fecha de caducidad"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,field_description:stock_lot_rule.field_stock_lot_rule__message_follower_ids
+msgid "Followers"
+msgstr "Seguidores"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,field_description:stock_lot_rule.field_stock_lot_rule__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Seguidores (Contactos)"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,help:stock_lot_rule.field_stock_lot_rule__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Icono Font Awesome ej. fa-tasks"
+
+#. module: stock_lot_rule
+#: model_terms:ir.ui.view,arch_db:stock_lot_rule.stock_lot_rule_form_view
+msgid "Format Configuration"
+msgstr "Configuración de Formato"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,field_description:stock_lot_rule.field_stock_lot_rule__format_pattern
+msgid "Format Pattern"
+msgstr "Patrón de Formato"
+
+#. module: stock_lot_rule
+#: model_terms:ir.ui.view,arch_db:stock_lot_rule.stock_lot_rule_form_view
+msgid "Format Pattern Help"
+msgstr "Ayuda del Patrón de Formato"
+
+#. module: stock_lot_rule
+#. odoo-python
+#: code:addons/stock_lot_rule/models/stock_lot_rule.py:0
+msgid "Format pattern cannot be empty"
+msgstr "El patrón de formato no puede estar vacío"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,help:stock_lot_rule.field_stock_lot_rule__format_pattern
+msgid ""
+"Format pattern for lot naming. Available placeholders:\n"
+"%(yy)s: 2-digit year\n"
+"%(yyyy)s: 4-digit year\n"
+"%(mm)s: 2-digit month\n"
+"%(dd)s: 2-digit day\n"
+"%(product_code)s: Product code placeholder\n"
+"Example: '%(yy)s%(mm)s-%(product_code)s' creates '2502-ABC123'"
+msgstr ""
+"Patrón de formato para nomenclatura de lotes. Marcadores disponibles:\n"
+"%(yy)s: año de 2 dígitos\n"
+"%(yyyy)s: año de 4 dígitos\n"
+"%(mm)s: mes de 2 dígitos\n"
+"%(dd)s: día de 2 dígitos\n"
+"%(product_code)s: marcador de código de producto\n"
+"Ejemplo: '%(yy)s%(mm)s-%(product_code)s' crea '2502-ABC123'"
+
+#. module: stock_lot_rule
+#. odoo-python
+#: code:addons/stock_lot_rule/models/stock_lot_rule.py:0
+msgid "Format pattern must contain %(product_code)s placeholder"
+msgstr "El patrón de formato debe contener el marcador %(product_code)s"
+
+#. module: stock_lot_rule
+#. odoo-python
+#: code:addons/stock_lot_rule/models/stock_lot_rule.py:0
+msgid "Format pattern must contain at least one date placeholder: %s"
+msgstr "El patrón de formato debe contener al menos un marcador de fecha: %s"
+
+#. module: stock_lot_rule
+#: model_terms:ir.ui.view,arch_db:stock_lot_rule.stock_lot_rule_search_view
+msgid "Group By"
+msgstr "Agrupar Por"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,field_description:stock_lot_rule.field_stock_lot_rule__has_message
+msgid "Has Message"
+msgstr "Tiene Mensaje"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,field_description:stock_lot_rule.field_product_template__id
+#: model:ir.model.fields,field_description:stock_lot_rule.field_stock_lot__id
+#: model:ir.model.fields,field_description:stock_lot_rule.field_stock_lot_rule__id
+msgid "ID"
+msgstr "Identificación"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,field_description:stock_lot_rule.field_stock_lot_rule__activity_exception_icon
+msgid "Icon"
+msgstr "Icono"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,help:stock_lot_rule.field_stock_lot_rule__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Icono para indicar una actividad de excepción."
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,help:stock_lot_rule.field_stock_lot_rule__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Si está marcado, los nuevos mensajes requieren su atención."
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,help:stock_lot_rule.field_stock_lot_rule__message_has_error
+#: model:ir.model.fields,help:stock_lot_rule.field_stock_lot_rule__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Si está marcado, algunos mensajes tienen un error de entrega."
+
+#. module: stock_lot_rule
+#: model_terms:ir.ui.view,arch_db:stock_lot_rule.stock_lot_rule_search_view
+msgid "Inactive"
+msgstr "Inactivo"
+
+#. module: stock_lot_rule
+#. odoo-python
+#: code:addons/stock_lot_rule/models/stock_lot_rule.py:0
+msgid "Invalid day in lot name '%s'. Day must be between 01 and 31"
+msgstr "Día inválido en el nombre del lote '%s'. El día debe estar entre 01 y 31"
+
+#. module: stock_lot_rule
+#. odoo-python
+#: code:addons/stock_lot_rule/models/stock_lot_rule.py:0
+msgid "Invalid format pattern: %s"
+msgstr "Patrón de formato inválido: %s"
+
+#. module: stock_lot_rule
+#. odoo-python
+#: code:addons/stock_lot_rule/models/stock_lot_rule.py:0
+msgid "Invalid month in lot name '%s'. Month must be between 01 and 12"
+msgstr "Mes inválido en el nombre del lote '%s'. El mes debe estar entre 01 y 12"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,field_description:stock_lot_rule.field_stock_lot_rule__message_is_follower
+msgid "Is Follower"
+msgstr "Es Seguidor"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,field_description:stock_lot_rule.field_stock_lot_rule__write_uid
+msgid "Last Updated by"
+msgstr "Última Actualización por"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,field_description:stock_lot_rule.field_stock_lot_rule__write_date
+msgid "Last Updated on"
+msgstr "Última Actualización el"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,field_description:stock_lot_rule.field_product_product__lot_rule_id
+#: model:ir.model.fields,field_description:stock_lot_rule.field_product_template__lot_rule_id
+msgid "Lot Rule"
+msgstr "Nomenclatura de Lote"
+
+#. module: stock_lot_rule
+#: model:ir.ui.menu,name:stock_lot_rule.stock_lot_rule_menu
+msgid "Lot Rules"
+msgstr "Nomenclaturas de Lotes"
+
+#. module: stock_lot_rule
+#. odoo-python
+#: code:addons/stock_lot_rule/models/stock_lot.py:0
+#: code:addons/stock_lot_rule/models/stock_lot_rule.py:0
+msgid "Lot name '%s' doesn't match the expected format pattern: %s"
+msgstr "El nombre del lote '%s' no coincide con el patrón de formato esperado: %s"
+
+#. module: stock_lot_rule
+#. odoo-python
+#: code:addons/stock_lot_rule/models/stock_lot.py:0
+msgid "Lot name cannot be empty"
+msgstr "El nombre del lote no puede estar vacío"
+
+#. module: stock_lot_rule
+#: model_terms:ir.actions.act_window,help:stock_lot_rule.stock_lot_rule_action
+msgid ""
+"Lot rules allow you to automatically calculate lot dates based on the lot name.\n"
+"                Configure nomenclature patterns and date calculations to automate your inventory management."
+msgstr ""
+"Las reglas de lote le permiten calcular automáticamente las fechas de lote basadas en el nombre del lote.\n"
+"                Configure patrones de nomenclatura y cálculos de fechas para automatizar su gestión de inventario."
+
+#. module: stock_lot_rule
+#: model:ir.model,name:stock_lot_rule.model_stock_lot
+msgid "Lot/Serial"
+msgstr "Número de serie/lote"
+
+#. module: stock_lot_rule
+#. odoo-python
+#: code:addons/stock_lot_rule/models/stock_lot_rule.py:0
+msgid "Manufacturing date cannot be in the future. Parsed date: %s"
+msgstr "La fecha de manufactura no puede estar en el futuro. Fecha analizada: %s"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,field_description:stock_lot_rule.field_stock_lot_rule__message_has_error
+msgid "Message Delivery error"
+msgstr "Error de Entrega de Mensaje"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,field_description:stock_lot_rule.field_stock_lot_rule__message_ids
+msgid "Messages"
+msgstr "Mensajes"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,field_description:stock_lot_rule.field_stock_lot_rule__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Fecha Límite de Mi Actividad"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,field_description:stock_lot_rule.field_stock_lot_rule__name
+msgid "Name"
+msgstr "Nombre"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,help:stock_lot_rule.field_stock_lot_rule__name
+msgid "Name of the lot rule schema"
+msgstr "Nombre del esquema de regla de lote"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,field_description:stock_lot_rule.field_stock_lot_rule__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Siguiente Evento de Actividad del Calendario"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,field_description:stock_lot_rule.field_stock_lot_rule__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Fecha Límite de Siguiente Actividad"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,field_description:stock_lot_rule.field_stock_lot_rule__activity_summary
+msgid "Next Activity Summary"
+msgstr "Resumen de Siguiente Actividad"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,field_description:stock_lot_rule.field_stock_lot_rule__activity_type_id
+msgid "Next Activity Type"
+msgstr "Tipo de Siguiente Actividad"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,field_description:stock_lot_rule.field_stock_lot_rule__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Número de Acciones"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,help:stock_lot_rule.field_stock_lot_rule__expiration_time
+msgid ""
+"Number of days after the receipt of the products (from the vendor or in "
+"stock after production) after which the goods may become dangerous and must "
+"not be consumed. It will be computed on the lot/serial number."
+msgstr ""
+"Número de días después de la recepción de los productos (del proveedor o en "
+"stock después de la producción) después de los cuales los productos pueden "
+"volverse peligrosos y no deben ser consumidos. Se calculará en el número de lote/serie."
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,help:stock_lot_rule.field_product_product__alert_time
+#: model:ir.model.fields,help:stock_lot_rule.field_product_template__alert_time
+msgid "Number of days before a lot alert"
+msgstr ""
+"Número de días antes de la fecha de caducidad después de los cuales se debe "
+"emitir una alarma para el número de lote o serie. Se calculará en el número "
+"de serie o lote."
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,help:stock_lot_rule.field_product_product__expiration_time
+#: model:ir.model.fields,help:stock_lot_rule.field_product_template__expiration_time
+msgid "Number of days before a lot expires"
+msgstr ""
+"Número de días después de la recepción de los productos (del proveedor o de "
+"las existencias después de la producción) después de los cuales los bienes "
+"pueden representar un riesgo y no se deben consumir. Se calculara en el "
+"número de lote o serie."
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,help:stock_lot_rule.field_product_product__removal_time
+#: model:ir.model.fields,help:stock_lot_rule.field_product_template__removal_time
+msgid "Number of days before a lot should be removed"
+msgstr ""
+"Número de días antes de la fecha de caducidad después de los cuales se deben"
+" retirar los bienes de las existencias. Se calculará en el número de serie o"
+" lote."
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,help:stock_lot_rule.field_product_product__use_time
+#: model:ir.model.fields,help:stock_lot_rule.field_product_template__use_time
+msgid "Number of days before a lot should be used"
+msgstr ""
+"Número de días antes de la fecha de caducidad después de los cuales los "
+"bienes se empiezan a deteriorar sin llegar a representar un peligro. Se "
+"calculará en el número de serie o lote."
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,help:stock_lot_rule.field_stock_lot_rule__alert_time
+msgid ""
+"Number of days before the Expiration Date after which an alert should be "
+"raised on the lot/serial number. It will be computed on the lot/serial "
+"number."
+msgstr ""
+"Número de días antes de la fecha de vencimiento después de los cuales se debe "
+"generar una alerta en el número de lote/serie. Se calculará en el número "
+"de lote/serie."
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,help:stock_lot_rule.field_stock_lot_rule__removal_time
+msgid ""
+"Number of days before the Expiration Date after which the goods should be "
+"removed from the stock. It will be computed on the lot/serial number."
+msgstr ""
+"Número de días antes de la fecha de vencimiento después de los cuales los "
+"productos deben ser retirados del stock. Se calculará en el número de lote/serie."
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,help:stock_lot_rule.field_stock_lot_rule__use_time
+msgid ""
+"Number of days before the Expiration Date after which the goods starts "
+"deteriorating, without being dangerous yet. It will be computed on the "
+"lot/serial number."
+msgstr ""
+"Número de días antes de la fecha de vencimiento después de los cuales los "
+"productos comienzan a deteriorarse, sin ser peligrosos aún. Se calculará en el "
+"número de lote/serie."
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,field_description:stock_lot_rule.field_stock_lot_rule__message_has_error_counter
+msgid "Number of errors"
+msgstr "Número de errores"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,help:stock_lot_rule.field_stock_lot_rule__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Número de mensajes que requieren acción"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,help:stock_lot_rule.field_stock_lot_rule__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Número de mensajes con error de entrega"
+
+#. module: stock_lot_rule
+#: model:ir.model,name:stock_lot_rule.model_product_template
+msgid "Product"
+msgstr "Producto"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,field_description:stock_lot_rule.field_stock_lot_rule__rating_ids
+msgid "Ratings"
+msgstr "Calificaciones"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,field_description:stock_lot_rule.field_product_product__removal_time
+#: model:ir.model.fields,field_description:stock_lot_rule.field_product_template__removal_time
+#: model:ir.model.fields,field_description:stock_lot_rule.field_stock_lot_rule__removal_time
+msgid "Removal Date"
+msgstr "Fecha de remoción"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,field_description:stock_lot_rule.field_stock_lot_rule__activity_user_id
+msgid "Responsible User"
+msgstr "Usuario Responsable"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,help:stock_lot_rule.field_product_product__lot_rule_id
+#: model:ir.model.fields,help:stock_lot_rule.field_product_template__lot_rule_id
+msgid "Rule to apply for lot nomenclature and automatic date calculations"
+msgstr "Regla a aplicar para nomenclatura de lotes y cálculos automáticos de fechas"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,field_description:stock_lot_rule.field_stock_lot_rule__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Error de Entrega de SMS"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,help:stock_lot_rule.field_stock_lot_rule__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Estado basado en actividades\n"
+"Vencido: La fecha de vencimiento ya pasó\n"
+"Hoy: La fecha de actividad es hoy\n"
+"Planificado: Actividades futuras."
+
+#. module: stock_lot_rule
+#: model:ir.model,name:stock_lot_rule.model_stock_lot_rule
+#: model_terms:ir.ui.view,arch_db:stock_lot_rule.stock_lot_rule_form_view
+msgid "Stock Lot Rule"
+msgstr "Nomenclatura de Lote"
+
+#. module: stock_lot_rule
+#: model:ir.actions.act_window,name:stock_lot_rule.stock_lot_rule_action
+#: model_terms:ir.ui.view,arch_db:stock_lot_rule.stock_lot_rule_list_view
+#: model_terms:ir.ui.view,arch_db:stock_lot_rule.stock_lot_rule_search_view
+msgid "Stock Lot Rules"
+msgstr "Nomenclaturas de Lotes"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,help:stock_lot_rule.field_stock_lot_rule__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Tipo de la actividad de excepción en el registro."
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,field_description:stock_lot_rule.field_stock_lot_rule__website_message_ids
+msgid "Website Messages"
+msgstr "Mensajes del Sitio Web"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,help:stock_lot_rule.field_stock_lot_rule__website_message_ids
+msgid "Website communication history"
+msgstr "Historial de comunicación del sitio web"
+
+#. module: stock_lot_rule
+#: model_terms:ir.ui.view,arch_db:stock_lot_rule.stock_lot_rule_search_view
+msgid "With Day"
+msgstr "Con Día"
+
+#. module: stock_lot_rule
+#: model_terms:ir.ui.view,arch_db:stock_lot_rule.stock_lot_rule_form_view
+msgid "e.g. 2502-12345"
+msgstr "ej. 2502-12345"
+
+#. module: stock_lot_rule
+#: model_terms:ir.ui.view,arch_db:stock_lot_rule.stock_lot_rule_form_view
+msgid "e.g. Standard Lot Rule"
+msgstr "ej. Regla de Lote Estándar"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,field_description:stock_lot_rule.field_stock_lot_rule__product_count
+msgid "Products Using This Rule"
+msgstr "Productos que Usan Esta Regla"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,help:stock_lot_rule.field_stock_lot_rule__product_count
+msgid "Number of products that use this lot rule"
+msgstr "Número de productos que usan esta regla de lote"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,field_description:stock_lot_rule.field_stock_lot__lot_rule_id
+msgid "Lot Rule"
+msgstr "Regla de Lote"
+
+#. module: stock_lot_rule
+#: model:ir.model.fields,help:stock_lot_rule.field_stock_lot__lot_rule_id
+msgid "Rule used for this lot nomenclature and date calculations"
+msgstr "Regla utilizada para la nomenclatura de este lote y cálculos de fechas"
+
+#. module: stock_lot_rule
+#. odoo-python
+#: code:addons/stock_lot_rule/models/stock_lot_rule.py:0
+msgid "Cannot delete lot rule '%s' because it is used by %d product(s). Please remove the rule from all products first or set it as inactive."
+msgstr "No se puede eliminar la regla de lote '%s' porque está siendo utilizada por %d producto(s). Por favor, retire la regla de todos los productos primero o márquela como inactiva."
+
+#. module: stock_lot_rule
+#. odoo-python
+#: code:addons/stock_lot_rule/models/stock_lot_rule.py:0
+msgid "Cannot delete lot rule '%s' because it is used by %d lot(s). Please remove the rule from all lots first or set it as inactive."
+msgstr "No se puede eliminar la regla de lote '%s' porque está siendo utilizada por %d lote(s). Por favor, retire la regla de todos los lotes primero o márquela como inactiva."
+
+#. module: stock_lot_rule
+#. odoo-python
+#: code:addons/stock_lot_rule/models/stock_lot.py:0
+msgid "Lot rule '%s' is not compatible with product '%s' rule '%s'"
+msgstr "La regla de lote '%s' no es compatible con la regla '%s' del producto '%s'"
+
+#. module: stock_lot_rule
+#. odoo-python
+#: code:addons/stock_lot_rule/models/stock_lot.py:0
+msgid "Invalid lot name '%s': %s"
+msgstr "Nombre de lote inválido '%s': %s"
+
+#. module: stock_lot_rule
+#. odoo-python
+#: code:addons/stock_lot_rule/models/stock_lot.py:0
+msgid "Could not calculate dates for lot \"%s\" (Product: %s). Please enter manufacturing date manually or adjust the lot name."
+msgstr "No se pudieron calcular las fechas para el lote \"%s\" (Producto: %s). Por favor, ingrese la fecha de fabricación manualmente o ajuste el nombre del lote."
+
+#. module: stock_lot_rule
+#. odoo-python
+#: code:addons/stock_lot_rule/models/stock_lot.py:0
+msgid "Lot name was auto-completed to: %s"
+msgstr "El nombre del lote se completó automáticamente a: %s"
+
+#. module: stock_lot_rule
+#. odoo-python
+#: code:addons/stock_lot_rule/models/stock_lot.py:0
+msgid "Lot Rule Warning"
+msgstr "Advertencia de Regla de Lote"
+
+#. module: stock_lot_rule
+#. odoo-python
+#: code:addons/stock_lot_rule/models/stock_lot.py:0
+msgid "Notification"
+msgstr "Notificación"
+
+#. module: stock_lot_rule
+#. odoo-python
+#: code:addons/stock_lot_rule/models/stock_lot.py:0
+msgid "Auto-completed"
+msgstr "Completado automáticamente"
+
+#. module: stock_lot_rule
+#: model_terms:ir.ui.view,arch_db:stock_lot_rule.stock_lot_search_view_lot_rule
+msgid "With Lot Rule"
+msgstr "Con Regla de Lote"
+
+#. module: stock_lot_rule
+#: model_terms:ir.ui.view,arch_db:stock_lot_rule.stock_lot_search_view_lot_rule
+msgid "Without Lot Rule"
+msgstr "Sin Regla de Lote"
+
+#. module: stock_lot_rule
+#: model:ir.actions.act_window,name:stock_lot_rule.action_view_products
+msgid "Products using %s"
+msgstr "Productos que usan %s"
+
+#. module: stock_lot_rule
+#. odoo-python
+#: code:addons/stock_lot_rule/models/stock_lot_rule.py:0
+msgid "Format pattern must contain %(product_code)s or %(product_id)s placeholder"
+msgstr "El patrón de formato debe contener el marcador %(product_code)s o %(product_id)s"
+
+#. module: stock_lot_rule
+#. odoo-python
+#: code:addons/stock_lot_rule/models/stock_lot_rule.py:0
+msgid "Product ID mismatch in lot name '%s'. Expected: %s, Found: %s"
+msgstr "No coincide el ID del producto en el nombre del lote '%s'. Esperado: %s, Encontrado: %s"
+
+#. module: stock_lot_rule
+#. odoo-python
+#: code:addons/stock_lot_rule/models/stock_lot.py:0
+msgid "Auto-completed"
+msgstr "Autocompletado"
+
+#. module: stock_lot_rule
+#. odoo-python
+#: code:addons/stock_lot_rule/models/stock_lot.py:0
+msgid "Lot name was auto-completed to: %s"
+msgstr "El nombre del lote fue autocompletado a: %s"
+
+#. module: stock_lot_rule
+#: model_terms:ir.ui.view,arch_db:stock_lot_rule.stock_lot_rule_form_view
+msgid "product_id:"
+msgstr "id_producto:"
+
+#. module: stock_lot_rule
+#: model_terms:ir.ui.view,arch_db:stock_lot_rule.stock_lot_rule_form_view
+msgid "Product ID (recommended)"
+msgstr "ID del Producto (recomendado)"
+
+#. module: stock_lot_rule
+#: model_terms:ir.ui.view,arch_db:stock_lot_rule.stock_lot_rule_form_view
+msgid "Lot Nomenclature"
+msgstr "Nomenclatura de Lotes"
+
+#. module: stock_lot_rule
+#: model_terms:ir.ui.view,arch_db:stock_lot_rule.stock_lot_rule_form_view
+msgid "Date Calculations"
+msgstr "Cálculos de Fechas"
+
+#. module: stock_lot_rule
+#: model_terms:ir.ui.view,arch_db:stock_lot_rule.stock_lot_rule_form_view
+msgid "Legend (for format pattern)"
+msgstr "Leyenda (para patrón de formato)"
+
+#. module: stock_lot_rule
+#: model_terms:ir.ui.view,arch_db:stock_lot_rule.stock_lot_rule_form_view
+msgid "Expiration Management (in days)"
+msgstr "Gestión de Vencimiento (en días)"
+
+#. module: stock_lot_rule
+#: model_terms:ir.ui.view,arch_db:stock_lot_rule.stock_lot_rule_form_view
+msgid "Stock Management (in days)"
+msgstr "Gestión de Stock (en días)"
+
+#. module: stock_lot_rule
+#: model_terms:ir.ui.view,arch_db:stock_lot_rule.stock_lot_rule_form_view
+msgid "2-digit Year:"
+msgstr "Año de 2 dígitos:"
+
+#. module: stock_lot_rule
+#: model_terms:ir.ui.view,arch_db:stock_lot_rule.stock_lot_rule_form_view
+msgid "4-digit Year:"
+msgstr "Año de 4 dígitos:"
+
+#. module: stock_lot_rule
+#: model_terms:ir.ui.view,arch_db:stock_lot_rule.stock_lot_rule_form_view
+msgid "Month:"
+msgstr "Mes:"
+
+#. module: stock_lot_rule
+#: model_terms:ir.ui.view,arch_db:stock_lot_rule.stock_lot_rule_form_view
+msgid "Day:"
+msgstr "Día:"
+
+#. module: stock_lot_rule
+#: model_terms:ir.ui.view,arch_db:stock_lot_rule.stock_lot_rule_form_view
+msgid "Product Code:"
+msgstr "Código de Producto:"
+
+#. module: stock_lot_rule
+#: model_terms:ir.ui.view,arch_db:stock_lot_rule.stock_lot_rule_form_view
+msgid "Product ID:"
+msgstr "ID del Producto:"
+
+#. module: stock_lot_rule
+#: model_terms:ir.ui.view,arch_db:stock_lot_rule.stock_lot_rule_form_view
+msgid "Example:"
+msgstr "Ejemplo:"
+
+#. module: stock_lot_rule
+#: model_terms:ir.ui.view,arch_db:stock_lot_rule.stock_lot_rule_form_view
+msgid "Creates:"
+msgstr "Crea:"
+
+#. module: stock_lot_rule
+#: model_terms:ir.ui.view,arch_db:stock_lot_rule.stock_lot_rule_form_view
+msgid "Use Python string formatting syntax with the placeholders above."
+msgstr "Use la sintaxis de formato de cadenas de Python con los marcadores anteriores."
+
+#. module: stock_lot_rule
+#: model_terms:ir.ui.view,arch_db:stock_lot_rule.stock_lot_rule_form_view
+msgid "The %(product_id)s placeholder is recommended for better consistency and uniqueness."
+msgstr "Se recomienda el marcador %(product_id)s para mejor consistencia y unicidad."
+
+#. module: stock_lot_rule
+#: model_terms:ir.ui.view,arch_db:stock_lot_rule.stock_lot_rule_form_view
+msgid "Date Calculation Information:"
+msgstr "Información de Cálculo de Fechas:"
+
+#. module: stock_lot_rule
+#: model_terms:ir.ui.view,arch_db:stock_lot_rule.stock_lot_rule_form_view
+msgid "Days after receipt when products become dangerous"
+msgstr "Días después de la recepción cuando los productos se vuelven peligrosos"
+
+#. module: stock_lot_rule
+#: model_terms:ir.ui.view,arch_db:stock_lot_rule.stock_lot_rule_form_view
+msgid "Days before expiration when products start deteriorating"
+msgstr "Días antes del vencimiento cuando los productos comienzan a deteriorarse"
+
+#. module: stock_lot_rule
+#: model_terms:ir.ui.view,arch_db:stock_lot_rule.stock_lot_rule_form_view
+msgid "Days before expiration when products should be removed from stock"
+msgstr "Días antes del vencimiento cuando los productos deben ser retirados del stock"
+
+#. module: stock_lot_rule
+#: model_terms:ir.ui.view,arch_db:stock_lot_rule.stock_lot_rule_form_view
+msgid "Days before expiration when alerts should be raised"
+msgstr "Días antes del vencimiento cuando se deben generar alertas"
+
+#. module: stock_lot_rule
+#. odoo-python
+#: code:addons/stock_lot_rule/models/stock_lot.py:0
+msgid "Warning: Could not automatically compute dates for lot '%s'. Error: %s. Please verify the lot rule configuration."
+msgstr "Advertencia: No se pudieron calcular automáticamente las fechas para el lote '%s'. Error: %s. Por favor verifique la configuración de la regla de lote."
+
+#. module: stock_lot_rule
+#. odoo-python
+#: code:addons/stock_lot_rule/models/stock_lot.py:0
+msgid "Lot Rule Warning"
+msgstr "Advertencia de Regla de Lote"
+
+#. module: stock_lot_rule
+#. odoo-python
+#: code:addons/stock_lot_rule/models/stock_lot.py:0
+msgid "Could not calculate dates for lot \"%s\" (Product: %s). Please enter manufacturing date manually or adjust the lot name. Error: %s"
+msgstr "No se pudieron calcular las fechas para el lote \"%s\" (Producto: %s). Por favor ingrese la fecha de manufactura manualmente o ajuste el nombre del lote. Error: %s"
