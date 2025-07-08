@@ -1,6 +1,6 @@
 {
     "name": "GPS Tracking",
-    "version": "1.0",
+    "version": "1.1",
     "category": "Fleet Management",
     "summary": "Module to track GPS coordinates and display them on a map",
     "author": "Raúl Alejandro Rodríguez López",
@@ -12,6 +12,7 @@
         "security/ir.model.access.csv",
         "report/gps_tracking_report_views.xml",
         "report/fleet_vehicle_loan_report_views.xml",
+        "views/hr_employee_views.xml",
         "views/gps_geofence_views.xml",
         "views/gps_tracking_history_views.xml",
         "views/gps_tracking_device_views.xml",

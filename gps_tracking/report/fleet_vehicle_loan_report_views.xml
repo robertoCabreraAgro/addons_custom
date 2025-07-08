@@ -7,7 +7,6 @@
             <list string="Reporte de Préstamos de Vehículos">
                 <field name="username" />
                 <field name="vehiculo" />
-                <field name="date" />
                 <field name="odometer_start" />
                 <field name="odometer_end" />
                 <field name="distance" />
@@ -15,6 +14,7 @@
                 <field name="date_end" />
                 <field name="weekday_start" optional="hide" />
                 <field name="weekday_end" optional="hide" />
+                <field name="work_hours_status" optional="hide" />
             </list>
         </field>
     </record>
@@ -29,7 +29,6 @@
                         <group>
                             <field name="username" />
                             <field name="vehiculo" />
-                            <field name="date" />
                             <field name="odometer_start" />
                             <field name="odometer_end" />
                         </group>
@@ -38,6 +37,7 @@
                             <field name="weekday_start" />
                             <field name="date_end" />
                             <field name="weekday_end" />
+                            <field name="work_hours_status" />
                         </group>
                     </group>
                 </sheet>
@@ -52,9 +52,22 @@
             <search string="Buscar Préstamos de Vehículos">
                 <field name="username" />
                 <field name="vehiculo" />
-                <field name="date" />
                 <field name="date_start" />
                 <field name="date_end" />
+                <filter
+                    name="filter_last_30_days"
+                    string="Last 30 Days"
+                    domain="[
+                        ('date_start', '>=', (context_today() - relativedelta(days=30)).strftime('%Y-%m-%d'))
+                    ]"
+                />
+                <filter
+                    name="filter_last_7_days"
+                    string="Last 7 Days"
+                    domain="[
+                        ('date_start', '>=', (context_today() - relativedelta(days=7)).strftime('%Y-%m-%d'))
+                    ]"
+                />
                 <group expand="0" string="Agrupar por">
                     <filter name="group_by_user" string="Usuario" context="{'group_by': 'username'}" />
                     <filter name="group_by_vehicle" string="Vehículo"
@@ -63,6 +76,8 @@
                         context="{'group_by': 'date_start'}" />
                     <filter name="group_by_date_end" string="Día fin"
                         context="{'group_by': 'date_end'}" />
+                    <filter name="group_by_work_hours_status" string="Estatus laboral"
+                        context="{'group_by': 'work_hours_status'}" />
                 </group>
             </search>
         </field>
@@ -75,7 +90,7 @@
         <field name="search_view_id" ref="view_fleet_vehicle_loan_report_search" />
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                No hay datos de préstamos de vehículos aprobados para mostrar.
+                No hay datos de préstamos de vehículos para mostrar.
             </p>
         </field>
     </record>

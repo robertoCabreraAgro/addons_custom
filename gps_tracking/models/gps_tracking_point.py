@@ -31,6 +31,13 @@ class GpsTrackingPoint(models.Model):
         compute="_compute_driver_name",
         store=True,
     )
+    driver_id = fields.Many2one(
+        comodel_name="hr.employee",
+        string="Conductor",
+        related="vehicle_id.driver_id",
+        store=True,
+        readonly=True,
+    )
     timestamp = fields.Datetime(string="Timestamp", required=True)
     priority = fields.Integer(string="Priority")
     altitude = fields.Float(string="Altitude")

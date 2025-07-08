@@ -6,7 +6,7 @@ _logger = logging.getLogger(__name__)
 
 class FleetVehicleLoanReport(models.Model):
     _name = "fleet.vehicle.loan.report"
-    _description = "Reporte de préstamos de vehículos aprobados"
+    _description = "Reporte de préstamos de vehículos"
     _auto = False
     _order = "date_start desc"
 
@@ -19,60 +19,136 @@ class FleetVehicleLoanReport(models.Model):
     date_end = fields.Datetime(string="Fecha fin", readonly=True)
     weekday_end = fields.Char(string="Día fin", readonly=True)
     distance = fields.Float(string="Distancia Recorrida", readonly=True)
-    date = fields.Datetime(string="Fecha de Aprobación", readonly=True)
+    work_hours_status = fields.Char(string="Estatus laboral", readonly=True)
 
     def _query(self):
         return """
-            SELECT 
-            ar.id,
-            rp.name AS username,
+        WITH
+        -- Step 1: Define trip segments.
+            TripSegments AS (
+                SELECT
+                    a.employee_id,
+                    a.check_in AS start_time,
+                    a.check_out AS end_time,
+                    'Dentro del trabajo' AS work_hours_status
+                FROM
+                    hr_attendance AS a
+                JOIN
+                    hr_employee AS he
+                    ON a.employee_id = he.id
+                WHERE
+                    a.check_out IS NOT NULL
+                    AND he.enable_vehicle_loan = TRUE
+                UNION ALL
+                SELECT
+                    a.employee_id,
+                    a.check_out AS start_time,
+                    LEAD(a.check_in) OVER (
+                        PARTITION BY a.employee_id
+                        ORDER BY a.check_in
+                    ) AS end_time,
+                    'Fuera del trabajo' AS work_hours_status
+                FROM
+                    hr_attendance AS a
+                JOIN
+                    hr_employee AS he
+                    ON a.employee_id = he.id
+                WHERE
+                    he.enable_vehicle_loan = TRUE
+            ),
+        -- Step 2: For each trip segment, find the ID of the nearest start and end GPS point.
+            TripDataPoints AS (
+                SELECT
+                    ts.employee_id,
+                    ts.start_time,
+                    ts.end_time,
+                    ts.work_hours_status,
+                    he.name AS username,
+                -- Find the single closest GPS point ID at the START of the trip
+                    (
+                        SELECT
+                            gtp.id
+                        FROM
+                            gps_tracking_point AS gtp
+                        WHERE
+                            gtp.driver_id = ts.employee_id
+                            AND gtp."timestamp" BETWEEN
+                                (ts.start_time - interval '1 hour')
+                                AND (ts.start_time + interval '1 hour')
+                        ORDER BY
+                            ABS(EXTRACT(EPOCH FROM (gtp."timestamp" - ts.start_time)))
+                        LIMIT 1
+                    ) AS start_point_id,
+                -- Find the single closest GPS point ID at the END of the trip
+                    (
+                        SELECT
+                            gtp.id
+                        FROM
+                            gps_tracking_point AS gtp
+                        WHERE
+                            gtp.driver_id = ts.employee_id
+                            AND gtp."timestamp" BETWEEN
+                                (ts.start_time - interval '1 hour')
+                                AND (ts.start_time + interval '1 hour')
+                        ORDER BY
+                            ABS(EXTRACT(EPOCH FROM (gtp."timestamp" - ts.end_time)))
+                        LIMIT 1
+                    ) AS end_point_id
+                FROM
+                    TripSegments AS ts
+                JOIN
+                    hr_employee AS he
+                    ON ts.employee_id = he.id
+                WHERE
+                    ts.end_time IS NOT NULL
+            )
+        -- Step 3: Final report - join the point IDs to get all details.
+        SELECT
+            (row_number() OVER ())::integer AS id,
+            tdp.username,
             fv.name AS vehiculo,
-            ar.odometer AS odometer_start,
-            ar.date AT TIME ZONE 'UTC' AT TIME ZONE 'America/Mexico_City' AS date,
-            LEAD(ar.odometer) OVER (
-                PARTITION BY ar.vehicle_id, ar.request_owner_id 
-                ORDER BY ar.date_start
-            ) AS odometer_end,
-            ar.date_start AT TIME ZONE 'UTC' AT TIME ZONE 'America/Mexico_City' AS date_start,
-            CASE EXTRACT(DOW FROM ar.date_start AT TIME ZONE 'UTC' AT TIME ZONE 'America/Mexico_City')
-                WHEN 0 THEN 'Domingo' 
-                WHEN 1 THEN 'Lunes' 
-                WHEN 2 THEN 'Martes' 
-                WHEN 3 THEN 'Miércoles' 
-                WHEN 4 THEN 'Jueves' 
-                WHEN 5 THEN 'Viernes' 
-                WHEN 6 THEN 'Sábado' 
+            tdp.work_hours_status,
+            start_point.odometer AS odometer_start,
+            end_point.odometer AS odometer_end,
+            tdp.start_time AT TIME ZONE 'UTC' AT TIME ZONE 'America/Mexico_City' AS date_start,
+            CASE EXTRACT(DOW FROM tdp.start_time AT TIME ZONE 'UTC' AT TIME ZONE 'America/Mexico_City')
+                WHEN 0 THEN 'Domingo'
+                WHEN 1 THEN 'Lunes'
+                WHEN 2 THEN 'Martes'
+                WHEN 3 THEN 'Miércoles'
+                WHEN 4 THEN 'Jueves'
+                WHEN 5 THEN 'Viernes'
+                WHEN 6 THEN 'Sábado'
             END AS weekday_start,
-            ar.date_end AT TIME ZONE 'UTC' AT TIME ZONE 'America/Mexico_City' AS date_end,
-            CASE EXTRACT(DOW FROM ar.date_end AT TIME ZONE 'UTC' AT TIME ZONE 'America/Mexico_City')
-                WHEN 0 THEN 'Domingo' 
-                WHEN 1 THEN 'Lunes' 
-                WHEN 2 THEN 'Martes' 
-                WHEN 3 THEN 'Miércoles' 
-                WHEN 4 THEN 'Jueves' 
-                WHEN 5 THEN 'Viernes' 
-                WHEN 6 THEN 'Sábado' 
+            tdp.end_time AT TIME ZONE 'UTC' AT TIME ZONE 'America/Mexico_City' AS date_end,
+            CASE EXTRACT(DOW FROM tdp.end_time AT TIME ZONE 'UTC' AT TIME ZONE 'America/Mexico_City')
+                WHEN 0 THEN 'Domingo'
+                WHEN 1 THEN 'Lunes'
+                WHEN 2 THEN 'Martes'
+                WHEN 3 THEN 'Miércoles'
+                WHEN 4 THEN 'Jueves'
+                WHEN 5 THEN 'Viernes'
+                WHEN 6 THEN 'Sábado'
             END AS weekday_end,
-            COALESCE(
-                LEAD(ar.odometer) OVER (
-                    PARTITION BY ar.vehicle_id, ar.request_owner_id 
-                    ORDER BY ar.date_start
-                ) - ar.odometer, 
-                0
-            ) AS distance
-        FROM 
-            approval_request ar
-        JOIN 
-            res_users ru ON ar.request_owner_id = ru.id
-        JOIN 
-            res_partner rp ON ru.partner_id = rp.id
-        LEFT JOIN 
-            fleet_vehicle fv ON ar.vehicle_id = fv.id
-        WHERE 
-            ar.category_id = 108
-            AND ar.request_status = 'approved'
-        ORDER BY 
-            ar.date_start DESC
+            COALESCE(end_point.odometer - start_point.odometer, 0) AS distance
+        FROM
+            TripDataPoints AS tdp
+        LEFT JOIN
+            gps_tracking_point AS start_point
+            ON tdp.start_point_id = start_point.id
+        LEFT JOIN
+            gps_tracking_point AS end_point
+            ON tdp.end_point_id = end_point.id
+        LEFT JOIN
+            gps_tracking_device AS gtd
+            ON start_point.device_id = gtd.id
+        LEFT JOIN
+            fleet_vehicle AS fv
+            ON gtd.vehicle_id = fv.id
+        WHERE
+            tdp.start_point_id IS NOT NULL
+        ORDER BY
+            tdp.start_time
         """
 
     def refresh_data(self):
