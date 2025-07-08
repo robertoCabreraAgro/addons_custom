@@ -27,8 +27,8 @@ class HrAttendanceTelegramController(TelegramController):
                 "/regresocomida": "_handle_lunch_in_command",
             }
         )
-        # Register commands that require the user to be an internal user
-        self._internal_user_added_cmds.update(
+        # Register commands that require the user to be a partner
+        self._partner_added_cmds.update(
             [
                 "/entrada",
                 "/salida",
@@ -36,6 +36,24 @@ class HrAttendanceTelegramController(TelegramController):
                 "/regresocomida",
             ]
         )
+
+    def _validate_employee_access(self, bot, chat, partner):
+        """Validates that the partner is an employee and can access attendance commands.
+        
+        :param bot: The telegram bot instance
+        :param chat: The telegram chat instance
+        :param partner: The partner to validate
+        :return: True if valid employee, False otherwise
+        """
+        if not partner:
+            bot.send_message(chat.chat_id, "Tu chat debe estar vinculado a un contacto para usar comandos de asistencia.")
+            return False
+        
+        if not partner.employee:
+            bot.send_message(chat.chat_id, "Solo los empleados pueden usar comandos de asistencia.")
+            return False
+        
+        return True
 
     def _parse_time_argument(self, args, user_tz_str, base_date_utc=None):
         """Parses an optional time argument from a command.
@@ -110,7 +128,10 @@ class HrAttendanceTelegramController(TelegramController):
 
     def _handle_check_in_command(self, bot, chat, args, partner=False, internal_user=False):
         """Handles the /entrada command to record a check-in for the user."""
-        user_tz_str = internal_user.tz or DEFAULT_TZ
+        if not self._validate_employee_access(bot, chat, partner):
+            return
+
+        user_tz_str = (internal_user and internal_user.tz) or DEFAULT_TZ
         check_in_time, error = self._parse_time_argument(args, user_tz_str)
         if error:
             bot.send_message(chat.chat_id, error)
@@ -132,9 +153,10 @@ class HrAttendanceTelegramController(TelegramController):
                 }
             )
             formatted_time = check_in_time.astimezone(pytz.timezone(user_tz_str)).strftime("%H:%M")
+            user_name = internal_user.name if internal_user else partner.name
             bot.send_message(
                 chat.chat_id,
-                f"¡Hola {internal_user.name}! Se ha registrado tu entrada a las {formatted_time}. ¡Que tengas un excelente día!",
+                f"¡Hola {user_name}! Se ha registrado tu entrada a las {formatted_time}. ¡Que tengas un excelente día!",
             )
         except ValidationError as e:
             new_attendance = attendance.search(
@@ -149,11 +171,14 @@ class HrAttendanceTelegramController(TelegramController):
 
     def _handle_check_out_command(self, bot, chat, args, partner=False, internal_user=False):
         """Handles the /salida command to record a check-out for the user."""
+        if not self._validate_employee_access(bot, chat, partner):
+            return
+
         attendance = self._get_last_attendance(partner, internal_user)
         if not attendance.check_in:
             bot.send_message(chat.chat_id, "No tienes una entrada abierta para registrar una salida.")
             return
-        user_tz_str = internal_user.tz or DEFAULT_TZ
+        user_tz_str = (internal_user and internal_user.tz) or DEFAULT_TZ
         check_out_time, error = self._parse_time_argument(args, user_tz_str, base_date_utc=attendance.check_in)
         if error:
             bot.send_message(chat.chat_id, error)
@@ -162,8 +187,9 @@ class HrAttendanceTelegramController(TelegramController):
             # Update the attendance record with the check-out time
             attendance.write({"check_out": check_out_time})
             formatted_time = check_out_time.astimezone(pytz.timezone(user_tz_str)).strftime("%H:%M")
+            user_name = internal_user.name if internal_user else partner.name
             bot.send_message(
-                chat.chat_id, f"Se ha registrado tu salida a las {formatted_time}. ¡Hasta luego, {internal_user.name}!"
+                chat.chat_id, f"Se ha registrado tu salida a las {formatted_time}. ¡Hasta luego, {user_name}!"
             )
         except ValidationError as e:
             attendance.write({"check_out": False})
@@ -171,7 +197,10 @@ class HrAttendanceTelegramController(TelegramController):
 
     def _handle_lunch_out_command(self, bot, chat, args, partner=False, internal_user=False):
         """Handles the /comida command to record the start of a lunch break."""
-        user_tz_str = internal_user.tz or DEFAULT_TZ
+        if not self._validate_employee_access(bot, chat, partner):
+            return
+
+        user_tz_str = (internal_user and internal_user.tz) or DEFAULT_TZ
         lunch_out_time, error = self._parse_time_argument(args, user_tz_str)
         if error:
             bot.send_message(chat.chat_id, error)
@@ -192,7 +221,10 @@ class HrAttendanceTelegramController(TelegramController):
 
     def _handle_lunch_in_command(self, bot, chat, args, partner=False, internal_user=False):
         """Handles the /regresocomida command to record the end of a lunch break."""
-        user_tz_str = internal_user.tz or DEFAULT_TZ
+        if not self._validate_employee_access(bot, chat, partner):
+            return
+
+        user_tz_str = (internal_user and internal_user.tz) or DEFAULT_TZ
         lunch_in_time, error = self._parse_time_argument(args, user_tz_str)
         if error:
             bot.send_message(chat.chat_id, error)
@@ -223,7 +255,7 @@ class HrAttendanceTelegramController(TelegramController):
         res = super()._handle_help_command(bot, chat, args, partner=partner, internal_user=internal_user)
         available_cmds = [cmd.name for cmd in bot.command_ids]
 
-        if internal_user and "/entrada" in available_cmds:
+        if partner and partner.employee and "/entrada" in available_cmds:
             attendance_help = [
                 "\n*Comandos de Asistencia:*",
                 "*/entrada [HH:MM]* - Registra tu llegada. Opcionalmente puedes especificar la hora.",
