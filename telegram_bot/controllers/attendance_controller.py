@@ -39,7 +39,7 @@ class HrAttendanceTelegramController(TelegramController):
 
     def _validate_employee_access(self, bot, chat, partner):
         """Validates that the partner is an employee and can access attendance commands.
-        
+
         :param bot: The telegram bot instance
         :param chat: The telegram chat instance
         :param partner: The partner to validate
@@ -48,11 +48,11 @@ class HrAttendanceTelegramController(TelegramController):
         if not partner:
             bot.send_message(chat.chat_id, "Tu chat debe estar vinculado a un contacto para usar comandos de asistencia.")
             return False
-        
-        if not partner.employee:
+
+        if not partner.sudo().employee_ids:
             bot.send_message(chat.chat_id, "Solo los empleados pueden usar comandos de asistencia.")
             return False
-        
+
         return True
 
     def _parse_time_argument(self, args, user_tz_str, base_date_utc=None):
@@ -255,7 +255,7 @@ class HrAttendanceTelegramController(TelegramController):
         res = super()._handle_help_command(bot, chat, args, partner=partner, internal_user=internal_user)
         available_cmds = [cmd.name for cmd in bot.command_ids]
 
-        if partner and partner.employee and "/entrada" in available_cmds:
+        if partner and partner.sudo().employee_ids and "/entrada" in available_cmds:
             attendance_help = [
                 "\n*Comandos de Asistencia:*",
                 "*/entrada [HH:MM]* - Registra tu llegada. Opcionalmente puedes especificar la hora.",
