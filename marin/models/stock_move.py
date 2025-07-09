@@ -43,3 +43,10 @@ class StockMove(models.Model):
             if not move.route_ids and move.picking_type_id.route_ids:
                 move.route_ids = move.picking_type_id.route_ids
         return super()._action_confirm(merge, merge_into)
+    
+    def _compute_show_details_visible(self):
+        if self.env.user.has_group("stock.group_stock_manager"):
+            return super()._compute_show_details_visible()
+        else:
+            for move in self:
+                move.show_details_visible = False
