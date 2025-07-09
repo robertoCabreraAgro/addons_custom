@@ -120,6 +120,9 @@
                     <span>%</span>
                 </div>
             </xpath>
+            <xpath expr="//page[@name='operations']/field[@name='move_ids_without_package']/list/button[@name='action_show_details']" position="attributes">
+                <attribute name="groups">stock.group_stock_user</attribute>
+            </xpath>
         </field>
     </record>
     <!--     <record id="view_picking_form_marin" model="ir.ui.view">
