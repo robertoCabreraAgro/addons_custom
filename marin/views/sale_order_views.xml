@@ -151,6 +151,9 @@
                     invisible="not id"
                 />
             </xpath>
+            <xpath expr="//button[@name='action_view_picking']" position="attributes">
+                <attribute name="groups">marin.group_stock_readonly,stock.group_stock_user</attribute>
+            </xpath>
             <!-- group partner_details -->
             <xpath expr="//field[@name='partner_id']" position="attributes">
                 <attribute name="options">{'no_create': True, 'always_reload': True}</attribute>
@@ -428,6 +431,46 @@
         <field name="state">code</field>
         <field name="code">if records:
     action = records.action_sale_authorize_debt()</field>
+    </record>
+
+    <!-- Create readonly-friendly window actions instead of server actions -->
+    <record id="action_picking_tree_incoming_readonly" model="ir.actions.act_window">
+        <field name="name">Receipts</field>
+        <field name="res_model">stock.picking</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'default_picking_type_code': 'incoming', 'search_default_available': 1}</field>
+        <field name="domain">[('picking_type_code', '=', 'incoming')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No receipts yet! Here you can see all incoming receipts.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_picking_tree_outgoing_readonly" model="ir.actions.act_window">
+        <field name="name">Delivery Orders</field>
+        <field name="res_model">stock.picking</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'default_picking_type_code': 'outgoing', 'search_default_available': 1}</field>
+        <field name="domain">[('picking_type_code', '=', 'outgoing')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No delivery orders yet! Here you can see all outgoing deliveries.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_picking_tree_internal_readonly" model="ir.actions.act_window">
+        <field name="name">Internal Transfers</field>
+        <field name="res_model">stock.picking</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'default_picking_type_code': 'internal', 'search_default_available': 1}</field>
+        <field name="domain">[('picking_type_code', '=', 'internal')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No internal transfers yet! Here you can see all internal movements.
+            </p>
+        </field>
     </record>
 
 </odoo>

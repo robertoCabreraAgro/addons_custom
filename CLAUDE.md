@@ -187,6 +187,11 @@ addon_name/
   <!-- Odoo 18.0 way -->
   <field name="field_name" invisible="state == 'draft'"/>
   ```
+- Use `group_ids` instead of `groups_id` for menu access control in `ir.ui.menu` records
+  ```diff
+  - <field name="groups_id" eval="[(4, ref('base.group_user'))]"/>
+  + <field name="group_ids" eval="[(4, ref('base.group_user'))]"/>
+  ```
 
 **Python Models:**
 - Replace `name_get()` with `_compute_display_name()` method

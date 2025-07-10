@@ -138,7 +138,6 @@
         "views/approval_category_views.xml",
         "views/approval_request_views.xml",
         "views/res_config_settings_views.xml",
-        "views/menuitem_views.xml",
         "report/invoice_line_in_views.xml",
         "report/invoice_line_out_views.xml",
         "report/invoice_line_out_team_views.xml",
@@ -154,6 +153,7 @@
         "wizards/sale_order_line_price_history.xml",
         "wizards/stock_quant_lot_update.xml",
         "wizards/fleet_vehicle_log_import_views.xml",
+        "views/menuitem_views.xml",  # always at last to avoid precedence problems
     ],
     "pre_init_hook": "_pre_init_marin",
     "assets": {
