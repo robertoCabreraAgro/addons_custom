@@ -32,6 +32,7 @@ class StockPicking(models.Model):
     tracker_id = fields.Many2one(
         comodel_name="stock.picking.tracker",
         tracking=True,
+        copy=False,
         help="Route tracker record that manages this transfer as part of a delivery route.",
     )
     vehicle_id = fields.Many2one(
