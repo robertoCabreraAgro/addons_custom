@@ -50,12 +50,8 @@
                     invisible="state != 'cancel'"
                     groups="stock.group_stock_user" />
             </xpath>
-            <!-- <xpath expr="//button[@name='%(stock.act_stock_return_picking)d']" position="attributes">
-                <attribute name="invisible">picking_type_code == 'internal'</attribute>
-            </xpath> -->
-
             <xpath expr="//button[@name='%(stock.act_stock_return_picking)d']" position="attributes">
-                <attribute name="invisible">picking_type_code == 'internal'</attribute>
+                <attribute name="invisible">picking_type_code == 'internal' or state != 'done'</attribute>
                 <attribute name="groups">marin.group_stock_return_readonly</attribute>
             </xpath>
             
