@@ -93,5 +93,6 @@ access_product_pricelist_item_readonly,product.pricelist.item.readonly,product.m
 access_product_tag_readonly,product.tag.readonly,product.model_product_tag,group_stock_readonly,1,0,0,0
 access_res_partner_readonly,res.partner.readonly,base.model_res_partner,group_stock_readonly,1,0,0,0
 access_quality_check_readonly,quality.check.readonly,quality.model_quality_check,group_stock_readonly,1,0,0,0
+access_stock_picking_batch_readonly,stock.picking.batch.readonly,stock_picking_batch.model_stock_picking_batch,group_stock_readonly,1,0,0,0
 sale_stock.access_stock_picking_salesman,stock.picking salesman,stock.model_stock_picking,sales_team.group_sale_salesman,1,0,0,0
 sale_stock.access_stock_move_salesman,stock_move salesman,stock.model_stock_move,sales_team.group_sale_salesman,1,0,0,0
