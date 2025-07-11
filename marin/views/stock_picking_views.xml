@@ -122,11 +122,6 @@
             </xpath>
             <xpath expr="//page[@name='operations']/field[@name='move_ids_without_package']/list/field[@name='lot_ids']" position="attributes">
                 <attribute name="readonly">1</attribute>
-            <xpath expr="//page[@name='operations']/field[@name='move_ids_without_package']/list/field[@name='quantity']" position="replace">
-                <field name="quantity" string="Quantity" readonly="1"
-                    column_invisible="parent.state=='draft'"
-                    decoration-danger="product_uom_qty and quantity > product_uom_qty and parent.state not in ['done', 'cancel']"/>
-            </xpath>
             </xpath>
         </field>
     </record>
