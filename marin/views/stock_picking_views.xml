@@ -50,13 +50,8 @@
                     invisible="state != 'cancel'"
                     groups="stock.group_stock_user" />
             </xpath>
-            <!-- <xpath expr="//button[@name='%(stock.act_stock_return_picking)d']" position="attributes">
-                <attribute name="invisible">picking_type_code == 'internal'</attribute>
-            </xpath> -->
-
             <xpath expr="//button[@name='%(stock.act_stock_return_picking)d']" position="attributes">
-                <attribute name="invisible">picking_type_code == 'internal'</attribute>
-                <attribute name="groups">marin.group_stock_return_readonly</attribute>
+                <attribute name="invisible">picking_type_code == 'internal' or state != 'done'</attribute>                <attribute name="groups">marin.group_stock_return_readonly</attribute>
             </xpath>
             
             <!--             <xpath expr="//button[@name='do_print_picking']" position="attributes">
@@ -122,6 +117,11 @@
             </xpath>
             <xpath expr="//page[@name='operations']/field[@name='move_ids_without_package']/list/field[@name='lot_ids']" position="attributes">
                 <attribute name="readonly">1</attribute>
+            <xpath expr="//page[@name='operations']/field[@name='move_ids_without_package']/list/field[@name='quantity']" position="replace">
+                <field name="quantity" string="Quantity" readonly="1"
+                    column_invisible="parent.state=='draft'"
+                    decoration-danger="product_uom_qty and quantity > product_uom_qty and parent.state not in ['done', 'cancel']"/>
+            </xpath>
             </xpath>
         </field>
     </record>
