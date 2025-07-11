@@ -111,7 +111,7 @@
                             <field
                                 name="diff_partner_id"
                                 required="1"
-                                readonly="state in ['in_progress', 'done', 'cancel']"
+                                readonly="state in ['done', 'cancel']"
                                 options="{'no_open': True, 'no_create': True}"
                                 invisible="not diff_partner"
                             />
