@@ -7,7 +7,7 @@
     "website": "https://www.agromarin.mx",
     "license": "OPL-1",
     "category": "Installer",
-    "version": "saas~18.2.0.0.1",
+    "version": "saas~18.2.0.0.2",
     "depends": [
         "date_range",
         "board",

@@ -34,16 +34,6 @@ class StockQuant(models.Model):
         related="location_id.removal_priority",
         store=True,
     )
-    is_reconditioned = fields.Boolean(
-        related="lot_id.is_reconditioned",
-        string="Reconditioned",
-        help="Indicates if this lot has been reconditioned to extend its shelf life",
-    )
-    recondition_date = fields.Date(
-        related="lot_id.recondition_date",
-        string="Recondition Date",
-        help="Date when the product was reconditioned",
-    )
     original_expiration_date = fields.Date(
         related="lot_id.original_expiration_date",
         string="Original Expiration Date",
@@ -118,7 +108,7 @@ class StockQuant(models.Model):
             return "removal_date, removal_priority ASC, id"
 
         if removal_strategy == "refurbished + fefo + priority":
-            return "is_reconditioned DESC, original_expiration_date ASC, removal_date, removal_priority ASC, id"
+            return "original_expiration_date ASC, removal_date, removal_priority ASC, id"
 
         return super()._get_removal_strategy_order(removal_strategy)
 

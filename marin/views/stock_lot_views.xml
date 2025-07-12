@@ -42,11 +42,8 @@
                 <attribute name="required">True</attribute>
             </field>
             <xpath expr="//page[@name='expiration_dates']/group" position="inside">
-                <group string="Reconditioned" groups="marin.group_stock_lot_reconditioned">
-                    <field name="is_reconditioned" />
-                    <field name="recondition_date" invisible="is_reconditioned == False"
-                        required="is_reconditioned == True" />
-                    <field name="original_expiration_date" invisible="is_reconditioned == False" />
+                <group string="Original Expiration" groups="marin.group_stock_lot_reconditioned">
+                    <field name="original_expiration_date" />
                 </group>
             </xpath>
             <xpath expr="//button[@name='action_view_so']" position="attributes">

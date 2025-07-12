@@ -12,18 +12,12 @@ class StockLot(models.Model):
     # FIELDS
     # ------------------------------------------------------------
 
-    is_reconditioned = fields.Boolean(
-        string="Reconditioned",
-        default=False,
-        help="Indicates if this lot has been reconditioned to extend its shelf life",
-    )
-    recondition_date = fields.Date(
-        string="Recondition Date",
-        help="Date when the product was reconditioned",
-    )
     original_expiration_date = fields.Date(
         string="Original Expiration Date",
         help="Original expiration date before reconditioning",
+        required=True,
+        compute='_compute_original_expiration_date',
+        store=True,
     )
 
     # ------------------------------------------------------------
@@ -85,12 +79,13 @@ class StockLot(models.Model):
                         lot._origin.alert_date and lot._origin.alert_date + time_delta
                     )
 
-    # ------------------------------------------------------------
-    # ONCHANGE METHODS
-    # ------------------------------------------------------------
+    @api.depends("expiration_date")
+    def _compute_original_expiration_date(self):
+        """Compute original expiration date.
 
-    @api.onchange("is_reconditioned")
-    def _onchange_is_reconditioned(self):
-        if not self.is_reconditioned:
-            self.recondition_date = False
-            self.original_expiration_date = False
+        If original_expiration_date is False, assign the value of expiration_date.
+        If original_expiration_date already has a value, keep it unchanged.
+        """
+        for lot in self:
+            if not lot.original_expiration_date and lot.expiration_date:
+                lot.original_expiration_date = lot.expiration_date
