@@ -40,6 +40,9 @@ class StockPicking(models.Model):
                 "stock_blocked_location.group_stock_force_blocked_location_in"
             )
 
+            blocked_out_locations = set()
+            blocked_in_locations = set()
+
             for move in picking.move_line_ids:
                 out_blocked = move.location_id.block_outgoing
                 in_blocked = move.location_dest_id.block_incoming
@@ -61,15 +64,21 @@ class StockPicking(models.Model):
                     )
 
                 if out_blocked and has_out_permission:
-                    picking.message_post(
-                        body=_("User %s confirmed OUTGOING from blocked location %s.")
-                        % (self.env.user.name, move.location_id.display_name)
-                    )
+                    blocked_out_locations.add(move.location_id)
                 if in_blocked and has_in_permission:
-                    picking.message_post(
-                        body=_("User %s confirmed INCOMING to blocked location %s.")
-                        % (self.env.user.name, move.location_dest_id.display_name)
-                    )
+                    blocked_in_locations.add(move.location_dest_id)
+
+            for location in blocked_out_locations:
+                picking.message_post(
+                    body=self.env._("User %s confirmed OUTGOING from blocked location %s.")
+                    % (self.env.user.name, location.display_name)
+                )
+            
+            for location in blocked_in_locations:
+                picking.message_post(
+                    body=self.env._("User %s confirmed INCOMING to blocked location %s.")
+                    % (self.env.user.name, location.display_name)
+                )
 
 
 class StockMove(models.Model):
