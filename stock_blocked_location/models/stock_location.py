@@ -25,10 +25,9 @@ class StockLocation(models.Model):
 class StockPicking(models.Model):
     _inherit = "stock.picking"
 
-    def button_validate(self):
-        """Override button_validate to check if any location is blocked."""
+    def _action_done(self):
         self._check_blocked_locations()
-        return super().button_validate()
+        return super()._action_done()
 
     def _check_blocked_locations(self):
         """Check if any move line comes from/to a blocked location."""
@@ -40,8 +39,8 @@ class StockPicking(models.Model):
                 "stock_blocked_location.group_stock_force_blocked_location_in"
             )
 
-            blocked_out_locations = set()
-            blocked_in_locations = set()
+            forced_outgoing_locations = set()
+            forced_incoming_locations = set()
 
             for move in picking.move_line_ids:
                 out_blocked = move.location_id.block_outgoing
@@ -64,30 +63,25 @@ class StockPicking(models.Model):
                     )
 
                 if out_blocked and has_out_permission:
-                    blocked_out_locations.add(move.location_id)
+                    forced_outgoing_locations.add(move.location_id.display_name)
+
                 if in_blocked and has_in_permission:
-                    blocked_in_locations.add(move.location_dest_id)
+                    forced_incoming_locations.add(move.location_dest_id.display_name)
 
-            for location in blocked_out_locations:
+            if forced_outgoing_locations:
+                locations_str = ", ".join(list(forced_outgoing_locations))
                 picking.message_post(
-                    body=self.env._("User %s confirmed OUTGOING from blocked location %s.")
-                    % (self.env.user.name, location.display_name)
-                )
-            
-            for location in blocked_in_locations:
-                picking.message_post(
-                    body=self.env._("User %s confirmed INCOMING to blocked location %s.")
-                    % (self.env.user.name, location.display_name)
+                    body=_(
+                        "User %s confirmed OUTGOING from blocked location(s): %s."
+                    )
+                    % (self.env.user.name, locations_str)
                 )
 
-
-class StockMove(models.Model):
-    _inherit = "stock.move"
-
-    def _action_done(self, cancel_backorder=False):
-        """Override _action_done to check blocked locations."""
-        for move in self:
-            picking = move.picking_id
-            if picking:
-                picking._check_blocked_locations()
-        return super()._action_done(cancel_backorder=cancel_backorder)
+            if forced_incoming_locations:
+                locations_str = ", ".join(list(forced_incoming_locations))
+                picking.message_post(
+                    body=_(
+                        "User %s confirmed INCOMING to blocked location(s): %s."
+                    )
+                    % (self.env.user.name, locations_str)
+                )

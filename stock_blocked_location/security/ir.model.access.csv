@@ -1,1 +1,2 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_stock_location_all,stock.location.all,stock.model_stock_location,,1,1,1,1
