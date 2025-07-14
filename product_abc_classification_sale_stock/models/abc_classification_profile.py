@@ -31,14 +31,50 @@ class AbcClassificationProfile(models.Model):
             [("company_id", "=", self.env.user.company_id.id)], limit=1
         ),
     )
+    interval_type = fields.Selection(
+        [
+            ("days", "Days"),
+            ("seasons", "Seasons"),
+        ],
+        string="Interval Type",
+        default="days",
+        help="Choose how to define the time period for ABC classification: "
+        "Days uses a fixed period from today, "
+        "Seasons uses specific date ranges",
+    )
+    date_range_ids = fields.Many2many(
+        "date.range",
+        string="Seasons",
+        domain="[('type_id.code', '=', 'AG'), ('active', '=', True)]",
+        help="Select one or more agricultural seasons for ABC classification calculation",
+    )
 
     @api.constrains("profile_type", "warehouse_id")
     def _check_warehouse_id(self):
         for rec in self:
             if rec.profile_type == "sale_stock" and not rec.warehouse_id:
                 raise ValidationError(
-                    self.env._("You must specify a warehouse for {profile_name}").forman(profile_name=rec.name)
+                    self.env._(
+                        "You must specify a warehouse for {profile_name}"
+                    ).format(profile_name=rec.name)
                 )
+
+    @api.constrains("profile_type", "interval_type", "date_range_ids")
+    def _check_date_range_ids(self):
+        for rec in self:
+            if rec.profile_type == "sale_stock" and rec.interval_type == "seasons":
+                if not rec.date_range_ids:
+                    raise ValidationError(
+                        self.env._(
+                            "At least one season must be selected when using seasons."
+                        )
+                    )
+                # Verificar que al menos una estación esté activa
+                active_ranges = rec.date_range_ids.filtered("active")
+                if not active_ranges:
+                    raise ValidationError(
+                        self.env._("At least one selected season must be active.")
+                    )
 
     @api.model
     def _get_collected_data_class(self):
@@ -70,71 +106,170 @@ class AbcClassificationProfile(models.Model):
         )
         return {r[0] for r in self.env.cr.fetchall()}
 
+    def _get_date_ranges_for_query(self):
+        """Get date ranges for query based on profile configuration"""
+        self.ensure_one()
+        if self.interval_type == "seasons" and self.date_range_ids:
+            # Usar solo rangos de fecha activos
+            active_ranges = self.date_range_ids.filtered("active")
+            if not active_ranges:
+                raise ValidationError(
+                    self.env._(
+                        "No active date ranges found for profile {profile_name}"
+                    ).format(profile_name=self.name)
+                )
+            return active_ranges
+        return self.env["date.range"]
+
     def _get_sale_stock_data_query(self, from_date, customer_location_ids):
-        query = """
-            SELECT
-                sol.product_id product_id,
-                COUNT(sol.id) number_so_lines
-            FROM
-                sale_order so
-            JOIN
-                sale_order_line sol ON
-                sol.order_id = so.id
-            JOIN
-                abc_classification_profile_product_rel rel
-                ON rel.product_id = sol.product_id
-            JOIN
-                product_product pp
-                ON pp.id = sol.product_id
-            WHERE sol.qty_transfered > 0
-                AND pp.active
-                AND rel.profile_id = %(profile_id)s
-                AND so.warehouse_id = %(current_warehouse_id)s
-            AND EXISTS (
-                    SELECT
-                        1
-                    FROM
-                        stock_move sm
-                    WHERE
-                        sm.date > %(start_date)s
-                        AND sm.location_dest_id in %(customer_loc_ids)s
-                        AND sm.sale_line_id = sol.id
+        """Modified query to support date ranges"""
+        date_ranges = self._get_date_ranges_for_query()
+
+        if date_ranges:
+            # Query con soporte para rangos de fecha específicos
+            date_conditions = []
+            for i, date_range in enumerate(date_ranges):
+                date_conditions.append(
+                    f"(so.date_order >= %(date_param_{i*2})s AND so.date_order <= %(date_param_{i*2+1})s)"
                 )
 
-            GROUP BY sol.product_id
-            ORDER BY number_so_lines DESC
-        """
-        params = {
-            "start_date": from_date,
-            "current_warehouse_id": self.warehouse_id.id,
-            "profile_id": self.id,
-            "customer_loc_ids": tuple(customer_location_ids),
-        }
-        return query, params
+            date_where_clause = " AND (" + " OR ".join(date_conditions) + ")"
+
+            query = """
+                SELECT
+                    sol.product_id product_id,
+                    COUNT(sol.id) number_so_lines
+                FROM
+                    sale_order so
+                JOIN
+                    sale_order_line sol ON
+                    sol.order_id = so.id
+                JOIN
+                    abc_classification_profile_product_rel rel
+                    ON rel.product_id = sol.product_id
+                JOIN
+                    product_product pp
+                    ON pp.id = sol.product_id
+                WHERE sol.qty_transfered > 0
+                    AND pp.active
+                    AND rel.profile_id = %(profile_id)s
+                    AND so.warehouse_id = %(current_warehouse_id)s
+                    {date_where_clause}
+                AND EXISTS (
+                        SELECT
+                            1
+                        FROM
+                            stock_move sm
+                        WHERE
+                            sm.location_dest_id in %(customer_loc_ids)s
+                            AND sm.sale_line_id = sol.id
+                    )
+                GROUP BY sol.product_id
+                ORDER BY number_so_lines DESC
+            """.format(
+                date_where_clause=date_where_clause
+            )
+
+            params = {
+                "profile_id": self.id,
+                "current_warehouse_id": self.warehouse_id.id,
+                "customer_loc_ids": tuple(customer_location_ids),
+            }
+
+            date_params = []
+            for date_range in date_ranges:
+                date_params.extend([date_range.date_start, date_range.date_end])
+
+            return query, params, date_params
+
+        else:
+            query = """
+                SELECT
+                    sol.product_id product_id,
+                    COUNT(sol.id) number_so_lines
+                FROM
+                    sale_order so
+                JOIN
+                    sale_order_line sol ON
+                    sol.order_id = so.id
+                JOIN
+                    abc_classification_profile_product_rel rel
+                    ON rel.product_id = sol.product_id
+                JOIN
+                    product_product pp
+                    ON pp.id = sol.product_id
+                WHERE sol.qty_transfered > 0
+                    AND pp.active
+                    AND rel.profile_id = %(profile_id)s
+                    AND so.warehouse_id = %(current_warehouse_id)s
+                AND EXISTS (
+                        SELECT
+                            1
+                        FROM
+                            stock_move sm
+                        WHERE
+                            sm.date > %(start_date)s
+                            AND sm.location_dest_id in %(customer_loc_ids)s
+                            AND sm.sale_line_id = sol.id
+                    )
+                GROUP BY sol.product_id
+                ORDER BY number_so_lines DESC
+            """
+            params = {
+                "start_date": from_date,
+                "current_warehouse_id": self.warehouse_id.id,
+                "profile_id": self.id,
+                "customer_loc_ids": tuple(customer_location_ids),
+            }
+            return query, params, []
 
     def _get_data(self, from_date=None):
         """Get a list of statics info from the DB ordered by number of lines desc"""
         self.ensure_one()
-        from_date = (
-            from_date if from_date else fields.Datetime.to_string(datetime.today() - timedelta(days=self.period))
+        date_ranges = self._get_date_ranges_for_query()
+        if date_ranges:
+            from_date = min(date_ranges.mapped("date_start"))
+            to_date = max(date_ranges.mapped("date_end"))
+        else:
+            from_date = (
+                from_date
+                if from_date
+                else fields.Datetime.to_string(
+                    datetime.today() - timedelta(days=self.period)
+                )
+            )
+            to_date = datetime.today()
+
+        customer_location_ids = (
+            self.env["stock.location"].search([("usage", "=", "customer")]).ids
         )
-        to_date = datetime.today()
-        customer_location_ids = self.env["stock.location"].search([("usage", "=", "customer")]).ids
+
         # Collect all the product linked to the profile to be sure to provide
         # information also for product no sold into the given period
         all_product_ids = self._get_all_product_ids()
 
         # Count the number of delivered order line by product linked to a
-        # stock_move with a customer location as destination and a date later
-        # than the given date
-        query, params = self._get_sale_stock_data_query(from_date, customer_location_ids)
-        self.env.cr.execute(query, params)
-        items = self.env.cr.fetchall()
+        # stock_move with a customer location as destination
+        query_result = self._get_sale_stock_data_query(from_date, customer_location_ids)
+        if len(query_result) == 3:
+            query, params, date_params = query_result
+            if date_params:
+                # Merge date parameters into params dict
+                for i, date_param in enumerate(date_params):
+                    params[f"date_param_{i}"] = date_param
+                self.env.cr.execute(query, params)
+            else:
+                self.env.cr.execute(query, params)
+        else:
+            query, params = query_result
+            self.env.cr.execute(query, params)
 
+        items = self.env.cr.fetchall()
         total = 0
         sale_stock_data_list = []
         ranking = 1
         product = self.env["product.product"]
+
         for item in items:
             sale_stock_data = self._init_collected_data_instance()
             product_id = item[0]
@@ -226,7 +361,9 @@ class AbcClassificationProfile(models.Model):
         remaining = self - to_compute
         res = None
         if remaining:
-            res = super(AbcClassificationProfile, remaining)._compute_abc_classification()
+            res = super(
+                AbcClassificationProfile, remaining
+            )._compute_abc_classification()
         product_classification = self.env["abc.classification.product.level"]
         for profile in to_compute:
             sale_stock_data_list, total = profile._get_data()
@@ -244,42 +381,61 @@ class AbcClassificationProfile(models.Model):
                 sale_stock_data.cumulated_percentage_products = (
                     sale_stock_data.percentage_products
                     if not i
-                    else (sale_stock_data.percentage_products + previous_data.cumulated_percentage_products)
+                    else (
+                        sale_stock_data.percentage_products
+                        + previous_data.cumulated_percentage_products
+                    )
                 )
                 # Compute percentages and cumulative percentages for the products
-                sale_stock_data.percentage = (100.0 * sale_stock_data.number_so_lines / total) if total else 0.0
+                sale_stock_data.percentage = (
+                    (100.0 * sale_stock_data.number_so_lines / total) if total else 0.0
+                )
 
                 sale_stock_data.cumulated_percentage = (
                     sale_stock_data.percentage
                     if not i
-                    else (sale_stock_data.percentage + previous_data.cumulated_percentage)
+                    else (
+                        sale_stock_data.percentage + previous_data.cumulated_percentage
+                    )
                 )
                 if float_round(sale_stock_data.cumulated_percentage, 0) > 100:
-                    raise UserError(self.env._("Cumulative percentage greater than 100."))
+                    raise UserError(
+                        self.env._("Cumulative percentage greater than 100.")
+                    )
 
                 sale_stock_data.sum_cumulated_percentages = (
-                    sale_stock_data.cumulated_percentage + sale_stock_data.cumulated_percentage_products
+                    sale_stock_data.cumulated_percentage
+                    + sale_stock_data.cumulated_percentage_products
                 )
 
                 # Compute ABC classification for the products based on the
                 # sum of cumulated percentages
 
-                if sale_stock_data.sum_cumulated_percentages > percentage and len(level_percentage) > 0:
+                if (
+                    sale_stock_data.sum_cumulated_percentages > percentage
+                    and len(level_percentage) > 0
+                ):
                     level, percentage = level_percentage.pop(0)
 
                 product = sale_stock_data.product
                 levels = product.abc_classification_product_level_ids
-                product_abc_classification = levels.filtered(lambda p, prof=profile: p.profile_id == prof)
+                product_abc_classification = levels.filtered(
+                    lambda p, prof=profile: p.profile_id == prof
+                )
 
                 sale_stock_data.computed_level = level
                 if product_abc_classification:
                     # The line is still significant...
                     existing_level_ids_to_remove.remove(product_abc_classification.id)
                     if product_abc_classification.level_id != level:
-                        vals = profile._sale_stock_data_to_vals(sale_stock_data, create=False)
+                        vals = profile._sale_stock_data_to_vals(
+                            sale_stock_data, create=False
+                        )
                         product_abc_classification.write(vals)
                 else:
-                    vals = profile._sale_stock_data_to_vals(sale_stock_data, create=True)
+                    vals = profile._sale_stock_data_to_vals(
+                        sale_stock_data, create=True
+                    )
                     product_abc_classification = product_classification.create(vals)
                 sale_stock_data.total_so_lines = total
                 sale_stock_data.product_level = product_abc_classification
@@ -302,7 +458,9 @@ class AbcClassificationProfile(models.Model):
         table = self.env["abc.sale_stock.level.history"]._table
         columns = sale_stock_data_list[0]._get_col_names()
         self.env.cr.copy_from(vals, table, columns=columns, sep=";")
-        self.env["abc.classification.product.level"]._invalidate_cache(["sale_stock_level_history_ids"])
+        self.env["abc.classification.product.level"].invalidate_model(
+            ["sale_stock_level_history_ids"]
+        )
 
 
 class SaleStockData:

@@ -125,3 +125,21 @@ class AbcSaleStockLevelHistory(models.Model):
     )
     from_date = fields.Date(readonly=True)
     to_date = fields.Date(readonly=True)
+    season_ids = fields.Many2many(
+        "date.range",
+        string="Seasons Used",
+        readonly=True,
+        help="Date ranges (seasons) used for this ABC classification calculation",
+    )
+
+    use_date_range = fields.Boolean(
+        string="Used Date Ranges",
+        readonly=True,
+        help="Indicates if this calculation used specific date ranges instead of fixed period",
+    )
+
+    season_names = fields.Char(
+        string="Season Names",
+        readonly=True,
+        help="Names of the seasons used for this calculation",
+    )

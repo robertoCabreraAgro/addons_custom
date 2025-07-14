@@ -1,15 +1,29 @@
 <?xml version='1.0' encoding='UTF-8' ?>
-<!-- Copyright 2020 ForgeFlow
-     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
 <odoo>
-  <record id="abc_classification_profile_form_view" model="ir.ui.view">
-    <field name="name">abc.classification.profile.form (in product_abc_classification_sale_stock)</field>
-    <field name="model">abc.classification.profile</field>
-    <field name="inherit_id" ref="product_abc_classification.abc_classification_profile_form_view" />
-    <field name="arch" type="xml">
-      <field name="profile_type" position="after">
-        <field name="warehouse_id" invisible="profile_type != 'sale_stock'" />
-      </field>
-    </field>
-  </record>
+    <record id="abc_classification_profile_form_view" model="ir.ui.view">
+        <field name="name">abc.classification.profile.sale.stock.form</field>
+        <field name="model">abc.classification.profile</field>
+        <field name="inherit_id" ref="product_abc_classification.abc_classification_profile_form_view" />
+        <field name="arch" type="xml">
+            <field name="profile_type" position="after">
+                <field name="warehouse_id" invisible="profile_type != 'sale_stock'" />
+            </field>
+            <xpath expr="//field[@name='period']" position="attributes">
+              <attribute name="invisible">profile_type != 'sale_stock' or interval_type != 'days'</attribute>
+              <attribute name="required">profile_type == 'sale_stock' and interval_type == 'days'</attribute>
+            </xpath>
+            <xpath expr="//field[@name='period']" position="before">
+                <field name="interval_type" 
+                       invisible="profile_type != 'sale_stock'"
+                       string="Interval Type"/>
+                <field name="date_range_ids" 
+                       widget="many2many_tags"
+                       string="Seasons"
+                       invisible="profile_type != 'sale_stock' or interval_type != 'seasons'"
+                       required="profile_type == 'sale_stock' and interval_type == 'seasons'"
+                       options="{'no_create': True, 'no_create_edit': True}"
+                       domain="[('type_id.name', '=', 'AG'), ('active', '=', True)]"/>
+            </xpath>
+        </field>
+    </record>
 </odoo>

@@ -12,7 +12,9 @@ class TestABCClassificationProfile(TransactionCase):
         super().setUpClass()
         cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
 
-        cls.partner = cls.env["res.partner"].create({"name": "Unittest partner", "ref": "12344566777878"})
+        cls.partner = cls.env["res.partner"].create(
+            {"name": "Unittest partner", "ref": "12344566777878"}
+        )
 
         cls.warehouse = cls.env.ref("stock.warehouse0")
         cls.warehouse.write(
@@ -24,10 +26,18 @@ class TestABCClassificationProfile(TransactionCase):
             }
         )
 
-        cls.stock_profile = cls.env.ref("product_abc_classification_sale_stock.abc_classification_profile_sale_stock")
-        cls.level_A = cls.env.ref("product_abc_classification_sale_stock.abc_classification_level_a")
-        cls.level_B = cls.env.ref("product_abc_classification_sale_stock.abc_classification_level_b")
-        cls.level_C = cls.env.ref("product_abc_classification_sale_stock.abc_classification_level_c")
+        cls.stock_profile = cls.env.ref(
+            "product_abc_classification_sale_stock.abc_classification_profile_sale_stock"
+        )
+        cls.level_A = cls.env.ref(
+            "product_abc_classification_sale_stock.abc_classification_level_a"
+        )
+        cls.level_B = cls.env.ref(
+            "product_abc_classification_sale_stock.abc_classification_level_b"
+        )
+        cls.level_C = cls.env.ref(
+            "product_abc_classification_sale_stock.abc_classification_level_c"
+        )
 
         cls.product1 = cls.env["product.product"].create(
             {
@@ -133,13 +143,19 @@ class TestABCClassificationProfile(TransactionCase):
         )
         cls._confirm_ship(cls.so2)
 
-        cls.so3 = cls._confirm_sale_order(products=[cls.product1], qty={cls.product1.name: 75})
+        cls.so3 = cls._confirm_sale_order(
+            products=[cls.product1], qty={cls.product1.name: 75}
+        )
         cls._confirm_ship(cls.so3)
 
-        cls.so3 = cls._confirm_sale_order(products=[cls.product1], qty={cls.product1.name: 75})
+        cls.so3 = cls._confirm_sale_order(
+            products=[cls.product1], qty={cls.product1.name: 75}
+        )
         cls._confirm_ship(cls.so3)
 
-        cls.so4 = cls._confirm_sale_order(products=[cls.product1], qty={cls.product1.name: 25})
+        cls.so4 = cls._confirm_sale_order(
+            products=[cls.product1], qty={cls.product1.name: 25}
+        )
         cls._confirm_ship(cls.so4)
 
         cls.so5 = cls._confirm_sale_order(
@@ -148,7 +164,9 @@ class TestABCClassificationProfile(TransactionCase):
         )
         cls._confirm_ship(cls.so5)
 
-        cls.so6 = cls._confirm_sale_order(products=[cls.product6], qty={cls.product6.name: 30})
+        cls.so6 = cls._confirm_sale_order(
+            products=[cls.product6], qty={cls.product6.name: 30}
+        )
         cls._confirm_ship(cls.so6)
 
     @classmethod

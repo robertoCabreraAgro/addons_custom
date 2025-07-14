@@ -11,7 +11,11 @@
     "website": "https://github.com/OCA/product-attribute",
     "maintainers": ["rousseldenis", "lmignon", "lmarion-source"],
     "author": "ACSONE SA/NV,Odoo Community Association (OCA)",
-    "depends": ["product_abc_classification", "sale_stock"],
+    "depends": [
+        "product_abc_classification",
+        "sale_stock",
+        "date_range",
+    ],
     "data": [
         "views/abc_classification_product_level.xml",
         "security/abc_sale_stock_level_history.xml",
