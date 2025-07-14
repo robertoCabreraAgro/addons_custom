@@ -1,8 +1,7 @@
 import logging
-
-from pyproj import Transformer
 from datetime import datetime, timedelta
 from odoo import api, fields, models
+from pytz import timezone, utc
 
 _logger = logging.getLogger(__name__)
 
@@ -88,9 +87,6 @@ class GpsTrackingDevice(models.Model):
     )
     history_route = fields.GeoLine(
         string="History Route",
-        # compute="_compute_history_route",
-        # store=True,
-        # srid=3857,
     )
     gsm_signal = fields.Integer(
         related="last_point_id.gsm_signal",
@@ -130,11 +126,41 @@ class GpsTrackingDevice(models.Model):
         groups="gps_tracking.group_gps_tracking_private",
         help="If checked, only users with specific access rights can see this device",
     )
+    inactivity_status = fields.Selection(
+        selection=[
+            ("active", "Activo"),
+            ("inactive_alert", "Inactivo"),
+        ],
+        string="Estado de Inactividad",
+        compute="_compute_inactivity_status",
+        store=False,
+    )
 
     _unique_code = models.Constraint(
         "unique (imei)",
         "This IMEI already exists",
     )
+
+    def _compute_inactivity_status(self):
+        """
+        Calcula el estado de inactividad de un dispositivo basado en el último reporte.
+        Un dispositivo se considera inactivo si no ha reportado en las últimas 2 horas.
+        """
+        now_utc = datetime.now(utc)
+
+        for device in self:
+            if not device.timestamp:
+                device.inactivity_status = "inactive_alert"
+                continue
+
+            last_report_utc = fields.Datetime.to_datetime(device.timestamp).replace(tzinfo=utc)
+            
+            inactive_duration = now_utc - last_report_utc
+
+            if inactive_duration >= timedelta(hours=2):
+                device.inactivity_status = "inactive_alert"
+            else:
+                device.inactivity_status = "active"
 
     @api.depends("tracking_points")
     def _compute_allowed_tracking_point(self):
@@ -154,16 +180,14 @@ class GpsTrackingDevice(models.Model):
                 device.vehicle_id.driver_id.name if device.vehicle_id.driver_id else ""
             )
 
-    @api.depends("tracking_points.timestamp")  # Usar el campo correcto
+    @api.depends("tracking_points.timestamp")
     def _compute_last_point(self):
         for device in self:
-            # Obtener el último punto usando tracking_points
             last_point = device.tracking_points.sorted(
                 key=lambda p: p.timestamp, reverse=True
             )[:1]
             device.last_point_id = last_point.id if last_point else False
 
-            # Log para depurar el valor del último punto
             if last_point:
                 _logger.info(
                     f"Dispositivo {device.id}: Último punto actualizado a {last_point.id} con timestamp {last_point.timestamp}"
