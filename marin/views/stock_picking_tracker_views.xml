@@ -43,14 +43,15 @@
                     <notebook>
                         <page string="Transfers" name="transfers">
                             <field name="allowed_picking_ids" invisible="1" />
-                            <field name="picking_ids" readonly="state != 'draft'" widget="many2many">
-                                <list>
-                                    <field name="name"/>
-                                    <field name="partner_id"/>
-                                    <field name="location_id"/>
-                                    <field name="location_dest_id"/>
-                                    <field name="date_planned"/>
-                                    <field name="state"/>
+                            <field name="picking_ids">
+                                <list editable="top" open_form_view="1" delete="false" create="false">
+                                    <field name="name" readonly="state != 'draft'"/>
+                                    <field name="origin" readonly="state != 'draft'"/>
+                                    <field name="partner_id" readonly="state != 'draft'"/>
+                                    <field name="location_id" readonly="state != 'draft'"/>
+                                    <field name="location_dest_id" readonly="state != 'draft'"/>
+                                    <field name="date_planned" readonly="state != 'draft'"/>
+                                    <field name="state" readonly="state != 'draft'"/>
                                     <field name="odometer_done"/>
                                 </list>
                             </field>
