@@ -43,8 +43,8 @@
                     <notebook>
                         <page string="Transfers" name="transfers">
                             <field name="allowed_picking_ids" invisible="1" />
-                            <field name="picking_ids">
-                                <list editable="top" open_form_view="1" delete="false" create="false">
+                            <field name="picking_ids" readonly="state == 'done'">
+                                <list editable="bottom" open_form_view="1">
                                     <field name="name" readonly="state != 'draft'"/>
                                     <field name="origin" readonly="state != 'draft'"/>
                                     <field name="partner_id" readonly="state != 'draft'"/>
