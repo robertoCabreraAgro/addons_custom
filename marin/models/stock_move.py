@@ -45,7 +45,7 @@ class StockMove(models.Model):
         return super()._action_confirm(merge, merge_into)
     
     def _compute_show_details_visible(self):
-        if self.env.user.has_group("stock.group_stock_manager"):
+        if self.env.user.has_group("stock.group_stock_user"):
             return super()._compute_show_details_visible()
         else:
             for move in self:
