@@ -128,7 +128,7 @@ class FleetVehicle(models.Model):
     def _compute_odometer(self):
         gps_vehicles = self.env["fleet.vehicle"]
         for vehicle in self:
-            vehicle.odometer = vehicle._get_gps_odometer()
+            vehicle.odometer = vehicle.get_current_odometer()
             if vehicle.odometer:
                 gps_vehicles |= vehicle
         return super(FleetVehicle, self - gps_vehicles)._compute_odometer()
@@ -356,26 +356,3 @@ class FleetVehicle(models.Model):
             "search_default_groupby_product_category_id": False,
         }
         return action
-
-    # ------------------------------------------------------------
-    #  HELPERS
-    # ------------------------------------------------------------
-
-    def _get_gps_tracking_device(self, date=False):
-        self.ensure_one()
-        domain = [("vehicle_id", "=", self.id)]
-        if date:
-            domain += [("timestamp", "<", date)]
-        return self.env["gps.tracking.device"].search(domain, order="id desc", limit=1)
-
-    def _get_gps_odometer(self, date=False):
-        """Get odometer reading from GPS"""
-        self.ensure_one()
-        gps_device = self._get_gps_tracking_device(date=date)
-        return round(gps_device.last_point_id.odometer / 1000, 2)
-
-    def _get_gps_fuel_level(self, date=False):
-        """Get fuel level reading from GPS"""
-        self.ensure_one()
-        gps_device = self._get_gps_tracking_device(date=date)
-        return round(gps_device.last_point_id.fuel_level, 2)

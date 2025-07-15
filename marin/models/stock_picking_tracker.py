@@ -400,22 +400,24 @@ class StockPickingTracker(models.Model):
     def action_update_odometer_start(self):
         """Action to get odometer from GPS at start a route"""
         self.ensure_one()
-        self.odometer_start = self.vehicle_id._get_gps_odometer()
+        self.odometer_start = self.vehicle_id.get_current_odometer()
 
     def action_update_fuel_start(self):
         """Action to get fuel level from GPS at start a route"""
         self.ensure_one()
-        self.fuel_start = self.vehicle_id._get_gps_fuel_level()
+        fuel_data = self.vehicle_id.get_current_fuel()
+        self.fuel_start = fuel_data.get('percentage', 0) if fuel_data else 0
 
     def action_update_odometer_end(self):
         """Action to get odometer from GPS at end a route"""
         self.ensure_one()
-        self.odometer_end = self.vehicle_id._get_gps_odometer()
+        self.odometer_end = self.vehicle_id.get_current_odometer()
 
     def action_update_fuel_end(self):
         """Action to get fuel level from GPS at end a route"""
         self.ensure_one()
-        self.fuel_end = self.vehicle_id._get_gps_fuel_level()
+        fuel_data = self.vehicle_id.get_current_fuel()
+        self.fuel_end = fuel_data.get('percentage', 0) if fuel_data else 0
 
     def action_view_pickings(self):
         self.ensure_one()
