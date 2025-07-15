@@ -37,7 +37,11 @@ class MxEdiToRecordWizard(models.TransientModel):
 
         line_vals = {"document_id": document.id, "action": "create", "move_id": False}
 
-        if not document.datas or document.l10n_mx_edi_is_cfdi_payment or document.l10n_mx_edi_is_cfdi_payroll:
+        if (
+            not document.datas
+            or document.l10n_mx_edi_is_cfdi_payment
+            or document.l10n_mx_edi_is_cfdi_payroll
+        ):
             line_vals["action"] = "none"
             return line_vals
 
@@ -70,20 +74,31 @@ class MxEdiToRecordWizard(models.TransientModel):
 
         # Preserve existing documents but recompute all other values
         document_ids = self.line_ids.mapped("document_id")
-        self.line_ids = [(5, 0, 0)] + [(0, 0, self._prepare_line_vals(doc)) for doc in document_ids]
+        self.line_ids = [(5, 0, 0)] + [
+            (0, 0, self._prepare_line_vals(doc)) for doc in document_ids
+        ]
 
     @api.model
     def default_get(self, fields_list):
         """Initialize wizard with lines from selected documents."""
         res = super().default_get(fields_list)
         document_ids = self.env["documents.document"]
-        if self._context.get("active_ids") and self._context.get("active_model") == "documents.document":
-            document_ids = self.env["documents.document"].browse(self._context.get("active_ids", []))
+        if (
+            self._context.get("active_ids")
+            and self._context.get("active_model") == "documents.document"
+        ):
+            document_ids = self.env["documents.document"].browse(
+                self._context.get("active_ids", [])
+            )
         elif self._context.get("default_document_ids"):
-            document_ids = self.env["documents.document"].browse(self._context.get("default_document_ids", []))
+            document_ids = self.env["documents.document"].browse(
+                self._context.get("default_document_ids", [])
+            )
 
         if document_ids:
-            res["line_ids"] = [(0, 0, self._prepare_line_vals(doc)) for doc in document_ids]
+            res["line_ids"] = [
+                (0, 0, self._prepare_line_vals(doc)) for doc in document_ids
+            ]
 
         return res
 
@@ -101,14 +116,15 @@ class MxEdiToRecordWizard(models.TransientModel):
         Raises:
             UserError: If any error occurs during processing
         """
-        move_ids = []
         account_move = self.env["account.move"]
         mx_edi_document = self.env["l10n_mx_edi.document"]
-        # Process only lines that require action (filter out 'none' actions)
-        for line in self.line_ids.filtered(lambda ln: ln.action != "none"):
-            document = line.document_id
-            move = line.move_id
 
+        # Process only lines that require action (filter out 'none' actions)
+        lines_to_process = self.line_ids.filtered(lambda ln: ln.action != "none")
+
+        # Pre-validation: Check all documents before processing
+        for line in lines_to_process:
+            document = line.document_id
             if document.l10n_mx_edi_is_cfdi_payment:
                 raise UserError(
                     self.env._(
@@ -117,97 +133,50 @@ class MxEdiToRecordWizard(models.TransientModel):
                     )
                 )
 
-            # Create new move if required
-            if line.action == "create":
-                try:
-                    # Step 1: Extract and validate CFDI data
-                    cfdi_infos = mx_edi_document._decode_cfdi_attachment(document.raw)
-                    uuid = cfdi_infos.get("uuid", "").upper()
-                    if not uuid:
-                        raise UserError(self.env._("Could not extract UUID from document %s", document.name))
+        # Separate lines by action type
+        create_lines = lines_to_process.filtered(lambda ln: ln.action == "create")
 
-                    # Step 2: Prepare invoice values from CFDI
-                    vals = mx_edi_document._prepare_invoice_vals(cfdi_infos, self.journal_id)
-                    vals.update({"l10n_mx_edi_cfdi_uuid": uuid})
-
-                    # Step 3: Create the account move
-                    move = account_move.create(vals)
-                except Exception as e:
-                    raise UserError(
-                        self.env._("Error creating invoice from document {}: {}").format(document.name, str(e))
-                    )
-
-            # Update document and move relationship
-            try:
-                attachment = document.attachment_id
-
-                # Link the attachment to the account move
-                attachment.with_context(no_document=True).write(
-                    {
-                        "res_model": "account.move",
-                        "res_id": move.id,
-                    }
+        # Prepare values for batch creation
+        vals_list = []
+        for line in create_lines:
+            # Step 1: Extract and validate CFDI data
+            document = line.document_id
+            cfdi_infos = mx_edi_document._decode_cfdi_attachment(document.raw)
+            uuid = cfdi_infos.get("uuid", "").upper()
+            if not uuid:
+                raise UserError(
+                    self.env._("Could not extract UUID from document %s", document.name)
                 )
 
-                # Ensure CFDI attachment is set on the move if missing
-                if not move.l10n_mx_edi_cfdi_uuid:
-                    cfdi_infos = mx_edi_document._decode_cfdi_attachment(document.raw)
-                    move.l10n_mx_edi_cfdi_uuid = cfdi_infos.get("uuid", "").upper()
+            # Step 2: Prepare invoice values from CFDI
+            vals = mx_edi_document._prepare_invoice_vals(cfdi_infos, self.journal_id)
+            try:
+                with self.env.cr.savepoint():
+                    move = account_move.create(vals)
+                    line.move_id = move
+            except UserError as e:
+                msg = self.env._(
+                    "The invoice could not be created for the following reason: %(error_message)s",
+                    error_message=e,
+                )
+                document.message_post(body=msg, message_type="comment")
+                continue
 
-                move_ids.append(move.id)
-
-                # Create MX Document for Vendor Bills
-                file_data_list = attachment._unwrap_edi_attachments()
-                for file_data in file_data_list:
-                    # Import CFDI if it's a valid CFDI file and no documents exist yet
-                    if file_data.get("is_cfdi", False) and not move.l10n_mx_edi_invoice_document_ids:
-                        account_move._l10n_mx_edi_import_cfdi_invoice(move, file_data)
-
-                move.l10n_mx_edi_cfdi_try_sat()
-
-                # If cancelled CFDI cancel account move
-                if move.l10n_mx_edi_cfdi_sat_state == "cancelled":
-                    move.action_post()
-                    move.button_cancel()
-
-            except Exception as e:
-                raise UserError(self.env._("Error assigning invoice to document {}: {}").format(document.name, str(e)))
-
-        # Return appropriate action based on results
-        if not move_ids:
-            return {"type": "ir.actions.act_window_close"}
-
-        action = {
-            "type": "ir.actions.act_window",
-            "res_model": "account.move",
-            "name": self.env._("Vendor Bills"),
-            "view_mode": "list,form",
-            "domain": [("id", "in", move_ids)],
-            "context": dict(self._context),
-        }
-
-        # For single move, show form view directly
-        if len(move_ids) == 1:
-            record = account_move.browse(move_ids[0])
-            action.update(
-                {
-                    "view_mode": "form",
-                    "views": [(record.get_formview_id(), "form")],
-                    "res_id": move_ids[0],
-                }
-            )
-
-        return action
+        return lines_to_process._process_moves_attachments()
 
 
 class MxEdiToRecordLine(models.TransientModel):
     _name = "documents.mx_edi_to_record_line"
 
-    wizard_id = fields.Many2one("documents.mx_edi_to_record_wizard", required=True, ondelete="cascade")
+    wizard_id = fields.Many2one(
+        "documents.mx_edi_to_record_wizard", required=True, ondelete="cascade"
+    )
     document_id = fields.Many2one("documents.document", required=True, readonly=True)
     partner_id = fields.Many2one(related="document_id.partner_id", readonly=True)
     journal_id = fields.Many2one(related="wizard_id.journal_id", readonly=True)
-    allowed_move_ids = fields.Many2many("account.move", compute="_compute_allowed_move_ids")
+    allowed_move_ids = fields.Many2many(
+        "account.move", compute="_compute_allowed_move_ids"
+    )
     action = fields.Selection(
         selection=[
             ("create", "Create"),
@@ -230,13 +199,20 @@ class MxEdiToRecordLine(models.TransientModel):
         mx_edi_document = self.env["l10n_mx_edi.document"]
         account_move = self.env["account.move"]
         for line in self:
-            if line.action != "assign" or not line.document_id or not line.document_id.datas or not line.journal_id:
+            if (
+                line.action != "assign"
+                or not line.document_id
+                or not line.document_id.datas
+                or not line.journal_id
+            ):
                 line.allowed_move_ids = False
                 continue
 
             allowed_moves = account_move
             try:
-                cfdi_infos = mx_edi_document._decode_cfdi_attachment(line.document_id.raw)
+                cfdi_infos = mx_edi_document._decode_cfdi_attachment(
+                    line.document_id.raw
+                )
                 existing_move = account_move.search(
                     [
                         ("l10n_mx_edi_cfdi_uuid", "=", cfdi_infos.get("uuid")),
@@ -268,7 +244,9 @@ class MxEdiToRecordLine(models.TransientModel):
 
                     if emission_date_str:
                         try:
-                            emission_date = fields.Date.from_string(emission_date_str.split()[0])
+                            emission_date = fields.Date.from_string(
+                                emission_date_str.split()[0]
+                            )
                             date_domain = [
                                 "|",
                                 "|",
@@ -286,7 +264,9 @@ class MxEdiToRecordLine(models.TransientModel):
                             ]
                             strict_domain = expression.AND([strict_domain, date_domain])
                         except Exception:
-                            _logger.info("CFDI date parsing failed: %s", emission_date_str)
+                            _logger.info(
+                                "CFDI date parsing failed: %s", emission_date_str
+                            )
 
                     allowed_moves = account_move.search(strict_domain, limit=10)
 
@@ -298,9 +278,93 @@ class MxEdiToRecordLine(models.TransientModel):
                             ("amount_total", "<=", amount_total + tolerance),
                         ]
                         if supplier_rfc and line.partner_id:
-                            flexible_domain.append(("partner_id.vat", "=", supplier_rfc))
+                            flexible_domain.append(
+                                ("partner_id.vat", "=", supplier_rfc)
+                            )
                         allowed_moves = account_move.search(flexible_domain, limit=10)
             except Exception as e:
                 _logger.error("Allowed moves computation failed: %s", str(e))
 
             line.allowed_move_ids = allowed_moves
+
+    def _process_moves_attachments(self):
+        mx_edi_document = self.env["l10n_mx_edi.document"]
+        account_move = self.env["account.move"]
+        processed_moves = account_move
+
+        for line in self:
+            document = line.document_id
+            move = line.move_id
+            if not move or not document:
+                continue
+
+            # Update document and move relationship
+            attachment = document.attachment_id
+
+            # Link the attachment to the account move
+            attachment.with_context(no_document=True).write(
+                {
+                    "res_model": "account.move",
+                    "res_id": move.id,
+                }
+            )
+
+            try:
+                # Ensure CFDI attachment is set on the move if missing
+                if not move.l10n_mx_edi_cfdi_uuid:
+                    document = line.document_id
+                    cfdi_infos = mx_edi_document._decode_cfdi_attachment(document.raw)
+                    move.l10n_mx_edi_cfdi_uuid = cfdi_infos.get("uuid", "").upper()
+
+                # Create MX Document for Vendor Bills
+                file_data_list = attachment._unwrap_edi_attachments()
+                for file_data in file_data_list:
+                    # Import CFDI if it's a valid CFDI file and no documents exist yet
+                    if (
+                        file_data.get("is_cfdi", False)
+                        and not move.l10n_mx_edi_invoice_document_ids
+                    ):
+                        account_move._l10n_mx_edi_import_cfdi_invoice(move, file_data)
+
+                move.l10n_mx_edi_cfdi_try_sat()
+
+                # If cancelled CFDI cancel account move
+                if move.l10n_mx_edi_cfdi_sat_state == "cancelled":
+                    move.with_context(amounts_match_validation=False).action_post()
+                    move.button_cancel()
+
+            except UserError as e:
+                msg = self.env._(
+                    "The invoice could not be assigned for the following reason: %(error_message)s",
+                    error_message=e,
+                )
+                document.message_post(body=msg, message_type="comment")
+                continue
+
+            processed_moves |= move
+
+        # Return appropriate action based on results
+        if not processed_moves:
+            return {"type": "ir.actions.act_window_close"}
+
+        action = {
+            "type": "ir.actions.act_window",
+            "res_model": "account.move",
+            "name": self.env._("Vendor Bills"),
+            "view_mode": "list,form",
+            "domain": [("id", "in", processed_moves.ids)],
+            "context": dict(self._context),
+        }
+
+        # For single move, show form view directly
+        if len(processed_moves) == 1:
+            record = account_move.browse(processed_moves.id)
+            action.update(
+                {
+                    "view_mode": "form",
+                    "views": [(record.get_formview_id(), "form")],
+                    "res_id": processed_moves.id,
+                }
+            )
+
+        return action

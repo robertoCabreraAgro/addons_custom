@@ -312,7 +312,10 @@ class AccountMove(models.Model):
         return True
 
     def action_post(self):
-        self._pre_post_invoice_edi_amounts_match_validation()
+        amounts_match_validation = self._context.get("amounts_match_validation", True)
+        if amounts_match_validation:
+            self._pre_post_invoice_edi_amounts_match_validation()
+
         res = self._authorize_credit_limit()
         if res is not True:
             return res

@@ -303,6 +303,7 @@ class Document(models.Model):
         - Assign appropriate tags and folder
         - Link the document to the corresponding company
         """
+        self.ensure_one()
         mx_edi_document = self.env["l10n_mx_edi.document"]
         cfdi_infos = mx_edi_document._decode_cfdi_attachment(self.raw)
         if not cfdi_infos or not cfdi_infos.get("uuid"):
@@ -319,10 +320,8 @@ class Document(models.Model):
             "folder_id": self._documents_l10n_mx_edi_get_folder(cfdi_infos["supplier_rfc"]).id,
             "l10n_mx_edi_is_cfdi": True,
             "tag_ids": [Command.link(tag_id) for tag_id in self._prepare_l10n_mx_edi_tags(cfdi_infos)],
+            "company_id": company.id,
         }
-
-        if company and not self.company_id:
-            update_vals["company_id"] = company.id
 
         self.write(update_vals)
 
