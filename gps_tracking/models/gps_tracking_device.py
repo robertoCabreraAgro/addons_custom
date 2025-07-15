@@ -15,6 +15,12 @@ class GpsTrackingDevice(models.Model):
         string="IMEI",
         required=True,
     )
+    config_id = fields.Many2one(
+        comodel_name="gps.tracking.config",
+        string="GPS Configuration",
+        required=True,
+        help="Configuration for interpreting GPS device data",
+    )
     vehicle_id = fields.Many2one(
         comodel_name="fleet.vehicle",
         string="Vehícle",
@@ -154,7 +160,7 @@ class GpsTrackingDevice(models.Model):
                 continue
 
             last_report_utc = fields.Datetime.to_datetime(device.timestamp).replace(tzinfo=utc)
-            
+
             inactive_duration = now_utc - last_report_utc
 
             if inactive_duration >= timedelta(hours=2):
@@ -211,3 +217,88 @@ class GpsTrackingDevice(models.Model):
                 device.history_route = f"LINESTRING({', '.join(coords)})"
             else:
                 device.history_route = False
+
+    @api.constrains('vehicle_id', 'config_id')
+    def _check_vehicle_config_association(self):
+        """Validate that device has configuration when associated with vehicle."""
+        for device in self:
+            if device.vehicle_id and not device.config_id:
+                raise ValueError(
+                    "GPS device must have a configuration assigned before "
+                    "associating it with a vehicle."
+                )
+
+    def get_odometer_at(self, target_datetime):
+        """Get corrected odometer reading at specific datetime.
+
+        Args:
+            target_datetime (datetime): Target datetime for odometer reading
+
+        Returns:
+            float: Corrected odometer value or False if not available
+        """
+        self.ensure_one()
+        if not self.config_id:
+            raise ValueError("Device must have a configuration to get odometer reading")
+
+        # Find the closest tracking point to the target datetime
+        point = self.env['gps.tracking.point'].search([
+            ('device_id', '=', self.id),
+            ('timestamp', '<=', target_datetime)
+        ], order='timestamp desc', limit=1)
+
+        if not point:
+            return False
+
+        # Use odometer or total_odometer based on configuration
+        if self.config_id.reports_odometer:
+            raw_odometer = point.odometer or 0
+        else:
+            raw_odometer = point.total_odometer or 0
+        return self.config_id.get_corrected_odometer(raw_odometer)
+
+    def get_fuel_at(self, target_datetime):
+        """Get fuel level at specific datetime based on configuration.
+
+        Args:
+            target_datetime (datetime): Target datetime for fuel reading
+
+        Returns:
+            dict: Dictionary with 'percentage' and 'liters' keys, or False if not available
+        """
+        self.ensure_one()
+        if not self.config_id:
+            raise ValueError("Device must have a configuration to get fuel reading")
+
+        # Find the closest tracking point to the target datetime
+        point = self.env['gps.tracking.point'].search([
+            ('device_id', '=', self.id),
+            ('timestamp', '<=', target_datetime)
+        ], order='timestamp desc', limit=1)
+
+        if not point:
+            return False
+
+        # Get fuel data from point
+        fuel_percentage = point.fuel_level
+        fuel_deciliters = point.fuel_level_l  # This field is in deciliters
+
+        # Convert based on configuration
+        percentage = self.config_id.get_fuel_level_percentage(
+            fuel_percentage=fuel_percentage,
+            fuel_deciliters=fuel_deciliters
+        )
+        liters = self.config_id.get_fuel_level_liters(
+            fuel_percentage=fuel_percentage,
+            fuel_deciliters=fuel_deciliters
+        )
+
+        if percentage is False and liters is False:
+            return False
+
+        return {
+            'percentage': percentage,
+            'liters': liters,
+            'raw_percentage': fuel_percentage,
+            'raw_deciliters': fuel_deciliters,
+        }

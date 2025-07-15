@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- GPS Tracking Configuration Form View -->
+    <record id="view_gps_tracking_config_form" model="ir.ui.view">
+        <field name="name">gps.tracking.config.form</field>
+        <field name="model">gps.tracking.config</field>
+        <field name="arch" type="xml">
+            <form string="GPS Tracking Configuration">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Configuration Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Statistics">
+                            <field name="device_count"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Odometer Configuration">
+                            <group>
+                                <field name="reports_odometer"/>
+                                <field name="odometer_correction_factor"/>
+                            </group>
+                        </page>
+                        
+                        <page string="Fuel Configuration">
+                            <group>
+                                <group string="Fuel Reporting Capabilities">
+                                    <field name="reports_fuel_percentage"/>
+                                    <field name="reports_fuel_volume"/>
+                                    <field name="reports_historical_consumption"/>
+                                </group>
+                                <group string="Tank Configuration">
+                                    <field name="fuel_tank_capacity" invisible="not reports_fuel_percentage"/>
+                                </group>
+                            </group>
+                        </page>
+                        
+                        
+                        <page string="Associated Devices">
+                            <field name="device_ids" readonly="1">
+                                <list>
+                                    <field name="imei"/>
+                                    <field name="vehicle_id"/>
+                                    <field name="license_plate"/>
+                                    <field name="driver_name"/>
+                                </list>
+                            </field>
+                        </page>
+                        
+                        <page string="Notes">
+                            <field name="notes" nolabel="1" placeholder="Additional notes about this configuration..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- GPS Tracking Configuration List View -->
+    <record id="view_gps_tracking_config_list" model="ir.ui.view">
+        <field name="name">gps.tracking.config.list</field>
+        <field name="model">gps.tracking.config</field>
+        <field name="arch" type="xml">
+            <list string="GPS Tracking Configurations">
+                <field name="name"/>
+                <field name="reports_odometer"/>
+                <field name="reports_fuel_percentage"/>
+                <field name="reports_fuel_volume"/>
+                <field name="device_count"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- GPS Tracking Configuration Search View -->
+    <record id="view_gps_tracking_config_search" model="ir.ui.view">
+        <field name="name">gps.tracking.config.search</field>
+        <field name="model">gps.tracking.config</field>
+        <field name="arch" type="xml">
+            <search string="GPS Tracking Configurations">
+                <field name="name"/>
+                <separator/>
+                <filter string="Reports Odometer" name="reports_odometer" domain="[('reports_odometer', '=', True)]"/>
+                <filter string="Reports Fuel Percentage" name="fuel_percentage" domain="[('reports_fuel_percentage', '=', True)]"/>
+                <filter string="Reports Fuel Volume" name="fuel_volume" domain="[('reports_fuel_volume', '=', True)]"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="Fuel Reporting" name="group_fuel_reporting" 
+                            context="{'group_by': 'reports_fuel_percentage'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- GPS Tracking Configuration Action -->
+    <record id="action_gps_tracking_config" model="ir.actions.act_window">
+        <field name="name">GPS Tracking Configurations</field>
+        <field name="res_model">gps.tracking.config</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first GPS tracking configuration!
+            </p>
+            <p>
+                GPS tracking configurations define how to interpret data from different
+                types of GPS devices. Each configuration specifies odometer reporting,
+                fuel reporting capabilities, and correction factors.
+            </p>
+        </field>
+    </record>
+
+</odoo>

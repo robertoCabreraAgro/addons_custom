@@ -10,9 +10,13 @@
                 <field name="license_plate" />
                 <field name="imei" />
                 <field name="location" />
+                <field name="config_id" />
                 <filter string="Con Ubicación" name="with_location" domain="[('location', '!=', False)]"/>
                 <filter string="Sin Ubicación" name="without_location" domain="[('location', '=', False)]"/>
+                <filter string="Con Configuración" name="with_config" domain="[('config_id', '!=', False)]"/>
+                <filter string="Sin Configuración" name="without_config" domain="[('config_id', '=', False)]"/>
                 <group expand="0" string="Agrupar por">
+                    <filter string="Configuración GPS" name="group_by_config" context="{'group_by': 'config_id'}"/>
                     <filter string="Ubicación" name="group_by_location" context="{'group_by': 'location'}"/>
                     <filter string="Modelo de Vehículo" name="group_by_model" context="{'group_by': 'model_id'}"/>
                 </group>
@@ -27,6 +31,7 @@
         <field name="arch" type="xml">
             <list string="GPS Tracking Devices" decoration-danger="inactivity_status == 'inactive_alert'">
                 <field name="imei" />
+                <field name="config_id" />
                 <field name="license_plate" />
                 <field name="driver_name" />
                 <field name="location" optional="hide" />
@@ -83,6 +88,7 @@
                     <group>
                         <group>
                             <field name="imei" />
+                            <field name="config_id" />
                             <field name="vehicle_id" />
                             <field name="license_plate" />
                             <field name="driver_name" />
