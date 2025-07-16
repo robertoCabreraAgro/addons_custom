@@ -21,9 +21,6 @@ class FleetVehicle(models.Model):
 
         Returns:
             float: Odometer value in configured units or False if not available
-
-        Raises:
-            ValidationError: If no GPS device or configuration found
         """
         self.ensure_one()
 
@@ -31,9 +28,7 @@ class FleetVehicle(models.Model):
         device = self.gps_device_ids.filtered(lambda d: d.config_id)[:1]
 
         if not device:
-            raise ValidationError(
-                f"Vehicle {self.name} has no GPS device with configuration assigned"
-            )
+            return False
 
         return device.get_odometer_at(target_datetime)
 
@@ -45,9 +40,6 @@ class FleetVehicle(models.Model):
 
         Returns:
             dict: Dictionary with fuel data or False if not available
-
-        Raises:
-            ValidationError: If no GPS device or configuration found
         """
         self.ensure_one()
 
@@ -55,9 +47,7 @@ class FleetVehicle(models.Model):
         device = self.gps_device_ids.filtered(lambda d: d.config_id)[:1]
 
         if not device:
-            raise ValidationError(
-                f"Vehicle {self.name} has no GPS device with configuration assigned"
-            )
+            return False
 
         return device.get_fuel_at(target_datetime)
 
