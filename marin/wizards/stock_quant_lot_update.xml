@@ -8,11 +8,12 @@
                 <group name="group_origin" string="Origin">
                     <field name="quant_id" invisible="1" force_save="1" />
                     <field name="product_id" force_save="1" />
+                    <field name="lot_rule_id" force_save="1" readonly ="1"/>
                     <field name="lot_id" force_save="1" />
                     <field name="max_quantity" string="Quantity" force_save="1" />
                 </group>
                 <group name="group_destination" string="Destination">
-                    <field name="dest_lot_id" />
+                    <field name="dest_lot_id" context="{'default_product_id': product_id, 'default_lot_rule_id': lot_rule_id}"/>
                     <field name="quantity" string="Transfer quantity" />
                 </group>
                 <footer>

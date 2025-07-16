@@ -32,6 +32,11 @@ class StockQuantLotUpdate(models.TransientModel):
         required=True,
         help="Quantity to be transfered to the destintation lot.",
     )
+    lot_rule_id = fields.Many2one(
+        comodel_name="stock.lot.rule",
+        string="Lot Rule",
+        help="Rule used for this lot nomenclature and date calculations",
+    )
 
     @api.model
     def default_get(self, fields_list):
@@ -44,6 +49,9 @@ class StockQuantLotUpdate(models.TransientModel):
                 {
                     "quant_id": quant.id,
                     "quantity": quant.quantity,
+                    "product_id": quant.product_id.id,
+                    "lot_id": quant.lot_id.id,
+                    "lot_rule_id": quant.lot_id.lot_rule_id.id if quant.lot_id else quant.product_id.lot_rule_id.id,
                 }
             )
         return res
