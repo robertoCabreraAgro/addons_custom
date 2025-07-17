@@ -110,7 +110,7 @@ class FleetVehicleLoanReport(models.Model):
             tdp.work_hours_status,
             start_point.odometer AS odometer_start,
             end_point.odometer AS odometer_end,
-            tdp.start_time AT TIME ZONE 'UTC' AT TIME ZONE 'America/Mexico_City' AS date_start,
+            tdp.start_time AS date_start,
             CASE EXTRACT(DOW FROM tdp.start_time AT TIME ZONE 'UTC' AT TIME ZONE 'America/Mexico_City')
                 WHEN 0 THEN 'Domingo'
                 WHEN 1 THEN 'Lunes'
@@ -120,7 +120,7 @@ class FleetVehicleLoanReport(models.Model):
                 WHEN 5 THEN 'Viernes'
                 WHEN 6 THEN 'Sábado'
             END AS weekday_start,
-            tdp.end_time AT TIME ZONE 'UTC' AT TIME ZONE 'America/Mexico_City' AS date_end,
+            tdp.end_time AS date_end,
             CASE EXTRACT(DOW FROM tdp.end_time AT TIME ZONE 'UTC' AT TIME ZONE 'America/Mexico_City')
                 WHEN 0 THEN 'Domingo'
                 WHEN 1 THEN 'Lunes'
