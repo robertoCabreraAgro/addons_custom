@@ -286,11 +286,13 @@ class GpsTrackingDevice(models.Model):
         # Convert based on configuration
         percentage = self.config_id.get_fuel_level_percentage(
             fuel_percentage=fuel_percentage,
-            fuel_deciliters=fuel_deciliters
+            fuel_deciliters=fuel_deciliters,
+            vehicle=self.vehicle_id
         )
         liters = self.config_id.get_fuel_level_liters(
             fuel_percentage=fuel_percentage,
-            fuel_deciliters=fuel_deciliters
+            fuel_deciliters=fuel_deciliters,
+            vehicle=self.vehicle_id
         )
 
         if percentage is False and liters is False:

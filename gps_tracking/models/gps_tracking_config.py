@@ -42,10 +42,6 @@ class GpsTrackingConfig(models.Model):
         default=False,
         help="Whether this device tracks historical fuel consumption"
     )
-    fuel_tank_capacity = fields.Float(
-        string="Fuel Tank Capacity (Liters)",
-        help="Tank capacity for converting percentage to liters (if needed)"
-    )
 
     notes = fields.Text(
         string="Notes",
@@ -78,12 +74,6 @@ class GpsTrackingConfig(models.Model):
             if config.odometer_correction_factor <= 0:
                 raise ValueError("Odometer correction factor must be positive")
 
-    @api.constrains('fuel_tank_capacity')
-    def _check_fuel_tank_capacity(self):
-        """Validate fuel tank capacity if provided."""
-        for config in self:
-            if config.fuel_tank_capacity and config.fuel_tank_capacity <= 0:
-                raise ValueError("Fuel tank capacity must be positive")
 
     def get_corrected_odometer(self, raw_odometer):
         """Apply correction factor to raw odometer reading.
@@ -99,12 +89,13 @@ class GpsTrackingConfig(models.Model):
             return 0.0
         return raw_odometer * self.odometer_correction_factor
 
-    def get_fuel_level_liters(self, fuel_percentage=None, fuel_deciliters=None):
+    def get_fuel_level_liters(self, fuel_percentage=None, fuel_deciliters=None, vehicle=None):
         """Get fuel level in liters based on configuration.
 
         Args:
             fuel_percentage (float): Fuel level as percentage (0-100)
             fuel_deciliters (float): Fuel level in deciliters
+            vehicle (fleet.vehicle): Vehicle record to get tank capacity from
 
         Returns:
             float: Fuel level in liters, or False if cannot be determined
@@ -117,17 +108,18 @@ class GpsTrackingConfig(models.Model):
 
         # If device reports percentage and we have tank capacity, convert it
         if (self.reports_fuel_percentage and fuel_percentage is not None 
-            and self.fuel_tank_capacity):
-            return (fuel_percentage / 100.0) * self.fuel_tank_capacity
+            and vehicle and vehicle.fuel_tank_capacity):
+            return (fuel_percentage / 100.0) * vehicle.fuel_tank_capacity
 
         return False
 
-    def get_fuel_level_percentage(self, fuel_percentage=None, fuel_deciliters=None):
+    def get_fuel_level_percentage(self, fuel_percentage=None, fuel_deciliters=None, vehicle=None):
         """Get fuel level as percentage based on configuration.
 
         Args:
             fuel_percentage (float): Fuel level as percentage (0-100)
             fuel_deciliters (float): Fuel level in deciliters
+            vehicle (fleet.vehicle): Vehicle record to get tank capacity from
 
         Returns:
             float: Fuel level as percentage, or False if cannot be determined
@@ -140,8 +132,8 @@ class GpsTrackingConfig(models.Model):
 
         # If device reports deciliters and we have tank capacity, convert it
         if (self.reports_fuel_volume and fuel_deciliters is not None 
-            and self.fuel_tank_capacity):
+            and vehicle and vehicle.fuel_tank_capacity):
             fuel_liters = fuel_deciliters / 10.0  # Convert deciliters to liters
-            return (fuel_liters / self.fuel_tank_capacity) * 100.0
+            return (fuel_liters / vehicle.fuel_tank_capacity) * 100.0
 
         return False

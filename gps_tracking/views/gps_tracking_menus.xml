@@ -8,12 +8,6 @@
             action="action_gps_tracking_device"
             sequence="10" />
 
-        <menuitem id="menu_gps_tracking_config"
-            name="Configurations"
-            action="action_gps_tracking_config"
-            sequence="15"
-            groups="group_gps_tracking_manager" />
-
         <menuitem id="menu_gps_tracking_dashboard"
             name="Dashboard"
             action="action_gps_tracking_client_action"
@@ -49,6 +43,17 @@
                 name="Préstamos de Vehículos"
                 action="action_fleet_vehicle_loan_report"
                 sequence="50" />
+        </menuitem>
+
+        <menuitem id="menu_gps_tracking_configuration"
+            name="Configuration"
+            groups="group_gps_tracking_manager"
+            sequence="60">
+
+            <menuitem id="menu_gps_tracking_config"
+                name="Device configurations"
+                action="action_gps_tracking_config"
+                sequence="10" />
         </menuitem>
     </menuitem>
 </odoo>

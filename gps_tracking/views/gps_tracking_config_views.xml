@@ -23,7 +23,7 @@
                         <page string="Odometer Configuration">
                             <group>
                                 <field name="reports_odometer"/>
-                                <field name="odometer_correction_factor"/>
+                                <field name="odometer_correction_factor" digits="[10,6]"/>
                             </group>
                         </page>
                         
@@ -34,12 +34,8 @@
                                     <field name="reports_fuel_volume"/>
                                     <field name="reports_historical_consumption"/>
                                 </group>
-                                <group string="Tank Configuration">
-                                    <field name="fuel_tank_capacity" invisible="not reports_fuel_percentage"/>
-                                </group>
                             </group>
                         </page>
-                        
                         
                         <page string="Associated Devices">
                             <field name="device_ids" readonly="1">
@@ -71,6 +67,8 @@
                 <field name="reports_odometer"/>
                 <field name="reports_fuel_percentage"/>
                 <field name="reports_fuel_volume"/>
+                <field name="reports_historical_consumption"/>
+                <field name="odometer_correction_factor" digits="[10,6]"/>
                 <field name="device_count"/>
             </list>
         </field>
