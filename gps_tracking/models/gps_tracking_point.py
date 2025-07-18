@@ -78,6 +78,7 @@ class GpsTrackingPoint(models.Model):
     isf_check_engine_indicator = fields.Integer(string="ISF Check Engine Indicator")
     iccid1 = fields.Char(string="ICCID1")
     total_odometer = fields.Integer(string="Total Odometer")
+    real_odometer = fields.Float(string="Real Odometer", digits=(16, 2), help="Corrected odometer reading based on device configuration")
     fuel_level_l = fields.Float(string="Fuel Level (L)", digits=(16, 2))
     engine_total_hours = fields.Float(string="Engine Total Hours", digits=(16, 2))
     fuel_consumed_counted = fields.Float(string="Fuel Consumed Counted", digits=(16, 2))
@@ -93,6 +94,24 @@ class GpsTrackingPoint(models.Model):
         for point in self:
             point.driver_name = point.device_id.driver_name
 
+    def _compute_real_odometer(self):
+        """Calculate real odometer reading based on device configuration"""
+        for point in self:
+            if not point.device_id or not point.device_id.config_id:
+                point.real_odometer = 0.0
+                continue
+
+            config = point.device_id.config_id
+
+            # Use odometer or total_odometer based on configuration
+            if config.reports_odometer:
+                raw_odometer = point.odometer or 0
+            else:
+                raw_odometer = point.total_odometer or 0
+
+            # Apply configuration correction
+            point.real_odometer = config.get_corrected_odometer(raw_odometer)
+
     @api.depends("latitude", "longitude")
     def _compute_the_point(self):
         transformer = Transformer.from_crs(4326, 3857, always_xy=True)
@@ -105,6 +124,13 @@ class GpsTrackingPoint(models.Model):
                 point.the_point = f"POINT({x} {y})"
             elif point.the_point:
                 _logger.info(f"Punto ya calculado: {point.the_point}")
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        """Override create to calculate real_odometer for new points"""
+        points = super().create(vals_list)
+        points._compute_real_odometer()
+        return points
 
     def _compute_address(self):
         #     api_key = ''  #Sustituye por tu clave de API

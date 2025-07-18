@@ -115,6 +115,9 @@ class GpsTrackingDevice(models.Model):
     odometer = fields.Integer(
         related="last_point_id.odometer", store=True, string="Odometer"
     )
+    real_odometer = fields.Float(
+        related="last_point_id.real_odometer", store=True, string="Real Odometer"
+    )
     color = fields.Selection(
         selection=[
             ("#FF0000", "Rojo"),
@@ -228,34 +231,6 @@ class GpsTrackingDevice(models.Model):
                     "associating it with a vehicle."
                 )
 
-    def get_odometer_at(self, target_datetime):
-        """Get corrected odometer reading at specific datetime.
-
-        Args:
-            target_datetime (datetime): Target datetime for odometer reading
-
-        Returns:
-            float: Corrected odometer value or False if not available
-        """
-        self.ensure_one()
-        if not self.config_id:
-            raise ValueError("Device must have a configuration to get odometer reading")
-
-        # Find the closest tracking point to the target datetime
-        point = self.env['gps.tracking.point'].search([
-            ('device_id', '=', self.id),
-            ('timestamp', '<=', target_datetime)
-        ], order='timestamp desc', limit=1)
-
-        if not point:
-            return False
-
-        # Use odometer or total_odometer based on configuration
-        if self.config_id.reports_odometer:
-            raw_odometer = point.odometer or 0
-        else:
-            raw_odometer = point.total_odometer or 0
-        return self.config_id.get_corrected_odometer(raw_odometer)
 
     def get_fuel_at(self, target_datetime):
         """Get fuel level at specific datetime based on configuration.

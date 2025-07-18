@@ -14,13 +14,13 @@ class FleetVehicle(models.Model):
     )
 
     def get_odometer_at(self, target_datetime):
-        """Get odometer reading at specific datetime using GPS configuration.
+        """Get odometer reading at specific datetime using real_odometer field.
 
         Args:
             target_datetime (datetime): Target datetime for odometer reading
 
         Returns:
-            float: Odometer value in configured units or False if not available
+            float: Odometer value from real_odometer field or False if not available
         """
         self.ensure_one()
 
@@ -30,7 +30,16 @@ class FleetVehicle(models.Model):
         if not device:
             return False
 
-        return device.get_odometer_at(target_datetime)
+        # Find the closest tracking point to the target datetime
+        point = self.env['gps.tracking.point'].search([
+            ('device_id', '=', device.id),
+            ('timestamp', '<=', target_datetime)
+        ], order='timestamp desc', limit=1)
+
+        if not point:
+            return False
+
+        return point.real_odometer
 
     def get_fuel_at(self, target_datetime):
         """Get fuel level at specific datetime using GPS configuration.
