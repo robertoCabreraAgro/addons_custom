@@ -8,6 +8,7 @@
             <xpath expr="//list" position="inside">
                 <field name="qty_fuel" optional="hidden" />
                 <field name="efficiency" optional="hidden" />
+                <field name="vendor_id" optional="hidden" />
             </xpath>
             <xpath expr="//field[@name='driver_id']" position="attributes">
                 <attribute name="invisible" />

@@ -105,6 +105,46 @@ class FleetVehicleLogImport(models.TransientModel):
 
         return numeric_part
 
+    def _find_or_create_vendor(self, rfc, station_number):
+        """Find or create vendor (res.partner) by RFC
+
+        Args:
+            rfc (str): RFC of the service station
+            station_number (str): Station number for naming
+
+        Returns:
+            record: Found or created res.partner record, or False if RFC empty
+        """
+        if not rfc:
+            return False
+
+        # Clean and normalize RFC - remove hyphens and spaces
+        rfc = rfc.strip().upper().replace('-', '')
+
+        # Search for existing partner with this RFC
+        existing_partner = self.env['res.partner'].search([
+            ('vat', '=', rfc),
+            ('supplier', '=', True)
+        ], limit=1)
+
+        if existing_partner:
+            return existing_partner
+
+        # Create new partner
+        partner_vals = {
+            'name': station_number,
+            'vat': rfc,
+            'is_company': True,
+            'supplier': True,
+            'country_id': self.env.ref("base.mx"),
+        }
+
+        try:
+            return self.env['res.partner'].create(partner_vals)
+        except Exception as e:
+            _logger.warning(f"Failed to create vendor with RFC {rfc}: {str(e)}")
+            return False
+
     def _find_vehicle_by_highway_pass(self, highway_pass_number, filter_vehicles=None):
         """Find a vehicle by highway pass tag number
 
@@ -158,6 +198,8 @@ class FleetVehicleLogImport(models.TransientModel):
                 "Concepto",
                 "Litros",
                 "Rendimiento",
+                "Estacion",
+                "Estacion RFC",
             ]
             header = sheet[6]  # 7th row (0-indexed)
 
@@ -196,6 +238,13 @@ class FleetVehicleLogImport(models.TransientModel):
                         error_msg = f"Row {row_idx}: No vehicle found with fuel card '{row[column_map['Cuenta']]}'"
                         errors.append(error_msg)
                         continue
+
+                    # Extract RFC and station info for vendor mapping
+                    station_rfc = str(row[column_map["Estacion RFC"]]).strip() if row[column_map["Estacion RFC"]] else ""
+                    station_name = str(row[column_map["Estacion"]]).strip() if row[column_map["Estacion"]] else ""
+
+                    # Find or create vendor
+                    vendor = self._find_or_create_vendor(station_rfc, station_name)
                     amount = (float(row[column_map["Cargo"]]) if row[column_map["Cargo"]] else 0) - (
                         float(row[column_map["Abono"]]) if row[column_map["Abono"]] else 0
                     )
@@ -212,6 +261,7 @@ class FleetVehicleLogImport(models.TransientModel):
                         "efficiency": (float(row[column_map["Rendimiento"]]) if row[column_map["Rendimiento"]] else 0),
                         "product_category_id": fuel_category.id,
                         "product_id": fuel_product.id,
+                        "vendor_id": vendor.id if vendor else False,
                     }
 
                     # Check for duplicate records

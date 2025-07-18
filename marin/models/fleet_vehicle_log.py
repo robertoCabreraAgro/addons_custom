@@ -18,6 +18,12 @@ class FleetVehiclelog(models.Model):
         aggregator="avg",
         help="Fuel efficiency in kilometers per liter",
     )
+    vendor_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Vendor",
+        domain=[("supplier", "=", True)],
+        help="Service station or vendor where the fuel was purchased",
+    )
 
     def action_open_upload_wizard(self):
         return {
