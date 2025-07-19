@@ -94,7 +94,7 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
                         "longitude", 
                         "ignition", 
                         "speed", 
-                        "odometer", 
+                        "real_odometer", 
                         "timestamp",
                         "movement",  
                         "fuel_consumed_counted"
@@ -208,7 +208,7 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
                         "longitude", 
                         "ignition", 
                         "speed", 
-                        "odometer", 
+                        "real_odometer", 
                         "timestamp", 
                         "movement", 
                         "fuel_consumed_counted"
@@ -227,7 +227,7 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
                 );
                 const firstPoint = points[0];
                 
-                this.state.firstOdometers = firstPoint?.odometer || 0;
+                this.state.firstOdometers = firstPoint?.real_odometer || 0;
                 this.state.firstFuel = firstPoint?.fuel_consumed_counted || 0;
                 const lastPoint = points[points.length - 1]
                 this.renderDevicePath(device, coordinates, firstPoint, lastPoint);
@@ -335,7 +335,7 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
                 device: device.imei,
                 timestamp: point.timestamp || "Desconocido",
                 speed: point.speed || 0,
-                odometer: point.odometer || 0,
+                real_odometer: point.real_odometer || 0,
                 ignition: point.ignition,
                 movement: point.movement,
                 fuel_consumed_counted: point.fuel_consumed_counted || 0, 
@@ -361,7 +361,7 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
                 device: device.imei,
                 timestamp: firstPoint.timestamp,
                 speed: firstPoint.speed || 0,
-                odometer: firstPoint.odometer || 0
+                real_odometer: firstPoint.real_odometer || 0
             });
     
             firstFeature.setStyle(new ol.style.Style({
@@ -384,7 +384,7 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
                 device: device.imei,
                 timestamp: lastPoint.timestamp,
                 speed: lastPoint.speed || 0,
-                odometer: lastPoint.odometer || 0
+                real_odometer: lastPoint.real_odometer || 0
             });
     
             lastFeature.setStyle(new ol.style.Style({
@@ -487,7 +487,7 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
                     <i class="fa fa-power-off" style="margin-right: 5px;"></i>
                     ${ignition == 1 ? 'Encendido' : 'Apagado'}
                 </span><br/>
-                <strong>Odómetro Actual:</strong> ${currentOdometer} km<br/>
+                <strong>Odómetro:</strong> ${currentOdometer} km<br/>
                 <strong>Distancia Recorrida:</strong> ${distanceTraveled.toFixed(2)} km<br/>
                 <strong>Combustible Consumido:</strong> ${consumedFuel.toFixed(2)} L<br/>
                 <strong>Hora:</strong> ${formattedTime}<br/>

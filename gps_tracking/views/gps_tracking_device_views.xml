@@ -36,7 +36,7 @@
                 <field name="driver_name" />
                 <field name="location" optional="hide" />
                 <field name="model_id" />
-                <field name="odometer" />
+                <field name="real_odometer" />
                 <field name="speed" />
                 <field name="timestamp" />
                 <field name="inactivity_status" widget="badge" decoration-success="inactivity_status == 'active'" decoration-warning="inactivity_status == 'inactive_off_hours'" decoration-danger="inactivity_status == 'inactive_alert'"/>
