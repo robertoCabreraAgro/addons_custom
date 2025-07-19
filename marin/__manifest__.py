@@ -67,6 +67,7 @@
         # "users_working_hours",
         "syngenta_edi",
         "gps_tracking",
+        "stock_lot_rule",
     ],
     "data": [
         "security/res_groups.xml",
