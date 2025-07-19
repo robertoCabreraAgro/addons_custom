@@ -48,13 +48,25 @@
             </form>
         </field>
     </record>
-    <record id="abc_classification_profile_tree_view" model="ir.ui.view">
-        <field name="name">abc.classification.profile.tree (in product_abc_classification)</field>
+    <record id="abc_classification_profile_list_view" model="ir.ui.view">
+        <field name="name">abc.classification.profile.list (in product_abc_classification)</field>
         <field name="model">abc.classification.profile</field>
         <field name="arch" type="xml">
             <list>
                 <field name="name" />
+                <field name="profile_type" />
             </list>
+        </field>
+    </record>
+    <record id="abc_classification_profile_search_view" model="ir.ui.view">
+        <field name="name">abc.classification.profile.search (in product_abc_classification)</field>
+        <field name="model">abc.classification.profile</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="profile_type"/>
+                <filter string="Profile Type" name="profile_type" context="{'group_by': 'profile_type'}"/>
+            </search>
         </field>
     </record>
     <record id="abc_classification_profile_action" model="ir.actions.act_window">

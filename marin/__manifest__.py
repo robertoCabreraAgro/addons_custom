@@ -68,6 +68,7 @@
         "syngenta_edi",
         "gps_tracking",
         "stock_lot_rule",
+        "product_abc_classification_sale_stock",
     ],
     "data": [
         "security/res_groups.xml",

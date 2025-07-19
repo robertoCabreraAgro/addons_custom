@@ -6,7 +6,9 @@
         <field name="inherit_id" ref="product_abc_classification.abc_classification_profile_form_view" />
         <field name="arch" type="xml">
             <field name="profile_type" position="after">
-                <field name="warehouse_id" invisible="profile_type != 'sale_stock'" />
+                <field name="warehouse_id" 
+                       invisible="profile_type != 'sale_stock'"
+                       required="profile_type == 'sale_stock'" />
             </field>
             <xpath expr="//field[@name='period']" position="attributes">
               <attribute name="invisible">profile_type != 'sale_stock' or interval_type != 'days'</attribute>
@@ -24,6 +26,37 @@
                        options="{'no_create': True, 'no_create_edit': True}"
                        domain="[('type_id.name', '=', 'AG'), ('active', '=', True)]"/>
             </xpath>
+        </field>
+    </record>
+
+    <record id="abc_classification_profile_list_view" model="ir.ui.view">
+        <field name="name">abc.classification.profile.sale.stock.list</field>
+        <field name="model">abc.classification.profile</field>
+        <field name="inherit_id" ref="product_abc_classification.abc_classification_profile_list_view" />
+        <field name="arch" type="xml">
+            <field name="profile_type" position="after">
+                <field name="warehouse_id" string="Warehouse"/>
+                <field name="interval_type" string="Interval"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="abc_classification_profile_search_view" model="ir.ui.view">
+        <field name="name">abc.classification.profile.sale.stock.search</field>
+        <field name="model">abc.classification.profile</field>
+        <field name="inherit_id" ref="product_abc_classification.abc_classification_profile_search_view" />
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="warehouse_id" string="Warehouse"/>
+                <field name="date_range_ids" string="Seasons"/>
+            </field>
+            <filter name="profile_type" position="after">
+                <filter string="Sale Stock Profiles" name="sale_stock_profiles" domain="[('profile_type', '=', 'sale_stock')]"/>
+                <filter string="Seasonal Profiles" name="seasonal_profiles" domain="[('interval_type', '=', 'seasons')]"/>
+                <separator/>
+                <filter string="Group by Warehouse" name="group_by_warehouse" context="{'group_by': 'warehouse_id'}"/>
+                <filter string="Group by Interval Type" name="group_by_interval" context="{'group_by': 'interval_type'}"/>
+            </filter>
         </field>
     </record>
 </odoo>

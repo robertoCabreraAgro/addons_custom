@@ -4,6 +4,7 @@
 from freezegun import freeze_time
 
 from odoo.tests.common import TransactionCase
+from odoo.exceptions import ValidationError
 
 
 class TestABCClassificationProfile(TransactionCase):
@@ -288,3 +289,199 @@ class TestABCClassificationProfile(TransactionCase):
             }
         )
         void_profile._compute_abc_classification()
+
+    def test_warehouse_season_overlap_validation(self):
+        """Test that overlapping seasons for the same warehouse are prevented."""
+        # Create test date ranges that overlap
+        date_range_1 = self.env["date.range"].create(
+            {
+                "name": "Test Spring-Summer 2024",
+                "date_start": "2024-03-01",
+                "date_end": "2024-10-31",
+                "type_id": self.env.ref("date_range.type_month").id,
+                "active": True,
+            }
+        )
+
+        date_range_2 = self.env["date.range"].create(
+            {
+                "name": "Test Autumn-Winter 2024",
+                "date_start": "2024-09-01",  # Overlaps with previous range
+                "date_end": "2025-03-31",
+                "type_id": self.env.ref("date_range.type_month").id,
+                "active": True,
+            }
+        )
+
+        # Create first profile with spring-summer season
+        profile_1 = self.env["abc.classification.profile"].create(
+            {
+                "name": "Test Profile 1",
+                "profile_type": "sale_stock",
+                "warehouse_id": self.warehouse.id,
+                "interval_type": "seasons",
+                "date_range_ids": [(6, 0, [date_range_1.id])],
+                "level_ids": [
+                    (6, 0, [self.level_A.id, self.level_B.id, self.level_C.id])
+                ],
+            }
+        )
+
+        # Try to create second profile with overlapping season for same warehouse
+        with self.assertRaises(ValidationError) as cm:
+            self.env["abc.classification.profile"].create(
+                {
+                    "name": "Test Profile 2",
+                    "profile_type": "sale_stock",
+                    "warehouse_id": self.warehouse.id,  # Same warehouse
+                    "interval_type": "seasons",
+                    "date_range_ids": [
+                        (6, 0, [date_range_2.id])
+                    ],  # Overlapping date range
+                    "level_ids": [
+                        (6, 0, [self.level_A.id, self.level_B.id, self.level_C.id])
+                    ],
+                }
+            )
+
+        self.assertIn("overlapping season", str(cm.exception))
+
+    def test_different_warehouse_same_season_allowed(self):
+        """Test that same seasons for different warehouses are allowed."""
+        # Create a second warehouse
+        warehouse_2 = self.env["stock.warehouse"].create(
+            {
+                "name": "Test Warehouse 2",
+                "code": "TST2",
+            }
+        )
+
+        # Create test date range
+        date_range = self.env["date.range"].create(
+            {
+                "name": "Test Spring-Summer 2024",
+                "date_start": "2024-03-01",
+                "date_end": "2024-10-31",
+                "type_id": self.env.ref("date_range.type_month").id,
+                "active": True,
+            }
+        )
+
+        # Create first profile for warehouse 1
+        profile_1 = self.env["abc.classification.profile"].create(
+            {
+                "name": "Test Profile Warehouse 1",
+                "profile_type": "sale_stock",
+                "warehouse_id": self.warehouse.id,
+                "interval_type": "seasons",
+                "date_range_ids": [(6, 0, [date_range.id])],
+                "level_ids": [
+                    (6, 0, [self.level_A.id, self.level_B.id, self.level_C.id])
+                ],
+            }
+        )
+
+        # Create second profile for warehouse 2 with same season - should be allowed
+        profile_2 = self.env["abc.classification.profile"].create(
+            {
+                "name": "Test Profile Warehouse 2",
+                "profile_type": "sale_stock",
+                "warehouse_id": warehouse_2.id,  # Different warehouse
+                "interval_type": "seasons",
+                "date_range_ids": [(6, 0, [date_range.id])],  # Same date range
+                "level_ids": [
+                    (6, 0, [self.level_A.id, self.level_B.id, self.level_C.id])
+                ],
+            }
+        )
+
+        # Should not raise any exception
+        self.assertTrue(profile_1.id)
+        self.assertTrue(profile_2.id)
+
+    def test_non_overlapping_seasons_same_warehouse_allowed(self):
+        """Test that non-overlapping seasons for the same warehouse are allowed."""
+        # Create test date ranges that don't overlap
+        date_range_1 = self.env["date.range"].create(
+            {
+                "name": "Test Spring-Summer 2024",
+                "date_start": "2024-03-01",
+                "date_end": "2024-08-31",
+                "type_id": self.env.ref("date_range.type_month").id,
+                "active": True,
+            }
+        )
+
+        date_range_2 = self.env["date.range"].create(
+            {
+                "name": "Test Autumn-Winter 2024",
+                "date_start": "2024-09-01",  # No overlap
+                "date_end": "2025-02-28",
+                "type_id": self.env.ref("date_range.type_month").id,
+                "active": True,
+            }
+        )
+
+        # Create first profile
+        profile_1 = self.env["abc.classification.profile"].create(
+            {
+                "name": "Test Profile Spring-Summer",
+                "profile_type": "sale_stock",
+                "warehouse_id": self.warehouse.id,
+                "interval_type": "seasons",
+                "date_range_ids": [(6, 0, [date_range_1.id])],
+                "level_ids": [
+                    (6, 0, [self.level_A.id, self.level_B.id, self.level_C.id])
+                ],
+            }
+        )
+
+        # Create second profile with non-overlapping season - should be allowed
+        profile_2 = self.env["abc.classification.profile"].create(
+            {
+                "name": "Test Profile Autumn-Winter",
+                "profile_type": "sale_stock",
+                "warehouse_id": self.warehouse.id,  # Same warehouse
+                "interval_type": "seasons",
+                "date_range_ids": [(6, 0, [date_range_2.id])],  # Non-overlapping
+                "level_ids": [
+                    (6, 0, [self.level_A.id, self.level_B.id, self.level_C.id])
+                ],
+            }
+        )
+
+        # Should not raise any exception
+        self.assertTrue(profile_1.id)
+        self.assertTrue(profile_2.id)
+
+    def test_profile_name_generation(self):
+        """Test automatic profile name generation."""
+        # Create test date ranges with geographic information
+        date_range_east = self.env["date.range"].create(
+            {
+                "name": "East valleys Spring - Summer 2024",
+                "date_start": "2024-03-01",
+                "date_end": "2024-08-31",
+                "type_id": self.env.ref("date_range.type_month").id,
+                "active": True,
+            }
+        )
+
+        # Create profile without name to test auto-generation
+        profile = self.env["abc.classification.profile"].create(
+            {
+                "profile_type": "sale_stock",
+                "warehouse_id": self.warehouse.id,
+                "interval_type": "seasons",
+                "date_range_ids": [(6, 0, [date_range_east.id])],
+                "level_ids": [
+                    (6, 0, [self.level_A.id, self.level_B.id, self.level_C.id])
+                ],
+            }
+        )
+
+        # Test name generation method
+        suggested_name = profile._generate_profile_name()
+        self.assertIn("Test Warehouse", suggested_name)
+        self.assertIn("East valleys", suggested_name)
+        self.assertIn("spring", suggested_name)

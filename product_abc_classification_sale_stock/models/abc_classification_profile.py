@@ -76,6 +76,115 @@ class AbcClassificationProfile(models.Model):
                         self.env._("At least one selected season must be active.")
                     )
 
+    @api.constrains("warehouse_id", "date_range_ids", "profile_type", "interval_type")
+    def _check_warehouse_season_overlap(self):
+        """Prevent overlapping seasons for the same warehouse."""
+        for rec in self:
+            if (
+                rec.profile_type == "sale_stock"
+                and rec.interval_type == "seasons"
+                and rec.warehouse_id
+                and rec.date_range_ids
+            ):
+                # Search for other profiles with same warehouse and overlapping date ranges
+                domain = [
+                    ("id", "!=", rec.id),
+                    ("profile_type", "=", "sale_stock"),
+                    ("interval_type", "=", "seasons"),
+                    ("warehouse_id", "=", rec.warehouse_id.id),
+                ]
+                other_profiles = self.search(domain)
+
+                for other_profile in other_profiles:
+                    if not other_profile.date_range_ids:
+                        continue
+
+                    # Check for overlapping date ranges
+                    for current_range in rec.date_range_ids:
+                        for other_range in other_profile.date_range_ids:
+                            # Check if date ranges overlap
+                            if (
+                                current_range.date_start <= other_range.date_end
+                                and current_range.date_end >= other_range.date_start
+                            ):
+                                raise ValidationError(
+                                    self.env._(
+                                        "Warehouse '{warehouse}' already has a profile '{other_profile}' "
+                                        "with overlapping season '{other_season}' (from {start} to {end}). "
+                                        "Current season '{current_season}' overlaps with it."
+                                    ).format(
+                                        warehouse=rec.warehouse_id.name,
+                                        other_profile=other_profile.name,
+                                        other_season=other_range.name,
+                                        start=other_range.date_start,
+                                        end=other_range.date_end,
+                                        current_season=current_range.name,
+                                    )
+                                )
+
+    def _generate_profile_name(self):
+        """Generate profile name in format 'Warehouse | Zone | Season1 - Season2'."""
+        self.ensure_one()
+        if not self.warehouse_id or not self.date_range_ids:
+            return ""
+
+        warehouse_name = self.warehouse_id.name
+
+        # Extract geographical zone from season names
+        # Looking for patterns like "East valleys", "High central valleys", etc.
+        zones = set()
+        seasons = set()
+
+        for date_range in self.date_range_ids:
+            name_parts = date_range.name.split()
+            # Extract zone (everything before the season words)
+            zone_parts = []
+            season_parts = []
+            capturing_zone = True
+
+            for part in name_parts:
+                if part.lower() in ["spring", "summer", "autumn", "winter", "autum"]:
+                    capturing_zone = False
+
+                if capturing_zone and part.lower() not in [
+                    "2018",
+                    "2019",
+                    "2020",
+                    "2021",
+                    "2022",
+                    "2023",
+                    "2024",
+                    "2025",
+                ]:
+                    zone_parts.append(part)
+                elif not capturing_zone and part.lower() in [
+                    "spring",
+                    "summer",
+                    "autumn",
+                    "winter",
+                    "autum",
+                ]:
+                    season_parts.append(part.lower().replace("autum", "autumn"))
+
+            if zone_parts:
+                zones.add(" ".join(zone_parts))
+            if season_parts:
+                seasons.update(season_parts)
+
+        # Build the name components
+        zone_str = list(zones)[0] if zones else "Unknown zone"
+        season_str = " - ".join(sorted(seasons)) if seasons else "Unknown season"
+
+        return f"{warehouse_name} | {zone_str} | {season_str}"
+
+    @api.onchange("warehouse_id", "date_range_ids", "interval_type")
+    def _onchange_suggest_name(self):
+        """Suggest profile name based on warehouse and seasons."""
+        if self.profile_type == "sale_stock" and self.interval_type == "seasons":
+            suggested_name = self._generate_profile_name()
+            if suggested_name and not self.name:
+                self.name = suggested_name
+
     @api.model
     def _get_collected_data_class(self):
         return SaleStockData
