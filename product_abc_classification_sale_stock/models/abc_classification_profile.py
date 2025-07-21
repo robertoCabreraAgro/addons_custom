@@ -556,7 +556,7 @@ class AbcClassificationProfile(models.Model):
 
     def _log_history(self, sale_stock_data_list):
         """Log collected and computed values into
-        abc.sale_stock.level.history
+        abc.classification.product.level.history
 
         """
         vals = StringIO()
@@ -564,7 +564,7 @@ class AbcClassificationProfile(models.Model):
         for sale_stock_data in sale_stock_data_list:
             writer.writerow(sale_stock_data._to_csv_line())
         vals.seek(0)
-        table = self.env["abc.sale_stock.level.history"]._table
+        table = self.env["abc.classification.product.level.history"]._table
         columns = sale_stock_data_list[0]._get_col_names()
         self.env.cr.copy_from(vals, table, columns=columns, sep=";")
         self.env["abc.classification.product.level"].invalidate_model(
@@ -577,7 +577,7 @@ class SaleStockData:
 
     This class is used to store all the data collectd and computed for
     a abc classification product level. It also provide methods used to bulk
-    insert these data into the abc.sale_stock.level.history table.
+    insert these data into the abc.classification.product.level.history table.
 
     """
 
@@ -626,7 +626,7 @@ class SaleStockData:
         """Return the ordered list of column names related to the values
         returned by _to_csv_line
 
-        We use the name of the columns defined into abc.sale_stock.level.history
+        We use the name of the columns defined into abc.classification.product.level.history
         """
         return [
             "product_id",

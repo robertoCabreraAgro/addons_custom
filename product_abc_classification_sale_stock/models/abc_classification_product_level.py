@@ -8,6 +8,6 @@ class AbcClassificationProductLevel(models.Model):
     _inherit = "abc.classification.product.level"
 
     sale_stock_level_history_ids = fields.One2many(
-        comodel_name="abc.sale_stock.level.history",
+        comodel_name="abc.classification.product.level.history",
         inverse_name="product_level_id",
     )

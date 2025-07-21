@@ -28,10 +28,10 @@ msgstr "Perfil de clasificación Abc"
 
 #. module: product_abc_classification_sale_stock
 #: model:ir.actions.act_window,name:product_abc_classification_sale_stock.abc_sale_stock_level_history_act_window
-#: model:ir.model,name:product_abc_classification_sale_stock.model_abc_sale_stock_level_history
+#: model:ir.model,name:product_abc_classification_sale_stock.model_abc_classification_product_level_history
 #: model:ir.ui.menu,name:product_abc_classification_sale_stock.abc_sale_stock_level_history_menu
-msgid "Abc Sale_stock Level History"
-msgstr "Abc Sale_stock Nivel Histórico"
+msgid "ABC Classification History"
+msgstr "Historial de Clasificación ABC"
 
 #. module: product_abc_classification_sale_stock
 #: model:ir.model.fields.selection,name:product_abc_classification_sale_stock.selection__abc_classification_profile__profile_type__sale_stock
@@ -237,3 +237,93 @@ msgstr "Almacén"
 #, python-format
 msgid "You must specify a warehouse for {profile_name}"
 msgstr "Debe especificar un almacén para {profile_name}"
+
+#. module: product_abc_classification_sale_stock
+#: model:ir.model.fields,field_description:product_abc_classification_sale_stock.field_abc_classification_product_level_history__season
+msgid "Season"
+msgstr "Estación"
+
+#. module: product_abc_classification_sale_stock
+#: model:ir.model.fields,field_description:product_abc_classification_sale_stock.field_abc_classification_product_level_history__zone
+msgid "Zone"
+msgstr "Zona"
+
+#. module: product_abc_classification_sale_stock
+#: model:ir.model.fields,field_description:product_abc_classification_sale_stock.field_abc_classification_product_level_history__classification_variance
+msgid "Classification Variance"
+msgstr "Variación de Clasificación"
+
+#. module: product_abc_classification_sale_stock
+#: model:ir.model.fields,field_description:product_abc_classification_sale_stock.field_abc_classification_product_level_history__season_performance
+msgid "Season Performance"
+msgstr "Rendimiento Estacional"
+
+#. module: product_abc_classification_sale_stock
+#: model_terms:ir.ui.view,arch_db:product_abc_classification_sale_stock.abc_classification_history_pivot_view
+msgid "ABC Seasonal Analysis"
+msgstr "Análisis ABC Estacional"
+
+#. module: product_abc_classification_sale_stock
+#: model_terms:ir.ui.view,arch_db:product_abc_classification_sale_stock.abc_classification_history_graph_view
+msgid "ABC Seasonal Performance"
+msgstr "Rendimiento ABC Estacional"
+
+#. module: product_abc_classification_sale_stock
+#: model_terms:ir.ui.view,arch_db:product_abc_classification_sale_stock.abc_sale_stock_level_history_search_view
+msgid "ABC Level"
+msgstr "Nivel ABC"
+
+#. module: product_abc_classification_sale_stock
+#: model_terms:ir.ui.view,arch_db:product_abc_classification_sale_stock.abc_sale_stock_level_history_search_view
+msgid "Level A"
+msgstr "Nivel A"
+
+#. module: product_abc_classification_sale_stock
+#: model_terms:ir.ui.view,arch_db:product_abc_classification_sale_stock.abc_sale_stock_level_history_search_view
+msgid "Level B"
+msgstr "Nivel B"
+
+#. module: product_abc_classification_sale_stock
+#: model_terms:ir.ui.view,arch_db:product_abc_classification_sale_stock.abc_sale_stock_level_history_search_view
+msgid "Level C"
+msgstr "Nivel C"
+
+#. module: product_abc_classification_sale_stock
+#: model_terms:ir.ui.view,arch_db:product_abc_classification_sale_stock.abc_sale_stock_level_history_search_view
+msgid "Spring-Summer"
+msgstr "Primavera-Verano"
+
+#. module: product_abc_classification_sale_stock
+#: model_terms:ir.ui.view,arch_db:product_abc_classification_sale_stock.abc_sale_stock_level_history_search_view
+msgid "Autumn-Winter"
+msgstr "Otoño-Invierno"
+
+#. module: product_abc_classification_sale_stock
+#: model:ir.model.fields,field_description:product_abc_classification_sale_stock.field_abc_classification_product_level_history__strategic_segment
+msgid "Strategic Segment"
+msgstr "Segmento Estratégico"
+
+#. module: product_abc_classification_sale_stock
+#: model:ir.model.fields.selection,name:product_abc_classification_sale_stock.selection__abc_classification_product_level_history__strategic_segment__seasonal_star
+msgid "Seasonal Star"
+msgstr "Estrella Estacional"
+
+#. module: product_abc_classification_sale_stock
+#: model:ir.model.fields.selection,name:product_abc_classification_sale_stock.selection__abc_classification_product_level_history__strategic_segment__business_pillar
+msgid "Business Pillar"
+msgstr "Pilar del Negocio"
+
+#. module: product_abc_classification_sale_stock
+#: model:ir.model.fields.selection,name:product_abc_classification_sale_stock.selection__abc_classification_product_level_history__strategic_segment__seasonal_niche
+msgid "Seasonal Niche"
+msgstr "Nicho Estacional"
+
+#. module: product_abc_classification_sale_stock
+#: model:ir.model.fields.selection,name:product_abc_classification_sale_stock.selection__abc_classification_product_level_history__strategic_segment__marginal_product
+msgid "Marginal Product"
+msgstr "Producto Marginal"
+
+#. module: product_abc_classification_sale_stock
+#: model_terms:ir.ui.view,arch_db:product_abc_classification_sale_stock.abc_sale_stock_level_history_search_view
+msgid "Strategic Segment"
+msgstr "Segmento Estratégico"

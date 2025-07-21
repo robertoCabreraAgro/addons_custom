@@ -17,9 +17,9 @@
         "date_range",
     ],
     "data": [
+        "security/ir.model.access.csv",
         "views/abc_classification_product_level.xml",
-        "security/abc_sale_stock_level_history.xml",
-        "views/abc_sale_stock_level_history.xml",
+        "views/abc_classification_product_level_history.xml",
         "views/abc_classification_profile.xml",
     ],
     "external_dependencies": {
