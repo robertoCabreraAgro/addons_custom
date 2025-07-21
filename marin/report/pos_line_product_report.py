@@ -91,13 +91,10 @@ class PosLineProductReport(models.Model):
         res = self._cr.fetchone()
         return res and res[0]
 
-    def refresh_concurrently(self):
+    def refresh(self):
         table = AsIs(self._table)
-        if not self._is_populated(table):
-            self._cr.execute(f"REFRESH MATERIALIZED VIEW {table}")
-            return
-
-        self._cr.execute(f"REFRESH MATERIALIZED VIEW CONCURRENTLY {table}")
+        command = f"REFRESH MATERIALIZED VIEW {"CONCURRENTLY" if self._is_populated() else ""} {table}"
+        self._cr.execute(command)
 
     def init(self):
         table = AsIs(self._table)
@@ -108,7 +105,7 @@ class PosLineProductReport(models.Model):
             self._cr.execute(f"CREATE MATERIALIZED VIEW {table} AS ({query})")
         else:
             # To avoid long time to update the module we create the view without data
-            # and later be populated by the cron that executes the method refresh_concurrently()
+            # and later be populated by the cron that executes the method refresh()
             self._cr.execute(
                 f"CREATE MATERIALIZED VIEW {table} AS ({query}) WITH NO DATA"
             )

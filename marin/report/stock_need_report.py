@@ -234,12 +234,10 @@ class StockNeed(models.Model):
                 ON pp.id = arly.product_id
         """
 
-    def refresh_concurrently(self):
+    def refresh(self):
         table = AsIs(self._table)
-        if not self._check_populated(table):
-            self._cr.execute("REFRESH MATERIALIZED VIEW %s" % (table,))
-            return
-        self._cr.execute("REFRESH MATERIALIZED VIEW CONCURRENTLY %s", (table,))
+        command = f"REFRESH MATERIALIZED VIEW {"CONCURRENTLY" if self._is_populated() else ""} {table}"
+        self._cr.execute(command)
 
     def _check_populated(self, table):
         self._cr.execute(
@@ -265,7 +263,7 @@ class StockNeed(models.Model):
             )
         else:
             # To avoid long time to update the module we create the view without data
-            # and later be populated by the cron that executes the method refresh_concurrently()
+            # and later be populated by the cron that executes the method refresh()
             self._cr.execute(
                 "CREATE MATERIALIZED VIEW %s AS (%s) WITH NO DATA",
                 (

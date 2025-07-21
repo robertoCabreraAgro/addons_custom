@@ -151,7 +151,7 @@ class InvoiceLineOut(models.Model):
         if not self._context.get("with_data"):
             # When calling with that context it will create the view and populate it
             # To avoid long time to update the module we create the view without data
-            # and later be populated by the cron that executes the method refresh_concurrently()
+            # and later be populated by the cron that executes the method refresh()
             command += " WITH NO DATA"
         self._cr.execute(command)
         self._cr.execute(f"CREATE UNIQUE INDEX id_{table} ON {table} (id)")
@@ -248,6 +248,7 @@ class InvoiceLineOut(models.Model):
                 f_price=self._field_to_sql(self._table, "price_subtotal", query),
                 f_qty=self._field_to_sql(self._table, "quantity", query),
             )
+
         elif aggregate_spec == "margin_percent:avg":
             return SQL(
                 """COALESCE(
@@ -257,14 +258,13 @@ class InvoiceLineOut(models.Model):
                 f_margin=self._field_to_sql(self._table, "margin", query),
                 f_subtotal=self._field_to_sql(self._table, "price_subtotal", query),
             )
+
         else:
             return super()._read_group_select(aggregate_spec, query)
 
-    def refresh_concurrently(self):
+    def refresh(self):
         table = AsIs(self._table)
-        command = f"REFRESH MATERIALIZED VIEW {table}"
-        if self._is_populated():
-            command += " CONCURRENTLY"
+        command = f"REFRESH MATERIALIZED VIEW {"CONCURRENTLY" if self._is_populated() else ""} {table}"
         self._cr.execute(command)
 
     # ------------------------------------------------------------

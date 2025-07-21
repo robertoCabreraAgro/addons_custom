@@ -17,7 +17,7 @@
         <field name="interval_type">minutes</field>
         <field name="user_id" ref="base.user_root" />
         <field name="state">code</field>
-        <field name="code">model.refresh_concurrently()</field>
+        <field name="code">model.refresh()</field>
     </record>
 
     <record id="ir_cron_initialize_invoice_line_in_report" model="ir.cron">
@@ -38,10 +38,10 @@
         <field name="interval_type">minutes</field>
         <field name="user_id" ref="base.user_root" />
         <field name="state">code</field>
-        <field name="code">model.refresh_concurrently()
-env["invoice.line.out.team.report"].refresh_concurrently()
-env["invoice.line.out.team.yearly.report"].refresh_concurrently()
-env["invoice.line.out.pos.report"].refresh_concurrently()</field>
+        <field name="code">model.refresh()
+env["invoice.line.out.team.report"].refresh()
+env["invoice.line.out.team.yearly.report"].refresh()
+env["invoice.line.out.pos.report"].refresh()</field>
     </record>
 
     <record id="ir_cron_initialize_invoice_line_out_report" model="ir.cron">
@@ -65,9 +65,9 @@ env["invoice.line.out.pos.report"].init()</field>
         <field name="interval_type">minutes</field>
         <field name="user_id" ref="base.user_root" />
         <field name="state">code</field>
-        <field name="code">model.refresh_concurrently()
-env["pos.line.report"].refresh_concurrently()
-env["pos.line.product.report"].refresh_concurrently()</field>
+        <field name="code">model.refresh()
+env["pos.line.report"].refresh()
+env["pos.line.product.report"].refresh()</field>
     </record>
 
     <record id="ir_cron_initialize_pos_line_report" model="ir.cron">
@@ -90,7 +90,7 @@ env["pos.line.product.report"].init()</field>
         <field name="interval_type">minutes</field>
         <field name="user_id" ref="base.user_root" />
         <field name="state">code</field>
-        <field name="code">model.refresh_concurrently()</field>
+        <field name="code">model.refresh()</field>
     </record>
 
     <record id="ir_cron_initialize_stock_need_report" model="ir.cron">

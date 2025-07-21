@@ -91,7 +91,7 @@ class PosLineReport(models.Model):
             self._cr.execute(f"CREATE MATERIALIZED VIEW {table} AS ({query})")
         else:
             # To avoid long time to update the module we create the view without data
-            # and later be populated by the cron that executes the method refresh_concurrently()
+            # and later be populated by the cron that executes the method refresh()
             self._cr.execute(
                 f"CREATE MATERIALIZED VIEW {table} AS ({query}) WITH NO DATA"
             )
@@ -160,11 +160,9 @@ class PosLineReport(models.Model):
     # HELPERS
     # ------------------------------------------------------------
 
-    def refresh_concurrently(self):
+    def refresh(self):
         table = AsIs(self._table)
-        command = f"REFRESH MATERIALIZED VIEW {table}"
-        if self._is_populated():
-            command += " CONCURRENTLY"
+        command = f"REFRESH MATERIALIZED VIEW {"CONCURRENTLY" if self._is_populated() else ""} {table}"
         self._cr.execute(command)
 
     # ------------------------------------------------------------
