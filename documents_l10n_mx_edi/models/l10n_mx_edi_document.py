@@ -611,6 +611,86 @@ class L10nMxEdiDocument(models.Model):
             partner_exist.message_post(body=msg)
         return partner_exist
 
+    def _create_ecc12_vehicle_logs(self, ecc12_node):
+        """Creates vehicle log records from ECC12 complement data.
+
+        Args:
+            ecc12_node (etree._Element): XML node of the ECC12 complement
+
+        Returns:
+            list: List of created fleet.vehicle.log records
+        """
+        fleet_vehicle_log = self.env["fleet.vehicle.log"]
+        fuel_category = self.env.ref("marin.product_category_vehicle_fuel")
+        fuel_debit_product = self.env.ref("marin.product_product_fuel_debit")
+        fuel_credit_product = self.env.ref("marin.product_product_fuel_credit")
+        ns = {"ecc12": "http://www.sat.gob.mx/EstadoDeCuentaCombustible12"}
+
+        created_logs = []
+
+        # Process each fuel concept line
+        for line in ecc12_node.findall("{*}Conceptos/{*}ConceptoEstadoDeCuentaCombustible", namespaces=ns):
+            # Extract data from ECC12 line
+            partner = self._search_partner_ecc12(line)
+            vehicle = self._search_vehicle_ecc12(line)
+
+            if not vehicle:
+                continue  # Skip if no vehicle found
+
+            # Parse date from line
+            fecha_str = line.get("Fecha")  # Format: "2025-06-18T15:19:51"
+            log_date = datetime.strptime(fecha_str, "%Y-%m-%dT%H:%M:%S").date()
+
+            # Extract amounts and quantities
+            quantity = float(line.get("Cantidad", 0.0))
+            unit_value = float(line.get("ValorUnitario", 0.0))
+            total_amount = float(line.get("Importe", 0.0))
+
+            # Determine if it's debit or credit (assume all fuel purchases are expenses)
+            amount = total_amount
+            fuel_product = fuel_credit_product if amount > 0 else fuel_debit_product
+
+            # Prepare log values
+            log_vals = {
+                "date": log_date,
+                "vehicle_id": vehicle.id,
+                "amount": amount,
+                "odometer": 0,  # ECC12 doesn't provide odometer
+                "state": "done",
+                "notes": f"ECC12 - Station: {line.get('ClaveEstacion')} - Operation: {line.get('FolioOperacion')}",
+                "qty_fuel": quantity,
+                "efficiency": 0.0,  # ECC12 doesn't provide efficiency  
+                "product_category_id": fuel_category.id,
+                "product_id": fuel_product.id,
+                "vendor_id": partner.id if partner else False,
+            }
+
+            # Check for duplicate records (without notes to avoid conflicts between Efectivale and ECC12)
+            existing_record = fleet_vehicle_log.search([
+                ("vehicle_id", "=", log_vals["vehicle_id"]),
+                ("date", "=", log_vals["date"]),
+                ("amount", "=", log_vals["amount"]),
+                ("qty_fuel", "=", log_vals["qty_fuel"]),
+                ("product_category_id", "=", fuel_category.id),
+                ("product_id", "=", fuel_product.id),
+            ], limit=1)
+
+            if not existing_record:
+                # Create the vehicle log record
+                created_log = fleet_vehicle_log.create(log_vals)
+                created_logs.append(created_log)
+                _logger.info(
+                    "Created vehicle log for vehicle %s: %s liters on %s",
+                    vehicle.name, quantity, log_date
+                )
+            else:
+                _logger.info(
+                    "Skipped duplicate vehicle log for vehicle %s on %s",
+                    vehicle.name, log_date
+                )
+
+        return created_logs
+
     def _prepare_ecc12_invoice_line_vals(self, ecc12_node):
         """Prepares invoice line values from ECC12 (Estado de Cuenta Combustible) CFDI complement.
 
@@ -930,6 +1010,8 @@ class L10nMxEdiDocument(models.Model):
         )
         if ecc12_node is not None:
             invoice_lines.extend(self._prepare_ecc12_invoice_line_vals(ecc12_node))
+            # Create vehicle logs from ECC12 data
+            self._create_ecc12_vehicle_logs(ecc12_node)
         else:
             invoice_lines.extend(
                 self._prepare_invoice_line_vals(cfdi_node, partner=partner)
