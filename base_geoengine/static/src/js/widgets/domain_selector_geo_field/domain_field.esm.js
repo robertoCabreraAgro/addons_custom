@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
-import {DomainField} from "@web/views/fields/domain/domain_field";
-import {registry} from "@web/core/registry";
+import {DomainField, domainField} from "@web/views/fields/domain/domain_field";
 
 export class DomainFieldExtend extends DomainField {
     async loadCount(props) {
@@ -22,6 +21,7 @@ export class DomainFieldExtend extends DomainField {
                 [domain],
                 {context: this.getContext(props)}
             );
+            // eslint-disable-next-line no-unused-vars
         } catch (_e) {
             // WOWL TODO: rethrow error when not the expected type
             Object.assign(this.state, {recordCount: 0, isValid: false});
@@ -31,8 +31,4 @@ export class DomainFieldExtend extends DomainField {
     }
 }
 
-export const domainFieldExtend = {
-    component: DomainFieldExtend,
-};
-
-registry.category("fields").add("extend_domain", domainFieldExtend, {force: true});
+domainField.component = DomainFieldExtend;

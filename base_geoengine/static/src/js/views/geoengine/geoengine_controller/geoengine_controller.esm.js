@@ -4,19 +4,19 @@
  * Copyright 2023 ACSONE SA/NV
  */
 
-import {Layout} from "@web/search/layout";
-import {_t} from "@web/core/l10n/translation";
-import {useModelWithSampleData} from "@web/model/model";
-import {extractFieldsFromArchInfo} from "@web/model/relational_model/utils";
-import {usePager} from "@web/search/pager_hook";
-import {useOwnedDialogs, useService} from "@web/core/utils/hooks";
+import {Component, useState} from "@odoo/owl";
 import {FormViewDialog} from "@web/views/view_dialogs/form_view_dialog";
+import {Layout} from "@web/search/layout";
+import {SearchBar} from "@web/search/search_bar/search_bar";
 import {WarningDialog} from "@web/core/errors/error_dialogs";
-import {Component, useState, useRef} from "@odoo/owl";
+import {_t} from "@web/core/l10n/translation";
+import {extractFieldsFromArchInfo} from "@web/model/relational_model/utils";
 import {session} from "@web/session";
 import {standardViewProps} from "@web/views/standard_view_props";
-import { SearchBar } from "@web/search/search_bar/search_bar";
-import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
+import {useModelWithSampleData} from "@web/model/model";
+import {useOwnedDialogs, useService} from "@web/core/utils/hooks";
+import {usePager} from "@web/search/pager_hook";
+import {useSearchBarToggler} from "@web/search/search_bar/search_bar_toggler";
 
 export class GeoengineController extends Component {
     /**
@@ -53,21 +53,44 @@ export class GeoengineController extends Component {
     }
     get modelParams() {
         const {resModel, archInfo, limit, defaultGroupBy} = this.props;
-        const {activeFields, fields} = extractFieldsFromArchInfo(
+        const {fields} = extractFieldsFromArchInfo(this.archInfo, this.props.fields);
+        let {activeFields} = extractFieldsFromArchInfo(
             this.archInfo,
             this.props.fields
         );
+        if (!("id" in activeFields))
+            activeFields = {
+                ...activeFields,
+                id: {
+                    context: "{}",
+                    forceSave: false,
+                    invisible: "1",
+                    isHandle: false,
+                    onChange: false,
+                    readonly: "True",
+                    required: "False",
+                },
+            };
 
-        const modelConfig = this.props.state?.modelState?.config || {
-            resModel: resModel,
-            fields,
-            activeFields,
-            openGroupsByDefault: true,
-        };
+        const modelConfig =
+            this.props.state &&
+            this.props.state.modelState &&
+            this.props.state.modelState.config
+                ? this.props.state.modelState.config
+                : {
+                      resModel: resModel,
+                      fields: fields,
+                      activeFields: activeFields,
+                      openGroupsByDefault: true,
+                  };
+        this.props.searchMenuTypes = this.props.searchMenuTypes || [];
 
         return {
             config: modelConfig,
-            state: this.props.state?.modelState,
+            state:
+                this.props.state && this.props.state.modelState
+                    ? this.props.state.modelState
+                    : null,
             limit: archInfo.limit || limit,
             countLimit: archInfo.countLimit,
             defaultOrderBy: archInfo.defaultOrder,
@@ -92,6 +115,7 @@ export class GeoengineController extends Component {
      * Allow you to open the form editing view for the filled-in model.
      * @param {*} resModel
      * @param {*} resId
+     * @param {*} viewId
      */
     async openRecord(resModel, resId, viewId) {
         const {views} = await this.view.loadViews({resModel, views: [[false, "form"]]});
@@ -146,7 +170,7 @@ export class GeoengineController extends Component {
      * This method is called when you click on discard button after edit a spatial representation.
      */
     async onClickDiscard() {
-        await this.model.root.editedRecord?.discard();
+        await this.model.root.editedRecord.discard();
         this.state.isSavedOrDiscarded = true;
     }
 

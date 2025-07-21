@@ -17,6 +17,7 @@ class GeoRasterLayerType(models.Model):
 class GeoRasterLayer(models.Model):
     _name = "geoengine.raster.layer"
     _description = "Raster Layer"
+    _order = "sequence ASC, name"
 
     raster_type = fields.Selection(
         [
@@ -48,9 +49,10 @@ class GeoRasterLayer(models.Model):
     params = fields.Char(help="Dictiorary of values for dimensions as JSON")
 
     # wms options
-    params_wms = fields.Char("Params", help="Need to provide at least a LAYERS param")
+    params_wms = fields.Char(help="Need to provide at least a LAYERS param")
     server_type = fields.Char(
-        help="The type of the remote WMS server: mapserver, geoserver, carmentaserver, or qgis",
+        help="The type of the remote WMS server: mapserver, \
+            geoserver, carmentaserver, or qgis",
     )
 
     # technical field to display or not layer type -- Not used

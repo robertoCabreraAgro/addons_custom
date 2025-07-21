@@ -10,7 +10,7 @@ from odoo import _, fields
 from odoo.tools import sql
 
 from . import geo_convertion_helper as convert
-from .geo_db import create_geo_column
+from .geo_db import create_geo_column, create_geo_index
 
 logger = logging.getLogger(__name__)
 try:
@@ -30,15 +30,20 @@ class GeoField(fields.Field):
     """
 
     geo_type = None
-    dim = 2
+    dim = "2"
     srid = 3857
     gist_index = True
 
     @property
     def column_type(self):
-        return ("geometry", f"geometry({self.geo_type.upper()}, {self.srid})")
+        postgis_geom_type = self.geo_type.upper() if self.geo_type else "GEOMETRY"
+        if self.dim == "3":
+            postgis_geom_type += "Z"
+        elif self.dim == "4":
+            postgis_geom_type += "ZM"
+        return ("geometry", f"geometry({postgis_geom_type}, {self.srid})")
 
-    def convert_to_column(self, value, record, values, validate):
+    def convert_to_column(self, value, record, values=None, validate=True):
         """Convert value to database format
 
         value can be geojson, wkt, shapely geometry object.
@@ -53,7 +58,7 @@ class GeoField(fields.Field):
 
     def convert_to_cache(self, value, record, validate=True):
         val = value
-        if isinstance(val, (bytes, str)):
+        if isinstance(val, bytes | str):
             try:
                 int(val, 16)
             except Exception:
@@ -74,7 +79,7 @@ class GeoField(fields.Field):
             return False
         return convert.value_to_shape(value, use_wkb=True)
 
-    def convert_to_read(self, value, record, use_name_get=True):
+    def convert_to_read(self, value, record, use_display_name=True):
         if not isinstance(value, BaseGeometry):
             # read hexadecimal value from database
             shape = self.load_geo(value)
@@ -102,19 +107,12 @@ class GeoField(fields.Field):
 
     def entry_to_shape(self, value, same_type=False):
         """Transform input into an object"""
-        use_wkb = True
-        if isinstance(value, (bytes, str)):
-            try:
-                int(value, 16)
-            except Exception:
-                # not an hex value -> try to load from a sting
-                # representation of a geometry
-                use_wkb = False
-        shape = convert.value_to_shape(value, use_wkb)
+        shape = convert.value_to_shape(value)
         if same_type and not shape.is_empty:
             if shape.geom_type.lower() != self.geo_type.lower():
                 msg = _(
-                    "Geo Value %(geom_type)s must be of the same type %(geo_type)s as fields",
+                    "Geo Value %(geom_type)s must be of the same type %(geo_type)s \
+                        as fields",
                     geom_type=shape.geom_type.lower(),
                     geo_type=self.geo_type.lower(),
                 )
@@ -165,14 +163,7 @@ class GeoField(fields.Field):
                 )
             )
         if self.gist_index:
-            cr.execute(
-                "SELECT indexname FROM pg_indexes WHERE indexname = %s",
-                (self._postgis_index_name(model._table, self.name),),
-            )
-            index = cr.fetchone()
-            if index:
-                return True
-            self._create_index(cr, model._table, self.name)
+            create_geo_index(cr, self.name, model._table)
         return True
 
     def update_db_column(self, model, column):
@@ -196,9 +187,13 @@ class GeoField(fields.Field):
                 self.dim,
                 self.string,
             )
+            if self.gist_index:
+                create_geo_index(model._cr, self.name, model._table)
             return
 
         if column["udt_name"] == self.column_type[0]:
+            if self.gist_index:
+                create_geo_index(model._cr, self.name, model._table)
             return
 
         self.update_geo_db_column(model)
@@ -277,10 +272,13 @@ class GeoPoint(GeoField):
 
     @classmethod
     def to_latlon(cls, cr, geopoint):
-        """Convert a UTM coordinate point to (latitude, longitude):"""
-        # Line to execute to retrieve longitude, latitude  from UTM in postgres command line:
+        """Convert a UTM coordinate point to \
+            (latitude, longitude):"""
+        # Line to execute to retrieve
+        # longitude, latitude from UTM in postgres command line:
         #  SELECT ST_X(geom), ST_Y(geom) FROM (SELECT ST_TRANSFORM(ST_SetSRID(
-        #               ST_MakePoint(601179.61612, 6399375,681364), 900913), 4326) as geom) g;
+        #               ST_MakePoint(601179.61612, 6399375,681364),
+        # ..............900913), 4326) as geom) g;
         if isinstance(geopoint, BaseGeometry):
             geo_point_instance = geopoint
         else:

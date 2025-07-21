@@ -6,10 +6,10 @@
 
 import {Field} from "@web/views/fields/field";
 import {Widget} from "@web/views/widgets/widget";
-import {visitXML} from "@web/core/utils/xml";
 import {_t} from "@web/core/l10n/translation";
-import {getActiveActions, processButton} from "@web/views/utils";
-import { exprToBoolean } from "@web/core/utils/strings";
+import {getActiveActions} from "@web/views/utils";
+import {exprToBoolean} from "@web/core/utils/strings";
+import {visitXML} from "@web/core/utils/xml";
 
 export const INFO_BOX_ATTRIBUTE = "info_box";
 
@@ -17,7 +17,6 @@ export class GeoengineArchParser {
     parse(xmlDoc, models, modelName) {
         const templateDocs = {};
         const fieldNodes = {};
-        const jsClass = xmlDoc.getAttribute("js_class");
         const activeFields = {};
         const geoengineAttr = {};
         let widgetNextId = 0;
@@ -26,25 +25,12 @@ export class GeoengineArchParser {
         const countLimit = xmlDoc.getAttribute("count_limit");
 
         const activeActions = getActiveActions(xmlDoc);
-        activeActions.archiveGroup = exprToBoolean(
-            xmlDoc.getAttribute("archivable"),
-            true
-        );
-        activeActions.createGroup = exprToBoolean(
-            xmlDoc.getAttribute("group_create"),
-            true
-        );
-        activeActions.deleteGroup = exprToBoolean(
-            xmlDoc.getAttribute("group_delete"),
-            true
-        );
-        activeActions.editGroup = exprToBoolean(
-            xmlDoc.getAttribute("group_edit"),
-            true
-        );
+        activeActions.archiveGroup = exprToBoolean(xmlDoc.getAttribute("archivable"));
+        activeActions.createGroup = exprToBoolean(xmlDoc.getAttribute("group_create"));
+        activeActions.deleteGroup = exprToBoolean(xmlDoc.getAttribute("group_delete"));
+        activeActions.editGroup = exprToBoolean(xmlDoc.getAttribute("group_edit"));
         activeActions.quickCreate =
-            activeActions.create &&
-            exprToBoolean(xmlDoc.getAttribute("quick_create"), true);
+            activeActions.create && exprToBoolean(xmlDoc.getAttribute("quick_create"));
         const className = xmlDoc.getAttribute("class") || null;
         const defaultGroupBy = xmlDoc.getAttribute("default_group_by");
 
@@ -64,8 +50,7 @@ export class GeoengineArchParser {
                     node,
                     models,
                     modelName,
-                    "geoengine",
-                    jsClass
+                    "geoengine"
                 );
                 const name = fieldInfo.name;
                 fieldNodes[name] = fieldInfo;

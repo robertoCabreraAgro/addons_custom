@@ -1,15 +1,15 @@
 /** @odoo-module **/
 
-import {registry} from "@web/core/registry";
-
 import {Component} from "@odoo/owl";
+import {registry} from "@web/core/registry";
 const parsers = registry.category("parsers");
 
 export class DomainSelectorFieldInput extends Component {
     parseValue(value) {
-        const parser = parsers.get(this.props.field.type, (value) => value);
+        const parser = parsers.get(this.props.field.type, (val) => val);
         try {
             return parser(value);
+            // eslint-disable-next-line no-unused-vars
         } catch (_) {
             return value;
         }

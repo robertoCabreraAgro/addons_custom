@@ -1,30 +1,19 @@
 /** @odoo-module */
 
+/* global document */
+/* global ol */
+/* global localStorage */
+/* global chroma */
+/* global geostats */
+/* global console */
+
 /**
  * Copyright 2023 ACSONE SA/NV
  */
 
-import { loadBundle, loadJS, templates } from "@web/core/assets";
-// import { getTemplate } from "@web/core/templates";
-import { user } from "@web/core/user";
-import {GeoengineRecord} from "../geoengine_record/geoengine_record.esm";
-import {LayersPanel} from "../layers_panel/layers_panel.esm";
-import {RecordsPanel} from "../records_panel/records_panel.esm";
-import {rasterLayersStore} from "../../../raster_layers_store.esm";
-import {vectorLayersStore} from "../../../vector_layers_store.esm";
-import {useService} from "@web/core/utils/hooks";
-import {registry} from "@web/core/registry";
-import {RelationalModel} from "@web/model/relational_model/relational_model";
-import {evaluateExpr} from "@web/core/py_js/py";
-import {parseXML} from "@web/core/utils/xml";
 import {
-    addFieldDependencies,
-    extractFieldsFromArchInfo,
-} from "@web/model/relational_model/utils";
-import {useModel, useModelWithSampleData} from "@web/model/model";
-import {
+    App,
     Component,
-    mount,
     onMounted,
     onPatched,
     onWillStart,
@@ -32,6 +21,23 @@ import {
     reactive,
     useState,
 } from "@odoo/owl";
+import {GeoengineRecord} from "../geoengine_record/geoengine_record.esm";
+import {LayersPanel} from "../layers_panel/layers_panel.esm";
+import {RecordsPanel} from "../records_panel/records_panel.esm";
+import {RelationalModel} from "@web/model/relational_model/relational_model";
+import {
+    addFieldDependencies,
+    extractFieldsFromArchInfo,
+} from "@web/model/relational_model/utils";
+import {evaluateExpr} from "@web/core/py_js/py";
+import {loadBundle} from "@web/core/assets";
+import {getTemplate} from "@web/core/templates";
+import {parseXML} from "@web/core/utils/xml";
+import {rasterLayersStore} from "../../../raster_layers_store.esm";
+import {registry} from "@web/core/registry";
+import {user} from "@web/core/user";
+import {useService} from "@web/core/utils/hooks";
+import {vectorLayersStore} from "../../../vector_layers_store.esm";
 
 /* CONSTANTS */
 const DEFAULT_BEGIN_COLOR = "#FFFFFF";
@@ -44,7 +50,6 @@ const LEGEND_MAX_ITEMS = 10;
 
 export class GeoengineRenderer extends Component {
     setup() {
-        
         this.state = useState({selectedFeatures: [], isModified: false, isFit: false});
         this.models = [];
         this.cfg_models = [];
@@ -69,22 +74,21 @@ export class GeoengineRenderer extends Component {
             this.services[key] = useService(key);
         }
 
-        onWillStart(async () => {
-            await loadBundle("web.assets_backend");
-            await loadJS('/base_geoengine/static/lib/ol-10.1.0/ol.js');
-            await loadJS('/base_geoengine/static/lib/chromajs-2.4.2/chroma.js');
-            await loadJS('/base_geoengine/static/lib/geostats-2.0.0/geostats.min.js');
-            await this.loadVectorModel();
-            this.isGeoengineAdmin = user.hasGroup("base_geoengine.group_geoengine_admin");
-        });
-
+        onWillStart(async () =>
+            Promise.all([
+                loadBundle("base_geoengine.assets_jsLibs_geoengine"),
+                this.loadVectorModel(),
+                (this.isGeoengineAdmin = await user.hasGroup(
+                    "base_geoengine.group_geoengine_admin"
+                )),
+            ])
+        );
 
         onMounted(() => {
             // Retrives all vector layers in the store.
             this.geometryFields = this.vectorLayersStore.vectorsLayers.map(
                 (layer) => layer.geo_field_id[1]
             );
-            console.log("Campos de geometría cargados:", this.geometryFields);
 
             this.vectorSources = [];
             this.renderMap();
@@ -106,10 +110,7 @@ export class GeoengineRenderer extends Component {
     }
 
     async loadVectorModel() {
-        console.log("Cargando modelo vectorial...");
         await this.loadView("geoengine.vector.layer", "form");
-        console.log("Modelo vectorial cargado.");
-
     }
 
     renderMap() {
@@ -117,10 +118,6 @@ export class GeoengineRenderer extends Component {
             this.createOverlay();
             this.map = new ol.Map({
                 target: "olmap",
-                controls: [
-                    new ol.control.Zoom(),
-                    new ol.control.Rotate(),
-                ],
                 layers: [
                     new ol.layer.Group({
                         title: "Base maps",
@@ -131,7 +128,6 @@ export class GeoengineRenderer extends Component {
                 ],
                 overlays: [this.overlay],
             });
-            console.log("Mapa creado:", this.map);
             this.map.on("moveend", () => {
                 const newZoom = this.map.getView().getZoom();
                 if (newZoom !== localStorage.getItem("ol-zoom")) {
@@ -176,28 +172,16 @@ export class GeoengineRenderer extends Component {
         source.push(new ol.layer.Tile({source: new ol.source.OSM()}));
         const backgroundLayers = backgrounds.map((background) => {
             switch (background.raster_type) {
-                case "osm":
+                case "osm": {
                     return new ol.layer.Tile({
                         title: background.name,
                         visible: !background.overlay,
                         type: "base",
                         opacity: background.opacity,
-                        source: new ol.source.OSM({
-                            attributions: null  // Desactivamos las atribuciones si no son necesarias
-                        }),
+                        source: new ol.source.OSM(),
                     });
-                case "xyz":
-                return new ol.layer.Tile({
-                    title: background.name,
-                    visible: !background.overlay,
-                    type: "base",
-                    opacity: background.opacity,
-                    source: new ol.source.XYZ({
-                        url: background.url,
-                        crossOrigin: 'anonymous',
-                    }),
-                });
-                case "wmts":
+                }
+                case "wmts": {
                     const {source_opt, tilegrid_opt, layer_opt} =
                         this.createOptions(background);
                     this.getUrl(background, source_opt);
@@ -237,11 +221,11 @@ export class GeoengineRenderer extends Component {
                     source_opt.tileGrid = new ol.tilegrid.WMTS(tilegrid_opt);
                     layer_opt.source = new ol.source.WMTS(source_opt);
                     return new ol.layer.Tile(layer_opt);
-                case "d_wms":
+                }
+                case "d_wms": {
                     const source_opt_wms = {
                         params: JSON.parse(background.params_wms),
                         serverType: background.server_type,
-                        attributions: null,
                     };
                     const urls = background.url.split(",");
                     if (urls.length > 1) {
@@ -255,8 +239,10 @@ export class GeoengineRenderer extends Component {
                         opacity: background.opacity,
                         source: new ol.source.TileWMS(source_opt_wms),
                     });
-                default:
+                }
+                default: {
                     return undefined;
+                }
             }
         });
         return source.concat(backgroundLayers);
@@ -355,7 +341,7 @@ export class GeoengineRenderer extends Component {
             this.addSelectedClassToButton(button);
             this.removeModifyInteraction();
             this.removeSelectInteraction();
-            if (this.props.data.editedRecord !== null) {
+            if (this.props.data.editedRecord !== undefined) {
                 this.props.onClickDiscard();
             }
             if (this.drawInteraction === undefined) {
@@ -398,7 +384,7 @@ export class GeoengineRenderer extends Component {
             this.addSelectedClassToButton(button);
             this.removeDrawInteraction();
             this.removeModifyInteraction();
-            if (this.props.data.editedRecord !== null) {
+            if (this.props.data.editedRecord !== undefined) {
                 this.props.onClickDiscard();
             }
             if (
@@ -572,60 +558,41 @@ export class GeoengineRenderer extends Component {
             record === undefined
                 ? model.records.find((element) => element._values.id === attributes.id)
                 : record;
-        mount(GeoengineRecord, popup, {
+        const app = new App(GeoengineRecord, {
             env: this.env,
             props: {
                 archInfo,
                 record: this.record,
                 templates: templateDocs,
             },
-            templates,
+            getTemplate,
         });
+        app.mount(popup);
     }
-    
+
     /**
      * When you click on a record in the RecordsPanel, this method is called to display the popup.
      * @param {*} record
      */
     onDisplayPopupRecord(record) {
-        try {
-            console.log("GeoengineRenderer: onDisplayPopupRecord llamado con registro:", record);
-        
-            const popup = this.getPopup();
-            console.log("GeoengineRenderer: Popup obtenido:", popup);
-        
-            const feature = this.vectorSource.getFeatureById(record.id);
-            console.log("GeoengineRenderer: Feature obtenido por ID:", feature);
-        
-            if (feature) {
-                this.mountGeoengineRecord({
-                    popup,
-                    archInfo: this.props.archInfo,
-                    templateDocs: this.props.archInfo.templateDocs,
-                    record,
+        const popup = this.getPopup();
+        const feature = this.vectorSource.getFeatureById(record.resId);
+        if (feature) {
+            this.mountGeoengineRecord({
+                popup,
+                archInfo: this.props.archInfo,
+                templateDocs: this.props.archInfo.templateDocs,
+                record,
+            });
+            var coord = ol.extent.getCenter(feature.getGeometry().getExtent());
+            this.overlay.setPosition(coord);
+            var map_view = this.map.getView();
+            if (map_view) {
+                map_view.animate({
+                    center: feature.getGeometry().getFirstCoordinate(),
+                    duration: 500,
                 });
-                console.log("GeoengineRenderer: mountGeoengineRecord llamado correctamente.");
-            
-                var coord = ol.extent.getCenter(feature.getGeometry().getExtent());
-                console.log("GeoengineRenderer: Coordenadas calculadas para el centro:", coord);
-                this.overlay.setPosition(coord);
-                console.log("GeoengineRenderer: Posición del overlay establecida.");
-            
-                var map_view = this.map.getView();
-                if (map_view) {
-                    map_view.animate({
-                        center: feature.getGeometry().getFirstCoordinate(),
-                        duration: 500,
-                    });
-                    console.log("GeoengineRenderer: Animación del mapa iniciada.");
-                } else {
-                    console.error("GeoengineRenderer: 'map_view' no está definido.");
-                }
-            } else {
-                console.warn("GeoengineRenderer: No se encontró una feature para el registro con ID:", record.id);
             }
-        } catch (error) {
-            console.error("GeoengineRenderer: Error en onDisplayPopupRecord:", error);
         }
     }
 
@@ -644,7 +611,7 @@ export class GeoengineRenderer extends Component {
             .getExtent();
         var infinite_extent = [Infinity, Infinity, -Infinity, -Infinity];
         if (JSON.stringify(extent) === JSON.stringify(infinite_extent)) {
-            extent = [-13360714.671289, 5314503.622, 8284735.328607, 7099727.320865]
+            extent = [-13360714.671289, 5314503.622, 8284735.328607, 7099727.320865];
         }
 
         if (JSON.stringify(extent) !== JSON.stringify(infinite_extent)) {
@@ -671,11 +638,11 @@ export class GeoengineRenderer extends Component {
      * openRecord method.
      */
     onInfoBoxClicked() {
-        var viewIds = this.env?.config?.views
-        var formViewId = null
+        var viewIds = this.env.config.views;
+        var formViewId = null;
 
-        if (viewIds){
-            formViewId = viewIds.filter(subList => subList.includes("form"));
+        if (viewIds) {
+            formViewId = viewIds.filter((subList) => subList.includes("form"));
         }
         this.props.openRecord(this.record.resModel, this.record.resId, formViewId);
     }
@@ -706,58 +673,38 @@ export class GeoengineRenderer extends Component {
      * when the user changes vector layers.
      */
     async onVectorLayerChanged() {
-        if (!this.map) {
-            console.warn("onVectorLayerChanged: el mapa aún no está inicializado");
-            return;
-        }
-    
-        const overlaysLayerGroup = this.map
+        await this.map
             .getLayers()
             .getArray()
-            .find((layer) => layer.get("title") === "Overlays");
-    
-        if (!overlaysLayerGroup) {
-            console.warn("onVectorLayerChanged: No se encontró el grupo de capas 'Overlays'");
-            return;
-        }
-    
-        // Crear un mapa para acceder rápidamente a las capas por título
-        const mapLayersByTitle = new Map();
-        overlaysLayerGroup.getLayers().forEach((layer) => {
-            mapLayersByTitle.set(layer.get("title"), layer);
-        });
-    
-        // Recorrer los vectores y aplicar cambios si existen en el mapa
-        for (const vector of this.vectorLayersStore.vectorsLayers) {
-            const layer = mapLayersByTitle.get(vector.name);
-            if (layer) {
-                // onVisibleChanged
-                if (vector.onVisibleChanged) {
-                    this.onVisibleChanged(vector, layer);
-                    const legend = document.getElementById(`legend-${vector.resId}`);
-                    if (legend) {
-                        legend.style.display = vector.isVisible ? "block" : "none";
+            .find((layer) => layer.get("title") === "Overlays")
+            .getLayers()
+            .getArray()
+            .forEach((layer) => {
+                this.vectorLayersStore.vectorsLayers.forEach(async (vector) => {
+                    if (vector.name === layer.get("title")) {
+                        if (vector.onVisibleChanged) {
+                            this.onVisibleChanged(vector, layer);
+                            const legend = document.getElementById(
+                                `legend-${vector.resId}`
+                            );
+                            if (legend !== null) {
+                                void (vector.isVisible
+                                    ? (legend.style.display = "block")
+                                    : (legend.style.display = "none"));
+                            }
+                        }
+                        if (vector.onDomainChanged) {
+                            this.onVectorLayerModelDomainChanged(vector, layer);
+                        }
+                        if (vector.onLayerChanged) {
+                            await this.onLayerChanged(vector, layer);
+                        }
+                        if (vector.onSequenceChanged) {
+                            this.onSequenceChanged(vector, layer);
+                        }
                     }
-                }
-    
-                // onDomainChanged
-                if (vector.onDomainChanged) {
-                    this.onVectorLayerModelDomainChanged(vector, layer);
-                }
-    
-                // onLayerChanged
-                if (vector.onLayerChanged) {
-                    await this.onLayerChanged(vector, layer);
-                }
-    
-                // onSequenceChanged
-                if (vector.onSequenceChanged) {
-                    this.onSequenceChanged(vector, layer);
-                }
-            } else {
-                console.warn(`onVectorLayerChanged: No se encontró la capa en el mapa para el vector '${vector.name}'`);
-            }
-        }
+                });
+            });
     }
 
     /**
@@ -807,7 +754,7 @@ export class GeoengineRenderer extends Component {
 
     /**
      * This method assigns a new source with the revalued domain.
-     * @param {*} cfg
+     * @param {*} vector
      * @param {*} layer
      */
     async onVectorLayerModelDomainChanged(vector, layer) {
@@ -824,49 +771,27 @@ export class GeoengineRenderer extends Component {
     }
 
     async renderVectorLayers() {
-        try {
-            console.log("GeoengineRenderer: renderVectorLayers iniciado");
-            const vectorLayers = await this.createVectorLayers();
-            console.log("GeoengineRenderer: Vector layers creados:", vectorLayers);
-    
-            this.vectorLayersResult = await Promise.all(vectorLayers);
-            console.log("GeoengineRenderer: vectorLayersResult actualizado:", this.vectorLayersResult);
-    
-            // Remover capas existentes de "Overlays"
-            this.map.getLayers().forEach((layer) => {
-                if (layer.get("title") === "Overlays") {
-                    console.log("GeoengineRenderer: Removiendo capa 'Overlays'");
-                    this.map.removeLayer(layer);
+        const vectorLayers = await this.createVectorLayers();
+        this.vectorLayersResult = await Promise.all(vectorLayers);
+        this.map.getLayers().forEach((layer) => {
+            if (layer.get("title") === "Overlays") {
+                this.map.removeLayer(layer);
+            }
+        });
+        this.overlaysGroup = new ol.layer.Group({
+            title: "Overlays",
+            layers: this.vectorLayersResult,
+        });
+        this.vectorLayersResult.forEach((vlayer) => {
+            this.vectorLayersStore.vectorsLayers.forEach((vector) => {
+                if (vlayer.values_.title === vector.name) {
+                    vlayer.setVisible(vector.isVisible);
                 }
             });
-    
-            // Crear grupo de overlays y añadir capas
-            this.overlaysGroup = new ol.layer.Group({
-                title: "Overlays",
-                layers: this.vectorLayersResult,
-            });
-            console.log("GeoengineRenderer: Grupo de Overlays creado:", this.overlaysGroup);
-    
-            // Configurar visibilidad según vectorLayersStore
-            this.vectorLayersResult.forEach((vlayer) => {
-                this.vectorLayersStore.vectorsLayers.forEach((vector) => {
-                    if (vlayer.values_.title === vector.name) {
-                        vlayer.setVisible(vector.isVisible);
-                        console.log(`GeoengineRenderer: Capa '${vector.name}' visibilidad establecida a ${vector.isVisible}`);
-                    }
-                });
-            });
-    
-            // Añadir grupo de overlays al mapa
-            this.map.addLayer(this.overlaysGroup);
-            console.log("GeoengineRenderer: Grupo de Overlays añadido al mapa");
-    
-            // Actualizar zoom
-            this.updateZoom();
-            console.log("GeoengineRenderer: Zoom actualizado");
-        } catch (error) {
-            console.error("GeoengineRenderer: Error en renderVectorLayers:", error);
-        }
+        });
+        this.map.addLayer(this.overlaysGroup);
+
+        this.updateZoom();
     }
 
     /**
@@ -931,7 +856,7 @@ export class GeoengineRenderer extends Component {
         let data = await this.orm.searchRead(cfg.model, [domain][0], fields_to_read);
         const modelsRecords = this.models.find((e) => e.model.resModel === cfg.model)
             .model.records;
-        data = data.map((data) => modelsRecords.find((rec) => rec.resId === data.id));
+        data = data.map((dat) => modelsRecords.find((rec) => rec.resId === dat.id));
         return data;
     }
 
@@ -961,6 +886,7 @@ export class GeoengineRenderer extends Component {
      * This method is called when a layer uses another model.
      * @param {*} cfg
      * @param {*} lv
+     * @param {*} res
      */
     useRelatedModel(cfg, lv, res) {
         const vectorSource = new ol.source.Vector();
@@ -1010,7 +936,7 @@ export class GeoengineRenderer extends Component {
     /**
      * Loads the model's view that is passed to the layer.
      * @param {*} model
-     * @param {*} domain
+     * @param {*} view
      */
     async loadView(model, view) {
         const viewRegistry = registry.category("views");
@@ -1140,193 +1066,68 @@ export class GeoengineRenderer extends Component {
     }
 
     styleVectorLayerColored(cfg, data) {
-        try {
-            console.log("=== Iniciando styleVectorLayerColored ===");
-            console.log("Configuración (cfg):", cfg);
-            console.log("Datos (data):", data);
-    
-            var indicator = cfg.attribute_field_id[1];
-            console.log("Indicador (indicator):", indicator);
-    
-            // Verificar si 'indicator' está definido
-            if (!indicator) {
-                console.error("Error: 'indicator' está undefined.");
-                return {
-                    style: () => defaultStyle, // Define un estilo por defecto
-                    legend: null,
-                };
-            }
-    
-            var values = this.extractLayerValues(cfg, data);
-            console.log("Valores extraídos (values):", values);
-    
-            var nb_class = cfg.nb_class || DEFAULT_NUM_CLASSES;
-            console.log("Número de clases (nb_class):", nb_class);
-    
-            var opacity = cfg.layer_opacity;
-            console.log("Opacidad (opacity):", opacity);
-    
-            var begin_color_hex = cfg.begin_color || DEFAULT_BEGIN_COLOR;
-            var end_color_hex = cfg.end_color || DEFAULT_END_COLOR;
-            console.log("Color de inicio (begin_color_hex):", begin_color_hex);
-            console.log("Color de fin (end_color_hex):", end_color_hex);
-    
-            var begin_color = chroma(begin_color_hex).alpha(opacity).css();
-            var end_color = chroma(end_color_hex).alpha(opacity).css();
-            console.log("Color de inicio con opacidad (begin_color):", begin_color);
-            console.log("Color de fin con opacidad (end_color):", end_color);
-    
-            var scale = chroma.scale([begin_color, end_color]);
-            console.log("Escala de colores (scale):", scale);
-    
-            var serie = new geostats(values);
-            console.log("Serie de geostats (serie):", serie);
-    
-            var vals = null;
-            switch (cfg.classification) {
-                case "unique":
-                case "custom":
-                    vals = serie.getClassUniqueValues();
-                    console.log("Valores únicos (vals):", vals);
-                    scale = chroma.scale("RdYlBu").domain([0, vals.length], vals.length);
-                    console.log("Nueva escala para 'unique'/'custom' (scale):", scale);
-                    break;
-                case "quantile":
-                    serie.getClassQuantile(nb_class);
-                    vals = serie.getRanges();
-                    console.log("Rangos de cuantiles (vals):", vals);
-                    scale = scale.domain([0, vals.length], vals.length);
-                    console.log("Nueva escala para 'quantile' (scale):", scale);
-                    break;
-                case "interval":
-                    serie.getClassEqInterval(nb_class);
-                    vals = serie.getRanges();
-                    console.log("Rangos de intervalos (vals):", vals);
-                    scale = scale.domain([0, vals.length], vals.length);
-                    console.log("Nueva escala para 'interval' (scale):", scale);
-                    break;
-                default:
-                    console.warn("Advertencia: Clasificación desconocida. Se usará la escala por defecto.");
-                    break;
-            }
-    
-            let colors = [];
-            if (cfg.classification === "custom") {
-                colors = vals.map((val, index) => {
-                    if (val) {
-                        const color = chroma(val).alpha(opacity).css();
-                        console.log(`Color personalizado para valor '${val}':`, color);
-                        return color;
-                    } else {
-                        console.warn(`Valor en 'vals' en posición ${index} es falsy:`, val);
-                        return DEFAULT_BEGIN_COLOR; // O un color por defecto
-                    }
-                });
-            } else {
-                colors = scale.colors(vals.length).map((color, index) => {
-                    const colored = chroma(color).alpha(opacity).css();
-                    console.log(`Color de escala para índice ${index}:`, colored);
-                    return colored;
-                });
-            }
-            console.log("Colores generados (colors):", colors);
-    
-            const styles_map = this.createStylesWithColors(colors);
-            console.log("Mapa de estilos (styles_map):", styles_map);
-    
-            let legend = null;
-            if (vals.length <= LEGEND_MAX_ITEMS) {
-                legend = serie.getHtmlLegend(colors, cfg.name, 1);
-                console.log("Leyenda generada (legend):", legend);
-            }
-    
-            // Verificar si 'styles_map' y 'colors' están correctamente definidos
-            if (!styles_map || typeof styles_map !== 'object') {
-                console.error("'styles_map' está undefined o no es un objeto.");
-                return {
-                    style: () => defaultStyle,
-                    legend: null,
-                };
-            }
-    
-            if (!colors || !Array.isArray(colors) || colors.length === 0) {
-                console.error("'colors' está undefined, no es un array o está vacío.");
-                return {
-                    style: () => defaultStyle,
-                    legend: null,
-                };
-            }
-    
-            return {
-                style: (feature) => {
-                    try {
-                        console.log("=== Aplicando estilo al feature ===");
-                        console.log("Feature completo:", feature);
-    
-                        const attributes = feature.get("attributes");
-                        console.log("Attributes del feature:", attributes);
-    
-                        if (!attributes) {
-                            console.error("Error: 'attributes' del feature están undefined.");
-                            return defaultStyle;
-                        }
-    
-                        const value = attributes[indicator];
-                        console.log(`Valor para el indicador '${indicator}':`, value);
-    
-                        if (value === undefined) {
-                            console.error(`Error: El indicador '${indicator}' no está definido en 'attributes'.`);
-                            return defaultStyle;
-                        }
-    
-                        const color_idx = this.getClass(value, vals);
-                        console.log(`Índice de color obtenido (color_idx):`, color_idx);
-    
-                        if (color_idx < 0 || color_idx >= colors.length) {
-                            console.error(`Error: color_idx (${color_idx}) está fuera del rango de 'colors'.`);
-                            return defaultStyle;
-                        }
-    
-                        var label_text = attributes.label;
-                        console.log(`Texto de etiqueta original (label_text):`, label_text);
-    
-                        if (label_text === false || label_text === undefined || label_text === null) {
-                            console.log("label_text es falsy. Asignando cadena vacía.");
-                            label_text = "";
-                        }
-    
-                        // Verificar si 'styles_map[colors[color_idx]]' está definido
-                        if (!styles_map[colors[color_idx]]) {
-                            console.error(`Error: 'styles_map' no contiene el color '${colors[color_idx]}'.`);
-                            return defaultStyle;
-                        }
-    
-                        // Verificar si el estilo específico está definido
-                        if (!styles_map[colors[color_idx]][0] || !styles_map[colors[color_idx]][0].text_) {
-                            console.error(`Error: El estilo para el color '${colors[color_idx]}' no está completamente definido.`);
-                            return defaultStyle;
-                        }
-    
-                        // Asignar el texto a la etiqueta del estilo
-                        styles_map[colors[color_idx]][0].text_.text_ = label_text.toString();
-                        console.log(`Texto de etiqueta asignado: '${label_text}' para color '${colors[color_idx]}'`);
-    
-                        // Retornar el estilo correspondiente
-                        return styles_map[colors[color_idx]];
-                    } catch (error) {
-                        console.error("Error en la función de estilo del feature:", error);
-                        return defaultStyle;
-                    }
-                },
-                legend,
-            };
-        } catch (error) {
-            console.error("Error en styleVectorLayerColored:", error);
-            return {
-                style: () => defaultStyle,
-                legend: null,
-            };
+        var indicator = cfg.attribute_field_id[1];
+        var values = this.extractLayerValues(cfg, data);
+        var nb_class = cfg.nb_class || DEFAULT_NUM_CLASSES;
+        var opacity = cfg.layer_opacity;
+        var begin_color_hex = cfg.begin_color || DEFAULT_BEGIN_COLOR;
+        var end_color_hex = cfg.end_color || DEFAULT_END_COLOR;
+        var begin_color = chroma(begin_color_hex).alpha(opacity).css();
+        var end_color = chroma(end_color_hex).alpha(opacity).css();
+        // Function that maps numeric values to a color palette.
+        // This scale function is only used when geo_repr is basic
+        var scale = chroma.scale([begin_color, end_color]);
+        var serie = new geostats(values);
+        var vals = null;
+        switch (cfg.classification) {
+            case "unique":
+            case "custom":
+                vals = serie.getClassUniqueValues();
+                // "RdYlBu" is a set of colors
+                scale = chroma.scale("RdYlBu").domain([0, vals.length], vals.length);
+                break;
+            case "quantile":
+                serie.getClassQuantile(nb_class);
+                vals = serie.getRanges();
+                scale = scale.domain([0, vals.length], vals.length);
+                break;
+            case "interval":
+                serie.getClassEqInterval(nb_class);
+                vals = serie.getRanges();
+                scale = scale.domain([0, vals.length], vals.length);
+                break;
         }
+        let colors = [];
+        if (cfg.classification === "custom") {
+            colors = vals.map((val) => {
+                if (val) {
+                    return chroma(val).alpha(opacity).css();
+                }
+            });
+        } else {
+            colors = scale
+                .colors(vals.length)
+                .map((color) => chroma(color).alpha(opacity).css());
+        }
+        const styles_map = this.createStylesWithColors(colors);
+        let legend = null;
+        if (vals.length <= LEGEND_MAX_ITEMS) {
+            legend = serie.getHtmlLegend(colors, cfg.name, 1);
+        }
+        return {
+            style: (feature) => {
+                const value = feature.get("attributes")[indicator];
+                const color_idx = this.getClass(value, vals);
+                var label_text = feature.values_.attributes.label;
+                if (label_text === false) {
+                    label_text = "";
+                }
+                console.log(feature.get("attributes").id);
+                styles_map[colors[color_idx]][0].text_.text_ = label_text.toString();
+                return styles_map[colors[color_idx]];
+            },
+            legend,
+        };
     }
 
     styleVectorLayerProportion(cfg, data) {
@@ -1374,9 +1175,9 @@ export class GeoengineRenderer extends Component {
 
     styleVectorLayerDefault(cfg) {
         const color_hex = cfg.begin_color || DEFAULT_BEGIN_COLOR;
-        var opacity = cfg.layer_opacity
+        var opacity = cfg.layer_opacity;
         if (cfg.layer_transparent) {
-            opacity = 0.0
+            opacity = 0.0;
         }
         var color = chroma(color_hex).alpha(opacity).css();
         // Basic
@@ -1424,7 +1225,7 @@ export class GeoengineRenderer extends Component {
     /**
      * Create a feature style based on the color table.
      * @param {*} colors
-     * @returns
+     * @returns {Object}
      */
     createStylesWithColors(colors) {
         const styles_map = {};

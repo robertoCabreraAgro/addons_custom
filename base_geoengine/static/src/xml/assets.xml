@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<odoo>
-    <template id="assets_backend_inherit" inherit_id="web.assets_backend">
-        <xpath expr="." position="inside">
-            <script type="text/javascript" src="/base_geoengine/static/lib/ol-10.1.0/ol.js" t-js="true"/>
-        </xpath>
-    </template>
-</odoo>

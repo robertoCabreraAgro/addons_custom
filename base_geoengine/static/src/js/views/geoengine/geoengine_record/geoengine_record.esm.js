@@ -1,14 +1,16 @@
+/** @odoo-module */
+
 /**
  * Copyright 2023 ACSONE SA/NV
  */
 
+import {Field} from "@web/views/fields/field";
 import {GeoengineCompiler} from "../geoengine_compiler.esm";
 import {INFO_BOX_ATTRIBUTE} from "../geoengine_arch_parser.esm";
 import {registry} from "@web/core/registry";
 import {useViewCompiler} from "@web/views/view_compiler";
-import {Component, onWillUpdateProps, xml} from "@odoo/owl";
+import {Component, onWillUpdateProps} from "@odoo/owl";
 import {user} from "@web/core/user";
-import {Field} from "@web/views/fields/field";
 
 const formatters = registry.category("formatters");
 
@@ -23,20 +25,7 @@ export class GeoengineRecord extends Component {
     /**
      * Setup the record by compiling the arch and the info-box template.
      */
-    static template = xml`
-    <div
-            t-att-data-id="props.record.id"
-            t-att-tabindex="props.record.model.useSampleModel ? -1 : 0"
-        >
-            <t
-t-call="{{ templates[this.constructor.INFO_BOX_ATTRIBUTE] }}"
-t-call-context="this.renderingContext"
-            />
-        </div>
-        `;
-
     setup() {
-        this.user = user;
         const {Compiler, templates} = this.props;
         const ViewCompiler = Compiler || this.constructor.Compiler;
 
@@ -52,11 +41,8 @@ t-call-context="this.renderingContext"
      */
     createRecord(props) {
         const {record} = props;
-        console.log("Datos del registro recibidos:", record);
-        console.log("Valores del registro (_values):", record._values);
         this.record = Object.create(null);
         for (const fieldName in record._values) {
-            console.log(`Procesando campo: ${fieldName}`);
             this.record[fieldName] = {
                 get value() {
                     return getValue(record, fieldName);
@@ -66,19 +52,19 @@ t-call-context="this.renderingContext"
     }
 
     get renderingContext() {
-        const context = {
+        return {
             context: this.props.record.context,
             JSON,
-            record: this.record,
+            record: this.props.record,
             read_only_mode: this.props.readonly,
             selection_mode: this.props.forceGlobalClick,
-            user_context: this.user.context,
+            user_context: user.context,
             __comp__: Object.assign(Object.create(this), {this: this}),
         };
-        console.log("Contexto de renderización para info_box:", context);
-        return context;
     }
 }
+
+GeoengineRecord.template = "base_geoengine.GeoengineRecord";
 GeoengineRecord.Compiler = GeoengineCompiler;
 GeoengineRecord.components = {Field};
 GeoengineRecord.INFO_BOX_ATTRIBUTE = INFO_BOX_ATTRIBUTE;

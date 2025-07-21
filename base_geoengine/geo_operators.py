@@ -9,7 +9,7 @@ class GeoOperator:
 
     def _get_direct_como_op_sql(self, table, col, value, params, op=""):
         """provide raw sql for geater and lesser operators"""
-        if isinstance(value, (int, float)):
+        if isinstance(value, int | float):
             return f" ST_Area({table}.{col}) {op} {value}"
         else:
             base = self.geo_field.entry_to_shape(value, same_type=False)
