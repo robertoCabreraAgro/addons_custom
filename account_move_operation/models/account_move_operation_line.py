@@ -242,7 +242,9 @@ class AccountMoveOperationLine(models.Model):
     def _get_action_move(self):
         self.ensure_one()
         ctx = self._context.copy()
-        _logger.info("Creating move for operation line %s with context %s", self.name, ctx)
+        _logger.info(
+            "Creating move for operation line %s with context %s", self.name, ctx
+        )
 
         if self.action_id.auto and self.operation_id.amount:
             ctx.update({"amount": self.operation_id.amount})
@@ -272,12 +274,16 @@ class AccountMoveOperationLine(models.Model):
         if payment_method_id:
             wizard_vals["l10n_mx_edi_payment_method_id"] = payment_method_id
         elif self.operation_id.l10n_mx_edi_payment_method_id:
-            wizard_vals["l10n_mx_edi_payment_method_id"] = self.operation_id.l10n_mx_edi_payment_method_id.id
+            wizard_vals["l10n_mx_edi_payment_method_id"] = (
+                self.operation_id.l10n_mx_edi_payment_method_id.id
+            )
 
         if self.multicompany and self.operation_id.multicompany_id:
             wizard_vals["multicompany_id"] = self.operation_id.multicompany_id.id
 
-        wizard = self.env["account.move.template.run"].with_context(ctx).create(wizard_vals)
+        wizard = (
+            self.env["account.move.template.run"].with_context(ctx).create(wizard_vals)
+        )
         wizard.load_lines()
         result = wizard.create_move()
 
@@ -296,7 +302,6 @@ class AccountMoveOperationLine(models.Model):
             self.operation_id.action_done()
 
         return True
-
 
     def _get_action_operation(self):
         if self.action_id.auto:
@@ -358,14 +363,16 @@ class AccountMoveOperationLine(models.Model):
         if not move or move.state != "posted":
             raise UserError(_("The invoice must be posted to reconcile."))
 
-        bank_rec_wizard = self.env['bank.rec.widget'].with_context(
-            default_st_line_id=st_line.id
-        ).new({})
+        bank_rec_wizard = (
+            self.env["bank.rec.widget"]
+            .with_context(default_st_line_id=st_line.id)
+            .new({})
+        )
         invoice_line = move.line_ids.filtered(
-            lambda l: l.account_id.account_type == 'asset_receivable'
+            lambda l: l.account_id.account_type == "asset_receivable"
         )
         bank_rec_wizard._action_add_new_amls(invoice_line)
-        if bank_rec_wizard.state != 'valid':
+        if bank_rec_wizard.state != "valid":
             raise ValueError("Reconciliation is not in valid status")
         bank_rec_wizard._action_validate()
         st_line.move_id.checked = True

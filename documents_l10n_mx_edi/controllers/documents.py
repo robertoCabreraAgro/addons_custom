@@ -11,7 +11,9 @@ class DocumentsShareRoute(ShareRoute):
             name = http.request.env["ir.attachment"].browse(vals["attachment_id"]).name
         if name and name.lower().endswith(".xml"):
             mx_edi_document = http.request.env["l10n_mx_edi.document"]
-            duplicate_result = mx_edi_document._get_duplicate_cfdi(name, http.request.env["documents.document"])
+            duplicate_result = mx_edi_document._get_duplicate_cfdi(
+                name, http.request.env["documents.document"]
+            )
             if duplicate_result["duplicated"]:
                 # Send notification for duplicate
                 http.request.env["bus.bus"]._sendone(
@@ -27,7 +29,9 @@ class DocumentsShareRoute(ShareRoute):
                 # Return the existing document and skip the message_post
                 existing_doc = duplicate_result["document"]
                 if existing_doc:
-                    existing_doc.message_post(body="Document uploaded (duplicate detected)")
+                    existing_doc.message_post(
+                        body="Document uploaded (duplicate detected)"
+                    )
                     return existing_doc
 
                 # No existing document found, skip creation

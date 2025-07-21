@@ -51,7 +51,11 @@ class StockQuantLotUpdate(models.TransientModel):
                     "quantity": quant.quantity,
                     "product_id": quant.product_id.id,
                     "lot_id": quant.lot_id.id,
-                    "lot_rule_id": quant.lot_id.lot_rule_id.id if quant.lot_id else quant.product_id.lot_rule_id.id,
+                    "lot_rule_id": (
+                        quant.lot_id.lot_rule_id.id
+                        if quant.lot_id
+                        else quant.product_id.lot_rule_id.id
+                    ),
                 }
             )
         return res

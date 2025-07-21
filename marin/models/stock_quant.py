@@ -108,7 +108,9 @@ class StockQuant(models.Model):
             return "removal_date, removal_priority ASC, id"
 
         if removal_strategy == "refurbished + fefo + priority":
-            return "original_expiration_date ASC, removal_date, removal_priority ASC, id"
+            return (
+                "original_expiration_date ASC, removal_date, removal_priority ASC, id"
+            )
 
         return super()._get_removal_strategy_order(removal_strategy)
 

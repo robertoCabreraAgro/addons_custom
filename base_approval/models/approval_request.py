@@ -303,9 +303,7 @@ class ApprovalRequest(models.Model):
                 )
                 if employee.parent_id.user_id:
                     manager_user_id = employee.parent_id.user_id.id
-                    manager_required = (
-                        request.manager_approval == "required"
-                    )
+                    manager_required = request.manager_approval == "required"
                     # We set the manager sequence to be lower than all others (9) so they are the first to approve.
                     self._create_or_update_approver(
                         manager_user_id,

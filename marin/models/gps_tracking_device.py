@@ -12,7 +12,9 @@ class GpsTrackingDevice(models.Model):
         string="Department",
     )
 
-    @api.depends("vehicle_id.driver_id", "vehicle_id.location", "vehicle_id.department_id")
+    @api.depends(
+        "vehicle_id.driver_id", "vehicle_id.location", "vehicle_id.department_id"
+    )
     def _compute_driver_name(self):
         """Override to include department dependency"""
         return super()._compute_driver_name()

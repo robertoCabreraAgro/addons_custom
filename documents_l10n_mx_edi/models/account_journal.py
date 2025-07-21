@@ -20,12 +20,16 @@ class AccountJournal(models.Model):
         for attachment_id in attachment_ids:
             name = ir_attachment.browse(attachment_id).name
             if name and name.lower().endswith(".xml") and check_duplicate:
-                duplicity_result = mx_edi_document._get_duplicate_cfdi(name, account_move)
+                duplicity_result = mx_edi_document._get_duplicate_cfdi(
+                    name, account_move
+                )
                 if duplicity_result["duplicated"]:
                     duplicated_attachments.append(name)
 
         if duplicated_attachments:
             duplicated_list = "\n".join(duplicated_attachments)
-            raise UserError(self.env._("Duplicated CFDI files detected:\n%s", duplicated_list))
+            raise UserError(
+                self.env._("Duplicated CFDI files detected:\n%s", duplicated_list)
+            )
 
         return super().create_document_from_attachment(attachment_ids)

@@ -84,7 +84,9 @@ class Document(models.Model):
             document.vendor_bill_name = vendor_bill_name
 
     def check_document_already_linked(self):
-        if documents_link_record := self.filtered(lambda d: d.res_model != "documents.document"):
+        if documents_link_record := self.filtered(
+            lambda d: d.res_model != "documents.document"
+        ):
             return {
                 "type": "ir.actions.client",
                 "tag": "display_notification",
@@ -137,7 +139,9 @@ class Document(models.Model):
 
     @api.depends("datas")
     def _compute_l10n_mx_edi_common_fields(self):
-        for rec in self.filtered(lambda doc: doc.l10n_mx_edi_is_cfdi and doc.attachment_id):
+        for rec in self.filtered(
+            lambda doc: doc.l10n_mx_edi_is_cfdi and doc.attachment_id
+        ):
             vals = self._prepare_l10n_mx_edi_common_fields(rec)
             rec.update(vals)
 
@@ -148,7 +152,9 @@ class Document(models.Model):
             ("res_model", "=", "documents.document"),
         ]
         if start_date:
-            domain.append(("l10n_mx_edi_stamp_date", ">=", start_date.strftime("%Y-%m-%d")))
+            domain.append(
+                ("l10n_mx_edi_stamp_date", ">=", start_date.strftime("%Y-%m-%d"))
+            )
 
         return domain
 
@@ -160,12 +166,18 @@ class Document(models.Model):
         3. Are as recent as 60 days.
         """
         ir_config = self.env["ir.config_parameter"].sudo()
-        batch_size = int(ir_config.get_param("l10n_mx_edi_marin.sat_batch_size", default=100))
-        max_days = int(ir_config.get_param("l10n_mx_edi_marin.sat_status_max_days", default=60))
+        batch_size = int(
+            ir_config.get_param("l10n_mx_edi_marin.sat_batch_size", default=100)
+        )
+        max_days = int(
+            ir_config.get_param("l10n_mx_edi_marin.sat_status_max_days", default=60)
+        )
         start_date = datetime.now() - timedelta(days=max_days)
         domain = self._get_update_sat_status_domain(start_date=start_date)
 
-        documents = self.search(domain, limit=batch_size + 1, order="last_sat_state_sync_date, id")
+        documents = self.search(
+            domain, limit=batch_size + 1, order="last_sat_state_sync_date, id"
+        )
         sync_date = fields.Datetime.now()
         auto_commit = self.env.context.get("auto_commit", True)
         processed_documents = self.browse()
@@ -228,12 +240,20 @@ class Document(models.Model):
 
     def _get_l10n_mx_edi_type_tag(self, key):
         values = {
-            "I": self.env.ref("documents_l10n_mx_edi.documents_l10n_mx_edi_tag_ingreso"),
+            "I": self.env.ref(
+                "documents_l10n_mx_edi.documents_l10n_mx_edi_tag_ingreso"
+            ),
             "E": self.env.ref("documents_l10n_mx_edi.documents_l10n_mx_edi_tag_egreso"),
-            "T": self.env.ref("documents_l10n_mx_edi.documents_l10n_mx_edi_tag_traslado"),
-            "P": self.env.ref("documents_l10n_mx_edi.documents_l10n_mx_edi_tag_reception"),
+            "T": self.env.ref(
+                "documents_l10n_mx_edi.documents_l10n_mx_edi_tag_traslado"
+            ),
+            "P": self.env.ref(
+                "documents_l10n_mx_edi.documents_l10n_mx_edi_tag_reception"
+            ),
             "N": self.env.ref("documents_l10n_mx_edi.documents_l10n_mx_edi_tag_nomina"),
-            "R": self.env.ref("documents_l10n_mx_edi.documents_l10n_mx_edi_tag_retencion"),
+            "R": self.env.ref(
+                "documents_l10n_mx_edi.documents_l10n_mx_edi_tag_retencion"
+            ),
         }
         return values.get(key, ())
 
@@ -277,7 +297,9 @@ class Document(models.Model):
         folder = (
             self.env.ref("documents_l10n_mx_edi.documents_l10n_mx_edi_folder_issued")
             if import_type == "issued"
-            else self.env.ref("documents_l10n_mx_edi.documents_l10n_mx_edi_folder_received")
+            else self.env.ref(
+                "documents_l10n_mx_edi.documents_l10n_mx_edi_folder_received"
+            )
         )
         return folder
 
@@ -292,7 +314,9 @@ class Document(models.Model):
         """
         if not rfc:
             return False
-        return self.env["res.company"].search(["|", ("vat", "=", rfc), ("vat", "=", "MX" + rfc)], limit=1)
+        return self.env["res.company"].search(
+            ["|", ("vat", "=", rfc), ("vat", "=", "MX" + rfc)], limit=1
+        )
 
     def _l10n_mx_edi_assign_cfdi_data(self):
         """Assign tags, folder and company to the document based on CFDI content.
@@ -316,10 +340,17 @@ class Document(models.Model):
 
         # Prepare values to update
         update_vals = {
-            "name": mx_edi_document._l10n_mx_edi_normalize_cfdi_filename(cfdi_infos["uuid"]),
-            "folder_id": self._documents_l10n_mx_edi_get_folder(cfdi_infos["supplier_rfc"]).id,
+            "name": mx_edi_document._l10n_mx_edi_normalize_cfdi_filename(
+                cfdi_infos["uuid"]
+            ),
+            "folder_id": self._documents_l10n_mx_edi_get_folder(
+                cfdi_infos["supplier_rfc"]
+            ).id,
             "l10n_mx_edi_is_cfdi": True,
-            "tag_ids": [Command.link(tag_id) for tag_id in self._prepare_l10n_mx_edi_tags(cfdi_infos)],
+            "tag_ids": [
+                Command.link(tag_id)
+                for tag_id in self._prepare_l10n_mx_edi_tags(cfdi_infos)
+            ],
             "company_id": company.id,
         }
 
@@ -345,7 +376,9 @@ class Document(models.Model):
             new_vals_list.append(vals)
 
         created_documents = super().create(new_vals_list)
-        for doc in created_documents.filtered(lambda r: splitext(r.name)[1].upper() == ".XML"):
+        for doc in created_documents.filtered(
+            lambda r: splitext(r.name)[1].upper() == ".XML"
+        ):
             doc._l10n_mx_edi_assign_cfdi_data()
 
         return created_documents

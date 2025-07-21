@@ -8,7 +8,9 @@ class L10nMxEdiFiscalRegime(models.Model):
 
     code = fields.Char(required=True, size=3, help="SAT fiscal regime code")
     name = fields.Char(required=True, help="Fiscal regime description")
-    active = fields.Boolean(default=True, help="Set to false to hide the fiscal regime without removing it")
+    active = fields.Boolean(
+        default=True, help="Set to false to hide the fiscal regime without removing it"
+    )
 
     @api.depends("code", "name")
     def _compute_display_name(self):

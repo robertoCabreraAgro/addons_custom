@@ -71,17 +71,13 @@ class StockPicking(models.Model):
             if forced_outgoing_locations:
                 locations_str = ", ".join(list(forced_outgoing_locations))
                 picking.message_post(
-                    body=_(
-                        "User %s confirmed OUTGOING from blocked location(s): %s."
-                    )
+                    body=_("User %s confirmed OUTGOING from blocked location(s): %s.")
                     % (self.env.user.name, locations_str)
                 )
 
             if forced_incoming_locations:
                 locations_str = ", ".join(list(forced_incoming_locations))
                 picking.message_post(
-                    body=_(
-                        "User %s confirmed INCOMING to blocked location(s): %s."
-                    )
+                    body=_("User %s confirmed INCOMING to blocked location(s): %s.")
                     % (self.env.user.name, locations_str)
                 )

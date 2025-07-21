@@ -21,4 +21,7 @@ def migrate_reconditioned_data(cr):
         """
     )
     non_reconditioned_updated = cr.rowcount
-    _logger.info("Updated %s non-reconditioned lots with original_expiration_date", non_reconditioned_updated)
+    _logger.info(
+        "Updated %s non-reconditioned lots with original_expiration_date",
+        non_reconditioned_updated,
+    )

@@ -471,12 +471,16 @@ class AccountMove(models.Model):
                     move_line.purchase_line_ids = po_line.id
         return True
 
-    @api.depends('state', 'l10n_mx_edi_cfdi_state', 'l10n_mx_edi_cfdi_sat_state')
+    @api.depends("state", "l10n_mx_edi_cfdi_state", "l10n_mx_edi_cfdi_sat_state")
     def _compute_l10n_mx_edi_update_sat_needed(self):
-        purchase_moves = self.filtered(lambda m: m.is_purchase_document() and m.l10n_mx_edi_invoice_document_ids)
+        purchase_moves = self.filtered(
+            lambda m: m.is_purchase_document() and m.l10n_mx_edi_invoice_document_ids
+        )
         for move in purchase_moves:
             move.l10n_mx_edi_update_sat_needed = True
-        return super(AccountMove, self - purchase_moves)._compute_l10n_mx_edi_update_sat_needed()
+        return super(
+            AccountMove, self - purchase_moves
+        )._compute_l10n_mx_edi_update_sat_needed()
 
     def _get_sat_status_cancellation_message(self):
         """Generate the message body for cancellation notification."""

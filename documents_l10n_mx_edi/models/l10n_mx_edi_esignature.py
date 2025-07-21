@@ -108,8 +108,16 @@ class Esignature(models.Model):
     def get_cert_data(self):
         self.ensure_one()
         cer_pem_dirty = self.get_pem_cer(self.content)
-        certificate = x509.load_pem_x509_certificate(cer_pem_dirty, backend=default_backend())
-        cer_pem = b"".join([line for line in cer_pem_dirty.splitlines() if not line.startswith(b"-----")])
+        certificate = x509.load_pem_x509_certificate(
+            cer_pem_dirty, backend=default_backend()
+        )
+        cer_pem = b"".join(
+            [
+                line
+                for line in cer_pem_dirty.splitlines()
+                if not line.startswith(b"-----")
+            ]
+        )
         return cer_pem, certificate
 
     def get_pk_data(self):
@@ -134,7 +142,9 @@ class Esignature(models.Model):
         return key_pem, private_key
 
     def get_mx_current_datetime(self):
-        return fields.Datetime.context_timestamp(self.with_context(tz="America/Mexico_City"), fields.Datetime.now())
+        return fields.Datetime.context_timestamp(
+            self.with_context(tz="America/Mexico_City"), fields.Datetime.now()
+        )
 
     def get_valid_esignature(self):
         mexican_dt = self.get_mx_current_datetime()
@@ -159,7 +169,9 @@ class Esignature(models.Model):
                 cn_attr = subject.get_attributes_for_oid(NameOID.COMMON_NAME)
                 holder = cn_attr[0].value if cn_attr else None
 
-                x500_attr = subject.get_attributes_for_oid(NameOID.X500_UNIQUE_IDENTIFIER)
+                x500_attr = subject.get_attributes_for_oid(
+                    NameOID.X500_UNIQUE_IDENTIFIER
+                )
                 holder_vat = x500_attr[0].value.split(" ")[0] if x500_attr else None
 
             except Exception:
@@ -172,9 +184,13 @@ class Esignature(models.Model):
             record.date_end = not_after.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
             if mexican_dt > not_after:
-                raise ValidationError(self.env._("The certificate is expired since %s", record.date_end))
+                raise ValidationError(
+                    self.env._("The certificate is expired since %s", record.date_end)
+                )
 
             try:
                 record.get_pk_data()
             except Exception:
-                raise ValidationError(self.env._("The certificate key and/or password is/are invalid."))
+                raise ValidationError(
+                    self.env._("The certificate key and/or password is/are invalid.")
+                )

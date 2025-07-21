@@ -15,7 +15,7 @@ class StockLot(models.Model):
     original_expiration_date = fields.Date(
         string="Original Expiration Date",
         help="Original expiration date before reconditioning",
-        compute='_compute_original_expiration_date',
+        compute="_compute_original_expiration_date",
         store=True,
     )
 

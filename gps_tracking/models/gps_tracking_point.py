@@ -78,7 +78,11 @@ class GpsTrackingPoint(models.Model):
     isf_check_engine_indicator = fields.Integer(string="ISF Check Engine Indicator")
     iccid1 = fields.Char(string="ICCID1")
     total_odometer = fields.Integer(string="Total Odometer")
-    real_odometer = fields.Float(string="Real Odometer", digits=(16, 2), help="Corrected odometer reading based on device configuration")
+    real_odometer = fields.Float(
+        string="Real Odometer",
+        digits=(16, 2),
+        help="Corrected odometer reading based on device configuration",
+    )
     fuel_level_l = fields.Float(string="Fuel Level (L)", digits=(16, 2))
     engine_total_hours = fields.Float(string="Engine Total Hours", digits=(16, 2))
     fuel_consumed_counted = fields.Float(string="Fuel Consumed Counted", digits=(16, 2))

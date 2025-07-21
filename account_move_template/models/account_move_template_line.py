@@ -56,7 +56,7 @@ class AccountMoveTemplateLine(models.Model):
     product_category_id = fields.Many2one(
         comodel_name="product.category",
         string="Product Category",
-        help="If set, a random product will be selected from this category (and subcategories) when generating the move."
+        help="If set, a random product will be selected from this category (and subcategories) when generating the move.",
     )
     product_uom_id = fields.Many2one(
         comodel_name="uom.uom",
@@ -99,7 +99,9 @@ class AccountMoveTemplateLine(models.Model):
         for line in self:
             if line.product_id and line.product_category_id:
                 raise ValidationError(
-                    _("You can set either a specific product or a product category, not both.")
+                    _(
+                        "You can set either a specific product or a product category, not both."
+                    )
                 )
 
     @api.depends("product_id")
@@ -136,36 +138,40 @@ class AccountMoveTemplateLine(models.Model):
         """
         Get a random product from the specified category and its subcategories.
         The product must have exclusively supplier_taxes_id = 1029 (VAT 0%).
-        
+
         Args:
             category: product.category record
-            
+
         Returns:
             product.product record
-            
+
         Raises:
             UserError: If no suitable product is found
         """
         # Get all category IDs including subcategories
-        category_ids = category.search([('id', 'child_of', category.id)]).ids
-        
+        category_ids = category.search([("id", "child_of", category.id)]).ids
+
         # Search for products in these categories with the required tax
-        products_with_tax = self.env['product.product'].search([
-            ('categ_id', 'in', category_ids),
-            ('supplier_taxes_id', 'in', [1029]),
-            ('active', '=', True),
-        ])
-        
+        products_with_tax = self.env["product.product"].search(
+            [
+                ("categ_id", "in", category_ids),
+                ("supplier_taxes_id", "in", [1029]),
+                ("active", "=", True),
+            ]
+        )
+
         # Filter products that have ONLY the VAT 0% tax (ID 1029)
         filtered_products = products_with_tax.filtered(
             lambda p: set(p.supplier_taxes_id.ids) == {1029}
         )
-        
+
         if not filtered_products:
             raise UserError(
-                _("No product found in category '%s' with exclusively VAT 0%% tax (ID: 1029).") 
+                _(
+                    "No product found in category '%s' with exclusively VAT 0%% tax (ID: 1029)."
+                )
                 % category.display_name
             )
-        
+
         # Return a random product from the filtered list
         return random.choice(filtered_products)

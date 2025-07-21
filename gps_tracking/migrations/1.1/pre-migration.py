@@ -2,8 +2,11 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
+
 def migrate(cr, version):
-    _logger.info("Starting PRE-migration to add and populate driver_id on gps.tracking.point.")
+    _logger.info(
+        "Starting PRE-migration to add and populate driver_id on gps.tracking.point."
+    )
 
     # Step 1: Manually add the column to the table if it doesn't exist.
     cr.execute(
@@ -14,7 +17,9 @@ def migrate(cr, version):
                 driver_id INTEGER;
         """
     )
-    _logger.info("Step 1/3: Column gps_tracking_point.driver_id created or already exists.")
+    _logger.info(
+        "Step 1/3: Column gps_tracking_point.driver_id created or already exists."
+    )
 
     # Step 2: Add the foreign key constraint that Odoo would normally create.
     cr.execute(
@@ -41,7 +46,9 @@ def migrate(cr, version):
         )
         _logger.info("Step 2/3: Foreign key constraint for driver_id has been created.")
     else:
-        _logger.info("Step 2/3: Foreign key constraint for driver_id already exists, skipping.")
+        _logger.info(
+            "Step 2/3: Foreign key constraint for driver_id already exists, skipping."
+        )
 
     # Step 3: Now that the column exists, populate it using the efficient query.
     cr.execute(

@@ -30,5 +30,5 @@ class PurchaseBillLineMatch(models.Model):
             AND aml.product_id IS NOT NULL
             AND NOT am.x_ignore_purchase_bill_matching
             """,
-            super()._where_aml()
+            super()._where_aml(),
         )

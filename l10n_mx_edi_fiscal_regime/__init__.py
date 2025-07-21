@@ -10,7 +10,9 @@ def post_init_hook(env):
         fiscal_regime_code = partner.l10n_mx_edi_fiscal_regime
 
         # Find the corresponding fiscal regime record
-        fiscal_regime = env["l10n_mx_edi.fiscal.regime"].search([("code", "=", fiscal_regime_code)], limit=1)
+        fiscal_regime = env["l10n_mx_edi.fiscal.regime"].search(
+            [("code", "=", fiscal_regime_code)], limit=1
+        )
 
         if fiscal_regime:
             # Update the partner with the new Many2one field

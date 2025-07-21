@@ -10,7 +10,7 @@ class FleetVehicle(models.Model):
         comodel_name="gps.tracking.device",
         inverse_name="vehicle_id",
         string="GPS Devices",
-        help="GPS tracking devices associated with this vehicle"
+        help="GPS tracking devices associated with this vehicle",
     )
 
     def get_odometer_at(self, target_datetime):
@@ -31,10 +31,11 @@ class FleetVehicle(models.Model):
             return False
 
         # Find the closest tracking point to the target datetime
-        point = self.env['gps.tracking.point'].search([
-            ('device_id', '=', device.id),
-            ('timestamp', '<=', target_datetime)
-        ], order='timestamp desc', limit=1)
+        point = self.env["gps.tracking.point"].search(
+            [("device_id", "=", device.id), ("timestamp", "<=", target_datetime)],
+            order="timestamp desc",
+            limit=1,
+        )
 
         if not point:
             return False
@@ -76,7 +77,7 @@ class FleetVehicle(models.Model):
         """
         return self.get_fuel_at(datetime.now())
 
-    @api.constrains('gps_device_ids')
+    @api.constrains("gps_device_ids")
     def _check_gps_device_configuration(self):
         """Validate that all GPS devices have configuration."""
         for vehicle in self:

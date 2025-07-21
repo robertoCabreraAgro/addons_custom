@@ -406,7 +406,7 @@ class StockPickingTracker(models.Model):
         """Action to get fuel level from GPS at start a route"""
         self.ensure_one()
         fuel_data = self.vehicle_id.get_current_fuel()
-        self.fuel_start = fuel_data.get('percentage', 0) if fuel_data else 0
+        self.fuel_start = fuel_data.get("percentage", 0) if fuel_data else 0
 
     def action_update_odometer_end(self):
         """Action to get odometer from GPS at end a route"""
@@ -417,7 +417,7 @@ class StockPickingTracker(models.Model):
         """Action to get fuel level from GPS at end a route"""
         self.ensure_one()
         fuel_data = self.vehicle_id.get_current_fuel()
-        self.fuel_end = fuel_data.get('percentage', 0) if fuel_data else 0
+        self.fuel_end = fuel_data.get("percentage", 0) if fuel_data else 0
 
     def action_view_pickings(self):
         self.ensure_one()

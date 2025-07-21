@@ -8,11 +8,9 @@ class FleetVehicleLog(models.Model):
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _description = "Logs for vehicles"
 
-
     def compute_next_year_date(self, strdate):
         start_date = fields.Date.from_string(strdate)
         return fields.Date.to_string(start_date + relativedelta(years=1))
-
 
     company_id = fields.Many2one(
         comodel_name="res.company",
@@ -52,7 +50,7 @@ class FleetVehicleLog(models.Model):
     service_ids = fields.Many2many(
         comodel_name="product.product",
         string="Included Services",
-        help="When the log is of type \"Contract\" here the included services can be specified"
+        help='When the log is of type "Contract" here the included services can be specified',
     )
     active = fields.Boolean(default=True)
     type = fields.Selection(
@@ -76,7 +74,7 @@ class FleetVehicleLog(models.Model):
         string="State",
         default="new",
         group_expand=True,
-        tracking=True
+        tracking=True,
     )
     date = fields.Date(
         default=fields.Date.context_today,
@@ -90,10 +88,12 @@ class FleetVehicleLog(models.Model):
     )
     date_end = fields.Date(
         string="Expiration Date",
-        default=lambda self: self.compute_next_year_date(fields.Date.context_today(self)),
+        default=lambda self: self.compute_next_year_date(
+            fields.Date.context_today(self)
+        ),
         tracking=True,
         help="Date when the coverage of the contract expirates "
-             "(by default, one year after begin date)",
+        "(by default, one year after begin date)",
     )
     odometer = fields.Float(
         string="Odometer Value",
@@ -112,7 +112,6 @@ class FleetVehicleLog(models.Model):
         string="Warning Date",
         compute="_compute_days_left",
     )
-
 
     @api.depends("date_end")
     def _compute_days_left(self):

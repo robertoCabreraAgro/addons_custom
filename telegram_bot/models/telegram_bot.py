@@ -46,10 +46,17 @@ class TelegramBot(models.Model):
         try:
             response = requests.post(api_url, json=payload, timeout=10)
             response.raise_for_status()
-            _logger.info("Request '%s' sent to chat %s by bot '%s'.", method, payload.get("chat_id"), self.name)
+            _logger.info(
+                "Request '%s' sent to chat %s by bot '%s'.",
+                method,
+                payload.get("chat_id"),
+                self.name,
+            )
             return response.json()
         except requests.exceptions.RequestException as e:
-            _logger.error("Failed to send request '%s' for bot '%s': %s", method, self.name, e)
+            _logger.error(
+                "Failed to send request '%s' for bot '%s': %s", method, self.name, e
+            )
             return False
 
     def send_message(self, chat_id, text):

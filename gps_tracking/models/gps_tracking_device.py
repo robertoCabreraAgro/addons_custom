@@ -162,7 +162,9 @@ class GpsTrackingDevice(models.Model):
                 device.inactivity_status = "inactive_alert"
                 continue
 
-            last_report_utc = fields.Datetime.to_datetime(device.timestamp).replace(tzinfo=utc)
+            last_report_utc = fields.Datetime.to_datetime(device.timestamp).replace(
+                tzinfo=utc
+            )
 
             inactive_duration = now_utc - last_report_utc
 
@@ -221,7 +223,7 @@ class GpsTrackingDevice(models.Model):
             else:
                 device.history_route = False
 
-    @api.constrains('vehicle_id', 'config_id')
+    @api.constrains("vehicle_id", "config_id")
     def _check_vehicle_config_association(self):
         """Validate that device has configuration when associated with vehicle."""
         for device in self:
@@ -230,7 +232,6 @@ class GpsTrackingDevice(models.Model):
                     "GPS device must have a configuration assigned before "
                     "associating it with a vehicle."
                 )
-
 
     def get_fuel_at(self, target_datetime):
         """Get fuel level at specific datetime based on configuration.
@@ -246,10 +247,11 @@ class GpsTrackingDevice(models.Model):
             raise ValueError("Device must have a configuration to get fuel reading")
 
         # Find the closest tracking point to the target datetime
-        point = self.env['gps.tracking.point'].search([
-            ('device_id', '=', self.id),
-            ('timestamp', '<=', target_datetime)
-        ], order='timestamp desc', limit=1)
+        point = self.env["gps.tracking.point"].search(
+            [("device_id", "=", self.id), ("timestamp", "<=", target_datetime)],
+            order="timestamp desc",
+            limit=1,
+        )
 
         if not point:
             return False
@@ -262,20 +264,20 @@ class GpsTrackingDevice(models.Model):
         percentage = self.config_id.get_fuel_level_percentage(
             fuel_percentage=fuel_percentage,
             fuel_deciliters=fuel_deciliters,
-            vehicle=self.vehicle_id
+            vehicle=self.vehicle_id,
         )
         liters = self.config_id.get_fuel_level_liters(
             fuel_percentage=fuel_percentage,
             fuel_deciliters=fuel_deciliters,
-            vehicle=self.vehicle_id
+            vehicle=self.vehicle_id,
         )
 
         if percentage is False and liters is False:
             return False
 
         return {
-            'percentage': percentage,
-            'liters': liters,
-            'raw_percentage': fuel_percentage,
-            'raw_deciliters': fuel_deciliters,
+            "percentage": percentage,
+            "liters": liters,
+            "raw_percentage": fuel_percentage,
+            "raw_deciliters": fuel_deciliters,
         }

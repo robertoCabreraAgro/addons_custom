@@ -14,7 +14,7 @@ class AccountMoveTemplateLineRun(models.TransientModel):
     template_line_id = fields.Many2one(
         comodel_name="account.move.template.line",
         string="Template Line",
-        help="Reference to the original template line"
+        help="Reference to the original template line",
     )
     name = fields.Char(string="Label")
     sequence = fields.Integer()

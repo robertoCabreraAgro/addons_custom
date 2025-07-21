@@ -46,11 +46,16 @@ class HrAttendanceTelegramController(TelegramController):
         :return: True if valid employee, False otherwise
         """
         if not partner:
-            bot.send_message(chat.chat_id, "Tu chat debe estar vinculado a un contacto para usar comandos de asistencia.")
+            bot.send_message(
+                chat.chat_id,
+                "Tu chat debe estar vinculado a un contacto para usar comandos de asistencia.",
+            )
             return False
 
         if not partner.sudo().employee_ids:
-            bot.send_message(chat.chat_id, "Solo los empleados pueden usar comandos de asistencia.")
+            bot.send_message(
+                chat.chat_id, "Solo los empleados pueden usar comandos de asistencia."
+            )
             return False
 
         return True
@@ -78,7 +83,10 @@ class HrAttendanceTelegramController(TelegramController):
             base_dt_user_tz = pytz.utc.localize(base_date_utc).astimezone(user_tz)
             # Default to the old date with the current time.
             target_dt_user_tz = base_dt_user_tz.replace(
-                hour=now_user_tz.hour, minute=now_user_tz.minute, second=now_user_tz.second, microsecond=0
+                hour=now_user_tz.hour,
+                minute=now_user_tz.minute,
+                second=now_user_tz.second,
+                microsecond=0,
             )
         else:
             # No base date, so we use today's date and the current time.
@@ -95,9 +103,7 @@ class HrAttendanceTelegramController(TelegramController):
                 # The base (target_dt_user_tz) already has seconds/microseconds cleared.
                 target_dt_user_tz = target_dt_user_tz.replace(hour=hour, minute=minute)
             except (ValueError, IndexError):
-                error_msg = (
-                    f"El formato de hora '{time_str}' es inválido. Por favor, usa el formato HH:MM (ej. 17:00)."
-                )
+                error_msg = f"El formato de hora '{time_str}' es inválido. Por favor, usa el formato HH:MM (ej. 17:00)."
                 return None, error_msg
 
         # Always convert from the user's timezone to a naive UTC datetime
@@ -126,7 +132,9 @@ class HrAttendanceTelegramController(TelegramController):
             order="check_in desc",
         )
 
-    def _handle_check_in_command(self, bot, chat, args, partner=False, internal_user=False):
+    def _handle_check_in_command(
+        self, bot, chat, args, partner=False, internal_user=False
+    ):
         """Handles the /entrada command to record a check-in for the user."""
         if not self._validate_employee_access(bot, chat, partner):
             return
@@ -140,7 +148,10 @@ class HrAttendanceTelegramController(TelegramController):
         # Find the latest attendance for today to check its status
         latest_attendance = self._get_last_attendance(partner, internal_user)
         if latest_attendance.check_in:
-            bot.send_message(chat.chat_id, "Ya tienes una entrada registrada sin salida el día de hoy.")
+            bot.send_message(
+                chat.chat_id,
+                "Ya tienes una entrada registrada sin salida el día de hoy.",
+            )
             return
 
         try:
@@ -152,7 +163,9 @@ class HrAttendanceTelegramController(TelegramController):
                     "check_in": check_in_time,
                 }
             )
-            formatted_time = check_in_time.astimezone(pytz.timezone(user_tz_str)).strftime("%H:%M")
+            formatted_time = check_in_time.astimezone(
+                pytz.timezone(user_tz_str)
+            ).strftime("%H:%M")
             user_name = internal_user.name if internal_user else partner.name
             bot.send_message(
                 chat.chat_id,
@@ -169,33 +182,44 @@ class HrAttendanceTelegramController(TelegramController):
             new_attendance.unlink()
             bot.send_message(chat.chat_id, f"Error: {e}")
 
-    def _handle_check_out_command(self, bot, chat, args, partner=False, internal_user=False):
+    def _handle_check_out_command(
+        self, bot, chat, args, partner=False, internal_user=False
+    ):
         """Handles the /salida command to record a check-out for the user."""
         if not self._validate_employee_access(bot, chat, partner):
             return
 
         attendance = self._get_last_attendance(partner, internal_user)
         if not attendance.check_in:
-            bot.send_message(chat.chat_id, "No tienes una entrada abierta para registrar una salida.")
+            bot.send_message(
+                chat.chat_id, "No tienes una entrada abierta para registrar una salida."
+            )
             return
         user_tz_str = (internal_user and internal_user.tz) or DEFAULT_TZ
-        check_out_time, error = self._parse_time_argument(args, user_tz_str, base_date_utc=attendance.check_in)
+        check_out_time, error = self._parse_time_argument(
+            args, user_tz_str, base_date_utc=attendance.check_in
+        )
         if error:
             bot.send_message(chat.chat_id, error)
             return
         try:
             # Update the attendance record with the check-out time
             attendance.write({"check_out": check_out_time})
-            formatted_time = check_out_time.astimezone(pytz.timezone(user_tz_str)).strftime("%H:%M")
+            formatted_time = check_out_time.astimezone(
+                pytz.timezone(user_tz_str)
+            ).strftime("%H:%M")
             user_name = internal_user.name if internal_user else partner.name
             bot.send_message(
-                chat.chat_id, f"Se ha registrado tu salida a las {formatted_time}. ¡Hasta luego, {user_name}!"
+                chat.chat_id,
+                f"Se ha registrado tu salida a las {formatted_time}. ¡Hasta luego, {user_name}!",
             )
         except ValidationError as e:
             attendance.write({"check_out": False})
             bot.send_message(chat.chat_id, f"Error: {e}")
 
-    def _handle_lunch_out_command(self, bot, chat, args, partner=False, internal_user=False):
+    def _handle_lunch_out_command(
+        self, bot, chat, args, partner=False, internal_user=False
+    ):
         """Handles the /comida command to record the start of a lunch break."""
         if not self._validate_employee_access(bot, chat, partner):
             return
@@ -208,7 +232,10 @@ class HrAttendanceTelegramController(TelegramController):
 
         attendance = self._get_last_attendance(partner, internal_user)
         if not attendance.check_in:
-            bot.send_message(chat.chat_id, "Debes tener una entrada activa para registrar tu salida a comer.")
+            bot.send_message(
+                chat.chat_id,
+                "Debes tener una entrada activa para registrar tu salida a comer.",
+            )
             return
 
         if attendance.lunch_out:
@@ -216,10 +243,17 @@ class HrAttendanceTelegramController(TelegramController):
             return
         # Update the attendance record with the lunch start time
         attendance.write({"lunch_out": lunch_out_time})
-        formatted_time = lunch_out_time.astimezone(pytz.timezone(user_tz_str)).strftime("%H:%M")
-        bot.send_message(chat.chat_id, f"Se ha registrado tu salida a comer a las {formatted_time}. ¡Buen provecho!")
+        formatted_time = lunch_out_time.astimezone(pytz.timezone(user_tz_str)).strftime(
+            "%H:%M"
+        )
+        bot.send_message(
+            chat.chat_id,
+            f"Se ha registrado tu salida a comer a las {formatted_time}. ¡Buen provecho!",
+        )
 
-    def _handle_lunch_in_command(self, bot, chat, args, partner=False, internal_user=False):
+    def _handle_lunch_in_command(
+        self, bot, chat, args, partner=False, internal_user=False
+    ):
         """Handles the /regresocomida command to record the end of a lunch break."""
         if not self._validate_employee_access(bot, chat, partner):
             return
@@ -233,7 +267,8 @@ class HrAttendanceTelegramController(TelegramController):
         attendance = self._get_last_attendance(partner, internal_user)
         if not attendance.check_in or not attendance.lunch_out:
             bot.send_message(
-                chat.chat_id, "No has registrado una salida a comer, por lo que no puedes registrar tu regreso."
+                chat.chat_id,
+                "No has registrado una salida a comer, por lo que no puedes registrar tu regreso.",
             )
             return
 
@@ -244,15 +279,22 @@ class HrAttendanceTelegramController(TelegramController):
         try:
             # Update the attendance record with the lunch end time
             attendance.write({"lunch_in": lunch_in_time})
-            formatted_time = lunch_in_time.astimezone(pytz.timezone(user_tz_str)).strftime("%H:%M")
-            bot.send_message(chat.chat_id, f"Se ha registrado tu regreso de la comida a las {formatted_time}.")
+            formatted_time = lunch_in_time.astimezone(
+                pytz.timezone(user_tz_str)
+            ).strftime("%H:%M")
+            bot.send_message(
+                chat.chat_id,
+                f"Se ha registrado tu regreso de la comida a las {formatted_time}.",
+            )
         except ValidationError as e:
             attendance.write({"lunch_in": False})
             bot.send_message(chat.chat_id, f"Error: {e}")
 
     def _handle_help_command(self, bot, chat, args, partner=False, internal_user=False):
         """Extends the base help command to include attendance-related commands."""
-        res = super()._handle_help_command(bot, chat, args, partner=partner, internal_user=internal_user)
+        res = super()._handle_help_command(
+            bot, chat, args, partner=partner, internal_user=internal_user
+        )
         available_cmds = [cmd.name for cmd in bot.command_ids]
 
         if partner and partner.sudo().employee_ids and "/entrada" in available_cmds:
