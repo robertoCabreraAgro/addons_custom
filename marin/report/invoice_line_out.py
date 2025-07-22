@@ -241,20 +241,36 @@ class InvoiceLineOut(models.Model):
         """This override allows us to correctly calculate the average price of products."""
         if aggregate_spec == "price_unit:avg":
             return SQL(
-                """COALESCE(
+                """
+                COALESCE(
                     SUM(%(f_price)s) / NULLIF(SUM(%(f_qty)s), 0.0),
                     0
-                )""",
+                )
+                """,
                 f_price=self._field_to_sql(self._table, "price_subtotal", query),
+                f_qty=self._field_to_sql(self._table, "quantity", query),
+            )
+
+        elif aggregate_spec == "purchase_price:avg":
+            return SQL(
+                """
+                COALESCE(
+                    SUM(%(f_price)s) / NULLIF(SUM(%(f_qty)s), 0.0),
+                    0
+                )
+                """,
+                f_price=self._field_to_sql(self._table, "purchase_price_total", query),
                 f_qty=self._field_to_sql(self._table, "quantity", query),
             )
 
         elif aggregate_spec == "margin_percent:avg":
             return SQL(
-                """COALESCE(
+                """
+                COALESCE(
                     SUM(%(f_margin)s) / NULLIF(SUM(%(f_subtotal)s), 0.0),
                     0
-                )""",
+                )
+                """,
                 f_margin=self._field_to_sql(self._table, "margin", query),
                 f_subtotal=self._field_to_sql(self._table, "price_subtotal", query),
             )
