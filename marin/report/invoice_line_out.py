@@ -106,6 +106,8 @@ class InvoiceLineOut(models.Model):
     day_of_year = fields.Integer(readonly=True)
     day_of_month = fields.Integer(readonly=True)
     day_of_week = fields.Integer(readonly=True)
+
+    # Product fields
     product_id = fields.Many2one(
         comodel_name="product.product",
         readonly=True,
@@ -129,6 +131,8 @@ class InvoiceLineOut(models.Model):
         string="Manufacturer",
         readonly=True,
     )
+
+    # ?? fields
     quantity = fields.Float(readonly=True)
     price_unit = fields.Float(readonly=True, aggregator="avg")
     discount = fields.Float(readonly=True, aggregator="avg")
@@ -138,6 +142,13 @@ class InvoiceLineOut(models.Model):
     purchase_price_total = fields.Float("Total Purchase", readonly=True)
     margin = fields.Float(readonly=True)
     margin_percent = fields.Float(readonly=True, aggregator="avg")
+
+    # Collection fields
+    collected_quantity = fields.Float(readonly=True)
+    collected_price_subtotal = fields.Float(readonly=True)
+    collected_price_total = fields.Float(readonly=True)
+    collected_purchase_price_total = fields.Float(readonly=True)
+    collected_margin = fields.Float(readonly=True)
 
     # ------------------------------------------------------------
     # INITIALIZATION
@@ -205,7 +216,29 @@ class InvoiceLineOut(models.Model):
             aml.purchase_price,
             ROUND((aml.purchase_price * quantity), 2) AS purchase_price_total,
             aml.margin,
-            aml.margin_percent
+            aml.margin_percent,
+
+            -- Collected values
+            aml.quantity * COALESCE(
+                (move.amount_total - move.amount_residual) / NULLIF(move.amount_total, 0.0),
+                0
+            ) AS collected_quantity,
+            aml.price_subtotal * COALESCE(
+                (move.amount_total - move.amount_residual) / NULLIF(move.amount_total, 0.0),
+                0
+            ) AS collected_price_subtotal,
+            aml.price_total * COALESCE(
+                (move.amount_total - move.amount_residual) / NULLIF(move.amount_total, 0.0),
+                0
+            ) AS collected_price_total,
+            aml.purchase_price * quantity * COALESCE(
+                (move.amount_total - move.amount_residual) / NULLIF(move.amount_total, 0.0),
+                0
+            ) AS collected_purchase_price_total,
+            aml.margin * COALESCE(
+                (move.amount_total - move.amount_residual) / NULLIF(move.amount_total, 0.0),
+                0
+            ) AS collected_margin
         """
 
     def _from(self):
@@ -228,7 +261,7 @@ class InvoiceLineOut(models.Model):
     def _where(self):
         return """
             move.move_type IN ('out_invoice', 'out_refund')
-            AND move."state" = 'posted'
+            AND move.state = 'posted'
             AND journal.x_treatment IN ('fiscal_real', 'not_fiscal_real')
             AND aml.display_type = 'product'
         """
