@@ -27,14 +27,24 @@ class AbcClassificationLevel(models.Model):
     def _check_percentage(self):
         for level in self:
             if level.percentage > 100.0:
-                raise ValidationError(self.env._("The percentage cannot be greater than 100."))
+                raise ValidationError(
+                    self.env._("The percentage cannot be greater than 100.")
+                )
             if level.percentage <= 0.0:
-                raise ValidationError(self.env._("The percentage should be a positive number."))
+                raise ValidationError(
+                    self.env._("The percentage should be a positive number.")
+                )
 
     @api.constrains("percentage_products")
     def _check_percentage_products(self):
         for level in self:
             if level.percentage_products > 100.0:
-                raise ValidationError(self.env._("The percentage of products cannot be greater than 100."))
+                raise ValidationError(
+                    self.env._("The percentage of products cannot be greater than 100.")
+                )
             if level.percentage_products <= 0.0:
-                raise ValidationError(self.env._("The percentage of products should be a positive number."))
+                raise ValidationError(
+                    self.env._(
+                        "The percentage of products should be a positive number."
+                    )
+                )

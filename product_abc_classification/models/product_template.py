@@ -27,9 +27,13 @@ class ProductTemplate(models.Model):
         "product_variant_ids.abc_classification_profile_ids",
     )
     def _compute_abc_classification_profile_ids(self):
-        unique_variants = self.filtered(lambda template: len(template.product_variant_ids) == 1)
+        unique_variants = self.filtered(
+            lambda template: len(template.product_variant_ids) == 1
+        )
         for template in unique_variants:
-            template.abc_classification_profile_ids = template.product_variant_ids.abc_classification_profile_ids
+            template.abc_classification_profile_ids = (
+                template.product_variant_ids.abc_classification_profile_ids
+            )
         for template in self - unique_variants:
             template.abc_classification_profile_ids = False
 
@@ -38,10 +42,14 @@ class ProductTemplate(models.Model):
         "product_variant_ids.abc_classification_product_level_ids",
     )
     def _compute_abc_classification_product_level_ids(self):
-        unique_variants = self.filtered(lambda template: len(template.product_variant_ids) == 1)
+        unique_variants = self.filtered(
+            lambda template: len(template.product_variant_ids) == 1
+        )
         for template in unique_variants:
             variants = template.product_variant_ids
-            template.abc_classification_product_level_ids = variants.abc_classification_product_level_ids
+            template.abc_classification_product_level_ids = (
+                variants.abc_classification_product_level_ids
+            )
         for template in self - unique_variants:
             template.abc_classification_product_level_ids = False
 
@@ -49,10 +57,14 @@ class ProductTemplate(models.Model):
         for template in self:
             if len(template.product_variant_ids) == 1:
                 variants = template.product_variant_ids
-                variants.abc_classification_profile_ids = template.abc_classification_profile_ids
+                variants.abc_classification_profile_ids = (
+                    template.abc_classification_profile_ids
+                )
 
     def _inverse_abc_classification_product_level_ids(self):
         for template in self:
             if len(template.product_variant_ids) == 1:
                 variants = template.product_variant_ids
-                variants.abc_classification_product_level_ids = template.abc_classification_product_level_ids
+                variants.abc_classification_product_level_ids = (
+                    template.abc_classification_product_level_ids
+                )

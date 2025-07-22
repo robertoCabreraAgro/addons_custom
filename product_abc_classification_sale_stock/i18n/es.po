@@ -238,15 +238,6 @@ msgstr "Almacén"
 msgid "You must specify a warehouse for {profile_name}"
 msgstr "Debe especificar un almacén para {profile_name}"
 
-#. module: product_abc_classification_sale_stock
-#: model:ir.model.fields,field_description:product_abc_classification_sale_stock.field_abc_classification_product_level_history__season
-msgid "Season"
-msgstr "Estación"
-
-#. module: product_abc_classification_sale_stock
-#: model:ir.model.fields,field_description:product_abc_classification_sale_stock.field_abc_classification_product_level_history__zone
-msgid "Zone"
-msgstr "Zona"
 
 #. module: product_abc_classification_sale_stock
 #: model:ir.model.fields,field_description:product_abc_classification_sale_stock.field_abc_classification_product_level_history__classification_variance
@@ -288,15 +279,6 @@ msgstr "Nivel B"
 msgid "Level C"
 msgstr "Nivel C"
 
-#. module: product_abc_classification_sale_stock
-#: model_terms:ir.ui.view,arch_db:product_abc_classification_sale_stock.abc_sale_stock_level_history_search_view
-msgid "Spring-Summer"
-msgstr "Primavera-Verano"
-
-#. module: product_abc_classification_sale_stock
-#: model_terms:ir.ui.view,arch_db:product_abc_classification_sale_stock.abc_sale_stock_level_history_search_view
-msgid "Autumn-Winter"
-msgstr "Otoño-Invierno"
 
 #. module: product_abc_classification_sale_stock
 #: model:ir.model.fields,field_description:product_abc_classification_sale_stock.field_abc_classification_product_level_history__strategic_segment
@@ -327,3 +309,8 @@ msgstr "Producto Marginal"
 #: model_terms:ir.ui.view,arch_db:product_abc_classification_sale_stock.abc_sale_stock_level_history_search_view
 msgid "Strategic Segment"
 msgstr "Segmento Estratégico"
+
+#. module: product_abc_classification_sale_stock
+#: model:ir.model.fields,field_description:product_abc_classification_sale_stock.field_abc_classification_product_level_history__season_id
+msgid "Season"
+msgstr "Estación"

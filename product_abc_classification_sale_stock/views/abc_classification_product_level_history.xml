@@ -10,8 +10,6 @@
                 <field name="product_id" />
                 <field name="profile_id" string="Profile" />
                 <field name="warehouse_id" string="Warehouse" />
-                <field name="season" string="Season" />
-                <field name="zone" string="Zone" />
                 <field name="computed_level_id" string="ABC Level" />
                 <separator />
                 <filter
@@ -24,8 +22,6 @@
                 <filter string="Level B" name="level_b" domain="[('computed_level_id.name', '=', 'B')]"/>
                 <filter string="Level C" name="level_c" domain="[('computed_level_id.name', '=', 'C')]"/>
                 <separator />
-                <filter string="Spring-Summer" name="spring_summer" domain="[('season', 'ilike', 'spring')]"/>
-                <filter string="Autumn-Winter" name="autumn_winter" domain="[('season', 'ilike', 'autumn')]"/>
                 <separator />
                 <filter string="Seasonal Star" name="seasonal_star" domain="[('strategic_segment', '=', 'seasonal_star')]"/>
                 <filter string="Business Pillar" name="business_pillar" domain="[('strategic_segment', '=', 'business_pillar')]"/>
@@ -37,18 +33,6 @@
                         name="group_by_warehouse"
                         domain="[]"
                         context="{'group_by': 'warehouse_id'}"
-                    />
-                    <filter
-                        string="Season"
-                        name="group_by_season"
-                        domain="[]"
-                        context="{'group_by': 'season'}"
-                    />
-                    <filter
-                        string="Zone"
-                        name="group_by_zone"
-                        domain="[]"
-                        context="{'group_by': 'zone'}"
                     />
                     <filter
                         string="ABC Level"
@@ -84,11 +68,12 @@
                 <field name="computed_level_id" />
                 <field name="ranking" />
                 <field name="number_so_lines" />
-                <field name="total_so_lines" />
+                <field name="total_so_lines" invisible="1" />
                 <field name="percentage" />
                 <field name="cumulated_percentage" />
                 <field name="cumulated_percentage_products" />
                 <field name="sum_cumulated_percentages" />
+                <field name="season_id" />
                 <field name="classification_variance" />
                 <field name="season_performance" />
                 <field name="strategic_segment" />
@@ -104,7 +89,7 @@
                 <field name="warehouse_id" type="row"/>
                 <field name="strategic_segment" type="row"/>
                 <field name="product_id" type="row"/>
-                <field name="season" type="col"/>
+                <field name="season_id" type="col"/>
                 <field name="computed_level_id" type="col"/>
                 <field name="number_so_lines" type="measure"/>
                 <field name="percentage" type="measure"/>
@@ -119,7 +104,7 @@
         <field name="model">abc.classification.product.level.history</field>
         <field name="arch" type="xml">
             <graph string="ABC Seasonal Performance" type="bar">
-                <field name="season" type="row"/>
+                <field name="season_id" type="row"/>
                 <field name="computed_level_id" type="col"/>
                 <field name="number_so_lines" type="measure"/>
             </graph>

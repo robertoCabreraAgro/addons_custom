@@ -24,4 +24,10 @@ class ProductCategory(models.Model):
                 ]
             )
             if products:
-                products.write({"abc_classification_profile_ids": [(6, 0, categ.abc_classification_profile_ids.ids)]})
+                products.write(
+                    {
+                        "abc_classification_profile_ids": [
+                            (6, 0, categ.abc_classification_profile_ids.ids)
+                        ]
+                    }
+                )

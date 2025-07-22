@@ -11,7 +11,7 @@
           <div
                         class="alert alert-danger"
                         role="alert"
-                        invisible="flag == False"
+                        invisible="level_mismatch == False"
                     >Computed level differs from the specified level</div>
           <group name="main_info">
             <field name="display_name" />
@@ -25,7 +25,7 @@
             <field name="computed_level_id" />
             <field name="level_id" />
             <field name="manual_level_id" class="oe_edit_only" />
-            <field name="flag" invisible="1" />
+            <field name="level_mismatch" invisible="1" />
             <field name="profile_type" invisible="1" />
           </group>
         </sheet>
@@ -40,12 +40,12 @@
     <field name="name">abc.classification.product.level.tree (in product_abc_classification)</field>
     <field name="model">abc.classification.product.level</field>
     <field name="arch" type="xml">
-      <list decoration-danger="flag == True" editable="bottom">
+      <list decoration-danger="level_mismatch == True" editable="bottom">
         <field name="profile_id" invisible="1" />
         <field name="product_id" />
         <field name="manual_level_id" />
         <field name="computed_level_id" />
-        <field name="flag" invisible="1" />
+        <field name="level_mismatch" invisible="1" />
       </list>
     </field>
   </record>
@@ -58,7 +58,7 @@
         <field name="level_id" string="Level" />
         <field name="profile_id" string="Profile" />
         <separator />
-        <filter string="Classification not in sync with computed" name="has_flag" domain="[('flag','=',True)]" />
+        <filter string="Classification not in sync with computed" name="has_flag" domain="[('level_mismatch','=',True)]" />
         <group expand="1" string="Group By">
           <filter string="Level" name="group_by_level" domain="[]" context="{'group_by': 'level_id'}" />
           <filter string="Profile" name="group_by_profile" domain="[]" context="{'group_by': 'profile_id'}" />

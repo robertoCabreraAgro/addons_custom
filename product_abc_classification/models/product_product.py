@@ -23,8 +23,13 @@ class ProductProduct(models.Model):
     def _update_abc_classification_profile_from_category(self):
         for rec in self:
             category = rec.categ_id
-            if not rec.abc_classification_profile_ids and category.abc_classification_profile_ids:
-                rec.abc_classification_profile_ids = category.abc_classification_profile_ids
+            if (
+                not rec.abc_classification_profile_ids
+                and category.abc_classification_profile_ids
+            ):
+                rec.abc_classification_profile_ids = (
+                    category.abc_classification_profile_ids
+                )
 
     @api.model_create_multi
     def create(self, vals_list):

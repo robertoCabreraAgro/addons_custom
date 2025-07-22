@@ -204,7 +204,7 @@ msgid "ID"
 msgstr ""
 
 #. module: product_abc_classification
-#: model:ir.model.fields,field_description:product_abc_classification.field_abc_classification_product_level__flag
+#: model:ir.model.fields,field_description:product_abc_classification.field_abc_classification_product_level__level_mismatch
 msgid ""
 "If True, this means that the manual classification is different from the "
 "computed one"

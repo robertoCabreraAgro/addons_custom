@@ -45,7 +45,6 @@ class AbcClassificationProductLevelHistory(models.Model):
         readonly=True,
         store=True,
     )
-    # percentage
     profile_id = fields.Many2one(
         "abc.classification.profile",
         string="Profile",
@@ -126,43 +125,17 @@ class AbcClassificationProductLevelHistory(models.Model):
     )
     from_date = fields.Date(readonly=True)
     to_date = fields.Date(readonly=True)
-    season_ids = fields.Many2many(
+    season_id = fields.Many2one(
         "date.range",
-        string="Seasons Used",
-        readonly=True,
-        help="Date ranges (seasons) used for this ABC classification calculation",
-    )
-
-    use_date_range = fields.Boolean(
-        string="Used Date Ranges",
-        readonly=True,
-        help="Indicates if this calculation used specific date ranges instead of fixed period",
-    )
-
-    season_names = fields.Char(
-        string="Season Names",
-        readonly=True,
-        help="Names of the seasons used for this calculation",
-    )
-
-    # Seasonal analysis fields
-    season = fields.Char(
         string="Season",
-        compute="_compute_seasonal_info",
-        store=True,
-        help="Season extracted from profile name (Spring-Summer, Autumn-Winter, etc.)",
-    )
-
-    zone = fields.Char(
-        string="Zone",
-        compute="_compute_seasonal_info",
-        store=True,
-        help="Zone extracted from profile name (High central valleys, etc.)",
+        readonly=True,
+        help="Specific season (date range) for this ABC classification record",
     )
 
     classification_variance = fields.Float(
         string="Classification Variance",
         compute="_compute_classification_variance",
+        store=True,
         help="Variation between seasons for this product",
         digits=(7, 4),
     )
@@ -170,6 +143,7 @@ class AbcClassificationProductLevelHistory(models.Model):
     season_performance = fields.Float(
         string="Season Performance",
         compute="_compute_season_performance",
+        store=True,
         help="Performance indicator for seasonal patterns",
         digits=(7, 4),
     )
@@ -191,31 +165,6 @@ class AbcClassificationProductLevelHistory(models.Model):
 • Seasonal Niche (variance ≥1, performance 1-10): Minimum seasonal stock  
 • Marginal Product (variance ≤1, performance <1): Discontinuation candidate""",
     )
-
-    @api.depends("profile_id.name")
-    def _compute_seasonal_info(self):
-        """Extract seasonal information from profile name.
-        Expected format: 'WAREHOUSE | ZONE | SEASON'
-        Example: 'CODAGEM | High central valleys | spring - summer'
-        """
-        for record in self:
-            if not record.profile_id or not record.profile_id.name:
-                record.season = ""
-                record.zone = ""
-                continue
-
-            profile_name = record.profile_id.name
-            parts = profile_name.split("|")
-
-            if len(parts) >= 3:
-                # Extract zone (middle part)
-                record.zone = parts[1].strip()
-                # Extract season (last part)
-                season_part = parts[2].strip()
-                record.season = season_part
-            else:
-                record.zone = ""
-                record.season = ""
 
     @api.depends("product_id", "computed_level_id")
     def _compute_classification_variance(self):

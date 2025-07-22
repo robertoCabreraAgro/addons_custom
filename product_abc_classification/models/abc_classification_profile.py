@@ -14,7 +14,9 @@ class AbcClassificationProfile(models.Model):
     _rec_name = "name"
 
     name = fields.Char(required=True)
-    level_ids = fields.One2many(comodel_name="abc.classification.level", inverse_name="profile_id")
+    level_ids = fields.One2many(
+        comodel_name="abc.classification.level", inverse_name="profile_id"
+    )
     profile_type = fields.Selection(
         selection=[],
         string="Type of ABC classification",
@@ -38,7 +40,8 @@ class AbcClassificationProfile(models.Model):
 
     auto_apply_computed_value = fields.Boolean(
         default=False,
-        help="Check this if you want to apply the computed level on each product that has this " "profile.",
+        help="Check this if you want to apply the computed level on each product that has this "
+        "profile.",
     )
 
     _name_uniq = models.Constraint(
@@ -52,14 +55,23 @@ class AbcClassificationProfile(models.Model):
             percentages = profile.level_ids.mapped("percentage")
             total = sum(percentages)
             if profile.level_ids and total != 100.0:
-                raise ValidationError(self.env._("The sum of the percentages of the levels should be " "100."))
+                raise ValidationError(
+                    self.env._(
+                        "The sum of the percentages of the levels should be " "100."
+                    )
+                )
             if profile.level_ids and len({}.fromkeys(percentages)) != len(percentages):
-                raise ValidationError(self.env._("The percentages of the levels must be unique."))
+                raise ValidationError(
+                    self.env._("The percentages of the levels must be unique.")
+                )
             percentage_productss = profile.level_ids.mapped("percentage_products")
             total = sum(percentage_productss)
             if profile.level_ids and total != 100.0:
                 raise ValidationError(
-                    self.env._("The sum of the products percentages of the levels " "should be 100.")
+                    self.env._(
+                        "The sum of the products percentages of the levels "
+                        "should be 100."
+                    )
                 )
 
     def _compute_abc_classification(self):
@@ -72,14 +84,20 @@ class AbcClassificationProfile(models.Model):
 
     def action_view_products(self):
         products = self.mapped("product_variant_ids")
-        action = self.env["ir.actions.act_window"]._for_xml_id("product.product_variant_action")
+        action = self.env["ir.actions.act_window"]._for_xml_id(
+            "product.product_variant_action"
+        )
         del action["context"]
         if len(products) > 1:
             action["domain"] = [("id", "in", products.ids)]
         elif len(products) == 1:
-            form_view = [(self.env.ref("product.product_variant_easy_edit_view").id, "form")]
+            form_view = [
+                (self.env.ref("product.product_variant_easy_edit_view").id, "form")
+            ]
             if "views" in action:
-                action["views"] = form_view + [(state, view) for state, view in action["views"] if view != "form"]
+                action["views"] = form_view + [
+                    (state, view) for state, view in action["views"] if view != "form"
+                ]
             else:
                 action["views"] = form_view
             action["res_id"] = products.id

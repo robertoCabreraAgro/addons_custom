@@ -69,7 +69,7 @@ class TestABCClassificationProductLevel(ABCClassificationLevelCase):
         Expected result:
             A instance is created with:
              * the manual_level_id and level_id set
-             * flag is False since manual and computd are the same
+             * level_mismatch is False since manual and computd are the same
 
         """
         level = self.ProductLevel.create(
@@ -81,7 +81,7 @@ class TestABCClassificationProductLevel(ABCClassificationLevelCase):
         )
         self.assertEqual(level.manual_level_id, self.classification_level_a)
         self.assertEqual(level.level_id, self.classification_level_a)
-        self.assertFalse(level.flag)
+        self.assertFalse(level.level_mismatch)
 
     def test_01(self):
         """
@@ -94,7 +94,7 @@ class TestABCClassificationProductLevel(ABCClassificationLevelCase):
             A new level is create with:
             * computed_level_id = False
             * level_id = manual_level_id
-            * flag = False
+            * level_mismatch = False
         """
         level = self.ProductLevel.create(
             {
@@ -106,7 +106,7 @@ class TestABCClassificationProductLevel(ABCClassificationLevelCase):
         self.assertFalse(level.computed_level_id)
         self.assertEqual(level.manual_level_id, self.classification_level_a)
         self.assertEqual(level.level_id, self.classification_level_a)
-        self.assertFalse(level.flag)
+        self.assertFalse(level.level_mismatch)
 
     def test_02(self):
         """
@@ -116,25 +116,27 @@ class TestABCClassificationProductLevel(ABCClassificationLevelCase):
             1. Change manual_level_id to an other value than the computed one
             2. Reset manual_level_id to the computed one
         Expected result:
-            1. level_id === manual =! computed and flag is true
-            2  level_id == manual == computed and flag is true
+            1. level_id === manual =! computed and level_mismatch is true
+            2  level_id == manual == computed and level_mismatch is true
             ValidationError
         """
-        self.assertFalse(self.product_level.flag)
+        self.assertFalse(self.product_level.level_mismatch)
         self.assertEqual(
             self.product_level.manual_level_id,
             self.product_level.computed_level_id,
         )
-        self.assertEqual(self.product_level.computed_level_id, self.classification_level_a)
+        self.assertEqual(
+            self.product_level.computed_level_id, self.classification_level_a
+        )
         self.assertEqual(self.product_level.level_id, self.classification_level_a)
         # 1
         self.product_level.manual_level_id = self.classification_level_b
         self.assertEqual(self.product_level.level_id, self.classification_level_b)
-        self.assertTrue(self.product_level.flag)
+        self.assertTrue(self.product_level.level_mismatch)
         # 2
         self.product_level.manual_level_id = self.product_level.computed_level_id
         self.assertEqual(self.product_level.level_id, self.classification_level_a)
-        self.assertFalse(self.product_level.flag)
+        self.assertFalse(self.product_level.level_mismatch)
 
     @mute_logger("odoo.sql_db")
     def test_03(self):
@@ -217,7 +219,9 @@ class TestABCClassificationProductLevel(ABCClassificationLevelCase):
             self.product_level.manual_level_id,
             self.product_level.computed_level_id,
         )
-        self.assertEqual(self.product_level.computed_level_id, self.classification_level_bis_a)
+        self.assertEqual(
+            self.product_level.computed_level_id, self.classification_level_bis_a
+        )
         self.assertEqual(self.product_level.level_id, self.classification_level_bis_a)
 
         self.product_level.write(
@@ -229,7 +233,9 @@ class TestABCClassificationProductLevel(ABCClassificationLevelCase):
             self.product_level.manual_level_id,
             self.product_level.computed_level_id,
         )
-        self.assertEqual(self.product_level.computed_level_id, self.classification_level_bis_b)
+        self.assertEqual(
+            self.product_level.computed_level_id, self.classification_level_bis_b
+        )
         self.assertEqual(self.product_level.level_id, self.classification_level_bis_b)
 
     def test_07_update_product_level_without_auto_compute(self):
@@ -246,8 +252,12 @@ class TestABCClassificationProductLevel(ABCClassificationLevelCase):
             self.product_level.manual_level_id,
             self.product_level.computed_level_id,
         )
-        self.assertEqual(self.product_level.computed_level_id, self.classification_level_a)
-        self.assertEqual(self.product_level.manual_level_id, self.classification_level_b)
+        self.assertEqual(
+            self.product_level.computed_level_id, self.classification_level_a
+        )
+        self.assertEqual(
+            self.product_level.manual_level_id, self.classification_level_b
+        )
         self.assertEqual(self.product_level.level_id, self.classification_level_b)
 
         self.product_level.write(
@@ -261,15 +271,21 @@ class TestABCClassificationProductLevel(ABCClassificationLevelCase):
             self.product_level.manual_level_id,
             self.product_level.computed_level_id,
         )
-        self.assertEqual(self.product_level.computed_level_id, self.classification_level_b)
-        self.assertEqual(self.product_level.manual_level_id, self.classification_level_a)
+        self.assertEqual(
+            self.product_level.computed_level_id, self.classification_level_b
+        )
+        self.assertEqual(
+            self.product_level.manual_level_id, self.classification_level_a
+        )
         self.assertEqual(self.product_level.level_id, self.classification_level_a)
 
     def test_08_update_recordset_with__autocompute(self):
         self._create_product_levels()
         self.classification_profile.auto_apply_computed_value = True
 
-        levels = self.ProductLevel.search([("profile_id", "=", self.classification_profile.id)])
+        levels = self.ProductLevel.search(
+            [("profile_id", "=", self.classification_profile.id)]
+        )
         levels.write(
             {
                 "manual_level_id": self.classification_level_a.id,
@@ -287,7 +303,9 @@ class TestABCClassificationProductLevel(ABCClassificationLevelCase):
         self._create_product_levels()
         self.classification_profile_bis.auto_apply_computed_value = True
 
-        levels = self.ProductLevel.search([("profile_id", "=", self.classification_profile.id)])
+        levels = self.ProductLevel.search(
+            [("profile_id", "=", self.classification_profile.id)]
+        )
         levels.write(
             {
                 "computed_level_id": self.classification_level_bis_a.id,
@@ -319,7 +337,9 @@ class TestABCClassificationProductLevel(ABCClassificationLevelCase):
     def test_11_auto_apply_computed_level(self):
         self._create_product_levels()
 
-        levels = self.ProductLevel.search([("profile_id", "=", self.classification_profile.id)])
+        levels = self.ProductLevel.search(
+            [("profile_id", "=", self.classification_profile.id)]
+        )
         level0 = levels[0]
         level1 = levels[1]
         level2 = levels[2]

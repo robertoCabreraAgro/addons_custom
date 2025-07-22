@@ -215,139 +215,101 @@ class AbcClassificationProfile(models.Model):
         )
         return {r[0] for r in self.env.cr.fetchall()}
 
-    def _get_date_ranges_for_query(self):
-        """Get date ranges for query based on profile configuration"""
+    def _get_sale_stock_data_query(self, from_date, to_date, customer_location_ids):
+        """Get sale stock data query for specific date period.
+
+        Args:
+            from_date: Start date for the period
+            to_date: End date for the period
+            customer_location_ids: List of customer location IDs
+
+        Returns:
+            tuple: (query, params)
+        """
+        query = """
+            SELECT
+                sol.product_id product_id,
+                COUNT(sol.id) number_so_lines
+            FROM
+                sale_order so
+            JOIN
+                sale_order_line sol ON
+                sol.order_id = so.id
+            JOIN
+                abc_classification_profile_product_rel rel
+                ON rel.product_id = sol.product_id
+            JOIN
+                product_product pp
+                ON pp.id = sol.product_id
+            WHERE sol.qty_transfered > 0
+                AND pp.active
+                AND rel.profile_id = %(profile_id)s
+                AND so.warehouse_id = %(current_warehouse_id)s
+                AND so.date_order >= %(from_date)s
+                AND so.date_order <= %(to_date)s
+            AND EXISTS (
+                    SELECT
+                        1
+                    FROM
+                        stock_move sm
+                    WHERE
+                        sm.location_dest_id in %(customer_loc_ids)s
+                        AND sm.sale_line_id = sol.id
+                )
+            GROUP BY sol.product_id
+            ORDER BY number_so_lines DESC
+        """
+
+        params = {
+            "profile_id": self.id,
+            "current_warehouse_id": self.warehouse_id.id,
+            "customer_loc_ids": tuple(customer_location_ids),
+            "from_date": from_date,
+            "to_date": to_date,
+        }
+
+        return query, params
+
+    def _get_date_periods(self):
+        """Generate list of date periods based on profile configuration."""
         self.ensure_one()
+        periods = []
+
         if self.interval_type == "seasons" and self.date_range_ids:
-            # Usar solo rangos de fecha activos
-            active_ranges = self.date_range_ids.filtered("active")
-            if not active_ranges:
-                raise ValidationError(
-                    self.env._(
-                        "No active date ranges found for profile {profile_name}"
-                    ).format(profile_name=self.name)
+            # For seasonal profiles, create one period per active season
+            for season in self.date_range_ids.filtered("active"):
+                periods.append(
+                    {
+                        "from_date": season.date_start,
+                        "to_date": season.date_end,
+                        "season_id": season.id,
+                    }
                 )
-            return active_ranges
-        return self.env["date.range"]
-
-    def _get_sale_stock_data_query(self, from_date, customer_location_ids):
-        """Modified query to support date ranges"""
-        date_ranges = self._get_date_ranges_for_query()
-
-        if date_ranges:
-            # Query con soporte para rangos de fecha específicos
-            date_conditions = []
-            for i, date_range in enumerate(date_ranges):
-                date_conditions.append(
-                    f"(so.date_order >= %(date_param_{i*2})s AND so.date_order <= %(date_param_{i*2+1})s)"
-                )
-
-            date_where_clause = " AND (" + " OR ".join(date_conditions) + ")"
-
-            query = """
-                SELECT
-                    sol.product_id product_id,
-                    COUNT(sol.id) number_so_lines
-                FROM
-                    sale_order so
-                JOIN
-                    sale_order_line sol ON
-                    sol.order_id = so.id
-                JOIN
-                    abc_classification_profile_product_rel rel
-                    ON rel.product_id = sol.product_id
-                JOIN
-                    product_product pp
-                    ON pp.id = sol.product_id
-                WHERE sol.qty_transfered > 0
-                    AND pp.active
-                    AND rel.profile_id = %(profile_id)s
-                    AND so.warehouse_id = %(current_warehouse_id)s
-                    {date_where_clause}
-                AND EXISTS (
-                        SELECT
-                            1
-                        FROM
-                            stock_move sm
-                        WHERE
-                            sm.location_dest_id in %(customer_loc_ids)s
-                            AND sm.sale_line_id = sol.id
-                    )
-                GROUP BY sol.product_id
-                ORDER BY number_so_lines DESC
-            """.format(
-                date_where_clause=date_where_clause
-            )
-
-            params = {
-                "profile_id": self.id,
-                "current_warehouse_id": self.warehouse_id.id,
-                "customer_loc_ids": tuple(customer_location_ids),
-            }
-
-            date_params = []
-            for date_range in date_ranges:
-                date_params.extend([date_range.date_start, date_range.date_end])
-
-            return query, params, date_params
-
         else:
-            query = """
-                SELECT
-                    sol.product_id product_id,
-                    COUNT(sol.id) number_so_lines
-                FROM
-                    sale_order so
-                JOIN
-                    sale_order_line sol ON
-                    sol.order_id = so.id
-                JOIN
-                    abc_classification_profile_product_rel rel
-                    ON rel.product_id = sol.product_id
-                JOIN
-                    product_product pp
-                    ON pp.id = sol.product_id
-                WHERE sol.qty_transfered > 0
-                    AND pp.active
-                    AND rel.profile_id = %(profile_id)s
-                    AND so.warehouse_id = %(current_warehouse_id)s
-                AND EXISTS (
-                        SELECT
-                            1
-                        FROM
-                            stock_move sm
-                        WHERE
-                            sm.date > %(start_date)s
-                            AND sm.location_dest_id in %(customer_loc_ids)s
-                            AND sm.sale_line_id = sol.id
-                    )
-                GROUP BY sol.product_id
-                ORDER BY number_so_lines DESC
-            """
-            params = {
-                "start_date": from_date,
-                "current_warehouse_id": self.warehouse_id.id,
-                "profile_id": self.id,
-                "customer_loc_ids": tuple(customer_location_ids),
-            }
-            return query, params, []
-
-    def _get_data(self, from_date=None):
-        """Get a list of statics info from the DB ordered by number of lines desc"""
-        self.ensure_one()
-        date_ranges = self._get_date_ranges_for_query()
-        if date_ranges:
-            from_date = min(date_ranges.mapped("date_start"))
-            to_date = max(date_ranges.mapped("date_end"))
-        else:
-            from_date = (
-                from_date
-                if from_date
-                else fields.Datetime.to_string(
-                    datetime.today() - timedelta(days=self.period)
-                )
+            # For traditional profiles, single period based on days
+            from_date = fields.Datetime.to_string(
+                datetime.today() - timedelta(days=self.period)
             )
             to_date = datetime.today()
+            periods.append(
+                {
+                    "from_date": from_date,
+                    "to_date": to_date,
+                    "season_id": None,
+                }
+            )
+
+        return periods
+
+    def _get_data(self, from_date, to_date, season_id=None):
+        """Get a list of statics info from the DB ordered by number of lines desc
+
+        Args:
+            from_date: Start date for the period (required)
+            to_date: End date for the period (required)
+            season_id: Optional season ID for history tracking
+        """
+        self.ensure_one()
 
         customer_location_ids = (
             self.env["stock.location"].search([("usage", "=", "customer")]).ids
@@ -359,19 +321,10 @@ class AbcClassificationProfile(models.Model):
 
         # Count the number of delivered order line by product linked to a
         # stock_move with a customer location as destination
-        query_result = self._get_sale_stock_data_query(from_date, customer_location_ids)
-        if len(query_result) == 3:
-            query, params, date_params = query_result
-            if date_params:
-                # Merge date parameters into params dict
-                for i, date_param in enumerate(date_params):
-                    params[f"date_param_{i}"] = date_param
-                self.env.cr.execute(query, params)
-            else:
-                self.env.cr.execute(query, params)
-        else:
-            query, params = query_result
-            self.env.cr.execute(query, params)
+        query, params = self._get_sale_stock_data_query(
+            from_date, to_date, customer_location_ids
+        )
+        self.env.cr.execute(query, params)
 
         items = self.env.cr.fetchall()
         total = 0
@@ -387,6 +340,7 @@ class AbcClassificationProfile(models.Model):
             sale_stock_data.ranking = ranking
             sale_stock_data.from_date = from_date
             sale_stock_data.to_date = to_date
+            sale_stock_data.season_id = season_id
             ranking += 1
             total += int(item[1])
             sale_stock_data_list.append(sale_stock_data)
@@ -400,6 +354,7 @@ class AbcClassificationProfile(models.Model):
             sale_stock_data.ranking = ranking
             sale_stock_data.from_date = from_date
             sale_stock_data.to_date = to_date
+            sale_stock_data.season_id = season_id
             sale_stock_data_list.append(sale_stock_data)
 
         return sale_stock_data_list, total
@@ -453,18 +408,6 @@ class AbcClassificationProfile(models.Model):
             {"ids": tuple(ids_to_remove)},
         )
 
-    def _sale_stock_data_to_vals(self, sale_stock_data, create=False):
-        self.ensure_one()
-        res = {"computed_level_id": sale_stock_data.computed_level.id}
-        if create:
-            res.update(
-                {
-                    "product_id": sale_stock_data.product.id,
-                    "profile_id": sale_stock_data.profile.id,
-                }
-            )
-        return res
-
     def _compute_abc_classification(self):
         to_compute = self.filtered(lambda p: p.profile_type == "sale_stock")
         remaining = self - to_compute
@@ -473,92 +416,221 @@ class AbcClassificationProfile(models.Model):
             res = super(
                 AbcClassificationProfile, remaining
             )._compute_abc_classification()
-        product_classification = self.env["abc.classification.product.level"]
+
         for profile in to_compute:
-            sale_stock_data_list, total = profile._get_data()
-            existing_level_ids_to_remove = profile._get_existing_level_ids()
-            level_percentage = profile._build_ordered_level_cumulative_percentage()
-            if not level_percentage:
-                continue
-            level, percentage = level_percentage.pop(0)
-            previous_data = {}
-            total_products = len(sale_stock_data_list)
-            percentage_products = (100.0 / total_products) if total_products else 0.0
-            for i, sale_stock_data in enumerate(sale_stock_data_list):
-                sale_stock_data.total_products = total_products
-                sale_stock_data.percentage_products = percentage_products
-                sale_stock_data.cumulated_percentage_products = (
-                    sale_stock_data.percentage_products
-                    if not i
-                    else (
-                        sale_stock_data.percentage_products
-                        + previous_data.cumulated_percentage_products
+            # Generate date periods based on profile configuration
+            date_periods = profile._get_date_periods()
+            for period_info in date_periods:
+                from_date = period_info["from_date"]
+                to_date = period_info["to_date"]
+                season_id = period_info.get("season_id")
+
+                sale_stock_data_list, total = profile._get_data(
+                    from_date, to_date, season_id
+                )
+                existing_level_ids_to_remove = profile._get_existing_level_ids()
+
+                # Process ABC classification levels for the list of sale stock data
+                level_percentage = profile._build_ordered_level_cumulative_percentage()
+                if not level_percentage:
+                    continue
+
+                level, percentage = level_percentage.pop(0)
+                previous_data = {}
+                total_products = len(sale_stock_data_list)
+                percentage_products = (
+                    (100.0 / total_products) if total_products else 0.0
+                )
+
+                for i, sale_stock_data in enumerate(sale_stock_data_list):
+                    computed_values = profile._process_abc_level(
+                        sale_stock_data.number_so_lines,
+                        i,
+                        total,
+                        total_products,
+                        percentage_products,
+                        previous_data,
+                        level_percentage,
+                        level,
+                        percentage,
                     )
-                )
-                # Compute percentages and cumulative percentages for the products
-                sale_stock_data.percentage = (
-                    (100.0 * sale_stock_data.number_so_lines / total) if total else 0.0
-                )
 
-                sale_stock_data.cumulated_percentage = (
-                    sale_stock_data.percentage
-                    if not i
-                    else (
-                        sale_stock_data.percentage + previous_data.cumulated_percentage
-                    )
-                )
-                if float_round(sale_stock_data.cumulated_percentage, 0) > 100:
-                    raise UserError(
-                        self.env._("Cumulative percentage greater than 100.")
-                    )
+                    # Update sale_stock_data with computed values
+                    sale_stock_data.total_products = computed_values["total_products"]
+                    sale_stock_data.percentage_products = computed_values[
+                        "percentage_products"
+                    ]
+                    sale_stock_data.cumulated_percentage_products = computed_values[
+                        "cumulated_percentage_products"
+                    ]
+                    sale_stock_data.percentage = computed_values["percentage"]
+                    sale_stock_data.cumulated_percentage = computed_values[
+                        "cumulated_percentage"
+                    ]
+                    sale_stock_data.sum_cumulated_percentages = computed_values[
+                        "sum_cumulated_percentages"
+                    ]
 
-                sale_stock_data.sum_cumulated_percentages = (
-                    sale_stock_data.cumulated_percentage
-                    + sale_stock_data.cumulated_percentage_products
-                )
-
-                # Compute ABC classification for the products based on the
-                # sum of cumulated percentages
-
-                if (
-                    sale_stock_data.sum_cumulated_percentages > percentage
-                    and len(level_percentage) > 0
-                ):
-                    level, percentage = level_percentage.pop(0)
-
-                product = sale_stock_data.product
-                levels = product.abc_classification_product_level_ids
-                product_abc_classification = levels.filtered(
-                    lambda p, prof=profile: p.profile_id == prof
-                )
-
-                sale_stock_data.computed_level = level
-                if product_abc_classification:
-                    # The line is still significant...
-                    existing_level_ids_to_remove.remove(product_abc_classification.id)
-                    if product_abc_classification.level_id != level:
-                        vals = profile._sale_stock_data_to_vals(
-                            sale_stock_data, create=False
+                    # Update product classification
+                    sale_stock_data.computed_level = computed_values["level"]
+                    sale_stock_data.total_so_lines = total
+                    product_abc_classification = (
+                        profile._update_product_abc_classification(
+                            sale_stock_data.product,
+                            computed_values["level"],
+                            existing_level_ids_to_remove,
                         )
-                        product_abc_classification.write(vals)
-                else:
-                    vals = profile._sale_stock_data_to_vals(
-                        sale_stock_data, create=True
                     )
-                    product_abc_classification = product_classification.create(vals)
-                sale_stock_data.total_so_lines = total
-                sale_stock_data.product_level = product_abc_classification
-                previous_data = sale_stock_data
-            if sale_stock_data_list:
-                self._log_history(sale_stock_data_list)
-            profile._purge_obsolete_level_values(existing_level_ids_to_remove)
+                    sale_stock_data.product_level = product_abc_classification
+
+                    level = computed_values["level"]
+                    percentage = computed_values["level_percentage"]
+                    previous_data = sale_stock_data
+
+                if sale_stock_data_list:
+                    profile._log_history(sale_stock_data_list)
+
+                profile._purge_obsolete_level_values(existing_level_ids_to_remove)
         return res
+
+    def _process_abc_level(
+        self,
+        number_so_lines,
+        index,
+        total,
+        total_products,
+        percentage_products,
+        previous_data,
+        level_percentage,
+        current_level,
+        current_percentage,
+    ):
+        """Process ABC classification calculations for a single product.
+
+        Returns dict with computed values to be applied to sale_stock_data.
+        """
+        self.ensure_one()
+
+        cumulated_percentage_products = (
+            percentage_products
+            if not index
+            else (percentage_products + previous_data.cumulated_percentage_products)
+        )
+
+        # Compute percentages and cumulative percentages for the products
+        percentage = (100.0 * number_so_lines / total) if total else 0.0
+
+        cumulated_percentage = (
+            percentage
+            if not index
+            else (percentage + previous_data.cumulated_percentage)
+        )
+
+        if float_round(cumulated_percentage, 0) > 100:
+            raise UserError(self.env._("Cumulative percentage greater than 100."))
+
+        sum_cumulated_percentages = cumulated_percentage + cumulated_percentage_products
+
+        # Determine classification level
+        current_level, current_percentage = self._determine_classification_level(
+            sum_cumulated_percentages,
+            level_percentage,
+            current_level,
+            current_percentage,
+        )
+
+        return {
+            "total_products": total_products,
+            "percentage_products": percentage_products,
+            "cumulated_percentage_products": cumulated_percentage_products,
+            "percentage": percentage,
+            "cumulated_percentage": cumulated_percentage,
+            "sum_cumulated_percentages": sum_cumulated_percentages,
+            "level": current_level,
+            "level_percentage": current_percentage,
+        }
+
+    def _update_product_abc_classification(
+        self, product, current_level, existing_level_ids_to_remove
+    ):
+        """Update or create product ABC classification."""
+        self.ensure_one()
+        product_classification = self.env["abc.classification.product.level"]
+
+        levels = product.abc_classification_product_level_ids
+        product_abc_classification = levels.filtered(
+            lambda p, prof=self: p.profile_id == prof
+        )
+
+        if product_abc_classification:
+            # The line is still significant...
+            existing_level_ids_to_remove.remove(product_abc_classification.id)
+            if product_abc_classification.level_id != current_level:
+                product_abc_classification.write(
+                    {"computed_level_id": current_level.id}
+                )
+        else:
+            product_abc_classification = product_classification.create(
+                {
+                    "computed_level_id": current_level.id,
+                    "product_id": product.id,
+                    "profile_id": self.id,
+                }
+            )
+
+        return product_abc_classification
+
+    def _determine_classification_level(
+        self,
+        sum_cumulated_percentages,
+        level_percentage,
+        current_level,
+        current_percentage,
+    ):
+        """Determine the appropriate ABC classification level for a product."""
+        # Compute ABC classification for the products based on the
+        # sum of cumulated percentages
+        if sum_cumulated_percentages > current_percentage and len(level_percentage) > 0:
+            current_level, current_percentage = level_percentage.pop(0)
+
+        return current_level, current_percentage
 
     def _log_history(self, sale_stock_data_list):
         """Log collected and computed values into
         abc.classification.product.level.history
 
         """
+        if not sale_stock_data_list:
+            return
+
+        # Get period info from first item
+        first_item = sale_stock_data_list[0]
+        profile_id = first_item.profile.id
+        from_date = first_item.from_date
+        to_date = first_item.to_date
+        season_id = first_item.season_id
+
+        # Delete existing records for the same period before inserting new ones
+        delete_query = """
+            DELETE FROM abc_classification_product_level_history
+            WHERE profile_id = %(profile_id)s
+                AND from_date = %(from_date)s
+                AND to_date = %(to_date)s
+        """
+        params = {
+            "profile_id": profile_id,
+            "from_date": from_date,
+            "to_date": to_date,
+        }
+
+        # Include season_id in deletion if it's a seasonal profile
+        if season_id:
+            delete_query += " AND season_id = %(season_id)s"
+            params["season_id"] = season_id
+
+        self.env.cr.execute(delete_query, params)
+
+        # Now insert the new records
         vals = StringIO()
         writer = csv.writer(vals, delimiter=";")
         for sale_stock_data in sale_stock_data_list:
@@ -567,6 +639,25 @@ class AbcClassificationProfile(models.Model):
         table = self.env["abc.classification.product.level.history"]._table
         columns = sale_stock_data_list[0]._get_col_names()
         self.env.cr.copy_from(vals, table, columns=columns, sep=";")
+
+        # Force computation of seasonal analysis fields after bulk insert
+        if season_id:
+            # Get the inserted records for this period
+            inserted_records = self.env[
+                "abc.classification.product.level.history"
+            ].search(
+                [
+                    ("profile_id", "=", profile_id),
+                    ("from_date", "=", from_date),
+                    ("to_date", "=", to_date),
+                    ("season_id", "=", season_id),
+                ]
+            )
+            # Trigger computation of seasonal fields
+            inserted_records._compute_classification_variance()
+            inserted_records._compute_season_performance()
+            inserted_records._compute_strategic_segment()
+
         self.env["abc.classification.product.level"].invalidate_model(
             ["sale_stock_level_history_ids"]
         )
@@ -593,6 +684,7 @@ class SaleStockData:
         "product_level",
         "from_date",
         "to_date",
+        "season_id",
         "total_products",
         "percentage_products",
         "cumulated_percentage_products",
@@ -615,6 +707,7 @@ class SaleStockData:
             self.product_level.id,
             self.from_date,
             self.to_date,
+            self.season_id,
             self.total_products,
             self.percentage_products,
             self.cumulated_percentage_products,
@@ -642,6 +735,7 @@ class SaleStockData:
             "product_level_id",
             "from_date",
             "to_date",
+            "season_id",
             "total_products",
             "percentage_products",
             "cumulated_percentage_products",

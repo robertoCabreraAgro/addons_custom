@@ -12,7 +12,9 @@ class ABCClassificationCase(TransactionCase):
         cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
         # add a fake profile_type
         cls.ABCClassificationProfile = cls.env["abc.classification.profile"]
-        cls.ABCClassificationProfile._fields["profile_type"].selection = [("test_type", "Test Type")]
+        cls.ABCClassificationProfile._fields["profile_type"].selection = [
+            ("test_type", "Test Type")
+        ]
         cls.classification_profile = cls.ABCClassificationProfile.create(
             {"name": "Profile test", "profile_type": "test_type"}
         )
@@ -118,7 +120,9 @@ class ABCClassificationLevelCase(ABCClassificationCase):
             {
                 "product_tmpl_id": cls.product_template.id,
                 "product_template_attribute_value_ids": [
-                    Command.set(size_value.pav_attribute_line_ids.product_template_value_ids.ids)
+                    Command.set(
+                        size_value.pav_attribute_line_ids.product_template_value_ids.ids
+                    )
                 ],
             }
         )

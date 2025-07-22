@@ -210,13 +210,9 @@ msgid "ID"
 msgstr "ID (identificación)"
 
 #. module: product_abc_classification
-#: model:ir.model.fields,field_description:product_abc_classification.field_abc_classification_product_level__flag
-msgid ""
-"If True, this means that the manual classification is different from the "
-"computed one"
-msgstr ""
-"Si es True, significa que la clasificación manual es diferente de la "
-"calculada"
+#: model:ir.model.fields,field_description:product_abc_classification.field_abc_classification_product_level__level_mismatch
+msgid "Level Mismatch"
+msgstr "Discrepancia de Nivel"
 
 #. module: product_abc_classification
 #: model:ir.model.fields,help:product_abc_classification.field_abc_classification_product_level__message_needaction

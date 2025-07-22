@@ -31,10 +31,11 @@ class AbcClassificationProductLevel(models.Model):
         store=True,
         domain="[('profile_id', '=', profile_id)]",
     )
-    flag = fields.Boolean(
+    level_mismatch = fields.Boolean(
         default=False,
-        compute="_compute_flag",
-        string="If True, this means that the manual classification is " "different from the computed one",
+        compute="_compute_level_mismatch",
+        string="Level Mismatch",
+        help="Indicates manual classification differs from computed classification",
         store=True,
         index=True,
     )
@@ -77,22 +78,29 @@ class AbcClassificationProductLevel(models.Model):
         for rec in self:
             if not rec.computed_level_id and not rec.manual_level_id:
                 raise ValidationError(self.env._("Classification level is mandatory"))
-            if rec.computed_level_id and rec.computed_level_id.profile_id != rec.profile_id:
+            if (
+                rec.computed_level_id
+                and rec.computed_level_id.profile_id != rec.profile_id
+            ):
                 raise ValidationError(
                     self.env._(
-                        "Computed level must be in  the same classifiation " "profile as the one on the product level"
+                        "Computed level must be in  the same classifiation "
+                        "profile as the one on the product level"
                     )
                 )
             if rec.manual_level_id and rec.manual_level_id.profile_id != rec.profile_id:
                 raise ValidationError(
                     self.env._(
-                        "Manual level must be in  the same classifiation " "profile as the one on the product level"
+                        "Manual level must be in  the same classifiation "
+                        "profile as the one on the product level"
                     )
                 )
 
     @api.onchange("product_tmpl_id")
     def _onchange_product_tmpl_id(self):
-        for rec in self.filtered(lambda a: a.product_tmpl_id.count_product_variant == 1):
+        for rec in self.filtered(
+            lambda a: a.product_tmpl_id.count_product_variant == 1
+        ):
             rec.product_id = rec.product_tmpl_id.product_variant_id
 
     @api.depends("level_id", "profile_id")
@@ -112,9 +120,11 @@ class AbcClassificationProductLevel(models.Model):
                 rec.level_id = rec.computed_level_id
 
     @api.depends("manual_level_id", "computed_level_id")
-    def _compute_flag(self):
+    def _compute_level_mismatch(self):
         for rec in self:
-            rec.flag = rec.computed_level_id and rec.manual_level_id != rec.computed_level_id
+            rec.level_mismatch = (
+                rec.computed_level_id and rec.manual_level_id != rec.computed_level_id
+            )
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -125,7 +135,9 @@ class AbcClassificationProductLevel(models.Model):
                 vals["manual_level_id"] = vals["computed_level_id"]
 
             if "profile_id" in vals:
-                profile = self.env["abc.classification.profile"].browse(vals["profile_id"])
+                profile = self.env["abc.classification.profile"].browse(
+                    vals["profile_id"]
+                )
                 if profile.auto_apply_computed_value and "computed_level_id" in vals:
                     vals["manual_level_id"] = vals["computed_level_id"]
         return super().create(vals_list)
@@ -141,7 +153,9 @@ class AbcClassificationProductLevel(models.Model):
         if "computed_level_id" in values:
             profile_obj = self.env["abc.classification.profile"]
             target_profile_id = (
-                profile_obj.browse(values["profile_id"]).filtered("auto_apply_computed_value")
+                profile_obj.browse(values["profile_id"]).filtered(
+                    "auto_apply_computed_value"
+                )
                 if "profile_id" in values
                 else profile_obj.browse()
             )
@@ -154,9 +168,11 @@ class AbcClassificationProductLevel(models.Model):
                 # If profile is not modified, filter levels per profile
                 # if it has auto_apply_computed_value True and modify only
                 # those ones
-                auto_applied_profiles_levels = self.filtered(lambda l: l.profile_id.auto_apply_computed_value)
-                new_self = self - auto_applied_profiles_levels
-                super(AbcClassificationProductLevel, auto_applied_profiles_levels).write(
-                    dict(values, manual_level_id=values["computed_level_id"])
+                auto_applied_profiles_levels = self.filtered(
+                    lambda l: l.profile_id.auto_apply_computed_value
                 )
+                new_self = self - auto_applied_profiles_levels
+                super(
+                    AbcClassificationProductLevel, auto_applied_profiles_levels
+                ).write(dict(values, manual_level_id=values["computed_level_id"]))
         return super(AbcClassificationProductLevel, new_self).write(values)
