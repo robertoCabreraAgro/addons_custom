@@ -149,7 +149,7 @@ export class GpsTrackingDashboard extends Component {
     // Cargar OpenLayers de forma global
     async loadOpenLayers() {
         try {
-            await loadJS("/base_geoengine/static/lib/ol-10.1.0/ol.js");
+            await loadJS("/base_geoengine/static/lib/ol-10.5.0/ol.js");
             if (typeof ol === "undefined") {
                 throw new Error("OpenLayers no está definido después de la carga.");
             }
@@ -292,6 +292,12 @@ export class GpsTrackingDashboard extends Component {
     initializeMap() {
         if (!this.mapContainerRef.el) {
             console.error("mapContainer no está disponible.");
+            return;
+        }
+
+        if (typeof ol === 'undefined') {
+            console.warn('OpenLayers not loaded yet, retrying...');
+            setTimeout(() => this.initializeMap(), 100);
             return;
         }
 

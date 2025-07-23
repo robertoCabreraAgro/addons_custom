@@ -115,6 +115,11 @@ export class GeoengineRenderer extends Component {
 
     renderMap() {
         if (!this.map) {
+            if (typeof ol === 'undefined') {
+                console.warn('OpenLayers not loaded yet, retrying...');
+                setTimeout(() => this.renderMap(), 100);
+                return;
+            }
             this.createOverlay();
             this.map = new ol.Map({
                 target: "olmap",
