@@ -1,6 +1,6 @@
 {
     "name": "GPS Tracking",
-    "version": "1.1",
+    "version": "1.2",
     "category": "Fleet Management",
     "summary": "Module to track GPS coordinates and display them on a map",
     "author": "Raúl Alejandro Rodríguez López",

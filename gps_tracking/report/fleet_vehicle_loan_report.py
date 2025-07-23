@@ -73,27 +73,12 @@ class FleetVehicleLoanReport(models.Model):
                         WHERE
                             gtp.driver_id = ts.employee_id
                             AND gtp."timestamp" BETWEEN
-                                (ts.start_time - interval '1 hour')
-                                AND (ts.start_time + interval '1 hour')
+                                (ts.start_time - interval '2 hours')
+                                AND (ts.start_time + interval '2 hours')
                         ORDER BY
                             ABS(EXTRACT(EPOCH FROM (gtp."timestamp" - ts.start_time)))
                         LIMIT 1
-                    ) AS start_point_id,
-                -- Find the single closest GPS point ID at the END of the trip
-                    (
-                        SELECT
-                            gtp.id
-                        FROM
-                            gps_tracking_point AS gtp
-                        WHERE
-                            gtp.driver_id = ts.employee_id
-                            AND gtp."timestamp" BETWEEN
-                                (ts.start_time - interval '1 hour')
-                                AND (ts.start_time + interval '1 hour')
-                        ORDER BY
-                            ABS(EXTRACT(EPOCH FROM (gtp."timestamp" - ts.end_time)))
-                        LIMIT 1
-                    ) AS end_point_id
+                    ) AS start_point_id
                 FROM
                     TripSegments AS ts
                 JOIN
@@ -101,17 +86,44 @@ class FleetVehicleLoanReport(models.Model):
                     ON ts.employee_id = he.id
                 WHERE
                     ts.end_time IS NOT NULL
+            ),
+        -- Step 3: Get start point details and find matching end point for the same vehicle
+            TripDataWithVehicle AS (
+                SELECT
+                    tdp.*,
+                    start_point.id AS start_point_id_final,
+                    start_point.device_id AS device_id,
+                    -- Find the closest GPS point at the END of the trip for the SAME DEVICE/VEHICLE
+                    (
+                        SELECT
+                            gtp.id
+                        FROM
+                            gps_tracking_point AS gtp
+                        WHERE
+                            gtp.device_id = start_point.device_id  -- Same device as start point
+                            AND gtp."timestamp" BETWEEN
+                                (tdp.end_time - interval '2 hours')
+                                AND (tdp.end_time + interval '2 hours')
+                        ORDER BY
+                            ABS(EXTRACT(EPOCH FROM (gtp."timestamp" - tdp.end_time)))
+                        LIMIT 1
+                    ) AS end_point_id
+                FROM
+                    TripDataPoints AS tdp
+                LEFT JOIN
+                    gps_tracking_point AS start_point
+                    ON tdp.start_point_id = start_point.id
             )
-        -- Step 3: Final report - join the point IDs to get all details.
+        -- Step 4: Final report - join the point IDs to get all details.
         SELECT
             (row_number() OVER ())::integer AS id,
-            tdp.username,
+            tdv.username,
             fv.name AS vehiculo,
-            tdp.work_hours_status,
-            start_point.odometer AS odometer_start,
-            end_point.odometer AS odometer_end,
-            tdp.start_time AS date_start,
-            CASE EXTRACT(DOW FROM tdp.start_time AT TIME ZONE 'UTC' AT TIME ZONE 'America/Mexico_City')
+            tdv.work_hours_status,
+            start_point.real_odometer AS odometer_start,
+            end_point.real_odometer AS odometer_end,
+            tdv.start_time AS date_start,
+            CASE EXTRACT(DOW FROM tdv.start_time AT TIME ZONE 'UTC' AT TIME ZONE 'America/Mexico_City')
                 WHEN 0 THEN 'Domingo'
                 WHEN 1 THEN 'Lunes'
                 WHEN 2 THEN 'Martes'
@@ -120,8 +132,8 @@ class FleetVehicleLoanReport(models.Model):
                 WHEN 5 THEN 'Viernes'
                 WHEN 6 THEN 'Sábado'
             END AS weekday_start,
-            tdp.end_time AS date_end,
-            CASE EXTRACT(DOW FROM tdp.end_time AT TIME ZONE 'UTC' AT TIME ZONE 'America/Mexico_City')
+            tdv.end_time AS date_end,
+            CASE EXTRACT(DOW FROM tdv.end_time AT TIME ZONE 'UTC' AT TIME ZONE 'America/Mexico_City')
                 WHEN 0 THEN 'Domingo'
                 WHEN 1 THEN 'Lunes'
                 WHEN 2 THEN 'Martes'
@@ -130,25 +142,28 @@ class FleetVehicleLoanReport(models.Model):
                 WHEN 5 THEN 'Viernes'
                 WHEN 6 THEN 'Sábado'
             END AS weekday_end,
-            COALESCE(end_point.odometer - start_point.odometer, 0) AS distance
+            CASE
+                WHEN end_point.real_odometer - start_point.real_odometer < 0 THEN 0
+                ELSE COALESCE(end_point.real_odometer - start_point.real_odometer, 0)
+            END AS distance
         FROM
-            TripDataPoints AS tdp
+            TripDataWithVehicle AS tdv
         LEFT JOIN
             gps_tracking_point AS start_point
-            ON tdp.start_point_id = start_point.id
+            ON tdv.start_point_id_final = start_point.id
         LEFT JOIN
             gps_tracking_point AS end_point
-            ON tdp.end_point_id = end_point.id
+            ON tdv.end_point_id = end_point.id
         LEFT JOIN
             gps_tracking_device AS gtd
-            ON start_point.device_id = gtd.id
+            ON tdv.device_id = gtd.id
         LEFT JOIN
             fleet_vehicle AS fv
             ON gtd.vehicle_id = fv.id
         WHERE
-            tdp.start_point_id IS NOT NULL
+            tdv.start_point_id IS NOT NULL
         ORDER BY
-            tdp.start_time
+            tdv.start_time
         """
 
     def refresh_data(self):

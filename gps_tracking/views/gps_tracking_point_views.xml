@@ -18,7 +18,6 @@
                 <field name="engine_speed_rpm" />
                 <field name="odometer" />
                 <field name="total_odometer" optional="hide" />
-                <field name="real_odometer" />
                 <field name="fuel_level" widget="progressbar" />
                 <field name="fuel_level_l" optional="hide" />
                 <field name="ignition" />
