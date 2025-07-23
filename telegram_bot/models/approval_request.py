@@ -21,10 +21,17 @@ class ApprovalRequest(models.Model):
     has_bsl = fields.Selection(related="category_id.has_bsl")
     has_operation_type = fields.Selection(related="category_id.has_operation_type")
 
+    used_bank_statement_line_ids = fields.Many2many(
+        comodel_name="account.bank.statement.line",
+        compute="_compute_used_bank_statement_line_ids",
+        string="Used Bank Statement Lines",
+        help="Bank statement lines already used in other approval requests.",
+    )
+
     bank_statement_line_id = fields.Many2one(
         comodel_name="account.bank.statement.line",
         string="Bank Statement Line",
-        domain="[('date', '=', date), ('amount', '=', amount), ('is_reconciled', '=', False)]",
+        domain="[('date', '=', date), ('amount', '=', amount), ('is_reconciled', '=', False), ('id', 'not in', used_bank_statement_line_ids)]",
         help="Select the bank transaction that corresponds to this payment.",
     )
     operation_type_id = fields.Many2one(
@@ -38,6 +45,18 @@ class ApprovalRequest(models.Model):
         readonly=True,
         copy=False,
     )
+
+    def _compute_used_bank_statement_line_ids(self):
+        """Compute bank statement lines already used in other approval requests."""
+        for record in self:
+            domain = [("bank_statement_line_id", "!=", False)]
+            if record.id:
+                # Exclude current record if it exists
+                domain.append(("id", "!=", record.id))
+
+            used_approvals = self.search(domain)
+            used_lines = used_approvals.mapped("bank_statement_line_id")
+            record.used_bank_statement_line_ids = used_lines
 
     @api.depends("telegram_data")
     def _compute_telegram_data_formatted(self):
