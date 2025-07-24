@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="gps_tracking.geofence_dialog">
+        <Dialog title="'Create Geographic Area'" size="'lg'">
+            <div class="container-fluid">
+                <form>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="areaName" class="form-label">Area Name *</label>
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                id="areaName" 
+                                t-model="state.form.name"
+                                required="true"/>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="areaType" class="form-label">Area Type *</label>
+                            <select 
+                                class="form-select" 
+                                id="areaType" 
+                                t-model="state.form.area_type"
+                                required="true">
+                                <option value="property">Property</option>
+                                <option value="parcel">Parcel</option>
+                                <option value="warehouse">Warehouse</option>
+                                <option value="corral">Corral</option>
+                                <option value="cultivation_zone">Cultivation Zone</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <label for="clientSelect" class="form-label">Client</label>
+                            <select 
+                                class="form-select" 
+                                id="clientSelect"
+                                t-model="state.form.partner_id">
+                                <option value="">-- Select Client --</option>
+                                <t t-foreach="state.partners" t-as="partner" t-key="partner.id">
+                                    <option t-att-value="partner.id" t-esc="partner.name"/>
+                                </t>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="parentArea" class="form-label">Parent Area</label>
+                            <select 
+                                class="form-select" 
+                                id="parentArea"
+                                t-model="state.form.parent_id">
+                                <option value="">-- No Parent --</option>
+                                <t t-foreach="state.geofences" t-as="geofence" t-key="geofence.id">
+                                    <option t-att-value="geofence.id">
+                                        <t t-esc="geofence.name"/> (<t t-esc="geofence.area_type"/>)
+                                    </option>
+                                </t>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <label for="areaColor" class="form-label">Color</label>
+                            <input 
+                                type="color" 
+                                class="form-control form-control-color" 
+                                id="areaColor" 
+                                t-model="state.form.color"/>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="sequenceNumber" class="form-label">Sequence</label>
+                            <input 
+                                type="number" 
+                                class="form-control" 
+                                id="sequenceNumber" 
+                                t-model="state.form.sequence"/>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <label for="areaDescription" class="form-label">Description</label>
+                            <textarea 
+                                class="form-control" 
+                                id="areaDescription" 
+                                rows="3"
+                                t-model="state.form.description">
+                            </textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <t t-set-slot="footer">
+                <button type="button" class="btn btn-secondary" t-on-click="onCancel">Cancel</button>
+                <button type="button" class="btn btn-primary" t-on-click="onSave">Save Geographic Area</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

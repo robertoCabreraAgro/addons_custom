@@ -1,4 +1,3 @@
-/** @odoo-module **/
 
 import { Component, useState, onWillStart, onMounted, useRef, onWillUnmount, onWillUpdateProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
@@ -8,6 +7,7 @@ import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { SearchBar } from "@web/search/search_bar/search_bar";
 import { SearchModel } from "@web/search/search_model";
 import { GpsSearchbar } from "../components/searchbar/gps_searchbar";
+import { GeofenceDialog } from "../components/geofence_dialog";
 
 export class GpsTrackingDashboard extends Component {
     static props = {
@@ -23,6 +23,7 @@ export class GpsTrackingDashboard extends Component {
     setup() {
         this.orm = useService("orm");
         this.action = useService("action");
+        this.dialog = useService("dialog");
         this.state = useState({
             devices: [],
             filteredDevices: [],
@@ -188,42 +189,70 @@ export class GpsTrackingDashboard extends Component {
             tooltipElement.style.left = pixel[0] + "px";
             tooltipElement.style.top = pixel[1] + "px";
 
-            // Recopilar datos del feature
-            const imei = feature.get("imei") || "Desconocido";
-            const speed = feature.get("speed") || 0;
-            const ignition = feature.get("ignition") || 0;
-            const movement = feature.get("movement") || 0;
+            const featureType = feature.get("feature_type");
+            let tooltipContent = "";
 
-            // Contenido base del tooltip
-            tooltipElement.innerHTML = `
-            <div style="min-width: 200px;">
-                <strong>IMEI:</strong> ${imei}<br/>
-                <strong>Velocidad:</strong> ${speed} km/h<br/>
-                <strong>Encendido:</strong>
-                <span style="color: ${ignition == 1 ? 'green' : 'red'};">
-                    <i class="fa fa-power-off" style="margin-right: 5px;"></i>
-                    ${ignition == 1 ? 'Encendido' : 'Apagado'}
-                </span><br/>
-                <strong>Movimiento:</strong>
-                <span style="color: ${movement == 1 ? 'green' : 'red'};">
-                    <i class="fa fa-car" style="margin-right: 5px;"></i>
-                    ${movement == 1 ? 'En movimiento' : 'Estacionado'}
-                </span><br/>
-                <button id="btn-street" class="btn btn-sm btn-info" style="margin-top:5px;">
-                    Ver Street View
-                </button>
-            </div>
-            `;
+            if (featureType === 'device') {
+                // Device tooltip content
+                const imei = feature.get("imei") || "Unknown";
+                const speed = feature.get("speed") || 0;
+                const ignition = feature.get("ignition") || 0;
+                const movement = feature.get("movement") || 0;
 
-            // Asignar listeners tras crear el contenido
+                tooltipContent = `
+                <div style="min-width: 200px;">
+                    <strong>IMEI:</strong> ${imei}<br/>
+                    <strong>Speed:</strong> ${speed} km/h<br/>
+                    <strong>Engine:</strong>
+                    <span style="color: ${ignition == 1 ? 'green' : 'red'};">
+                        <i class="fa fa-power-off" style="margin-right: 5px;"></i>
+                        ${ignition == 1 ? 'On' : 'Off'}
+                    </span><br/>
+                    <strong>Movement:</strong>
+                    <span style="color: ${movement == 1 ? 'green' : 'red'};">
+                        <i class="fa fa-car" style="margin-right: 5px;"></i>
+                        ${movement == 1 ? 'Moving' : 'Parked'}
+                    </span><br/>
+                    <button id="btn-street" class="btn btn-sm btn-info" style="margin-top:5px;">
+                        View Street View
+                    </button>
+                </div>
+                `;
+            } else if (featureType === 'geofence') {
+                // Geofence tooltip content
+                const name = feature.get("name") || "Unnamed Area";
+                const areaType = feature.get("area_type") || "Unknown";
+                const partnerId = feature.get("partner_id");
+                const parentId = feature.get("parent_id");
+
+                tooltipContent = `
+                <div style="min-width: 200px;">
+                    <strong><i class="fa fa-map-marker"></i> ${name}</strong><br/>
+                    <strong>Type:</strong> ${areaType.charAt(0).toUpperCase() + areaType.slice(1).replace('_', ' ')}<br/>
+                    ${partnerId ? `<strong>Client:</strong> ${partnerId[1]}<br/>` : ''}
+                    ${parentId ? `<strong>Parent Area:</strong> ${parentId[1]}<br/>` : ''}
+                    <div style="margin-top: 8px;">
+                        <span style="display: inline-block; width: 15px; height: 15px; background-color: ${feature.get("color")}; border: 1px solid #000; margin-right: 5px;"></span>
+                        <small>Geographic Area</small>
+                    </div>
+                </div>
+                `;
+            }
+
+            // Set tooltip content
+            tooltipElement.innerHTML = tooltipContent;
+
+            // Assign listeners after creating content
             setTimeout(() => {
-                // Botón StreetView
-                const btnStreet = document.getElementById("btn-street");
-                if (btnStreet) {
-                    btnStreet.addEventListener("click", (evt) => {
-                        evt.stopPropagation();  // Evitar que el mapa lo oculte
-                        this._showStreetViewInsideTooltip(tooltipElement, feature);
-                    });
+                // StreetView button (only for devices)
+                if (featureType === 'device') {
+                    const btnStreet = document.getElementById("btn-street");
+                    if (btnStreet) {
+                        btnStreet.addEventListener("click", (evt) => {
+                            evt.stopPropagation();  // Prevent map from hiding it
+                            this._showStreetViewInsideTooltip(tooltipElement, feature);
+                        });
+                    }
                 }
             }, 0);
 
@@ -365,6 +394,7 @@ export class GpsTrackingDashboard extends Component {
                     speed: device.speed,
                     ignition: device.ignition,
                     movement: device.movement,
+                    feature_type: 'device',
                 });
             }
         }).filter((feature) => feature);
@@ -423,6 +453,7 @@ export class GpsTrackingDashboard extends Component {
                         speed: device.speed,
                         ignition: device.ignition,
                         movement: device.movement,
+                        feature_type: 'device',
                     });
                 }
             }).filter((feature) => feature);
@@ -522,9 +553,9 @@ export class GpsTrackingDashboard extends Component {
             const geofences = await this.orm.searchRead(
                 "gps.geofence",
                 [["active", "=", true]],
-                ["id", "name", "geometry", "color"]
+                ["id", "name", "geometry", "color", "area_type", "partner_id", "parent_id"]
             );
-            console.log("Geocercas cargadas:", geofences);
+            console.log("Geographic areas loaded:", geofences);
 
             const features = geofences.map((geofence) => {
                 const geom = JSON.parse(geofence.geometry); // Validar que el JSON sea válido
@@ -535,11 +566,15 @@ export class GpsTrackingDashboard extends Component {
                     ring.map((coord) => ol.proj.transform(coord, "EPSG:4326", "EPSG:3857"))
                 );
 
-                // Crear la feature usando las coordenadas transformadas
+                // Create the feature using transformed coordinates
                 return new ol.Feature({
                     geometry: new ol.geom.Polygon(transformedCoords),
                     name: geofence.name,
                     color: color,
+                    area_type: geofence.area_type,
+                    partner_id: geofence.partner_id,
+                    parent_id: geofence.parent_id,
+                    feature_type: 'geofence',
                 });
             });
 
@@ -585,68 +620,58 @@ export class GpsTrackingDashboard extends Component {
         }
     }
 
-    addGeofenceDrawingTool() {
-        // Verificar si la capa de geocercas está inicializada
+    async addGeofenceDrawingTool() {
+        /**
+         * Activate the geofence drawing tool and show creation dialog
+         */
+        // Check if geofence layer is initialized
         if (!this.geofenceLayer) {
-            console.error("La capa de geocercas no está inicializada.");
+            console.error("The geofence layer is not initialized.");
             return;
         }
 
-        // Alternar la herramienta de dibujo
+        // Toggle drawing tool
         if (this.state.drawingToolActive) {
             this.map.removeInteraction(this.state.drawingInteraction);
             this.state.drawingToolActive = false;
             this.state.drawingInteraction = null;
-            console.log("Herramienta de dibujo desactivada desde el botón.");
-            alert("La herramienta de dibujo se ha desactivado.");
+            console.log("Drawing tool deactivated from button.");
             return;
         }
 
-        // Crear una nueva interacción de dibujo
+        // Create new drawing interaction
         const draw = new ol.interaction.Draw({
             source: this.geofenceLayer.getSource(),
-            type: "Polygon", // Cambia a 'Circle' si deseas geocercas circulares
+            type: "Polygon",
         });
 
         draw.on("drawend", async (event) => {
-            const geometry = event.feature.getGeometry().clone().transform('EPSG:3857', 'EPSG:4326'); // Convertir a EPSG:4326
+            const geometry = event.feature.getGeometry().clone().transform('EPSG:3857', 'EPSG:4326');
             const geoJson = new ol.format.GeoJSON().writeGeometry(geometry);
+            console.log("New geographic area created (GeoJSON):", geoJson);
 
-            console.log("Nueva Geocerca creada (GeoJSON):", geoJson);
+            // Show dialog with geometry
+            this.dialog.add(GeofenceDialog, {
+                geometry: geoJson,
+                onSave: (result) => {
+                    // Reload geofences to show the new one
+                    this.loadGeofences();
+                    alert(`Geographic area saved successfully.`);
+                }
+            });
 
-            const name = prompt("Ingrese un nombre para la geocerca:");
-            const color = prompt("Ingrese un color para la geocerca (ej. #FF0000):", "#FF0000");
-
-            try {
-                const newGeofence = {
-                    name: name || "Geocerca sin nombre",
-                    geometry: geoJson,
-                    color: color || "#FF0000",
-                    active: true,
-                };
-
-                // Guardar la geocerca en Odoo
-                const result = await this.orm.create("gps.geofence", [newGeofence]);
-                console.log("Geocerca guardada en Odoo:", result);
-                alert(`Geocerca "${name}" guardada correctamente.`);
-            } catch (error) {
-                console.error("Error al guardar la geocerca en Odoo:", error);
-                alert("Hubo un error al guardar la geocerca.");
-            }
-
-            // Desactivar la herramienta de dibujo después de guardar
+            // Deactivate drawing tool after drawing
             this.map.removeInteraction(draw);
             this.state.drawingToolActive = false;
-            console.log("Herramienta de dibujo desactivada automáticamente.");
         });
 
-        // Agregar interacción al mapa
+        // Add interaction to map
         this.map.addInteraction(draw);
         this.state.drawingInteraction = draw;
         this.state.drawingToolActive = true;
-        console.log("Herramienta de dibujo activada.");
-        alert("La herramienta de dibujo se ha activado.");
+        console.log("Drawing tool activated.");
     }
+
 
     // Recorrido por fechas
     // Recorrido por fechas
