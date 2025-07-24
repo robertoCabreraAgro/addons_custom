@@ -21,4 +21,18 @@
             </xpath>
         </field>
     </record>
+
+    <record id="product_product_stock_tree" model="ir.ui.view">
+        <field name="name">product.product.stock.tree</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="stock.product_product_stock_tree" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='qty_available']" position="attributes">
+                <attribute name="optional">hidden</attribute>
+            </xpath>
+            <xpath expr="//button[@name='%(stock.action_view_inventory_tree)d']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+        </field>
+    </record>
 </odoo>
