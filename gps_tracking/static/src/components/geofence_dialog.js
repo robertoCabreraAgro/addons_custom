@@ -10,11 +10,14 @@ export class GeofenceDialog extends Component {
         this.orm = useService("orm");
         this.state = useState({
             partners: [],
+            filteredPartners: [],
             geofences: [],
+            geofenceTypes: [],
             form: {
                 name: "",
-                area_type: "property",
+                area_type: "",
                 partner_id: "",
+                partner_name: "",
                 parent_id: "",
                 color: "#ff0000",
                 sequence: 10,
@@ -32,10 +35,10 @@ export class GeofenceDialog extends Component {
          * Load partners and existing geofences for the selects
          */
         try {
-            // Load partners (clients)
+            // Load partners (clients only, not suppliers)
             const partners = await this.orm.searchRead(
                 "res.partner",
-                [["is_company", "=", true]],
+                [["customer_rank", ">", 0]],
                 ["id", "name"]
             );
 
@@ -46,13 +49,85 @@ export class GeofenceDialog extends Component {
                 ["id", "name", "area_type"]
             );
 
-            this.state.partners = partners;
+            // Load geofence types for color/sequence computation
+            const geofenceTypes = await this.orm.searchRead(
+                "gps.geofence.type",
+                [["active", "=", true]],
+                ["id", "name", "code", "color", "sequence"]
+            );
+
+            // Filter out partners with invalid names
+            const validPartners = partners.filter(partner => partner && partner.name);
+            this.state.partners = validPartners;
+            this.state.filteredPartners = validPartners;
             this.state.geofences = geofences;
+            this.state.geofenceTypes = geofenceTypes;
+            
+            // Set default area_type to first available type
+            if (geofenceTypes.length > 0) {
+                this.state.form.area_type = geofenceTypes[0].code;
+            }
+            
+            // Set initial color/sequence based on default area_type
+            this.updateColorSequence();
         } catch (error) {
             console.error("Error loading modal data:", error);
         }
     }
 
+    updateColorSequence() {
+        /**
+         * Update color and sequence based on selected area_type
+         */
+        const selectedType = this.state.geofenceTypes.find(
+            type => type.code === this.state.form.area_type
+        );
+        
+        if (selectedType) {
+            this.state.form.color = selectedType.color;
+            this.state.form.sequence = selectedType.sequence;
+        }
+    }
+
+    onAreaTypeChange(event) {
+        /**
+         * Handle area type change and update color/sequence
+         */
+        this.state.form.area_type = event.target.value;
+        this.updateColorSequence();
+    }
+
+    onPartnerSearch(event) {
+        /**
+         * Filter partners based on search input
+         */
+        const searchTerm = event.target.value.toLowerCase();
+        if (searchTerm) {
+            this.state.filteredPartners = this.state.partners.filter(partner =>
+                partner && partner.name && 
+                partner.name.toLowerCase().includes(searchTerm)
+            );
+        } else {
+            this.state.filteredPartners = this.state.partners;
+        }
+    }
+
+    onPartnerBlur(event) {
+        /**
+         * Handle partner selection when user selects from datalist
+         */
+        const selectedName = event.target.value;
+        const selectedPartner = this.state.partners.find(partner => 
+            partner && partner.name && partner.name === selectedName
+        );
+        
+        if (selectedPartner) {
+            this.state.form.partner_id = selectedPartner.id;
+            this.state.form.partner_name = selectedPartner.name;
+        } else {
+            this.state.form.partner_id = "";
+        }
+    }
 
     async onSave() {
         /**

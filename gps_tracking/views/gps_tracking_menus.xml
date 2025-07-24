@@ -18,20 +18,10 @@
             action="action_gps_tracking_client_action_timeline"
             sequence="30" />
 
-        <menuitem id="menu_gps_geofence_root"
+        <menuitem id="menu_gps_geofence"
             name="Geographic Areas"
-            sequence="40">
-            
-            <menuitem id="menu_gps_geofence"
-                name="All Areas"
-                action="action_gps_geofence"
-                sequence="10" />
-                
-            <menuitem id="menu_gps_geofence_hierarchy"
-                name="Areas Hierarchy"
-                action="action_gps_geofence_hierarchy"
-                sequence="20" />
-        </menuitem>
+            action="action_gps_geofence"
+            sequence="40" />
 
         <menuitem id="menu_gps_tracking_reporting"
             name="Reporting"
@@ -64,6 +54,11 @@
                 name="Device configurations"
                 action="action_gps_tracking_config"
                 sequence="10" />
+
+            <menuitem id="menu_gps_geofence_type"
+                name="Area Types"
+                action="action_gps_geofence_type"
+                sequence="20" />
         </menuitem>
     </menuitem>
 </odoo>

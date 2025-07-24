@@ -20,28 +20,31 @@
                                 class="form-select" 
                                 id="areaType" 
                                 t-model="state.form.area_type"
+                                t-on-change="onAreaTypeChange"
                                 required="true">
-                                <option value="property">Property</option>
-                                <option value="parcel">Parcel</option>
-                                <option value="warehouse">Warehouse</option>
-                                <option value="corral">Corral</option>
-                                <option value="cultivation_zone">Cultivation Zone</option>
-                                <option value="other">Other</option>
+                                <t t-foreach="state.geofenceTypes" t-as="areaType" t-key="areaType.id">
+                                    <option t-att-value="areaType.code" t-esc="areaType.name"/>
+                                </t>
                             </select>
                         </div>
                     </div>
                     <div class="row mt-3">
                         <div class="col-md-6">
                             <label for="clientSelect" class="form-label">Client</label>
-                            <select 
-                                class="form-select" 
+                            <input 
+                                type="text" 
+                                class="form-control" 
                                 id="clientSelect"
-                                t-model="state.form.partner_id">
-                                <option value="">-- Select Client --</option>
-                                <t t-foreach="state.partners" t-as="partner" t-key="partner.id">
-                                    <option t-att-value="partner.id" t-esc="partner.name"/>
+                                placeholder="Type to search client..."
+                                t-model="state.form.partner_name"
+                                t-on-input="onPartnerSearch"
+                                t-on-blur="onPartnerBlur"
+                                list="partnerDatalist"/>
+                            <datalist id="partnerDatalist">
+                                <t t-foreach="state.filteredPartners" t-as="partner" t-key="partner.id">
+                                    <option t-att-value="partner.name" t-att-data-id="partner.id"/>
                                 </t>
-                            </select>
+                            </datalist>
                         </div>
                         <div class="col-md-6">
                             <label for="parentArea" class="form-label">Parent Area</label>
@@ -65,7 +68,8 @@
                                 type="color" 
                                 class="form-control form-control-color" 
                                 id="areaColor" 
-                                t-model="state.form.color"/>
+                                t-model="state.form.color"
+                                disabled="disabled"/>
                         </div>
                         <div class="col-md-6">
                             <label for="sequenceNumber" class="form-label">Sequence</label>
@@ -73,7 +77,8 @@
                                 type="number" 
                                 class="form-control" 
                                 id="sequenceNumber" 
-                                t-model="state.form.sequence"/>
+                                t-model="state.form.sequence"
+                                disabled="disabled"/>
                         </div>
                     </div>
                     <div class="row mt-3">

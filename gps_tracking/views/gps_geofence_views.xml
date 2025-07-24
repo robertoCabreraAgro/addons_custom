@@ -11,7 +11,7 @@
                 <field name="partner_id"/>
                 <field name="parent_id"/>
                 <field name="child_count" string="Sub-areas"/>
-                <field name="area_size" string="Size (ha)"/>
+                <field name="surface" string="Size (m²)"/>
                 <field name="color" widget="color"/>
                 <field name="active" widget="boolean_toggle"/>
             </list>
@@ -38,14 +38,14 @@
                     </div>
                     <group>
                         <group string="Basic Information">
-                            <field name="sequence"/>
                             <field name="partner_id" options="{'no_create': True}"/>
                             <field name="parent_id" domain="[('id', '!=', id)]" options="{'no_create': True}"/>
                             <field name="full_name" readonly="1"/>
                         </group>
                         <group string="Visual Properties">
                             <field name="color" widget="color"/>
-                            <field name="area_size" readonly="1"/>
+                            <field name="sequence"/>
+                            <field name="surface" readonly="1"/>
                         </group>
                     </group>
                     <group string="Geographic Data">
@@ -62,7 +62,7 @@
                                     <field name="sequence" widget="handle"/>
                                     <field name="name"/>
                                     <field name="area_type"/>
-                                    <field name="area_size"/>
+                                    <field name="surface"/>
                                     <field name="active" widget="boolean_toggle"/>
                                 </list>
                             </field>
@@ -84,7 +84,7 @@
                 <field name="area_type"/>
                 <field name="partner_id"/>
                 <field name="parent_id"/>
-                <field name="area_size"/>
+                <field name="surface"/>
                 <field name="color" widget="color"/>
                 <field name="active" widget="boolean_toggle"/>
             </list>
