@@ -7,6 +7,7 @@
     "author": "German Loredo Becerra",
     "depends": [
         "account_move_operation",
+        "account_reports",
         "base_approval",
     ],
     "data": [

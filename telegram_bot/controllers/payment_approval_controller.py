@@ -39,29 +39,21 @@ class PaymentApprovalTelegramController(TelegramController):
             self._process_payment_details(bot, chat, message, internal_user)
         elif chat.state == "awaiting_payment_proof":
             if message.get("photo"):
-                self._handle_payment_proof_file(
-                    bot, chat, message, internal_user, is_photo=True
-                )
+                self._handle_payment_proof_file(bot, chat, message, internal_user, is_photo=True)
             elif message.get("document"):
                 document = message["document"]
                 if document.get("mime_type") == "application/pdf":
-                    self._handle_payment_proof_file(
-                        bot, chat, message, internal_user, is_photo=False
-                    )
+                    self._handle_payment_proof_file(bot, chat, message, internal_user, is_photo=False)
                 else:
                     bot.send_message(
                         chat.chat_id,
                         "Tipo de documento invalido. Porfavor envia una imagen (JPEG/PNG) o un PDF.",
                     )
             else:
-                bot.send_message(
-                    chat.chat_id, "Porfavor envia una imagen (JPEG/PNG) o un PDF."
-                )
+                bot.send_message(chat.chat_id, "Porfavor envia una imagen (JPEG/PNG) o un PDF.")
         else:
             # If not in a specific state, use the parent's logic
-            return super()._handle_non_command_message(
-                bot, chat, message, partner, internal_user
-            )
+            return super()._handle_non_command_message(bot, chat, message, partner, internal_user)
 
     def _handle_callback_query(self, bot, chat, callback_query, partner, internal_user):
         """Handles the confirmation/cancellation buttons."""
@@ -75,15 +67,11 @@ class PaymentApprovalTelegramController(TelegramController):
             chat.reset_state()
             bot.send_message(chat.chat_id, "Operación cancelada.")
         else:
-            super()._handle_callback_query(
-                bot, chat, callback_query, partner, internal_user
-            )
+            super()._handle_callback_query(bot, chat, callback_query, partner, internal_user)
 
     def _handle_help_command(self, bot, chat, args, partner=False, internal_user=False):
         """Override the help handler to add the new command. Now is /ayuda"""
-        res = super()._handle_help_command(
-            bot, chat, args, partner=partner, internal_user=internal_user
-        )
+        res = super()._handle_help_command(bot, chat, args, partner=partner, internal_user=internal_user)
         available_cmds = [cmd.name for cmd in bot.command_ids]
 
         if internal_user and "/pago" in available_cmds:
@@ -105,9 +93,7 @@ class PaymentApprovalTelegramController(TelegramController):
         return res
 
     # --- Specific logic of /pago command ---
-    def _handle_payment_command(
-        self, bot, chat, args, partner=False, internal_user=False
-    ):
+    def _handle_payment_command(self, bot, chat, args, partner=False, internal_user=False):
         """Process the /pago command and prepares for the multi-line message."""
         chat.write({"state": "awaiting_payment_details", "pending_payment_data": "{}"})
         bot.send_message(
@@ -118,9 +104,7 @@ class PaymentApprovalTelegramController(TelegramController):
             ),
         )
 
-    def _handle_cancel_command(
-        self, bot, chat, args, partner=False, internal_user=False
-    ):
+    def _handle_cancel_command(self, bot, chat, args, partner=False, internal_user=False):
         """Cancels the current payment registration process."""
         cancellable_states = [
             "awaiting_payment_details",
@@ -131,9 +115,7 @@ class PaymentApprovalTelegramController(TelegramController):
             chat.reset_state()
             bot.send_message(chat.chat_id, "Operación de registro de pago cancelada.")
         else:
-            bot.send_message(
-                chat.chat_id, "No hay ninguna operación de pago en curso para cancelar."
-            )
+            bot.send_message(chat.chat_id, "No hay ninguna operación de pago en curso para cancelar.")
 
     # --- Validation Helper Methods ---
     def _normalize_string(self, string):
@@ -231,20 +213,14 @@ class PaymentApprovalTelegramController(TelegramController):
             bot.send_message(chat.chat_id, msg)
             return
 
-        p_fx_name, category, cfdi, method, company, p_cn_name, date_str, amount_str = (
-            line.strip() for line in lines
-        )
+        p_fx_name, category, cfdi, method, company, p_cn_name, date_str, amount_str = (line.strip() for line in lines)
         errors = []
 
-        partner_fx, err = self._validate_partner(
-            internal_user, p_fx_name, "A quién se factura"
-        )
+        partner_fx, err = self._validate_partner(internal_user, p_fx_name, "A quién se factura")
         if err:
             errors.append(err)
 
-        partner_cn, err = self._validate_partner(
-            internal_user, p_cn_name, "A quién se aplica el pago"
-        )
+        partner_cn, err = self._validate_partner(internal_user, p_cn_name, "A quién se aplica el pago")
         if err:
             errors.append(err)
 
@@ -290,8 +266,7 @@ class PaymentApprovalTelegramController(TelegramController):
         if errors:
             bot.send_message(
                 chat.chat_id,
-                "Se encontraron los siguientes errores:\n\n"
-                + "\n".join(f"- {e}" for e in errors),
+                "Se encontraron los siguientes errores:\n\n" + "\n".join(f"- {e}" for e in errors),
             )
             return
 
@@ -340,9 +315,7 @@ class PaymentApprovalTelegramController(TelegramController):
         pending_data["file_b64"] = base64.b64encode(file_content).decode("ascii")
         pending_data["file_mimetype"] = file_mimetype
 
-        chat.write(
-            {"state": "awaiting_confirmation", "pending_payment_data": pending_data}
-        )
+        chat.write({"state": "awaiting_confirmation", "pending_payment_data": pending_data})
 
         summary_text = (
             "Por favor, confirma los datos para crear la solicitud:\n\n"
@@ -397,11 +370,7 @@ class PaymentApprovalTelegramController(TelegramController):
 
         try:
             # 1. Create the approval request
-            approval = (
-                internal_user.env["approval.request"]
-                .with_user(internal_user)
-                .create(approval_vals)
-            )
+            approval = internal_user.env["approval.request"].with_user(internal_user).create(approval_vals)
 
             # 2. Create the attachment
             attachment_name = f"comprobante_{data['partner_cn_name'].replace(' ', '_')}_{approval.id}.dat"
@@ -415,9 +384,7 @@ class PaymentApprovalTelegramController(TelegramController):
                         "res_model": "approval.request",
                         "res_id": approval.id,
                         "type": "binary",
-                        "mimetype": data.get(
-                            "file_mimetype", "application/octet-stream"
-                        ),
+                        "mimetype": data.get("file_mimetype", "application/octet-stream"),
                     }
                 )
             )
@@ -434,18 +401,11 @@ class PaymentApprovalTelegramController(TelegramController):
             approval.action_confirm()
 
             # 5. Notify the user and clean state
-            base_url = (
-                internal_user.env["ir.config_parameter"]
-                .sudo()
-                .get_param("web.base.url")
-            )
+            base_url = internal_user.env["ir.config_parameter"].sudo().get_param("web.base.url")
             message = f"¡Éxito! Se ha creado la solicitud de aprobación `{approval.name}`. /ayuda"
 
             if base_url:
-                approval_url = (
-                    f"{base_url}/web#id={approval.id}&"
-                    f"model=approval.request&view_type=form"
-                )
+                approval_url = f"{base_url}/web#id={approval.id}&" f"model=approval.request&view_type=form"
                 markdown_link = f"[{approval.name}]({approval_url})"
                 message = f"¡Éxito! Se ha creado la solicitud de aprobación: {markdown_link}. /ayuda"
 
@@ -457,9 +417,7 @@ class PaymentApprovalTelegramController(TelegramController):
                 "AccessError para el usuario %s al crear la solicitud de aprobación.",
                 internal_user.login,
             )
-            bot.send_message(
-                chat.chat_id, "No tienes permiso para crear solicitudes de aprobación."
-            )
+            bot.send_message(chat.chat_id, "No tienes permiso para crear solicitudes de aprobación.")
             chat.reset_state()
         except Exception as e:
             _logger.error("Error al crear la solicitud de aprobación: %s", e)

@@ -54,9 +54,7 @@ class TelegramBot(models.Model):
             )
             return response.json()
         except requests.exceptions.RequestException as e:
-            _logger.error(
-                "Failed to send request '%s' for bot '%s': %s", method, self.name, e
-            )
+            _logger.error("Failed to send request '%s' for bot '%s': %s", method, self.name, e)
             return False
 
     def send_message(self, chat_id, text):
@@ -99,4 +97,49 @@ class TelegramBot(models.Model):
             return response.content
         except requests.exceptions.RequestException as e:
             _logger.error("Failed to download file from %s: %s", file_url, e)
+            return False
+
+    def send_document(self, chat_id, document_content, filename, caption=None):
+        """Sends a document to a specific chat through the Telegram Bot API.
+
+        Args:
+            chat_id: Telegram chat ID
+            document_content: Binary content of the document
+            filename: Name of the file
+            caption: Optional caption for the document
+        """
+        self.ensure_one()
+        api_url = f"https://api.telegram.org/bot{self.token}/sendDocument"
+
+        # Ensure filename has .pdf extension for proper MIME detection
+        if not filename.lower().endswith(".pdf"):
+            filename = f"{filename}.pdf"
+
+        # Prepare form data with explicit MIME type and proper headers
+        files = {
+            "document": (
+                filename,
+                document_content,
+                "application/pdf",
+                {"Content-Disposition": f'attachment; filename="{filename}"'},
+            )
+        }
+
+        data = {"chat_id": chat_id, "parse_mode": "Markdown"}
+
+        if caption:
+            data["caption"] = caption
+
+        try:
+            response = requests.post(api_url, data=data, files=files, timeout=30)
+            response.raise_for_status()
+            _logger.info(
+                "Document '%s' sent to chat %s by bot '%s'.",
+                filename,
+                chat_id,
+                self.name,
+            )
+            return response.json()
+        except requests.exceptions.RequestException as e:
+            _logger.error("Failed to send document '%s' to chat %s for bot '%s': %s", filename, chat_id, self.name, e)
             return False

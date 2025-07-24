@@ -11,9 +11,7 @@ class TelegramChat(models.Model):
 
     chat_id = fields.Char(string="Chat ID", required=True, index=True, readonly=True)
     telegram_username = fields.Char(index=True, readonly=True)
-    bot_id = fields.Many2one(
-        "telegram.bot", string="Bot", required=True, readonly=True, ondelete="cascade"
-    )
+    bot_id = fields.Many2one("telegram.bot", string="Bot", required=True, readonly=True, ondelete="cascade")
     partner_id = fields.Many2one("res.partner", string="Odoo Contact")
     state = fields.Selection(
         [
@@ -85,9 +83,7 @@ class TelegramChat(models.Model):
         res = super().write(vals)
         if "partner_id" in vals:
             for chat in self:
-                existing_partner = self.env["res.partner"].search(
-                    [("telegram_username", "=", chat.telegram_username)]
-                )
+                existing_partner = self.env["res.partner"].search([("telegram_username", "=", chat.telegram_username)])
                 if existing_partner:
                     existing_partner.write({"telegram_username": False})
 

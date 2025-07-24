@@ -18,4 +18,7 @@
     <record id="command_regresocomida" model="telegram.command">
         <field name="name">/regresocomida</field>
     </record>
+    <record id="command_estadocuenta" model="telegram.command">
+        <field name="name">/estadocuenta</field>
+    </record>
 </odoo>
