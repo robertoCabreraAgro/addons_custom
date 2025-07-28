@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <!-- Server Action: Enable Vehicle Loan Report -->
+        <record id="server_action_enable_vehicle_loan" model="ir.actions.server">
+            <field name="name">Enable Vehicle Loan Report</field>
+            <field name="model_id" ref="hr.model_hr_employee_public"/>
+            <field name="binding_model_id" ref="hr.model_hr_employee_public"/>
+            <field name="binding_view_types">form,list</field>
+            <field name="state">code</field>
+            <field name="code">records.action_enable_vehicle_loan_report()</field>
+        </record>
+
+        <!-- Server Action: Disable Vehicle Loan Report -->
+        <record id="server_action_disable_vehicle_loan" model="ir.actions.server">
+            <field name="name">Disable Vehicle Loan Report</field>
+            <field name="model_id" ref="hr.model_hr_employee_public"/>
+            <field name="binding_model_id" ref="hr.model_hr_employee_public"/>
+            <field name="binding_view_types">form,list</field>
+            <field name="state">code</field>
+            <field name="code">records.action_disable_vehicle_loan_report()</field>
+        </record>
+</odoo>
