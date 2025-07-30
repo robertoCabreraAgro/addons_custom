@@ -5760,3 +5760,117 @@ msgstr "amarillo"
 msgid "⟳ Update"
 msgstr "⟳ Actualizar"
 
+#. module: marin
+#: model:ir.model,name:marin.model_res_partner_profile
+msgid "Partner Profile"
+msgstr "Perfil de Cliente"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_res_partner_profile__name
+msgid "Profile Name"
+msgstr "Nombre del Perfil"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_res_partner_profile__category_ids
+msgid "Partner Tags"
+msgstr "Etiquetas de Cliente"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_res_partner_profile__factor
+msgid "Factor"
+msgstr "Factor"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_res_partner_profile__sequence
+msgid "Sequence"
+msgstr "Secuencia"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_res_partner_profile__active
+msgid "Active"
+msgstr "Activo"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_res_partner_profile__company_id
+msgid "Company"
+msgstr "Compañía"
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_res_partner_profile__name
+msgid "Name of the customer profile"
+msgstr "Nombre del perfil de cliente"
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_res_partner_profile__category_ids
+msgid "Partner categories associated with this profile"
+msgstr "Categorías de cliente asociadas a este perfil"
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_res_partner_profile__factor
+msgid "Multiplicative percentage factor (e.g., 1.2 for 120%)"
+msgstr "Factor multiplicativo porcentual (ej: 1.2 para 120%)"
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_res_partner_profile__sequence
+msgid "Used to order profiles. Lower values have higher precedence."
+msgstr "Usado para ordenar perfiles. Valores menores tienen mayor precedencia."
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_res_partner_profile__active
+msgid "If unchecked, the profile will not appear in default views"
+msgstr "Si está desmarcado, el perfil no aparecerá en las vistas por defecto"
+
+#. module: marin
+#: model:ir.actions.act_window,name:marin.action_res_partner_profile
+#: model:ir.ui.menu,name:marin.menu_res_partner_profile
+msgid "Partner Profiles"
+msgstr "Perfiles de Cliente"
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_res_partner_profile_form
+#: model_terms:ir.ui.view,arch_db:marin.view_res_partner_profile_list
+#: model_terms:ir.ui.view,arch_db:marin.view_res_partner_profile_search
+msgid "Partner Profile"
+msgstr "Perfil de Cliente"
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_res_partner_profile_list
+msgid "Partner Profiles"
+msgstr "Perfiles de Cliente"
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_res_partner_profile_search
+msgid "Search Partner Profile"
+msgstr "Buscar Perfil de Cliente"
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_res_partner_profile_search
+msgid "Group By"
+msgstr "Agrupar Por"
+
+#. module: marin
+#: model_terms:ir.actions.act_window,help:marin.action_res_partner_profile
+msgid "Create a new partner profile"
+msgstr "Crear un nuevo perfil de cliente"
+
+#. module: marin
+#: model_terms:ir.actions.act_window,help:marin.action_res_partner_profile
+msgid ""
+"Partner profiles allow you to classify customers through tags and \n"
+"apply percentage factors for calculating expected revenues and commercial targets."
+msgstr ""
+"Los perfiles de cliente te permiten clasificar clientes mediante etiquetas y \n"
+"aplicar factores porcentuales para calcular ingresos esperados y metas comerciales."
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/res_partner_profile.py:0
+msgid "The factor must be greater than 0. Current value: %s"
+msgstr "El factor debe ser mayor a 0. Valor actual: %s"
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/res_partner_profile.py:0
+msgid "New Profile"
+msgstr "Nuevo Perfil"
+

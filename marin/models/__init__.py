@@ -36,6 +36,7 @@ from . import project_task
 from . import res_company
 from . import res_partner_age_range
 from . import res_partner
+from . import res_partner_profile
 from . import res_users
 from . import sale_order
 from . import sale_order_line
