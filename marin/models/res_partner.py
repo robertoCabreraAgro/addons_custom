@@ -89,6 +89,21 @@ class ResPartner(models.Model):
         readonly=False,
         ondelete="set null",
     )
+    hectares = fields.Float(
+        string="Hectáreas",
+        default=0.0,
+    )
+    partner_profile_id = fields.Many2one(
+        'res.partner.profile',
+        string="Perfil Asignado",
+        compute='_compute_partner_profile',
+        store=True,
+    )
+    profile_factor = fields.Float(
+        string="Factor del Perfil",
+        related='partner_profile_id.factor',
+        readonly=True,
+    )
 
     def _prepare_compute_group(self):
         return {
