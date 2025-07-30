@@ -229,3 +229,10 @@ class ResPartner(models.Model):
                     best_profile = profile
             
             partner.partner_profile_id = best_profile if max_matches > 0 else False
+
+    @api.constrains('hectares')
+    def _check_hectares_positive(self):
+        """Ensure hectares is not negative."""
+        for partner in self:
+            if partner.hectares < 0:
+                raise ValidationError("Las hectáreas no pueden ser negativas.")
