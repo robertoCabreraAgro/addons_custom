@@ -1,6 +1,7 @@
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 from odoo.tools.misc import formatLang
 from odoo.tools.translate import _
 
@@ -201,3 +202,30 @@ class ResPartner(models.Model):
             "ignore_session": "both",
         }
         return action
+
+    @api.depends('category_id')
+    def _compute_partner_profile(self):
+        """Compute partner profile based on category matching."""
+        for partner in self:
+            if not partner.category_id:
+                partner.partner_profile_id = False
+                continue
+                
+            partner_categories = set(partner.category_id.ids)
+            profiles = self.env['res.partner.profile'].search([('active', '=', True)])
+            
+            best_profile = False
+            max_matches = 0
+            min_sequence = float('inf')
+            
+            for profile in profiles:
+                profile_categories = set(profile.category_ids.ids)
+                matches = len(partner_categories & profile_categories)
+                
+                if (matches > max_matches or 
+                    (matches == max_matches and profile.sequence < min_sequence)):
+                    max_matches = matches
+                    min_sequence = profile.sequence
+                    best_profile = profile
+            
+            partner.partner_profile_id = best_profile if max_matches > 0 else False
