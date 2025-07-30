@@ -65,6 +65,9 @@
             <xpath expr="//page[@name='sales_purchases']//field[@name='user_id']" position="after">
                 <field name="team_id" readonly="not user_sale_manager" />
                 <field name="social_style_color" readonly="not user_sale_manager" />
+                <field name="hectares"/>
+                <field name="partner_profile_id" readonly="1"/>
+                <field name="profile_factor" readonly="1"/>
             </xpath>
             <xpath expr="//page[@name='sales_purchases']//group[@name='purchase']" position="attributes">
                 <attribute name="groups">marin.group_purchase_readonly</attribute>
