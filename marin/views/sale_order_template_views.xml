@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form view inheritance for sale.order.template with agricultural season fields -->
+    <record id="sale_order_template_form_season" model="ir.ui.view">
+        <field name="name">sale.order.template.form.season</field>
+        <field name="model">sale.order.template</field>
+        <field name="inherit_id" ref="sale.order.template.form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='journal_id']" position="after">
+                <field name="season_id" domain="[('type_id.name', '=', 'AG')]"/>
+                <field name="season_date_start" readonly="1"/>
+                <field name="season_date_end" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- List view inheritance for sale.order.template with season columns -->
+    <record id="sale_order_template_tree_season" model="ir.ui.view">
+        <field name="name">sale.order.template.tree.season</field>
+        <field name="model">sale.order.template</field>
+        <field name="inherit_id" ref="sale.order.template.list"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="season_id" optional="show"/>
+                <field name="season_date_start" optional="hide"/>
+                <field name="season_date_end" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- Search view inheritance for sale.order.template with season filters -->
+    <record id="sale_order_template_search_season" model="ir.ui.view">
+        <field name="name">sale.order.template.search.season</field>
+        <field name="model">sale.order.template</field>
+        <field name="inherit_id" ref="sale.order.template.search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <filter string="By Season" name="group_by_season" 
+                        context="{'group_by': 'season_id'}"/>
+                <field name="season_id" string="Season"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

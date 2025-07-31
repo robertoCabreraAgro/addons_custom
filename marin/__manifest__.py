@@ -9,6 +9,8 @@
     "category": "Installer",
     "version": "saas~18.2.0.0.2",
     "depends": [
+        "sale",
+        "sale_management",
         "date_range",
         "board",
         "web_studio",
@@ -129,6 +131,7 @@
         "views/res_users_views.xml",
         "views/sale_order_views.xml",
         "views/sale_order_line_views.xml",
+        "views/sale_order_template_views.xml",
         "views/stock_location_views.xml",
         "views/stock_lot_views.xml",
         "views/stock_move_views.xml",
