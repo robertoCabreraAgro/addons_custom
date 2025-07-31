@@ -91,17 +91,17 @@ class ResPartner(models.Model):
         ondelete="set null",
     )
     hectares = fields.Float(
-        string="Hectáreas",
+        string="Hectares",
         default=0.0,
     )
     profile_id = fields.Many2one(
         'res.partner.profile',
-        string="Perfil Asignado",
+        string="Assigned Profile",
         compute='_compute_partner_profile',
         store=True,
     )
     factor = fields.Float(
-        string="Factor del Perfil",
+        string="Profile Factor",
         related='profile_id.factor',
         readonly=True,
     )
@@ -216,7 +216,7 @@ class ResPartner(models.Model):
             
             best_profile = False
             max_matches = 0
-            min_sequence = float('inf')
+            min_sequence = max(profiles.mapped("sequence"))
             
             for profile in profiles:
                 profile_categories = set(profile.category_ids.ids)
