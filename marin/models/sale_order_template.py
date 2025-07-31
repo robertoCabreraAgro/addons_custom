@@ -13,7 +13,7 @@ class SaleOrderTemplate(models.Model):
     
     season_id = fields.Many2one(
         'date.range',
-        string="Agricultural Season",
+        string="AG Season",
         domain="[('type_id.name', '=', 'AG')]",
         help="Select the agricultural season for this quotation template"
     )
@@ -32,9 +32,3 @@ class SaleOrderTemplate(models.Model):
         help="End date of the selected agricultural season"
     )
 
-    @api.constrains('season_id')
-    def _check_season_active(self):
-        """Ensure selected season is active."""
-        for template in self:
-            if template.season_id and not template.season_id.active:
-                raise ValidationError("The selected season must be active.")
