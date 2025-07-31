@@ -5874,3 +5874,9 @@ msgstr "El factor debe ser mayor a 0. Valor actual: %s"
 msgid "New Profile"
 msgstr "Nuevo Perfil"
 
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/res_partner.py:0
+msgid "Hectares cannot be negative."
+msgstr "Las hectáreas no pueden ser negativas."
+

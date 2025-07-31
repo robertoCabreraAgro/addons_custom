@@ -94,15 +94,15 @@ class ResPartner(models.Model):
         string="Hectáreas",
         default=0.0,
     )
-    partner_profile_id = fields.Many2one(
+    profile_id = fields.Many2one(
         'res.partner.profile',
         string="Perfil Asignado",
         compute='_compute_partner_profile',
         store=True,
     )
-    profile_factor = fields.Float(
+    factor = fields.Float(
         string="Factor del Perfil",
-        related='partner_profile_id.factor',
+        related='profile_id.factor',
         readonly=True,
     )
 
@@ -208,7 +208,7 @@ class ResPartner(models.Model):
         """Compute partner profile based on category matching."""
         for partner in self:
             if not partner.category_id:
-                partner.partner_profile_id = False
+                partner.profile_id = False
                 continue
                 
             partner_categories = set(partner.category_id.ids)
@@ -228,11 +228,11 @@ class ResPartner(models.Model):
                     min_sequence = profile.sequence
                     best_profile = profile
             
-            partner.partner_profile_id = best_profile if max_matches > 0 else False
+            partner.profile_id = best_profile if max_matches > 0 else False
 
     @api.constrains('hectares')
     def _check_hectares_positive(self):
         """Ensure hectares is not negative."""
         for partner in self:
             if partner.hectares < 0:
-                raise ValidationError("Las hectáreas no pueden ser negativas.")
+                raise ValidationError(_("Hectares cannot be negative."))
