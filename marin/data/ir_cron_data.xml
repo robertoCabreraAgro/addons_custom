@@ -31,33 +31,6 @@
         <field name="code">model.init()</field>
     </record>
 
-    <record id="ir_cron_update_invoice_line_out_report" model="ir.cron">
-        <field name="name">Invoice Line Out Report: Update views</field>
-        <field name="model_id" ref="model_invoice_line_out_report" />
-        <field name="interval_number">10</field>
-        <field name="interval_type">minutes</field>
-        <field name="user_id" ref="base.user_root" />
-        <field name="state">code</field>
-        <field name="code">model.refresh()
-env["invoice.line.out.team.report"].refresh()
-env["invoice.line.out.team.yearly.report"].refresh()
-env["invoice.line.out.pos.report"].refresh()</field>
-    </record>
-
-    <record id="ir_cron_initialize_invoice_line_out_report" model="ir.cron">
-        <field name="name">Invoice Line Out Report: Initialize views</field>
-        <field name="model_id" ref="model_invoice_line_out_report" />
-        <field name="interval_number">1</field>
-        <field name="interval_type">days</field>
-        <field name="user_id" ref="base.user_root" />
-        <field name="state">code</field>
-        <field name="active" eval="False" />
-        <field name="code">model.init()
-env["invoice.line.out.team.report"].init()
-env["invoice.line.out.team.yearly.report"].init()
-env["invoice.line.out.pos.report"].init()</field>
-    </record>
-
     <record id="ir_cron_update_pos_line_report" model="ir.cron">
         <field name="name">PoS Line Report: Update views</field>
         <field name="model_id" ref="model_pos_line_report" />

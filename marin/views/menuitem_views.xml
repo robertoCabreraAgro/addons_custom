@@ -589,6 +589,12 @@
             Command.link(ref('sales_team.group_sale_salesman'))]" />
     </record>
 
+    <menuitem id="menu_sales_analysis_report"
+              name="Sales Master"
+              parent="sale.menu_sale_report"
+              action="action_sales_master_report"
+              sequence="10"/>
+
     <!-- Expenses -->
     <record id="hr_expense.menu_hr_expense_root" model="ir.ui.menu">
         <field

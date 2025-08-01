@@ -33,11 +33,6 @@
         <field name="groups" eval="[(4, ref('marin.group_sale_salesman_team'))]" />
     </record>
 
-    <record id="rule_multicompany_invoice_line_out_report" model="ir.rule">
-        <field name="name">Invoice Analysis multi-company</field>
-        <field name="model_id" ref="model_invoice_line_out_report"/>
-        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
-    </record>
 
     <record id="account_invoice_rule_see_salesteam" model="ir.rule">
         <field name="name">Salesteam Invoices</field>
@@ -53,6 +48,40 @@
         <field name="domain_force"
         >[('move_id.move_type', 'in', ('out_invoice', 'out_refund')), '|', ('move_id.invoice_user_id', 'in', (False, user.id)), ('move_id.team_id', 'in', user.crm_team_ids.ids)]</field>
         <field name="groups" eval="[(4, ref('marin.group_sale_salesman_team'))]" />
+    </record>
+
+    <!-- Sales Master Report Rules -->
+    <record id="sales_master_report_rule_manager" model="ir.rule">
+        <field name="name">Sales Master Report: Manager</field>
+        <field name="model_id" ref="model_sales_master_report"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman_all_leads'))]"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+
+    <record id="sales_master_report_rule_team_leader" model="ir.rule">
+        <field name="name">Sales Master Report: Team Leader</field>
+        <field name="model_id" ref="model_sales_master_report"/>
+        <field name="domain_force">[('team_id.user_id', 'in', (False, user.id))]</field>
+        <field name="groups" eval="[(4, ref('marin.group_sale_salesman_team'))]"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+
+    <record id="sales_master_report_rule_salesperson" model="ir.rule">
+        <field name="name">Sales Master Report: Salesperson</field>
+        <field name="model_id" ref="model_sales_master_report"/>
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
     </record>
 
 </odoo>

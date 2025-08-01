@@ -2304,44 +2304,6 @@ msgstr ""
 msgid "Invoice Line In Report: Update view"
 msgstr ""
 
-#. module: marin
-#: model:ir.model,name:marin.model_invoice_line_out_report
-msgid "Invoice Line Out"
-msgstr ""
-
-#. module: marin
-#: model:ir.actions.act_window,name:marin.action_invoice_line_out_report
-#: model:ir.ui.menu,name:marin.menu_invoice_line_out_report
-msgid "Invoice Line Out Report"
-msgstr ""
-
-#. module: marin
-#: model:ir.actions.server,name:marin.ir_cron_initialize_invoice_line_out_report_ir_actions_server
-msgid "Invoice Line Out Report: Initialize views"
-msgstr ""
-
-#. module: marin
-#: model:ir.actions.server,name:marin.ir_cron_update_invoice_line_out_report_ir_actions_server
-msgid "Invoice Line Out Report: Update views"
-msgstr ""
-
-#. module: marin
-#: model:ir.actions.act_window,name:marin.action_invoice_line_out_team_report
-#: model:ir.ui.menu,name:marin.menu_invoice_line_out_team_report
-msgid "Invoice Line Out Team Report"
-msgstr ""
-
-#. module: marin
-#: model:ir.actions.act_window,name:marin.action_invoice_line_out_team_yearly_report
-#: model:ir.ui.menu,name:marin.menu_invoice_line_out_team_yearly_report
-msgid "Invoice Line Out Team Yearly Report"
-msgstr ""
-
-#. module: marin
-#: model:ir.model,name:marin.model_invoice_line_out_team_report
-#: model:ir.model,name:marin.model_invoice_line_out_team_yearly_report
-msgid "Invoice Line Out by Team"
-msgstr ""
 
 #. module: marin
 #: model:ir.model,name:marin.model_invoice_line_price_history
