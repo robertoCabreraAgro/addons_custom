@@ -250,3 +250,19 @@ class SaleOrder(models.Model):
             )
             moves._action_cancel()
             line.with_context(avoid_check_unlink=True).unlink()
+    
+    # Extend original method
+    def action_cancel(self):
+        """Override to prevent cancellation if there are active invoices."""
+        for order in self:
+            active_invoices = order.invoice_ids.filtered(
+                lambda inv: inv.state not in ('cancel', 'draft') and inv.move_type == 'out_invoice'
+            )
+
+            if active_invoices:
+                invoice_numbers = ', '.join(active_invoices.mapped('name'))
+                raise UserError(_(
+                    "Cannot cancel this sale order because it has been invoiced. Please cancel the invoices first. Related invoice(s): %s"
+                ) % invoice_numbers)
+
+        return super(SaleOrder, self).action_cancel()
