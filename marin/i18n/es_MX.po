@@ -182,7 +182,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:marin.field_res_partner__age_range_id
 #: model:ir.model.fields,field_description:marin.field_res_users__age_range_id
 msgid "Age Range"
-msgstr ""
+msgstr "Rango de Edad"
 
 #. module: marin
 #: model:res.partner.category,name:marin.partner_category_agronomic
@@ -389,14 +389,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:marin.field_res_partner__credit_limit_available
 #: model:ir.model.fields,field_description:marin.field_res_users__credit_limit_available
 msgid "Available Receivable Limit"
-msgstr ""
+msgstr "Límite de Crédito Disponible"
 
 #. module: marin
 #: model:ir.model.fields,help:marin.field_authorize_debt_wizard__credit_limit_available
 #: model:ir.model.fields,help:marin.field_res_partner__credit_limit_available
 #: model:ir.model.fields,help:marin.field_res_users__credit_limit_available
 msgid "Available receivable limit"
-msgstr ""
+msgstr "Límite de crédito disponible"
 
 #. module: marin
 #: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_team_report_tree
@@ -527,17 +527,17 @@ msgstr ""
 #. module: marin
 #: model:ir.model.fields.selection,name:marin.selection__res_partner__b2x__both
 msgid "Business business and consumer"
-msgstr ""
+msgstr "Empresa a empresa y consumidor"
 
 #. module: marin
 #: model:ir.model.fields.selection,name:marin.selection__res_partner__b2x__b2b
 msgid "Business to business"
-msgstr ""
+msgstr "Empresa a empresa"
 
 #. module: marin
 #: model:ir.model.fields.selection,name:marin.selection__res_partner__b2x__b2c
 msgid "Business to consumer"
-msgstr ""
+msgstr "Empresa a consumidor"
 
 #. module: marin
 #: model:ir.model.fields,field_description:marin.field_purchase_order_line__product_updatable
@@ -942,7 +942,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/marin/models/res_partner.py:0
 msgid "Credit available: %s"
-msgstr ""
+msgstr "Crédito disponible: %s"
 
 #. module: marin
 #: model:ir.model.fields,field_description:marin.field_authorize_debt_wizard__credit_limit
@@ -1642,7 +1642,7 @@ msgstr ""
 #. module: marin
 #: model:ir.model.fields.selection,name:marin.selection__res_partner__gender__female
 msgid "Female"
-msgstr ""
+msgstr "Femenino"
 
 #. module: marin
 #: model:ir.model.fields,help:marin.field_account_account__x_sequence
@@ -2627,7 +2627,7 @@ msgstr ""
 #. module: marin
 #: model:ir.model.fields.selection,name:marin.selection__res_partner__gender__male
 msgid "Male"
-msgstr ""
+msgstr "Masculino"
 
 #. module: marin
 #: model_terms:ir.ui.view,arch_db:marin.quant_search_view_marin
@@ -3143,7 +3143,7 @@ msgstr ""
 #. module: marin
 #: model:ir.model.fields.selection,name:marin.selection__res_partner__gender__other
 msgid "Other"
-msgstr ""
+msgstr "Otro"
 
 #. module: marin
 #: model_terms:ir.ui.view,arch_db:marin.view_sales_order_filter_marin
@@ -4156,7 +4156,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:marin.field_res_users__team_id
 #: model_terms:ir.ui.view,arch_db:marin.view_sales_order_filter_marin
 msgid "Sales Team"
-msgstr ""
+msgstr "Equipo de Ventas"
 
 #. module: marin
 #: model_terms:ir.ui.view,arch_db:marin.view_invoice_line_out_report_search_view
@@ -4687,7 +4687,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/marin/models/res_partner.py:0
 msgid "The partner %s has reached its credit limit of : %s\n"
-msgstr ""
+msgstr "El socio %s ha alcanzado su límite de crédito de : %s\n"
 
 #. module: marin
 #. odoo-python
@@ -4854,7 +4854,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/marin/models/res_partner.py:0
 msgid "Total amount due (including this document): %s\n"
-msgstr ""
+msgstr "Monto total adeudado (incluyendo este documento): %s\n"
 
 #. module: marin
 #: model:ir.model.fields,help:marin.field_authorize_debt_wizard__credit
@@ -5856,4 +5856,19 @@ msgstr "Fecha Inicio Temporada"
 #: model:ir.model.fields,field_description:marin.field_sale_order_template__season_date_end
 msgid "Season End Date"
 msgstr "Fecha Fin Temporada"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_res_partner__hectares
+msgid "Hectares"
+msgstr "Hectáreas"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_res_partner__profile_id
+msgid "Assigned Profile"
+msgstr "Perfil Asignado"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_res_partner__factor
+msgid "Profile Factor"
+msgstr "Factor del Perfil"
 
