@@ -84,4 +84,16 @@
         </field>
     </record>
 
+    <!-- Hide Unit Cost field in product stock report -->
+    <record id="view_product_stock_list_unit_cost" model="ir.ui.view">
+        <field name="name">product.stock.list.unit.cost.protection</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="stock_account.product_product_stock_tree_inherit_stock_account" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='avg_cost']" position="attributes">
+                <attribute name="groups">marin.group_product_cost_readonly</attribute>
+            </xpath>
+        </field>
+    </record>
+
 </odoo>
