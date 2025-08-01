@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- Sales Target Form View -->
+    <record id="view_sale_target_form" model="ir.ui.view">
+        <field name="name">sale.target.form</field>
+        <field name="model">sale.target</field>
+        <field name="arch" type="xml">
+            <form string="Sales Target">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Period">
+                            <field name="date_from" required="1" />
+                            <field name="date_to" required="1" />
+                            <field name="company_id" groups="base.group_multi_company" />
+                        </group>
+                        <group string="Customer Information">
+                            <field name="partner_id" required="1" />
+                            <field name="user_id" readonly="1" />
+                            <field name="hectares" readonly="1" />
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Template &amp; Profile">
+                            <field name="template_id" required="1" />
+                            <field name="season_id" readonly="1" />
+                            <field name="profile_id" readonly="1" />
+                            <field name="factor" readonly="1" />
+                        </group>
+                        <group string="Target Summary">
+                            <field name="target_amount" readonly="1" widget="monetary" />
+                            <field name="currency_id" invisible="1" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Target Lines">
+                            <field name="line_ids">
+                                <list editable="bottom">
+                                    <field name="product_id" />
+                                    <field name="quantity" />
+                                    <field name="target_quantity" readonly="1" />
+                                    <field name="price_unit" widget="monetary" />
+                                    <field name="target_amount" readonly="1" widget="monetary" />
+                                    <field name="currency_id" invisible="1" />
+                                </list>
+                                <form>
+                                    <group>
+                                        <group>
+                                            <field name="product_id" />
+                                            <field name="quantity" />
+                                            <field name="price_unit" widget="monetary" />
+                                        </group>
+                                        <group>
+                                            <field name="target_quantity" readonly="1" />
+                                            <field name="subtotal" readonly="1" widget="monetary" />
+                                            <field name="target_amount" readonly="1" widget="monetary" />
+                                            <field name="currency_id" invisible="1" />
+                                        </group>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Sales Target List View -->
+    <record id="view_sale_target_list" model="ir.ui.view">
+        <field name="name">sale.target.list</field>
+        <field name="model">sale.target</field>
+        <field name="arch" type="xml">
+            <list string="Sales Targets">
+                <field name="name" />
+                <field name="partner_id" />
+                <field name="date_from" />
+                <field name="date_to" />
+                <field name="season_id" />
+                <field name="profile_id" />
+                <field name="hectares" />
+                <field name="factor" />
+                <field name="target_amount" widget="monetary" />
+                <field name="user_id" />
+                <field name="currency_id" invisible="1" />
+            </list>
+        </field>
+    </record>
+
+    <!-- Sales Target Search View -->
+    <record id="view_sale_target_search" model="ir.ui.view">
+        <field name="name">sale.target.search</field>
+        <field name="model">sale.target</field>
+        <field name="arch" type="xml">
+            <search string="Sales Targets">
+                <field name="name" />
+                <field name="partner_id" />
+                <field name="template_id" />
+                <field name="season_id" />
+                <field name="user_id" />
+                <separator />
+                <filter string="My Targets" name="my_targets" domain="[('user_id', '=', uid)]" />
+                <filter
+                    string="Current Period"
+                    name="current_period"
+                    domain="[('date_from', '&lt;=', context_today()), ('date_to', '&gt;=', context_today())]"
+                />
+                <separator />
+                <group expand="0" string="Group By">
+                    <filter string="Customer" name="group_partner" context="{'group_by': 'partner_id'}" />
+                    <filter string="Salesperson" name="group_user" context="{'group_by': 'user_id'}" />
+                    <filter string="Season" name="group_season" context="{'group_by': 'season_id'}" />
+                    <filter string="Profile" name="group_profile" context="{'group_by': 'profile_id'}" />
+                    <filter string="Template" name="group_template" context="{'group_by': 'template_id'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Sales Target Action -->
+    <record id="action_sale_target" model="ir.actions.act_window">
+        <field name="name">Sales Targets</field>
+        <field name="res_model">sale.target</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_sale_target_search" />
+        <field name="context">{'search_default_my_targets': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first sales target!
+            </p>
+            <p>
+                Sales targets help you set and track customer-specific objectives based on their profile,
+                hectares, and agricultural seasons. The system automatically calculates target quantities
+                using quotation templates and customer profile factors.
+            </p>
+        </field>
+    </record>
+
+</odoo>

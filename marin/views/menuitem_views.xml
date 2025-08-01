@@ -594,6 +594,12 @@
               parent="sale.menu_sale_report"
               action="action_sales_master_report"
               sequence="10"/>
+ 
+    <menuitem id="menu_sale_target"
+              name="Sales Targets"
+              parent="sale.menu_sale_report"
+              action="action_sale_target"
+              sequence="50"/>
 
     <!-- Expenses -->
     <record id="hr_expense.menu_hr_expense_root" model="ir.ui.menu">

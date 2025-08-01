@@ -47,6 +47,12 @@ msgid "%s (copy)"
 msgstr "%s (copia)"
 
 #. module: marin
+#. odoo-python
+#: code:addons/marin/models/sale_target.py:0
+msgid "End date must be after start date."
+msgstr "La fecha de fin debe ser posterior a la fecha de inicio."
+
+#. module: marin
 #: model_terms:ir.ui.view,arch_db:marin.view_account_invoice_discount_form
 msgid "<span class=\"o_form_label oe_inline\">%</span>"
 msgstr ""
@@ -5871,4 +5877,286 @@ msgstr "Perfil Asignado"
 #: model:ir.model.fields,field_description:marin.field_res_partner__factor
 msgid "Profile Factor"
 msgstr "Factor del Perfil"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_sale_target__name
+msgid "Target Name"
+msgstr "Nombre del Objetivo"
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_sale_target__name
+msgid "Computed name based on partner, template and period"
+msgstr "Nombre calculado basado en cliente, plantilla y período"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_sale_target__date_from
+msgid "Date From"
+msgstr "Fecha Desde"
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_sale_target__date_from
+msgid "Start date of the target period"
+msgstr "Fecha de inicio del período objetivo"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_sale_target__date_to
+msgid "Date To"
+msgstr "Fecha Hasta"
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_sale_target__date_to
+msgid "End date of the target period"
+msgstr "Fecha de fin del período objetivo"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_sale_target__partner_id
+msgid "Customer"
+msgstr "Cliente"
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_sale_target__partner_id
+msgid "Customer for this sales target"
+msgstr "Cliente para este objetivo de ventas"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_sale_target__template_id
+msgid "Quotation Template"
+msgstr "Plantilla de Cotización"
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_sale_target__template_id
+msgid "Template used to calculate target quantities and amounts"
+msgstr "Plantilla utilizada para calcular cantidades y montos objetivo"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_sale_target__season_id
+msgid "Agricultural Season"
+msgstr "Temporada Agrícola"
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_sale_target__season_id
+msgid "Agricultural season from the selected quotation template"
+msgstr "Temporada agrícola de la plantilla de cotización seleccionada"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_sale_target__profile_id
+msgid "Customer Profile"
+msgstr "Perfil del Cliente"
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_sale_target__profile_id
+msgid "Customer profile used for factor calculation"
+msgstr "Perfil del cliente utilizado para el cálculo del factor"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_sale_target__hectares
+msgid "Hectares"
+msgstr "Hectáreas"
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_sale_target__hectares
+msgid "Customer's hectares for target quantity calculation"
+msgstr "Hectáreas del cliente para el cálculo de cantidad objetivo"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_sale_target__factor
+msgid "Profile Factor"
+msgstr "Factor del Perfil"
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_sale_target__factor
+msgid "Factor from customer profile for quantity adjustment"
+msgstr "Factor del perfil del cliente para ajuste de cantidad"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_sale_target__target_amount
+msgid "Target Amount"
+msgstr "Monto Objetivo"
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_sale_target__target_amount
+msgid "Total target amount calculated from all lines"
+msgstr "Monto objetivo total calculado de todas las líneas"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_sale_target__line_ids
+msgid "Target Lines"
+msgstr "Líneas del Objetivo"
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_sale_target__line_ids
+msgid "Detailed target lines by product"
+msgstr "Líneas detalladas del objetivo por producto"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_sale_target__user_id
+msgid "Salesperson"
+msgstr "Vendedor"
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_sale_target__user_id
+msgid "Assigned salesperson from customer record"
+msgstr "Vendedor asignado del registro del cliente"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_sale_target__company_id
+msgid "Company"
+msgstr "Empresa"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_sale_target__currency_id
+msgid "Currency"
+msgstr "Moneda"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_sale_target_line__target_id
+msgid "Sales Target"
+msgstr "Objetivo de Ventas"
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_sale_target_line__target_id
+msgid "Related sales target record"
+msgstr "Registro de objetivo de ventas relacionado"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_sale_target_line__product_id
+msgid "Product"
+msgstr "Producto"
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_sale_target_line__product_id
+msgid "Product for this target line"
+msgstr "Producto para esta línea objetivo"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_sale_target_line__price_unit
+msgid "Unit Price"
+msgstr "Precio Unitario"
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_sale_target_line__price_unit
+msgid "Unit price for target amount calculation"
+msgstr "Precio unitario para el cálculo del monto objetivo"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_sale_target_line__template_quantity
+msgid "Template Quantity"
+msgstr "Cantidad de Plantilla"
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_sale_target_line__template_quantity
+msgid "Base quantity from quotation template"
+msgstr "Cantidad base de la plantilla de cotización"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_sale_target_line__subtotal
+msgid "Subtotal"
+msgstr "Subtotal"
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_sale_target_line__subtotal
+msgid "Calculated as unit price × target quantity"
+msgstr "Calculado como precio unitario × cantidad objetivo"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_sale_target_line__target_quantity
+msgid "Target Quantity"
+msgstr "Cantidad Objetivo"
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_sale_target_line__target_quantity
+msgid "Calculated as template quantity × hectares × profile factor"
+msgstr "Calculado como cantidad de plantilla × hectáreas × factor del perfil"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_sale_target_line__target_amount
+msgid "Target Amount"
+msgstr "Monto Objetivo"
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_sale_target_line__target_amount
+msgid "Calculated as unit price × target quantity"
+msgstr "Calculado como precio unitario × cantidad objetivo"
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sale_target_form
+msgid "Sales Target"
+msgstr "Objetivo de Ventas"
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sale_target_form
+msgid "Period"
+msgstr "Período"
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sale_target_form
+msgid "Customer Information"
+msgstr "Información del Cliente"
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sale_target_form
+msgid "Template & Profile"
+msgstr "Plantilla y Perfil"
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sale_target_form
+msgid "Target Summary"
+msgstr "Resumen del Objetivo"
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sale_target_form
+#: model_terms:ir.ui.view,arch_db:marin.view_sale_target_list
+msgid "Target Lines"
+msgstr "Líneas del Objetivo"
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sale_target_list
+#: model_terms:ir.ui.view,arch_db:marin.view_sale_target_search
+msgid "Sales Targets"
+msgstr "Objetivos de Ventas"
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sale_target_search
+msgid "My Targets"
+msgstr "Mis Objetivos"
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sale_target_search
+msgid "Current Period"
+msgstr "Período Actual"
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sale_target_search
+msgid "Group By"
+msgstr "Agrupar Por"
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sale_target_search
+msgid "Customer"
+msgstr "Cliente"
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sale_target_search
+msgid "Salesperson"
+msgstr "Vendedor"
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sale_target_search
+msgid "Season"
+msgstr "Temporada"
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sale_target_search
+msgid "Profile"
+msgstr "Perfil"
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_sale_target_search
+msgid "Template"
+msgstr "Plantilla"
+
+#. module: marin
+#: model:ir.ui.menu,name:marin.menu_sale_target
+msgid "Sales Targets"
+msgstr "Objetivos de Ventas"
 

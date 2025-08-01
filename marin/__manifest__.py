@@ -133,6 +133,7 @@
         "views/sale_order_views.xml",
         "views/sale_order_line_views.xml",
         "views/sale_order_template_views.xml",
+        "views/sale_target_views.xml",
         "views/stock_location_views.xml",
         "views/stock_lot_views.xml",
         "views/stock_move_views.xml",

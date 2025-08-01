@@ -41,6 +41,8 @@ from . import res_users
 from . import sale_order
 from . import sale_order_line
 from . import sale_order_template
+from . import sale_target
+from . import sale_target_line
 from . import stock_location
 from . import stock_lot
 from . import stock_move

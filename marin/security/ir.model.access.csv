@@ -98,3 +98,7 @@ access_res_partner_profile_manager,res.partner.profile.manager,marin.model_res_p
 access_sales_master_report_manager,sales.master.report.manager,model_sales_master_report,sales_team.group_sale_manager,1,0,0,0
 access_sales_master_report_team_leader,sales.master.report.team.leader,model_sales_master_report,sales_team.group_sale_salesman_all_leads,1,0,0,0
 access_sales_master_report_salesperson,sales.master.report.salesperson,model_sales_master_report,sales_team.group_sale_salesman,1,0,0,0
+access_sale_target_user,sale.target.user,marin.model_sale_target,sales_team.group_sale_salesman,1,0,0,0
+access_sale_target_manager,sale.target.manager,marin.model_sale_target,sales_team.group_sale_manager,1,1,1,1
+access_sale_target_line_user,sale.target.line.user,marin.model_sale_target_line,sales_team.group_sale_salesman,1,0,0,0
+access_sale_target_line_manager,sale.target.line.manager,marin.model_sale_target_line,sales_team.group_sale_manager,1,1,1,1
