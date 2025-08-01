@@ -213,6 +213,9 @@ class ResPartner(models.Model):
                 
             partner_categories = set(partner.category_id.ids)
             profiles = self.env['res.partner.profile'].search([('active', '=', True)])
+            if not profiles:
+                partner.profile_id = False
+                continue
             
             best_profile = False
             max_matches = 0
