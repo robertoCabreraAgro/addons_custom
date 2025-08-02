@@ -1,4 +1,3 @@
-/** @odoo-module **/
 
 import { GpsTrackingDashboard } from "./gps_tracking_dashboard";
 import { registry } from "@web/core/registry";
@@ -28,12 +27,8 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
             clearInterval(this.refreshInterval);
         }
 
-        this.loadGeofences = async () => {
-            console.log("Carga de geocercas desactivada en Timeline.");
-        };
-        this.addDeviceMarkers = async () => {
-            console.log("Carga de devicemarkers desactivado en Timeline.");
-        };
+        this.loadGeofences = async () => {};
+        this.addDeviceMarkers = async () => {};
     }
 
     // Handles device selection from the Kanban view and centers the map on its location
@@ -49,7 +44,6 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
                 const coords = [point.coordinates[0], point.coordinates[1]];
 
                 setTimeout(() => {
-                    console.log("Iniciando animación del mapa...");
                     this.map.getView().animate({
                         center: coords,
                         zoom: 13,
@@ -73,7 +67,6 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
             this.state.activeDevices.includes(device.imei)
         );
         if (activeDevices.length === 0) {
-            console.log("No hay dispositivos activos para mostrar rutas.");
             return;
         }
         activeDevices.forEach(async (device) => {
@@ -101,7 +94,6 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
                     ]
                 );
                 if (!points || points.length === 0) {
-                    console.log(`No se encontraron puntos para el dispositivo ${device.imei}`);
                     return;
                 }
                 const coordinates = points
@@ -127,7 +119,7 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
                 });
                 this.map.addLayer(lineLayer);
                 this.state.routeLayers[device.imei] = lineLayer;
-                console.log(`Ruta agregada para ${device.imei}`);
+                // console.log(`Ruta agregada para ${device.imei}`);
             } catch (error) {
                 console.error(`Error al obtener recorrido del dispositivo ${device.imei}:`, error);
             }
@@ -143,7 +135,7 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
         });
         this.state.routeLayers = {};
         this.state.deviceLayers = {};
-        console.log("Todas las capas vectoriales eliminadas completamente");
+        // console.log("Todas las capas vectoriales eliminadas completamente");
     }
 
     toggleDeviceRouteVisibility(device) {
@@ -155,10 +147,10 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
         const deviceIndex = updatedActiveDevices.indexOf(device.imei);
         if (deviceIndex > -1) {
             updatedActiveDevices.splice(deviceIndex, 1);
-            console.log("Checkbox desmarcado. Dispositivo ocultado:", device.imei);
+            // console.log("Checkbox desmarcado. Dispositivo ocultado:", device.imei);
         } else {
             updatedActiveDevices.push(device.imei);
-            console.log("Checkbox marcado. Dispositivo mostrado:", device.imei);
+            // console.log("Checkbox marcado. Dispositivo mostrado:", device.imei);
         }
         this.state.activeDevices = updatedActiveDevices;
         this.refreshMapWithActiveDevices();
@@ -167,7 +159,7 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
     refreshMapWithActiveDevices() {
         this.cleanupAllLayers();
         if (this.state.activeDevices.length === 0) {
-            console.log("No hay dispositivos activos para mostrar");
+            // console.log("No hay dispositivos activos para mostrar");
             this.map.renderSync();
             return;
         }
@@ -182,7 +174,7 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
         this.cleanupAllLayers();
         const activeDevices = this.state.activeDevices.slice();
         if (activeDevices.length === 0) {
-            console.log("No hay dispositivos activos. Mapa en blanco.");
+            // console.log("No hay dispositivos activos. Mapa en blanco.");
             this.map.renderSync();
             return;
         }
@@ -214,9 +206,9 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
                         "fuel_consumed_counted"
                     ]
                 );
-                console.log("Puntos obtenidos para", device.imei, points);
+                // console.log("Puntos obtenidos para", device.imei, points);
                 if (points.length === 0) {
-                    console.log("No se encontraron puntos para el dispositivo:", device.imei);
+                    // console.log("No se encontraron puntos para el dispositivo:", device.imei);
                     continue;
                 }
                 points.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
@@ -248,7 +240,7 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
         });
         this.state.deviceLayers = {};
         this.state.routeLayers = {};
-        console.log("Todas las capas vectoriales han sido eliminadas del mapa");
+        // console.log("Todas las capas vectoriales han sido eliminadas del mapa");
     }
 
     // Renders a device's path on the map with start and end markers
@@ -410,7 +402,7 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
         this.map.addLayer(pointLayer);
         this.state.deviceLayers[`${device.imei}_points`] = pointLayer;
     
-        console.log(`Ruta, puntos y marcadores de inicio/fin del dispositivo ${device.imei} renderizados correctamente.`);
+        // console.log(`Ruta, puntos y marcadores de inicio/fin del dispositivo ${device.imei} renderizados correctamente.`);
     }
     
 
@@ -433,7 +425,7 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
             padding: [50, 50, 50, 50],
             duration: 1000,
         });
-        console.log("Mapa ajustado a la ruta.");
+        // console.log("Mapa ajustado a la ruta.");
     }
 
     _displayFeatureInfo(pixel, target, click = false) {
@@ -461,7 +453,7 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
         const ignition = closestFeature.get("ignition") || "Desconocido";
         const imei = closestFeature.get("device");
         const speed = closestFeature.get("speed") || 0;
-        const currentOdometer = closestFeature.get("odometer") || 0;
+        const currentOdometer = closestFeature.get("real_odometer") || 0;
         const currentFuel = closestFeature.get("fuel_consumed_counted") || 0;
         
         // Get vehicle plate from the selected device
@@ -500,7 +492,7 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
 
     // Resets the component state and clears the map
     resetAll() {
-        console.log("Reiniciando todo...");
+        // console.log("Reiniciando todo...");
         const layersToRemove = this.map.getLayers().getArray().filter(layer => layer instanceof ol.layer.Vector);
         layersToRemove.forEach(layer => this.map.removeLayer(layer));
         this.state.deviceLayers = {};
@@ -512,13 +504,13 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
         const formattedDate = today.toISOString().slice(0, 16);
         this.state.startDate = formattedDate;
         this.state.endDate = formattedDate;
-        console.log(`Fechas reiniciadas: ${this.state.startDate} - ${this.state.endDate}`);
+        // console.log(`Fechas reiniciadas: ${this.state.startDate} - ${this.state.endDate}`);
         document.querySelectorAll(".kanban_toggle_view input[type='checkbox']").forEach(checkbox => {
             checkbox.checked = false;
         });
         this.map.renderSync();
         setTimeout(() => this.map.renderSync(), 100);
-        console.log("Mapa y estado reiniciados completamente.");
+        // console.log("Mapa y estado reiniciados completamente.");
     }
 }
 

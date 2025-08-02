@@ -59,12 +59,12 @@ class GPSWebhook(http.Controller):
         gps_tracking_point = request.env["gps.tracking.point"].sudo()
         _logger.debug(
             "Iniciando procesamiento del webhook GPS."
-        )  # TODO: cambiar a debug luego de estabilizacion
+        )
         try:
             json_data = request.get_json_data() or {}
             _logger.debug(
                 f"Payload recibido: {json_data}"
-            )  # TODO: cambiar a debug luego de estabilizacion
+            )
 
             payload = json_data["state"]["reported"]
         except Exception as e:
@@ -120,16 +120,16 @@ class GPSWebhook(http.Controller):
 
                 _logger.debug(
                     f"Creando nuevo punto de seguimiento GPS: {vals}"
-                )  # TODO: cambiar a debug luego de estabilizacion
+                )
                 new_point = gps_tracking_point.create(vals)
                 _logger.debug(
                     f"Punto de seguimiento creado exitosamente: ID {new_point.id}"
-                )  # TODO: cambiar a debug luego de estabilizacion
+                )
 
                 device.sudo().write({"last_point_id": new_point.id})
                 _logger.debug(
                     f"Dispositivo actualizado con el último punto: ID {new_point.id}"
-                )  # TODO: cambiar a debug luego de estabilizacion
+                )
 
                 return b"\x01"
 

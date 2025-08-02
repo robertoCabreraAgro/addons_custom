@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { SearchModel } from "@web/search/search_model";
 import { Domain } from "@web/core/domain";
 

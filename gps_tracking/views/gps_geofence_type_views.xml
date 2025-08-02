@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form View -->
+    <record id="view_gps_geofence_type_form" model="ir.ui.view">
+        <field name="name">gps.geofence.type.form</field>
+        <field name="model">gps.geofence.type</field>
+        <field name="arch" type="xml">
+            <form string="Area Type Configuration">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_geofences" type="object" 
+                                class="oe_stat_button" icon="fa-map-marker"
+                                invisible="geofence_count == 0">
+                            <field name="geofence_count" widget="statinfo" string="Areas"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Area type name..."/>
+                        </h1>
+                        <h3>
+                            <field name="code" placeholder="Technical code..."/>
+                        </h3>
+                    </div>
+                    <group>
+                        <group string="Configuration">
+                            <field name="sequence"/>
+                            <field name="color" widget="color"/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                        <group string="Statistics">
+                            <field name="geofence_count" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Description">
+                        <field name="description" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- List View -->
+    <record id="view_gps_geofence_type_list" model="ir.ui.view">
+        <field name="name">gps.geofence.type.list</field>
+        <field name="model">gps.geofence.type</field>
+        <field name="arch" type="xml">
+            <list string="Area Type Configuration" default_order="sequence,name">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="color" widget="color"/>
+                <field name="geofence_count" string="Areas Count"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_gps_geofence_type_search" model="ir.ui.view">
+        <field name="name">gps.geofence.type.search</field>
+        <field name="model">gps.geofence.type</field>
+        <field name="arch" type="xml">
+            <search string="Search Area Types">
+                <field name="name"/>
+                <field name="code"/>
+                <separator/>
+                <filter name="active" string="Active" domain="[('active', '=', True)]"/>
+                <filter name="inactive" string="Inactive" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_gps_geofence_type" model="ir.actions.act_window">
+        <field name="name">Area Types Configuration</field>
+        <field name="res_model">gps.geofence.type</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_gps_geofence_type_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first area type configuration
+            </p>
+            <p>
+                Define area types with their default colors and sequences
+                to standardize geographic area management.
+            </p>
+        </field>
+    </record>
+</odoo>

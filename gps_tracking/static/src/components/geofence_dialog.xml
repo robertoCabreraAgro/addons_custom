@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="gps_tracking.geofence_dialog">
+        <Dialog title="'Create Geographic Area'" size="'lg'">
+            <div class="container-fluid">
+                <form>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="areaName" class="form-label">Area Name *</label>
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                id="areaName" 
+                                t-model="state.form.name"
+                                required="true"/>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="areaType" class="form-label">Area Type *</label>
+                            <select 
+                                class="form-select" 
+                                id="areaType" 
+                                t-model="state.form.area_type"
+                                t-on-change="onAreaTypeChange"
+                                required="true">
+                                <t t-foreach="state.geofenceTypes" t-as="areaType" t-key="areaType.id">
+                                    <option t-att-value="areaType.code" t-esc="areaType.name"/>
+                                </t>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- Client field - only shown for 'property' area type -->
+                    <div class="row mt-3" t-if="state.form.area_type === 'property'">
+                        <div class="col-md-12">
+                            <label for="clientSelect" class="form-label">Client</label>
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                id="clientSelect"
+                                placeholder="Type to search client..."
+                                t-model="state.form.partner_name"
+                                t-on-input="onPartnerSearch"
+                                t-on-blur="onPartnerBlur"
+                                list="partnerDatalist"/>
+                            <datalist id="partnerDatalist">
+                                <t t-foreach="state.filteredPartners" t-as="partner" t-key="partner.id">
+                                    <option t-att-value="partner.name" t-att-data-id="partner.id"/>
+                                </t>
+                            </datalist>
+                            <small class="form-text text-muted">
+                                Client is only set for properties. Other area types inherit client from parent.
+                            </small>
+                        </div>
+                    </div>
+                    <!-- Parent Area field is hidden - calculated automatically by intersection -->
+                    <div class="row mt-3">
+                        <div class="col-md-4">
+                            <label for="areaColor" class="form-label">Color</label>
+                            <input 
+                                type="color" 
+                                class="form-control form-control-color w-100" 
+                                id="areaColor" 
+                                t-model="state.form.color"
+                                disabled="disabled"
+                                style="height: 38px;"/>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="sequenceNumber" class="form-label">Sequence</label>
+                            <input 
+                                type="number" 
+                                class="form-control" 
+                                id="sequenceNumber" 
+                                t-model="state.form.sequence"
+                                disabled="disabled"/>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="surfaceArea" class="form-label">Surface (ha)</label>
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                id="surfaceArea" 
+                                t-att-value="state.form.surface ? state.form.surface.toFixed(4) : '0.0000'"
+                                readonly="readonly"/>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <label for="areaDescription" class="form-label">Description</label>
+                            <textarea 
+                                class="form-control" 
+                                id="areaDescription" 
+                                rows="3"
+                                t-model="state.form.description">
+                            </textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <t t-set-slot="footer">
+                <button type="button" class="btn btn-secondary" t-on-click="onCancel">Cancel</button>
+                <button type="button" class="btn btn-primary" t-on-click="onSave">Save Geographic Area</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

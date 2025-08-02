@@ -1,6 +1,7 @@
 import logging
 from datetime import datetime, timedelta
 from odoo import api, fields, models
+from pyproj import Transformer
 from pytz import timezone, utc
 
 _logger = logging.getLogger(__name__)

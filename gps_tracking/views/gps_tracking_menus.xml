@@ -19,7 +19,7 @@
             sequence="30" />
 
         <menuitem id="menu_gps_geofence"
-            name="Geofences"
+            name="Geographic Areas"
             action="action_gps_geofence"
             sequence="40" />
 
@@ -54,6 +54,11 @@
                 name="Device configurations"
                 action="action_gps_tracking_config"
                 sequence="10" />
+
+            <menuitem id="menu_gps_geofence_type"
+                name="Area Types"
+                action="action_gps_geofence_type"
+                sequence="20" />
         </menuitem>
     </menuitem>
 </odoo>

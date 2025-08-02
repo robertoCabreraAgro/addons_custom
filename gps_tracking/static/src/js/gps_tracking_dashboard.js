@@ -1,4 +1,3 @@
-/** @odoo-module **/
 
 import { Component, useState, onWillStart, onMounted, useRef, onWillUnmount, onWillUpdateProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
@@ -8,6 +7,7 @@ import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { SearchBar } from "@web/search/search_bar/search_bar";
 import { SearchModel } from "@web/search/search_model";
 import { GpsSearchbar } from "../components/searchbar/gps_searchbar";
+import { GeofenceDialog } from "../components/geofence_dialog";
 
 export class GpsTrackingDashboard extends Component {
     static props = {
@@ -23,6 +23,7 @@ export class GpsTrackingDashboard extends Component {
     setup() {
         this.orm = useService("orm");
         this.action = useService("action");
+        this.dialog = useService("dialog");
         this.state = useState({
             devices: [],
             filteredDevices: [],
@@ -55,11 +56,6 @@ export class GpsTrackingDashboard extends Component {
         }, 1000); // 10 segundos
 
         onWillStart(async () => {
-            // Acceder al contexto correctamente
-            const context = this.props.action.context || {};
-            const searchViewId = context.search_view_id;
-            console.log("searchViewId:", searchViewId);
-
             // Cargar los dispositivos inicialmente
             await this.loadDevices();
             this.state.filteredDevices = [...this.state.devices];
@@ -68,20 +64,16 @@ export class GpsTrackingDashboard extends Component {
 
         onMounted(() => {
             if (this.mapContainerRef.el) {
-                console.log("mapContainer está disponible.");
                 this.initializeMap();
                 this.addDeviceMarkers();
-                this.loadGeofences(); // Cargar geocercas al iniciar el mapa
+                this.loadGeofences();
                 this.mapInitialized = true;
             } else {
-                console.error("mapContainer no está disponible en onMounted.");
                 setTimeout(() => {
                     if (this.mapContainerRef.el) {
                         this.initializeMap();
                         this.addDeviceMarkers();
                         this.mapInitialized = true;
-                    } else {
-                        console.error("mapContainer sigue sin estar disponible.");
                     }
                 }, 0);
             }
@@ -90,14 +82,11 @@ export class GpsTrackingDashboard extends Component {
         onWillUnmount(() => {
             if (this.refreshInterval) {
                 clearInterval(this.refreshInterval);
-                console.log("Intervalo de actualización limpiado.");
             }
         });
     }
 
     async _reloadDevicesWithDomain(domain) {
-        console.log("Recargando con domain:", domain);
-        // Llama a searchRead en gps.tracking.device con ese domain
         try {
             const devices = await this.orm.searchRead(
                 "gps.tracking.device",
@@ -106,7 +95,6 @@ export class GpsTrackingDashboard extends Component {
             );
             this.state.devices = devices;
             this.state.filteredDevices = devices;
-            // Actualizar marcadores si lo deseas, etc.
         } catch (error) {
             console.error("Error al recargar dispositivos:", error);
         }
@@ -138,12 +126,8 @@ export class GpsTrackingDashboard extends Component {
 
     // Método para refrescar los datos
     async refreshData() {
-        console.log("Actualizando datos...");
-        // llamamos a _reloadDevicesWithDomain() usando el dominio actual de las props.
         await this._reloadDevicesWithDomain(this.props.searchDomain || []);
-        // Ajustamos los marcadores
         this.updateDeviceMarkers();
-        console.log("Datos actualizados.");
     }
 
     // Cargar OpenLayers de forma global
@@ -153,7 +137,6 @@ export class GpsTrackingDashboard extends Component {
             if (typeof ol === "undefined") {
                 throw new Error("OpenLayers no está definido después de la carga.");
             }
-            console.log("OpenLayers cargado correctamente.");
         } catch (error) {
             console.error("Error al cargar OpenLayers:", error);
         }
@@ -188,42 +171,70 @@ export class GpsTrackingDashboard extends Component {
             tooltipElement.style.left = pixel[0] + "px";
             tooltipElement.style.top = pixel[1] + "px";
 
-            // Recopilar datos del feature
-            const imei = feature.get("imei") || "Desconocido";
-            const speed = feature.get("speed") || 0;
-            const ignition = feature.get("ignition") || 0;
-            const movement = feature.get("movement") || 0;
+            const featureType = feature.get("feature_type");
+            let tooltipContent = "";
 
-            // Contenido base del tooltip
-            tooltipElement.innerHTML = `
-            <div style="min-width: 200px;">
-                <strong>IMEI:</strong> ${imei}<br/>
-                <strong>Velocidad:</strong> ${speed} km/h<br/>
-                <strong>Encendido:</strong>
-                <span style="color: ${ignition == 1 ? 'green' : 'red'};">
-                    <i class="fa fa-power-off" style="margin-right: 5px;"></i>
-                    ${ignition == 1 ? 'Encendido' : 'Apagado'}
-                </span><br/>
-                <strong>Movimiento:</strong>
-                <span style="color: ${movement == 1 ? 'green' : 'red'};">
-                    <i class="fa fa-car" style="margin-right: 5px;"></i>
-                    ${movement == 1 ? 'En movimiento' : 'Estacionado'}
-                </span><br/>
-                <button id="btn-street" class="btn btn-sm btn-info" style="margin-top:5px;">
-                    Ver Street View
-                </button>
-            </div>
-            `;
+            if (featureType === 'device') {
+                // Device tooltip content
+                const imei = feature.get("imei") || "Unknown";
+                const speed = feature.get("speed") || 0;
+                const ignition = feature.get("ignition") || 0;
+                const movement = feature.get("movement") || 0;
 
-            // Asignar listeners tras crear el contenido
+                tooltipContent = `
+                <div style="min-width: 200px;">
+                    <strong>IMEI:</strong> ${imei}<br/>
+                    <strong>Speed:</strong> ${speed} km/h<br/>
+                    <strong>Engine:</strong>
+                    <span style="color: ${ignition == 1 ? 'green' : 'red'};">
+                        <i class="fa fa-power-off" style="margin-right: 5px;"></i>
+                        ${ignition == 1 ? 'On' : 'Off'}
+                    </span><br/>
+                    <strong>Movement:</strong>
+                    <span style="color: ${movement == 1 ? 'green' : 'red'};">
+                        <i class="fa fa-car" style="margin-right: 5px;"></i>
+                        ${movement == 1 ? 'Moving' : 'Parked'}
+                    </span><br/>
+                    <button id="btn-street" class="btn btn-sm btn-info" style="margin-top:5px;">
+                        View Street View
+                    </button>
+                </div>
+                `;
+            } else if (featureType === 'geofence') {
+                // Geofence tooltip content
+                const name = feature.get("name") || "Unnamed Area";
+                const areaType = feature.get("area_type") || "Unknown";
+                const partnerId = feature.get("partner_id");
+                const parentId = feature.get("parent_id");
+
+                tooltipContent = `
+                <div style="min-width: 200px;">
+                    <strong><i class="fa fa-map-marker"></i> ${name}</strong><br/>
+                    <strong>Type:</strong> ${areaType.charAt(0).toUpperCase() + areaType.slice(1).replace('_', ' ')}<br/>
+                    ${partnerId ? `<strong>Client:</strong> ${partnerId[1]}<br/>` : ''}
+                    ${parentId ? `<strong>Parent Area:</strong> ${parentId[1]}<br/>` : ''}
+                    <div style="margin-top: 8px;">
+                        <span style="display: inline-block; width: 15px; height: 15px; background-color: ${feature.get("color")}; border: 1px solid #000; margin-right: 5px;"></span>
+                        <small>Geographic Area</small>
+                    </div>
+                </div>
+                `;
+            }
+
+            // Set tooltip content
+            tooltipElement.innerHTML = tooltipContent;
+
+            // Assign listeners after creating content
             setTimeout(() => {
-                // Botón StreetView
-                const btnStreet = document.getElementById("btn-street");
-                if (btnStreet) {
-                    btnStreet.addEventListener("click", (evt) => {
-                        evt.stopPropagation();  // Evitar que el mapa lo oculte
-                        this._showStreetViewInsideTooltip(tooltipElement, feature);
-                    });
+                // StreetView button (only for devices)
+                if (featureType === 'device') {
+                    const btnStreet = document.getElementById("btn-street");
+                    if (btnStreet) {
+                        btnStreet.addEventListener("click", (evt) => {
+                            evt.stopPropagation();  // Prevent map from hiding it
+                            this._showStreetViewInsideTooltip(tooltipElement, feature);
+                        });
+                    }
                 }
             }, 0);
 
@@ -251,7 +262,6 @@ export class GpsTrackingDashboard extends Component {
         // 3. Guardar contenido anterior del tooltip
         const oldContent = tooltipElement.innerHTML;
 
-        console.log(embedUrl)
 
         // 4. Renderizar el iFrame con la URL embed
         tooltipElement.innerHTML = `
@@ -291,33 +301,47 @@ export class GpsTrackingDashboard extends Component {
 
     initializeMap() {
         if (!this.mapContainerRef.el) {
-            console.error("mapContainer no está disponible.");
             return;
         }
 
         if (typeof ol === 'undefined') {
-            console.warn('OpenLayers not loaded yet, retrying...');
             setTimeout(() => this.initializeMap(), 100);
             return;
         }
 
-        // Crear el mapa con su capa base
+        // Crear capas base para diferentes tipos de vista
+        this.baseLayers = {
+            satellite: new ol.layer.Tile({
+                title: 'Satellite',
+                type: 'base',
+                visible: true,
+                source: new ol.source.XYZ({
+                    url: "https://mts1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}&key=TU_CLAVE_API",
+                })
+            }),
+            roads: new ol.layer.Tile({
+                title: 'Roads Only',
+                type: 'base',
+                visible: false,
+                source: new ol.source.XYZ({
+                    url: "https://mts1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}&key=TU_CLAVE_API",
+                })
+            })
+        };
+
+        // Crear el mapa con todas las capas base
         this.map = new ol.Map({
             target: this.mapContainerRef.el,
-            layers: [
-                new ol.layer.Tile({
-                    source: new ol.source.XYZ({
-                        url: "https://mts1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}&key=TU_CLAVE_API",
-                    }),
-                }),
-            ],
+            layers: Object.values(this.baseLayers),
             view: new ol.View({
                 center: ol.proj.fromLonLat([0, 0]),
                 zoom: 2,
             }),
         });
 
-        console.log("Mapa inicializado:", this.map);
+        // Agregar control de cambio de capas
+        this.addLayerSwitcher();
+
 
         // Manejar pointermove para tooltip
         this.map.on("pointermove", (evt) => {
@@ -344,7 +368,6 @@ export class GpsTrackingDashboard extends Component {
 
     addDeviceMarkers() {
         if (!this.map) {
-            console.error("El mapa no está inicializado.");
             return;
         }
 
@@ -365,6 +388,7 @@ export class GpsTrackingDashboard extends Component {
                     speed: device.speed,
                     ignition: device.ignition,
                     movement: device.movement,
+                    feature_type: 'device',
                 });
             }
         }).filter((feature) => feature);
@@ -401,7 +425,6 @@ export class GpsTrackingDashboard extends Component {
 
     updateDeviceMarkers() {
         if (!this.map) {
-            console.error("El mapa no está inicializado.");
             return;
         }
 
@@ -423,6 +446,7 @@ export class GpsTrackingDashboard extends Component {
                         speed: device.speed,
                         ignition: device.ignition,
                         movement: device.movement,
+                        feature_type: 'device',
                     });
                 }
             }).filter((feature) => feature);
@@ -486,25 +510,18 @@ export class GpsTrackingDashboard extends Component {
 
     onCardClick(device) {
         if (!this.map) {
-            console.error("El mapa aún no está inicializado.");
             return;
         }
 
         if (device.the_point) {
             try {
-                console.log("Dispositivo seleccionado:", device);
-
-                // Actualizar el dispositivo activo y el estilo de los marcadores
                 this.state.activeDevice = device;
                 this.updateDeviceMarkers();
 
-                // Obtener las coordenadas
                 const point = JSON.parse(device.the_point);
                 const coords = [point.coordinates[0], point.coordinates[1]];
-
-                // Animar el mapa
+                
                 setTimeout(() => {
-                    console.log("Iniciando animación del mapa...");
                     this.map.getView().animate({
                         center: coords,
                         zoom: 15,
@@ -522,9 +539,8 @@ export class GpsTrackingDashboard extends Component {
             const geofences = await this.orm.searchRead(
                 "gps.geofence",
                 [["active", "=", true]],
-                ["id", "name", "geometry", "color"]
+                ["id", "name", "geometry", "color", "area_type", "partner_id", "parent_id"]
             );
-            console.log("Geocercas cargadas:", geofences);
 
             const features = geofences.map((geofence) => {
                 const geom = JSON.parse(geofence.geometry); // Validar que el JSON sea válido
@@ -535,11 +551,15 @@ export class GpsTrackingDashboard extends Component {
                     ring.map((coord) => ol.proj.transform(coord, "EPSG:4326", "EPSG:3857"))
                 );
 
-                // Crear la feature usando las coordenadas transformadas
+                // Create the feature using transformed coordinates
                 return new ol.Feature({
                     geometry: new ol.geom.Polygon(transformedCoords),
                     name: geofence.name,
                     color: color,
+                    area_type: geofence.area_type,
+                    partner_id: geofence.partner_id,
+                    parent_id: geofence.parent_id,
+                    feature_type: 'geofence',
                 });
             });
 
@@ -563,7 +583,6 @@ export class GpsTrackingDashboard extends Component {
             });
 
             this.map.addLayer(this.geofenceLayer);
-            console.log("Geocercas añadidas al mapa.");
         } catch (error) {
             console.error("Error al cargar las geocercas:", error);
         }
@@ -576,77 +595,56 @@ export class GpsTrackingDashboard extends Component {
         this.geofenceLayer.getSource().getFeatures().forEach((feature) => {
             if (feature.getGeometry().intersectsCoordinate(point.getCoordinates())) {
                 inside = true;
-                console.log(`${device.imei} está dentro de la geocerca: ${feature.get("name")}`);
             }
         });
-
-        if (!inside) {
-            console.log(`${device.imei} está fuera de todas las geocercas.`);
-        }
     }
 
-    addGeofenceDrawingTool() {
-        // Verificar si la capa de geocercas está inicializada
+    async addGeofenceDrawingTool() {
+        /**
+         * Activate the geofence drawing tool and show creation dialog
+         */
         if (!this.geofenceLayer) {
-            console.error("La capa de geocercas no está inicializada.");
             return;
         }
 
-        // Alternar la herramienta de dibujo
         if (this.state.drawingToolActive) {
             this.map.removeInteraction(this.state.drawingInteraction);
             this.state.drawingToolActive = false;
             this.state.drawingInteraction = null;
-            console.log("Herramienta de dibujo desactivada desde el botón.");
-            alert("La herramienta de dibujo se ha desactivado.");
             return;
         }
 
-        // Crear una nueva interacción de dibujo
+        // Create new drawing interaction
         const draw = new ol.interaction.Draw({
             source: this.geofenceLayer.getSource(),
-            type: "Polygon", // Cambia a 'Circle' si deseas geocercas circulares
+            type: "Polygon",
         });
 
         draw.on("drawend", async (event) => {
-            const geometry = event.feature.getGeometry().clone().transform('EPSG:3857', 'EPSG:4326'); // Convertir a EPSG:4326
+            const geometry = event.feature.getGeometry().clone().transform('EPSG:3857', 'EPSG:4326');
             const geoJson = new ol.format.GeoJSON().writeGeometry(geometry);
+            
 
-            console.log("Nueva Geocerca creada (GeoJSON):", geoJson);
+            // Show dialog with geometry
+            this.dialog.add(GeofenceDialog, {
+                geometry: geoJson,
+                onSave: (result) => {
+                    // Reload geofences to show the new one
+                    this.loadGeofences();
+                    alert(`Geographic area saved successfully.`);
+                }
+            });
 
-            const name = prompt("Ingrese un nombre para la geocerca:");
-            const color = prompt("Ingrese un color para la geocerca (ej. #FF0000):", "#FF0000");
-
-            try {
-                const newGeofence = {
-                    name: name || "Geocerca sin nombre",
-                    geometry: geoJson,
-                    color: color || "#FF0000",
-                    active: true,
-                };
-
-                // Guardar la geocerca en Odoo
-                const result = await this.orm.create("gps.geofence", [newGeofence]);
-                console.log("Geocerca guardada en Odoo:", result);
-                alert(`Geocerca "${name}" guardada correctamente.`);
-            } catch (error) {
-                console.error("Error al guardar la geocerca en Odoo:", error);
-                alert("Hubo un error al guardar la geocerca.");
-            }
-
-            // Desactivar la herramienta de dibujo después de guardar
+            // Deactivate drawing tool after drawing
             this.map.removeInteraction(draw);
             this.state.drawingToolActive = false;
-            console.log("Herramienta de dibujo desactivada automáticamente.");
         });
 
-        // Agregar interacción al mapa
         this.map.addInteraction(draw);
         this.state.drawingInteraction = draw;
         this.state.drawingToolActive = true;
-        console.log("Herramienta de dibujo activada.");
-        alert("La herramienta de dibujo se ha activado.");
     }
+
 
     // Recorrido por fechas
     // Recorrido por fechas
@@ -660,10 +658,6 @@ export class GpsTrackingDashboard extends Component {
         const formattedStartDate = this.localToUTC(this.state.startDate);
         const formattedEndDate = this.localToUTC(this.state.endDate);
 
-        // Imprimir fechas formateadas
-        console.log("Fecha de inicio (UTC):", formattedStartDate);
-        console.log("Fecha de fin (UTC):", formattedEndDate);
-        console.log("Device ID del dispositivo activo:", this.state.activeDevice.id);
 
         try {
             // Crear el dominio con las fechas en UTC
@@ -672,7 +666,6 @@ export class GpsTrackingDashboard extends Component {
                 ["timestamp", ">=", formattedStartDate],
                 ["timestamp", "<=", formattedEndDate],
             ];
-            console.log("Dominio enviado al backend:", domain);
 
             const points = await this.orm.searchRead(
                 "gps.tracking.point",
@@ -680,8 +673,6 @@ export class GpsTrackingDashboard extends Component {
                 ["latitude", "longitude", "timestamp"]
             );
 
-            // Imprimir resultado de la consulta
-            console.log("Puntos obtenidos del backend:", points);
 
             if (points.length === 0) {
                 alert("No se encontraron puntos en el rango de fechas seleccionado.");
@@ -693,7 +684,6 @@ export class GpsTrackingDashboard extends Component {
                 point.latitude,
             ]);
 
-            console.log("Puntos formateados para OpenLayers:", this.state.pathPoints);
             this.renderDevicePath();
         } catch (error) {
             console.error("Error al obtener el recorrido:", error);
@@ -742,7 +732,58 @@ export class GpsTrackingDashboard extends Component {
         this.state.pathLayer = lineLayer; // Guardar referencia a la capa de recorrido
         this.map.addLayer(lineLayer);
 
-        console.log("Recorrido renderizado en el mapa.");
+    }
+
+    addLayerSwitcher() {
+        // Crear botones para cambiar tipo de mapa
+        const layerSwitcherDiv = document.createElement('div');
+        layerSwitcherDiv.className = 'layer-switcher ol-unselectable ol-control';
+        layerSwitcherDiv.style.cssText = 'top: 10px; right: 10px; background: rgba(255,255,255,0.9); border-radius: 6px; padding: 8px; display: flex; gap: 5px; box-shadow: 0 2px 8px rgba(0,0,0,0.2);';
+        
+        const layers = [
+            { key: 'satellite', label: '🛰️', title: 'Vista Satelital' },
+            { key: 'roads', label: '🚗', title: 'Solo Carreteras' }
+        ];
+
+        layers.forEach(layer => {
+            const button = document.createElement('button');
+            button.innerHTML = layer.label;
+            button.title = layer.title;
+            button.className = layer.key === 'satellite' ? 'active' : '';
+            button.style.cssText = 'padding: 6px 8px; border: 1px solid #ddd; background: white; cursor: pointer; border-radius: 4px; font-size: 16px; min-width: 35px; transition: all 0.2s;';
+            
+            button.onclick = () => {
+                // Ocultar todas las capas
+                Object.values(this.baseLayers).forEach(l => l.setVisible(false));
+                // Mostrar la capa seleccionada
+                this.baseLayers[layer.key].setVisible(true);
+                
+                // Actualizar botones activos
+                layerSwitcherDiv.querySelectorAll('button').forEach(b => {
+                    b.className = '';
+                    b.style.background = 'white';
+                });
+                button.className = 'active';
+                button.style.background = '#007bff';
+                button.style.color = 'white';
+            };
+            
+            layerSwitcherDiv.appendChild(button);
+        });
+
+        // Crear control personalizado
+        const layerSwitcherControl = new ol.control.Control({
+            element: layerSwitcherDiv
+        });
+
+        this.map.addControl(layerSwitcherControl);
+
+        // Estilo inicial para botón activo
+        const activeButton = layerSwitcherDiv.querySelector('.active');
+        if (activeButton) {
+            activeButton.style.background = '#007bff';
+            activeButton.style.color = 'white';
+        }
     }
 
 }
@@ -752,14 +793,12 @@ GpsTrackingDashboard.components = { ControlPanel, GpsSearchbar, SearchBar };
 GpsTrackingDashboard.template = "gps_tracking.gps_tracking_dashboard_template";
 
 GpsTrackingDashboard.prototype.onSearch = async function (query) {
-    console.log("Iniciando búsqueda en el Dashboard:", query);
     const filteredDevices = this.state.devices.filter((device) =>
         device.imei.toLowerCase().includes(query.toLowerCase())
     );
-    console.log("Dispositivos filtrados en el Dashboard:", filteredDevices);
 
     this.state.filteredDevices = filteredDevices;
-    this.updateDeviceMarkers(filteredDevices); // Actualizar el mapa
+    this.updateDeviceMarkers(filteredDevices);
 };
 
 registry.category("actions").add("gps_tracking_dashboard", GpsTrackingDashboard);
