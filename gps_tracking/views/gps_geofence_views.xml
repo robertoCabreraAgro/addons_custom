@@ -39,7 +39,7 @@
                             <field name="name" placeholder="Area name..."/>
                         </h1>
                         <h3>
-                            <field name="area_type" widget="badge"/>
+                            <field name="area_type"/>
                         </h3>
                     </div>
                     <group>

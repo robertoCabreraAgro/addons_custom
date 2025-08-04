@@ -126,6 +126,36 @@ class GpsGeofence(models.Model):
     def _onchange_area_type(self):
         """Auto-assign color and sequence based on area type configuration."""
         if self.area_type:
+            # Validate hierarchy if there's a parent
+            if self.parent_id and not self._validate_hierarchy(self.parent_id.area_type, self.area_type):
+                return {
+                    'warning': {
+                        'title': 'Invalid Area Type',
+                        'message': f'Area type "{self.area_type}" is not valid for parent "{self.parent_id.area_type}". '
+                                 f'Valid child types for {self.parent_id.area_type}: '
+                                 f'{", ".join(self._get_valid_children(self.parent_id.area_type))}'
+                    }
+                }
+                
+            # Validate hierarchy if there are children
+            if self.child_ids:
+                invalid_children = []
+                for child in self.child_ids:
+                    if not self._validate_hierarchy(self.area_type, child.area_type):
+                        invalid_children.append(f"{child.name} ({child.area_type})")
+                
+                if invalid_children:
+                    return {
+                        'warning': {
+                            'title': 'Invalid Area Type Change',
+                            'message': f'Cannot change to "{self.area_type}" because these child areas would become invalid:\n'
+                                     f'{", ".join(invalid_children)}\n\n'
+                                     f'Valid child types for {self.area_type}: '
+                                     f'{", ".join(self._get_valid_children(self.area_type))}'
+                        }
+                    }
+            
+            # Apply type configuration
             geofence_type = self.env['gps.geofence.type'].search([
                 ('code', '=', self.area_type)
             ], limit=1)
@@ -318,7 +348,34 @@ class GpsGeofence(models.Model):
         return records
 
     def write(self, vals):
-        """Override write to recalculate surface when geometry changes."""
+        """Override write to recalculate surface when geometry changes and validate area type changes."""
+        # Validate area_type changes before writing
+        if 'area_type' in vals:
+            for record in self:
+                new_area_type = vals['area_type']
+                
+                # Check parent hierarchy compatibility
+                if record.parent_id and not record._validate_hierarchy(record.parent_id.area_type, new_area_type):
+                    raise ValidationError(
+                        f'Area type "{new_area_type}" is not valid for parent "{record.parent_id.area_type}" '
+                        f'in geofence "{record.name}". '
+                        f'Valid child types: {", ".join(record._get_valid_children(record.parent_id.area_type))}'
+                    )
+                
+                # Check children hierarchy compatibility
+                if record.child_ids:
+                    invalid_children = []
+                    for child in record.child_ids:
+                        if not record._validate_hierarchy(new_area_type, child.area_type):
+                            invalid_children.append(f"{child.name} ({child.area_type})")
+                    
+                    if invalid_children:
+                        raise ValidationError(
+                            f'Cannot change "{record.name}" to area type "{new_area_type}" because '
+                            f'these child areas would become invalid: {", ".join(invalid_children)}. '
+                            f'Valid child types for {new_area_type}: {", ".join(record._get_valid_children(new_area_type))}'
+                        )
+        
         result = super().write(vals)
         
         # Skip surface calculation if explicitly told to do so (prevents recursion)
@@ -346,6 +403,18 @@ class GpsGeofence(models.Model):
         """Prevent recursive parent relationships."""
         if self._has_cycle():
             raise ValidationError("You cannot create recursive geographic area hierarchies.")
+
+    @api.constrains('area_type', 'parent_id')
+    def _check_area_type_hierarchy(self):
+        """Validate area type hierarchy on save."""
+        for record in self:
+            if record.parent_id and record.area_type:
+                if not record._validate_hierarchy(record.parent_id.area_type, record.area_type):
+                    raise ValidationError(
+                        f'Area type "{record.area_type}" is not valid for parent "{record.parent_id.area_type}" '
+                        f'in geofence "{record.name}". '
+                        f'Valid child types: {", ".join(record._get_valid_children(record.parent_id.area_type))}'
+                    )
 
     def _project_to_srid(self, geom_json, from_srid, to_srid):
         """
@@ -601,16 +670,26 @@ class GpsGeofence(models.Model):
             
         return False
 
+    def _get_valid_hierarchies(self):
+        """
+        Get the valid hierarchy mapping for area types.
+        """
+        return {
+            'property': ['parcel', 'structure', 'demo_parcel'],
+            'parcel': ['treatment'],
+        }
+
+    def _get_valid_children(self, area_type):
+        """
+        Get list of valid child area types for a given area type.
+        """
+        return self._get_valid_hierarchies().get(area_type, [])
+
     def _validate_hierarchy(self, container_area_type, new_area_type):
         """
         Validate if the new area type can be a child of the container area type.        
         """
-        valid_hierarchies = {
-            'property': ['parcel', 'structure', 'demo_parcel'],
-            'parcel': ['treatment'],
-        }
-        
-        allowed_children = valid_hierarchies.get(container_area_type, [])
+        allowed_children = self._get_valid_children(container_area_type)
         return new_area_type in allowed_children
 
     def _find_partner_in_hierarchy(self, container):
@@ -1028,9 +1107,7 @@ class GpsGeofence(models.Model):
                 _logger.warning(f"Error extracting coordinates from main_entrance_point: {e}")
                 context = {}
         
-        _logger.info(f"🎯 GEOFENCE DASHBOARD ACTION - Final context: {context}")
-        
-        action_result = {
+        return {
             'type': 'ir.actions.client',
             'name': f'GPS Dashboard - {self.name}',
             'tag': 'gps_tracking_client_action',
@@ -1041,9 +1118,6 @@ class GpsGeofence(models.Model):
                 'context': context,
             }
         }
-        
-        _logger.info(f"🎯 GEOFENCE DASHBOARD ACTION - Action result: {action_result}")
-        return action_result
 
     @api.model
     def calculate_geometry_surface(self, geometry_geojson):
