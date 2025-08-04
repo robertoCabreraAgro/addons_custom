@@ -26,7 +26,7 @@
         "views/geoengine_raster_layer_views.xml",
         "views/gps_tracking_point_views.xml",
         "views/gps_tracking_templates.xml",
-        "views/gps_tracking_menus.xml",
+        "views/gps_tracking_menus.xml",  # always at last
     ],
     "assets": {
         "web.assets_backend": ["gps_tracking/static/src/**/*"],

@@ -3,30 +3,37 @@
         groups="group_gps_tracking_user"
         web_icon="gps_tracking,static/description/icon.png">
 
-        <menuitem id="menu_gps_tracking_device"
-            name="Devices"
-            action="action_gps_tracking_device"
-            sequence="10" />
-
         <menuitem id="menu_gps_tracking_dashboard"
             name="Dashboard"
             action="action_gps_tracking_client_action"
-            sequence="20" />
+            sequence="10" />
 
         <menuitem id="menu_gps_tracking_timeline"
             name="Timeline"
             action="action_gps_tracking_client_action_timeline"
-            sequence="30" />
+            groups="group_gps_tracking_reporting"
+            sequence="20" />
 
-        <menuitem id="menu_gps_geofence"
-            name="Geographic Areas"
-            action="action_gps_geofence"
-            sequence="40" />
+        <menuitem id="menu_gps_tracking_operations"
+            name="Operations"
+            sequence="30">
+
+            <menuitem id="menu_gps_tracking_device"
+                name="Devices"
+                action="action_gps_tracking_device"
+                groups="group_gps_tracking_reporting"
+                sequence="10" />
+
+            <menuitem id="menu_gps_geofence"
+                name="Geographic Areas"
+                action="action_gps_geofence"
+                sequence="20" />
+        </menuitem>
 
         <menuitem id="menu_gps_tracking_reporting"
             name="Reporting"
             groups="group_gps_tracking_reporting"
-            sequence="50">
+            sequence="40">
 
             <menuitem id="menu_gps_tracking_report"
                 name="Daily Perfomance Summary"
@@ -38,17 +45,17 @@
                 action="action_gps_tracking_point_report"
                 sequence="40" />
 
-            <!-- Menú para acceder al reporte (AHORA EN GPS TRACKING) -->
             <menuitem id="menu_fleet_vehicle_loan_report"
                 name="Préstamos de Vehículos"
                 action="action_fleet_vehicle_loan_report"
+                groups="group_gps_tracking_vehicle_loan"
                 sequence="50" />
         </menuitem>
 
         <menuitem id="menu_gps_tracking_configuration"
             name="Configuration"
             groups="group_gps_tracking_manager"
-            sequence="60">
+            sequence="50">
 
             <menuitem id="menu_gps_tracking_config"
                 name="Device configurations"
