@@ -28,8 +28,8 @@
                             </select>
                         </div>
                     </div>
-                    <!-- Client field - only shown for 'property' area type -->
-                    <div class="row mt-3" t-if="state.form.area_type === 'property'">
+                    <!-- Client field - available for all area types -->
+                    <div class="row mt-3">
                         <div class="col-md-12">
                             <label for="clientSelect" class="form-label">Client</label>
                             <input 
@@ -47,7 +47,7 @@
                                 </t>
                             </datalist>
                             <small class="form-text text-muted">
-                                Client is only set for properties. Other area types inherit client from parent.
+                                Client can be set for any area type or inherited from parent.
                             </small>
                         </div>
                     </div>
@@ -79,7 +79,7 @@
                                 class="form-control" 
                                 id="surfaceArea" 
                                 t-att-value="state.form.surface ? state.form.surface.toFixed(4) : '0.0000'"
-                                readonly="readonly"/>
+                                disabled="disabled"/>
                         </div>
                     </div>
                     <div class="row mt-3">
