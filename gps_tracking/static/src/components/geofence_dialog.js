@@ -39,7 +39,11 @@ export class GeofenceDialog extends Component {
       // Load partners (clients only, not suppliers)
       const partners = await this.orm.searchRead(
         "res.partner",
-        [["customer_rank", ">", 0]],
+        [
+          "|",
+          ["customer_rank", ">", 0],
+          ["customer", "=", true]
+        ],
         ["id", "name"]
       );
 

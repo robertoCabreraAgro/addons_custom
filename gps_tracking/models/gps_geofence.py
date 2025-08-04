@@ -35,7 +35,7 @@ class GpsGeofence(models.Model):
     partner_id = fields.Many2one(
         'res.partner', 
         string="Client", 
-        domain=[('customer_rank', '>', 0)],
+        domain=['|', ('customer', '=', True), ('customer_rank', '>', 0)],
         help="Client associated with this geographic area",
         tracking=True
     )
