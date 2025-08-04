@@ -44,6 +44,60 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="app_settings_block" title="Customer Merge Policies">
+                    <h2>Customer Merge Policies</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="customer_merge_active" />
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="customer_merge_active" />
+                                <div class="text-muted">Automatically merge inactive customers with the general public partner based on configured policies</div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-6 o_setting_box" invisible="not customer_merge_active">
+                            <div class="o_setting_left_pane" />
+                            <div class="o_setting_right_pane">
+                                <label for="customer_merge_general_partner_id" />
+                                <field name="customer_merge_general_partner_id" placeholder="Select general public partner..." />
+                                <div class="text-muted">Partner to merge inactive customers with</div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-6 o_setting_box" invisible="not customer_merge_active">
+                            <div class="o_setting_left_pane" />
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">Evaluation Period</span>
+                                <div class="d-flex">
+                                    <field name="customer_merge_interval_number" class="me-2" style="width: 100px;" />
+                                    <field name="customer_merge_interval_type" />
+                                </div>
+                                <div class="text-muted">Time period to evaluate customer activity</div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-6 o_setting_box" invisible="not customer_merge_active">
+                            <div class="o_setting_left_pane" />
+                            <div class="o_setting_right_pane">
+                                <label for="customer_merge_min_orders" />
+                                <field name="customer_merge_min_orders" />
+                                <div class="text-muted">Minimum number of orders required to keep a customer active</div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 o_setting_box" invisible="not customer_merge_active">
+                            <div class="o_setting_left_pane" />
+                            <div class="o_setting_right_pane">
+                                <label for="customer_merge_required_fields" />
+                                <field name="customer_merge_required_fields" widget="many2many_tags" placeholder="Select required fields..." />
+                                <div class="text-muted">Fields that must be completed for a customer to remain active (e.g., phone, email, tags)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </xpath>
         </field>
     </record>

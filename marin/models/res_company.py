@@ -9,6 +9,14 @@ class ResCompany(models.Model):
 
     code = fields.Char(string="Short Code", size=6)
     complete_name = fields.Char(compute="_compute_complete_name", store=True)
+    
+    # Customer merge configuration
+    customer_merge_required_fields = fields.Many2many(
+        'ir.model.fields',
+        string="Required Customer Fields",
+        domain=[('model', '=', 'res.partner')],
+        help="Fields that must be completed to keep a customer active"
+    )
 
     _code_uniq = models.Constraint("UNIQUE(code)", "The company's code must be unique")
 

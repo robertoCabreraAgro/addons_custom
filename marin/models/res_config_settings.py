@@ -19,3 +19,45 @@ class ResConfigSettings(models.TransientModel):
         default=60,
         config_parameter="l10n_mx_edi_marin.sat_status_max_days",
     )
+
+    # Customer merge configuration
+    customer_merge_active = fields.Boolean(
+        string="Enable Automatic Customer Merge",
+        config_parameter="customer_merge_active",
+        default=False,
+        help="Automatically merge inactive customers with the general public partner"
+    )
+    customer_merge_interval_number = fields.Integer(
+        string="Evaluation Period",
+        config_parameter="customer_merge_interval_number",
+        default=3,
+        help="Number of time units for the evaluation period"
+    )
+    customer_merge_interval_type = fields.Selection([
+        ('days', 'Days'),
+        ('weeks', 'Weeks'),
+        ('months', 'Months')
+    ], string="Period Type",
+        config_parameter="customer_merge_interval_type",
+        default='months',
+        help="Time unit for the evaluation period"
+    )
+    customer_merge_min_orders = fields.Integer(
+        string="Minimum Orders Required",
+        config_parameter="customer_merge_min_orders",
+        default=2,
+        help="Minimum number of orders required to keep a customer active"
+    )
+    customer_merge_general_partner_id = fields.Many2one(
+        'res.partner',
+        string="General Public Partner",
+        config_parameter="customer_merge_general_partner_id",
+        help="Partner to merge inactive customers with"
+    )
+    customer_merge_required_fields = fields.Many2many(
+        'ir.model.fields',
+        related="company_id.customer_merge_required_fields",
+        readonly=False,
+        string="Required Customer Fields",
+        help="Fields that must be completed to keep a customer active"
+    )
