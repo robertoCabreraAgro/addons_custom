@@ -644,7 +644,16 @@ class L10nMxEdiDocument(models.Model):
             # Extract amounts and quantities
             quantity = float(line.get("Cantidad", 0.0))
             unit_value = float(line.get("ValorUnitario", 0.0))
-            total_amount = float(line.get("Importe", 0.0))
+            base_amount = float(line.get("Importe", 0.0))
+
+            # Calculate total amount including taxes (Traslados)
+            tax_amount = 0.0
+            tax_nodes = line.findall("{*}Traslados/{*}Traslado", namespaces=ns)
+            for tax_node in tax_nodes:
+                tax_amount += float(tax_node.get("Importe", 0.0))
+
+            # Total amount is base amount plus taxes
+            total_amount = base_amount + tax_amount
 
             # Determine if it's debit or credit (assume all fuel purchases are expenses)
             amount = total_amount
@@ -656,7 +665,7 @@ class L10nMxEdiDocument(models.Model):
                 "vehicle_id": vehicle.id,
                 "amount": amount,
                 "odometer": 0,  # ECC12 doesn't provide odometer
-                "state": "done",
+                "state": "new",
                 "notes": f"ECC12 - Station: {line.get('ClaveEstacion')} - Operation: {line.get('FolioOperacion')}",
                 "qty_fuel": quantity,
                 "efficiency": 0.0,  # ECC12 doesn't provide efficiency  

@@ -307,8 +307,8 @@ class FleetVehicleLogImport(models.TransientModel):
                         "vendor_id": vendor.id if vendor else False,
                     }
 
-                    # Check for duplicate records
-                    existing_record = fleet_vehicle_log.search(
+                    # Check for duplicate records (done state)
+                    existing_done_record = fleet_vehicle_log.search(
                         [
                             ("vehicle_id", "=", log_vals["vehicle_id"]),
                             ("date", "=", log_vals["date"]),
@@ -316,13 +316,44 @@ class FleetVehicleLogImport(models.TransientModel):
                             ("qty_fuel", "=", log_vals["qty_fuel"]),
                             ("product_category_id", "=", fuel_category.id),
                             ("product_id", "=", fuel_product.id),
+                            ("state", "=", "done"),
                         ],
                         limit=1,
                     )
 
-                    if existing_record:
+                    if existing_done_record:
                         errors.append(
                             f"Row {row_idx}: Duplicate record found for vehicle with fuel card '{fuel_card_number}'"
+                        )
+                        continue
+
+                    # Check for existing 'new' record from CFDI (for verification)
+                    existing_new_record = fleet_vehicle_log.search(
+                        [
+                            ("vehicle_id", "=", log_vals["vehicle_id"]),
+                            ("date", "=", log_vals["date"]),
+                            ("qty_fuel", "=", log_vals["qty_fuel"]),
+                            ("product_category_id", "=", fuel_category.id),
+                            ("product_id", "=", fuel_product.id),
+                            ("state", "=", "new"),
+                        ],
+                        limit=1,
+                    )
+
+                    if existing_new_record:
+                        # Update the existing 'new' record with Effectivale data
+                        # This provides verification and fills missing information
+                        existing_new_record.write({
+                            "amount": log_vals["amount"],  # Update with Effectivale amount
+                            "odometer": log_vals["odometer"],  # Fill missing odometer
+                            "efficiency": log_vals["efficiency"],  # Fill missing efficiency
+                            "vendor_id": log_vals["vendor_id"],  # Fill missing vendor
+                            "state": "done",  # Mark as verified/complete
+                            "notes": f"{existing_new_record.notes} | Efectivale: {log_vals['notes']}",  # Combine notes
+                        })
+                        _logger.info(
+                            "Updated CFDI record %s with Effectivale data for vehicle %s",
+                            existing_new_record.id, vehicle.name
                         )
                         continue
 

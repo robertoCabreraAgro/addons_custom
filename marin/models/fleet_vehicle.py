@@ -189,16 +189,17 @@ class FleetVehicle(models.Model):
                 name = name.replace("IMDM ", "")
             vehicle.highway_pass_name = name
 
-    @api.depends("log_ids.amount")
+    @api.depends("log_ids.amount", "log_ids.state")
     def _compute_fuel_card_balance(self):
         """Calculates the current balance based on fuel credit/debit records"""
         fuel_product_category = self.env.ref("marin.product_category_vehicle_fuel")
         for vehicle in self:
-            # Find all fuel log records associated with this vehicle
+            # Find all fuel log records associated with this vehicle (only done state)
             fuel_logs = self.env["fleet.vehicle.log"].search(
                 [
                     ("vehicle_id", "=", vehicle.id),
                     ("product_category_id", "=", fuel_product_category.id),
+                    ("state", "=", "done"),
                 ]
             )
 
