@@ -67,12 +67,19 @@ export class GpsTrackingDashboard extends Component {
                 this.initializeMap();
                 this.addDeviceMarkers();
                 this.loadGeofences();
+                // Ejecutar checkGeofenceContext después de que todo esté cargado
+                setTimeout(() => {
+                    this.checkGeofenceContext();
+                }, 800);
                 this.mapInitialized = true;
             } else {
                 setTimeout(() => {
                     if (this.mapContainerRef.el) {
                         this.initializeMap();
                         this.addDeviceMarkers();
+                        setTimeout(() => {
+                            this.checkGeofenceContext();
+                        }, 800);
                         this.mapInitialized = true;
                     }
                 }, 0);
@@ -128,6 +135,41 @@ export class GpsTrackingDashboard extends Component {
     async refreshData() {
         await this._reloadDevicesWithDomain(this.props.searchDomain || []);
         this.updateDeviceMarkers();
+    }
+
+    // Verificar si hay contexto de geofence para hacer zoom automático
+    checkGeofenceContext() {
+        if (!this.map) {
+            return;
+        }
+
+        // Buscar coordenadas en el contexto
+        const context = this.props.context || {};
+        const actionContext = (this.props.action && this.props.action.context) || {};
+        
+        let targetContext = null;
+        if (context.default_center_lat && context.default_center_lng) {
+            targetContext = context;
+        } else if (actionContext.default_center_lat && actionContext.default_center_lng) {
+            targetContext = actionContext;
+        }
+        
+        if (targetContext) {
+            const lat = parseFloat(targetContext.default_center_lat);
+            const lng = parseFloat(targetContext.default_center_lng);
+            const zoom = targetContext.default_zoom || 16;
+            
+            // Convertir coordenadas y hacer zoom
+            const coords = ol.proj.fromLonLat([lng, lat]);
+            
+            setTimeout(() => {
+                this.map.getView().animate({
+                    center: coords,
+                    zoom: zoom,
+                    duration: 500,
+                });
+            }, 500);
+        }
     }
 
     // Cargar OpenLayers de forma global
