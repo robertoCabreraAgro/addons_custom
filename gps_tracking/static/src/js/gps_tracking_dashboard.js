@@ -316,7 +316,7 @@ export class GpsTrackingDashboard extends Component {
                 type: 'base',
                 visible: true,
                 source: new ol.source.XYZ({
-                    url: "https://mts1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}&key=TU_CLAVE_API",
+                    url: "https://mts1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}&key=TU_CLAVE_API",
                 })
             }),
             roads: new ol.layer.Tile({

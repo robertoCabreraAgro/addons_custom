@@ -969,6 +969,82 @@ class GpsGeofence(models.Model):
                 'error': str(e)
             }
 
+    def action_view_in_dashboard(self):
+        """
+        Redirect to GPS Dashboard with this geofence's coordinates.
+        """
+        self.ensure_one()
+        
+        if not self.main_entrance_point:
+            # If no main entrance point, try to calculate it from geometry
+            if self.geometry:
+                try:
+                    # Get centroid of the geometry as fallback
+                    self.env.cr.execute("""
+                        SELECT ST_Y(ST_Centroid(geometry)) as lat, ST_X(ST_Centroid(geometry)) as lng
+                        FROM gps_geofence 
+                        WHERE id = %s
+                    """, (self.id,))
+                    
+                    result = self.env.cr.fetchone()
+                    if result:
+                        lat, lng = result
+                        context = {
+                            'default_center_lat': lat,
+                            'default_center_lng': lng,
+                            'default_zoom': 20,
+                            'geofence_id': self.id,
+                            'geofence_name': self.name
+                        }
+                    else:
+                        context = {}
+                except Exception as e:
+                    _logger.warning(f"Error getting geometry centroid: {e}")
+                    context = {}
+            else:
+                context = {}
+        else:
+            # Extract coordinates from main_entrance_point (PostGIS Point)
+            try:
+                self.env.cr.execute("""
+                    SELECT ST_Y(main_entrance_point) as lat, ST_X(main_entrance_point) as lng
+                    FROM gps_geofence 
+                    WHERE id = %s
+                """, (self.id,))
+                
+                result = self.env.cr.fetchone()
+                if result:
+                    lat, lng = result
+                    context = {
+                        'default_center_lat': lat,
+                        'default_center_lng': lng,
+                        'default_zoom': 20,
+                        'geofence_id': self.id,
+                        'geofence_name': self.name
+                    }
+                else:
+                    context = {}
+            except Exception as e:
+                _logger.warning(f"Error extracting coordinates from main_entrance_point: {e}")
+                context = {}
+        
+        _logger.info(f"🎯 GEOFENCE DASHBOARD ACTION - Final context: {context}")
+        
+        action_result = {
+            'type': 'ir.actions.client',
+            'name': f'GPS Dashboard - {self.name}',
+            'tag': 'gps_tracking_client_action',
+            'target': 'current',
+            'context': context,
+            'params': {
+                'searchViewId': self.env.ref('gps_tracking.view_gps_tracking_device_search').id,
+                'context': context,
+            }
+        }
+        
+        _logger.info(f"🎯 GEOFENCE DASHBOARD ACTION - Action result: {action_result}")
+        return action_result
+
     @api.model
     def calculate_geometry_surface(self, geometry_geojson):
         """
