@@ -107,6 +107,36 @@ class ResPartner(models.Model):
         related="profile_id.factor",
         readonly=True,
     )
+    
+    score_hectares = fields.Float(
+        string='Hectares Score',
+        compute='_compute_client_score',
+        store=True,
+    )
+    score_categories = fields.Float(
+        string='Categories Score',
+        compute='_compute_client_score',
+        store=True,
+    )
+    score_total = fields.Float(
+        string='Total Score',
+        compute='_compute_client_score',
+        store=True,
+    )
+    
+    profile_history_ids = fields.One2many(
+        'res.partner.profile.history',
+        'partner_id',
+        string='Profile History',
+    )
+    profile_change_count = fields.Integer(
+        string='Profile Changes',
+        compute='_compute_profile_stats',
+    )
+    last_profile_change = fields.Date(
+        string='Last Profile Change',
+        compute='_compute_profile_stats',
+    )
 
     # Customer merge fields
     auto_merge = fields.Boolean(
@@ -224,13 +254,97 @@ class ResPartner(models.Model):
         }
         return action
 
+<<<<<<< HEAD
     @api.depends("category_id")
+=======
+    @api.depends('category_id', 'hectares', 'score_total')
+>>>>>>> bb6947b ([ADD] marin: implement dynamic scoring system for client classification)
     def _compute_partner_profile(self):
-        """Compute partner profile based on category matching."""
+        """Compute partner profile based on dynamic scoring system."""
+        for partner in self:
+            old_profile = partner.profile_id
+            old_score = partner.score_total or 0
+            
+            new_profile = self.env['res.partner.profile'].search([
+                ('score_min', '<=', partner.score_total),
+                ('score_max', '>=', partner.score_total),
+                ('active', '=', True)
+            ], order='sequence', limit=1)
+            
+            if not new_profile:
+                new_profile = self._fallback_profile_matching(partner)
+            
+            partner.profile_id = new_profile
+            
+            if (partner.id and old_profile and new_profile and old_profile != new_profile):
+                self._create_profile_history_record(partner, old_profile, new_profile, old_score)
+    
+    def _fallback_profile_matching(self, partner):
+        """Fallback profile matching based on category overlap."""
+        if not partner.category_id:
+            return False
+            
+        partner_categories = set(partner.category_id.ids)
+        profiles = self.env['res.partner.profile'].search([('active', '=', True)])
+        
+        best_profile = False
+        max_matches = 0
+        min_sequence = float('inf')
+        
+        for profile in profiles:
+            profile_categories = set(profile.category_ids.ids)
+            matches = len(partner_categories & profile_categories)
+            
+            if matches > max_matches or (matches == max_matches and profile.sequence < min_sequence):
+                max_matches = matches
+                min_sequence = profile.sequence
+                best_profile = profile
+        
+        return best_profile if max_matches > 0 else False
+    
+    def _create_profile_history_record(self, partner, old_profile, new_profile, old_score):
+        """Create profile history record for tracking changes."""
+        change_trigger = 'manual'
+        reason_parts = []
+        
+        if hasattr(partner, '_origin') and partner._origin.hectares != partner.hectares:
+            change_trigger = 'hectares'
+            reason_parts.append(f"Hectares: {partner._origin.hectares} → {partner.hectares}")
+        
+        if hasattr(partner, '_origin'):
+            old_cats = set(partner._origin.category_id.mapped('name')) if partner._origin.category_id else set()
+            new_cats = set(partner.category_id.mapped('name')) if partner.category_id else set()
+            
+            if old_cats != new_cats:
+                change_trigger = 'category'
+                added = new_cats - old_cats
+                removed = old_cats - new_cats
+                if added:
+                    reason_parts.append(f"Added: {', '.join(added)}")
+                if removed:
+                    reason_parts.append(f"Removed: {', '.join(removed)}")
+        
+        self.env['res.partner.profile.history'].create({
+            'partner_id': partner.id,
+            'old_profile_id': old_profile.id,
+            'new_profile_id': new_profile.id,
+            'old_score_total': old_score,
+            'new_score_total': partner.score_total,
+            'score_hectares': partner.score_hectares,
+            'score_categories': partner.score_categories,
+            'change_trigger': change_trigger,
+            'change_reason': '\n'.join(reason_parts) if reason_parts else 'Automatic scoring change'
+        })
+
+    @api.constrains('category_id')
+    def _check_category_groups_unique(self):
+        """Ensure only one category per exclusive group."""
+        exclusive_groups = ['Technology Level', 'Commercial Profile', 'Production size', 'Growth perspective']
+        
         for partner in self:
             if not partner.category_id:
-                partner.profile_id = False
                 continue
+<<<<<<< HEAD
 
             partner_categories = set(partner.category_id.ids)
             profiles = self.env["res.partner.profile"].search([("active", "=", True)])
@@ -254,6 +368,119 @@ class ResPartner(models.Model):
                     best_profile = profile
 
             partner.profile_id = best_profile if max_matches > 0 else False
+=======
+                
+            category_names = partner.category_id.mapped('name')
+            
+            for group_prefix in exclusive_groups:
+                group_categories = [name for name in category_names if name.startswith(group_prefix)]
+                
+                if len(group_categories) > 1:
+                    raise ValidationError(
+                        f"Only one category from '{group_prefix}' group is allowed. "
+                        f"Currently assigned: {', '.join(group_categories)}"
+                    )
+
+    def write(self, vals):
+        """Override write to track profile changes."""
+        tracked_fields = ['hectares', 'category_id', 'profile_id']
+        has_tracked_changes = any(field in vals for field in tracked_fields)
+        
+        old_values = {}
+        if has_tracked_changes:
+            for partner in self:
+                if partner.id:
+                    old_values[partner.id] = {
+                        'hectares': partner.hectares,
+                        'category_id': partner.category_id.mapped('name'),
+                        'profile_id': partner.profile_id,
+                        'score_total': partner.score_total,
+                    }
+        
+        result = super().write(vals)
+        
+        if has_tracked_changes and old_values:
+            for partner in self:
+                if partner.id in old_values:
+                    self._check_and_create_history_record(partner, old_values[partner.id], vals)
+        
+        return result
+    
+    def _check_and_create_history_record(self, partner, old_vals, new_vals):
+        """Check for significant changes and create history record."""
+        reason_parts = []
+        change_trigger = 'manual'
+        
+        if 'hectares' in new_vals and old_vals['hectares'] != partner.hectares:
+            reason_parts.append(f"Hectares: {old_vals['hectares']} → {partner.hectares}")
+            change_trigger = 'hectares'
+        
+        if 'category_id' in new_vals:
+            old_cats = set(old_vals['category_id'])
+            new_cats = set(partner.category_id.mapped('name'))
+            
+            if old_cats != new_cats:
+                added = new_cats - old_cats
+                removed = old_cats - new_cats
+                
+                if added:
+                    reason_parts.append(f"Added: {', '.join(added)}")
+                    change_trigger = 'category'
+                if removed:
+                    reason_parts.append(f"Removed: {', '.join(removed)}")
+                    change_trigger = 'category'
+        
+        profile_changed = 'profile_id' in new_vals and old_vals['profile_id'] != partner.profile_id
+        
+        if reason_parts or profile_changed:
+            if not reason_parts and profile_changed:
+                reason_parts.append("Manual profile assignment")
+            
+            self.env['res.partner.profile.history'].create({
+                'partner_id': partner.id,
+                'old_profile_id': old_vals['profile_id'].id if old_vals['profile_id'] else False,
+                'new_profile_id': partner.profile_id.id if partner.profile_id else False,
+                'old_score_total': old_vals['score_total'],
+                'new_score_total': partner.score_total,
+                'score_hectares': partner.score_hectares,
+                'score_categories': partner.score_categories,
+                'change_trigger': change_trigger,
+                'change_reason': '\n'.join(reason_parts) if reason_parts else 'Profile update'
+            })
+    
+    @api.depends('hectares', 'category_id', 'category_id.score_value', 'category_id.scoring_active')
+    def _compute_client_score(self):
+        """Compute client scores using dynamic scoring system."""
+        for partner in self:
+            partner.score_hectares = self._get_hectares_score(partner.hectares)
+            partner.score_categories = sum(
+                cat.score_value for cat in partner.category_id.filtered('scoring_active')
+            )
+            partner.score_total = partner.score_hectares + partner.score_categories
+    
+    def _get_hectares_score(self, hectares):
+        """Get hectares score using dynamic ranges."""
+        if not hectares:
+            return 0.0
+            
+        hectares_range = self.env['res.partner.hectares.range'].search([
+            ('active', '=', True),
+            ('min_hectares', '<=', hectares),
+            '|',
+            ('max_hectares', '>=', hectares),
+            ('max_hectares', '=', False)
+        ], order='min_hectares desc', limit=1)
+        
+        return hectares_range.score_value if hectares_range else 0.0
+    
+    @api.depends('profile_history_ids')
+    def _compute_profile_stats(self):
+        """Compute profile statistics."""
+        for partner in self:
+            history = partner.profile_history_ids
+            partner.profile_change_count = len(history)
+            partner.last_profile_change = history[0].change_date.date() if history else False
+>>>>>>> bb6947b ([ADD] marin: implement dynamic scoring system for client classification)
 
     @api.constrains("hectares")
     def _check_hectares_positive(self):
@@ -636,6 +863,226 @@ class ResPartner(models.Model):
 
         partners = self.filtered(lambda p: p.is_company and p.customer)
         if not partners:
+<<<<<<< HEAD
+=======
+            raise UserError(_("Please select customers (companies with customer flag enabled)."))
+        
+        return {
+            'name': _('Generate Sale Targets'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'sale.target.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_partner_ids': [(6, 0, partners.ids)],
+                'default_date_from': fields.Date.today(),
+            }
+        }
+
+
+class ResPartnerHectaresRange(models.Model):
+    _name = 'res.partner.hectares.range'
+    _description = 'Partner Hectares Range'
+    _order = 'min_hectares'
+    _rec_name = 'display_name'
+
+    display_name = fields.Char(compute='_compute_display_name', store=True)
+    min_hectares = fields.Float(required=True)
+    max_hectares = fields.Float()
+    score_value = fields.Float(required=True)
+    active = fields.Boolean(default=True)
+    company_id = fields.Many2one('res.company', default=lambda self: self.env.company)
+
+    @api.depends('min_hectares', 'max_hectares', 'score_value')
+    def _compute_display_name(self):
+        for record in self:
+            if record.max_hectares:
+                range_text = f"{record.min_hectares} - {record.max_hectares}"
+            else:
+                range_text = f"{record.min_hectares}+"
+            record.display_name = f"{range_text} hectares (Score: {record.score_value})"
+
+    @api.constrains('min_hectares', 'max_hectares')
+    def _check_hectares_range(self):
+        for record in self:
+            if record.min_hectares < 0:
+                raise ValidationError("Minimum hectares cannot be negative.")
+            if record.max_hectares and record.max_hectares < record.min_hectares:
+                raise ValidationError("Maximum hectares must be greater than minimum hectares.")
+
+    @api.constrains('min_hectares', 'max_hectares', 'active', 'company_id')
+    def _check_overlapping_ranges(self):
+        for record in self:
+            if not record.active:
+                continue
+                
+            existing_ranges = self.search([
+                ('id', '!=', record.id),
+                ('active', '=', True),
+                ('company_id', '=', record.company_id.id),
+            ])
+            
+            for existing in existing_ranges:
+                record_min = record.min_hectares
+                record_max = record.max_hectares or float('inf')
+                existing_min = existing.min_hectares  
+                existing_max = existing.max_hectares or float('inf')
+                
+                if (record_min <= existing_max and record_max >= existing_min):
+                    raise ValidationError(
+                        f"Hectares range {record.min_hectares}-{record.max_hectares or '∞'} "
+                        f"overlaps with existing range {existing.min_hectares}-{existing.max_hectares or '∞'}."
+                    )
+
+
+class ResPartnerProfileHistory(models.Model):
+    _name = 'res.partner.profile.history'
+    _description = 'Partner Profile History'
+    _order = 'change_date desc, id desc'
+    _rec_name = 'display_name'
+    
+    display_name = fields.Char(compute='_compute_display_name', store=True)
+    partner_id = fields.Many2one('res.partner', required=True, ondelete='cascade')
+    change_date = fields.Datetime(default=fields.Datetime.now, required=True)
+    old_profile_id = fields.Many2one('res.partner.profile')
+    new_profile_id = fields.Many2one('res.partner.profile', required=True)
+    old_score_total = fields.Float()
+    new_score_total = fields.Float()
+    score_hectares = fields.Float()
+    score_categories = fields.Float()
+    change_trigger = fields.Selection([
+        ('manual', 'Manual Assignment'),
+        ('hectares', 'Hectares Change'),
+        ('category', 'Category Change'),
+        ('scoring', 'Scoring Update')
+    ], required=True)
+    change_reason = fields.Text()
+    user_id = fields.Many2one('res.users', default=lambda self: self.env.user)
+    company_id = fields.Many2one('res.company', related='partner_id.company_id', store=True)
+    
+    @api.depends('partner_id', 'old_profile_id', 'new_profile_id', 'change_date')
+    def _compute_display_name(self):
+        for record in self:
+            if record.partner_id and record.new_profile_id:
+                old_name = record.old_profile_id.name if record.old_profile_id else 'None'
+                new_name = record.new_profile_id.name
+                date_str = record.change_date.strftime('%Y-%m-%d %H:%M') if record.change_date else ''
+                record.display_name = f"{record.partner_id.name}: {old_name} → {new_name} ({date_str})"
+            else:
+                record.display_name = "Profile Change"
+
+
+class SaleTargetWizard(models.TransientModel):
+    """Sale Target Generation Wizard for mass target creation."""
+    
+    _name = "sale.target.wizard"
+    _description = "Sale Target Generation Wizard"
+    
+    partner_ids = fields.Many2many(
+        'res.partner',
+        string="Clients",
+        required=True,
+        domain=[('is_company', '=', True), ('customer', '=', True)],
+    )
+    
+    template_id = fields.Many2one(
+        'sale.order.template',
+        string="Quotation Template", 
+        required=True,
+    )
+    
+    date_from = fields.Date(
+        string="Start Date",
+        required=True,
+        default=fields.Date.today,
+    )
+    
+    date_to = fields.Date(
+        string="End Date", 
+        required=True,
+    )
+    
+    target_count = fields.Integer(
+        string="Targets to Create",
+        compute="_compute_summary",
+        readonly=True
+    )
+    
+    line_count = fields.Integer(
+        string="Target Lines to Create", 
+        compute="_compute_summary",
+        readonly=True
+    )
+    
+    validation_errors = fields.Text(
+        string="Validation Issues",
+        compute="_compute_validation_errors",
+        readonly=True
+    )
+    
+    @api.depends('partner_ids', 'template_id')
+    def _compute_summary(self):
+        """Compute summary counts for wizard."""
+        for wizard in self:
+            wizard.target_count = len(wizard.partner_ids)
+            wizard.line_count = len(wizard.partner_ids) * len(wizard.template_id.sale_order_template_line_ids)
+    
+    @api.depends('partner_ids', 'template_id', 'date_from', 'date_to')
+    def _compute_validation_errors(self):
+        """Compute validation errors for wizard."""
+        for wizard in self:
+            errors = []
+            
+            if wizard.date_from and wizard.date_to and wizard.date_from >= wizard.date_to:
+                errors.append("End date must be after start date")
+            
+            partners_without_hectares = wizard.partner_ids.filtered(lambda p: not p.hectares)
+            if partners_without_hectares:
+                errors.append(f"Partners without hectares: {', '.join(partners_without_hectares.mapped('name'))}")
+            
+            partners_without_profile = wizard.partner_ids.filtered(lambda p: not p.profile_id)
+            if partners_without_profile:
+                errors.append(f"Partners without profile: {', '.join(partners_without_profile.mapped('name'))}")
+            
+            if wizard.template_id and not wizard.template_id.sale_order_template_line_ids:
+                errors.append("Selected template has no product lines")
+            
+            if wizard.partner_ids and wizard.date_from and wizard.date_to:
+                overlapping = self._check_overlapping_targets(wizard)
+                if overlapping:
+                    errors.append(f"Overlapping targets found for: {', '.join(overlapping)}")
+            
+            wizard.validation_errors = '\n'.join(errors) if errors else False
+    
+    def _check_overlapping_targets(self, wizard):
+        """Check for overlapping targets in the date range."""
+        overlapping_partners = []
+        
+        for partner in wizard.partner_ids:
+            existing_targets = self.env['sale.target'].search([
+                ('partner_id', '=', partner.id),
+                ('date_from', '<=', wizard.date_to),
+                ('date_to', '>=', wizard.date_from)
+            ])
+            
+            if existing_targets:
+                overlapping_partners.append(partner.name)
+        
+        return overlapping_partners
+    
+    @api.constrains('date_from', 'date_to')
+    def _check_dates(self):
+        """Validate date range."""
+        for wizard in self:
+            if wizard.date_from and wizard.date_to and wizard.date_from >= wizard.date_to:
+                raise ValidationError(_("End date must be after start date."))
+    
+    def action_generate_targets(self):
+        """Generate sale targets based on wizard configuration."""
+        self.ensure_one()
+        
+        if self.validation_errors:
+>>>>>>> bb6947b ([ADD] marin: implement dynamic scoring system for client classification)
             raise UserError(
                 _("Please select customers (companies with customer flag enabled).")
             )

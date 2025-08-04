@@ -52,6 +52,18 @@ class ResPartnerProfile(models.Model):
         "res.company", string="Company", default=lambda self: self.env.company
     )
 
+    score_min = fields.Float(
+        string="Minimum Score",
+        default=0.0,
+        help="Minimum score required for this profile"
+    )
+
+    score_max = fields.Float(
+        string="Maximum Score", 
+        default=100.0,
+        help="Maximum score for this profile"
+    )
+
     @api.constrains("factor")
     def _check_factor(self):
         """Validate that the factor is greater than 0."""
@@ -61,6 +73,16 @@ class ResPartnerProfile(models.Model):
                     "The factor must be greater than 0. "
                     "Current value: %s" % profile.factor
                 )
+
+    @api.constrains("score_min", "score_max")
+    def _check_score_range(self):
+        """Validate score range values."""
+        for profile in self:
+            if profile.score_min < 0:
+                raise ValidationError("Minimum score cannot be negative.")
+            
+            if profile.score_max < profile.score_min:
+                raise ValidationError("Maximum score must be greater than or equal to minimum score.")
 
     @api.depends("name")
     def _compute_display_name(self):

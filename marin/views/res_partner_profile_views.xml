@@ -20,6 +20,8 @@
                             <field name="sequence"/>
                         </group>
                         <group>
+                            <field name="score_min"/>
+                            <field name="score_max"/>
                             <field name="active"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
@@ -38,6 +40,8 @@
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                <field name="score_min"/>
+                <field name="score_max"/>
                 <field name="factor" widget="percentage"/>
                 <field name="active"/>
                 <field name="company_id" groups="base.group_multi_company"/>
