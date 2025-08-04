@@ -14,6 +14,10 @@
                 <field name="surface" string="Size (ha)"/>
                 <field name="color" widget="color"/>
                 <field name="active" widget="boolean_toggle"/>
+                <field name="main_entrance_point" column_invisible="True"/>
+                <button name="action_view_in_dashboard" type="object" string="" 
+                        class="btn-link" icon="fa-map-marker" 
+                        title="View this geofence in GPS Dashboard"/>
             </list>
         </field>
     </record>
@@ -25,6 +29,8 @@
         <field name="arch" type="xml">
             <form string="Geographic Area">
                 <header>
+                    <button name="action_view_in_dashboard" type="object" string="View in Dashboard" 
+                            class="oe_highlight" icon="fa-map-marker"/>
                     <field name="active" widget="boolean_button"/>
                 </header>
                 <sheet>
