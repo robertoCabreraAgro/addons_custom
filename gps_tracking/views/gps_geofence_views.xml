@@ -13,7 +13,6 @@
                 <field name="child_count" string="Sub-areas"/>
                 <field name="surface" string="Size (ha)"/>
                 <field name="color" widget="color"/>
-                <field name="active" widget="boolean_toggle"/>
                 <field name="main_entrance_point" column_invisible="True"/>
                 <button name="action_view_in_dashboard" type="object" string="" 
                         class="btn-link" icon="fa-map-marker" 
@@ -31,7 +30,6 @@
                 <header>
                     <button name="action_view_in_dashboard" type="object" string="View in Dashboard" 
                             class="oe_highlight" icon="fa-map-marker"/>
-                    <field name="active" widget="boolean_button"/>
                 </header>
                 <sheet>
                     <div class="oe_title">
@@ -69,7 +67,6 @@
                                     <field name="name"/>
                                     <field name="area_type"/>
                                     <field name="surface"/>
-                                    <field name="active" widget="boolean_toggle"/>
                                 </list>
                             </field>
                         </page>
@@ -92,7 +89,6 @@
                 <field name="parent_id"/>
                 <field name="surface"/>
                 <field name="color" widget="color"/>
-                <field name="active" widget="boolean_toggle"/>
             </list>
         </field>
     </record>
