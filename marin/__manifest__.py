@@ -159,6 +159,7 @@
         "wizards/sale_order_line_price_history.xml",
         "wizards/stock_quant_lot_update.xml",
         "wizards/fleet_vehicle_log_import_views.xml",
+        "wizards/sale_target_wizard.xml",
         "views/menuitem_views.xml",  # always at last to avoid precedence problems
     ],
     "pre_init_hook": "_pre_init_marin",
