@@ -72,9 +72,6 @@
                 <field name="hectares"/>
                 <field name="profile_id" readonly="1"/>
                 <field name="factor" readonly="1"/>
-                <field name="score_hectares" readonly="1"/>
-                <field name="score_categories" readonly="1"/>
-                <field name="score_total" readonly="1"/>
             </xpath>
             <xpath expr="//page[@name='sales_purchases']//field[@name='social_style_color']" position="after">
                 <field name="recent_orders_count" invisible="not customer" readonly="1" />
@@ -117,6 +114,40 @@
                         <group>
                             <field name="age_range_id" invisible="not birthdate" />
                         </group>
+                    </group>
+                </page>
+                <page
+                    name="profile_classification_page"
+                    string="Client Classification"
+                    invisible="not is_company"
+                    groups="sales_team.group_sale_manager"
+                >
+                    <group>
+                        <group string="Current Classification">
+                            <field name="profile_id" readonly="1"/>
+                            <field name="factor" readonly="1"/>
+                            <field name="score_total" readonly="1"/>
+                            <field name="profile_change_count" readonly="1"/>
+                            <field name="last_profile_change" readonly="1"/>
+                        </group>
+                        <group string="Score Breakdown">
+                            <field name="score_hectares" readonly="1"/>
+                            <field name="score_categories" readonly="1"/>
+                            <field name="hectares"/>
+                        </group>
+                    </group>
+                    <group string="Profile Change History">
+                        <field name="profile_history_ids" nolabel="1">
+                            <list string="Profile Changes" create="false" edit="false" delete="false">
+                                <field name="change_date"/>
+                                <field name="old_profile_id"/>
+                                <field name="new_profile_id"/>
+                                <field name="old_score_total"/>
+                                <field name="new_score_total"/>
+                                <field name="change_trigger"/>
+                                <field name="user_id"/>
+                            </list>
+                        </field>
                     </group>
                 </page>
             </xpath>
