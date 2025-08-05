@@ -61,3 +61,18 @@ class ResConfigSettings(models.TransientModel):
         string="Required Customer Fields",
         help="Fields that must be completed to keep a customer active"
     )
+    
+    # Restricted Contact Creation configuration
+    restricted_contact_creation = fields.Boolean(
+        string="Restricted Contact Creation",
+        config_parameter="sale.restricted_contact_creation",
+        default=False,
+        help="Restrict users in the selected group from creating or editing contacts unless all mandatory fields are completed."
+    )
+    restricted_contact_required_fields = fields.Many2many(
+        'ir.model.fields',
+        related="company_id.restricted_contact_required_fields",
+        readonly=False,
+        string="Mandatory Contact Fields",
+        help="Fields that must be completed when restricted contact creation is enabled"
+    )

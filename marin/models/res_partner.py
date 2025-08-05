@@ -482,3 +482,95 @@ class ResPartner(models.Model):
             self.env.cr.commit()  # Commit each batch
 
         _logger.info("Completed automatic customer merge process")
+
+    def _validate_restricted_contact_fields(self, vals=None):
+        """
+        Validate that all mandatory fields are completed for restricted contact creation.
+
+        Args:
+            vals: Dictionary of values to be written (for write method)
+
+        Raises:
+            ValidationError: If mandatory fields are missing
+        """
+        # Check if restricted contact creation is enabled
+        config = self.env['ir.config_parameter'].sudo()
+        if not config.get_param('sale.restricted_contact_creation', False):
+            return True
+
+        # Check if user belongs to restricted group
+        if not self.env.user.has_group('marin.group_partner_restricted'):
+            return True
+
+        # Get required fields from company configuration with sudo
+        company = self.env.company
+        required_fields = company.sudo().restricted_contact_required_fields
+
+        if not required_fields:
+            return True
+
+        missing_fields = []
+
+        # For create method
+        if vals is not None and not self:
+            for field in required_fields.sudo():
+                field_name = field.name
+                field_value = vals.get(field_name)
+
+                # Check if field is empty
+                if not field_value or (isinstance(field_value, str) and not field_value.strip()):
+                    missing_fields.append(field.field_description)
+
+        # For write method or checking existing record
+        else:
+            for record in self:
+                for field in required_fields.sudo():
+                    field_name = field.name
+
+                    # Get the value from vals if provided, otherwise from the record
+                    if vals and field_name in vals:
+                        field_value = vals[field_name]
+                    else:
+                        field_value = record[field_name]
+
+                    # Check if field is empty
+                    if field.ttype in ['many2one']:
+                        if not field_value or (hasattr(field_value, 'id') and not field_value.id):
+                            missing_fields.append(field.field_description)
+                    elif field.ttype in ['many2many', 'one2many']:
+                        if not field_value or (hasattr(field_value, 'ids') and not field_value.ids):
+                            missing_fields.append(field.field_description)
+                    elif not field_value or (isinstance(field_value, str) and not field_value.strip()):
+                        missing_fields.append(field.field_description)
+
+        if missing_fields:
+            missing_fields = list(set(missing_fields))  # Remove duplicates
+            raise ValidationError(
+                _("Cannot save contact. The following mandatory fields must be completed:\n• %s") 
+                % '\n• '.join(missing_fields)
+            )
+
+        return True
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        """
+        Override create to validate mandatory fields for restricted users.
+        """
+        for vals in vals_list:
+            # Only validate if it's a company or standalone contact (not a child contact)
+            if not vals.get('parent_id'):
+                self._validate_restricted_contact_fields(vals)
+
+        return super().create(vals_list)
+
+    def write(self, vals):
+        """
+        Override write to validate mandatory fields for restricted users.
+        """
+        # Only validate for company or standalone contacts (not child contacts)
+        for record in self:
+            if not record.parent_id:
+                record._validate_restricted_contact_fields(vals)
+
+        return super().write(vals)

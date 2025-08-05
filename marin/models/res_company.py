@@ -17,6 +17,17 @@ class ResCompany(models.Model):
         domain=[('model', '=', 'res.partner')],
         help="Fields that must be completed to keep a customer active"
     )
+    
+    # Restricted contact creation configuration
+    restricted_contact_required_fields = fields.Many2many(
+        'ir.model.fields',
+        'company_restricted_contact_fields_rel',
+        'company_id',
+        'field_id',
+        string="Mandatory Contact Fields",
+        domain=[('model', '=', 'res.partner')],
+        help="Fields that must be completed when restricted contact creation is enabled"
+    )
 
     _code_uniq = models.Constraint("UNIQUE(code)", "The company's code must be unique")
 
