@@ -254,11 +254,7 @@ class ResPartner(models.Model):
         }
         return action
 
-<<<<<<< HEAD
-    @api.depends("category_id")
-=======
     @api.depends('category_id', 'hectares', 'score_total')
->>>>>>> bb6947b ([ADD] marin: implement dynamic scoring system for client classification)
     def _compute_partner_profile(self):
         """Compute partner profile based on dynamic scoring system."""
         for partner in self:
@@ -295,7 +291,8 @@ class ResPartner(models.Model):
             profile_categories = set(profile.category_ids.ids)
             matches = len(partner_categories & profile_categories)
             
-            if matches > max_matches or (matches == max_matches and profile.sequence < min_sequence):
+            if (matches > max_matches or 
+                (matches == max_matches and profile.sequence < min_sequence)):
                 max_matches = matches
                 min_sequence = profile.sequence
                 best_profile = profile
@@ -312,8 +309,10 @@ class ResPartner(models.Model):
             reason_parts.append(f"Hectares: {partner._origin.hectares} → {partner.hectares}")
         
         if hasattr(partner, '_origin'):
-            old_cats = set(partner._origin.category_id.mapped('name')) if partner._origin.category_id else set()
-            new_cats = set(partner.category_id.mapped('name')) if partner.category_id else set()
+            old_cats = (set(partner._origin.category_id.mapped('name')) 
+                       if partner._origin.category_id else set())
+            new_cats = (set(partner.category_id.mapped('name')) 
+                       if partner.category_id else set())
             
             if old_cats != new_cats:
                 change_trigger = 'category'
@@ -333,47 +332,29 @@ class ResPartner(models.Model):
             'score_hectares': partner.score_hectares,
             'score_categories': partner.score_categories,
             'change_trigger': change_trigger,
-            'change_reason': '\n'.join(reason_parts) if reason_parts else 'Automatic scoring change'
+            'change_reason': ('\n'.join(reason_parts) 
+                            if reason_parts else 'Automatic scoring change')
         })
 
     @api.constrains('category_id')
     def _check_category_groups_unique(self):
         """Ensure only one category per exclusive group."""
-        exclusive_groups = ['Technology Level', 'Commercial Profile', 'Production size', 'Growth perspective']
+        exclusive_groups = [
+            'Technology Level', 'Commercial Profile', 
+            'Production size', 'Growth perspective'
+        ]
         
         for partner in self:
             if not partner.category_id:
                 continue
-<<<<<<< HEAD
 
-            partner_categories = set(partner.category_id.ids)
-            profiles = self.env["res.partner.profile"].search([("active", "=", True)])
-            if not profiles:
-                partner.profile_id = False
-                continue
-
-            best_profile = False
-            max_matches = 0
-            min_sequence = max(profiles.mapped("sequence"))
-
-            for profile in profiles:
-                profile_categories = set(profile.category_ids.ids)
-                matches = len(partner_categories & profile_categories)
-
-                if matches > max_matches or (
-                    matches == max_matches and profile.sequence < min_sequence
-                ):
-                    max_matches = matches
-                    min_sequence = profile.sequence
-                    best_profile = profile
-
-            partner.profile_id = best_profile if max_matches > 0 else False
-=======
-                
             category_names = partner.category_id.mapped('name')
             
             for group_prefix in exclusive_groups:
-                group_categories = [name for name in category_names if name.startswith(group_prefix)]
+                group_categories = [
+                    name for name in category_names 
+                    if name.startswith(group_prefix)
+                ]
                 
                 if len(group_categories) > 1:
                     raise ValidationError(
@@ -480,7 +461,6 @@ class ResPartner(models.Model):
             history = partner.profile_history_ids
             partner.profile_change_count = len(history)
             partner.last_profile_change = history[0].change_date.date() if history else False
->>>>>>> bb6947b ([ADD] marin: implement dynamic scoring system for client classification)
 
     @api.constrains("hectares")
     def _check_hectares_positive(self):
@@ -863,8 +843,6 @@ class ResPartner(models.Model):
 
         partners = self.filtered(lambda p: p.is_company and p.customer)
         if not partners:
-<<<<<<< HEAD
-=======
             raise UserError(_("Please select customers (companies with customer flag enabled)."))
         
         return {
@@ -880,35 +858,49 @@ class ResPartner(models.Model):
         }
 
 
+
 class ResPartnerHectaresRange(models.Model):
     _name = 'res.partner.hectares.range'
     _description = 'Partner Hectares Range'
     _order = 'min_hectares'
     _rec_name = 'display_name'
 
+    name = fields.Char(string='Classification Name')
     display_name = fields.Char(compute='_compute_display_name', store=True)
-    min_hectares = fields.Float(required=True)
-    max_hectares = fields.Float()
-    score_value = fields.Float(required=True)
+    min_hectares = fields.Float(string='Minimum Hectares', required=True)
+    max_hectares = fields.Float(string='Maximum Hectares')
+    score_value = fields.Float(string='Score Points', required=True)
     active = fields.Boolean(default=True)
-    company_id = fields.Many2one('res.company', default=lambda self: self.env.company)
+    company_id = fields.Many2one(
+        'res.company', 
+        default=lambda self: self.env.company
+    )
 
-    @api.depends('min_hectares', 'max_hectares', 'score_value')
+    @api.depends('name', 'min_hectares', 'max_hectares', 'score_value')
     def _compute_display_name(self):
         for record in self:
-            if record.max_hectares:
-                range_text = f"{record.min_hectares} - {record.max_hectares}"
+            range_text = (f"{record.min_hectares} - {record.max_hectares}" 
+                         if record.max_hectares 
+                         else f"{record.min_hectares}+")
+            
+            if record.name:
+                record.display_name = (f"{record.name} "
+                                     f"({range_text} hectares, "
+                                     f"{record.score_value} pts)")
             else:
-                range_text = f"{record.min_hectares}+"
-            record.display_name = f"{range_text} hectares (Score: {record.score_value})"
+                record.display_name = (f"{range_text} hectares "
+                                     f"(Score: {record.score_value})")
 
     @api.constrains('min_hectares', 'max_hectares')
     def _check_hectares_range(self):
         for record in self:
             if record.min_hectares < 0:
                 raise ValidationError("Minimum hectares cannot be negative.")
-            if record.max_hectares and record.max_hectares < record.min_hectares:
-                raise ValidationError("Maximum hectares must be greater than minimum hectares.")
+            if (record.max_hectares and 
+                record.max_hectares < record.min_hectares):
+                raise ValidationError(
+                    "Maximum hectares must be greater than minimum."
+                )
 
     @api.constrains('min_hectares', 'max_hectares', 'active', 'company_id')
     def _check_overlapping_ranges(self):
@@ -916,23 +908,23 @@ class ResPartnerHectaresRange(models.Model):
             if not record.active:
                 continue
                 
-            existing_ranges = self.search([
+            existing = self.search([
                 ('id', '!=', record.id),
                 ('active', '=', True),
                 ('company_id', '=', record.company_id.id),
             ])
             
-            for existing in existing_ranges:
-                record_min = record.min_hectares
-                record_max = record.max_hectares or float('inf')
-                existing_min = existing.min_hectares  
-                existing_max = existing.max_hectares or float('inf')
-                
-                if (record_min <= existing_max and record_max >= existing_min):
+            for other in existing:
+                if self._ranges_overlap(record, other):
                     raise ValidationError(
-                        f"Hectares range {record.min_hectares}-{record.max_hectares or '∞'} "
-                        f"overlaps with existing range {existing.min_hectares}-{existing.max_hectares or '∞'}."
+                        f"Range {record.min_hectares}-{record.max_hectares or '∞'} "
+                        f"overlaps with {other.min_hectares}-{other.max_hectares or '∞'}"
                     )
+    
+    def _ranges_overlap(self, range1, range2):
+        min1, max1 = range1.min_hectares, range1.max_hectares or float('inf')
+        min2, max2 = range2.min_hectares, range2.max_hectares or float('inf')
+        return min1 <= max2 and max1 >= min2
 
 
 class ResPartnerProfileHistory(models.Model):
@@ -942,8 +934,15 @@ class ResPartnerProfileHistory(models.Model):
     _rec_name = 'display_name'
     
     display_name = fields.Char(compute='_compute_display_name', store=True)
-    partner_id = fields.Many2one('res.partner', required=True, ondelete='cascade')
-    change_date = fields.Datetime(default=fields.Datetime.now, required=True)
+    partner_id = fields.Many2one(
+        'res.partner', 
+        required=True, 
+        ondelete='cascade'
+    )
+    change_date = fields.Datetime(
+        default=fields.Datetime.now, 
+        required=True
+    )
     old_profile_id = fields.Many2one('res.partner.profile')
     new_profile_id = fields.Many2one('res.partner.profile', required=True)
     old_score_total = fields.Float()
@@ -958,16 +957,23 @@ class ResPartnerProfileHistory(models.Model):
     ], required=True)
     change_reason = fields.Text()
     user_id = fields.Many2one('res.users', default=lambda self: self.env.user)
-    company_id = fields.Many2one('res.company', related='partner_id.company_id', store=True)
+    company_id = fields.Many2one(
+        'res.company', 
+        related='partner_id.company_id', 
+        store=True
+    )
     
     @api.depends('partner_id', 'old_profile_id', 'new_profile_id', 'change_date')
     def _compute_display_name(self):
         for record in self:
             if record.partner_id and record.new_profile_id:
-                old_name = record.old_profile_id.name if record.old_profile_id else 'None'
+                old_name = (record.old_profile_id.name 
+                           if record.old_profile_id else 'None')
                 new_name = record.new_profile_id.name
-                date_str = record.change_date.strftime('%Y-%m-%d %H:%M') if record.change_date else ''
-                record.display_name = f"{record.partner_id.name}: {old_name} → {new_name} ({date_str})"
+                date_str = (record.change_date.strftime('%Y-%m-%d %H:%M') 
+                           if record.change_date else '')
+                record.display_name = (f"{record.partner_id.name}: "
+                                     f"{old_name} → {new_name} ({date_str})")
             else:
                 record.display_name = "Profile Change"
 
@@ -984,36 +990,30 @@ class SaleTargetWizard(models.TransientModel):
         required=True,
         domain=[('is_company', '=', True), ('customer', '=', True)],
     )
-    
     template_id = fields.Many2one(
         'sale.order.template',
         string="Quotation Template", 
         required=True,
     )
-    
     date_from = fields.Date(
         string="Start Date",
         required=True,
         default=fields.Date.today,
     )
-    
     date_to = fields.Date(
         string="End Date", 
         required=True,
     )
-    
     target_count = fields.Integer(
         string="Targets to Create",
         compute="_compute_summary",
         readonly=True
     )
-    
     line_count = fields.Integer(
         string="Target Lines to Create", 
         compute="_compute_summary",
         readonly=True
     )
-    
     validation_errors = fields.Text(
         string="Validation Issues",
         compute="_compute_validation_errors",
@@ -1022,71 +1022,138 @@ class SaleTargetWizard(models.TransientModel):
     
     @api.depends('partner_ids', 'template_id')
     def _compute_summary(self):
-        """Compute summary counts for wizard."""
         for wizard in self:
             wizard.target_count = len(wizard.partner_ids)
-            wizard.line_count = len(wizard.partner_ids) * len(wizard.template_id.sale_order_template_line_ids)
+            template_lines = wizard.template_id.sale_order_template_line_ids
+            wizard.line_count = len(wizard.partner_ids) * len(template_lines)
     
     @api.depends('partner_ids', 'template_id', 'date_from', 'date_to')
     def _compute_validation_errors(self):
-        """Compute validation errors for wizard."""
         for wizard in self:
             errors = []
             
-            if wizard.date_from and wizard.date_to and wizard.date_from >= wizard.date_to:
+            if (wizard.date_from and wizard.date_to and 
+                wizard.date_from >= wizard.date_to):
                 errors.append("End date must be after start date")
             
-            partners_without_hectares = wizard.partner_ids.filtered(lambda p: not p.hectares)
-            if partners_without_hectares:
-                errors.append(f"Partners without hectares: {', '.join(partners_without_hectares.mapped('name'))}")
+            no_hectares = wizard.partner_ids.filtered(lambda p: not p.hectares)
+            if no_hectares:
+                names = ', '.join(no_hectares.mapped('name'))
+                errors.append(f"Partners without hectares: {names}")
             
-            partners_without_profile = wizard.partner_ids.filtered(lambda p: not p.profile_id)
-            if partners_without_profile:
-                errors.append(f"Partners without profile: {', '.join(partners_without_profile.mapped('name'))}")
+            no_profile = wizard.partner_ids.filtered(lambda p: not p.profile_id)
+            if no_profile:
+                names = ', '.join(no_profile.mapped('name'))
+                errors.append(f"Partners without profile: {names}")
             
-            if wizard.template_id and not wizard.template_id.sale_order_template_line_ids:
+            if (wizard.template_id and 
+                not wizard.template_id.sale_order_template_line_ids):
                 errors.append("Selected template has no product lines")
             
             if wizard.partner_ids and wizard.date_from and wizard.date_to:
                 overlapping = self._check_overlapping_targets(wizard)
                 if overlapping:
-                    errors.append(f"Overlapping targets found for: {', '.join(overlapping)}")
+                    names = ', '.join(overlapping)
+                    errors.append(f"Overlapping targets found for: {names}")
             
             wizard.validation_errors = '\n'.join(errors) if errors else False
     
     def _check_overlapping_targets(self, wizard):
-        """Check for overlapping targets in the date range."""
         overlapping_partners = []
         
         for partner in wizard.partner_ids:
-            existing_targets = self.env['sale.target'].search([
+            existing = self.env['sale.target'].search([
                 ('partner_id', '=', partner.id),
                 ('date_from', '<=', wizard.date_to),
                 ('date_to', '>=', wizard.date_from)
             ])
             
-            if existing_targets:
+            if existing:
                 overlapping_partners.append(partner.name)
         
         return overlapping_partners
     
     @api.constrains('date_from', 'date_to')
     def _check_dates(self):
-        """Validate date range."""
         for wizard in self:
-            if wizard.date_from and wizard.date_to and wizard.date_from >= wizard.date_to:
-                raise ValidationError(_("End date must be after start date."))
+            if (wizard.date_from and wizard.date_to and 
+                wizard.date_from >= wizard.date_to):
+                raise ValidationError("End date must be after start date.")
     
     def action_generate_targets(self):
-        """Generate sale targets based on wizard configuration."""
         self.ensure_one()
         
         if self.validation_errors:
->>>>>>> bb6947b ([ADD] marin: implement dynamic scoring system for client classification)
             raise UserError(
                 _("Please select customers (companies with customer flag enabled).")
             )
 
+            raise UserError(f"Please resolve issues:\n{self.validation_errors}")
+        
+        created_targets = self.env['sale.target']
+        
+        for partner in self.partner_ids:
+            target = self.env['sale.target'].create({
+                'partner_id': partner.id,
+                'date_from': self.date_from,
+                'date_to': self.date_to,
+                'template_id': self.template_id.id,
+                'user_id': partner.user_id.id if partner.user_id else False,
+            })
+            
+            self._create_target_lines(target, partner)
+            created_targets |= target
+        
+        return self._show_success_result(created_targets)
+    
+    def _create_target_lines(self, target, partner):
+        for template_line in self.template_id.sale_order_template_line_ids:
+            if not template_line.product_id or template_line.display_type:
+                continue
+                
+            price = self._calculate_target_price(template_line, partner)
+            
+            self.env['sale.target.line'].create({
+                'target_id': target.id,
+                'product_id': template_line.product_id.id,
+                'quantity': template_line.product_uom_qty or 1.0,
+                'price_unit': price,
+            })
+    
+    def _calculate_target_price(self, template_line, partner):
+        if not template_line.product_id:
+            return 0.0
+        
+        pricelist = partner.property_product_pricelist
+        if pricelist:
+            try:
+                return pricelist.get_product_price(
+                    template_line.product_id, 1.0, partner,
+                    date=fields.Date.today()
+                )
+            except:
+                pass
+        
+        return template_line.product_id.list_price
+    
+    def _show_success_result(self, created_targets):
+        """Show success notification and open created targets."""
+        target_count = len(created_targets)
+        line_count = sum(len(target.line_ids) for target in created_targets)
+        
+        message = _(
+            "Successfully created %(target_count)d targets with %(line_count)d lines."
+        ) % {
+            'target_count': target_count,
+            'line_count': line_count
+        }
+        
+        action = self.env.ref('marin.action_sale_target').read()[0]
+        action.update({
+            'domain': [('id', 'in', created_targets.ids)],
+            'context': {}
+        })
+        
         return {
             "name": _("Generate Sale Targets"),
             "type": "ir.actions.act_window",

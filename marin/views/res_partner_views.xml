@@ -212,15 +212,21 @@
                         </h1>
                     </div>
                     <group>
-                        <group string="Range Configuration">
-                            <field name="min_hectares" required="1"/>
-                            <field name="max_hectares"/>
+                        <group string="Classification">
+                            <field name="name" placeholder="e.g., Small Producer"/>
                             <field name="score_value" required="1"/>
                         </group>
+                        <group string="Hectares Range">
+                            <field name="min_hectares" required="1"/>
+                            <field name="max_hectares"/>
+                        </group>
+                    </group>
+                    <group>
                         <group string="Settings">
                             <field name="active"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
+                        <group></group>
                     </group>
                 </sheet>
             </form>
@@ -232,6 +238,7 @@
         <field name="model">res.partner.hectares.range</field>
         <field name="arch" type="xml">
             <list string="Hectares Ranges" multi_edit="1">
+                <field name="name"/>
                 <field name="min_hectares"/>
                 <field name="max_hectares"/>
                 <field name="score_value"/>
