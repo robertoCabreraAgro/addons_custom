@@ -13,7 +13,7 @@
     "depends": ["account"],
     "data": [
         "security/res_groups_data.xml",
-        "views/account_invoice_margin_view.xml",
+        "views/account_move_views.xml",
     ],
     "pre_init_hook": "pre_init_hook",
 }
