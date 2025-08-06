@@ -11,8 +11,8 @@ class SalesMasterReport(models.Model):
     _rec_name = "id"
 
     # Core dimensions
-    move_id = fields.Many2one("account.move", string="Entry", readonly=True)
     company_id = fields.Many2one("res.company", string="Company", readonly=True)
+    move_id = fields.Many2one("account.move", string="Entry", readonly=True)
     user_id = fields.Many2one("res.users", string="Salesperson", readonly=True)
     team_id = fields.Many2one("crm.team", string="Sales Team", readonly=True)
     partner_id = fields.Many2one("res.partner", string="Partner", readonly=True)
@@ -151,7 +151,8 @@ class SalesMasterReport(models.Model):
     def _query(self):
         """Build query with pure group aggregations."""
         return f"""
-            WITH invoice_data AS (
+            WITH
+            invoice_data AS (
                 {self._select_invoice_aggregated()}
                 FROM {self._from_sales()}
                 WHERE {self._where_sales()}
@@ -321,7 +322,7 @@ class SalesMasterReport(models.Model):
         return """
             move.move_type IN ('out_invoice', 'out_refund')
             AND move.state = 'posted'
-            AND journal.x_treatment IN ('fiscal_real', 'not_fiscal_real', 'fiscal_simulated', 'not_fiscal_simulated')
+            AND journal.x_treatment IN ('fiscal_real', 'not_fiscal_real')
             AND aml.display_type = 'product'
         """
 
