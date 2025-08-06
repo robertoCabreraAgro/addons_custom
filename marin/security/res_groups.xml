@@ -109,6 +109,11 @@
         <field name="name">Sale readonly</field>
         <field name="category_id" ref="base.module_category_usability" />
     </record>
+    <record id="group_partner_restricted" model="res.groups">
+        <field name="name">Restricted Contact Creation</field>
+        <field name="category_id" ref="base.module_category_sales_sales" />
+        <field name="comment">Users can create contacts but with mandatory field validation</field>
+    </record>
     <record id="group_sale_force_transfer_state" model="res.groups">
         <field name="name">Force transfer status on Sale Orders</field>
         <field name="category_id" ref="base.module_category_usability" />

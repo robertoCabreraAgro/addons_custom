@@ -47,6 +47,10 @@
                         <field name="supplier" readonly="not user_purchase_manager" />
                         <label for="supplier" />
                     </span>
+                    <span id="auto_merge_span" class="d-inline-block" invisible="not customer">
+                        <field name="auto_merge" groups="sales_team.group_sale_manager" />
+                        <label for="auto_merge" />
+                    </span>
                 </div>
             </xpath>
             <xpath expr="//field[@name='vat']" position="attributes">
@@ -68,6 +72,10 @@
                 <field name="hectares"/>
                 <field name="profile_id" readonly="1"/>
                 <field name="factor" readonly="1"/>
+            </xpath>
+            <xpath expr="//page[@name='sales_purchases']//field[@name='social_style_color']" position="after">
+                <field name="recent_orders_count" invisible="not customer" readonly="1" />
+                <field name="days_since_last_order" invisible="not customer" readonly="1" />
             </xpath>
             <xpath expr="//page[@name='sales_purchases']//group[@name='purchase']" position="attributes">
                 <attribute name="groups">marin.group_purchase_readonly</attribute>
@@ -128,6 +136,18 @@
                 <attribute name="invisible">not use_partner_credit_limit</attribute>
                 <attribute name="readonly">not user_debt_manager</attribute>
                 <attribute name="required">use_partner_credit_limit</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_res_partner_filter_customer_merge" model="ir.ui.view">
+        <field name="name">res.partner.search.customer.merge</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter" />
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='inactive']" position="after">
+                <separator/>
+                <filter string="Auto-merge Enabled" name="auto_merge_enabled" domain="[('auto_merge', '=', True)]" help="Customers with auto-merge enabled"/>
             </xpath>
         </field>
     </record>

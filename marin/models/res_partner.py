@@ -1,9 +1,11 @@
 from dateutil.relativedelta import relativedelta
+import logging
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _, Command
 from odoo.exceptions import ValidationError
 from odoo.tools.misc import formatLang
-from odoo.tools.translate import _
+
+_logger = logging.getLogger(__name__)
 
 
 class ResPartner(models.Model):
@@ -104,6 +106,25 @@ class ResPartner(models.Model):
         string="Profile Factor",
         related='profile_id.factor',
         readonly=True,
+    )
+
+    # Customer merge fields
+    auto_merge = fields.Boolean(
+        string="Auto-merge when inactive",
+        compute="_compute_auto_merge",
+        store=True,
+        readonly=False,
+        help="If enabled, this customer will be automatically merged with the general public partner if they become inactive"
+    )
+    recent_orders_count = fields.Integer(
+        string="Recent Orders Count",
+        compute="_compute_recent_orders_count",
+        help="Number of sale orders in the evaluation period"
+    )
+    days_since_last_order = fields.Integer(
+        string="Days Since Last Order",
+        compute="_compute_days_since_last_order",
+        help="Number of days since the last sale order from this customer"
     )
 
     def _prepare_compute_group(self):
@@ -210,27 +231,27 @@ class ResPartner(models.Model):
             if not partner.category_id:
                 partner.profile_id = False
                 continue
-                
+
             partner_categories = set(partner.category_id.ids)
             profiles = self.env['res.partner.profile'].search([('active', '=', True)])
             if not profiles:
                 partner.profile_id = False
                 continue
-            
+
             best_profile = False
             max_matches = 0
             min_sequence = max(profiles.mapped("sequence"))
-            
+
             for profile in profiles:
                 profile_categories = set(profile.category_ids.ids)
                 matches = len(partner_categories & profile_categories)
-                
+
                 if (matches > max_matches or 
                     (matches == max_matches and profile.sequence < min_sequence)):
                     max_matches = matches
                     min_sequence = profile.sequence
                     best_profile = profile
-            
+
             partner.profile_id = best_profile if max_matches > 0 else False
 
     @api.constrains('hectares')
@@ -239,3 +260,317 @@ class ResPartner(models.Model):
         for partner in self:
             if partner.hectares < 0:
                 raise ValidationError(_("Hectares cannot be negative."))
+    @api.depends('customer')
+    def _compute_auto_merge(self):
+        """Compute auto_merge based on customer flag and global configuration"""
+        config_active = self.env['ir.config_parameter'].sudo().get_param('customer_merge_active', False)
+        for partner in self:
+            if partner.customer and config_active:
+                partner.auto_merge = True
+            else:
+                partner.auto_merge = False
+
+    def _compute_recent_orders_count(self):
+        """Compute number of sale orders in the evaluation period"""
+        config = self.env['ir.config_parameter'].sudo()
+        interval_number = int(config.get_param('customer_merge_interval_number', 3))
+        interval_type = config.get_param('customer_merge_interval_type', 'months')
+
+        # Calculate cutoff date
+        if interval_type == 'days':
+            cutoff_date = fields.Date.today() - relativedelta(days=interval_number)
+        elif interval_type == 'weeks':
+            cutoff_date = fields.Date.today() - relativedelta(weeks=interval_number)
+        else:  # months
+            cutoff_date = fields.Date.today() - relativedelta(months=interval_number)
+
+        for partner in self:
+            if not partner.customer:
+                partner.recent_orders_count = 0
+                continue
+
+            # Count confirmed sale orders in the period
+            order_count = self.env['sale.order'].search_count([
+                ('partner_id', '=', partner.id),
+                ('state', '=', 'sale'),
+                ('date_order', '>=', cutoff_date)
+            ])
+            partner.recent_orders_count = order_count
+
+    def _compute_days_since_last_order(self):
+        """Compute days since last sale order"""
+        for partner in self:
+            if not partner.customer:
+                partner.days_since_last_order = 0
+                continue
+
+            last_order = self.env['sale.order'].search([
+                ('partner_id', '=', partner.id),
+                ('state', '=', 'sale')
+            ], order='date_order desc', limit=1)
+
+            if last_order:
+                delta = fields.Date.today() - last_order.date_order.date()
+                partner.days_since_last_order = delta.days
+            else:
+                partner.days_since_last_order = 9999  # No orders found
+
+    def _find_merge_candidates(self):
+        """Find customers that are candidates for merging with general public"""
+        config = self.env['ir.config_parameter'].sudo()
+
+        min_orders = int(config.get_param('customer_merge_min_orders', 2))
+        general_partner_id = int(config.get_param('customer_merge_general_partner_id', 0))
+
+        # Get evaluation period settings
+        interval_number = int(config.get_param('customer_merge_interval_number', 3))
+        interval_type = config.get_param('customer_merge_interval_type', 'months')
+
+        if not general_partner_id:
+            _logger.warning("No general partner configured for customer merge")
+            return self.env['res.partner']
+
+        # Calculate minimum creation date (same as evaluation period)
+        # Only consider partners created before this cutoff to give them time to fulfill requirements
+        if interval_type == 'days':
+            min_creation_date = fields.Date.today() - relativedelta(days=interval_number)
+        elif interval_type == 'weeks':
+            min_creation_date = fields.Date.today() - relativedelta(weeks=interval_number)
+        else:  # months
+            min_creation_date = fields.Date.today() - relativedelta(months=interval_number)
+
+        # Get required fields from company_lmmr configuration
+        try:
+            company = self.env.ref('marin_data.company_lmmr')
+        except ValueError:
+            company = self.env.company  # Fallback to default company
+        required_fields = company.customer_merge_required_fields.mapped('name')
+
+        candidates = self.env['res.partner']
+
+        # Search for customers with auto_merge enabled
+        partners = self.search([
+            ('customer', '=', True),
+            ('auto_merge', '=', True),
+            ('id', '!=', general_partner_id)
+        ])
+
+        for partner in partners:
+            # Check if required fields are completed (immediate merge regardless of creation date)
+            missing_fields = []
+            for field_name in required_fields:
+                if hasattr(partner, field_name):
+                    field_value = getattr(partner, field_name)
+                    if not field_value:
+                        missing_fields.append(field_name)
+
+            if missing_fields:
+                _logger.info(f"Partner {partner.name} (ID: {partner.id}) is a merge candidate - missing fields: {missing_fields}")
+                candidates |= partner
+            elif partner.create_date.date() <= min_creation_date and partner.recent_orders_count < min_orders:
+                # Only check order activity for partners old enough to have had time to place orders
+                _logger.info(f"Partner {partner.name} (ID: {partner.id}) is a merge candidate - insufficient orders: {partner.recent_orders_count}")
+                candidates |= partner
+
+        return candidates
+
+    def _merge_family_hierarchy(self, parent_partner):
+        """Merge all children and grandchildren into the parent partner
+
+        This method breaks parent-child relationships first to avoid merge restrictions,
+        then merges all family members into the parent partner.
+        """
+        if not parent_partner.child_ids:
+            return  # No children to merge
+
+        # Collect all descendants recursively (children, grandchildren, etc.)
+        all_descendants = self._get_all_descendants(parent_partner)
+
+        if not all_descendants:
+            return
+
+        # Break all parent-child relationships first to avoid merge restrictions
+        all_descendants.write({'parent_id': False})
+
+        # Now merge all descendants with parent in batches of 2
+        batch_size = 2  # Max 2 descendants + 1 parent = 3 total
+
+        for i in range(0, len(all_descendants), batch_size):
+            batch = all_descendants[i:i + batch_size]
+            if batch:
+                try:
+                    # Standard merge (no cleanup context) to preserve descendant data in parent
+                    child_wizard = self.env['base.partner.merge.automatic.wizard'].create({})
+                    all_family = batch | parent_partner
+                    child_wizard._merge(all_family.ids, dst_partner=parent_partner, extra_checks=False)
+                except Exception as e:
+                    _logger.error(f"Error merging descendants {batch.ids} with parent {parent_partner.id}: {str(e)}")
+
+    def _get_all_descendants(self, parent_partner):
+        """Recursively get all descendants (children, grandchildren, etc.)"""
+        descendants = self.env['res.partner']
+
+        def collect_children(partner):
+            nonlocal descendants
+            children = partner.child_ids
+            descendants |= children
+            for child in children:
+                collect_children(child)
+
+        collect_children(parent_partner)
+        return descendants
+
+    def _merge_with_general_partner(self, partner_ids):
+        """Helper method to merge partners with the general public partner"""
+        config = self.env['ir.config_parameter'].sudo()
+        general_partner_id = int(config.get_param('customer_merge_general_partner_id', 0))
+        general_partner = self.env['res.partner'].browse(general_partner_id)
+
+        partners_to_merge = self.browse(partner_ids)
+        if not partners_to_merge:
+            return False
+
+        try:
+            # First, recursively merge all family hierarchies into their root parents
+            for partner in partners_to_merge:
+                self._merge_family_hierarchy(partner)
+
+            # Use the base partner merge wizard with context to prevent field value merging
+            wizard = self.env['base.partner.merge.automatic.wizard'].with_context(
+                customer_merge_cleanup=True
+            ).create({})
+
+            # Store original general partner categories before merge
+            original_categories = general_partner.category_id
+
+            # Add general partner to the list
+            all_partners = partners_to_merge | general_partner
+
+            # Perform the merge
+            wizard._merge(all_partners.ids, dst_partner=general_partner, extra_checks=False)
+
+            # Restore original categories to preserve general partner's identity
+            general_partner.write({'category_id': [Command.set(original_categories.ids)]})
+
+            return True
+
+        except Exception as e:
+            _logger.error(f"Error merging partners {partner_ids} with general partner: {str(e)}")
+            return False
+
+    @api.model
+    def _cron_merge_inactive_customers(self):
+        """Cron job to merge inactive customers with general public partner"""
+        config = self.env['ir.config_parameter'].sudo()
+        if not config.get_param('customer_merge_active'):
+            return
+
+        _logger.info("Starting automatic customer merge process")
+
+        candidates = self._find_merge_candidates()
+        if not candidates:
+            _logger.info("No merge candidates found")
+            return
+
+        _logger.info(f"Found {len(candidates)} merge candidates: {candidates.mapped('name')}")
+
+        # Merge candidates in batches (max 2 candidates + 1 general partner = 3 total)
+        batch_size = 2  # Maximum 2 candidates per batch due to wizard limit
+        for i in range(0, len(candidates), batch_size):
+            batch = candidates[i:i + batch_size]
+            self._merge_with_general_partner(batch.ids)
+            self.env.cr.commit()  # Commit each batch
+
+        _logger.info("Completed automatic customer merge process")
+
+    def _validate_restricted_contact_fields(self, vals=None):
+        """
+        Validate that all mandatory fields are completed for restricted contact creation.
+
+        Args:
+            vals: Dictionary of values to be written (for write method)
+
+        Raises:
+            ValidationError: If mandatory fields are missing
+        """
+        # Check if restricted contact creation is enabled
+        config = self.env['ir.config_parameter'].sudo()
+        if not config.get_param('sale.restricted_contact_creation', False):
+            return True
+
+        # Check if user belongs to restricted group
+        if not self.env.user.has_group('marin.group_partner_restricted'):
+            return True
+
+        # Get required fields from company configuration with sudo
+        company = self.env.company
+        required_fields = company.sudo().restricted_contact_required_fields
+
+        if not required_fields:
+            return True
+
+        missing_fields = []
+
+        # For create method
+        if vals is not None and not self:
+            for field in required_fields.sudo():
+                field_name = field.name
+                field_value = vals.get(field_name)
+
+                # Check if field is empty
+                if not field_value or (isinstance(field_value, str) and not field_value.strip()):
+                    missing_fields.append(field.field_description)
+
+        # For write method or checking existing record
+        else:
+            for record in self:
+                for field in required_fields.sudo():
+                    field_name = field.name
+
+                    # Get the value from vals if provided, otherwise from the record
+                    if vals and field_name in vals:
+                        field_value = vals[field_name]
+                    else:
+                        field_value = record[field_name]
+
+                    # Check if field is empty
+                    if field.ttype in ['many2one']:
+                        if not field_value or (hasattr(field_value, 'id') and not field_value.id):
+                            missing_fields.append(field.field_description)
+                    elif field.ttype in ['many2many', 'one2many']:
+                        if not field_value or (hasattr(field_value, 'ids') and not field_value.ids):
+                            missing_fields.append(field.field_description)
+                    elif not field_value or (isinstance(field_value, str) and not field_value.strip()):
+                        missing_fields.append(field.field_description)
+
+        if missing_fields:
+            missing_fields = list(set(missing_fields))  # Remove duplicates
+            raise ValidationError(
+                _("Cannot save contact. The following mandatory fields must be completed:\n• %s") 
+                % '\n• '.join(missing_fields)
+            )
+
+        return True
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        """
+        Override create to validate mandatory fields for restricted users.
+        """
+        for vals in vals_list:
+            # Only validate if it's a company or standalone contact (not a child contact)
+            if not vals.get('parent_id'):
+                self._validate_restricted_contact_fields(vals)
+
+        return super().create(vals_list)
+
+    def write(self, vals):
+        """
+        Override write to validate mandatory fields for restricted users.
+        """
+        # Only validate for company or standalone contacts (not child contacts)
+        for record in self:
+            if not record.parent_id:
+                record._validate_restricted_contact_fields(vals)
+
+        return super().write(vals)
