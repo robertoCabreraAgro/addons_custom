@@ -1,5 +1,37 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
+    <!-- Partner Search View Extension -->
+    <record id="view_res_partner_filter_fiscal_regimes" model="ir.ui.view">
+        <field name="name">res.partner.select.fiscal.regimes</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter" />
+        <field name="arch" type="xml">
+            <field name="category_id" position="after">
+                <field name="l10n_mx_edi_fiscal_regime_id" />
+                <field name="l10n_mx_edi_fiscal_regime_ids" />
+            </field>
+            <group position="inside">
+                <filter
+                    string="With Fiscal Regime"
+                    name="has_fiscal_regime"
+                    domain="[('l10n_mx_edi_fiscal_regime_id', '!=', False)]"
+                />
+            </group>
+        </field>
+    </record>
+
+    <!-- Partner Tree View Extension -->
+    <record id="view_partner_tree_fiscal_regimes" model="ir.ui.view">
+        <field name="name">res.partner.tree.fiscal.regimes</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree" />
+        <field name="arch" type="xml">
+            <field name="vat" position="after">
+                <field name="l10n_mx_edi_fiscal_regime_id" optional="hide" />
+            </field>
+        </field>
+    </record>
+
     <!-- Partner Form View Extension -->
     <record id="view_partner_form_fiscal_regimes" model="ir.ui.view">
         <field name="name">res.partner.form.fiscal.regimes</field>
@@ -24,38 +56,6 @@
                     options="{'no_create': True, 'no_open': True}"
                 />
             </field>
-        </field>
-    </record>
-
-    <!-- Partner Tree View Extension -->
-    <record id="view_partner_tree_fiscal_regimes" model="ir.ui.view">
-        <field name="name">res.partner.tree.fiscal.regimes</field>
-        <field name="model">res.partner</field>
-        <field name="inherit_id" ref="base.view_partner_tree" />
-        <field name="arch" type="xml">
-            <field name="vat" position="after">
-                <field name="l10n_mx_edi_fiscal_regime_id" optional="hide" />
-            </field>
-        </field>
-    </record>
-
-    <!-- Partner Search View Extension -->
-    <record id="view_res_partner_filter_fiscal_regimes" model="ir.ui.view">
-        <field name="name">res.partner.select.fiscal.regimes</field>
-        <field name="model">res.partner</field>
-        <field name="inherit_id" ref="base.view_res_partner_filter" />
-        <field name="arch" type="xml">
-            <field name="category_id" position="after">
-                <field name="l10n_mx_edi_fiscal_regime_id" />
-                <field name="l10n_mx_edi_fiscal_regime_ids" />
-            </field>
-            <group position="inside">
-                <filter
-                    string="With Fiscal Regime"
-                    name="has_fiscal_regime"
-                    domain="[('l10n_mx_edi_fiscal_regime_id', '!=', False)]"
-                />
-            </group>
         </field>
     </record>
 </odoo>

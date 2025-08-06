@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
+    <!-- Fiscal Regime Search View -->
+    <record id="view_l10n_mx_edi_fiscal_regime_search" model="ir.ui.view">
+        <field name="name">l10n_mx_edi.fiscal.regime.search</field>
+        <field name="model">l10n_mx_edi.fiscal.regime</field>
+        <field name="arch" type="xml">
+            <search string="Search Fiscal Regimes">
+                <field name="code" />
+                <field name="name" />
+                <filter string="Active" name="active" domain="[('active', '=', True)]" />
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]" />
+                <group expand="0" string="Group By">
+                    <filter string="Active" name="group_by_active" context="{'group_by': 'active'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
     <!-- Fiscal Regime Tree View -->
     <record id="view_l10n_mx_edi_fiscal_regime_list" model="ir.ui.view">
         <field name="name">l10n_mx_edi.fiscal.regime.list</field>
@@ -30,23 +47,6 @@
                     </group>
                 </sheet>
             </form>
-        </field>
-    </record>
-
-    <!-- Fiscal Regime Search View -->
-    <record id="view_l10n_mx_edi_fiscal_regime_search" model="ir.ui.view">
-        <field name="name">l10n_mx_edi.fiscal.regime.search</field>
-        <field name="model">l10n_mx_edi.fiscal.regime</field>
-        <field name="arch" type="xml">
-            <search string="Search Fiscal Regimes">
-                <field name="code" />
-                <field name="name" />
-                <filter string="Active" name="active" domain="[('active', '=', True)]" />
-                <filter string="Archived" name="inactive" domain="[('active', '=', False)]" />
-                <group expand="0" string="Group By">
-                    <filter string="Active" name="group_by_active" context="{'group_by': 'active'}" />
-                </group>
-            </search>
         </field>
     </record>
 

@@ -4,19 +4,27 @@ from odoo import api, fields, models
 class AccountMove(models.Model):
     _inherit = "account.move"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
+    l10n_mx_edi_fiscal_regime_ids = fields.Many2many(
+        "l10n_mx_edi.fiscal.regime",
+        compute="_compute_l10n_mx_edi_fiscal_regime_ids",
+    )
     l10n_mx_edi_fiscal_regime_id = fields.Many2one(
         "l10n_mx_edi.fiscal.regime",
         string="Fiscal Regime",
-        help="Fiscal regime to be used for this invoice CFDI generation",
-        domain="[('id', 'in', l10n_mx_edi_fiscal_regime_ids)]",
         compute="_compute_l10n_mx_edi_fiscal_regime_id",
         store=True,
         readonly=False,
+        domain="[('id', 'in', l10n_mx_edi_fiscal_regime_ids)]",
+        help="Fiscal regime to be used for this invoice CFDI generation",
     )
 
-    l10n_mx_edi_fiscal_regime_ids = fields.Many2many(
-        "l10n_mx_edi.fiscal.regime", compute="_compute_l10n_mx_edi_fiscal_regime_ids"
-    )
+    # ------------------------------------------------------------
+    # COMPUTE METHODS
+    # ------------------------------------------------------------
 
     @api.depends("partner_id", "partner_id.l10n_mx_edi_fiscal_regime_ids")
     def _compute_l10n_mx_edi_fiscal_regime_ids(self):
@@ -47,6 +55,10 @@ class AccountMove(models.Model):
             elif not move.partner_id:
                 move.l10n_mx_edi_fiscal_regime_id = False
 
+    # ------------------------------------------------------------
+    # ONCHANGE METHODS
+    # ------------------------------------------------------------
+
     @api.onchange("partner_id")
     def _onchange_partner_id(self):
         """Update fiscal regime when partner changes."""
@@ -56,6 +68,10 @@ class AccountMove(models.Model):
             l10n_mx_edi_fiscal_regime_id = self.partner_id.l10n_mx_edi_fiscal_regime_id
         self.l10n_mx_edi_fiscal_regime_id = l10n_mx_edi_fiscal_regime_id
         return res
+
+    # ------------------------------------------------------------
+    # HELPERS
+    # ------------------------------------------------------------
 
     def _l10n_mx_edi_get_customer_fiscal_regime(self):
         """Helper method to return the selected fiscal regime for CFDI generation.

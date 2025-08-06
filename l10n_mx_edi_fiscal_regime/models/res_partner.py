@@ -7,6 +7,10 @@ class ResPartner(models.Model):
 
     _inherit = "res.partner"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     l10n_mx_edi_fiscal_regime_ids = fields.Many2many(
         "l10n_mx_edi.fiscal.regime",
         "partner_l10n_mx_edi_fiscal_regime_rel",
@@ -21,26 +25,18 @@ class ResPartner(models.Model):
         domain="[('id', 'in', l10n_mx_edi_fiscal_regime_ids)]",
         help="Default fiscal regime for this partner",
     )
-
     # Computed field for backward compatibility
     l10n_mx_edi_fiscal_regime = fields.Char(
         string="Fiscal Regime",
         compute="_compute_l10n_mx_edi_fiscal_regime",
-        readonly=False,
         store=True,
+        readonly=False,
         help="Fiscal Regime is required for all partners (used in CFDI)",
     )
 
-    @api.depends("country_code", "l10n_mx_edi_fiscal_regime_id")
-    def _compute_l10n_mx_edi_fiscal_regime(self):
-        """Re-compute fiscal regime code for backward compatibility."""
-        res = super()._compute_l10n_mx_edi_fiscal_regime()
-        for partner in self:
-            if partner.country_code == "MX" and partner.l10n_mx_edi_fiscal_regime_id:
-                partner.l10n_mx_edi_fiscal_regime = (
-                    partner.l10n_mx_edi_fiscal_regime_id.code
-                )
-        return res
+    # ------------------------------------------------------------
+    # CONSTRAINTS
+    # ------------------------------------------------------------
 
     @api.constrains("l10n_mx_edi_fiscal_regime_id", "l10n_mx_edi_fiscal_regime_ids")
     def _check_l10n_mx_edi_fiscal_regime_id(self):
@@ -60,6 +56,25 @@ class ResPartner(models.Model):
                             partner.name,
                         )
                     )
+
+    # ------------------------------------------------------------
+    # COMPUTE METHODS
+    # ------------------------------------------------------------
+
+    @api.depends("country_code", "l10n_mx_edi_fiscal_regime_id")
+    def _compute_l10n_mx_edi_fiscal_regime(self):
+        """Re-compute fiscal regime code for backward compatibility."""
+        res = super()._compute_l10n_mx_edi_fiscal_regime()
+        for partner in self:
+            if partner.country_code == "MX" and partner.l10n_mx_edi_fiscal_regime_id:
+                partner.l10n_mx_edi_fiscal_regime = (
+                    partner.l10n_mx_edi_fiscal_regime_id.code
+                )
+        return res
+
+    # ------------------------------------------------------------
+    # ONCHANGE METHODS
+    # ------------------------------------------------------------
 
     @api.onchange("l10n_mx_edi_fiscal_regime_ids")
     def _onchange_l10n_mx_edi_fiscal_regime_ids(self):
