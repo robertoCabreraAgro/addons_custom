@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_marin_ai_agent,access_marin_ai_agent,model_marin_ai_agent,base.group_user,1,1,1,1
+access_marin_ai_agent_model,access_marin_ai_agent_model,model_marin_ai_agent_model,base.group_user,1,1,1,1
+access_marin_ai_prompt,access_marin_ai_prompt,model_marin_ai_prompt,base.group_user,1,1,1,1
+access_marin_ai_prompt_template,access_marin_ai_prompt_template,model_marin_ai_prompt_template,base.group_user,1,1,1,1
