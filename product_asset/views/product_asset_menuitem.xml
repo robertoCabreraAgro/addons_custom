@@ -17,10 +17,10 @@
          />
 
     <menuitem
-        id="fleet_vehicle_log_menu"
+        id="product_asset_log_menu"
         parent="fleet_root"
         sequence="200"
-        action="action_fleet_vehicle_log"
+        action="action_product_asset_log"
          />
 
     <menuitem

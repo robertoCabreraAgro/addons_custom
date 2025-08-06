@@ -3,14 +3,14 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, _, fields, models
 
 
-class FleetVehicleLog(models.Model):
-    _name = "fleet.vehicle.log"
+class ProductAssetLog(models.Model):
+    _name = "product.asset.log"
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _description = "Logs for vehicles"
 
-    def compute_next_year_date(self, strdate):
-        start_date = fields.Date.from_string(strdate)
-        return fields.Date.to_string(start_date + relativedelta(years=1))
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
 
     company_id = fields.Many2one(
         comodel_name="res.company",
@@ -112,6 +112,10 @@ class FleetVehicleLog(models.Model):
         string="Warning Date",
         compute="_compute_days_left",
     )
+
+    def compute_next_year_date(self, strdate):
+        start_date = fields.Date.from_string(strdate)
+        return fields.Date.to_string(start_date + relativedelta(years=1))
 
     @api.depends("date_end")
     def _compute_days_left(self):

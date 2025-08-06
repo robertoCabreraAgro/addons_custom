@@ -13,14 +13,9 @@
         # "data/ir_cron_data.xml",
         "views/product_template_views.xml",
         "views/product_model_views.xml",
-        "views/fleet_vehicle_log_views.xml",
-        "views/product_fleet_menuitem.xml",
+        "views/product_asset_log_views.xml",
+        "views/product_asset_menuitem.xml",
     ],
-    # "assets": {
-    #     "web.assets_backend": [
-    #         "date_range/static/src/js/*",
-    #     ],
-    # },
     "license": "LGPL-3",
     "installable": True,
 }

@@ -21,8 +21,12 @@ class ProductModel(models.Model):
     _inherit = ["avatar.mixin"]
     _order = "name asc"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     name = fields.Char(
-        "Model name",
+        string="Model name",
         required=True,
         tracking=True,
     )
@@ -49,7 +53,7 @@ class ProductModel(models.Model):
         tracking=True,
     )
     transmission = fields.Selection(
-        [
+        selection=[
             ("manual", "Manual"),
             ("automatic", "Automatic"),
         ],
@@ -94,7 +98,7 @@ class ProductModel(models.Model):
         tracking=True,
     )
     co2 = fields.Float(
-        "CO2 Emissions",
+        string="CO2 Emissions",
         tracking=True,
     )
     model_year = fields.Integer(

@@ -281,20 +281,20 @@ class ProductTemplate(models.Model):
     value_residual = fields.Float()
 
     log_ids = fields.One2many(
-        "fleet.vehicle.log",
+        "product.asset.log",
         "vehicle_id",
         "Logs",
     )
     assignment_count = fields.Integer(
-        "Drivers History Count",
+        string="Drivers History Count",
         compute="_compute_count_all",
     )
     service_count = fields.Integer(
-        "Services",
+        string="Services",
         compute="_compute_count_all",
     )
     contract_count = fields.Integer(
-        "Contracts",
+        string="Contracts",
         compute="_compute_count_all",
     )
     date_first_contract = fields.Date(
@@ -351,7 +351,7 @@ class ProductTemplate(models.Model):
                 vehicle.create_driver_history(vals)
 
         if "active" in vals and not vals["active"]:
-            self.env["fleet.vehicle.log"].search(
+            self.env["product.asset.log"].search(
                 [("vehicle_id", "in", self.ids)]
             ).active = False
 
@@ -383,7 +383,7 @@ class ProductTemplate(models.Model):
         )
 
     def _compute_count_all(self):
-        Log = self.env["fleet.vehicle.log"].with_context(active_test=False)
+        Log = self.env["product.asset.log"].with_context(active_test=False)
         contract_data = Log._read_group(
             [
                 ("vehicle_id", "in", self.ids),
@@ -478,7 +478,7 @@ class ProductTemplate(models.Model):
             params.get_param("hr_fleet.delay_alert_contract", default=30)
         )
         current_date = fields.Date.context_today(self)
-        data = self.env["fleet.vehicle.log"]._read_group(
+        data = self.env["product.asset.log"]._read_group(
             domain=[
                 ("date_end", "!=", False),
                 ("vehicle_id", "in", self.ids),
@@ -548,7 +548,7 @@ class ProductTemplate(models.Model):
             datetime_today + relativedelta(days=+delay_alert_contract)
         )
         res_ids = (
-            self.env["fleet.vehicle.log"]
+            self.env["product.asset.log"]
             .search(
                 [
                     ("date_end", ">", today),
@@ -613,7 +613,7 @@ class ProductTemplate(models.Model):
         return {
             "name": _("Assignment Logs"),
             "type": "ir.actions.act_window",
-            "res_model": "fleet.vehicle.log",
+            "res_model": "product.asset.log",
             "view_mode": "list",
             "domain": [("vehicle_id", "=", self.id)],
             "context": {
@@ -700,7 +700,7 @@ class ProductTemplate(models.Model):
 
     def create_driver_history(self, vals):
         for vehicle in self:
-            self.env["fleet.vehicle.log"].create(vehicle._get_driver_history_data(vals))
+            self.env["product.asset.log"].create(vehicle._get_driver_history_data(vals))
 
     def return_action_to_open(self):
         """
