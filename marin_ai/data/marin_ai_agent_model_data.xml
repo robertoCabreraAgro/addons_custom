@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Default AI Agent Models -->
+    
+    <!-- Gemini Flash Model for SQL Agents -->
+    <record id="agent_model_gemini_flash" model="marin.ai.agent.model">
+        <field name="name">gemini-1.5-flash</field>
+        <field name="provider">google</field>
+        <field name="api_key_env_var">GEMINI_API_KEY</field>
+        <field name="temperature">0.0</field>
+        <field name="max_tokens">8192</field>
+        <field name="description">Google Gemini 1.5 Flash model optimized for fast SQL generation and structured responses</field>
+    </record>
+
+</odoo>
