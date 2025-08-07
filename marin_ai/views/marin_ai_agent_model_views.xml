@@ -21,27 +21,48 @@
         <field name="model">marin.ai.agent.model</field>
         <field name="arch" type="xml">
             <form string="AI Model">
+                <header>
+                    <field name="active" widget="boolean_button" 
+                           options="{'terminology': {'string_true': 'Active', 'string_false': 'Archived'}}"/>
+                </header>
                 <sheet>
-                    <widget name="web_ribbon" title="Archived" invisible="active"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <div class="oe_title">
+                        <div class="o_row">
+                            <field name="provider" widget="badge" 
+                                   decoration-info="provider == 'google'"
+                                   decoration-success="provider == 'openai'"
+                                   decoration-warning="provider == 'anthropic'"/>
+                        </div>
                         <label for="name"/>
                         <h1>
-                            <field name="name" placeholder="e.g., gemini-1.5-flash"/>
+                            <field name="name" placeholder="e.g., gemini-1.5-flash, gpt-4, claude-3"/>
                         </h1>
                     </div>
                     <group>
-                        <group>
+                        <group string="Basic Configuration">
                             <field name="provider"/>
-                            <field name="api_key_env_var" placeholder="e.g., GEMINI_API_KEY"/>
-                            <field name="active" invisible="1"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
                         </group>
-                        <group>
-                            <field name="temperature" widget="float" options="{'digits': [1, 2]}"/>
-                            <field name="max_tokens"/>
+                        <group string="Model Parameters">
+                            <field name="temperature" widget="float" options="{'digits': [1, 2]}" 
+                                   help="Controls randomness: 0.0 = deterministic, 1.0 = very creative"/>
+                            <field name="max_tokens" help="Maximum tokens in AI response (leave empty for model default)"/>
                         </group>
                     </group>
-                    <group>
-                        <field name="description" placeholder="Describe the model capabilities and use cases..."/>
+                    <group string="API Configuration">
+                        <group string="Environment Variable">
+                            <field name="api_key_env_var" placeholder="e.g., GEMINI_API_KEY, OPENAI_API_KEY" 
+                                   help="Environment variable name containing the API key"/>
+                        </group>
+                        <group string="Direct Configuration" groups="base.group_system">
+                            <field name="api_key_encrypted" password="True" 
+                                   help="Encrypted API key stored in database (overrides environment variable)"/>
+                        </group>
+                    </group>
+                    <group string="Description">
+                        <field name="description" nolabel="1" 
+                               placeholder="Describe the model capabilities, use cases, and any special features...&#10;&#10;Example:&#10;Google's Gemini 1.5 Flash model optimized for fast responses and multilingual support. Good for general conversations and basic reasoning tasks."/>
                     </group>
                 </sheet>
                 <chatter/>

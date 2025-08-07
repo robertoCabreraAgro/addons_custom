@@ -1,5 +1,9 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_marin_ai_agent,access_marin_ai_agent,model_marin_ai_agent,base.group_user,1,1,1,1
-access_marin_ai_agent_model,access_marin_ai_agent_model,model_marin_ai_agent_model,base.group_user,1,1,1,1
-access_marin_ai_prompt,access_marin_ai_prompt,model_marin_ai_prompt,base.group_user,1,1,1,1
-access_marin_ai_prompt_template,access_marin_ai_prompt_template,model_marin_ai_prompt_template,base.group_user,1,1,1,1
+access_marin_ai_agent_user,marin.ai.agent user,model_marin_ai_agent,group_marin_ai_user,1,0,0,0
+access_marin_ai_agent_admin,marin.ai.agent admin,model_marin_ai_agent,group_marin_ai_admin,1,1,1,1
+access_marin_ai_agent_model_user,marin.ai.agent.model user,model_marin_ai_agent_model,group_marin_ai_user,1,0,0,0
+access_marin_ai_agent_model_admin,marin.ai.agent.model admin,model_marin_ai_agent_model,group_marin_ai_admin,1,1,1,1
+access_marin_ai_prompt_user,marin.ai.prompt user,model_marin_ai_prompt,group_marin_ai_user,1,0,1,0
+access_marin_ai_prompt_admin,marin.ai.prompt admin,model_marin_ai_prompt,group_marin_ai_admin,1,1,1,1
+access_marin_ai_prompt_template_user,marin.ai.prompt.template user,model_marin_ai_prompt_template,group_marin_ai_user,1,0,0,0
+access_marin_ai_prompt_template_admin,marin.ai.prompt.template admin,model_marin_ai_prompt_template,group_marin_ai_admin,1,1,1,1

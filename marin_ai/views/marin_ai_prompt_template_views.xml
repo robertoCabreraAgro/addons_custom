@@ -20,28 +20,68 @@
         <field name="model">marin.ai.prompt.template</field>
         <field name="arch" type="xml">
             <form string="Prompt Template">
+                <header>
+                    <button name="%(action_test_template)d" 
+                            string="Preview Template" 
+                            type="action" 
+                            class="btn-secondary"
+                            invisible="not active"/>
+                    <field name="active" widget="boolean_button" 
+                           options="{'terminology': {'string_true': 'Active', 'string_false': 'Inactive'}}"/>
+                </header>
                 <sheet>
-                    <widget name="web_ribbon" title="Archived" invisible="active"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object" name="action_view_usage" icon="fa-line-chart">
+                            <field string="Usage" name="usage_count" widget="statinfo"/>
+                        </button>
+                    </div>
                     <div class="oe_title">
-                        <label for="name"/>
+                        <div class="o_row">
+                            <field name="category" widget="badge" 
+                                   decoration-success="category == 'orchestrator'"
+                                   decoration-info="category == 'chat'"
+                                   decoration-warning="category in ['inventory', 'sales']"
+                                   decoration-primary="category == 'final_response'"
+                                   decoration-muted="category == 'custom'"/>
+                        </div>
+                        <label for="name" string="Template Name"/>
                         <h1>
-                            <field name="name" placeholder="Template Name"/>
+                            <field name="name" placeholder="e.g., Sales Query Template, Inventory Assistant"/>
                         </h1>
                     </div>
                     <group>
-                        <group>
-                            <field name="category"/>
-                            <field name="active" invisible="1"/>
+                        <group name="main_config" string="Configuration">
+                            <field name="category" widget="selection"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
                         </group>
-                        <group>
-                            <field name="usage_count" readonly="1"/>
+                        <group name="stats" string="Statistics">
+                            <field name="usage_count" readonly="1" widget="integer"/>
                         </group>
                     </group>
-                    <group>
-                        <field name="description" placeholder="Describe the purpose and usage of this template..."/>
+                    <group name="description_group" string="Description">
+                        <field name="description" 
+                               placeholder="Describe the purpose and usage of this template...&#10;&#10;Example:&#10;This template is designed for sales-related queries. It helps the AI understand product information and customer requirements to provide accurate sales assistance."
+                               nolabel="1"/>
                     </group>
-                    <group string="Prompt Template">
-                        <field name="prompt" widget="ace" options="{'mode': 'text'}" nolabel="1" placeholder="Enter your prompt template with placeholders like {user_input}, {context}, {question}, {result}, etc."/>
+                    <group name="template_group" string="Prompt Template">
+                        <div class="alert alert-info" role="alert">
+                            <h6><i class="fa fa-info-circle"/> Available Placeholders:</h6>
+                            <ul class="mb-0">
+                                <li><code>{user_input}</code> - The user's question or request</li>
+                                <li><code>{input}</code> - Alternative to user_input</li>
+                                <li><code>{table_info}</code> - Database schema information (for SQL agents)</li>
+                                <li><code>{context}</code> - Additional context information</li>
+                                <li><code>{history}</code> - Previous conversation history</li>
+                                <li><code>{question}</code> - The processed question</li>
+                                <li><code>{result}</code> - Query results (for final response templates)</li>
+                            </ul>
+                        </div>
+                        <field name="prompt" 
+                               widget="ace" 
+                               options="{'mode': 'markdown', 'theme': 'github', 'fontSize': 14, 'showPrintMargin': false, 'wrap': true, 'showLineNumbers': true}"
+                               nolabel="1" 
+                               placeholder="Enter your prompt template with placeholders...&#10;&#10;Example:&#10;You are a helpful AI assistant specialized in {category} operations.&#10;&#10;Context: {table_info}&#10;&#10;User question: {user_input}&#10;&#10;Please provide a detailed and accurate response."/>
                     </group>
                 </sheet>
                 <chatter/>

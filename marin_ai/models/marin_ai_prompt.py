@@ -16,11 +16,18 @@ class MarinAiPrompt(models.Model):
 
     @api.model
     def create(self, vals):
-        """Override create to auto-generate sequence number for name based on agent."""
-        if not vals.get("name") and vals.get("agent_id"):
-            agent = self.env["marin.ai.agent"].browse(vals["agent_id"])
-            sequence_code = f'marin.ai.prompt.{agent.name.lower().replace(" ", "_")}'
-            vals["name"] = self.env["ir.sequence"].next_by_code(sequence_code)
-        elif not vals.get("name"):
-            vals["name"] = self.env["ir.sequence"].next_by_code("marin.ai.prompt")
-        return super(MarinAiPrompt, self).create(vals)
+        """Override create to auto-generate sequence number for name."""
+        if not vals.get("name"):
+            # Try to get sequence, fallback to timestamp-based name
+            sequence_name = self.env["ir.sequence"].sudo().next_by_code("marin.ai.prompt")
+            if sequence_name:
+                vals["name"] = sequence_name
+            else:
+                # Generate more descriptive fallback name with timestamp and user info
+                timestamp = fields.Datetime.now().strftime("%Y%m%d-%H%M%S")
+                user_login = self.env.user.login or "user"
+                # Take first part of email or username for brevity
+                user_short = user_login.split('@')[0] if '@' in user_login else user_login
+                vals["name"] = f"AI-{timestamp}-{user_short}"
+                
+        return super().create(vals)
