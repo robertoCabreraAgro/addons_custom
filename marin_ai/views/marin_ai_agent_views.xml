@@ -1,4 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    
+    <!-- AI Agent List View -->
+    <record id="view_marin_ai_agent_list" model="ir.ui.view">
+        <field name="name">marin.ai.agent.list</field>
+        <field name="model">marin.ai.agent</field>
+        <field name="arch" type="xml">
+            <list string="AI Agents">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="intent"/>
+                <field name="agent_model_id"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- AI Agent Form View -->
+    <record id="view_marin_ai_agent_form" model="ir.ui.view">
+        <field name="name">marin.ai.agent.form</field>
+        <field name="model">marin.ai.agent</field>
+        <field name="arch" type="xml">
+            <form string="AI Agent">
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="Agent Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="intent"/>
+                            <field name="sequence"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="agent_model_id" options="{'no_create': True}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Configuration">
+                            <group>
+                                <field name="context" widget="ace" options="{'mode': 'text'}" placeholder="Enter the agent prompt template with placeholders like {input}, {table_info}, {user_input}, etc."/>
+                            </group>
+                        </page>
+                        <page string="Models Access" invisible="intent == 'chat' or intent == 'orchestrator'">
+                            <field name="model_ids">
+                                <list string="Accessible Models">
+                                    <field name="name"/>
+                                    <field name="model"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Prompts History">
+                            <field name="prompt_ids" readonly="1">
+                                <list string="Prompts">
+                                    <field name="name"/>
+                                    <field name="user"/>
+                                    <field name="create_date"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- AI Agent Search View -->
+    <record id="view_marin_ai_agent_search" model="ir.ui.view">
+        <field name="name">marin.ai.agent.search</field>
+        <field name="model">marin.ai.agent</field>
+        <field name="arch" type="xml">
+            <search string="Search AI Agents">
+                <field name="name"/>
+                <field name="intent"/>
+                <field name="agent_model_id"/>
+                <filter string="Active" name="active" domain="[('active', '=', True)]"/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <separator/>
+                <filter string="Orchestrator" name="orchestrator" domain="[('intent', '=', 'orchestrator')]"/>
+                <filter string="Inventory" name="inventory" domain="[('intent', '=', 'inventory')]"/>
+                <filter string="Sales" name="sales" domain="[('intent', '=', 'sales')]"/>
+                <filter string="Chat" name="chat" domain="[('intent', '=', 'chat')]"/>
+                <filter string="Custom" name="custom" domain="[('intent', '=', 'custom')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Intent" name="group_intent" context="{'group_by': 'intent'}"/>
+                    <filter string="Model" name="group_model" context="{'group_by': 'agent_model_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- AI Agent Action -->
+    <record id="action_marin_ai_agent" model="ir.actions.act_window">
+        <field name="name">AI Agents</field>
+        <field name="res_model">marin.ai.agent</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_marin_ai_agent_search"/>
+        <field name="context">{'search_default_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first AI Agent
+            </p>
+            <p>
+                AI Agents help process user queries using different AI models and contexts.
+                Configure agents for inventory, sales, chat, or create custom agents.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem id="menu_marin_ai_root" name="AI Assistant" sequence="100" web_icon="marin_ai,static/description/icon.png"/>
+    <menuitem id="menu_marin_ai_agents" name="Agents" parent="menu_marin_ai_root" action="action_marin_ai_agent" sequence="10"/>
 </odoo>
