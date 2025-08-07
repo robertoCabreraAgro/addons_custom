@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Default Prompt Templates -->
+    
+    <!-- Final Response Template -->
+    <record id="prompt_template_final_response" model="marin.ai.prompt.template">
+        <field name="name">Final Response Formatter</field>
+        <field name="category">final_response</field>
+        <field name="description">Template for formatting final responses from database query results</field>
+        <field name="prompt">Eres un asistente de Odoo amigable y servicial.
+Tu tarea es tomar la pregunta original del usuario y los resultados de la base de datos y formular una respuesta clara, concisa y en lenguaje natural.
+
+- Resume los hallazgos de forma amable.
+- Si los resultados son una lista, formatéalos de manera legible (por ejemplo, con viñetas o una tabla simple).
+- Si no hay resultados (`result` está vacío o es `None`), informa al usuario educadamente que no encontraste información para su consulta.
+- Responde siempre en el mismo idioma de la pregunta del usuario.
+
+**Pregunta Original del Usuario:**
+{question}
+
+**Resultados de la Base de Datos:**
+{result}
+
+**Respuesta Final:**</field>
+        <field name="active">True</field>
+    </record>
+
+</odoo>
