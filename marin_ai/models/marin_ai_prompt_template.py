@@ -37,6 +37,9 @@ class MarinAiPromptTemplate(models.Model):
 
     # Computed fields
     display_name = fields.Char(string="Display Name", compute="_compute_display_name", store=True)
+    company_id = fields.Many2one(
+        "res.company", string="Company", default=lambda self: self.env.company, required=True
+    )
 
     @api.depends("name", "category")
     def _compute_display_name(self):

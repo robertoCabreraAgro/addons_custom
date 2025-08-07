@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- AI Module Category -->
+    <record id="module_category_marin_ai" model="ir.module.category">
+        <field name="name">Marin AI</field>
+        <field name="description">Manage AI agents and prompts</field>
+        <field name="sequence">99</field>
+    </record>
+
+    <!-- AI User Group -->
+    <record id="group_marin_ai_user" model="res.groups">
+        <field name="name">AI User</field>
+        <field name="category_id" ref="module_category_marin_ai"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="comment">Users can view and use AI agents, view prompt history</field>
+    </record>
+
+    <!-- AI Administrator Group -->
+    <record id="group_marin_ai_admin" model="res.groups">
+        <field name="name">AI Administrator</field>
+        <field name="category_id" ref="module_category_marin_ai"/>
+        <field name="implied_ids" eval="[(4, ref('group_marin_ai_user'))]"/>
+        <field name="comment">Full access to configure AI agents, models, and templates</field>
+    </record>
+</odoo>

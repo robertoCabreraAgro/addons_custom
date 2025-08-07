@@ -1,5 +1,8 @@
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
+import base64
+import os
+from cryptography.fernet import Fernet
 
 
 class MarinAiAgentModel(models.Model):
@@ -29,6 +32,11 @@ class MarinAiAgentModel(models.Model):
         help="Environment variable name for API key",
         tracking=True,
     )
+    api_key_encrypted = fields.Char(
+        string="Encrypted API Key",
+        help="Encrypted API key stored in database (optional, overrides environment variable)",
+        groups="base.group_system",
+    )
     temperature = fields.Float(
         string="Default Temperature",
         default=0.0,
@@ -41,6 +49,9 @@ class MarinAiAgentModel(models.Model):
 
     # Computed fields
     display_name = fields.Char(string="Display Name", compute="_compute_display_name", store=True)
+    company_id = fields.Many2one(
+        "res.company", string="Company", default=lambda self: self.env.company, required=True
+    )
 
     @api.depends("name", "provider")
     def _compute_display_name(self):
@@ -56,4 +67,75 @@ class MarinAiAgentModel(models.Model):
         """Validate temperature is between 0 and 1."""
         for record in self:
             if record.temperature < 0.0 or record.temperature > 1.0:
-                raise ValidationError("Temperature must be between 0.0 and 1.0")
+                raise ValidationError(
+                    self.env._("Temperature must be between 0.0 and 1.0")
+                )
+    
+    @api.constrains("max_tokens")
+    def _check_max_tokens(self):
+        """Validate max_tokens is positive."""
+        for record in self:
+            if record.max_tokens and record.max_tokens <= 0:
+                raise ValidationError(
+                    self.env._("Max tokens must be a positive number")
+                )
+    
+    @api.constrains("name", "provider")
+    def _check_unique_model(self):
+        """Ensure model name is unique per provider."""
+        for record in self:
+            domain = [
+                ("name", "=", record.name),
+                ("provider", "=", record.provider),
+                ("id", "!=", record.id),
+                ("company_id", "in", [record.company_id.id, False])
+            ]
+            if self.search_count(domain) > 0:
+                raise ValidationError(
+                    self.env._("A model with name '%s' already exists for provider '%s'") 
+                    % (record.name, record.provider)
+                )
+
+    def _get_encryption_key(self):
+        """Get or create encryption key for API keys."""
+        # Use system parameter to store encryption key
+        key_param = self.env['ir.config_parameter'].sudo().get_param('marin_ai.encryption_key')
+        
+        if not key_param:
+            # Generate new key
+            key = Fernet.generate_key()
+            key_b64 = base64.b64encode(key).decode()
+            self.env['ir.config_parameter'].sudo().set_param('marin_ai.encryption_key', key_b64)
+            return key
+        else:
+            return base64.b64decode(key_param.encode())
+
+    def set_api_key(self, api_key):
+        """Encrypt and store API key."""
+        if not api_key:
+            self.api_key_encrypted = False
+            return
+            
+        key = self._get_encryption_key()
+        cipher_suite = Fernet(key)
+        encrypted_key = cipher_suite.encrypt(api_key.encode())
+        self.api_key_encrypted = base64.b64encode(encrypted_key).decode()
+
+    def get_api_key(self):
+        """Decrypt and return API key."""
+        # First try encrypted key from database
+        if self.api_key_encrypted:
+            try:
+                key = self._get_encryption_key()
+                cipher_suite = Fernet(key)
+                encrypted_key = base64.b64decode(self.api_key_encrypted.encode())
+                return cipher_suite.decrypt(encrypted_key).decode()
+            except Exception:
+                # Fall back to environment variable if decryption fails
+                pass
+        
+        # Fall back to environment variable
+        if self.api_key_env_var:
+            return os.getenv(self.api_key_env_var)
+        
+        return None
