@@ -1,0 +1,162 @@
+/* AI Agent Dashboard Styles */
+
+.o_agent_dashboard {
+    .oe_kanban_global_click {
+        cursor: pointer;
+        transition: all 0.3s ease;
+        
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+    }
+
+    .o_kanban_card_header {
+        border-bottom: 1px solid #e9ecef;
+        padding-bottom: 10px;
+        margin-bottom: 15px;
+
+        .o_kanban_record_title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .o_secondary {
+            font-size: 0.85rem;
+            margin-top: 4px;
+        }
+    }
+
+    .o_dashboard_action {
+        font-size: 1rem;
+        padding: 12px;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        
+        .o_value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            display: block;
+            line-height: 1.2;
+        }
+        
+        .o_label {
+            font-size: 0.9rem;
+            display: block;
+            margin-top: 4px;
+            opacity: 0.9;
+        }
+
+        &:hover {
+            transform: scale(1.02);
+            text-decoration: none;
+        }
+    }
+
+    .o_secondary_value {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #495057;
+    }
+
+    .o_secondary_label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: #6c757d;
+        margin-top: 2px;
+    }
+
+    .o_kanban_card_footer {
+        border-top: 1px solid #e9ecef;
+        padding-top: 8px;
+        margin-top: 15px;
+        background-color: #f8f9fa;
+        border-radius: 0 0 8px 8px;
+        margin: 15px -15px -15px -15px;
+        padding: 8px 15px;
+
+        .border-right {
+            border-right: 1px solid #dee2e6 !important;
+        }
+    }
+
+    .alert {
+        border-radius: 6px;
+        font-size: 0.85rem;
+        
+        &.alert-warning {
+            background-color: #fff3cd;
+            border-color: #ffecb5;
+            color: #856404;
+        }
+    }
+
+    .badge {
+        font-size: 0.75rem;
+        padding: 6px 10px;
+        border-radius: 12px;
+        
+        &.badge-success {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        &.badge-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+    }
+
+    .o_kanban_card_grey {
+        opacity: 0.7;
+        background-color: #f8f9fa;
+    }
+
+    .text-success { color: #28a745 !important; }
+    .text-warning { color: #ffc107 !important; }
+    .text-info { color: #17a2b8 !important; }
+    .text-muted { color: #6c757d !important; }
+}
+
+/* Intent-based color coding for kanban groups */
+.o_kanban_group[data-folded="false"] {
+    &[data-id="orchestrator"] .o_kanban_header {
+        background: linear-gradient(135deg, #28a745, #34ce57);
+        color: white;
+    }
+    
+    &[data-id="inventory"] .o_kanban_header {
+        background: linear-gradient(135deg, #ffc107, #ffcd39);
+        color: #212529;
+    }
+    
+    &[data-id="sales"] .o_kanban_header {
+        background: linear-gradient(135deg, #fd7e14, #ff922b);
+        color: white;
+    }
+    
+    &[data-id="chat"] .o_kanban_header {
+        background: linear-gradient(135deg, #17a2b8, #46b7c9);
+        color: white;
+    }
+    
+    &[data-id="custom"] .o_kanban_header {
+        background: linear-gradient(135deg, #6c757d, #868e96);
+        color: white;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .o_agent_dashboard {
+        .o_dashboard_action .o_value {
+            font-size: 1.5rem;
+        }
+        
+        .o_secondary_value {
+            font-size: 1rem;
+        }
+    }
+}

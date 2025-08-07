@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- AI Assistant Menu Items -->
+    
+    <!-- Main Menu Root -->
+    <menuitem 
+        id="menu_marin_ai_root" 
+        name="AI Assistant" 
+        sequence="100" 
+        web_icon="marin_ai,static/description/icon.png"
+        groups="marin_ai.group_marin_ai_user,marin_ai.group_marin_ai_admin"
+    />
+    
+    <!-- Dashboard Menu -->
+    <menuitem 
+        id="menu_marin_ai_dashboard" 
+        name="Dashboard" 
+        parent="menu_marin_ai_root" 
+        action="marin_ai.action_marin_ai_agent_dashboard" 
+        sequence="5"
+        groups="marin_ai.group_marin_ai_user,marin_ai.group_marin_ai_admin"
+    />
+    
+    <!-- Prompt History Menu -->
+    <menuitem 
+        id="menu_marin_ai_history" 
+        name="Prompt History" 
+        parent="menu_marin_ai_root" 
+        action="marin_ai.action_marin_ai_prompt" 
+        sequence="10"
+        groups="marin_ai.group_marin_ai_admin"
+    />
+    
+    <!-- Configuration Menu -->
+    <menuitem 
+        id="menu_marin_ai_configuration" 
+        name="Configuration" 
+        parent="menu_marin_ai_root" 
+        sequence="80"
+        groups="marin_ai.group_marin_ai_admin"
+    />
+    
+    <!-- Agents Menu (submenu of Configuration) -->
+    <menuitem 
+        id="menu_marin_ai_agents" 
+        name="Agents" 
+        parent="menu_marin_ai_configuration" 
+        action="marin_ai.action_marin_ai_agent" 
+        sequence="10"
+        groups="marin_ai.group_marin_ai_admin"
+    />
+    
+    <!-- AI Models Menu (submenu of Configuration) -->
+    <menuitem 
+        id="menu_marin_ai_models" 
+        name="AI Models" 
+        parent="menu_marin_ai_configuration" 
+        action="marin_ai.action_marin_ai_agent_model" 
+        sequence="20"
+        groups="marin_ai.group_marin_ai_admin"
+    />
+    
+    <!-- Templates Menu (submenu of Configuration) -->
+    <menuitem 
+        id="menu_marin_ai_templates" 
+        name="Prompt Templates" 
+        parent="menu_marin_ai_configuration" 
+        action="marin_ai.action_marin_ai_prompt_template" 
+        sequence="30"
+        groups="marin_ai.group_marin_ai_admin"
+    />
+
+</odoo>

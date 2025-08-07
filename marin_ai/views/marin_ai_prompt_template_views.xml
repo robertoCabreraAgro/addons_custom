@@ -243,7 +243,4 @@
         </field>
     </record>
 
-    <!-- Menu Items -->
-    <menuitem id="menu_marin_ai_templates" name="Templates" parent="marin_ai.menu_marin_ai_root" action="action_marin_ai_prompt_template" sequence="30"/>
-    <menuitem id="menu_marin_ai_history" name="Prompt History" parent="marin_ai.menu_marin_ai_root" action="action_marin_ai_prompt" sequence="40"/>
 </odoo>

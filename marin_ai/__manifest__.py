@@ -23,7 +23,13 @@
         "views/marin_ai_agent_views.xml",
         "views/marin_ai_agent_model_views.xml",
         "views/marin_ai_prompt_template_views.xml",
+        "views/menuitem_views.xml",
     ],
+    "assets": {
+        "web.assets_backend": [
+            "marin_ai/static/src/scss/agent_dashboard.scss",
+        ],
+    },
     "installable": True,
     "auto_install": False,
 }
