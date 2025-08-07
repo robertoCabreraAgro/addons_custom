@@ -1,4 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    
+    <!-- AI Agent Model List View -->
+    <record id="view_marin_ai_agent_model_list" model="ir.ui.view">
+        <field name="name">marin.ai.agent.model.list</field>
+        <field name="model">marin.ai.agent.model</field>
+        <field name="arch" type="xml">
+            <list string="AI Models">
+                <field name="display_name"/>
+                <field name="provider"/>
+                <field name="temperature"/>
+                <field name="max_tokens"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- AI Agent Model Form View -->
+    <record id="view_marin_ai_agent_model_form" model="ir.ui.view">
+        <field name="name">marin.ai.agent.model.form</field>
+        <field name="model">marin.ai.agent.model</field>
+        <field name="arch" type="xml">
+            <form string="AI Model">
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g., gemini-1.5-flash"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="provider"/>
+                            <field name="api_key_env_var" placeholder="e.g., GEMINI_API_KEY"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="temperature" widget="float" options="{'digits': [1, 2]}"/>
+                            <field name="max_tokens"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="description" placeholder="Describe the model capabilities and use cases..."/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- AI Agent Model Search View -->
+    <record id="view_marin_ai_agent_model_search" model="ir.ui.view">
+        <field name="name">marin.ai.agent.model.search</field>
+        <field name="model">marin.ai.agent.model</field>
+        <field name="arch" type="xml">
+            <search string="Search AI Models">
+                <field name="name"/>
+                <field name="provider"/>
+                <filter string="Active" name="active" domain="[('active', '=', True)]"/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <separator/>
+                <filter string="Google" name="google" domain="[('provider', '=', 'google')]"/>
+                <filter string="OpenAI" name="openai" domain="[('provider', '=', 'openai')]"/>
+                <filter string="Anthropic" name="anthropic" domain="[('provider', '=', 'anthropic')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Provider" name="group_provider" context="{'group_by': 'provider'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- AI Agent Model Action -->
+    <record id="action_marin_ai_agent_model" model="ir.actions.act_window">
+        <field name="name">AI Models</field>
+        <field name="res_model">marin.ai.agent.model</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_marin_ai_agent_model_search"/>
+        <field name="context">{'search_default_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Configure your AI Models
+            </p>
+            <p>
+                Define the AI models available for your agents.
+                Configure provider settings, API keys, and model parameters.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem id="menu_marin_ai_models" name="AI Models" parent="marin_ai.menu_marin_ai_root" action="action_marin_ai_agent_model" sequence="20"/>
 </odoo>
