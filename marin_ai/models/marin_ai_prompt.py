@@ -27,7 +27,7 @@ class MarinAiPrompt(models.Model):
                 timestamp = fields.Datetime.now().strftime("%Y%m%d-%H%M%S")
                 user_login = self.env.user.login or "user"
                 # Take first part of email or username for brevity
-                user_short = user_login.split('@')[0] if '@' in user_login else user_login
+                user_short = user_login.split("@")[0] if "@" in user_login else user_login
                 vals["name"] = f"AI-{timestamp}-{user_short}"
-                
+
         return super().create(vals)

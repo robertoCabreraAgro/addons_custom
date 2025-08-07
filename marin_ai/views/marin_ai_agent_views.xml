@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Test Agent Action -->
+    <record id="action_test_agent" model="ir.actions.act_window">
+        <field name="name">Test AI Agent</field>
+        <field name="res_model">marin.ai.prompt</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_agent_id': active_id, 'default_prompt': 'Test prompt for agent'}</field>
+    </record>
+
     <!-- AI Agent List View -->
     <record id="view_marin_ai_agent_list" model="ir.ui.view">
         <field name="name">marin.ai.agent.list</field>
@@ -14,23 +23,19 @@
                        decoration-warning="intent in ['inventory', 'sales']"
                        decoration-muted="intent == 'custom'"/>
                 <field name="agent_model_id" string="AI Model" optional="show"/>
-                <field name="max_query_limit" optional="hide" groups="marin_ai.group_marin_ai_admin" 
-                       help="Maximum records per query"/>
-                <field name="queries_per_minute" optional="hide" groups="marin_ai.group_marin_ai_admin" 
-                       help="Rate limit per user"/>
+                <field name="max_query_limit" optional="hide" groups="marin_ai.group_marin_ai_admin"/>
+                <field name="queries_per_minute" optional="hide" groups="marin_ai.group_marin_ai_admin"/>
                 <field name="security_violations_count" optional="hide" 
                        decoration-danger="security_violations_count > 0" 
-                       groups="marin_ai.group_marin_ai_admin"
-                       help="Security violations detected"/>
+                       groups="marin_ai.group_marin_ai_admin"/>
                 <field name="last_security_check" optional="hide" groups="marin_ai.group_marin_ai_admin" 
-                       widget="datetime" help="Last security validation"/>
-                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                       widget="datetime"/>
                 <field name="active" string="Status" widget="boolean_toggle" 
                        decoration-success="active == True"
                        decoration-danger="active == False"/>
-                <button name="process_prompt_for_agent" 
+                <button name="%(action_test_agent)d" 
                         string="Test" 
-                        type="object" 
+                        type="action" 
                         icon="fa-play-circle" 
                         class="btn-link"
                         invisible="not active"
@@ -52,10 +57,10 @@
                 <field name="agent_model_id"/>
                 <field name="sequence"/>
                 <templates>
-                    <t t-name="kanban-box">
+                    <t t-name="card">
                         <div class="oe_kanban_card oe_kanban_global_click">
                             <div class="o_kanban_image">
-                                <i class="fa fa-robot fa-2x" 
+                                <i class="fa fa-robot fa-2x" title="AI Agent" 
                                    t-attf-style="color: #{intent == 'orchestrator' and '#28a745' or intent == 'chat' and '#17a2b8' or intent in ['inventory', 'sales'] and '#ffc107' or '#6c757d'}"/>
                             </div>
                             <div class="oe_kanban_details">
@@ -67,7 +72,7 @@
                                     </div>
                                     <div class="o_kanban_manage_button_section">
                                         <a class="o_kanban_manage_toggle_button" href="#">
-                                            <i class="fa fa-ellipsis-v"/>
+                                            <i class="fa fa-ellipsis-v" title="Manage"/>
                                         </a>
                                     </div>
                                 </div>
@@ -77,17 +82,17 @@
                                         <field name="intent"/>
                                     </span>
                                     <div class="mt4">
-                                        <i class="fa fa-cog"/> <field name="agent_model_id"/>
+                                        <i class="fa fa-cog" title="Configuration"/> <field name="agent_model_id"/>
                                     </div>
                                 </div>
                                 <div class="o_kanban_record_bottom">
                                     <div class="oe_kanban_bottom_left">
-                                        <span class="badge" t-if="not active" style="background-color: #dc3545;">Inactive</span>
+                                        <span class="badge" t-if="!active" style="background-color: #dc3545;">Inactive</span>
                                         <span class="badge" t-if="active" style="background-color: #28a745;">Active</span>
                                     </div>
                                     <div class="oe_kanban_bottom_right">
-                                        <button name="process_prompt_for_agent" 
-                                                type="object" 
+                                        <button name="%(action_test_agent)d" 
+                                                type="action" 
                                                 class="btn btn-primary btn-sm" 
                                                 t-if="active"
                                                 title="Test Agent">
@@ -98,7 +103,7 @@
                             </div>
                             <div class="o_kanban_manage_button_section" dropdown-toggle="dropdown">
                                 <a class="o_kanban_manage_toggle_button" href="#">
-                                    <i class="fa fa-ellipsis-v"/>
+                                    <i class="fa fa-ellipsis-v" title="Menu"/>
                                 </a>
                                 <div class="dropdown-menu" role="menu">
                                     <a t-if="widget.editable" role="menuitem" type="edit" class="dropdown-item">Edit</a>
@@ -160,7 +165,6 @@
                                    widget="many2one"/>
                         </group>
                         <group name="advanced_config" string="Advanced Settings">
-                            <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                     </group>
                     <notebook>
@@ -282,17 +286,12 @@
                 
                 <!-- My Filters -->
                 <separator/>
-                <filter string="My Company" name="my_company" 
-                        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]"
-                        groups="base.group_multi_company"/>
                 
                 <!-- Group By Options -->
                 <group expand="0" string="Group By">
                     <filter string="Intent" name="group_intent" context="{'group_by': 'intent'}"/>
                     <filter string="AI Model" name="group_model" context="{'group_by': 'agent_model_id'}"/>
                     <filter string="Status" name="group_active" context="{'group_by': 'active'}"/>
-                    <filter string="Company" name="group_company" context="{'group_by': 'company_id'}" 
-                            groups="base.group_multi_company"/>
                 </group>
             </search>
         </field>

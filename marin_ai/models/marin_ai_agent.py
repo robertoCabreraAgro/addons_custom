@@ -47,32 +47,25 @@ class MarinAiAgent(models.Model):
     # Relations
     model_ids = fields.Many2many("ir.model", string="Models", help="Models/tables that this agent can access")
     prompt_ids = fields.One2many("marin.ai.prompt", "agent_id", string="Prompts", readonly=True)
-    company_id = fields.Many2one(
-        "res.company", string="Company", default=lambda self: self.env.company, required=True
-    )
-    
+
     # Security tracking
     max_query_limit = fields.Integer(
-        string="Max Query Limit", 
-        default=100, 
-        help="Maximum number of records this agent can return in a single query"
+        string="Max Query Limit", default=100, help="Maximum number of records this agent can return in a single query"
     )
     queries_per_minute = fields.Integer(
-        string="Queries Per Minute", 
-        default=10, 
-        help="Rate limit for queries per minute per user"
+        string="Queries Per Minute", default=10, help="Rate limit for queries per minute per user"
     )
     last_security_check = fields.Datetime(string="Last Security Check", readonly=True)
     security_violations_count = fields.Integer(string="Security Violations", readonly=True, default=0)
 
     @api.model
-    @tools.ormcache('model_names')
+    @tools.ormcache("model_names")
     def _get_table_info(self, model_names):
         """Get schema information for the given Odoo models using ORM metadata.
-        
+
         Args:
             model_names (tuple): Tuple of model names (hashable for cache)
-            
+
         Returns:
             str: Formatted table schema information
         """
@@ -100,65 +93,80 @@ class MarinAiAgent(models.Model):
                 continue
 
         return table_info
-    
-    @api.model
-    def clear_table_info_cache(self):
-        """Clear the cached table information."""
-        self._get_table_info.clear_cache(self.env[self._name])
-        
-    def _invalidate_cache(self):
-        """Invalidate relevant caches when model configuration changes."""
-        self._get_table_info.clear_cache(self.env[self._name])
-        self._get_allowed_tables.clear_cache(self)
-        
+
     def write(self, vals):
-        """Override write to invalidate cache when model_ids change."""
+        """Override write to clear cache when model_ids change."""
         result = super().write(vals)
-        if 'model_ids' in vals:
-            self._invalidate_cache()
+        if "model_ids" in vals:
+            self.env.registry.clear_cache()
         return result
 
     def _validate_query(self, sql_query: str) -> str:
         """Enhanced SQL validation with comprehensive security checks."""
         if not sql_query:
             raise ValidationError(self.env._("Query cannot be empty."))
-            
+
         query = sql_query.strip()
 
         # Basic SELECT validation
         if not query.lower().startswith("select"):
-            raise ValidationError(
-                self.env._("Invalid query: Only SELECT statements are allowed.")
-            )
+            raise ValidationError(self.env._("Invalid query: Only SELECT statements are allowed."))
 
         # Comprehensive forbidden keywords list
         forbidden_keywords = [
             # Data modification
-            "insert", "update", "delete", "truncate", "merge", "upsert",
+            "insert",
+            "update",
+            "delete",
+            "truncate",
+            "merge",
+            "upsert",
             # Schema modification
-            "drop", "alter", "create", "rename",
+            "drop",
+            "alter",
+            "create",
+            "rename",
             # Access control
-            "grant", "revoke", "deny",
+            "grant",
+            "revoke",
+            "deny",
             # Transaction control
-            "commit", "rollback", "begin", "transaction", "savepoint",
+            "commit",
+            "rollback",
+            "begin",
+            "transaction",
+            "savepoint",
             # System functions
-            "execute", "exec", "call", "do",
+            "execute",
+            "exec",
+            "call",
+            "do",
             # Stored procedures (various databases)
-            "xp_", "sp_", "sys.", "information_schema.",
+            "xp_",
+            "sp_",
+            "sys.",
+            "information_schema.",
             # File operations
-            "load_file", "into outfile", "into dumpfile", "bulk insert",
+            "load_file",
+            "into outfile",
+            "into dumpfile",
+            "bulk insert",
             # Database-specific dangerous functions
-            "pg_read_file", "pg_ls_dir", "copy",
+            "pg_read_file",
+            "pg_ls_dir",
+            "copy",
             # Union-based injections prevention
-            "@@", "char(", "chr(", "ascii(", "substring(",
+            "@@",
+            "char(",
+            "chr(",
+            "ascii(",
+            "substring(",
         ]
 
         # Enhanced regex pattern with word boundaries and case insensitivity
         pattern = r"\b(" + "|".join(re.escape(kw) for kw in forbidden_keywords) + r")\b"
         if re.search(pattern, query.lower()):
-            raise ValidationError(
-                self.env._("Invalid query: Contains forbidden keywords or functions.")
-            )
+            raise ValidationError(self.env._("Invalid query: Contains forbidden keywords or functions."))
 
         # Comprehensive comment detection
         comment_patterns = [
@@ -167,12 +175,10 @@ class MarinAiAgent(models.Model):
             r"#.*",  # MySQL comments
             r";.*",  # Statement terminators that could hide commands
         ]
-        
+
         for pattern in comment_patterns:
             if re.search(pattern, query, re.DOTALL):
-                raise ValidationError(
-                    self.env._("Invalid query: Comments and command separators are not allowed.")
-                )
+                raise ValidationError(self.env._("Invalid query: Comments and command separators are not allowed."))
 
         # Check for suspicious patterns
         suspicious_patterns = [
@@ -184,57 +190,51 @@ class MarinAiAgent(models.Model):
             r"load_file\s*\(",  # File reading
             r"into\s+(outfile|dumpfile)",  # File writing
         ]
-        
+
         for pattern in suspicious_patterns:
             if re.search(pattern, query.lower()):
-                raise ValidationError(
-                    self.env._("Invalid query: Suspicious SQL pattern detected.")
-                )
+                raise ValidationError(self.env._("Invalid query: Suspicious SQL pattern detected."))
 
         # Validate table access against whitelist
         query = self._validate_table_access(query)
 
         # Enhanced LIMIT validation and enforcement
         query = self._enforce_result_limits(query)
-        
+
         # Update security check timestamp
-        self.sudo().write({'last_security_check': fields.Datetime.now()})
+        self.sudo().write({"last_security_check": fields.Datetime.now()})
 
         return query
 
     def _validate_table_access(self, query: str) -> str:
         """Validate that query only accesses authorized tables."""
         if not self.model_ids:
-            raise ValidationError(
-                self.env._("No authorized tables configured for this agent.")
-            )
-        
+            raise ValidationError(self.env._("No authorized tables configured for this agent."))
+
         # Get allowed table names from configured models
         allowed_tables = self._get_allowed_tables()
-        
+
         if not allowed_tables:
-            raise ValidationError(
-                self.env._("No valid tables found in agent configuration.")
-            )
-        
+            raise ValidationError(self.env._("No valid tables found in agent configuration."))
+
         # Extract table names from query using regex
         found_tables = self._extract_table_names_from_query(query)
-        
+
         # Check if all found tables are in whitelist
         unauthorized_tables = found_tables - allowed_tables
         if unauthorized_tables:
             # Log security violation
-            self.sudo().write({
-                'security_violations_count': self.security_violations_count + 1
-            })
-            _logger.warning(f"Security violation: Agent {self.id} attempted to access unauthorized tables: {unauthorized_tables}")
+            self.sudo().write({"security_violations_count": self.security_violations_count + 1})
+            _logger.warning(
+                f"Security violation: Agent {self.id} attempted to access unauthorized tables: {unauthorized_tables}"
+            )
             raise ValidationError(
                 self.env._("Query accesses unauthorized tables: %s") % ", ".join(unauthorized_tables)
             )
-        
+
         return query
 
-    @tools.ormcache('self')
+    @tools.ormcache("self")
     def _get_allowed_tables(self):
         """Get set of allowed table names for this agent (cached)."""
         allowed_tables = set()
@@ -251,47 +251,42 @@ class MarinAiAgent(models.Model):
         """Extract table names from SQL query using regex."""
         table_pattern = r"\bfrom\s+([a-zA-Z_][a-zA-Z0-9_]*)"
         join_pattern = r"\bjoin\s+([a-zA-Z_][a-zA-Z0-9_]*)"
-        
+
         found_tables = set()
         for pattern in [table_pattern, join_pattern]:
             matches = re.findall(pattern, query.lower())
             found_tables.update(matches)
-        
+
         return found_tables
 
     def _enforce_result_limits(self, query: str) -> str:
         """Enforce result size limits and add LIMIT if missing."""
         query_lower = query.lower()
-        
+
         # Use agent-specific limits or defaults
         MAX_LIMIT = min(self.max_query_limit or 100, 1000)  # Never exceed 1000
         DEFAULT_LIMIT = min(self.max_query_limit or 100, 100)
-        
+
         # Check if LIMIT is already present
         limit_match = re.search(r"\blimit\s+(\d+)", query_lower)
-        
+
         if limit_match:
             limit_value = int(limit_match.group(1))
             if limit_value > MAX_LIMIT:
                 # Replace with maximum allowed limit
-                query = re.sub(
-                    r"\blimit\s+\d+", 
-                    f"LIMIT {MAX_LIMIT}", 
-                    query, 
-                    flags=re.IGNORECASE
-                )
+                query = re.sub(r"\blimit\s+\d+", f"LIMIT {MAX_LIMIT}", query, flags=re.IGNORECASE)
                 _logger.warning(f"Query limit reduced from {limit_value} to {MAX_LIMIT}")
         else:
             # Add default limit
             query += f" LIMIT {DEFAULT_LIMIT}"
-        
+
         return query
 
     def _run_query(self, sql_query: str):
         """Execute a validated SQL query with rate limiting and security controls."""
         # Apply rate limiting
         self._check_rate_limit()
-        
+
         query = self._validate_query(sql_query)
 
         # Log query execution without exposing sensitive data
@@ -301,16 +296,16 @@ class MarinAiAgent(models.Model):
         try:
             # Record query execution for rate limiting
             self._record_query_execution()
-            
+
             # Use Odoo's cursor for transaction safety
             self.env.cr.execute(query)
             results = self.env.cr.dictfetchall()
-            
+
             # Log successful execution with result count
             _logger.info(f"Query executed successfully, returned {len(results)} records")
-            
+
             return results
-            
+
         except Exception as e:
             _logger.error(f"Query execution failed for agent {self.id}: {type(e).__name__}")
             # Don't log the actual error message to avoid information disclosure
@@ -320,50 +315,48 @@ class MarinAiAgent(models.Model):
         """Check if user has exceeded query rate limits."""
         current_user = self.env.user
         cache_key = f"query_rate_limit_{current_user.id}_{self.id}"
-        
+
         # Get rate limit configuration (queries per minute)
         queries_per_minute = self.queries_per_minute or 10
-        if current_user.has_group('marin_ai.group_marin_ai_admin'):
+        if current_user.has_group("marin_ai.group_marin_ai_admin"):
             queries_per_minute = min(queries_per_minute * 3, 50)  # Higher limit for admins, capped at 50
-        
+
         # Use simple cache-based rate limiting
-        
+
         # Get cached query timestamps
-        cached_data = self.env.cache.get(cache_key, '[]')
+        cached_data = self.env.cache.get(cache_key, "[]")
         try:
             query_times = [datetime.fromisoformat(ts) for ts in json.loads(cached_data)]
         except (json.JSONDecodeError, ValueError):
             query_times = []
-        
+
         # Remove timestamps older than 1 minute
         cutoff_time = datetime.now() - timedelta(minutes=1)
         recent_queries = [ts for ts in query_times if ts > cutoff_time]
-        
+
         # Check if limit exceeded
         if len(recent_queries) >= queries_per_minute:
-            raise UserError(
-                self.env._("Rate limit exceeded. Please wait before executing more queries.")
-            )
+            raise UserError(self.env._("Rate limit exceeded. Please wait before executing more queries."))
 
     def _record_query_execution(self):
         """Record query execution timestamp for rate limiting."""
         current_user = self.env.user
         cache_key = f"query_rate_limit_{current_user.id}_{self.id}"
-        
+
         # Get existing timestamps
-        cached_data = self.env.cache.get(cache_key, '[]')
+        cached_data = self.env.cache.get(cache_key, "[]")
         try:
             query_times = [datetime.fromisoformat(ts) for ts in json.loads(cached_data)]
         except (json.JSONDecodeError, ValueError):
             query_times = []
-        
+
         # Add current timestamp
         query_times.append(datetime.now())
-        
+
         # Keep only last hour of data
         cutoff_time = datetime.now() - timedelta(hours=1)
         query_times = [ts for ts in query_times if ts > cutoff_time]
-        
+
         # Store back in cache
         timestamps_str = json.dumps([ts.isoformat() for ts in query_times])
         self.env.cache[cache_key] = timestamps_str
@@ -380,15 +373,14 @@ class MarinAiAgent(models.Model):
         api_key = self.agent_model_id.get_api_key()
         if not api_key:
             _logger.error(f"Missing API key for agent {self.id}, model {self.agent_model_id.name}")
-            raise UserError(
-                self.env._("API key not configured. Please contact system administrator.")
-            )
+            raise UserError(self.env._("API key not configured. Please contact system administrator."))
 
         try:
             if self.agent_model_id.provider == "google":
                 # Log model initialization without exposing sensitive data
                 _logger.info(f"Initializing Google AI model for agent {self.id}")
                 from langchain_google_genai import ChatGoogleGenerativeAI
+
                 return ChatGoogleGenerativeAI(
                     model=self.agent_model_id.name,
                     temperature=self.agent_model_id.temperature,
@@ -396,15 +388,11 @@ class MarinAiAgent(models.Model):
                     max_output_tokens=self.agent_model_id.max_tokens,
                 )
             else:
-                raise UserError(
-                    self.env._("Provider '%s' not implemented yet.") % self.agent_model_id.provider
-                )
+                raise UserError(self.env._("Provider '%s' not implemented yet.") % self.agent_model_id.provider)
         except Exception as e:
             # Log error without exposing sensitive information
             _logger.error(f"Failed to create LLM instance for agent {self.id}: {type(e).__name__}")
-            raise UserError(
-                self.env._("Failed to initialize AI model. Please check configuration.")
-            )
+            raise UserError(self.env._("Failed to initialize AI model. Please check configuration."))
 
     def _get_tables(self) -> List[str]:
         """Get list of table names from model_ids relation."""
@@ -424,12 +412,13 @@ class MarinAiAgent(models.Model):
 
         # Create prompt template from context
         from langchain_core.prompts import PromptTemplate
+
         prompt_template = PromptTemplate.from_template(self.context)
 
         # Create SQL generation chain without external SQLDatabase dependency
         from langchain_core.runnables import RunnablePassthrough
         from langchain_core.output_parsers import StrOutputParser
-        
+
         sql_query_chain = (
             RunnablePassthrough.assign(table_info=lambda x: table_info) | prompt_template | llm | StrOutputParser()
         )
@@ -481,14 +470,10 @@ Tu tarea es tomar la pregunta original del usuario y los resultados de la base d
         self.ensure_one()
 
         if not self.active:
-            raise UserError(
-                self.env._("Agent '%s' is not active.") % self.name
-            )
+            raise UserError(self.env._("Agent '%s' is not active.") % self.name)
 
         if not user_input or not user_input.strip():
-            raise ValidationError(
-                self.env._("Input cannot be empty.")
-            )
+            raise ValidationError(self.env._("Input cannot be empty."))
 
         try:
             if self.intent in ["inventory", "sales", "custom"] and self.model_ids:
@@ -500,6 +485,7 @@ Tu tarea es tomar la pregunta original del usuario y los resultados de la base d
                 llm = self._create_llm_instance()
                 from langchain_core.prompts import PromptTemplate
                 from langchain_core.output_parsers import StrOutputParser
+
                 prompt = PromptTemplate.from_template(self.context)
                 chain = prompt | llm | StrOutputParser()
 
@@ -518,9 +504,7 @@ Tu tarea es tomar la pregunta original del usuario y los resultados de la base d
         except Exception as e:
             # Log error without exposing sensitive information
             _logger.error(f"Error processing prompt with agent {self.id}: {type(e).__name__}")
-            raise UserError(
-                self.env._("Error processing request. Please try again or contact support.")
-            )
+            raise UserError(self.env._("Error processing request. Please try again or contact support."))
 
     @api.model
     def process_prompt(self, user_input: str, chat_history: Optional[List] = None) -> str:
@@ -596,29 +580,23 @@ Tu tarea es tomar la pregunta original del usuario y los resultados de la base d
         """Locate appropriate agent based on intent."""
         if not intent:
             intent = "CHAT"
-            
+
         # Define intent to agent type mapping
-        intent_mapping = {
-            "INVENTORY_QUERY": "inventory", 
-            "SALES_QUERY": "sales", 
-            "CHAT": "chat"
-        }
+        intent_mapping = {"INVENTORY_QUERY": "inventory", "SALES_QUERY": "sales", "CHAT": "chat"}
 
         # Find active agent of the determined type
         agent_type = intent_mapping.get(intent.upper(), "chat")
-        agent = self.search([
-            ("intent", "=", agent_type), 
-            ("active", "=", True),
-            ("company_id", "in", [self.env.company.id, False])
-        ], limit=1)
+        agent = self.search(
+            [("intent", "=", agent_type), ("active", "=", True)],
+            limit=1,
+        )
 
         if not agent:
             # Fallback to chat agent
-            agent = self.search([
-                ("intent", "=", "chat"), 
-                ("active", "=", True),
-                ("company_id", "in", [self.env.company.id, False])
-            ], limit=1)
+            agent = self.search(
+                [("intent", "=", "chat"), ("active", "=", True)],
+                limit=1,
+            )
 
         if not agent:
             raise UserError(
@@ -626,3 +604,16 @@ Tu tarea es tomar la pregunta original del usuario y los resultados de la base d
             )
 
         return agent
+
+    def action_view_prompts(self):
+        """Action to view prompts for this agent."""
+        self.ensure_one()
+        return {
+            'name': f'Prompts - {self.name}',
+            'type': 'ir.actions.act_window',
+            'res_model': 'marin.ai.prompt',
+            'view_mode': 'list,form',
+            'domain': [('agent_id', '=', self.id)],
+            'context': {'default_agent_id': self.id},
+            'target': 'current',
+        }
