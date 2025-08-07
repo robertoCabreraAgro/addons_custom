@@ -58,6 +58,11 @@ class MarinAiAgent(models.Model):
     last_security_check = fields.Datetime(string="Last Security Check", readonly=True)
     security_violations_count = fields.Integer(string="Security Violations", readonly=True, default=0)
 
+    # Dashboard computed fields
+    prompt_count = fields.Integer(string="Prompts Processed", compute="_compute_prompt_count", store=False)
+    prompts_today = fields.Integer(string="Prompts Today", compute="_compute_prompts_today", store=False)
+    prompts_this_week = fields.Integer(string="Prompts This Week", compute="_compute_prompts_this_week", store=False)
+
     @api.model
     @tools.ormcache("model_names")
     def _get_table_info(self, model_names):
@@ -605,6 +610,30 @@ Tu tarea es tomar la pregunta original del usuario y los resultados de la base d
 
         return agent
 
+    @api.depends("prompt_ids")
+    def _compute_prompt_count(self):
+        """Compute total prompts processed by this agent."""
+        for agent in self:
+            agent.prompt_count = len(agent.prompt_ids)
+
+    def _compute_prompts_today(self):
+        """Compute prompts processed today."""
+        today = fields.Date.today()
+        for agent in self:
+            agent.prompts_today = self.env["marin.ai.prompt"].search_count([
+                ("agent_id", "=", agent.id),
+                ("create_date", ">=", today)
+            ])
+
+    def _compute_prompts_this_week(self):
+        """Compute prompts processed this week."""
+        week_start = fields.Date.today() - timedelta(days=7)
+        for agent in self:
+            agent.prompts_this_week = self.env["marin.ai.prompt"].search_count([
+                ("agent_id", "=", agent.id),
+                ("create_date", ">=", week_start)
+            ])
+
     def action_view_prompts(self):
         """Action to view prompts for this agent."""
         self.ensure_one()
@@ -614,6 +643,40 @@ Tu tarea es tomar la pregunta original del usuario y los resultados de la base d
             'res_model': 'marin.ai.prompt',
             'view_mode': 'list,form',
             'domain': [('agent_id', '=', self.id)],
+            'context': {'default_agent_id': self.id},
+            'target': 'current',
+        }
+
+    def action_view_prompts_today(self):
+        """Action to view prompts processed today for this agent."""
+        self.ensure_one()
+        today = fields.Date.today()
+        return {
+            'name': f'Prompts Today - {self.name}',
+            'type': 'ir.actions.act_window',
+            'res_model': 'marin.ai.prompt',
+            'view_mode': 'list,form',
+            'domain': [
+                ('agent_id', '=', self.id),
+                ('create_date', '>=', today)
+            ],
+            'context': {'default_agent_id': self.id},
+            'target': 'current',
+        }
+
+    def action_view_prompts_week(self):
+        """Action to view prompts processed this week for this agent."""
+        self.ensure_one()
+        week_start = fields.Date.today() - timedelta(days=7)
+        return {
+            'name': f'Prompts This Week - {self.name}',
+            'type': 'ir.actions.act_window',
+            'res_model': 'marin.ai.prompt',
+            'view_mode': 'list,form',
+            'domain': [
+                ('agent_id', '=', self.id),
+                ('create_date', '>=', week_start)
+            ],
             'context': {'default_agent_id': self.id},
             'target': 'current',
         }

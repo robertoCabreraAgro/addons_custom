@@ -108,6 +108,4 @@
         </field>
     </record>
 
-    <!-- Menu Item -->
-    <menuitem id="menu_marin_ai_models" name="AI Models" parent="marin_ai.menu_marin_ai_root" action="action_marin_ai_agent_model" sequence="20"/>
 </odoo>
