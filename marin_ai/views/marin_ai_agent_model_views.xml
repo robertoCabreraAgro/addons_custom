@@ -42,7 +42,6 @@
                     <group>
                         <group string="Basic Configuration">
                             <field name="provider"/>
-                            <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                         <group string="Model Parameters">
                             <field name="temperature" widget="float" options="{'digits': [1, 2]}" 

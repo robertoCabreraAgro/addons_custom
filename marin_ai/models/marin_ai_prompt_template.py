@@ -37,9 +37,6 @@ class MarinAiPromptTemplate(models.Model):
 
     # Computed fields
     display_name = fields.Char(string="Display Name", compute="_compute_display_name", store=True)
-    company_id = fields.Many2one(
-        "res.company", string="Company", default=lambda self: self.env.company, required=True
-    )
 
     @api.depends("name", "category")
     def _compute_display_name(self):
@@ -50,3 +47,15 @@ class MarinAiPromptTemplate(models.Model):
             else:
                 record.display_name = record.name or "New Template"
 
+    def action_view_usage(self):
+        """Action to view usage statistics for this template."""
+        self.ensure_one()
+        return {
+            'name': f'Usage Statistics - {self.name}',
+            'type': 'ir.actions.act_window',
+            'res_model': 'marin.ai.prompt',
+            'view_mode': 'list,form',
+            'domain': [('prompt_template_id', '=', self.id)],
+            'context': {'search_default_template_id': self.id},
+            'target': 'current',
+        }

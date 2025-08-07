@@ -2,13 +2,6 @@
 <odoo>
     <!-- Record Rules for marin.ai.agent -->
     
-    <!-- AI Agents: Company-based access -->
-    <record id="marin_ai_agent_company_rule" model="ir.rule">
-        <field name="name">AI Agents Multi-Company</field>
-        <field name="model_id" ref="model_marin_ai_agent"/>
-        <field name="global" eval="True"/>
-        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
-    </record>
 
     <!-- AI Agents: Only active agents visible to users -->
     <record id="marin_ai_agent_active_rule" model="ir.rule">
@@ -36,13 +29,6 @@
 
     <!-- Record Rules for marin.ai.agent.model -->
     
-    <!-- AI Models: Company-based access -->
-    <record id="marin_ai_agent_model_company_rule" model="ir.rule">
-        <field name="name">AI Models Multi-Company</field>
-        <field name="model_id" ref="model_marin_ai_agent_model"/>
-        <field name="global" eval="True"/>
-        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
-    </record>
 
     <!-- Record Rules for marin.ai.prompt -->
     
@@ -72,11 +58,4 @@
 
     <!-- Record Rules for marin.ai.prompt.template -->
     
-    <!-- Prompt Templates: Company-based access -->
-    <record id="marin_ai_prompt_template_company_rule" model="ir.rule">
-        <field name="name">Prompt Templates Multi-Company</field>
-        <field name="model_id" ref="model_marin_ai_prompt_template"/>
-        <field name="global" eval="True"/>
-        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
-    </record>
 </odoo>

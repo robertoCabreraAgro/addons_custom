@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Test Template Action -->
+    <record id="action_test_template" model="ir.actions.act_window">
+        <field name="name">Preview Template</field>
+        <field name="res_model">marin.ai.prompt</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_prompt_template_id': active_id, 'default_prompt': 'Test preview of template'}</field>
+    </record>
+
     <!-- Prompt Template List View -->
     <record id="view_marin_ai_prompt_template_list" model="ir.ui.view">
         <field name="name">marin.ai.prompt.template.list</field>
@@ -53,7 +62,6 @@
                     <group>
                         <group name="main_config" string="Configuration">
                             <field name="category" widget="selection"/>
-                            <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                         <group name="stats" string="Statistics">
                             <field name="usage_count" readonly="1" widget="integer"/>
@@ -101,7 +109,7 @@
                 <field name="usage_count"/>
                 <field name="active"/>
                 <templates>
-                    <t t-name="kanban-box">
+                    <t t-name="card">
                         <div class="oe_kanban_global_click">
                             <div class="oe_kanban_details">
                                 <strong class="o_kanban_record_title">
