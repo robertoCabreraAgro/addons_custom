@@ -137,8 +137,7 @@
                             class="btn-primary"
                             invisible="not active"
                             context="{'default_user': uid}"/>
-                    <field name="active" widget="boolean_button" 
-                           options="{'terminology': {'string_true': 'Active', 'string_false': 'Inactive'}}"/>
+                    <field name="active" invisible="1" />
                 </header>
                 <sheet>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
@@ -161,12 +160,10 @@
                         </h1>
                     </div>
                     <group>
-                        <group name="main_config" string="Main Configuration">
-                            <field name="sequence" widget="integer"/>
-                            <field name="agent_model_id" 
-                                   options="{'no_create': True, 'no_open': True}"
-                                   widget="many2one"/>
-                        </group>
+                        <field name="sequence" widget="integer"/>
+                        <field name="agent_model_id" 
+                               options="{'no_create': True, 'no_open': True}"
+                               widget="many2one"/>
                     </group>
                     <notebook>
                         <page string="Configuration" name="configuration">
@@ -178,6 +175,7 @@
                                             <li><code>{input}</code> - User's original question</li>
                                             <li><code>{table_info}</code> - Database schema information</li>
                                             <li><code>{user_input}</code> - Processed user input</li>
+                                            <li><code>{limit}</code> - Query result limit (for SQL queries)</li>
                                         </ul>
                                     </div>
                                     <div class="col-6">
