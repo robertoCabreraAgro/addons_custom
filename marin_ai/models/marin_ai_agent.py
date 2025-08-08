@@ -178,7 +178,7 @@ class MarinAiAgent(models.Model):
             r"--.*",  # SQL line comments
             r"/\*.*?\*/",  # SQL block comments
             r"#.*",  # MySQL comments
-            r";.*",  # Statement terminators that could hide commands
+            r";\s*\w+",  # Statement terminators followed by additional commands (not just whitespace)
         ]
 
         for pattern in comment_patterns:
@@ -223,7 +223,7 @@ class MarinAiAgent(models.Model):
             raise ValidationError(self.env._("No valid tables found in agent configuration."))
 
         # Extract table names from query using regex
-        found_tables = self._extract_table_names_from_query(query)
+        found_tables = self._extract_tables_from_query(query)
 
         # Check if all found tables are in whitelist
         unauthorized_tables = found_tables - allowed_tables
@@ -252,17 +252,28 @@ class MarinAiAgent(models.Model):
                 continue
         return allowed_tables
 
-    def _extract_table_names_from_query(self, query):
-        """Extract table names from SQL query using regex."""
-        table_pattern = r"\bfrom\s+([a-zA-Z_][a-zA-Z0-9_]*)"
-        join_pattern = r"\bjoin\s+([a-zA-Z_][a-zA-Z0-9_]*)"
-
-        found_tables = set()
-        for pattern in [table_pattern, join_pattern]:
-            matches = re.findall(pattern, query.lower())
-            found_tables.update(matches)
-
-        return found_tables
+    def _extract_tables_from_query(self, sql_query):
+        """Extracts table names from SQL query as a set, ignoring aliases.
+        
+        Args:
+            sql_query (str): SQL query to extract table names from
+            
+        Returns:
+            set: Set of table names found
+        """
+        pattern = r'(?:^|[\s\n])(?:FROM|(?:INNER\s+|LEFT\s+|RIGHT\s+|FULL\s+|CROSS\s+)?JOIN)\s+([a-zA-Z_][a-zA-Z0-9_.]*)\s*(?:\s+(?:AS\s+)?[a-zA-Z_][a-zA-Z0-9_]*)?'
+        
+        tables = set()
+        for match in re.finditer(pattern, sql_query, re.IGNORECASE | re.MULTILINE):
+            # Skip if inside a function (has unclosed parenthesis before)
+            context = sql_query[max(0, match.start() - 10):match.start()].upper()
+            if '(' in context and ')' not in context:
+                continue
+                
+            table_name = match.group(1).split('.')[-1]  # Take only table name if schema.table
+            tables.add(table_name)
+        
+        return tables
 
     def _enforce_result_limits(self, query: str) -> str:
         """Enforce result size limits and add LIMIT if missing."""
@@ -282,7 +293,8 @@ class MarinAiAgent(models.Model):
                 query = re.sub(r"\blimit\s+\d+", f"LIMIT {MAX_LIMIT}", query, flags=re.IGNORECASE)
                 _logger.warning(f"Query limit reduced from {limit_value} to {MAX_LIMIT}")
         else:
-            # Add default limit
+            # Add default limit, removing trailing semicolon if present
+            query = query.rstrip(';').rstrip()
             query += f" LIMIT {DEFAULT_LIMIT}"
 
         return query
@@ -319,17 +331,17 @@ class MarinAiAgent(models.Model):
     def _check_rate_limit(self):
         """Check if user has exceeded query rate limits."""
         current_user = self.env.user
-        cache_key = f"query_rate_limit_{current_user.id}_{self.id}"
 
         # Get rate limit configuration (queries per minute)
         queries_per_minute = self.queries_per_minute or 10
         if current_user.has_group("marin_ai.group_marin_ai_admin"):
             queries_per_minute = min(queries_per_minute * 3, 50)  # Higher limit for admins, capped at 50
 
-        # Use simple cache-based rate limiting
-
+        # Use system parameters for rate limiting (database-based approach)
+        param_key = f"marin_ai.rate_limit_{current_user.id}_{self.id}"
+        
         # Get cached query timestamps
-        cached_data = self.env.cache.get(cache_key, "[]")
+        cached_data = self.env["ir.config_parameter"].sudo().get_param(param_key, "[]")
         try:
             query_times = [datetime.fromisoformat(ts) for ts in json.loads(cached_data)]
         except (json.JSONDecodeError, ValueError):
@@ -346,10 +358,10 @@ class MarinAiAgent(models.Model):
     def _record_query_execution(self):
         """Record query execution timestamp for rate limiting."""
         current_user = self.env.user
-        cache_key = f"query_rate_limit_{current_user.id}_{self.id}"
+        param_key = f"marin_ai.rate_limit_{current_user.id}_{self.id}"
 
         # Get existing timestamps
-        cached_data = self.env.cache.get(cache_key, "[]")
+        cached_data = self.env["ir.config_parameter"].sudo().get_param(param_key, "[]")
         try:
             query_times = [datetime.fromisoformat(ts) for ts in json.loads(cached_data)]
         except (json.JSONDecodeError, ValueError):
@@ -362,9 +374,9 @@ class MarinAiAgent(models.Model):
         cutoff_time = datetime.now() - timedelta(hours=1)
         query_times = [ts for ts in query_times if ts > cutoff_time]
 
-        # Store back in cache
+        # Store back in system parameters
         timestamps_str = json.dumps([ts.isoformat() for ts in query_times])
-        self.env.cache[cache_key] = timestamps_str
+        self.env["ir.config_parameter"].sudo().set_param(param_key, timestamps_str)
 
     def _create_llm_instance(self):
         """Create LLM instance for this agent with secure API key handling."""
@@ -373,7 +385,6 @@ class MarinAiAgent(models.Model):
 
         if not self.agent_model_id.api_key_env_var:
             raise UserError(self.env._("No API key environment variable configured for the AI model."))
-
         # Get API key using secure method
         api_key = self.agent_model_id.get_api_key()
         if not api_key:
@@ -433,11 +444,23 @@ class MarinAiAgent(models.Model):
         answer_prompt = PromptTemplate.from_template(final_template)
         answer_chain = answer_prompt | llm | StrOutputParser()
 
+        # Create a closure that captures the agent instance
+        def execute_sql_query(x):
+            """Execute SQL query with proper context."""
+            # Clean SQL query from markdown formatting
+            sql_query = x["sql_query"].strip()
+            if sql_query.startswith("```sql"):
+                sql_query = sql_query.replace("```sql", "").replace("```", "").strip()
+            elif sql_query.startswith("```"):
+                sql_query = sql_query.replace("```", "").strip()
+            
+            return self._run_query(sql_query)
+
         # Complete chain
         chain = (
             RunnablePassthrough.assign(question=lambda x: x["input"])
             .assign(sql_query=sql_query_chain)
-            .assign(result=lambda x: self._run_query(x["sql_query"]))
+            .assign(result=execute_sql_query)
             | answer_chain
         )
         return chain
@@ -479,7 +502,6 @@ Tu tarea es tomar la pregunta original del usuario y los resultados de la base d
 
         if not user_input or not user_input.strip():
             raise ValidationError(self.env._("Input cannot be empty."))
-
         try:
             if self.intent in ["inventory", "sales", "custom"] and self.model_ids:
                 # SQL-enabled agent
@@ -506,10 +528,10 @@ Tu tarea es tomar la pregunta original del usuario y los resultados de la base d
         except (ValidationError, UserError):
             # Re-raise Odoo exceptions as-is
             raise
-        except Exception as e:
-            # Log error without exposing sensitive information
-            _logger.error(f"Error processing prompt with agent {self.id}: {type(e).__name__}")
-            raise UserError(self.env._("Error processing request. Please try again or contact support."))
+        #except Exception as e:
+        #    # Log error without exposing sensitive information
+        #    _logger.error(f"Error processing prompt with agent {self.id}: {type(e).__name__}")
+        #    raise UserError(self.env._("Error processing request. Please try again or contact support."))
 
     @api.model
     def process_prompt(self, user_input: str, chat_history: Optional[List] = None) -> str:
@@ -620,31 +642,29 @@ Tu tarea es tomar la pregunta original del usuario y los resultados de la base d
         """Compute prompts processed today."""
         today = fields.Date.today()
         for agent in self:
-            agent.prompts_today = self.env["marin.ai.prompt"].search_count([
-                ("agent_id", "=", agent.id),
-                ("create_date", ">=", today)
-            ])
+            agent.prompts_today = self.env["marin.ai.prompt"].search_count(
+                [("agent_id", "=", agent.id), ("create_date", ">=", today)]
+            )
 
     def _compute_prompts_this_week(self):
         """Compute prompts processed this week."""
         week_start = fields.Date.today() - timedelta(days=7)
         for agent in self:
-            agent.prompts_this_week = self.env["marin.ai.prompt"].search_count([
-                ("agent_id", "=", agent.id),
-                ("create_date", ">=", week_start)
-            ])
+            agent.prompts_this_week = self.env["marin.ai.prompt"].search_count(
+                [("agent_id", "=", agent.id), ("create_date", ">=", week_start)]
+            )
 
     def action_view_prompts(self):
         """Action to view prompts for this agent."""
         self.ensure_one()
         return {
-            'name': f'Prompts - {self.name}',
-            'type': 'ir.actions.act_window',
-            'res_model': 'marin.ai.prompt',
-            'view_mode': 'list,form',
-            'domain': [('agent_id', '=', self.id)],
-            'context': {'default_agent_id': self.id},
-            'target': 'current',
+            "name": f"Prompts - {self.name}",
+            "type": "ir.actions.act_window",
+            "res_model": "marin.ai.prompt",
+            "view_mode": "list,form",
+            "domain": [("agent_id", "=", self.id)],
+            "context": {"default_agent_id": self.id},
+            "target": "current",
         }
 
     def action_view_prompts_today(self):
@@ -652,16 +672,13 @@ Tu tarea es tomar la pregunta original del usuario y los resultados de la base d
         self.ensure_one()
         today = fields.Date.today()
         return {
-            'name': f'Prompts Today - {self.name}',
-            'type': 'ir.actions.act_window',
-            'res_model': 'marin.ai.prompt',
-            'view_mode': 'list,form',
-            'domain': [
-                ('agent_id', '=', self.id),
-                ('create_date', '>=', today)
-            ],
-            'context': {'default_agent_id': self.id},
-            'target': 'current',
+            "name": f"Prompts Today - {self.name}",
+            "type": "ir.actions.act_window",
+            "res_model": "marin.ai.prompt",
+            "view_mode": "list,form",
+            "domain": [("agent_id", "=", self.id), ("create_date", ">=", today)],
+            "context": {"default_agent_id": self.id},
+            "target": "current",
         }
 
     def action_view_prompts_week(self):
@@ -669,14 +686,24 @@ Tu tarea es tomar la pregunta original del usuario y los resultados de la base d
         self.ensure_one()
         week_start = fields.Date.today() - timedelta(days=7)
         return {
-            'name': f'Prompts This Week - {self.name}',
-            'type': 'ir.actions.act_window',
-            'res_model': 'marin.ai.prompt',
-            'view_mode': 'list,form',
-            'domain': [
-                ('agent_id', '=', self.id),
-                ('create_date', '>=', week_start)
-            ],
-            'context': {'default_agent_id': self.id},
-            'target': 'current',
+            "name": f"Prompts This Week - {self.name}",
+            "type": "ir.actions.act_window",
+            "res_model": "marin.ai.prompt",
+            "view_mode": "list,form",
+            "domain": [("agent_id", "=", self.id), ("create_date", ">=", week_start)],
+            "context": {"default_agent_id": self.id},
+            "target": "current",
+        }
+
+    def action_view_security_violations(self):
+        """Action to view security violations for this agent."""
+        self.ensure_one()
+        return {
+            "name": f"Security Violations - {self.name}",
+            "type": "ir.actions.act_window",
+            "res_model": "marin.ai.prompt",
+            "view_mode": "list,form",
+            "domain": [("agent_id", "=", self.id)],
+            "context": {"default_agent_id": self.id, "search_default_security_violations": 1},
+            "target": "current",
         }
