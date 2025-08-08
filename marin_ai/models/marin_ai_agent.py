@@ -496,7 +496,7 @@ Tu tarea es tomar la pregunta original del usuario y los resultados de la base d
 **Respuesta Final:**
 """
 
-    def process_prompt_for_agent(self, user_input: str, **kwargs) -> str:
+    def execute(self, user_input: str, **kwargs) -> str:
         """Process prompt through this specific agent."""
         self.ensure_one()
 
@@ -531,13 +531,13 @@ Tu tarea es tomar la pregunta original del usuario y los resultados de la base d
         except (ValidationError, UserError):
             # Re-raise Odoo exceptions as-is
             raise
-        #except Exception as e:
-        #    # Log error without exposing sensitive information
-        #    _logger.error(f"Error processing prompt with agent {self.id}: {type(e).__name__}")
-        #    raise UserError(self.env._("Error processing request. Please try again or contact support."))
+        except Exception as e:
+            # Log error without exposing sensitive information
+            _logger.error(f"Error processing prompt with agent {self.id}: {type(e).__name__}")
+            raise UserError(self.env._("Error processing request. Please try again or contact support."))
 
     @api.model
-    def process_prompt(self, user_input: str, chat_history: Optional[List] = None) -> str:
+    def orchestrate(self, user_input: str, chat_history: Optional[List] = None) -> str:
         """Main method to receive prompt and return response."""
         if not user_input or not user_input.strip():
             return "Please provide a valid question or prompt."
@@ -565,7 +565,7 @@ Tu tarea es tomar la pregunta original del usuario y los resultados de la base d
             # Step 3: Send to agent for processing
             _logger.info(f"Routing to agent: {agent.name}")
 
-            response = agent.process_prompt_for_agent(
+            response = agent.execute(
                 user_input,
                 history="\n".join(
                     [
@@ -600,7 +600,7 @@ Tu tarea es tomar la pregunta original del usuario y los resultados de la base d
             return "CHAT"
 
         try:
-            response = orchestrator.process_prompt_for_agent(user_input)
+            response = orchestrator.execute(user_input)
             return response.strip().upper()
         except Exception as e:
             _logger.warning(f"Intent classification failed: {e}")
