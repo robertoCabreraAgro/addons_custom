@@ -103,3 +103,6 @@ access_sale_target_user,sale.target.user,marin.model_sale_target,sales_team.grou
 access_sale_target_manager,sale.target.manager,marin.model_sale_target,sales_team.group_sale_manager,1,1,1,1
 access_sale_target_line_user,sale.target.line.user,marin.model_sale_target_line,sales_team.group_sale_salesman,1,0,0,0
 access_sale_target_line_manager,sale.target.line.manager,marin.model_sale_target_line,sales_team.group_sale_manager,1,1,1,1
+access_account_move_line_fleet_manager,account.move.line fleet manager,account.model_account_move_line,fleet.fleet_group_manager,1,0,0,0
+access_account_move_fleet_manager,account.move fleet manager,account.model_account_move,fleet.fleet_group_manager,1,0,0,0
+access_account_partial_reconcile_fleet_manager,account.partial.reconcile fleet manager,account.model_account_partial_reconcile,fleet.fleet_group_manager,1,0,0,0

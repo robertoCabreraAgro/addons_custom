@@ -84,4 +84,16 @@
         <field name="perm_unlink" eval="0"/>
     </record>
 
+    <!-- Fleet Manager Rule for Account Moves with Vehicle Lines -->
+    <record id="account_move_fleet_manager_rule" model="ir.rule">
+        <field name="name">Fleet Manager: Account Moves with Vehicle Lines</field>
+        <field name="model_id" ref="account.model_account_move"/>
+        <field name="domain_force">[('line_ids.vehicle_id', '!=', False)]</field>
+        <field name="groups" eval="[(4, ref('fleet.fleet_group_manager'))]"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+
 </odoo>
