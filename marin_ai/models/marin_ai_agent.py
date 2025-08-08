@@ -41,7 +41,7 @@ class MarinAiAgent(models.Model):
         string="Context",
         required=True,
         tracking=True,
-        help="Prompt template with placeholders like {input}, {table_info}, etc.",
+        help="Prompt template with placeholders like {input}, {table_info}, {limit}, etc.",
     )
 
     # Relations
@@ -426,10 +426,13 @@ class MarinAiAgent(models.Model):
         # Convert to tuple for caching (lists are not hashable)
         table_info = self._get_table_info(tuple(sorted(model_names)))
 
-        # Create prompt template from context
+        # Create prompt template from context with limit placeholder replacement
         from langchain_core.prompts import PromptTemplate
 
-        prompt_template = PromptTemplate.from_template(self.context)
+        # Replace {limit} placeholder with max_query_limit value
+        limit_value = self.max_query_limit or 100
+        context_with_limit = self.context.replace("{limit}", str(limit_value))
+        prompt_template = PromptTemplate.from_template(context_with_limit)
 
         # Create SQL generation chain without external SQLDatabase dependency
         from langchain_core.runnables import RunnablePassthrough

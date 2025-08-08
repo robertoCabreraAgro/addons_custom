@@ -22,8 +22,7 @@
         <field name="arch" type="xml">
             <form string="AI Model">
                 <header>
-                    <field name="active" widget="boolean_button" 
-                           options="{'terminology': {'string_true': 'Active', 'string_false': 'Archived'}}"/>
+                    <field name="active" invisible="1" />
                 </header>
                 <sheet>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>

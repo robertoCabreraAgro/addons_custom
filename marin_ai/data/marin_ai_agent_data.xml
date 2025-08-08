@@ -39,7 +39,7 @@ Basado en el esquema de la base de datos a continuación, las reglas y la pregun
 
 **Reglas Importantes:**
 - Genera SOLO la consulta SQL, sin explicaciones, sin markdown, solo el código SQL.
-- Limita tus resultados a {top_k} filas a menos que el usuario lo pida explícitamente.
+- Limita tus resultados a {limit} filas a menos que el usuario lo pida explícitamente.
 - Las tablas y campos usan snake_case (ej: product_template, stock_quant).
 - Los campos de texto traducibles (como 'name') son de tipo jsonb. Para obtener el nombre en español o inglés, usa:
   `COALESCE(name->>'es_ES', name->>'en_US')`
@@ -86,7 +86,7 @@ Basado en el esquema de la base de datos, las reglas y la pregunta del usuario, 
 
 **Reglas Importantes:**
 - Genera SOLO la consulta SQL, sin explicaciones, sin markdown, solo el código SQL.
-- Limita tus resultados a {top_k} filas a menos que el usuario lo pida.
+- Limita tus resultados a {limit} filas a menos que el usuario lo pida.
 - Los campos de texto traducibles (como 'name') son de tipo jsonb. Usa `COALESCE(name->>'es_ES', name->>'en_US')` para obtener el nombre.
 - Para búsquedas de texto no exactas en campos JSONB traducibles, usa: 
   `COALESCE(name->>'es_ES', name->>'en_US') ILIKE '%texto%'`
