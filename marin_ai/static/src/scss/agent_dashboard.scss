@@ -1,5 +1,34 @@
 /* AI Agent Dashboard Styles */
 
+.o_kanban_dashboard {
+    .o_kanban_record {
+        .row {
+            margin-left: 0;
+            margin-right: 0;
+            
+            > * {
+                padding-left: 0.25rem;
+                padding-right: 0.25rem;
+            }
+        }
+        
+        .d-flex {
+            align-items: center;
+            min-height: 1.5rem;
+            
+            span {
+                font-size: 0.85rem;
+                color: #495057;
+            }
+            
+            field {
+                font-weight: 600;
+                color: #212529;
+            }
+        }
+    }
+}
+
 .o_agent_dashboard {
     .oe_kanban_global_click {
         cursor: pointer;

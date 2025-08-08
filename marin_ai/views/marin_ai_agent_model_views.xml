@@ -50,14 +50,8 @@
                         </group>
                     </group>
                     <group string="API Configuration">
-                        <group string="Environment Variable">
-                            <field name="api_key_env_var" placeholder="e.g., GEMINI_API_KEY, OPENAI_API_KEY" 
-                                   help="Environment variable name containing the API key"/>
-                        </group>
-                        <group string="Direct Configuration" groups="base.group_system">
-                            <field name="api_key_encrypted" password="True" 
-                                   help="Encrypted API key stored in database (overrides environment variable)"/>
-                        </group>
+                        <field name="api_key_env_var" placeholder="e.g., GEMINI_API_KEY, OPENAI_API_KEY" 
+                               help="Environment variable name containing the API key"/>
                     </group>
                     <group string="Description">
                         <field name="description" nolabel="1" 

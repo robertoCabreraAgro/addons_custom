@@ -1,8 +1,6 @@
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
-import base64
 import os
-from cryptography.fernet import Fernet
 
 
 class MarinAiAgentModel(models.Model):
@@ -31,11 +29,6 @@ class MarinAiAgentModel(models.Model):
         default="GEMINI_API_KEY",
         help="Environment variable name for API key",
         tracking=True,
-    )
-    api_key_encrypted = fields.Char(
-        string="Encrypted API Key",
-        help="Encrypted API key stored in database (optional, overrides environment variable)",
-        groups="base.group_system",
     )
     temperature = fields.Float(
         string="Default Temperature",
@@ -88,46 +81,9 @@ class MarinAiAgentModel(models.Model):
                     % (record.name, record.provider)
                 )
 
-    def _get_encryption_key(self):
-        """Get or create encryption key for API keys."""
-        # Use system parameter to store encryption key
-        key_param = self.env["ir.config_parameter"].sudo().get_param("marin_ai.encryption_key")
-
-        if not key_param:
-            # Generate new key
-            key = Fernet.generate_key()
-            key_b64 = base64.b64encode(key).decode()
-            self.env["ir.config_parameter"].sudo().set_param("marin_ai.encryption_key", key_b64)
-            return key
-        else:
-            return base64.b64decode(key_param.encode())
-
-    def set_api_key(self, api_key):
-        """Encrypt and store API key."""
-        if not api_key:
-            self.api_key_encrypted = False
-            return
-
-        key = self._get_encryption_key()
-        cipher_suite = Fernet(key)
-        encrypted_key = cipher_suite.encrypt(api_key.encode())
-        self.api_key_encrypted = base64.b64encode(encrypted_key).decode()
 
     def get_api_key(self):
-        """Decrypt and return API key."""
-        # First try encrypted key from database
-        if self.api_key_encrypted:
-            try:
-                key = self._get_encryption_key()
-                cipher_suite = Fernet(key)
-                encrypted_key = base64.b64decode(self.api_key_encrypted.encode())
-                return cipher_suite.decrypt(encrypted_key).decode()
-            except Exception:
-                # Fall back to environment variable if decryption fails
-                pass
-
-        # Fall back to environment variable
+        """Get API key from environment variable."""
         if self.api_key_env_var:
             return os.getenv(self.api_key_env_var)
-
         return None

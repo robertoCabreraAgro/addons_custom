@@ -51,11 +51,11 @@ class MarinAiPromptTemplate(models.Model):
         """Action to view usage statistics for this template."""
         self.ensure_one()
         return {
-            'name': f'Usage Statistics - {self.name}',
-            'type': 'ir.actions.act_window',
-            'res_model': 'marin.ai.prompt',
-            'view_mode': 'list,form',
-            'domain': [('prompt_template_id', '=', self.id)],
-            'context': {'search_default_template_id': self.id},
-            'target': 'current',
+            "name": f"Usage Statistics - {self.name}",
+            "type": "ir.actions.act_window",
+            "res_model": "marin.ai.prompt",
+            "view_mode": "list,form",
+            "domain": [("prompt_template_id", "=", self.id)],
+            "context": {"search_default_template_id": self.id},
+            "target": "current",
         }

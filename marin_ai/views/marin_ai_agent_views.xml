@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Test Agent Action -->
-    <record id="action_test_agent" model="ir.actions.act_window">
-        <field name="name">Test AI Agent</field>
-        <field name="res_model">marin.ai.prompt</field>
-        <field name="view_mode">form</field>
-        <field name="target">new</field>
-        <field name="context">{'default_agent_id': active_id, 'default_prompt': 'Test prompt for agent'}</field>
-    </record>
 
     <!-- AI Agent List View -->
     <record id="view_marin_ai_agent_list" model="ir.ui.view">
@@ -39,7 +31,7 @@
                         icon="fa-play-circle" 
                         class="btn-link"
                         invisible="not active"
-                        context="{'default_agent_id': id}"/>
+                        context="{'default_agent_id': id, 'default_user': uid}"/>
             </list>
         </field>
     </record>
@@ -80,7 +72,7 @@
                                         <span>Actions</span>
                                     </h5>
                                     <div role="menuitem">
-                                        <a name="%(action_test_agent)d" type="action">Test Agent</a>
+                                        <a name="%(action_test_agent)d" type="action" context="{'default_user': uid}">Test Agent</a>
                                     </div>
                                     <div role="menuitem" t-if="widget.editable">
                                         <a type="edit">Configuration</a>
@@ -98,39 +90,29 @@
                             <field name="agent_model_id" class="d-block"/>
                             <div t-if="!selection_mode" class="row mt-3">
                                 <div class="col-6">
-                                    <button class="btn btn-primary" name="action_view_prompts" type="object">
-                                        <span t-if="record.prompt_count.raw_value > 0">
-                                            <field name="prompt_count"/>
-                                            <t> Total Prompts</t>
-                                        </span>
-                                        <span t-else="">Open</span>
+                                    <button class="btn btn-primary" name="%(action_test_agent)d" type="action" context="{'default_agent_id': id, 'default_user': uid}">
+                                        <i class="fa fa-play-circle"/> Test Agent
                                     </button>
                                 </div>
                                 <div class="col-6">
-                                    <div t-if="record.prompts_today.raw_value > 0" class="row">
-                                        <a class="col-8 offset-4 pe-0 text-truncate" name="action_view_prompts_today" type="object">
-                                            <div class="row">
-                                                <span class="col-6">Today</span>
-                                                <field class="col-2 text-end" name="prompts_today"/>
-                                            </div>
+                                    <div class="row mb-1">
+                                        <a class="col-12 d-flex justify-content-between text-truncate" name="action_view_prompts_today" type="object">
+                                            <span>Today</span>
+                                            <field name="prompts_today"/>
                                         </a>
                                     </div>
                                     
-                                    <div t-if="record.prompts_this_week.raw_value > 0" class="row">
-                                        <a class="col-8 offset-4 pe-0 text-truncate" name="action_view_prompts_week" type="object">
-                                            <div class="row">
-                                                <span class="col-6">This Week</span>
-                                                <field class="col-2 text-end" name="prompts_this_week"/>
-                                            </div>
+                                    <div class="row mb-1">
+                                        <a class="col-12 d-flex justify-content-between text-truncate" name="action_view_prompts_week" type="object">
+                                            <span>This Week</span>
+                                            <field name="prompts_this_week"/>
                                         </a>
                                     </div>
                                     
-                                    <div t-if="record.security_violations_count.raw_value > 0" class="row">
-                                        <a class="col-8 offset-4 pe-0 text-truncate" name="action_view_security_violations" type="object">
-                                            <div class="row">
-                                                <span class="col-6">Security Issues</span>
-                                                <field class="col-2 text-end" name="security_violations_count"/>
-                                            </div>
+                                    <div class="row mb-1">
+                                        <a class="col-12 d-flex justify-content-between text-truncate" name="action_view_security_violations" type="object">
+                                            <span>Security Issues</span>
+                                            <field name="security_violations_count"/>
                                         </a>
                                     </div>
                                 </div>
@@ -153,7 +135,8 @@
                             string="Test Agent" 
                             type="action" 
                             class="btn-primary"
-                            invisible="not active"/>
+                            invisible="not active"
+                            context="{'default_user': uid}"/>
                     <field name="active" widget="boolean_button" 
                            options="{'terminology': {'string_true': 'Active', 'string_false': 'Inactive'}}"/>
                 </header>
@@ -179,24 +162,38 @@
                     </div>
                     <group>
                         <group name="main_config" string="Main Configuration">
-                            <field name="intent" widget="selection"/>
                             <field name="sequence" widget="integer"/>
                             <field name="agent_model_id" 
                                    options="{'no_create': True, 'no_open': True}"
                                    widget="many2one"/>
                         </group>
-                        <group name="advanced_config" string="Advanced Settings">
-                        </group>
                     </group>
                     <notebook>
                         <page string="Configuration" name="configuration">
-                            <group>
-                                <label for="context" string="Agent Prompt Template"/>
-                                <field name="context" 
-                                       widget="ace" 
-                                       options="{'mode': 'markdown', 'theme': 'github', 'fontSize': 14, 'showPrintMargin': false, 'wrap': true}"
-                                       placeholder="Enter the agent prompt template with placeholders like {input}, {table_info}, {user_input}, {history}, etc.&#10;&#10;Example:&#10;You are a helpful AI assistant for {intent} queries.&#10;Use the following context: {table_info}&#10;&#10;User question: {input}&#10;Please provide a clear and accurate response."/>
-                            </group>
+                            <div class="alert alert-info" role="alert" style="margin-bottom: 15px;">
+                                <strong>Available placeholders:</strong>
+                                <div class="row mt-2">
+                                    <div class="col-6">
+                                        <ul class="mb-0" style="font-size: 0.9em;">
+                                            <li><code>{input}</code> - User's original question</li>
+                                            <li><code>{table_info}</code> - Database schema information</li>
+                                            <li><code>{user_input}</code> - Processed user input</li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-6">
+                                        <ul class="mb-0" style="font-size: 0.9em;">
+                                            <li><code>{history}</code> - Conversation history</li>
+                                            <li><code>{intent}</code> - Classified user intent</li>
+                                            <li><code>{result}</code> - Query results (for response templates)</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <field name="context" 
+                                   widget="ace" 
+                                   options="{'type': 'markdown', 'theme': 'github', 'fontSize': 14, 'showPrintMargin': false, 'wrap': true, 'minLines': 25, 'maxLines': 50}"
+                                   nolabel="1"
+                                   placeholder="Enter the agent prompt template with placeholders...&#10;&#10;Example:&#10;You are a helpful AI assistant specialized in {intent} operations.&#10;&#10;Available database context:&#10;{table_info}&#10;&#10;User question: {input}&#10;&#10;Please provide a detailed and accurate response based on the available data."/>
                         </page>
                         <page string="Security Settings" name="security" groups="marin_ai.group_marin_ai_admin">
                             <group>
