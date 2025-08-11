@@ -14,40 +14,9 @@
                 <field name="move_id" />
                 <field name="company_id" />
                 <separator />
-                <!-- Years Filter -->
-                <filter name="year_2023" string="2023"
-                    domain="[('invoice_date', '&gt;=', '2023-01-01'), ('invoice_date', '&lt;=', '2023-12-31')]" />
-                <filter name="year_2024" string="2024"
-                    domain="[('invoice_date', '&gt;=', '2024-01-01'), ('invoice_date', '&lt;=', '2024-12-31')]" />
-                <filter name="year_2025" string="2025"
-                    domain="[('invoice_date', '&gt;=', '2025-01-01'), ('invoice_date', '&lt;=', '2025-12-31')]" />
-                <separator />
-                <!-- Months Filter -->
-                <filter string="January" name="month_01"
-                    domain="[('invoice_date', '&gt;=', datetime.datetime.now().strftime('%Y-01-01')), ('invoice_date', '&lt;=', datetime.datetime.now().strftime('%Y-01-31'))]" />
-                <filter string="February" name="month_02"
-                    domain="[('invoice_date', '&gt;=', datetime.datetime.now().strftime('%Y-02-01')), ('invoice_date', '&lt;=', datetime.datetime.now().strftime('%Y-02-28'))]" />
-                <filter string="March" name="month_03"
-                    domain="[('invoice_date', '&gt;=', datetime.datetime.now().strftime('%Y-03-01')), ('invoice_date', '&lt;=', datetime.datetime.now().strftime('%Y-03-31'))]" />
-                <filter string="April" name="month_04"
-                    domain="[('invoice_date', '&gt;=', datetime.datetime.now().strftime('%Y-04-01')), ('invoice_date', '&lt;=', datetime.datetime.now().strftime('%Y-04-30'))]" />
-                <filter string="May" name="month_05"
-                    domain="[('invoice_date', '&gt;=', datetime.datetime.now().strftime('%Y-05-01')), ('invoice_date', '&lt;=', datetime.datetime.now().strftime('%Y-05-31'))]" />
-                <filter string="June" name="month_06"
-                    domain="[('invoice_date', '&gt;=', datetime.datetime.now().strftime('%Y-06-01')), ('invoice_date', '&lt;=', datetime.datetime.now().strftime('%Y-06-30'))]" />
-                <filter string="July" name="month_07"
-                    domain="[('invoice_date', '&gt;=', datetime.datetime.now().strftime('%Y-07-01')), ('invoice_date', '&lt;=', datetime.datetime.now().strftime('%Y-07-31'))]" />
-                <filter string="August" name="month_08"
-                    domain="[('invoice_date', '&gt;=', datetime.datetime.now().strftime('%Y-08-01')), ('invoice_date', '&lt;=', datetime.datetime.now().strftime('%Y-08-31'))]" />
-                <filter string="September" name="month_09"
-                    domain="[('invoice_date', '&gt;=', datetime.datetime.now().strftime('%Y-09-01')), ('invoice_date', '&lt;=', datetime.datetime.now().strftime('%Y-09-30'))]" />
-                <filter string="October" name="month_10"
-                    domain="[('invoice_date', '&gt;=', datetime.datetime.now().strftime('%Y-10-01')), ('invoice_date', '&lt;=', datetime.datetime.now().strftime('%Y-10-31'))]" />
-                <filter string="November" name="month_11"
-                    domain="[('invoice_date', '&gt;=', datetime.datetime.now().strftime('%Y-11-01')), ('invoice_date', '&lt;=', datetime.datetime.now().strftime('%Y-11-30'))]" />
-                <filter string="December" name="month_12"
-                    domain="[('invoice_date', '&gt;=', datetime.datetime.now().strftime('%Y-12-01')), ('invoice_date', '&lt;=', datetime.datetime.now().strftime('%Y-12-31'))]" />
-                <separator />
+                <!-- Date Filter -->
+                <filter name="filter_invoice_date" string="Invoice Date"
+                    date="invoice_date" default_period="month"/>
                 <!-- Channel Filters -->
                 <filter name="invoices" string="Invoices"
                     domain="[('sale_channel', '=', 'invoice')]" />
