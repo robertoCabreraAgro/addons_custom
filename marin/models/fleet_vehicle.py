@@ -134,7 +134,7 @@ class FleetVehicle(models.Model):
         return super(FleetVehicle, self - gps_vehicles)._compute_odometer()
 
     def _compute_fuel_count(self):
-        fuel_product_category = self.env.ref("marin.product_category_vehicle_fuel")
+        fuel_product_category = self.env.ref("marin.product_category_fuel")
         for vehicle in self:
             vehicle.fuel_count = len(
                 vehicle.log_ids.filtered(
@@ -144,7 +144,7 @@ class FleetVehicle(models.Model):
 
     def _compute_highway_pass_count(self):
         highway_pass_product_category = self.env.ref(
-            "marin.product_category_vehicle_highway_pass"
+            "marin.product_category_highway_toll"
         )
         for vehicle in self:
             vehicle.highway_pass_count = len(
@@ -192,7 +192,7 @@ class FleetVehicle(models.Model):
     @api.depends("log_ids.amount", "log_ids.state")
     def _compute_fuel_card_balance(self):
         """Calculates the current balance based on fuel credit/debit records"""
-        fuel_product_category = self.env.ref("marin.product_category_vehicle_fuel")
+        fuel_product_category = self.env.ref("marin.product_category_fuel")
         for vehicle in self:
             # Find all fuel log records associated with this vehicle (only done state)
             fuel_logs = self.env["fleet.vehicle.log"].search(
@@ -213,7 +213,7 @@ class FleetVehicle(models.Model):
     def _compute_highway_pass_balance(self):
         """Compute current balance based on toll debit/credit records"""
         highway_pass_product_category = self.env.ref(
-            "marin.product_category_vehicle_highway_pass"
+            "marin.product_category_highway_toll"
         )
         for vehicle in self:
             # Find all toll records associated with this vehicle
@@ -320,7 +320,7 @@ class FleetVehicle(models.Model):
 
     def action_view_fuel_logs(self):
         self.ensure_one()
-        fuel_product_category = self.env.ref("marin.product_category_vehicle_fuel")
+        fuel_product_category = self.env.ref("marin.product_category_fuel")
         action = self.env["ir.actions.act_window"]._for_xml_id(
             "fleet.action_fleet_vehicle_log"
         )
@@ -340,7 +340,7 @@ class FleetVehicle(models.Model):
     def action_view_highway_pass_logs(self):
         self.ensure_one()
         highway_pass_product_category = self.env.ref(
-            "marin.product_category_vehicle_highway_pass"
+            "marin.product_category_highway_toll"
         )
         action = self.env["ir.actions.act_window"]._for_xml_id(
             "fleet.action_fleet_vehicle_log"

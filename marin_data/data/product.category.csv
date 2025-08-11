@@ -5,7 +5,6 @@ product_category_103,Gastos,
 product_category_104,Materia prima,
 product_category_105,Nucleo,
 product_category_106,"Articulos de promocion, propaganda, publicidad",marin_data.product_category_103
-product_category_107,Casetas,marin_data.product_category_103
 product_category_108,"Formulantes, ingredientes activos",marin_data.product_category_104
 product_category_109,Material de empaque,marin_data.product_category_104
 product_category_110,Acondicionadores,marin_data.product_category_105
@@ -58,4 +57,3 @@ product_category_156,Papa semillas,marin_data.product_category_116
 product_category_157,Rodenticidas,marin_data.product_category_116
 product_category_158,Tomate semillas,marin_data.product_category_116
 product_category_159,Zanahoria semillas,marin_data.product_category_116
-product_category_160,Frituras,

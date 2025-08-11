@@ -180,7 +180,7 @@ class FleetVehicleLogImport(models.TransientModel):
             tuple: (list of fleet.vehicle.log values, list of error messages)
         """
         fleet_vehicle_log = self.env["fleet.vehicle.log"]
-        fuel_category = self.env.ref("marin.product_category_vehicle_fuel")
+        fuel_category = self.env.ref("marin.product_category_fuel")
         fuel_debit_product = self.env.ref("marin.product_product_fuel_debit")
         fuel_credit_product = self.env.ref("marin.product_product_fuel_credit")
         try:
@@ -386,13 +386,13 @@ class FleetVehicleLogImport(models.TransientModel):
         """
         fleet_vehicle_log = self.env["fleet.vehicle.log"]
         highway_pass_category = self.env.ref(
-            "marin.product_category_vehicle_highway_pass"
+            "marin.product_category_highway_toll"
         )
         highway_pass_debit_product = self.env.ref(
-            "marin.product_product_highway_pass_debit"
+            "marin.product_product_highway_debit"
         )
         highway_pass_credit_product = self.env.ref(
-            "marin.product_product_highway_pass_credit"
+            "marin.product_product_highway_credit"
         )
         try:
             # Decode and load the CSV file
@@ -570,13 +570,13 @@ class FleetVehicleLogImport(models.TransientModel):
         """
         fleet_vehicle_log = self.env["fleet.vehicle.log"]
         highway_pass_category = self.env.ref(
-            "marin.product_category_vehicle_highway_pass"
+            "marin.product_category_highway_toll"
         )
         highway_pass_debit_product = self.env.ref(
-            "marin.product_product_highway_pass_debit"
+            "marin.product_product_highway_debit"
         )
         highway_pass_credit_product = self.env.ref(
-            "marin.product_product_highway_pass_credit"
+            "marin.product_product_highway_credit"
         )
         try:
             # Decode and load the CSV file

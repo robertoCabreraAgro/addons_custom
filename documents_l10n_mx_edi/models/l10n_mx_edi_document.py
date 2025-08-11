@@ -621,7 +621,7 @@ class L10nMxEdiDocument(models.Model):
             list: List of created fleet.vehicle.log records
         """
         fleet_vehicle_log = self.env["fleet.vehicle.log"]
-        fuel_category = self.env.ref("marin.product_category_vehicle_fuel")
+        fuel_category = self.env.ref("marin.product_category_fuel")
         fuel_debit_product = self.env.ref("marin.product_product_fuel_debit")
         fuel_credit_product = self.env.ref("marin.product_product_fuel_credit")
         ns = {"ecc12": "http://www.sat.gob.mx/EstadoDeCuentaCombustible12"}
