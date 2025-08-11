@@ -18,30 +18,38 @@
         <field name="inherit_id" ref="project.view_task_form2" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='stage_id']" position="before">
-                <button 
-                    name="action_new_quotation"
+                <field name="allow_create_quotations" invisible="1" />
+                <button
+                    name="action_create_sale_order"
                     type="object"
                     class="oe_highlight"
                     string="New Quotation"
-                    title="Create new quotation"
+                    title="Create a new quotation"
                     data-hotkey="q"
+                    invisible="not allow_create_quotations or sale_order_id"
+                    groups="sales_team.group_sale_salesman"
                 />
-            </xpath>            
+            </xpath>
             <xpath expr="//div[hasclass('oe_title')]//h1[1]" position="after">
                 <h2 class="row g-0 pb-3 pb-sm-4">
                     <div class="col-auto pb-2 pb-md-0">
                         <label for="expected_area" class="oe_edit_only" />
                         <div class="d-flex align-items-baseline">
                             <field name="is_ag_initial" invisible="1" />
-                            <field name="expected_area" class="o_input_13ch" widget="float"  />
+                            <field name="expected_area" class="o_input_13ch" widget="float" />
                             <span class="oe_grey p-2"> Ha</span>
                         </div>
                     </div>
                     <div class="col-auto pb-2 pb-md-0">
-                        <label for="expected_revenue" class="oe_edit_only"/>
+                        <label for="expected_revenue" class="oe_edit_only" />
                         <div class="d-flex align-items-baseline">
-                            <field name="company_currency" invisible="1"/>
-                            <field name="expected_revenue" class="o_input_13ch" widget='monetary' options="{'currency_field': 'company_currency'}" />
+                            <field name="company_currency" invisible="1" />
+                            <field
+                                name="expected_revenue"
+                                class="o_input_13ch"
+                                widget='monetary'
+                                options="{'currency_field': 'company_currency'}"
+                            />
                         </div>
                     </div>
                 </h2>
@@ -59,14 +67,14 @@
                 <attribute name="options">{'no_create': True}</attribute>
             </xpath>
 
-            <!-- Page KPI --> 
-            <xpath expr="//page[@name='extra_info']/group" position="inside">        
+            <!-- Page KPI -->
+            <xpath expr="//page[@name='extra_info']/group" position="inside">
                 <group string="KPI operation time" invisible="use_kpi_optime == False">
-                    <field name="use_kpi_optime" invisible="1"/>
+                    <field name="use_kpi_optime" invisible="1" />
                     <field name="kpi_optime_predev_min" />
-                    <field name="kpi_optime_postdev_min"/>
-                    <field name="kpi_optime_frequency_type"/>
-                    <field name="kpi_optime_frequency_interval"/>                
+                    <field name="kpi_optime_postdev_min" />
+                    <field name="kpi_optime_frequency_type" />
+                    <field name="kpi_optime_frequency_interval" />
                 </group>
             </xpath>
         </field>

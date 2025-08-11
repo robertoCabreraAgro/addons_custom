@@ -6160,3 +6160,46 @@ msgstr "Plantilla"
 msgid "Sales Targets"
 msgstr "Objetivos de Ventas"
 
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_project_project__allow_quotations
+msgid "Allow Quotations"
+msgstr "Permitir Cotizaciones"
+
+#. module: marin
+#: model:ir.model.fields,help:marin.field_project_project__allow_quotations
+msgid "Allow creating quotations from tasks in this project"
+msgstr "Permitir crear cotizaciones desde tareas en este proyecto"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_project_task__allow_create_quotations
+msgid "Allow Create Quotations"
+msgstr "Permitir Crear Cotizaciones"
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/project_task.py:0
+msgid "You cannot create a quotation for a task that is already linked to a sale order.\nConcerned task(s):\n%(ref_str)s"
+msgstr "No puedes crear una cotización para una tarea que ya está vinculada a una orden de venta.\nTarea(s) afectada(s):\n%(ref_str)s"
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/project_task.py:0
+msgid "You need to define a customer on the task before creating a related quotation.\nConcerned task(s):\n%(ref_str)s"
+msgstr "Necesitas definir un cliente en la tarea antes de crear una cotización relacionada.\nTarea(s) afectada(s):\n%(ref_str)s"
+
+#. module: marin
+#. odoo-python
+#: code:addons/marin/models/project_task.py:0
+msgid "You need to define an agricultural season on the task before creating a related quotation.\nConcerned task(s):\n%(ref_str)s"
+msgstr "Necesitas definir una temporada agrícola en la tarea antes de crear una cotización relacionada.\nTarea(s) afectada(s):\n%(ref_str)s"
+
+#. module: marin
+#: model_terms:ir.actions.act_window,name:marin.action_project_task_create_quotation
+msgid "Created Quotations"
+msgstr "Cotizaciones Creadas"
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_task_form2
+msgid "Create a new quotation"
+msgstr "Crear una nueva cotización"
+

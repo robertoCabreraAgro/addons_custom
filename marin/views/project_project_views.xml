@@ -1,20 +1,32 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<odoo>   
+<odoo>
     <record id="view_project_kpi_form2" model="ir.ui.view">
         <field name="name">project.project.form.kpi</field>
         <field name="model">project.project</field>
         <field name="inherit_id" ref="project.edit_project" />
         <field name="arch" type="xml">
-            <!-- Agregar al final de la pestaña settings -->
-            <xpath expr="//page[@name='settings']/group" position="inside">
-                <group name="group_kpi_management" string="KPI Management" col="1" class="row mt16 o_settings_container" groups="marin.group_project_kpi">
-                    <div>
-                        <setting class="col-lg-12" id="project_kpi_setting" help="Compare task execution times before and after process changes.">
-                            <field name="use_kpi_optime"/>
-                        </setting>
-                    </div>
-                </group>
-            </xpath>           
+            <xpath expr="//group[@name='group_time_managment']" position="inside">
+                <div>
+                    <setting
+                        class="col-lg-12"
+                        id="project_kpi_setting"
+                        help="Compare task execution times before and after process changes."
+                    >
+                        <field name="use_kpi_optime" />
+                    </setting>
+                </div>
+            </xpath>
+            <xpath expr="//group[@name='group_sales_invoicing']" position="inside">
+                <div>
+                    <setting
+                        class="col-lg-12"
+                        id="allow_quotations_container"
+                        help="Allow creating quotations from tasks in this project."
+                    >
+                        <field name="allow_quotations" />
+                    </setting>
+                </div>
+            </xpath>
         </field>
     </record>
 </odoo>

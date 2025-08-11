@@ -22,9 +22,7 @@ class Task(models.Model):
         compute="_compute_company_currency",
         compute_sudo=True,
     )
-    expected_revenue = fields.Monetary(
-        "Expected Revenue", currency_field="company_currency", tracking=True
-    )
+    expected_revenue = fields.Monetary("Expected Revenue", currency_field="company_currency", tracking=True)
     referer_partner_id = fields.Many2one(
         "res.partner",
         "Referred By",
@@ -52,6 +50,12 @@ class Task(models.Model):
         "AG season",
         help="Since every farmer can have several growing seasons the specific one can be selected.",
     )
+    allow_create_quotations = fields.Boolean(
+        related="project_id.allow_quotations",
+        string="Allow Create Quotations",
+        store=False,
+    )
+
     # Fields KPI
     kpi_optime_predev_min = fields.Float(
         "Time before development",
@@ -104,29 +108,74 @@ class Task(models.Model):
     #        if task.team_id != team:
     #            task.team_id = team.id
 
-    def _prepare_task_quotation_context(self):
-        """Prepares the context for a new quotation (sale.order) by sharing the values of common fields"""
+    def action_view_sale_order(self):
         self.ensure_one()
-        quotation_context = {
-            # 'default_opportunity_id': self.id,
-            "default_partner_id": self.partner_id.id,
-            # 'default_campaign_id': self.campaign_id.id,
-            # 'default_medium_id': self.medium_id.id,
-            # 'default_source_id': self.source_id.id,
-            "default_origin": self.name,
-            "default_company_id": self.company_id.id or self.env.company.id,
-            # 'default_tag_ids': [(6, 0, self.tag_ids.ids)]
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": "sale.order",
+            "views": [[False, "form"]],
+            "res_id": self.sale_order_id.id,
         }
-        # if self.team_id:
-        #     quotation_context['default_team_id'] = self.team_id.id
-        # if self.user_id:
-        #     quotation_context['default_user_id'] = self.user_id.id
-        return quotation_context
 
-    def action_new_quotation(self):
-        action = self.env["ir.actions.actions"]._for_xml_id(
-            "marin.action_quotation_new"
-        )
-        action["context"] = self._prepare_task_quotation_context()
-        # action['context']['search_default_opportunity_id'] = self.id
-        return action
+    def action_create_sale_order(self):
+        if any(task.sale_order_id for task in self):
+            concerned_task = self.filtered("sale_order_id")
+            ref_str = "\n".join(task.name for task in concerned_task)
+            raise UserError(
+                _(
+                    "You cannot create a quotation for a task that is already linked to a sale order.\nConcerned task(s):\n%(ref_str)s",
+                    ref_str=ref_str,
+                ),
+            )
+        if any(not task.partner_id for task in self):
+            concerned_task = self.filtered(lambda task: not task.partner_id)
+            ref_str = "\n".join(task.name for task in concerned_task)
+            raise UserError(
+                _(
+                    "You need to define a customer on the task before creating a related quotation.\nConcerned task(s):\n%(ref_str)s",
+                    ref_str=ref_str,
+                ),
+            )
+        # Validate season requirement
+        if any(not task.season_id for task in self):
+            concerned_task = self.filtered(lambda task: not task.season_id)
+            ref_str = "\n".join(task.name for task in concerned_task)
+            raise UserError(
+                _(
+                    "You need to define an agricultural season on the task before creating a related quotation.\nConcerned task(s):\n%(ref_str)s",
+                    ref_str=ref_str,
+                ),
+            )
+
+        sale_orders = self.env["sale.order"]
+        for task in self:
+            sale_order_values = {
+                "company_id": task.company_id.id or self.env.company.id,
+                "partner_id": task.partner_id.id,
+                "season_id": task.season_id.id,
+                "origin": task.name,
+            }
+            sale_order = self.env["sale.order"].create(sale_order_values)
+
+            # Link the task to the created sale order
+            task.write({"sale_order_id": sale_order.id})
+
+            # Add chatter message to the sale order
+            sale_order.message_post_with_source(
+                "mail.message_origin_link",
+                render_values={"self": sale_order, "origin": task},
+                subtype_xmlid="mail.mt_note",
+            )
+
+            sale_orders |= sale_order
+
+        if len(sale_orders) == 1:
+            return self.action_view_sale_order()
+
+        return {
+            "type": "ir.actions.act_window",
+            "name": _("Created Quotations"),
+            "res_model": "sale.order",
+            "view_mode": "list,form",
+            "domain": [("id", "in", sale_orders.ids)],
+        }

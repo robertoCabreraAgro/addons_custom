@@ -38,7 +38,6 @@ class SaleOrder(models.Model):
     # --------------------------------------------------
     # CRUD METHODS
     # --------------------------------------------------
-
     def write(self, vals):
         res = super().write(vals)
         if "route_id" in vals:
