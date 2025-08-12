@@ -55,7 +55,7 @@
                 </h2>
             </xpath>
             <xpath expr="//field[@name='tag_ids']" position="before">
-                <field name="season_id" />
+                <field name="season_id" invisible="not sales_features" />
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="attributes">
                 <attribute name="options">{'no_create': True}</attribute>
