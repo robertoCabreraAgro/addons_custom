@@ -18,7 +18,7 @@
         <field name="inherit_id" ref="project.view_task_form2" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='stage_id']" position="before">
-                <field name="allow_create_quotations" invisible="1" />
+                <field name="sales_features" invisible="1" />
                 <button
                     name="action_create_sale_order"
                     type="object"
@@ -26,7 +26,7 @@
                     string="New Quotation"
                     title="Create a new quotation"
                     data-hotkey="q"
-                    invisible="not allow_create_quotations or sale_order_id"
+                    invisible="not sales_features or sale_order_id"
                     groups="sales_team.group_sale_salesman"
                 />
             </xpath>
@@ -55,6 +55,7 @@
                 </h2>
             </xpath>
             <xpath expr="//field[@name='tag_ids']" position="before">
+                <field name="sales_features" invisible="1" />
                 <field name="season_id" invisible="not sales_features" />
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="attributes">

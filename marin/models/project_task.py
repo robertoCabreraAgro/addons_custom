@@ -50,9 +50,9 @@ class Task(models.Model):
         "AG season",
         help="Since every farmer can have several growing seasons the specific one can be selected.",
     )
-    allow_create_quotations = fields.Boolean(
+    sales_features = fields.Boolean(
         related="project_id.sales_features",
-        string="Allow Create Quotations",
+        string="Sales Features",
         store=False,
     )
 
