@@ -79,6 +79,12 @@ class Task(models.Model):
         string="Interval frequency",
         help="Number that indicates how many times the event occurs in the selected period",
     )
+    kpi_employee_ids = fields.Many2many(
+        "hr.employee",
+        string="KPI Affected Employees",
+        help="Employees that are affected by this KPI. This is used to filter the employees that will be able to see the KPI in their dashboard.",
+        compute_sudo=True,
+    )
     use_kpi_optime = fields.Boolean(
         related="project_id.use_kpi_optime",
         string="Use KPI time operative",
