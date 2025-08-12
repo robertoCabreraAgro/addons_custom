@@ -6161,12 +6161,12 @@ msgid "Sales Targets"
 msgstr "Objetivos de Ventas"
 
 #. module: marin
-#: model:ir.model.fields,field_description:marin.field_project_project__allow_quotations
+#: model:ir.model.fields,field_description:marin.field_project_project__sales_features
 msgid "Allow Quotations"
 msgstr "Permitir Cotizaciones"
 
 #. module: marin
-#: model:ir.model.fields,help:marin.field_project_project__allow_quotations
+#: model:ir.model.fields,help:marin.field_project_project__sales_features
 msgid "Allow creating quotations from tasks in this project"
 msgstr "Permitir crear cotizaciones desde tareas en este proyecto"
 
