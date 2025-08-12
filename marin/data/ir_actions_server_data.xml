@@ -105,4 +105,15 @@ action["domain"] = ["|", ("partner_id", "in", partners.ids), ("partner_id.commer
         </field>
     </record>
 
+    <!-- Generate Sale Targets Server Action -->
+    <record id="action_server_generate_sale_targets" model="ir.actions.server">
+        <field name="name">Generate Sale Targets</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="binding_model_id" ref="base.model_res_partner"/>
+        <field name="binding_view_types">list</field>
+        <field name="group_ids" eval="[(4, ref('sales_team.group_sale_manager'))]"/>
+        <field name="state">code</field>
+        <field name="code">if records:
+    action = records.action_generate_sale_targets()</field>
+    </record>
 </odoo>
