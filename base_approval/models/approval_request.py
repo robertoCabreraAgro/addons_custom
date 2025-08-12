@@ -79,21 +79,6 @@ class ApprovalRequest(models.Model):
             ("cancel", "Canceled"),
         ],
         default="new",
-        # compute="_compute_state",
-        # store=True,
-        # tracking=True,
-        # group_expand=True,
-        # index=True,
-    )
-    request_status = fields.Selection(
-        [
-            ("new", "To Submit"),
-            ("pending", "Submitted"),
-            ("approved", "Approved"),
-            ("refused", "Refused"),
-            ("cancel", "Canceled"),
-        ],
-        default="new",
         compute="_compute_state",
         store=True,
         tracking=True,
