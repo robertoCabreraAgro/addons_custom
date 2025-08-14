@@ -11,7 +11,7 @@
                 <separator />
                 <filter name="inactive" string="Archived"
                     domain="[('active', '=', False)]" />
-                <group expand="1" string="Group By">
+                <group>
                     <filter name="groupby_product_id" string="Service Type"
                         context="{'group_by': 'product_id'}" />
                     <filter name="groupby_asset_manager_id" string="Fleet Manager"
@@ -144,7 +144,6 @@
                             <label for="odometer" />
                             <div class="o_row">
                                 <field name="odometer" class="w-25" />
-                                <field name="odometer_uom_id" class="ps-1 ps-sm-0" />
                             </div>
                         </group>
                     </group>

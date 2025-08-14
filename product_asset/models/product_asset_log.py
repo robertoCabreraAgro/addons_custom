@@ -6,7 +6,7 @@ from odoo import api, _, fields, models
 class ProductAssetLog(models.Model):
     _name = "product.asset.log"
     _inherit = ["mail.thread", "mail.activity.mixin"]
-    _description = "Logs for vehicles"
+    _description = "Logs for Assets"
 
     # ------------------------------------------------------------
     # FIELDS
@@ -21,22 +21,19 @@ class ProductAssetLog(models.Model):
         related="company_id.currency_id",
     )
     asset_id = fields.Many2one(
-        comodel_name="product.template",
-        string="Vehicle",
+        comodel_name="stock.lot",
+        string="Asset",
         required=True,
     )
     operator_id = fields.Many2one(
         related="asset_id.operator_id",
-        string="Driver",
+        store=True,
+        string="Operator",
     )
     asset_manager_id = fields.Many2one(
         related="asset_id.asset_manager_id",
-        string="Fleet Manager",
-    )
-    odometer_uom_id = fields.Many2one(
-        related="asset_id.odometer_uom_id",
-        string="Unit",
-        readonly=True,
+        store=True,
+        string="Asset Manager",
     )
     vendor_id = fields.Many2one(
         comodel_name="res.partner",
@@ -57,7 +54,7 @@ class ProductAssetLog(models.Model):
         selection=[
             ("service", "Service"),
             ("contract", "Contract"),
-            ("driver", "driver change"),
+            ("operator", "Operator change"),
         ],
         string="Type",
         default="service",
@@ -100,7 +97,7 @@ class ProductAssetLog(models.Model):
         # TODO improve logic for account.move.line to set odometer
         # or to inforce only on the view
         # required=True,
-        help="Odometer measure of the vehicle at the moment of this log",
+        help="Odometer measure of the Asset at the moment of this log",
     )
     amount = fields.Monetary(
         string="Cost",

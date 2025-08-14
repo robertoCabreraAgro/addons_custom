@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Search View -->
+    <record id="stock_lot_fleet_search_view" model="ir.ui.view">
+        <field name="name">stock.lot.fleet.search</field>
+        <field name="model">stock.lot</field>
+        <field name="inherit_id" ref="stock.search_product_lot_filter" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field name="license_plate" />
+                <field name="operator_id" />
+                <field name="asset_manager_id" />
+                <field name="vin_sn" />
+                <field name="location" />
+            </xpath>
+
+            <xpath expr="//filter[@name='on_hand']" position="after">
+                <separator />
+                <filter name="has_driver" string="Has Driver"
+                    domain="[('operator_id', '!=', False)]" />
+                <filter name="no_driver" string="No Driver" domain="[('operator_id', '=', False)]" />
+                <filter name="has_trailer_hook" string="Has Trailer Hook"
+                    domain="[('trailer_hook', '=', True)]" />
+                <separator />
+                <filter name="service_overdue" string="Service Overdue"
+                    domain="[('service_activity', '=', 'overdue')]" />
+                <filter name="service_today" string="Service Today"
+                    domain="[('service_activity', '=', 'today')]" />
+                <separator />
+                <filter name="contract_due_soon" string="Contract Due Soon"
+                    domain="[('contract_renewal_due_soon', '=', True)]" />
+                <filter name="contract_overdue" string="Contract Overdue"
+                    domain="[('contract_renewal_overdue', '=', True)]" />
+                <separator />
+                <filter name="active_contracts" string="Active Contracts"
+                    domain="[('contract_state', '=', 'open')]" />
+                <filter name="expired_contracts" string="Expired Contracts"
+                    domain="[('contract_state', '=', 'expired')]" />
+            </xpath>
+
+            <xpath expr="//search/group" position="inside">
+                <filter name="group_by_driver" string="Driver" domain="[]"
+                    context="{'group_by': 'operator_id'}" />
+                <filter name="group_by_manager" string="Manager" domain="[]"
+                    context="{'group_by': 'asset_manager_id'}" />
+                <filter name="group_by_location" string="Location" domain="[]"
+                    context="{'group_by': 'location'}" />
+                <filter name="group_by_model_year" string="Model Year" domain="[]"
+                    context="{'group_by': 'model_year'}" />
+                <filter name="group_by_contract_state" string="Contract State" domain="[]"
+                    context="{'group_by': 'contract_state'}" />
+                <filter name="group_by_service_activity" string="Service Activity" domain="[]"
+                    context="{'group_by': 'service_activity'}" />
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Tree View -->
+    <record id="stock_lot_fleet_tree_view" model="ir.ui.view">
+        <field name="name">stock.lot.fleet.tree</field>
+        <field name="model">stock.lot</field>
+        <field name="inherit_id" ref="stock.view_production_lot_tree" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="license_plate" optional="show" />
+                <field name="operator_id" optional="show" />
+                <field name="asset_manager_id" optional="hide" />
+                <field name="model_year" optional="hide" />
+                <field name="odometer" optional="show" />
+                <field name="service_activity" optional="show" widget="badge"
+                    decoration-danger="service_activity == 'overdue'"
+                    decoration-warning="service_activity == 'today'" />
+                <field name="contract_state" optional="show" widget="badge" />
+                <field name="location" optional="hide" />
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="stock_lot_fleet_form_view" model="ir.ui.view">
+        <field name="name">stock.lot.fleet.form</field>
+        <field name="model">stock.lot</field>
+        <field name="inherit_id" ref="stock.view_production_lot_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <header>
+                    <button name="accept_driver_change"
+                        string="Accept Driver Change"
+                        type="object"
+                        class="btn-primary"
+                        invisible="not future_operator_id" />
+                    <button name="action_send_email"
+                        string="Send Email"
+                        type="object"
+                        class="btn-secondary" />
+                    <field name="contract_state" widget="statusbar"
+                        statusbar_visible="futur,open,expired,closed" />
+                </header>
+            </xpath>
+
+            <xpath expr="//sheet/group" position="after">
+
+                <!-- Statistics Buttons -->
+                <div class="oe_button_box" name="button_box">
+                    <button name="action_view_assignation_logs"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-users">
+                        <field name="assignment_count" widget="statbutton" string="Assignments" />
+                    </button>
+                    <button name="act_show_log_cost"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-wrench">
+                        <field name="service_count" widget="statbutton" string="Services" />
+                    </button>
+                    <button name="return_action_to_open"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-file-text-o"
+                        context="{'xml_id': 'fleet_vehicle_log_contract_action'}">
+                        <field name="contract_count" widget="statbutton" string="Contracts" />
+                    </button>
+                    <button name="action_view_bills"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-credit-card">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_text">Bills</span>
+                        </div>
+                    </button>
+                </div>
+
+                <!-- Vehicle Information -->
+                <group string="Vehicle Information">
+                    <group>
+                        <field name="license_plate" />
+                        <field name="vin_sn" />
+                        <field name="engine_sn" />
+                        <field name="model_year" />
+                        <field name="trailer_hook" />
+                        <field name="mobility_card" />
+                        <field name="location" />
+                    </group>
+                    <group>
+                        <field name="odometer" />
+                        <field name="service_activity" />
+                    </group>
+                </group>
+
+                <!-- Personnel -->
+                <group string="Personnel">
+                    <group>
+                        <field name="asset_manager_id"
+                            options="{'no_create': True, 'no_create_edit': True}" />
+                        <field name="operator_id"
+                            options="{'no_create': True, 'no_create_edit': True}" />
+                        <field name="future_operator_id"
+                            options="{'no_create': True, 'no_create_edit': True}" />
+                    </group>
+                </group>
+
+                <!-- Financial Information -->
+                <group string="Financial Information">
+                    <group>
+                        <field name="date_acquisition" />
+                        <field name="date_write_off" />
+                        <field name="date_first_contract" />
+                        <field name="date_next_assignation" />
+                    </group>
+                    <group>
+                        <field name="value_original" widget="monetary" />
+                        <field name="value_residual" widget="monetary" />
+                    </group>
+                </group>
+
+                <!-- Contract Information -->
+                <group string="Contract Information">
+                    <group>
+                        <field name="contract_renewal_due_soon" />
+                        <field name="contract_renewal_overdue" />
+                    </group>
+                </group>
+
+                <!-- Logs -->
+                <notebook>
+                    <page string="Logs" name="logs">
+                        <field name="log_ids" readonly="1">
+                            <list>
+                                <field name="date_start" />
+                                <field name="date_end" />
+                                <field name="type" />
+                                <field name="operator_id" />
+                                <field name="odometer" />
+                                <field name="activity_state" optional="show" />
+                            </list>
+                        </field>
+                    </page>
+                </notebook>
+
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Actions -->
+    <record id="stock_lot_fleet_action" model="ir.actions.act_window">
+        <field name="name">Fleet Vehicles</field>
+        <field name="res_model">stock.lot</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('product_id.tracking', '!=', 'none')]</field>
+        <field name="context">{
+            'search_default_available': 1
+            }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new vehicle
+            </p>
+            <p>
+                Manage your fleet vehicles with detailed information about drivers,
+                contracts, services, and maintenance schedules.
+            </p>
+        </field>
+    </record>
+
+    <!-- Dashboard Action for Vehicles with Service Due -->
+    <record id="stock_lot_service_due_action" model="ir.actions.act_window">
+        <field name="name">Vehicles - Service Due</field>
+        <field name="res_model">stock.lot</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('service_activity', 'in', ['overdue', 'today'])]</field>
+        <field name="context">{
+            'search_default_service_overdue': 1,
+            'search_default_service_today': 1
+            }</field>
+    </record>
+
+    <!-- Dashboard Action for Contract Renewals -->
+    <record id="stock_lot_contract_renewal_action" model="ir.actions.act_window">
+        <field name="name">Vehicles - Contract Renewals</field>
+        <field name="res_model">stock.lot</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">['|', ('contract_renewal_due_soon', '=', True),
+            ('contract_renewal_overdue', '=', True)]</field>
+        <field name="context">{
+            'search_default_contract_due_soon': 1,
+            'search_default_contract_overdue': 1
+            }</field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem id="fleet_vehicles_menu"
+        name="Fleet Vehicles"
+        parent="stock.menu_stock_inventory_control"
+        action="stock_lot_fleet_action"
+        sequence="10" />
+
+    <menuitem id="fleet_service_due_menu"
+        name="Service Due"
+        parent="fleet_vehicles_menu"
+        action="stock_lot_service_due_action"
+        sequence="20" />
+
+    <menuitem id="fleet_contract_renewal_menu"
+        name="Contract Renewals"
+        parent="fleet_vehicles_menu"
+        action="stock_lot_contract_renewal_action"
+        sequence="30" />
+
+</odoo>
