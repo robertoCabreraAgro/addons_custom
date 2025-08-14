@@ -1,0 +1,536 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="product_attribute_fleet_brand" model="product.attribute">
+        <field name="name">Fleet brand</field>
+        <field name="sequence">10</field>
+        <field name="create_variant">no_variant</field>
+        <field name="display_type">select</field>
+    </record>
+
+    <record id="product_attribute_fuel_type" model="product.attribute">
+        <field name="name">Fuel type</field>
+        <field name="sequence">10</field>
+        <field name="create_variant">no_variant</field>
+        <field name="display_type">select</field>
+    </record>
+
+    <record id="product_attribute_displacement" model="product.attribute">
+        <field name="name">Displacement</field>
+        <field name="sequence">10</field>
+        <field name="create_variant">no_variant</field>
+        <field name="display_type">select</field>
+    </record>
+
+    <record id="product_attribute_transmission" model="product.attribute">
+        <field name="name">Transmission</field>
+        <field name="sequence">10</field>
+        <field name="create_variant">no_variant</field>
+        <field name="display_type">select</field>
+    </record>
+
+    <record id="fleet_brand_abarth" model="product.attribute.value">
+        <field name="name">Abarth</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_abarth-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_acura" model="product.attribute.value">
+        <field name="name">Acura</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_acura-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_alfa" model="product.attribute.value">
+        <field name="name">Alfa</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_alfa-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_audi" model="product.attribute.value">
+        <field name="name">Audi</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_audi-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_austin" model="product.attribute.value">
+        <field name="name">Austin</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_austin-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_bentley" model="product.attribute.value">
+        <field name="name">Bentley</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_bentley-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_bmw" model="product.attribute.value">
+        <field name="name">Bmw</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_bmw-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_bugatti" model="product.attribute.value">
+        <field name="name">Bugatti</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_bugatti-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_buick" model="product.attribute.value">
+        <field name="name">Buick</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_buick-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_byd" model="product.attribute.value">
+        <field name="name">Byd</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_byd-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_cadillac" model="product.attribute.value">
+        <field name="name">Cadillac</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_cadillac-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_chevrolet" model="product.attribute.value">
+        <field name="name">Chevrolet</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_chevrolet-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_chrysler" model="product.attribute.value">
+        <field name="name">Chrysler</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_chrysler-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_citroen" model="product.attribute.value">
+        <field name="name">Citroen</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_citroen-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_corre_la_licorne" model="product.attribute.value">
+        <field name="name">Corre La Licorne</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_corre-la-licorne-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_daewoo" model="product.attribute.value">
+        <field name="name">Daewoo</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_daewoo-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_dodge" model="product.attribute.value">
+        <field name="name">Dodge</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_dodge-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_ferrari" model="product.attribute.value">
+        <field name="name">Ferrari</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_ferrari-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_fiat" model="product.attribute.value">
+        <field name="name">Fiat</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_fiat-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_ford" model="product.attribute.value">
+        <field name="name">Ford</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_ford-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_freightliner" model="product.attribute.value">
+        <field name="name">Freightliner</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_freightliner-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_gmc" model="product.attribute.value">
+        <field name="name">GMC</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_gmc-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_holden" model="product.attribute.value">
+        <field name="name">Holden</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_holden-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_honda" model="product.attribute.value">
+        <field name="name">Honda</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_honda-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_hyundai" model="product.attribute.value">
+        <field name="name">Hyundai</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_hyundai-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_infiniti" model="product.attribute.value">
+        <field name="name">Infiniti</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_infiniti-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_isuzu" model="product.attribute.value">
+        <field name="name">Isuzu</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_isuzu-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_jaguar" model="product.attribute.value">
+        <field name="name">Jaguar</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_jaguar-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_jeep" model="product.attribute.value">
+        <field name="name">Jeep</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_jeep-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_kenworth" model="product.attribute.value">
+        <field name="name">Kenworth</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_kenworth-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_kia" model="product.attribute.value">
+        <field name="name">Kia</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_kia-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_koenigsegg" model="product.attribute.value">
+        <field name="name">Koenigsegg</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_koenigsegg-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_lagonda" model="product.attribute.value">
+        <field name="name">Lagonda</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_lagonda-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_lamborghini" model="product.attribute.value">
+        <field name="name">Lamborghini</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_lamborghini-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_lancia" model="product.attribute.value">
+        <field name="name">Lancia</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_lancia-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_land_rover" model="product.attribute.value">
+        <field name="name">Land Rover</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_land-rover-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_lexus" model="product.attribute.value">
+        <field name="name">Lexus</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_lexus-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_lincoln" model="product.attribute.value">
+        <field name="name">Lincoln</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_lincoln-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_lotus" model="product.attribute.value">
+        <field name="name">Lotus</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_lotus-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_maserati" model="product.attribute.value">
+        <field name="name">Maserati</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_maserati-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_maybach" model="product.attribute.value">
+        <field name="name">Maybach</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_maybach-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_mazda" model="product.attribute.value">
+        <field name="name">Mazda</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_mazda-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_mercedes" model="product.attribute.value">
+        <field name="name">Mercedes</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_mercedes-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_mg" model="product.attribute.value">
+        <field name="name">Mg</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_mg-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_mini" model="product.attribute.value">
+        <field name="name">Mini</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_mini-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_mitsubishi" model="product.attribute.value">
+        <field name="name">Mitsubishi</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_mitsubishi-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_morgan" model="product.attribute.value">
+        <field name="name">Morgan</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_morgan-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_nissan" model="product.attribute.value">
+        <field name="name">Nissan</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_nissan-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_oldsmobile" model="product.attribute.value">
+        <field name="name">Oldsmobile</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_oldsmobile-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_opel" model="product.attribute.value">
+        <field name="name">Opel</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_opel-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_peugeot" model="product.attribute.value">
+        <field name="name">Peugeot</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_peugeot-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_pontiac" model="product.attribute.value">
+        <field name="name">Pontiac</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_pontiac-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_porsche" model="product.attribute.value">
+        <field name="name">Porsche</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_porsche-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_rambler" model="product.attribute.value">
+        <field name="name">Rambler</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_rambler-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_renault" model="product.attribute.value">
+        <field name="name">Renault</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_renault-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_rolls-royce" model="product.attribute.value">
+        <field name="name">Rolls-Royce</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_rolls-royce-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_saab" model="product.attribute.value">
+        <field name="name">Saab</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_saab-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_scion" model="product.attribute.value">
+        <field name="name">Scion</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_scion-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_skoda" model="product.attribute.value">
+        <field name="name">Skoda</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_skoda-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_smart" model="product.attribute.value">
+        <field name="name">Smart</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_smart-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_steyr" model="product.attribute.value">
+        <field name="name">Steyr</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_steyr-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_subaru" model="product.attribute.value">
+        <field name="name">Subaru</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_subaru-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_tesla_motors" model="product.attribute.value">
+        <field name="name">Tesla Motors</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_tesla-motors-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_toyota" model="product.attribute.value">
+        <field name="name">Toyota</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_toyota-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_trabant" model="product.attribute.value">
+        <field name="name">Trabant</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_trabant-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_volkswagen" model="product.attribute.value">
+        <field name="name">Volkswagen</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_volkswagen-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_volvo" model="product.attribute.value">
+        <field name="name">Volvo</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_volvo-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_willys" model="product.attribute.value">
+        <field name="name">Willys</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_willys-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fleet_brand_suzuki" model="product.attribute.value">
+        <field name="name">Suzuki</field>
+        <field name="image" type="base64" file="product_asset/static/img/brand_suzuki-image.png"/>
+        <field name="attribute_id" ref="product_asset.product_attribute_fleet_brand"/>
+    </record>
+
+    <record id="fuel_type_cng" model="product.attribute.value">
+        <field name="name">CNG</field>
+        <field name="attribute_id" ref="product_asset.product_attribute_fuel_type"/>
+    </record>
+
+    <record id="fuel_type_diesel" model="product.attribute.value">
+        <field name="name">Diesel</field>
+        <field name="attribute_id" ref="product_asset.product_attribute_fuel_type"/>
+    </record>
+
+    <record id="fuel_type_diesel_hybrid" model="product.attribute.value">
+        <field name="name">Diesel hybrid</field>
+        <field name="attribute_id" ref="product_asset.product_attribute_fuel_type"/>
+    </record>
+
+    <record id="fuel_type_electric" model="product.attribute.value">
+        <field name="name">Electric</field>
+        <field name="attribute_id" ref="product_asset.product_attribute_fuel_type"/>
+    </record>
+
+    <record id="fuel_type_gasoline" model="product.attribute.value">
+        <field name="name">Gasoline</field>
+        <field name="attribute_id" ref="product_asset.product_attribute_fuel_type"/>
+    </record>
+
+    <record id="fuel_type_gasoline_hybrid" model="product.attribute.value">
+        <field name="name">Gasoline hybrid</field>
+        <field name="attribute_id" ref="product_asset.product_attribute_fuel_type"/>
+    </record>
+
+    <record id="fuel_type_hydrogen" model="product.attribute.value">
+        <field name="name">Hydrogen</field>
+        <field name="attribute_id" ref="product_asset.product_attribute_fuel_type"/>
+    </record>
+
+    <record id="fuel_type_lpg" model="product.attribute.value">
+        <field name="name">LPG</field>
+        <field name="attribute_id" ref="product_asset.product_attribute_fuel_type"/>
+    </record>
+
+    <record id="displacement_0" model="product.attribute.value">
+        <field name="name">No cilinders</field>
+        <field name="attribute_id" ref="product_asset.product_attribute_displacement"/>
+    </record>
+
+    <record id="displacement_1" model="product.attribute.value">
+        <field name="name">1 cilinder</field>
+        <field name="attribute_id" ref="product_asset.product_attribute_displacement"/>
+    </record>
+
+    <record id="displacement_2" model="product.attribute.value">
+        <field name="name">2 cilinders</field>
+        <field name="attribute_id" ref="product_asset.product_attribute_displacement"/>
+    </record>
+
+    <record id="displacement_3" model="product.attribute.value">
+        <field name="name">3 cilinders</field>
+        <field name="attribute_id" ref="product_asset.product_attribute_displacement"/>
+    </record>
+
+    <record id="displacement_4" model="product.attribute.value">
+        <field name="name">4 cilinders</field>
+        <field name="attribute_id" ref="product_asset.product_attribute_displacement"/>
+    </record>
+
+    <record id="displacement_6" model="product.attribute.value">
+        <field name="name">6 cilinders</field>
+        <field name="attribute_id" ref="product_asset.product_attribute_displacement"/>
+    </record>
+
+    <record id="displacement_8" model="product.attribute.value">
+        <field name="name">8 cilinders</field>
+        <field name="attribute_id" ref="product_asset.product_attribute_displacement"/>
+    </record>
+
+    <record id="displacement_10" model="product.attribute.value">
+        <field name="name">10 cilinders</field>
+        <field name="attribute_id" ref="product_asset.product_attribute_displacement"/>
+    </record>
+
+    <record id="transmission_manual" model="product.attribute.value">
+        <field name="name">Manual</field>
+        <field name="attribute_id" ref="product_asset.product_attribute_transmission"/>
+    </record>
+
+    <record id="transmission_automatic" model="product.attribute.value">
+        <field name="name">Automatic</field>
+        <field name="attribute_id" ref="product_asset.product_attribute_transmission"/>
+    </record>
+
+</odoo>

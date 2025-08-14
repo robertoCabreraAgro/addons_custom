@@ -1,7 +1,7 @@
 {
     "name": "Product asset",
     "summary": "Manage assets",
-    "version": "saas~18.2.1.0.0",
+    "version": "1.0",
     "category": "Uncategorized",
     "author": "Odoo Community Association (OCA)",
     "depends": ["product_manufacturer", "hr"],
@@ -10,7 +10,7 @@
         "security/ir.model.access.csv",
         "data/res_partner_data.xml",
         "data/product_category_data.xml",
-        # "data/ir_cron_data.xml",
+        "data/product_attribute_data.xml",
         "views/product_template_views.xml",
         "views/product_model_views.xml",
         "views/product_asset_log_views.xml",

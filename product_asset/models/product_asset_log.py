@@ -20,21 +20,21 @@ class ProductAssetLog(models.Model):
     currency_id = fields.Many2one(
         related="company_id.currency_id",
     )
-    vehicle_id = fields.Many2one(
+    asset_id = fields.Many2one(
         comodel_name="product.template",
         string="Vehicle",
         required=True,
     )
     operator_id = fields.Many2one(
-        related="vehicle_id.operator_id",
+        related="asset_id.operator_id",
         string="Driver",
     )
-    fleet_manager_id = fields.Many2one(
-        related="vehicle_id.fleet_manager_id",
+    asset_manager_id = fields.Many2one(
+        related="asset_id.asset_manager_id",
         string="Fleet Manager",
     )
     odometer_uom_id = fields.Many2one(
-        related="vehicle_id.odometer_uom_id",
+        related="asset_id.odometer_uom_id",
         string="Unit",
         readonly=True,
     )

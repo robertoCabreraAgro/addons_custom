@@ -35,7 +35,7 @@ class ProductTemplate(models.Model):
     # FIELDS
     # ------------------------------------------------------------
 
-    fleet_manager_id = fields.Many2one(
+    asset_manager_id = fields.Many2one(
         comodel_name="hr.employee",
         string="Manager",
         domain=lambda self: [
@@ -51,10 +51,6 @@ class ProductTemplate(models.Model):
         tracking=True,
         help="Driver address of the vehicle",
     )
-    mobility_card = fields.Char(
-        # related="operator_id.mobility_card",
-        # store=True,
-    )
     future_operator_id = fields.Many2one(
         comodel_name="hr.employee",
         string="Future Driver",
@@ -62,61 +58,6 @@ class ProductTemplate(models.Model):
         tracking=True,
         copy=False,
         help="Next Driver Address of the vehicle",
-    )
-    asset_type = fields.Selection(
-        selection=[
-            ("machinery", "Machinery"),
-            ("product", "Product"),
-            ("property", "Property"),
-            ("vehicle", "Vehicle"),
-        ],
-        compute="_compute_model_fields",
-        store=True,
-        readonly=False,
-    )
-    location = fields.Char(
-        help="Location of the vehicle (garage, ...)",
-    )
-
-    # Technical fields
-    model_id = fields.Many2one(
-        comodel_name="product.model",
-        string="Model",
-        tracking=True,
-    )
-    image_128 = fields.Image(
-        compute="_compute_image_128",
-        readonly=True,
-    )
-    manufacturer_id = fields.Many2one(
-        compute="_compute_model_fields",
-        store=True,
-        readonly=False,
-    )
-    transmission = fields.Selection(
-        selection=[
-            ("manual", "Manual"),
-            ("automatic", "Automatic"),
-        ],
-        string="Transmission",
-        compute="_compute_model_fields",
-        store=True,
-        readonly=False,
-    )
-    fuel_type = fields.Selection(
-        FUEL_TYPES,
-        string="Fuel Type",
-        compute="_compute_model_fields",
-        store=True,
-        readonly=False,
-    )
-    service_activity = fields.Selection(
-        selection=[
-            ("none", "None"),
-            ("overdue", "Overdue"),
-            ("today", "Today"),
-        ],
-        compute="_compute_service_activity",
     )
     # TODO make power unit a many2one
     power_uom_id = fields.Many2one(
@@ -129,14 +70,6 @@ class ProductTemplate(models.Model):
         # ],
         copy=True,
         help="Odometer measure of the vehicle",
-    )
-    power_unit = fields.Selection(
-        selection=[
-            ("power", "kW"),
-            ("horsepower", "Horsepower"),
-        ],
-        string="Power Unit",
-        default="power",
     )
     power = fields.Integer(
         string="Power",
@@ -156,11 +89,35 @@ class ProductTemplate(models.Model):
         copy=True,
         help="Odometer unit of measure of the vehicle",
     )
-    odometer = fields.Float(
-        string="Odometer",
-        compute="_compute_odometer",
+    asset_type = fields.Selection(
+        selection=[
+            ("equipment", "Equipment"),
+            ("machinery", "Machinery"),
+            ("product", "Product"),
+            ("property", "Property"),
+            ("vehicle", "Vehicle"),
+        ],
+        default="product",
+    )
+    mobility_card = fields.Char()
+    location = fields.Char(
+        help="Location of the vehicle (garage, ...)",
+    )
+
+    # Technical fields
+    model_id = fields.Many2one(
+        comodel_name="product.model",
+        string="Model",
+        tracking=True,
+    )
+    image_128 = fields.Image(
+        compute="_compute_image_128",
         readonly=True,
-        help="Odometer measure of the vehicle",
+    )
+    manufacturer_id = fields.Many2one(
+        compute="_compute_model_fields",
+        store=True,
+        readonly=False,
     )
     model_year = fields.Char(
         string="Model Year",
@@ -169,12 +126,6 @@ class ProductTemplate(models.Model):
         readonly=False,
         help="Year of the model",
     )
-    # color_name = fields.Char(
-    #     compute="_compute_model_fields",
-    #     store=True,
-    #     readonly=False,
-    #     help="Color of the vehicle",
-    # )
     doors = fields.Integer(
         string="Doors Number",
         compute="_compute_model_fields",
@@ -189,15 +140,9 @@ class ProductTemplate(models.Model):
         readonly=False,
         help="Number of seats of the vehicle",
     )
-    fuel_tank_capacity = fields.Integer(
-        string="Tank capacity",
-        compute="_compute_model_fields",
-        store=True,
-        readonly=False,
-        help="Fuel tank capacity in liters",
-    )
-    cilinders = fields.Integer(
-        string="Cilinders Number",
+    trailer_hook = fields.Boolean(
+        string="Trailer Hitch",
+        default=False,
         compute="_compute_model_fields",
         store=True,
         readonly=False,
@@ -218,6 +163,13 @@ class ProductTemplate(models.Model):
         aggregator="avg",
         help="Fuel efficiency in kilometers per liter (km/L)",
     )
+    fuel_tank_capacity = fields.Integer(
+        string="Tank capacity",
+        compute="_compute_model_fields",
+        store=True,
+        readonly=False,
+        help="Fuel tank capacity in liters",
+    )
     vehicle_range = fields.Float(string="Range")
     weight_capacity = fields.Float(
         string="Max Weight",
@@ -232,13 +184,6 @@ class ProductTemplate(models.Model):
     volume_capacity_uom_name = fields.Char(
         string="Volume unit of measure label",
         compute="_compute_volume_capacity_uom_name",
-    )
-    trailer_hook = fields.Boolean(
-        string="Trailer Hitch",
-        default=False,
-        compute="_compute_model_fields",
-        store=True,
-        readonly=False,
     )
 
     # Identification fields
@@ -282,8 +227,22 @@ class ProductTemplate(models.Model):
 
     log_ids = fields.One2many(
         "product.asset.log",
-        "vehicle_id",
+        "asset_id",
         "Logs",
+    )
+    service_activity = fields.Selection(
+        selection=[
+            ("none", "None"),
+            ("overdue", "Overdue"),
+            ("today", "Today"),
+        ],
+        compute="_compute_service_activity",
+    )
+    odometer = fields.Float(
+        string="Odometer",
+        compute="_compute_odometer",
+        readonly=True,
+        help="Odometer measure of the vehicle",
     )
     assignment_count = fields.Integer(
         string="Drivers History Count",
@@ -352,7 +311,7 @@ class ProductTemplate(models.Model):
 
         if "active" in vals and not vals["active"]:
             self.env["product.asset.log"].search(
-                [("vehicle_id", "in", self.ids)]
+                [("asset_id", "in", self.ids)]
             ).active = False
 
         su_vals = self._clean_vals_internal_user(vals)
@@ -386,21 +345,21 @@ class ProductTemplate(models.Model):
         Log = self.env["product.asset.log"].with_context(active_test=False)
         contract_data = Log._read_group(
             [
-                ("vehicle_id", "in", self.ids),
+                ("asset_id", "in", self.ids),
                 ("type", "=", "contract"),
                 ("state", "!=", "closed"),
             ],
-            ["vehicle_id", "active"],
+            ["asset_id", "active"],
             ["__count"],
         )
         service_data = Log._read_group(
-            [("vehicle_id", "in", self.ids), ("type", "=", "service")],
-            ["vehicle_id", "active"],
+            [("asset_id", "in", self.ids), ("type", "=", "service")],
+            ["asset_id", "active"],
             ["__count"],
         )
         history_data = Log._read_group(
-            [("vehicle_id", "in", self.ids), ("type", "=", "driver")],
-            ["vehicle_id"],
+            [("asset_id", "in", self.ids), ("type", "=", "driver")],
+            ["asset_id"],
             ["__count"],
         )
 
@@ -481,21 +440,21 @@ class ProductTemplate(models.Model):
         data = self.env["product.asset.log"]._read_group(
             domain=[
                 ("date_end", "!=", False),
-                ("vehicle_id", "in", self.ids),
+                ("asset_id", "in", self.ids),
                 ("type", "=", "contract"),
                 ("state", "!=", "closed"),
             ],
-            groupby=["vehicle_id", "state"],
+            groupby=["asset_id", "state"],
             aggregates=["date_end:max"],
         )
         prepared_data = {}
-        for vehicle_id, state, date_end in data:
-            if prepared_data.get(vehicle_id.id):
-                if prepared_data[vehicle_id.id]["date_end"] < date_end:
-                    prepared_data[vehicle_id.id]["date_end"] = date_end
-                    prepared_data[vehicle_id.id]["state"] = state
+        for asset_id, state, date_end in data:
+            if prepared_data.get(asset_id.id):
+                if prepared_data[asset_id.id]["date_end"] < date_end:
+                    prepared_data[asset_id.id]["date_end"] = date_end
+                    prepared_data[asset_id.id]["state"] = state
             else:
-                prepared_data[vehicle_id.id] = {
+                prepared_data[asset_id.id] = {
                     "state": state,
                     "date_end": date_end,
                 }
@@ -557,7 +516,7 @@ class ProductTemplate(models.Model):
                     ("state", "in", ["open", "expired"]),
                 ]
             )
-            .mapped("vehicle_id")
+            .mapped("asset_id")
             .ids
         )
         res.append(("id", search_operator, res_ids))
@@ -578,7 +537,7 @@ class ProductTemplate(models.Model):
         today = fields.Date.context_today(self)
         # get the id of vehicles that have overdue contracts
         # but exclude those for which a new contract has already been created for them
-        vehicle_ids = self.env["fleet.vehicle"]._search(
+        asset_ids = self.env["fleet.vehicle"]._search(
             [
                 (
                     "contract_ids",
@@ -601,7 +560,7 @@ class ProductTemplate(models.Model):
                 ),
             ]
         )
-        res.append(("id", search_operator, vehicle_ids))
+        res.append(("id", search_operator, asset_ids))
         return res
 
     # ------------------------------------------------------------
@@ -615,10 +574,10 @@ class ProductTemplate(models.Model):
             "type": "ir.actions.act_window",
             "res_model": "product.asset.log",
             "view_mode": "list",
-            "domain": [("vehicle_id", "=", self.id)],
+            "domain": [("asset_id", "=", self.id)],
             "context": {
                 "default_operator_id": self.operator_id.id,
-                "default_vehicle_id": self.id,
+                "default_asset_id": self.id,
             },
         }
 
@@ -630,7 +589,7 @@ class ProductTemplate(models.Model):
             "target": "new",
             "view_mode": "form",
             "context": {
-                "default_vehicle_ids": self.ids,
+                "default_asset_ids": self.ids,
             },
         }
 
@@ -681,10 +640,10 @@ class ProductTemplate(models.Model):
         res.update(
             context=dict(
                 copy_context,
-                default_vehicle_id=self.id,
+                default_asset_id=self.id,
                 search_default_parent_false=True,
             ),
-            domain=[("vehicle_id", "=", self.id)],
+            domain=[("asset_id", "=", self.id)],
         )
         return res
 
@@ -712,9 +671,9 @@ class ProductTemplate(models.Model):
             res = self.env["ir.actions.act_window"]._for_xml_id(f"fleet.{xml_id}")
             res.update(
                 context=dict(
-                    self.env.context, default_vehicle_id=self.id, group_by=False
+                    self.env.context, default_asset_id=self.id, group_by=False
                 ),
-                domain=[("vehicle_id", "=", self.id)],
+                domain=[("asset_id", "=", self.id)],
             )
             return res
         return False
@@ -726,7 +685,7 @@ class ProductTemplate(models.Model):
     def _get_driver_history_data(self, vals):
         self.ensure_one()
         return {
-            "vehicle_id": self.id,
+            "asset_id": self.id,
             "operator_id": vals["operator_id"],
             "type": "driver",
             "date_start": fields.Date.today(),
