@@ -96,11 +96,12 @@ class SaleTarget(models.Model):
     @api.depends("partner_id", "template_id", "date_from", "date_to")
     def _compute_name(self):
         for target in self:
-            if all([target.partner_id, target.template_id, 
-                   target.date_from, target.date_to]):
-                target.name = (f"{target.partner_id.name} - "
-                              f"{target.template_id.name} "
-                              f"({target.date_from} - {target.date_to})")
+            if all([target.partner_id, target.template_id, target.date_from, target.date_to]):
+                target.name = (
+                    f"{target.partner_id.name} - "
+                    f"{target.template_id.name} "
+                    f"({target.date_from} - {target.date_to})"
+                )
             else:
                 target.name = "New Sales Target"
 
@@ -112,15 +113,16 @@ class SaleTarget(models.Model):
     def _get_historical_orders(self):
         """Get historical orders for current target's parameters."""
         if not all([self.partner_id, self.user_id, self.season_id]):
-            return self.env['sale.order']
-        
-        return self.env['sale.order'].search([
-            ('partner_id', '=', self.partner_id.id),
-            ('user_id', '=', self.user_id.id),
-            ('season_id', '=', self.season_id.id),
-            ('state', 'in', ['sale', 'done']),
-        ])
+            return self.env["sale.order"]
 
+        return self.env["sale.order"].search(
+            [
+                ("partner_id", "=", self.partner_id.id),
+                ("user_id", "=", self.user_id.id),
+                ("season_id", "=", self.season_id.id),
+                ("state", "in", ["sale", "done"]),
+            ]
+        )
 
     @api.depends("partner_id", "user_id", "season_id", "template_id")
     def _compute_ideal_amount(self):
@@ -128,12 +130,11 @@ class SaleTarget(models.Model):
             if not all([target.partner_id, target.user_id, target.season_id, target.template_id]):
                 target.ideal_amount = 0.0
                 continue
-            
-            template_products = target.template_id.sale_order_template_line_ids.mapped('product_id')
+
+            template_products = target.template_id.sale_order_template_line_ids.mapped("product_id")
             if not template_products:
                 target.ideal_amount = 0.0
                 continue
-            
 
             historical_orders = target._get_historical_orders()
 
@@ -142,7 +143,7 @@ class SaleTarget(models.Model):
                 for line in order.line_ids:
                     if line.product_id in template_products:
                         ideal_total += line.price_subtotal
-            
+
             target.ideal_amount = ideal_total
 
     @api.depends("partner_id", "user_id", "season_id", "template_id")
@@ -151,15 +152,15 @@ class SaleTarget(models.Model):
             if not all([target.partner_id, target.user_id, target.season_id, target.template_id]):
                 target.no_ideal_amount = 0.0
                 continue
-            
-            template_products = target.template_id.sale_order_template_line_ids.mapped('product_id')
+
+            template_products = target.template_id.sale_order_template_line_ids.mapped("product_id")
             historical_orders = target._get_historical_orders()
             no_ideal_total = 0.0
             for order in historical_orders:
                 for line in order.line_ids:
                     if line.product_id not in template_products:
                         no_ideal_total += line.price_subtotal
-            
+
             target.no_ideal_amount = no_ideal_total
 
     @api.depends("target_amount", "ideal_amount")
@@ -172,19 +173,23 @@ class SaleTarget(models.Model):
         for target in self:
             if not all([target.date_from, target.date_to, target.partner_id]):
                 continue
-                
+
             if target.date_from > target.date_to:
                 raise ValidationError("End date must be after start date.")
 
-            overlapping = self.search([
-                ("id", "!=", target.id),
-                ("partner_id", "=", target.partner_id.id),
-                "|",
-                "&", ("date_from", "<=", target.date_from),
-                     ("date_to", ">=", target.date_from),
-                "&", ("date_from", "<=", target.date_to),
-                     ("date_to", ">=", target.date_to),
-            ])
+            overlapping = self.search(
+                [
+                    ("id", "!=", target.id),
+                    ("partner_id", "=", target.partner_id.id),
+                    "|",
+                    "&",
+                    ("date_from", "<=", target.date_from),
+                    ("date_to", ">=", target.date_from),
+                    "&",
+                    ("date_from", "<=", target.date_to),
+                    ("date_to", ">=", target.date_to),
+                ]
+            )
 
             if overlapping:
                 raise ValidationError(
@@ -192,42 +197,47 @@ class SaleTarget(models.Model):
                     f"({overlapping[0].date_from} - {overlapping[0].date_to})"
                 )
 
-    @api.onchange('partner_id')
+    @api.onchange("partner_id")
     def _onchange_partner_id(self):
         if self.partner_id and self.partner_id.user_id:
             self.user_id = self.partner_id.user_id
 
-    @api.onchange('template_id')  
+    @api.onchange("template_id")
     def _onchange_template_id(self):
         if not (self.template_id and self.partner_id):
             return
-            
+
         if self._origin.id and self.template_id == self._origin.template_id:
             return
-            
+
         self.line_ids = [(5, 0, 0)]
         lines = []
-        
+
         for template_line in self.template_id.sale_order_template_line_ids:
             if not template_line.product_id or template_line.display_type:
                 continue
-                
+
             price = self._get_product_price(template_line)
-            lines.append((0, 0, {
-                'product_id': template_line.product_id.id,
-                'quantity': template_line.product_uom_qty or 1.0,
-                'price_unit': price,
-            }))
-        
+            lines.append(
+                (
+                    0,
+                    0,
+                    {
+                        "product_id": template_line.product_id.id,
+                        "quantity": template_line.product_uom_qty or 1.0,
+                        "price_unit": price,
+                    },
+                )
+            )
+
         self.line_ids = lines
-    
+
     def _get_product_price(self, template_line):
         pricelist = self.partner_id.property_product_pricelist
         if pricelist:
             try:
                 return pricelist.get_product_price(
-                    template_line.product_id, 1.0, self.partner_id,
-                    date=fields.Date.today()
+                    template_line.product_id, 1.0, self.partner_id, date=fields.Date.today()
                 )
             except:
                 pass
