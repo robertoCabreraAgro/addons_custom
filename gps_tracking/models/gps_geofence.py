@@ -545,6 +545,132 @@ class GpsGeofence(models.Model):
 
 
 
+    def _calculate_intersection_percentage(self, container_geofence, new_geojson):
+        """
+        Calculate the percentage of new geometry that intersects with container.
+        Returns percentage (0-100) or None if calculation fails.
+        """
+        if not SHAPELY_AVAILABLE:
+            return None
+            
+        try:
+            # Get container geometry from WKT
+            self.env.cr.execute("""
+                SELECT ST_AsText(geometry) as wkt
+                FROM gps_geofence 
+                WHERE id = %s
+            """, (container_geofence.id,))
+            
+            container_result = self.env.cr.fetchone()
+            if not container_result or not container_result[0]:
+                return None
+                
+            container_wkt = container_result[0]
+            
+            # Extract coordinates from WKT and create GeoJSON
+            import re
+            coord_pattern = r'(-?\d+\.?\d*)\s+(-?\d+\.?\d*)'
+            matches = re.findall(coord_pattern, container_wkt)
+            
+            if not matches:
+                return None
+                
+            # Create GeoJSON from WKT coordinates
+            container_coords = [[float(lng), float(lat)] for lng, lat in matches]
+            if container_coords[0] != container_coords[-1]:
+                container_coords.append(container_coords[0])
+                
+            container_geojson = {
+                "type": "Polygon", 
+                "coordinates": [container_coords]
+            }
+            
+            # Create Shapely geometries
+            container_geom = shape(container_geojson)
+            new_geom = shape(new_geojson)
+            
+            # Calculate intersection
+            intersection = container_geom.intersection(new_geom)
+            
+            # Calculate areas
+            new_area = new_geom.area
+            intersection_area = intersection.area
+            
+            if new_area > 0:
+                percentage = (intersection_area / new_area) * 100
+                _logger.info(f"📐 Intersection calculation:")
+                _logger.info(f"   New polygon area: {new_area:.8f}")
+                _logger.info(f"   Intersection area: {intersection_area:.8f}")
+                _logger.info(f"   Intersection percentage: {percentage:.2f}%")
+                return percentage
+            else:
+                return 0.0
+                
+        except Exception as e:
+            _logger.warning(f"Error calculating intersection percentage: {e}")
+            return None
+
+    def _check_intersection_postgis_50_percent(self, new_geometry, container_geofence):
+        """
+        Check if at least 50% of new geometry intersects with container using PostGIS.
+        """
+        try:
+            _logger.info(f"📍 POSTGIS 50% INTERSECTION ANALYSIS:")
+            
+            # Get container's SRID
+            self.env.cr.execute("""
+                SELECT ST_SRID(geometry) as container_srid
+                FROM gps_geofence 
+                WHERE id = %s
+            """, (container_geofence.id,))
+            
+            srid_result = self.env.cr.fetchone()
+            if not srid_result:
+                return False
+                
+            container_srid = srid_result[0]
+            _logger.info(f"   Using container SRID: {container_srid}")
+            
+            # Calculate intersection percentage using PostGIS
+            self.env.cr.execute("""
+                WITH new_geom AS (
+                    SELECT ST_Transform(
+                        ST_SetSRID(ST_GeomFromGeoJSON(%s), 4326), 
+                        %s
+                    ) as geom
+                )
+                SELECT 
+                    ST_Area(ST_Intersection(g.geometry, n.geom)) / NULLIF(ST_Area(n.geom), 0) * 100 as intersection_percentage,
+                    ST_Intersects(g.geometry, n.geom) as intersects,
+                    ST_Area(n.geom) as new_area,
+                    ST_Area(ST_Intersection(g.geometry, n.geom)) as intersection_area
+                FROM gps_geofence g, new_geom n
+                WHERE g.id = %s
+            """, (json.dumps(new_geometry), container_srid, container_geofence.id))
+            
+            result = self.env.cr.fetchone()
+            if result:
+                intersection_percentage = float(result[0]) if result[0] else 0.0
+                intersects = bool(result[1])
+                new_area = float(result[2]) if result[2] else 0.0
+                intersection_area = float(result[3]) if result[3] else 0.0
+                
+                _logger.info(f"   New polygon area: {new_area:.2f}")
+                _logger.info(f"   Intersection area: {intersection_area:.2f}")
+                _logger.info(f"   Intersection percentage: {intersection_percentage:.2f}%")
+                _logger.info(f"   Meets 50% requirement: {intersection_percentage >= 50.0}")
+                
+                # Return True if at least 50% intersection
+                return intersection_percentage >= 50.0
+                
+            return False
+            
+        except Exception as e:
+            _logger.warning(f"Error in PostGIS 50% intersection check: {e}")
+            import traceback
+            _logger.warning(traceback.format_exc())
+            return False
+
     def _check_containment_postgis_improved(self, new_geometry, container_geofence):
         """ 
         Improved PostGIS containment check using container's SRID.
@@ -620,42 +746,37 @@ class GpsGeofence(models.Model):
 
     def _check_spatial_containment(self, new_geometry, container_geofence):
         """
-        Check if the new geometry is spatially contained within the container geofence.
+        Check if the new geometry has at least 50% intersection with the container geofence.
+        Modified to use 50% intersection instead of full containment.
         """
         if not container_geofence.geometry or not new_geometry:
             return False
             
-        _logger.info(f"🔍 SPATIAL CONTAINMENT CHECK - Container: {container_geofence.name} (ID: {container_geofence.id})")
+        _logger.info(f"🔍 SPATIAL INTERSECTION CHECK (50%) - Container: {container_geofence.name} (ID: {container_geofence.id})")
         
         # Method 1: New improved Shapely method (primary)
         if SHAPELY_AVAILABLE:
-            _logger.info("📍 Using improved Shapely method (primary)")
+            _logger.info("📍 Using Shapely method for 50% intersection check")
             try:
-                comparison_result = self._compare_geometries(container_geofence, new_geometry, new_srid=4326)
+                comparison_result = self._calculate_intersection_percentage(container_geofence, new_geometry)
                 
-                if comparison_result:
-                    # Use covers() as it's more tolerant than contains()
-                    spatial_result = comparison_result.get('covers', False)
-                    
-                    # If covers fails but intersects, try contains as backup
-                    if not spatial_result and comparison_result.get('intersects', False):
-                        spatial_result = comparison_result.get('contains', False)
-                        if spatial_result:
-                            _logger.info("✅ Contains confirmed after intersects check")
-                    
-                    _logger.info(f"✅ Improved Shapely result: {spatial_result}")
+                if comparison_result is not None:
+                    # Check if intersection is at least 50%
+                    spatial_result = comparison_result >= 50.0
+                    _logger.info(f"✅ Intersection percentage: {comparison_result:.2f}%")
+                    _logger.info(f"✅ Meets 50% requirement: {spatial_result}")
                     return spatial_result
                 else:
-                    _logger.warning("⚠️ Geometry comparison returned None")
+                    _logger.warning("⚠️ Intersection calculation returned None")
                     
             except Exception as e:
-                _logger.warning(f"⚠️ Improved Shapely method failed: {e}")
+                _logger.warning(f"⚠️ Shapely intersection method failed: {e}")
         
-        # Method 2: PostGIS fallback
-        _logger.info("📍 Using PostGIS method (fallback)")
+        # Method 2: PostGIS fallback with 50% intersection
+        _logger.info("📍 Using PostGIS method for 50% intersection (fallback)")
         try:
-            result = self._check_containment_postgis_improved(new_geometry, container_geofence)
-            _logger.info(f"✅ PostGIS result: {result}")
+            result = self._check_intersection_postgis_50_percent(new_geometry, container_geofence)
+            _logger.info(f"✅ PostGIS 50% intersection result: {result}")
             if result is not None:
                 return result
         except Exception as e:
@@ -885,20 +1006,20 @@ class GpsGeofence(models.Model):
         
         _logger.info(f"\n📊 Bounds filtering: {len(potential_containers)} → {len(bounds_candidates)} candidates")
         
-        # Second pass: Spatial containment check only on bounds candidates
+        # Second pass: 50% intersection check only on bounds candidates
         spatial_containers = []
         for geofence in bounds_candidates:
             if self._check_spatial_containment(new_geom, geofence):
                 spatial_containers.append(geofence)
-                _logger.info(f"✅ Spatial containment confirmed: {geofence.name} ({geofence.area_type})")
+                _logger.info(f"✅ 50% intersection confirmed: {geofence.name} ({geofence.area_type})")
         
-        _logger.info(f"📊 Spatial filtering: {len(bounds_candidates)} → {len(spatial_containers)} containers")
+        _logger.info(f"📊 50% intersection filtering: {len(bounds_candidates)} → {len(spatial_containers)} containers")
         
         if not spatial_containers:
-            _logger.info("No spatial containers found")
+            _logger.info("No containers with 50% intersection found")
             return container_info
         
-        # Find the most immediate container (highest sequence priority, then smallest area)
+        # Find the most immediate container (lowest sequence = higher priority, then smallest area)
         immediate_container = None
         best_sequence = float('inf')
         min_surface = float('inf')
