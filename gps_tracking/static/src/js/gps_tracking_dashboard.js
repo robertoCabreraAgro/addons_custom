@@ -42,6 +42,7 @@ export class GpsTrackingDashboard extends Component {
             startDate: null,
             endDate: null,
             pathPoints: [],
+            leftPanelVisible: true, // Control de visibilidad del panel izquierdo
         });
         this.map = null;
         this.vectorLayer = null;
@@ -556,6 +557,17 @@ export class GpsTrackingDashboard extends Component {
         };
 
         step();
+    }
+
+    toggleLeftPanel() {
+        this.state.leftPanelVisible = !this.state.leftPanelVisible;
+        
+        // Notificar al mapa que se redimensione
+        setTimeout(() => {
+            if (this.map) {
+                this.map.updateSize();
+            }
+        }, 300); // Esperar a que termine la transición CSS
     }
 
     onCardClick(device) {
