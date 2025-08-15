@@ -15,8 +15,8 @@ class SaleTarget(models.Model):
         compute="_compute_name",
         store=True,
     )
-    date_from = fields.Date(required=True)
-    date_to = fields.Date(required=True)
+    date_from = fields.Date()
+    date_to = fields.Date()
     partner_id = fields.Many2one(
         "res.partner",
         string="Customer",
@@ -53,6 +53,21 @@ class SaleTarget(models.Model):
     )
     target_amount = fields.Monetary(
         compute="_compute_amounts",
+        store=True,
+    )
+    ideal_amount = fields.Monetary(
+        string="Ideal Amount",
+        compute="_compute_ideal_amount",
+        store=True,
+    )
+    no_ideal_amount = fields.Monetary(
+        string="No Ideal Amount",
+        compute="_compute_no_ideal_amount",
+        store=True,
+    )
+    ideal_gap = fields.Monetary(
+        string="Ideal Gap",
+        compute="_compute_ideal_gap",
         store=True,
     )
     line_ids = fields.One2many(
@@ -93,6 +108,62 @@ class SaleTarget(models.Model):
     def _compute_amounts(self):
         for target in self:
             target.target_amount = sum(target.line_ids.mapped("target_amount"))
+
+    @api.depends("partner_id", "user_id", "season_id", "template_id")
+    def _compute_ideal_amount(self):
+        for target in self:
+            if not all([target.partner_id, target.user_id, target.season_id, target.template_id]):
+                target.ideal_amount = 0.0
+                continue
+            
+            template_products = target.template_id.sale_order_template_line_ids.mapped('product_id')
+            if not template_products:
+                target.ideal_amount = 0.0
+                continue
+            
+            historical_orders = self.env['sale.order'].search([
+                ('partner_id', '=', target.partner_id.id),
+                ('user_id', '=', target.user_id.id),
+                ('season_id', '=', target.season_id.id),
+                ('state', 'in', ['sale', 'done']),
+            ])
+            
+            ideal_total = 0.0
+            for order in historical_orders:
+                for line in order.line_ids:
+                    if line.product_id in template_products:
+                        ideal_total += line.price_subtotal
+            
+            target.ideal_amount = ideal_total
+
+    @api.depends("partner_id", "user_id", "season_id", "template_id")
+    def _compute_no_ideal_amount(self):
+        for target in self:
+            if not all([target.partner_id, target.user_id, target.season_id, target.template_id]):
+                target.no_ideal_amount = 0.0
+                continue
+            
+            template_products = target.template_id.sale_order_template_line_ids.mapped('product_id')
+            
+            historical_orders = self.env['sale.order'].search([
+                ('partner_id', '=', target.partner_id.id),
+                ('user_id', '=', target.user_id.id),
+                ('season_id', '=', target.season_id.id),
+                ('state', 'in', ['sale', 'done']),
+            ])
+            
+            no_ideal_total = 0.0
+            for order in historical_orders:
+                for line in order.line_ids:
+                    if line.product_id not in template_products:
+                        no_ideal_total += line.price_subtotal
+            
+            target.no_ideal_amount = no_ideal_total
+
+    @api.depends("target_amount", "ideal_amount")
+    def _compute_ideal_gap(self):
+        for target in self:
+            target.ideal_gap = target.target_amount - target.ideal_amount
 
     @api.constrains("date_from", "date_to", "partner_id")
     def _check_overlapping_periods(self):

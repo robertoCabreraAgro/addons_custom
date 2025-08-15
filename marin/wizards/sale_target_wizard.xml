@@ -10,27 +10,20 @@
                     <div class="oe_title">
                         <h1>Generate Sale Targets</h1>
                     </div>
-                    <group>
-                        <group string="Target Configuration">
-                            <field name="template_id" required="1"/>
-                            <field name="date_from" required="1"/>
-                            <field name="date_to" required="1"/>
-                        </group>
-                        <group string="Summary">
-                            <field name="target_count" readonly="1"/>
-                            <field name="line_count" readonly="1"/>
-                        </group>
+                    <group string="Target Configuration">
+                        <field name="template_id" required="1"/>
+                        <field name="date_from" readonly="1"/>
+                        <field name="date_to" readonly="1"/>
                     </group>
-                    <group string="Selected Clients">
-                        <field name="partner_ids" nolabel="1">
-                            <list>
-                                <field name="name"/>
-                                <field name="hectares"/>
-                                <field name="profile_id"/>
-                                <field name="factor"/>
-                            </list>
-                        </field>
-                    </group>
+                    <separator string="Selected Clients"/>
+                    <field name="partner_ids" nolabel="1">
+                        <list>
+                            <field name="name"/>
+                            <field name="hectares"/>
+                            <field name="profile_id"/>
+                            <field name="factor"/>
+                        </list>
+                    </field>
                     <group string="Validation" invisible="not validation_errors">
                         <field name="validation_errors" nolabel="1" widget="text" readonly="1"/>
                     </group>

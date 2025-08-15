@@ -20,6 +20,12 @@ class ResUsers(models.Model):
         check_company=True,
         domain="([('type', '=', 'sale')])",
     )
+    season_id = fields.Many2one(
+        comodel_name="date.range",
+        string="AG Season",
+        domain="[('type_id.name', '=', 'AG Season')]",
+        help="Default AG season for this user's sales orders",
+    )
 
     def _get_default_purchase_journal_id(self):
         if self.property_purchase_journal_id:

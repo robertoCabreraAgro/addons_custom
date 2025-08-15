@@ -69,7 +69,6 @@
             <xpath expr="//page[@name='sales_purchases']//field[@name='user_id']" position="after">
                 <field name="team_id" readonly="not user_sale_manager" />
                 <field name="social_style_color" readonly="not user_sale_manager" />
-                <field name="season_id"/>
                 <field name="hectares"/>
                 <field name="profile_id" readonly="1"/>
                 <field name="factor" readonly="1"/>
@@ -184,6 +183,48 @@
                 <separator/>
                 <filter string="Auto-merge Enabled" name="auto_merge_enabled" domain="[('auto_merge', '=', True)]" help="Customers with auto-merge enabled"/>
             </xpath>
+        </field>
+    </record>
+    
+    <!-- Sale Target Wizard -->
+    <record id="view_sale_target_wizard_form" model="ir.ui.view">
+        <field name="name">sale.target.wizard.form</field>
+        <field name="model">sale.target.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Generate Sale Targets">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Generate Sale Targets</h1>
+                    </div>
+                    <group>
+                        <group string="Target Configuration">
+                            <field name="template_id" required="1"/>
+                            <field name="date_from" readonly="1"/>
+                            <field name="date_to" readonly="1"/>
+                        </group>
+                    </group>
+                    <separator string="Selected Clients"/>
+                    <field name="partner_ids" nolabel="1">
+                        <list>
+                            <field name="name"/>
+                            <field name="hectares"/>
+                            <field name="profile_id"/>
+                            <field name="factor"/>
+                        </list>
+                    </field>
+                    <group string="Validation" invisible="not validation_errors">
+                        <field name="validation_errors" nolabel="1" widget="text" readonly="1"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_generate_targets" 
+                            string="Generate Targets" 
+                            type="object" 
+                            class="btn-primary"
+                            invisible="validation_errors"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
         </field>
     </record>
     

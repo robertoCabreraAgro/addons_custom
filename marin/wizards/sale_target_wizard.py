@@ -29,35 +29,21 @@ class SaleTargetWizard(models.TransientModel):
 
     date_from = fields.Date(
         string="Start Date",
-        required=True,
-        default=fields.Date.today,
+        related="template_id.season_id.date_start",
+        readonly=True,
     )
 
     date_to = fields.Date(
         string="End Date",
-        required=True,
+        related="template_id.season_id.date_end",
+        readonly=True,
     )
 
-    target_count = fields.Integer(
-        string="Targets to Create", compute="_compute_summary", readonly=True
-    )
-
-    line_count = fields.Integer(
-        string="Target Lines to Create", compute="_compute_summary", readonly=True
-    )
 
     validation_errors = fields.Text(
         string="Validation Issues", compute="_compute_validation_errors", readonly=True
     )
 
-    @api.depends("partner_ids", "template_id")
-    def _compute_summary(self):
-        """Compute summary counts for wizard."""
-        for wizard in self:
-            wizard.target_count = len(wizard.partner_ids)
-            wizard.line_count = len(wizard.partner_ids) * len(
-                wizard.template_id.sale_order_template_line_ids
-            )
 
     @api.depends("partner_ids", "template_id", "date_from", "date_to")
     def _compute_validation_errors(self):
@@ -151,6 +137,7 @@ class SaleTargetWizard(models.TransientModel):
                     "date_from": self.date_from,
                     "date_to": self.date_to,
                     "template_id": self.template_id.id,
+                    "user_id": partner.user_id.id if partner.user_id else self.env.user.id,
                 }
             )
 
