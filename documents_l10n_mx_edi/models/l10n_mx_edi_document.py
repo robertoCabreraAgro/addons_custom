@@ -152,10 +152,6 @@ class L10nMxEdiDocument(models.Model):
                         domain,
                     ]
                 )
-            else:
-                domain = expression.AND(
-                    [[("company_id", "in", [False, self.env.company.id])], domain]
-                )
 
             # Check if UUID exists in documents, excluding current record
             existing_document = self.env["documents.document"].search(domain, limit=1)
@@ -192,13 +188,6 @@ class L10nMxEdiDocument(models.Model):
                     [
                         [("id", "!=", record.id)],
                         [("company_id", "in", [False, record.company_id.id])],
-                        domain,
-                    ]
-                )
-            else:
-                domain = expression.AND(
-                    [
-                        [("company_id", "in", [False, self.env.company.id])],
                         domain,
                     ]
                 )
