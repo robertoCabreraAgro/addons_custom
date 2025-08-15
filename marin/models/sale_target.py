@@ -109,6 +109,19 @@ class SaleTarget(models.Model):
         for target in self:
             target.target_amount = sum(target.line_ids.mapped("target_amount"))
 
+    def _get_historical_orders(self):
+        """Get historical orders for current target's parameters."""
+        if not all([self.partner_id, self.user_id, self.season_id]):
+            return self.env['sale.order']
+        
+        return self.env['sale.order'].search([
+            ('partner_id', '=', self.partner_id.id),
+            ('user_id', '=', self.user_id.id),
+            ('season_id', '=', self.season_id.id),
+            ('state', 'in', ['sale', 'done']),
+        ])
+
+
     @api.depends("partner_id", "user_id", "season_id", "template_id")
     def _compute_ideal_amount(self):
         for target in self:
@@ -121,13 +134,9 @@ class SaleTarget(models.Model):
                 target.ideal_amount = 0.0
                 continue
             
-            historical_orders = self.env['sale.order'].search([
-                ('partner_id', '=', target.partner_id.id),
-                ('user_id', '=', target.user_id.id),
-                ('season_id', '=', target.season_id.id),
-                ('state', 'in', ['sale', 'done']),
-            ])
-            
+
+            historical_orders = target._get_historical_orders()
+
             ideal_total = 0.0
             for order in historical_orders:
                 for line in order.line_ids:
@@ -144,14 +153,7 @@ class SaleTarget(models.Model):
                 continue
             
             template_products = target.template_id.sale_order_template_line_ids.mapped('product_id')
-            
-            historical_orders = self.env['sale.order'].search([
-                ('partner_id', '=', target.partner_id.id),
-                ('user_id', '=', target.user_id.id),
-                ('season_id', '=', target.season_id.id),
-                ('state', 'in', ['sale', 'done']),
-            ])
-            
+            historical_orders = target._get_historical_orders()
             no_ideal_total = 0.0
             for order in historical_orders:
                 for line in order.line_ids:

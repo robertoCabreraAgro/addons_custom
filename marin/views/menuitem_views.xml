@@ -598,8 +598,9 @@
     <menuitem id="menu_sale_target"
               name="Sales Targets"
               parent="sale.menu_sale_report"
-              action="action_sale_target"
-              sequence="50"/>
+              action="action_sale_target_line"
+              sequence="60"
+              groups="sales_team.group_sale_manager"/>
 
     <menuitem
         id="menu_hectares_ranges"
@@ -618,7 +619,6 @@
         sequence="41"
         groups="sales_team.group_sale_manager"
     />
-
 
     <!-- Expenses -->
     <record id="hr_expense.menu_hr_expense_root" model="ir.ui.menu">

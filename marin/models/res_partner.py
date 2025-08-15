@@ -138,6 +138,7 @@ class ResPartner(models.Model):
         string='Last Profile Change',
         compute='_compute_profile_stats',
     )
+   
     season_id = fields.Many2one(
         'date.range',
         string="AG Season",
