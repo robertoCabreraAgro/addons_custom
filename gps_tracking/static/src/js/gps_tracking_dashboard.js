@@ -9,6 +9,13 @@ import { SearchModel } from "@web/search/search_model";
 import { GpsSearchbar } from "../components/searchbar/gps_searchbar";
 import { GeofenceDialog } from "../components/geofence_dialog";
 
+// Constants
+const REFRESH_INTERVAL_MS = 1000;
+const DEFAULT_ZOOM_LEVEL = 15;
+const ANIMATION_DURATION_MS = 500;
+const DEFAULT_STROKE_COLOR = "#3399CC";
+const TRANSPARENT_FILL = "rgba(0, 0, 0, 0)";
+
 export class GpsTrackingDashboard extends Component {
     static props = {
         action: { type: Object, optional: true },
@@ -24,6 +31,7 @@ export class GpsTrackingDashboard extends Component {
         this.orm = useService("orm");
         this.action = useService("action");
         this.dialog = useService("dialog");
+        this.notification = useService("notification");
         this.state = useState({
             devices: [],
             filteredDevices: [],
@@ -50,10 +58,10 @@ export class GpsTrackingDashboard extends Component {
             }
         });
 
-        // Llamar a la función de actualización periódicamente (cada 10 segundos)
+        // Llamar a la función de actualización periódicamente 
         this.refreshInterval = setInterval(() => {
             this.refreshData();
-        }, 1000); // 10 segundos
+        }, REFRESH_INTERVAL_MS);
 
         onWillStart(async () => {
             // Cargar los dispositivos inicialmente
@@ -566,8 +574,8 @@ export class GpsTrackingDashboard extends Component {
                 setTimeout(() => {
                     this.map.getView().animate({
                         center: coords,
-                        zoom: 15,
-                        duration: 500,
+                        zoom: DEFAULT_ZOOM_LEVEL,
+                        duration: ANIMATION_DURATION_MS,
                     });
                 }, 200);
             } catch (error) {
@@ -612,13 +620,18 @@ export class GpsTrackingDashboard extends Component {
             this.geofenceLayer = new ol.layer.Vector({
                 source: vectorSource,
                 style: (feature) => {
+                    // Si la feature no tiene color asignado (temporal), hacer relleno transparente
+                    const color = feature.get("color");
+                    const fillColor = color ? color + "44" : TRANSPARENT_FILL; // Transparente para temporales
+                    const strokeColor = color || DEFAULT_STROKE_COLOR; // Azul por defecto para temporales
+                    
                     return new ol.style.Style({
                         stroke: new ol.style.Stroke({
-                            color: feature.get("color"),
+                            color: strokeColor,
                             width: 2,
                         }),
                         fill: new ol.style.Fill({
-                            color: feature.get("color") + "44", // Transparente
+                            color: fillColor,
                         }),
                     });
                 },
@@ -666,15 +679,30 @@ export class GpsTrackingDashboard extends Component {
             const geometry = event.feature.getGeometry().clone().transform('EPSG:3857', 'EPSG:4326');
             const geoJson = new ol.format.GeoJSON().writeGeometry(geometry);
             
+            // Store reference to the temporary feature for potential removal
+            const tempFeature = event.feature;
+            
+            // Create cleanup function to avoid code duplication
+            const cleanupTempFeature = (reason = "cancelled") => {
+                console.log(`Dialog ${reason} - removing temporary features`);
+                
+                if (tempFeature && this.geofenceLayer) {
+                    this.geofenceLayer.getSource().removeFeature(tempFeature);
+                }
+                
+                this.removeTemporaryFeatures();
+            };
 
             // Show dialog with geometry
             this.dialog.add(GeofenceDialog, {
                 geometry: geoJson,
                 onSave: (result) => {
-                    // Reload geofences to show the new one
                     this.loadGeofences();
-                    alert(`Geographic area saved successfully.`);
-                }
+                    this.notification.add("Geographic area saved successfully.", { type: "success" });
+                },
+                onCancel: () => cleanupTempFeature("cancelled")
+            }, {
+                onClose: () => cleanupTempFeature("closed")
             });
 
             // Deactivate drawing tool after drawing
@@ -687,12 +715,42 @@ export class GpsTrackingDashboard extends Component {
         this.state.drawingToolActive = true;
     }
 
+    removeTemporaryFeatures() {
+        /**
+         * Remove all temporary features (features without color property) from the geofence layer
+         */
+        if (!this.geofenceLayer) {
+            return;
+        }
 
-    // Recorrido por fechas
+        const source = this.geofenceLayer.getSource();
+        const featuresToRemove = [];
+
+        // Find all features that are temporary (no color or not saved geofences)
+        source.forEachFeature((feature) => {
+            const color = feature.get("color");
+            const featureType = feature.get("feature_type");
+            
+            // Remove features that don't have color AND don't have feature_type="geofence"
+            if (!color || featureType !== "geofence") {
+                featuresToRemove.push(feature);
+            }
+        });
+
+        // Remove all temporary features
+        featuresToRemove.forEach((feature) => {
+            source.removeFeature(feature);
+        });
+        
+        if (featuresToRemove.length > 0) {
+            console.log(`Removed ${featuresToRemove.length} temporary feature(s)`);
+        }
+    }
+
     // Recorrido por fechas
     async fetchDevicePath() {
         if (!this.state.startDate || !this.state.endDate) {
-            alert("Selecciona un rango de fechas.");
+            this.notification.add("Please select a date range.", { type: "warning" });
             return;
         }
 
@@ -717,7 +775,7 @@ export class GpsTrackingDashboard extends Component {
 
 
             if (points.length === 0) {
-                alert("No se encontraron puntos en el rango de fechas seleccionado.");
+                this.notification.add("No points found for the selected date range.", { type: "info" });
                 return;
             }
 

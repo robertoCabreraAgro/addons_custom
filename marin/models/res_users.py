@@ -41,6 +41,7 @@ class ResUsers(models.Model):
         return super().SELF_READABLE_FIELDS + [
             "property_purchase_journal_id",
             "property_sale_journal_id",
+            "season_id",
         ]
 
     # pylint: disable=invalid-name
@@ -49,4 +50,5 @@ class ResUsers(models.Model):
         return super().SELF_WRITEABLE_FIELDS + [
             "property_purchase_journal_id",
             "property_sale_journal_id",
+            "season_id",
         ]

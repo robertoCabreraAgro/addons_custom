@@ -8,6 +8,7 @@ export class GeofenceDialog extends Component {
 
   setup() {
     this.orm = useService("orm");
+    this.notification = useService("notification");
     this.state = useState({
       partners: [],
       filteredPartners: [],
@@ -85,6 +86,13 @@ export class GeofenceDialog extends Component {
     }
   }
 
+  /**
+   * Helper method to ensure geometry is a JSON string
+   */
+  _ensureGeometryJson(geometry) {
+    return typeof geometry === "string" ? geometry : JSON.stringify(geometry);
+  }
+
   updateColorSequence() {
     /**
      * Update color and sequence based on selected area_type
@@ -150,21 +158,18 @@ export class GeofenceDialog extends Component {
 
     // Validate required fields
     if (!name || !area_type) {
-      alert("Please fill in all required fields (Name and Area Type).");
+      this.notification.add("Please fill in all required fields (Name and Area Type).", { type: "warning" });
       return;
     }
 
     if (!this.props.geometry) {
-      alert("Please draw a geographic area first.");
+      this.notification.add("Please draw a geographic area first.", { type: "warning" });
       return;
     }
 
     try {
       // Ensure geometry is a JSON string for consistency
-      const geometryJson =
-        typeof this.props.geometry === "string"
-          ? this.props.geometry
-          : JSON.stringify(this.props.geometry);
+      const geometryJson = this._ensureGeometryJson(this.props.geometry);
 
       // Detect container before saving
       const containerInfo = await this.orm.call(
@@ -179,7 +184,7 @@ export class GeofenceDialog extends Component {
         containerInfo.validation_errors.length > 0
       ) {
         const errorMessage = containerInfo.validation_errors.join("\n");
-        alert(`Validation errors:\n${errorMessage}`);
+        this.notification.add(`Validation errors:\n${errorMessage}`, { type: "danger" });
         return;
       }
 
@@ -221,7 +226,7 @@ export class GeofenceDialog extends Component {
       this.props.close();
     } catch (error) {
       console.error("Error saving geographic area in Odoo:", error);
-      alert("There was an error saving the geographic area.");
+      this.notification.add("There was an error saving the geographic area.", { type: "danger" });
     }
   }
 
@@ -242,10 +247,7 @@ export class GeofenceDialog extends Component {
       const areaType = this.state.form.area_type || "property";
 
       // Ensure geometry is a JSON string
-      const geometryJson =
-        typeof this.props.geometry === "string"
-          ? this.props.geometry
-          : JSON.stringify(this.props.geometry);
+      const geometryJson = this._ensureGeometryJson(this.props.geometry);
 
       // Detect container
       const containerInfo = await this.orm.call(
@@ -309,10 +311,7 @@ export class GeofenceDialog extends Component {
 
     try {
       // Ensure geometry is a JSON string
-      const geometryJson =
-        typeof this.props.geometry === "string"
-          ? this.props.geometry
-          : JSON.stringify(this.props.geometry);
+      const geometryJson = this._ensureGeometryJson(this.props.geometry);
 
       // Use a temporary method to calculate surface
       const result = await this.orm.call(
@@ -331,6 +330,10 @@ export class GeofenceDialog extends Component {
     /**
      * Cancel and close dialog
      */
+    // Call onCancel callback if provided (to clean up temporary features)
+    if (this.props.onCancel) {
+      this.props.onCancel();
+    }
     this.props.close();
   }
 }

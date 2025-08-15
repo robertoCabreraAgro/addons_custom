@@ -106,3 +106,8 @@ access_sale_target_line_manager,sale.target.line.manager,marin.model_sale_target
 access_account_move_line_fleet_manager,account.move.line fleet manager,account.model_account_move_line,fleet.fleet_group_manager,1,0,0,0
 access_account_move_fleet_manager,account.move fleet manager,account.model_account_move,fleet.fleet_group_manager,1,0,0,0
 access_account_partial_reconcile_fleet_manager,account.partial.reconcile fleet manager,account.model_account_partial_reconcile,fleet.fleet_group_manager,1,0,0,0
+access_sale_target_wizard_manager,sale.target.wizard.manager,marin.model_sale_target_wizard,sales_team.group_sale_manager,1,1,1,1
+access_res_partner_hectares_range_user,res.partner.hectares.range.user,marin.model_res_partner_hectares_range,sales_team.group_sale_salesman,1,0,0,0
+access_res_partner_hectares_range_manager,res.partner.hectares.range.manager,marin.model_res_partner_hectares_range,sales_team.group_sale_manager,1,1,1,1
+access_res_partner_profile_history_user,res.partner.profile.history.user,marin.model_res_partner_profile_history,sales_team.group_sale_salesman,1,0,0,0
+access_res_partner_profile_history_manager,res.partner.profile.history.manager,marin.model_res_partner_profile_history,sales_team.group_sale_manager,1,1,1,1

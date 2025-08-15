@@ -69,6 +69,7 @@
             <xpath expr="//page[@name='sales_purchases']//field[@name='user_id']" position="after">
                 <field name="team_id" readonly="not user_sale_manager" />
                 <field name="social_style_color" readonly="not user_sale_manager" />
+                <field name="season_id"/>
                 <field name="hectares"/>
                 <field name="profile_id" readonly="1"/>
                 <field name="factor" readonly="1"/>
@@ -116,6 +117,40 @@
                         </group>
                     </group>
                 </page>
+                <page
+                    name="profile_classification_page"
+                    string="Client Classification"
+                    invisible="not is_company"
+                    groups="sales_team.group_sale_manager"
+                >
+                    <group>
+                        <group string="Current Classification">
+                            <field name="profile_id" readonly="1"/>
+                            <field name="factor" readonly="1"/>
+                            <field name="score_total" readonly="1"/>
+                            <field name="profile_change_count" readonly="1"/>
+                            <field name="last_profile_change" readonly="1"/>
+                        </group>
+                        <group string="Score Breakdown">
+                            <field name="score_hectares" readonly="1"/>
+                            <field name="score_categories" readonly="1"/>
+                            <field name="hectares"/>
+                        </group>
+                    </group>
+                    <group string="Profile Change History">
+                        <field name="profile_history_ids" nolabel="1">
+                            <list string="Profile Changes" create="false" edit="false" delete="false">
+                                <field name="change_date"/>
+                                <field name="old_profile_id"/>
+                                <field name="new_profile_id"/>
+                                <field name="old_score_total"/>
+                                <field name="new_score_total"/>
+                                <field name="change_trigger"/>
+                                <field name="user_id"/>
+                            </list>
+                        </field>
+                    </group>
+                </page>
             </xpath>
         </field>
     </record>
@@ -151,4 +186,102 @@
             </xpath>
         </field>
     </record>
+    
+    <!-- Partner Category List View Extension -->
+    <record id="view_partner_category_list_scoring" model="ir.ui.view">
+        <field name="name">res.partner.category.list.scoring</field>
+        <field name="model">res.partner.category</field>
+        <field name="inherit_id" ref="base.view_partner_category_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='color']" position="after">
+                <field name="score_value" string="Score" invisible="not scoring_active"/>
+                <field name="scoring_active" string="Scoring Active" widget="boolean_toggle"/>
+            </xpath>
+        </field>
+    </record>
+    
+    <!-- Hectares Range Views -->
+    <record id="view_res_partner_hectares_range_form" model="ir.ui.view">
+        <field name="name">res.partner.hectares.range.form</field>
+        <field name="model">res.partner.hectares.range</field>
+        <field name="arch" type="xml">
+            <form string="Hectares Range">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="display_name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Classification">
+                            <field name="name" placeholder="e.g., Small Producer"/>
+                            <field name="score_value" required="1"/>
+                        </group>
+                        <group string="Hectares Range">
+                            <field name="min_hectares" required="1"/>
+                            <field name="max_hectares"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Settings">
+                            <field name="active"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group></group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_res_partner_hectares_range_list" model="ir.ui.view">
+        <field name="name">res.partner.hectares.range.list</field>
+        <field name="model">res.partner.hectares.range</field>
+        <field name="arch" type="xml">
+            <list string="Hectares Ranges" multi_edit="1">
+                <field name="name"/>
+                <field name="min_hectares"/>
+                <field name="max_hectares"/>
+                <field name="score_value"/>
+                <field name="active"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_res_partner_hectares_range" model="ir.actions.act_window">
+        <field name="name">Hectares Ranges</field>
+        <field name="res_model">res.partner.hectares.range</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new hectares range
+            </p>
+        </field>
+    </record>
+    
+    <!-- Profile History Views -->
+    <record id="view_res_partner_profile_history_list" model="ir.ui.view">
+        <field name="name">res.partner.profile.history.list</field>
+        <field name="model">res.partner.profile.history</field>
+        <field name="arch" type="xml">
+            <list string="Profile History" create="false" edit="false" delete="false">
+                <field name="change_date"/>
+                <field name="partner_id"/>
+                <field name="old_profile_id"/>
+                <field name="new_profile_id"/>
+                <field name="old_score_total"/>
+                <field name="new_score_total"/>
+                <field name="change_trigger"/>
+                <field name="user_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_res_partner_profile_history" model="ir.actions.act_window">
+        <field name="name">Profile History</field>
+        <field name="res_model">res.partner.profile.history</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
 </odoo>

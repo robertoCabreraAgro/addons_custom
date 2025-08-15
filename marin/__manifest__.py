@@ -93,6 +93,7 @@
         "data/approval_category_data.xml",
         "data/product_category_data.xml",
         "data/product_product_data.xml",
+        "data/res_partner_hectares_range_data.xml",
         "data/discuss_channel_data.xml",
         # "report/report_deliveryslip.xml",
         # "report/report_stock_picking_operations.xml",
@@ -159,6 +160,7 @@
         "wizards/sale_order_line_price_history.xml",
         "wizards/stock_quant_lot_update.xml",
         "wizards/fleet_vehicle_log_import_views.xml",
+        "wizards/sale_target_wizard.xml",
         "views/menuitem_views.xml",  # always at last to avoid precedence problems
     ],
     "pre_init_hook": "_pre_init_marin",

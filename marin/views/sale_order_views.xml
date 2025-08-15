@@ -81,6 +81,13 @@
         <field name="priority">4</field>
         <field name="arch" type="xml">
             <list sample="1" decoration-info="invoice_state == 'to do'" decoration-muted="state == 'cancel'">
+                <header>
+                    <button name="action_assign_missing_seasons" 
+                            string="Assign missing seasons" 
+                            type="object" 
+                            class="btn-primary"
+                            groups="sales_team.group_sale_manager"/>
+                </header>
                 <field name="company_id" column_invisible="1" />
                 <field name="currency_id" column_invisible="1" />
                 <field name="state" column_invisible="1" />
@@ -129,6 +136,7 @@
                     decoration-success="invoice_state == 'done'"
                 />
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide" />
+                <field name="season_id" optional="show" />
                 <field name="warehouse_id" optional="show" />
                 <field name="company_id" readonly="1" optional="show" groups="base.group_multi_company" />
             </list>
@@ -198,7 +206,6 @@
                 />
                 <field
                     name="season_id"
-                    required="state == 'draft'"
                     readonly="state in ['sale', 'cancel']"
                     options="{'no_create': True}"
                 />

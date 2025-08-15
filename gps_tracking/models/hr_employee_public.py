@@ -12,10 +12,10 @@ class HrEmployeePublic(models.Model):
 
     def action_enable_vehicle_loan_report(self):
         """Server action to enable vehicle loan report for selected employees."""
-        self.write({'enable_vehicle_loan': True})
+        self.write({"enable_vehicle_loan": True})
         return True
 
     def action_disable_vehicle_loan_report(self):
         """Server action to disable vehicle loan report for selected employees."""
-        self.write({'enable_vehicle_loan': False})
+        self.write({"enable_vehicle_loan": False})
         return True

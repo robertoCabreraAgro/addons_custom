@@ -18,6 +18,10 @@
                         options="{'no_create': True}"
                         groups="account.group_account_invoice"
                     />
+                    <field 
+                        name="season_id" 
+                        options="{'no_create': True}"
+                    />
                 </group>
             </group>
         </field>
@@ -40,6 +44,10 @@
                         options="{'no_create': True}"
                         groups="account.group_account_invoice"
                     />
+                    <field 
+                        name="season_id" 
+                        options="{'no_create': True}"
+                    />
                 </group>
             </group>
         </field>
@@ -61,6 +69,10 @@
                         name="property_sale_journal_id"
                         options="{'no_create': True}"
                         groups="account.group_account_invoice"
+                    />
+                    <field 
+                        name="season_id" 
+                        options="{'no_create': True}"
                     />
                 </group>
             </group>

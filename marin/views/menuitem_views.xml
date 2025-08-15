@@ -601,6 +601,25 @@
               action="action_sale_target"
               sequence="50"/>
 
+    <menuitem
+        id="menu_hectares_ranges"
+        name="Hectares Ranges"
+        parent="sale.menu_sale_config"
+        action="action_res_partner_hectares_range"
+        sequence="40"
+        groups="sales_team.group_sale_manager"
+    />
+    
+    <menuitem
+        id="menu_profile_history"
+        name="Profile History"
+        parent="sale.menu_sale_config"
+        action="action_res_partner_profile_history"
+        sequence="41"
+        groups="sales_team.group_sale_manager"
+    />
+
+
     <!-- Expenses -->
     <record id="hr_expense.menu_hr_expense_root" model="ir.ui.menu">
         <field
@@ -724,4 +743,5 @@
     <record id="stock.int_picking" model="ir.ui.menu">
         <field name="action" ref="action_picking_tree_internal_readonly"/>
     </record>
+
 </odoo>
