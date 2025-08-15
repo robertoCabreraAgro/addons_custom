@@ -69,6 +69,7 @@
             <xpath expr="//page[@name='sales_purchases']//field[@name='user_id']" position="after">
                 <field name="team_id" readonly="not user_sale_manager" />
                 <field name="social_style_color" readonly="not user_sale_manager" />
+                <field name="season_id"/>
                 <field name="hectares"/>
                 <field name="profile_id" readonly="1"/>
                 <field name="factor" readonly="1"/>
