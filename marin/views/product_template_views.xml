@@ -133,8 +133,12 @@
             <xpath expr="//field[@name='property_account_expense_id']" position="after">
                 <field name="property_account_expense_refund_id" />
             </xpath>
-            <xpath expr="//field[@name='uom_id']" position="after">
-                <field name="x_dose_x_ha" />
+            <xpath expr="//field[@name='product_tooltip']" position="before">
+                <label for="use_dose" class="oe_inline" invisible="type != 'consu'"/>
+                <div class="o_row w-100" invisible="type != 'consu'">
+                    <field name="use_dose"/>
+                    <field name="x_dose" invisible="not use_dose" />
+                </div>
             </xpath>
             <xpath expr="//field[@name='seller_ids']" position="attributes">
                 <!-- removed standard_price from context since it's in marin.group_product_cost_readonly causing 'Access Rights Inconsistency' (Task #5664) -->

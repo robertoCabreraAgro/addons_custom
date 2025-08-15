@@ -4,11 +4,10 @@
     "version": "1.0",
     "category": "Uncategorized",
     "author": "Odoo Community Association (OCA)",
-    "depends": ["product_manufacturer", "hr"],
+    "depends": ["uom_extended", "product_manufacturer", "hr"],
     "data": [
         "security/security.xml",
         "security/ir.model.access.csv",
-        "data/uom_uom_data.xml",
         "data/res_partner_data.xml",
         "data/product_category_data.xml",
         "data/product_attribute_data.xml",

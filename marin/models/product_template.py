@@ -36,13 +36,19 @@ class ProductTemplate(models.Model):
         help="Used as default value on the vendor refunds lines. "
         "Leave empty to use the account from the product category.",
     )
-    x_dose_x_ha = fields.Float(
+    use_dose = fields.Boolean(
+        compute="_compute_use_expiration_date",
+        store=True,
+        readonly=False,
+    )
+    x_dose = fields.Float(
         "Dose per Hectare",
         digits="Product Price",
     )
     use_expiration_date = fields.Boolean(
         compute="_compute_use_expiration_date",
         store=True,
+        readonly=False,
     )
 
     def _compute_group(self):
@@ -56,10 +62,17 @@ class ProductTemplate(models.Model):
             if default_sale_ok:
                 product.sale_ok = default_sale_ok
 
-    @api.depends("tracking")
+    @api.depends("categ_id")
+    def _compute_use_dose(self):
+        for product in self:
+            if product.categ_id and product.categ_id.use_dose:
+                product.use_dose = True
+
+    @api.depends("categ_id")
     def _compute_use_expiration_date(self):
-        for rec in self:
-            rec.use_expiration_date = rec.tracking != "none"
+        for product in self:
+            if product.categ_id and product.categ_id.use_expiration_date:
+                product.use_expiration_date = True
 
     # Extend original method
     def _get_product_accounts(self):

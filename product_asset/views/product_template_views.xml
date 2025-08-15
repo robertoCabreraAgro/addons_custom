@@ -30,8 +30,6 @@
             <group position="inside">
                 <filter string="Asset Type" name="group_asset_type"
                     context="{'group_by': 'asset_type'}" />
-                <filter string="Power Unit" name="group_power_uom"
-                    context="{'group_by': 'power_uom_id'}" />
             </group>
         </field>
     </record>
@@ -45,7 +43,6 @@
             <field name="categ_id" position="after">
                 <field name="asset_type" optional="show" />
                 <field name="power" optional="hide" />
-                <field name="power_uom_id" optional="hide" />
             </field>
         </field>
     </record>
@@ -57,7 +54,7 @@
         <field name="inherit_id" ref="product.product_template_form_view" />
         <field name="arch" type="xml">
             <xpath expr="//notebook" position="inside">
-                <page string="Asset Information" name="asset_info">
+                <page name="asset_info" string="Asset Information" invisible="asset_type == 'product'">
                     <group>
                         <group string="General Asset Info">
                             <field name="asset_type" />
@@ -65,29 +62,27 @@
                     </group>
 
                     <!-- Power Information -->
-                    <group string="Power Specifications" name="power_group">
+                    <group name="power_group" string="Power Specifications">
                         <group>
                             <field name="power" />
-                            <field name="power_uom_id" />
                         </group>
                     </group>
 
                     <!-- Vehicle Specific Information -->
-                    <group string="Vehicle Specifications" name="vehicle_group"
+                    <group name="vehicle_group" string="Vehicle Specifications"
                         invisible="asset_type != 'vehicle'">
                         <group>
                             <field name="doors" />
                             <field name="seats" />
-                            <field name="odometer_uom_id" />
                         </group>
                         <group>
                             <field name="co2" />
-                            <field name="vehicle_range" />
+                            <field name="range" />
                         </group>
                     </group>
 
                     <!-- Fuel Efficiency -->
-                    <group string="Fuel Efficiency" name="fuel_group"
+                    <group name="fuel_group" string="Fuel Efficiency"
                         invisible="asset_type != 'vehicle'">
                         <group>
                             <field name="fuel_efficiency_theoretical" />

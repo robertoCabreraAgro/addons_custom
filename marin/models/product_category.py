@@ -22,6 +22,15 @@ class ProductCategory(models.Model):
         help="Used as default value on the vendor refunds lines. "
         "Leave empty to use the expense account.",
     )
+    use_dose = fields.Boolean(
+        string="Use Dose",
+        help="When this box is ticked, doses can be specified for the product for exampple medicines, pesticides, etc.",
+    )
+    use_expiration_date = fields.Boolean(
+        string="Use Expiration Date",
+        help="When this box is ticked, you have the possibility to specify dates to manage"
+        " product expiration, on the product and on the corresponding lot/serial numbers",
+    )
     expiration_time = fields.Integer(
         string="Expiration Date",
         help="Number of days after the receipt of the products (from the vendor "

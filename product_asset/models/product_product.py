@@ -23,13 +23,17 @@ class ProductProduct(models.Model):
     def _compute_vehicle_name(self):
         for vehicle in self:
             if vehicle.asset_type == "product":
-                vehicle.name = ""
+                vehicle.vehicle_name = ""
             else:
                 vehicle.vehicle_name = (
                     (vehicle.manufacturer_id.name or "")
                     + "/"
                     + (vehicle.name or "")
                     + "/"
-                    + (vehicle.lot_ids[-1].license_plate or _("No Plate"))
+                    + (
+                        vehicle.lot_ids[-1].license_plate
+                        if vehicle.lot_ids
+                        else _("No Plate")
+                    )
                 )
                 # vehicle.name = f"{vehicle.manufacturer_id.name or ""}/{vehicle.model_id.name or ""}/{vehicle.license_plate or _("No Plate")}"
