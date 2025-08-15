@@ -1,4 +1,5 @@
 from odoo import fields, models, api
+from odoo.exceptions import UserError
 
 
 class Task(models.Model):
@@ -128,7 +129,7 @@ class Task(models.Model):
             concerned_task = self.filtered("sale_order_id")
             ref_str = "\n".join(task.name for task in concerned_task)
             raise UserError(
-                _(
+               self.env._(
                     "You cannot create a quotation for a task that is already linked to a sale order.\nConcerned task(s):\n%(ref_str)s",
                     ref_str=ref_str,
                 ),
@@ -137,7 +138,7 @@ class Task(models.Model):
             concerned_task = self.filtered(lambda task: not task.partner_id)
             ref_str = "\n".join(task.name for task in concerned_task)
             raise UserError(
-                _(
+                self.env._(
                     "You need to define a customer on the task before creating a related quotation.\nConcerned task(s):\n%(ref_str)s",
                     ref_str=ref_str,
                 ),
@@ -147,7 +148,7 @@ class Task(models.Model):
             concerned_task = self.filtered(lambda task: not task.season_id)
             ref_str = "\n".join(task.name for task in concerned_task)
             raise UserError(
-                _(
+                self.env._(
                     "You need to define an agricultural season on the task before creating a related quotation.\nConcerned task(s):\n%(ref_str)s",
                     ref_str=ref_str,
                 ),
