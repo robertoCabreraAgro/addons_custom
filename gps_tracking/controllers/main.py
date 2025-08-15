@@ -57,14 +57,10 @@ class GPSWebhook(http.Controller):
     )
     def gps_webhook(self, **kwargs):
         gps_tracking_point = request.env["gps.tracking.point"].sudo()
-        _logger.debug(
-            "Iniciando procesamiento del webhook GPS."
-        )
+        _logger.debug("Iniciando procesamiento del webhook GPS.")
         try:
             json_data = request.get_json_data() or {}
-            _logger.debug(
-                f"Payload recibido: {json_data}"
-            )
+            _logger.debug(f"Payload recibido: {json_data}")
 
             payload = json_data["state"]["reported"]
         except Exception as e:
@@ -118,9 +114,7 @@ class GPSWebhook(http.Controller):
                         else:
                             vals[model_field] = value
 
-                _logger.debug(
-                    f"Creando nuevo punto de seguimiento GPS: {vals}"
-                )
+                _logger.debug(f"Creando nuevo punto de seguimiento GPS: {vals}")
                 new_point = gps_tracking_point.create(vals)
                 _logger.debug(
                     f"Punto de seguimiento creado exitosamente: ID {new_point.id}"
