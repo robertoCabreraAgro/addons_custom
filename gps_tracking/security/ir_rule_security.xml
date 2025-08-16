@@ -13,6 +13,18 @@
         <field name="perm_unlink" eval="False" />
     </record>
 
+    <!-- Regla para responsables comerciales (Sales Manager) - solo excluye privados -->
+    <record id="rule_gps_tracking_device_reporting_department" model="ir.rule">
+        <field name="name">Reporting: exclude private devices only</field>
+        <field name="model_id" ref="model_gps_tracking_device" />
+        <field name="domain_force">[('private', '=', False)]</field>
+        <field name="groups" eval="[(4, ref('group_gps_tracking_reporting'))]" />
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="False" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+
     <!-- Regla para usuarios con acceso a dispositivos privados -->
     <record id="rule_gps_tracking_device_private_access" model="ir.rule">
         <field name="name">User: see all devices</field>

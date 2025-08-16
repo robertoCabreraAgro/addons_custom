@@ -2,6 +2,7 @@
 import { Component, useState, onWillStart, onMounted, useRef, onWillUnmount, onWillUpdateProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { user } from "@web/core/user";
 import { loadJS } from "@web/core/assets";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { SearchBar } from "@web/search/search_bar/search_bar";
@@ -59,15 +60,22 @@ export class GpsTrackingDashboard extends Component {
             }
         });
 
-        // Llamar a la función de actualización periódicamente 
-        this.refreshInterval = setInterval(() => {
-            this.refreshData();
-        }, REFRESH_INTERVAL_MS);
+        // DESHABILITADO TEMPORALMENTE - Llamar a la función de actualización periódicamente 
+        // this.refreshInterval = setInterval(() => {
+        //     this.refreshData();
+        // }, REFRESH_INTERVAL_MS);
 
         onWillStart(async () => {
+            console.log('=== onWillStart: Loading devices ===');
             // Cargar los dispositivos inicialmente
             await this.loadDevices();
-            this.state.filteredDevices = [...this.state.devices];
+            
+            // Esperar un momento para que se calculen los campos computados y luego refiltrar
+            setTimeout(() => {
+                console.log('=== Applying delayed filter after computed fields ===');
+                this.applyDepartmentFilter();
+            }, 2000); // Esperar 2 segundos
+            
             await this.loadOpenLayers();
         });
 
@@ -107,10 +115,31 @@ export class GpsTrackingDashboard extends Component {
             const devices = await this.orm.searchRead(
                 "gps.tracking.device",
                 domain || [],
-                ["id", "imei", "the_point", "speed", "timestamp", "altitude", "satellite", "address", "gsm_signal", "ignition", "movement", "color", "vehicle_id", "license_plate", "driver_name", "odometer", "real_odometer", "location"]
+                ["id", "imei", "the_point", "speed", "timestamp", "altitude", "satellite", "address", "gsm_signal", "ignition", "movement", "color", "vehicle_id", "license_plate", "driver_name", "odometer", "real_odometer", "location", "department_id"]
             );
-            this.state.devices = devices;
-            this.state.filteredDevices = devices;
+            
+            // PRUEBA: Solo mostrar vehículos con department_id = 4
+            console.log('Reload - All devices:', devices.map(d => ({
+                license_plate: d.license_plate, 
+                department_id: d.department_id,
+                dept_id_value: d.department_id ? d.department_id[0] : 'NULL'
+            })));
+            
+            const filteredDevices = devices.filter(device => {
+                // Verificar si tiene department_id y es un array con al menos un elemento
+                const hasDept = device.department_id && Array.isArray(device.department_id) && device.department_id.length > 0;
+                const deptId = hasDept ? device.department_id[0] : null;
+                const isDept4 = deptId === 4;
+                
+                console.log(`Reload Device ${device.license_plate}: raw_dept=${JSON.stringify(device.department_id)}, deptId=${deptId}, isDept4=${isDept4}`);
+                
+                return isDept4;
+            });
+            
+            console.log(`Reload - Total devices: ${devices.length}, Department 4 devices: ${filteredDevices.length}`);
+            
+            this.state.devices = filteredDevices;
+            this.state.filteredDevices = filteredDevices;
         } catch (error) {
             console.error("Error al recargar dispositivos:", error);
         }
@@ -121,12 +150,82 @@ export class GpsTrackingDashboard extends Component {
             const devices = await this.orm.searchRead(
                 "gps.tracking.device",
                 [],
-                ["id", "imei", "the_point", "speed", "timestamp", "altitude", "satellite", "address", "gsm_signal", "ignition", "movement", "color", "vehicle_id", "license_plate", "driver_name", "odometer", "real_odometer", "location"]
+                ["id", "imei", "the_point", "speed", "timestamp", "altitude", "satellite", "address", "gsm_signal", "ignition", "movement", "color", "vehicle_id", "license_plate", "driver_name", "odometer", "real_odometer", "location", "department_id"]
             );
-            this.state.devices = devices;
+            
+            // PRUEBA: Solo mostrar vehículos con department_id = 4
+            console.log('All devices loaded:', devices.map(d => ({
+                license_plate: d.license_plate, 
+                department_id: d.department_id,
+                dept_id_value: d.department_id ? d.department_id[0] : 'NULL'
+            })));
+            
+            const filteredDevices = devices.filter(device => {
+                // Verificar si tiene department_id y es un array con al menos un elemento
+                const hasDept = device.department_id && Array.isArray(device.department_id) && device.department_id.length > 0;
+                const deptId = hasDept ? device.department_id[0] : null;
+                const isDept4 = deptId === 4;
+                
+                console.log(`Device ${device.license_plate}: raw_dept=${JSON.stringify(device.department_id)}, deptId=${deptId}, isDept4=${isDept4}`);
+                
+                return isDept4;
+            });
+            
+            console.log(`Initial load - Total devices: ${devices.length}, Department 4 devices: ${filteredDevices.length}`);
+            
+            this.state.devices = filteredDevices;
+            this.state.filteredDevices = filteredDevices;
         } catch (error) {
             console.error("Error al cargar los dispositivos:", error);
             this.state.devices = [];
+        }
+    }
+
+    async applyDepartmentFilter() {
+        /**
+         * Apply department filtering after computed fields are available.
+         * This method re-reads the devices with department_id and applies filtering.
+         */
+        console.log('=== applyDepartmentFilter: Re-reading devices with computed fields ===');
+        
+        try {
+            // Re-read devices to get updated computed fields
+            const devices = await this.orm.searchRead(
+                "gps.tracking.device",
+                [],
+                ["id", "imei", "the_point", "speed", "timestamp", "altitude", "satellite", "address", "gsm_signal", "ignition", "movement", "color", "vehicle_id", "license_plate", "driver_name", "odometer", "real_odometer", "location", "department_id"]
+            );
+            
+            console.log('=== applyDepartmentFilter: All devices after re-read ===', devices.map(d => ({
+                license_plate: d.license_plate, 
+                department_id: d.department_id,
+                dept_id_value: d.department_id ? d.department_id[0] : 'NULL'
+            })));
+            
+            // Apply department filtering (currently testing with department_id = 4)
+            const filteredDevices = devices.filter(device => {
+                const hasDept = device.department_id && Array.isArray(device.department_id) && device.department_id.length > 0;
+                const deptId = hasDept ? device.department_id[0] : null;
+                const isDept4 = deptId === 4;
+                
+                console.log(`applyDepartmentFilter - Device ${device.license_plate}: raw_dept=${JSON.stringify(device.department_id)}, deptId=${deptId}, isDept4=${isDept4}`);
+                
+                return isDept4;
+            });
+            
+            console.log(`=== applyDepartmentFilter: Total devices: ${devices.length}, Department 4 devices: ${filteredDevices.length} ===`);
+            
+            // Update state with filtered devices
+            this.state.devices = filteredDevices;
+            this.state.filteredDevices = filteredDevices;
+            
+            // Update map markers if map is initialized
+            if (this.mapInitialized) {
+                this.addDeviceMarkers();
+            }
+            
+        } catch (error) {
+            console.error("Error in applyDepartmentFilter:", error);
         }
     }
 
@@ -142,7 +241,12 @@ export class GpsTrackingDashboard extends Component {
 
     // Método para refrescar los datos
     async refreshData() {
+        console.log('=== refreshData called ===');
         await this._reloadDevicesWithDomain(this.props.searchDomain || []);
+        console.log('=== refreshData: After reload ===', this.state.devices.map(d => ({
+            license_plate: d.license_plate,
+            department: d.department_id
+        })));
         this.updateDeviceMarkers();
     }
 

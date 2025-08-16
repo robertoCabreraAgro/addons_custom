@@ -45,6 +45,10 @@
             </button>
             
             <div class="o_gps_tracking_kanban" t-att-class="{'hidden': !state.leftPanelVisible}">
+                <!-- DEBUG: Total devices in template -->
+                <div style="background: yellow; padding: 5px; margin: 5px;">
+                    DEBUG: Mostrando <t t-esc="state.filteredDevices.length"/> dispositivos
+                </div>
                 <t t-foreach="state.filteredDevices" t-as="device" t-key="device.imei">
                     <div class="o_gps_tracking_card" t-att-class="{'active': state.activeDevice === device}" t-on-click.prevent="() => this.onCardClick(device)">
                         <!-- Checkbox para activar/desactivar la vista -->
@@ -53,6 +57,8 @@
                                 t-on-click.prevent="() => this.toggleDeviceVisibility(device)"/>
                             <div class="card_header">
                                 <strong><t t-esc="device.license_plate"/></strong>
+                                <br/>
+                                <small style="color: red;">DEBUG: Dept <t t-esc="device.department_id ? device.department_id[0] : 'NULL'"/></small>
                             </div>
                             <!-- Botón de flecha para expandir -->
                             <button class="expand_button" 
@@ -63,6 +69,9 @@
                         <div t-if="state.expandedDevices.has(device.imei)" class="card_body">
                             <div t-if="device.vehicle_id">
                                 <span>Vehículo: <t t-esc="device.vehicle_id[1]"/></span> <!-- Mostrar el nombre del vehículo -->
+                            </div>
+                            <div t-if="device.department_id">
+                                <span>Departamento: <t t-esc="device.department_id[1]"/></span>
                             </div>
                             <div t-if="device.driver_name">
                                 <span>Conductor: <t t-esc="device.driver_name"/></span>
