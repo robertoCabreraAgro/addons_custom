@@ -12,3 +12,5 @@ class ProjectTaskDescriptionTemplate(models.Model):
     description = fields.Html(required=True)
     active = fields.Boolean(default=True)
     company_id = fields.Many2one("res.company", default=lambda self: self.env.company)
+    project_ids = fields.Many2many(
+        "project.project", string='Projects', help='Leave empty to make this template available for all projects')
