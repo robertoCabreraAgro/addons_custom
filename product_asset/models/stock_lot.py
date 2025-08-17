@@ -11,6 +11,11 @@ class StockLot(models.Model):
     # FIELDS
     # ------------------------------------------------------------
 
+    asset_type = fields.Selection(
+        related="product_id.asset_type",
+        store=True,
+        string="Asset Type",
+    )
     asset_manager_id = fields.Many2one(
         comodel_name="hr.employee",
         string="Manager",
@@ -35,13 +40,17 @@ class StockLot(models.Model):
         copy=False,
         help="Next Driver Address of the vehicle",
     )
-    mobility_card = fields.Char()
     location = fields.Char(
         help="Location of the vehicle (garage, ...)",
     )
     model_year = fields.Char(
         string="Model Year",
         help="Year of the model",
+    )
+    brand_new = fields.Boolean(
+        string="Brand New",
+        default=True,
+        help="Mark as True if this asset was acquired as brand new.",
     )
     trailer_hook = fields.Boolean(
         string="Trailer Hitch",
@@ -70,7 +79,6 @@ class StockLot(models.Model):
     # Financial fields
     date_acquisition = fields.Date(
         string="Registration Date",
-        default=fields.Date.today,
         copy=False,
         tracking=True,
         help="Date of vehicle registration",
@@ -88,6 +96,102 @@ class StockLot(models.Model):
     )
     value_residual = fields.Float(
         copy=False,
+    )
+    account_prefix = fields.Char(
+        string="Account Prefix",
+        tracking=True,
+        help="This fields is required by Accounting to group according to its needs.",
+    )
+
+    fuel_card_id = fields.Char()
+    # fuel_card_id = fields.Many2one(
+    #     comodel_name="documents.document",
+    #     domain=lambda self: [
+    #         ("tag_ids", "in", self.env.ref("marin_data.documents_fleet_fuel_card").ids),
+    #     ],
+    #     inverse="_inverse_fuel_card_id",
+    #     store=True,
+    #     readonly=False,
+    # )
+    # fuel_card_name = fields.Char(
+    #     compute="_compute_fuel_card_name",
+    #     store=True,
+    # )
+    # fuel_card_count = fields.Integer(
+    #     "Fuel",
+    #     compute="_compute_fuel_card_count",
+    # )
+    fuel_card_openning_balance = fields.Float(
+        digits="Product Price",
+        default=0.0,
+        help="Opening balaned used to match the actual balance due differences caused by "
+        "missing transactions and legacy data",
+    )
+    fuel_card_budget = fields.Float(
+        string="Monthly fuel budget",
+        digits="Product Price",
+        default=0.0,
+        help="Recommended starting balance for the fuel card at the beginning of the period",
+    )
+    fuel_card_balance = fields.Float(
+        digits="Product Price",
+        # compute="_compute_fuel_card_balance",
+        # store=True,
+        help="Current balance available on fuel card",
+    )
+    fuel_card_balance_to_reload = fields.Float(
+        digits="Product Price",
+        # compute="_compute_fuel_card_balance_to_reload",
+        # store=True,
+        help="Amount required to reach the recommended fuel card balance.",
+    )
+    highway_pass_id = fields.Char()
+    # highway_pass_id = fields.Many2one(
+    #     comodel_name="documents.document",
+    #     domain=lambda self: [
+    #         (
+    #             "tag_ids",
+    #             "in",
+    #             self.env.ref("marin_data.documents_fleet_highway_pass").ids,
+    #         ),
+    #     ],
+    #     inverse="_inverse_highway_pass_id",
+    #     store=True,
+    #     readonly=False,
+    # )
+    # highway_pass_name = fields.Char(
+    #     compute="_compute_highway_pass_name",
+    #     store=True,
+    # )
+    # highway_pass_count = fields.Integer(
+    #     "Highway Pass",
+    #     compute="_compute_highway_pass_count",
+    # )
+    highway_pass_openning_balance = fields.Float(
+        digits="Product Price",
+        default=0.0,
+        help="Opening balaned used to match the actual balance due differences caused by "
+        "missing transactions and legacy data",
+    )
+    highway_pass_budget = fields.Float(
+        string="Monthly highway pass budget",
+        digits="Product Price",
+        default=0.0,
+        help="Estimated monthly budget for toll usage",
+    )
+    highway_pass_balance = fields.Float(
+        string="Current higway pass balance",
+        digits="Product Price",
+        # compute="_compute_highway_pass_balance",
+        # store=True,
+        help="Current available amount in the toll card",
+    )
+    highway_pass_balance_to_reload = fields.Float(
+        string="Toll Balance to Reload",
+        digits="Product Price",
+        # compute="_compute_highway_pass_balance_to_reload",
+        # store=True,
+        help="Amount needed to reach the monthly toll budget",
     )
 
     log_ids = fields.One2many(
@@ -163,7 +267,7 @@ class StockLot(models.Model):
     def create(self, vals_list):
         lots = super().create(vals_list)
         for lot, vals in zip(lots, vals_list):
-            if vals.get('operator_id'):
+            if vals.get("operator_id"):
                 lot.create_driver_history(vals)
         return lots
 
@@ -258,12 +362,13 @@ class StockLot(models.Model):
             params.get_param("hr_fleet.delay_alert_contract", default=30)
         )
         current_date = fields.Date.context_today(self)
+        product = self._get_product_contract()
         data = self.env["product.asset.log"]._read_group(
             domain=[
-                ("date_end", "!=", False),
                 ("asset_id", "in", self.ids),
-                ("type", "=", "contract"),
                 ("state", "!=", "closed"),
+                ("date_end", "!=", False),
+                ("product_id", "in", product.ids),
             ],
             groupby=["asset_id", "state"],
             aggregates=["date_end:max"],
@@ -433,7 +538,7 @@ class StockLot(models.Model):
     # HELPERS
     # ------------------------------------------------------------
 
-    def accept_driver_change(self):
+    def accept_operator_change(self):
         # Find all the vehicles of the same type for which the driver is the future_operator_id
         # remove their operator_id and close their history using current date
         vehicles = self.search(
@@ -447,7 +552,7 @@ class StockLot(models.Model):
             vehicle.operator_id = vehicle.future_operator_id
             vehicle.future_operator_id = False
 
-    def act_show_log_cost(self):
+    def action_show_log_cost(self):
         """
         This opens log view to view and add new log for this vehicle, groupby default to only show effective costs
         @return: the costs log view
@@ -470,7 +575,7 @@ class StockLot(models.Model):
 
     def create_driver_history(self, vals):
         for vehicle in self:
-            self.env["product.asset.log"].create(vehicle._get_driver_history_data(vals))
+            self.env["product.asset.log"].create(vehicle._prepare_driver_history_data(vals))
 
     def return_action_to_open(self):
         """
@@ -493,12 +598,19 @@ class StockLot(models.Model):
         # This function is used in fleet_account and is overrided in l10n_be_hr_payroll_fleet
         return self.license_plate or _("No plate")
 
-    def _get_driver_history_data(self, vals):
+    def _get_product_contract(self):
+        product = self.env.ref(
+            "product_asset.product_product_insurance", raise_if_not_found=False
+        )
+        return product or self.env["product.product"]
+
+    def _prepare_driver_history_data(self, vals):
         self.ensure_one()
+        product = self.env.ref("product_asset.product_product_operator_reasignment")
         return {
             "asset_id": self.id,
             "operator_id": vals["operator_id"],
-            "type": "driver",
+            "product_id": product.id or False,
             "date_start": fields.Date.today(),
             "odometer": self.odometer,
         }

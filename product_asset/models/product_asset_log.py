@@ -44,23 +44,12 @@ class ProductAssetLog(models.Model):
         string="Product",
         ondelete="restrict",
     )
-    service_ids = fields.Many2many(
-        comodel_name="product.product",
-        string="Included Services",
-        help='When the log is of type "Contract" here the included services can be specified',
+    product_category_id = fields.Many2one(
+        related="product_id.categ_id",
+        store=True,
+        string="Asset Manager",
     )
     active = fields.Boolean(default=True)
-    type = fields.Selection(
-        selection=[
-            ("service", "Service"),
-            ("contract", "Contract"),
-            ("operator", "Operator change"),
-        ],
-        string="Type",
-        default="service",
-        tracking=True,
-        help="Technical name used to classify the log types",
-    )
     state = fields.Selection(
         selection=[
             ("new", "New"),
@@ -109,6 +98,10 @@ class ProductAssetLog(models.Model):
         string="Warning Date",
         compute="_compute_days_left",
     )
+
+    # ------------------------------------------------------------
+    # COMPUTE METHODS
+    # ------------------------------------------------------------
 
     def compute_next_year_date(self, strdate):
         start_date = fields.Date.from_string(strdate)

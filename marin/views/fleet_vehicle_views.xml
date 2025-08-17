@@ -1,6 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 
+    <record id="fleet_vehicle_view_list_marin" model="ir.ui.view">
+        <field name="name">fleet.vehicle.list</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_tree" />
+        <field name="priority" eval="100" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='category_id']" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </xpath>
+            <xpath expr="//field[@name='vin_sn']" position="attributes">
+                <attribute name="optional">show</attribute>
+            </xpath>
+            <xpath expr="//field[@name='engine_sn']" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </xpath>
+            <xpath expr="//field[@name='acquisition_date']" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </xpath>
+            <xpath expr="//field[@name='tag_ids']" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </xpath>
+            <xpath expr="//field[@name='vehicle_properties']" position="attributes">
+                <attribute name="column_invisible">True</attribute>
+            </xpath>
+            <xpath expr="//field[@name='vehicle_properties']" position="after">
+                <field name="fuel_card_name" optional="show" string="Fuel Card" />
+                <field name="fuel_card_budget" optional="show" string="Budget (FC)" />
+                <field name="fuel_card_balance" optional="show" string="Balance (FC)" />
+                <field name="fuel_card_balance_to_reload" optional="show" string="To Reload (FC)"
+                    sum="Total to reload" />
+                <field name="highway_pass_name" optional="show" string="Highway Pass" />
+                <field name="highway_pass_budget" string="Budget (HWP)" optional="show" />
+                <field name="highway_pass_balance" string="Balance (HWP)" optional="show" />
+                <field name="highway_pass_balance_to_reload" string="To Reload (HWP)"
+                    optional="show" sum="Total to reload" />
+            </xpath>
+        </field>
+    </record>
+
     <record id="fleet_vehicle_view_form_marin" model="ir.ui.view">
         <field name="name">fleet.vehicle.form</field>
         <field name="model">fleet.vehicle</field>
@@ -41,7 +80,7 @@
                     type="object" class="oe_stat_button"
                     icon="fa-tint"
                     help="show the fuel logs for this vehicle">
-                    <field name="fuel_count" string="Fuel" widget="statinfo" />
+                    <field name="fuel_card_count" string="Fuel" widget="statinfo" />
                 </button>
                 <button name="action_view_highway_pass_logs"
                     type="object" class="oe_stat_button"
@@ -49,45 +88,6 @@
                     help="show the highway pass logs for this vehicle">
                     <field name="highway_pass_count" string="Highway" widget="statinfo" />
                 </button>
-            </xpath>
-        </field>
-    </record>
-
-    <record id="fleet_vehicle_view_list_marin" model="ir.ui.view">
-        <field name="name">fleet.vehicle.list</field>
-        <field name="model">fleet.vehicle</field>
-        <field name="inherit_id" ref="fleet.fleet_vehicle_view_tree" />
-        <field name="priority" eval="100" />
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='category_id']" position="attributes">
-                <attribute name="optional">hide</attribute>
-            </xpath>
-            <xpath expr="//field[@name='vin_sn']" position="attributes">
-                <attribute name="optional">show</attribute>
-            </xpath>
-            <xpath expr="//field[@name='engine_sn']" position="attributes">
-                <attribute name="optional">hide</attribute>
-            </xpath>
-            <xpath expr="//field[@name='acquisition_date']" position="attributes">
-                <attribute name="optional">hide</attribute>
-            </xpath>
-            <xpath expr="//field[@name='tag_ids']" position="attributes">
-                <attribute name="optional">hide</attribute>
-            </xpath>
-            <xpath expr="//field[@name='vehicle_properties']" position="attributes">
-                <attribute name="column_invisible">True</attribute>
-            </xpath>
-            <xpath expr="//field[@name='vehicle_properties']" position="after">
-                <field name="fuel_card_name" optional="show" string="Fuel Card" />
-                <field name="fuel_card_budget" optional="show" string="Budget (FC)" />
-                <field name="fuel_card_balance" optional="show" string="Balance (FC)" />
-                <field name="fuel_card_balance_to_reload" optional="show" string="To Reload (FC)"
-                    sum="Total to reload" />
-                <field name="highway_pass_name" optional="show" string="Highway Pass" />
-                <field name="highway_pass_budget" string="Budget (HWP)" optional="show" />
-                <field name="highway_pass_balance" string="Balance (HWP)" optional="show" />
-                <field name="highway_pass_balance_to_reload" string="To Reload (HWP)"
-                    optional="show" sum="Total to reload" />
             </xpath>
         </field>
     </record>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- Product Template Search View -->
+    <!-- Product Template Search Views -->
     <record id="product_template_search_view_asset" model="ir.ui.view">
         <field name="name">product.template.search.asset</field>
         <field name="model">product.template</field>
@@ -9,32 +9,27 @@
         <field name="arch" type="xml">
             <field name="name" position="after">
                 <field name="asset_type" />
-                <field name="power" />
-                <field name="doors" />
-                <field name="seats" />
             </field>
             <filter name="filter_to_sell" position="after">
                 <separator />
-                <filter string="Vehicles" name="filter_vehicles"
+                <filter name="filter_vehicles" string="Vehicles"
                     domain="[('asset_type', '=', 'vehicle')]" />
-                <filter string="Equipment" name="filter_equipment"
+                <filter name="filter_equipment" string="Equipment"
                     domain="[('asset_type', '=', 'equipment')]" />
-                <filter string="Machinery" name="filter_machinery"
+                <filter name="filter_machinery" string="Machinery"
                     domain="[('asset_type', '=', 'machinery')]" />
-                <filter string="Property" name="filter_property"
+                <filter name="filter_property" string="Property"
                     domain="[('asset_type', '=', 'property')]" />
                 <separator />
-                <filter string="High Power (>100)" name="filter_high_power"
-                    domain="[('power', '>', 100)]" />
             </filter>
             <group position="inside">
-                <filter string="Asset Type" name="group_asset_type"
+                <filter name="group_asset_type" string="Asset Type"
                     context="{'group_by': 'asset_type'}" />
             </group>
         </field>
     </record>
 
-    <!-- Product Template Tree View -->
+    <!-- Product Template List Views -->
     <record id="product_template_tree_view_asset" model="ir.ui.view">
         <field name="name">product.template.tree.asset</field>
         <field name="model">product.template</field>
@@ -42,12 +37,24 @@
         <field name="arch" type="xml">
             <field name="categ_id" position="after">
                 <field name="asset_type" optional="show" />
-                <field name="power" optional="hide" />
             </field>
         </field>
     </record>
 
-    <!-- Product Template Form View -->
+    <record id="product_template_tree_view_vehicle" model="ir.ui.view">
+        <field name="name">product.template.tree.asset</field>
+        <field name="model">product.template</field>
+        <field name="arch" type="xml">
+            <list string="Product" multi_edit="1" sample="1">
+                <field name="name" />
+                <field name="manufacturer_id" optional="show" />
+                <field name="categ_id" />
+                <field name="count_lot_ids" string="Vehicles"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Product Template Form Views -->
     <record id="product_template_form_view_asset" model="ir.ui.view">
         <field name="name">product.template.form.asset</field>
         <field name="model">product.template</field>
@@ -110,86 +117,37 @@
         </field>
     </record>
 
-    <!-- Asset-specific Action and Menu Items -->
-    <record id="product_template_action_asset" model="ir.actions.act_window">
+    <!-- Asset-specific Action -->
+    <record id="action_product_template_asset" model="ir.actions.act_window">
         <field name="name">Assets</field>
         <field name="res_model">product.template</field>
-        <field name="view_mode">kanban,list,form</field>
+        <field name="view_mode">list,form</field>
         <field name="domain">[('asset_type', '!=', 'product')]</field>
-        <field name="context">{
-            'search_default_filter_vehicles': 1,
-            'default_detailed_type': 'product'
-            }</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Create your first asset!
-            </p>
-            <p>
-                Track and manage your company assets including vehicles, equipment, machinery, and
-                property.
-            </p>
-        </field>
+        <field name="context">{}</field>
     </record>
 
     <!-- Vehicle-specific Action -->
-    <record id="product_template_action_vehicle" model="ir.actions.act_window">
-        <field name="name">Vehicles</field>
+    <record id="action_product_template_vehicle" model="ir.actions.act_window">
+        <field name="name">Models</field>
         <field name="res_model">product.template</field>
-        <field name="view_mode">kanban,list,form</field>
+        <field name="view_mode">list,form</field>
         <field name="domain">[('asset_type', '=', 'vehicle')]</field>
-        <field name="context">{
-            'default_asset_type': 'vehicle',
-            'default_detailed_type': 'product'
-            }</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Create your first vehicle!
-            </p>
-            <p>
-                Track your company vehicles with detailed specifications including power, fuel
-                efficiency, and capacity.
-            </p>
-        </field>
+        <field name="context">{}</field>
+        <field name="view_ids"
+            eval="[
+                (5, 0, 0),
+                (0, 0, {'view_mode': 'list', 'view_id': ref('product_template_tree_view_vehicle')}),
+                (0, 0, {'view_mode': 'form'}),
+            ]" />
     </record>
 
     <!-- Equipment-specific Action -->
-    <record id="product_template_action_equipment" model="ir.actions.act_window">
+    <record id="action_product_template_equipment" model="ir.actions.act_window">
         <field name="name">Equipment</field>
         <field name="res_model">product.template</field>
-        <field name="view_mode">kanban,list,form</field>
+        <field name="view_mode">list,form</field>
         <field name="domain">[('asset_type', '=', 'equipment')]</field>
-        <field name="context">{
-            'default_asset_type': 'equipment',
-            'default_detailed_type': 'product'
-            }</field>
+        <field name="context">{}</field>
     </record>
-
-    <!-- Menu Items -->
-    <menuitem id="menu_asset_root"
-        name="Assets"
-        sequence="85" />
-
-    <menuitem id="menu_asset_management"
-        name="Asset Management"
-        parent="menu_asset_root"
-        sequence="10" />
-
-    <menuitem id="menu_all_assets"
-        name="All Assets"
-        parent="menu_asset_management"
-        action="product_template_action_asset"
-        sequence="10" />
-
-    <menuitem id="menu_vehicles"
-        name="Vehicles"
-        parent="menu_asset_management"
-        action="product_template_action_vehicle"
-        sequence="20" />
-
-    <menuitem id="menu_equipment"
-        name="Equipment"
-        parent="menu_asset_management"
-        action="product_template_action_equipment"
-        sequence="30" />
 
 </odoo>

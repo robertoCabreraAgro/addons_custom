@@ -76,6 +76,10 @@ class ProductTemplate(models.Model):
         string="Seats Number",
         help="Number of seats of the vehicle",
     )
+    count_lot_ids = fields.Integer(
+        compute="_compute_count_lot_ids",
+        string="Lots Count",
+    )
 
     # ------------------------------------------------------------
     # COMPUTE METHODS
@@ -100,6 +104,16 @@ class ProductTemplate(models.Model):
         self.volume_capacity_uom_name = (
             self._get_volume_uom_name_from_ir_config_parameter()
         )
+
+    def _compute_count_lot_ids(self):
+        for template in self:
+            template.count_lot_ids = template.env[
+                "stock.lot"
+            ].search_count(
+                [
+                    ("product_id", "in", template.product_variant_ids.ids),
+                ]
+            )
 
     # @api.depends("model_id")
     # def _compute_image_128(self):

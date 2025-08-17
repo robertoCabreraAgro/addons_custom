@@ -53,9 +53,9 @@ class FleetVehicle(models.Model):
         store=True,
         help="Amount required to reach the recommended fuel card balance.",
     )
-    fuel_count = fields.Integer(
+    fuel_card_count = fields.Integer(
         "Fuel",
-        compute="_compute_fuel_count",
+        compute="_compute_fuel_card_count",
     )
     highway_pass_id = fields.Many2one(
         comodel_name="documents.document",
@@ -133,10 +133,10 @@ class FleetVehicle(models.Model):
                 gps_vehicles |= vehicle
         return super(FleetVehicle, self - gps_vehicles)._compute_odometer()
 
-    def _compute_fuel_count(self):
+    def _compute_fuel_card_count(self):
         fuel_product_category = self.env.ref("marin.product_category_fuel")
         for vehicle in self:
-            vehicle.fuel_count = len(
+            vehicle.fuel_card_count = len(
                 vehicle.log_ids.filtered(
                     lambda l: l.product_category_id == fuel_product_category
                 )

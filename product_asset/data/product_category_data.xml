@@ -1,8 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
 
-    <record id="product_category_fleet" model="product.category">
-        <field name="name">Fleet</field>
+    <record id="product_category_fuel" model="product.category">
+        <field name="name">Fuels</field>
+    </record>
+
+    <record id="product_category_highway_toll" model="product.category">
+        <field name="name">Highways</field>
+    </record>
+
+    <record id="product_category_insurance_and_policies" model="product.category">
+        <field name="name">Insurances and policies</field>
+    </record>
+
+    <record id="product_category_maintenance_and_repairs" model="product.category">
+        <field name="name">Maintenance and repairs</field>
+    </record>
+
+    <record id="product_category_vehicles" model="product.category">
+        <field name="name">Vehicles</field>
     </record>
 
 </odoo>

@@ -32,26 +32,30 @@
                 <widget name="web_ribbon" title="Archived" bg_color="bg-danger" invisible="active" />
                 <field name="active" invisible="1" />
             </field>
+
             <xpath expr="//notebook" position="attributes">
                 <attribute name="invisible">False</attribute>
             </xpath>
+
             <field name="expiration_date" position="attributes">
-                <attribute name="required">True</attribute>
+                <attribute name="required">use_expiration_date</attribute>
             </field>
-            <field name="removal_date" position="attributes">
-                <attribute name="required">True</attribute>
-            </field>
+
             <xpath expr="//page[@name='expiration_dates']/group" position="inside">
                 <group string="Original Expiration" groups="marin.group_stock_lot_reconditioned">
                     <field name="original_expiration_date" />
                 </group>
             </xpath>
+
             <xpath expr="//button[@name='action_view_so']" position="attributes">
                 <attribute name="groups">sales_team.group_sale_salesman_all_leads</attribute>
             </xpath>
+
             <xpath expr="//field[@name='sale_order_ids']" position="attributes">
                 <attribute name="groups">sales_team.group_sale_salesman_all_leads</attribute>
             </xpath>
+
         </field>
     </record>
+
 </odoo>
