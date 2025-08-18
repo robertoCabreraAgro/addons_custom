@@ -4,7 +4,6 @@ from odoo import api, models
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
-
     # ------------------------------------------------------------
     # HELPERS
     # ------------------------------------------------------------
@@ -54,7 +53,9 @@ class ProductTemplate(models.Model):
         by adding an ir.config_parameter record with "product.area_in_square_ft" as key
         and "1" as value."""
         product_area_in_square_feet_param = (
-            self.env["ir.config_parameter"].sudo().get_param("product.area_in_square_ft")
+            self.env["ir.config_parameter"]
+            .sudo()
+            .get_param("product.area_in_square_ft")
         )
         if product_area_in_square_feet_param == "1":
             return self.env.ref("uom.product_uom_square_foot")
@@ -92,7 +93,9 @@ class ProductTemplate(models.Model):
         by adding an ir.config_parameter record with "product.fuel_efficiency_in_mpg" as key
         and "1" as value."""
         product_fuel_efficiency_in_mpg_param = (
-            self.env["ir.config_parameter"].sudo().get_param("product.fuel_efficiency_in_mpg")
+            self.env["ir.config_parameter"]
+            .sudo()
+            .get_param("product.fuel_efficiency_in_mpg")
         )
         if product_fuel_efficiency_in_mpg_param == "1":
             return self.env.ref("uom_extended.product_uom_miles_per_galon")

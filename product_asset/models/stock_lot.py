@@ -311,7 +311,10 @@ class StockLot(models.Model):
             ["__count"],
         )
         service_data = Log._read_group(
-            [("asset_id", "in", self.ids), ("product_id", "not in", contract.ids + reassignment.ids)],
+            [
+                ("asset_id", "in", self.ids),
+                ("product_id", "not in", contract.ids + reassignment.ids),
+            ],
             ["asset_id", "active"],
             ["__count"],
         )
@@ -583,7 +586,9 @@ class StockLot(models.Model):
 
     def create_driver_history(self, vals):
         for vehicle in self:
-            self.env["product.asset.log"].create(vehicle._prepare_driver_history_data(vals))
+            self.env["product.asset.log"].create(
+                vehicle._prepare_driver_history_data(vals)
+            )
 
     def _get_analytic_name(self):
         # This function is used in fleet_account and is overrided in l10n_be_hr_payroll_fleet
@@ -597,7 +602,8 @@ class StockLot(models.Model):
 
     def _get_product_operator_reassignment(self):
         product = self.env.ref(
-            "product_asset.product_product_operator_Reassignment", raise_if_not_found=False
+            "product_asset.product_product_operator_Reassignment",
+            raise_if_not_found=False,
         )
         return product or self.env["product.product"]
 

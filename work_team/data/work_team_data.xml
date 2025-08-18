@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
+
     <record id="team_sales_department" model="work.team">
         <field name="name">Sales</field>
-        <field name="sequence">0</field>
         <field name="company_id" eval="False" />
+        <field name="sequence">0</field>
     </record>
 
     <record id="work_team_member_admin_sales" model="work.team.member" forcecreate="0">
@@ -26,10 +27,11 @@
     <function
         model="work.team"
         name="message_unsubscribe"
-        eval="[
+        eval="
+            [
                 ref('work_team.team_sales_department'),
                 ref('work_team.salesteam_website_sales'),
-                ref('work_team.pos_sales_team')],
-                [ref('base.partner_root')
-        ]" />
+                ref('work_team.pos_sales_team'),
+            ],
+            [ref('base.partner_root')]" />
 </odoo>

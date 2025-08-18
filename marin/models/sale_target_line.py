@@ -33,7 +33,9 @@ class SaleTargetLine(models.Model):
         help="Unit price for target amount calculation",
     )
 
-    quantity = fields.Float(string="Template Quantity", help="Base quantity from quotation template")
+    quantity = fields.Float(
+        string="Template Quantity", help="Base quantity from quotation template"
+    )
 
     target_quantity = fields.Float(
         string="Quantity",
@@ -50,24 +52,48 @@ class SaleTargetLine(models.Model):
         help="Calculated as unit price × target quantity",
     )
 
-    currency_id = fields.Many2one("res.currency", related="target_id.currency_id", readonly=True)
+    currency_id = fields.Many2one(
+        "res.currency", related="target_id.currency_id", readonly=True
+    )
 
     # Related fields from target_id
     partner_id = fields.Many2one(
-        "res.partner", related="target_id.partner_id", string="Customer", store=True, readonly=True
+        "res.partner",
+        related="target_id.partner_id",
+        string="Customer",
+        store=True,
+        readonly=True,
     )
     user_id = fields.Many2one(
-        "res.users", related="target_id.user_id", string="Salesperson", store=True, readonly=True
+        "res.users",
+        related="target_id.user_id",
+        string="Salesperson",
+        store=True,
+        readonly=True,
     )
     season_id = fields.Many2one(
-        "date.range", related="target_id.season_id", string="Season", store=True, readonly=True
+        "date.range",
+        related="target_id.season_id",
+        string="Season",
+        store=True,
+        readonly=True,
     )
     profile_id = fields.Many2one(
-        "res.partner.profile", related="target_id.profile_id", string="Profile", store=True, readonly=True
+        "res.partner.profile",
+        related="target_id.profile_id",
+        string="Profile",
+        store=True,
+        readonly=True,
     )
-    hectares = fields.Float(related="target_id.hectares", string="Hectares", store=True, readonly=True)
+    hectares = fields.Float(
+        related="target_id.hectares", string="Hectares", store=True, readonly=True
+    )
     template_id = fields.Many2one(
-        "sale.order.template", related="target_id.template_id", string="Template", store=True, readonly=True
+        "sale.order.template",
+        related="target_id.template_id",
+        string="Template",
+        store=True,
+        readonly=True,
     )
 
     sold_amount = fields.Monetary(
@@ -127,7 +153,9 @@ class SaleTargetLine(models.Model):
     def _compute_sold_amount(self):
         """Calculate sold amount for this product with same customer, salesperson and season."""
         for line in self:
-            if not all([line.product_id, line.partner_id, line.user_id, line.season_id]):
+            if not all(
+                [line.product_id, line.partner_id, line.user_id, line.season_id]
+            ):
                 line.sold_amount = 0.0
                 continue
 

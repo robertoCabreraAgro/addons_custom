@@ -21,7 +21,9 @@ class PartnerLedgerController(TelegramController):
         # Add command to partner-level permissions (customers can use it)
         self._partner_added_cmds.add("/estadocuenta")
 
-    def _handle_estadocuenta_command(self, bot, chat, args, partner=False, internal_user=False):
+    def _handle_estadocuenta_command(
+        self, bot, chat, args, partner=False, internal_user=False
+    ):
         """Handles the /estadocuenta command to generate Partner Ledger report.
 
         Usage:
@@ -41,11 +43,17 @@ class PartnerLedgerController(TelegramController):
         except ValidationError as e:
             bot.send_message(chat.chat_id, f"Error en los parámetros: {str(e)}")
         except AccessError:
-            bot.send_message(chat.chat_id, "No tienes permisos para generar este reporte. Contacta al administrador.")
-        except Exception as e:
-            _logger.error("Error generating partner ledger for partner %s: %s", partner.id, str(e))
             bot.send_message(
-                chat.chat_id, "Ocurrió un error al generar el estado de cuenta. Por favor, inténtalo más tarde."
+                chat.chat_id,
+                "No tienes permisos para generar este reporte. Contacta al administrador.",
+            )
+        except Exception as e:
+            _logger.error(
+                "Error generating partner ledger for partner %s: %s", partner.id, str(e)
+            )
+            bot.send_message(
+                chat.chat_id,
+                "Ocurrió un error al generar el estado de cuenta. Por favor, inténtalo más tarde.",
             )
 
     def _validate_partner_access(self, bot, chat, partner):
@@ -65,7 +73,11 @@ class PartnerLedgerController(TelegramController):
             [
                 ("partner_id", "=", partner.id),
                 ("display_type", "not in", ("line_section", "line_note")),
-                ("account_id.account_type", "in", ["asset_receivable", "liability_payable"]),
+                (
+                    "account_id.account_type",
+                    "in",
+                    ["asset_receivable", "liability_payable"],
+                ),
                 ("move_id.state", "=", "posted"),
             ],
             limit=1,
@@ -73,7 +85,8 @@ class PartnerLedgerController(TelegramController):
 
         if not move_lines:
             bot.send_message(
-                chat.chat_id, "No se encontraron transacciones de cuentas por cobrar o por pagar para tu cuenta."
+                chat.chat_id,
+                "No se encontraron transacciones de cuentas por cobrar o por pagar para tu cuenta.",
             )
             return False
 
@@ -106,12 +119,18 @@ class PartnerLedgerController(TelegramController):
 
                 # Validate date range
                 if date_from > date_to:
-                    raise ValidationError("La fecha de inicio debe ser anterior a la fecha final.")
+                    raise ValidationError(
+                        "La fecha de inicio debe ser anterior a la fecha final."
+                    )
 
             except ValueError:
-                raise ValidationError("Formato de fecha inválido. Usa: /estadocuenta YYYY-MM-DD YYYY-MM-DD")
+                raise ValidationError(
+                    "Formato de fecha inválido. Usa: /estadocuenta YYYY-MM-DD YYYY-MM-DD"
+                )
         else:
-            raise ValidationError("Uso incorrecto. Usa: /estadocuenta o /estadocuenta YYYY-MM-DD YYYY-MM-DD")
+            raise ValidationError(
+                "Uso incorrecto. Usa: /estadocuenta o /estadocuenta YYYY-MM-DD YYYY-MM-DD"
+            )
 
         return date_from, date_to
 
@@ -128,15 +147,20 @@ class PartnerLedgerController(TelegramController):
         # Send initial message
         bot.send_message(
             chat.chat_id,
-            f"Generando estado de cuenta para el período {date_from} al {date_to}...\n" "Por favor espera un momento.",
+            f"Generando estado de cuenta para el período {date_from} al {date_to}...\n"
+            "Por favor espera un momento.",
         )
 
         try:
             # Get the correct company for the partner (marin_data.company_lmmr)
-            target_company = bot.env.ref("marin_data.company_lmmr", raise_if_not_found=False)
+            target_company = bot.env.ref(
+                "marin_data.company_lmmr", raise_if_not_found=False
+            )
             if not target_company:
                 # Fallback to finding LMMR company by name
-                target_company = bot.env["res.company"].search([("name", "ilike", "LMMR")], limit=1)
+                target_company = bot.env["res.company"].search(
+                    [("name", "ilike", "LMMR")], limit=1
+                )
 
             if not target_company:
                 raise Exception("No se pudo encontrar la empresa LMMR")
@@ -177,7 +201,10 @@ class PartnerLedgerController(TelegramController):
 
             # Verify PDF header
             if not file_content.startswith(b"%PDF"):
-                _logger.error("Generated content is not a valid PDF. First 20 bytes: %s", file_content[:20])
+                _logger.error(
+                    "Generated content is not a valid PDF. First 20 bytes: %s",
+                    file_content[:20],
+                )
                 raise Exception("El contenido generado no es un PDF válido")
 
             # Send PDF via Telegram
@@ -188,7 +215,10 @@ class PartnerLedgerController(TelegramController):
                 caption=f"Estado de cuenta para *{partner.name}*\nPeríodo: {date_from} al {date_to}",
             )
 
-            _logger.info("Partner Ledger report sent successfully to partner %s via Telegram", partner.id)
+            _logger.info(
+                "Partner Ledger report sent successfully to partner %s via Telegram",
+                partner.id,
+            )
 
         except Exception as e:
             _logger.error("Error in report generation: %s", str(e))
@@ -196,7 +226,9 @@ class PartnerLedgerController(TelegramController):
 
     def _handle_help_command(self, bot, chat, args, partner=False, internal_user=False):
         """Extends the base help command to include Partner Ledger command."""
-        res = super()._handle_help_command(bot, chat, args, partner=partner, internal_user=internal_user)
+        res = super()._handle_help_command(
+            bot, chat, args, partner=partner, internal_user=internal_user
+        )
         available_cmds = [cmd.name for cmd in bot.command_ids]
 
         if partner and "/estadocuenta" in available_cmds:

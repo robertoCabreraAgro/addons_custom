@@ -9,24 +9,24 @@ class ResCompany(models.Model):
 
     code = fields.Char(string="Short Code", size=6)
     complete_name = fields.Char(compute="_compute_complete_name", store=True)
-    
+
     # Customer merge configuration
     customer_merge_required_fields = fields.Many2many(
-        'ir.model.fields',
+        "ir.model.fields",
         string="Required Customer Fields",
-        domain=[('model', '=', 'res.partner')],
-        help="Fields that must be completed to keep a customer active"
+        domain=[("model", "=", "res.partner")],
+        help="Fields that must be completed to keep a customer active",
     )
-    
+
     # Restricted contact creation configuration
     restricted_contact_required_fields = fields.Many2many(
-        'ir.model.fields',
-        'company_restricted_contact_fields_rel',
-        'company_id',
-        'field_id',
+        "ir.model.fields",
+        "company_restricted_contact_fields_rel",
+        "company_id",
+        "field_id",
         string="Mandatory Contact Fields",
-        domain=[('model', '=', 'res.partner')],
-        help="Fields that must be completed when restricted contact creation is enabled"
+        domain=[("model", "=", "res.partner")],
+        help="Fields that must be completed when restricted contact creation is enabled",
     )
 
     _code_uniq = models.Constraint("UNIQUE(code)", "The company's code must be unique")

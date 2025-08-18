@@ -23,7 +23,9 @@ class Task(models.Model):
         compute="_compute_company_currency",
         compute_sudo=True,
     )
-    expected_revenue = fields.Monetary("Expected Revenue", currency_field="company_currency", tracking=True)
+    expected_revenue = fields.Monetary(
+        "Expected Revenue", currency_field="company_currency", tracking=True
+    )
     referer_partner_id = fields.Many2one(
         "res.partner",
         "Referred By",
@@ -129,7 +131,7 @@ class Task(models.Model):
             concerned_task = self.filtered("sale_order_id")
             ref_str = "\n".join(task.name for task in concerned_task)
             raise UserError(
-               self.env._(
+                self.env._(
                     "You cannot create a quotation for a task that is already linked to a sale order.\nConcerned task(s):\n%(ref_str)s",
                     ref_str=ref_str,
                 ),

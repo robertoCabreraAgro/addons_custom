@@ -96,7 +96,14 @@ class SaleTarget(models.Model):
     @api.depends("partner_id", "template_id", "date_from", "date_to")
     def _compute_name(self):
         for target in self:
-            if all([target.partner_id, target.template_id, target.date_from, target.date_to]):
+            if all(
+                [
+                    target.partner_id,
+                    target.template_id,
+                    target.date_from,
+                    target.date_to,
+                ]
+            ):
                 target.name = (
                     f"{target.partner_id.name} - "
                     f"{target.template_id.name} "
@@ -127,11 +134,20 @@ class SaleTarget(models.Model):
     @api.depends("partner_id", "user_id", "season_id", "template_id")
     def _compute_ideal_amount(self):
         for target in self:
-            if not all([target.partner_id, target.user_id, target.season_id, target.template_id]):
+            if not all(
+                [
+                    target.partner_id,
+                    target.user_id,
+                    target.season_id,
+                    target.template_id,
+                ]
+            ):
                 target.ideal_amount = 0.0
                 continue
 
-            template_products = target.template_id.sale_order_template_line_ids.mapped("product_id")
+            template_products = target.template_id.sale_order_template_line_ids.mapped(
+                "product_id"
+            )
             if not template_products:
                 target.ideal_amount = 0.0
                 continue
@@ -149,11 +165,20 @@ class SaleTarget(models.Model):
     @api.depends("partner_id", "user_id", "season_id", "template_id")
     def _compute_no_ideal_amount(self):
         for target in self:
-            if not all([target.partner_id, target.user_id, target.season_id, target.template_id]):
+            if not all(
+                [
+                    target.partner_id,
+                    target.user_id,
+                    target.season_id,
+                    target.template_id,
+                ]
+            ):
                 target.no_ideal_amount = 0.0
                 continue
 
-            template_products = target.template_id.sale_order_template_line_ids.mapped("product_id")
+            template_products = target.template_id.sale_order_template_line_ids.mapped(
+                "product_id"
+            )
             historical_orders = target._get_historical_orders()
             no_ideal_total = 0.0
             for order in historical_orders:
@@ -237,7 +262,10 @@ class SaleTarget(models.Model):
         if pricelist:
             try:
                 return pricelist.get_product_price(
-                    template_line.product_id, 1.0, self.partner_id, date=fields.Date.today()
+                    template_line.product_id,
+                    1.0,
+                    self.partner_id,
+                    date=fields.Date.today(),
                 )
             except:
                 pass

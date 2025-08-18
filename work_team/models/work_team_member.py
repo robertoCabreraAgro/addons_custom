@@ -11,6 +11,10 @@ class CrmTeamMember(models.Model):
     _order = "create_date ASC, id"
     _check_company_auto = True
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     work_team_id = fields.Many2one(
         "work.team",
         string="Work Team",
@@ -26,14 +30,9 @@ class CrmTeamMember(models.Model):
         string="Salesperson",  # TDE FIXME check responsible field
         required=True,
         check_company=True,
-        domain="[('share', '=', False), ('id', 'not in', user_in_teams_ids), ('company_ids', 'in', user_company_ids)]",
+        domain="[('share', '=', False), ('id', 'not in', user_in_team_ids), ('company_ids', 'in', user_company_ids)]",
         ondelete="cascade",
         index=True,
-    )
-    user_in_teams_ids = fields.Many2many(
-        "res.users",
-        compute="_compute_user_in_teams_ids",
-        help="UX: Give users not to add in the currently chosen team to avoid duplicates",
     )
     user_company_ids = fields.Many2many(
         "res.company",
@@ -47,21 +46,54 @@ class CrmTeamMember(models.Model):
         help="If True, users may belong to several sales teams. "
         "Otherwise membership is limited to a single sales team.",
     )
+    user_in_team_ids = fields.Many2many(
+        "res.users",
+        compute="_compute_user_in_team_ids",
+        help="UX: Give users not to add in the currently chosen team to avoid duplicates",
+    )
     member_warning = fields.Text(compute="_compute_member_warning")
     # salesman information
     image_1920 = fields.Image(
-        "Image", related="user_id.image_1920", max_width=1920, max_height=1920
+        "Image",
+        related="user_id.image_1920",
+        max_width=1920,
+        max_height=1920,
     )
     image_128 = fields.Image(
-        "Image (128)", related="user_id.image_128", max_width=128, max_height=128
+        "Image (128)",
+        related="user_id.image_128",
+        max_width=128,
+        max_height=128,
     )
-    name = fields.Char(string="Name", related="user_id.display_name", readonly=False)
-    email = fields.Char(string="Email", related="user_id.email")
-    phone = fields.Char(string="Phone", related="user_id.phone")
-    mobile = fields.Char(string="Mobile", related="user_id.mobile")
+    name = fields.Char(
+        related="user_id.display_name",
+        string="Name",
+        readonly=True,
+    )
+    email = fields.Char(
+        related="user_id.email",
+        string="Email",
+        readonly=True,
+    )
+    phone = fields.Char(
+        related="user_id.phone",
+        string="Phone",
+        readonly=True,
+    )
+    mobile = fields.Char(
+        related="user_id.mobile",
+        string="Mobile",
+        readonly=True,
+    )
     company_id = fields.Many2one(
-        "res.company", string="Company", related="user_id.company_id"
+        related="user_id.company_id",
+        string="Company",
+        readonly=True,
     )
+
+    # ------------------------------------------------------------
+    # CONSTRAINTS
+    # ------------------------------------------------------------
 
     @api.constrains("work_team_id", "user_id", "active")
     def _constrains_membership(self):
@@ -103,15 +135,18 @@ class CrmTeamMember(models.Model):
                     "You are trying to create duplicate membership(s). "
                     "We found that %(duplicates)s already exist(s).",
                     duplicates=", ".join(
-                        "%s (%s)" % (m.user_id.name, m.work_team_id.name)
-                        for m in duplicates
+                        f"{m.user_id.name} ({m.work_team_id.name})" for m in duplicates
                     ),
-                )
+                ),
             )
+
+    # ------------------------------------------------------------
+    # COMPUTE METHODS
+    # ------------------------------------------------------------
 
     @api.depends_context("default_work_team_id")
     @api.depends("work_team_id", "user_id", "is_membership_multi")
-    def _compute_user_in_teams_ids(self):
+    def _compute_user_in_team_ids(self):
         """
         Give users not to add in the currently chosen team to avoid duplicates.
         In multi membership mode this field is empty as duplicates are allowed.
@@ -128,17 +163,17 @@ class CrmTeamMember(models.Model):
             member_user_ids = self.env["work.team.member"].search([]).user_id
         for member in self:
             if member_user_ids:
-                member.user_in_teams_ids = member_user_ids
+                member.user_in_team_ids = member_user_ids
             elif member.work_team_id:
-                member.user_in_teams_ids = member.work_team_id.member_ids
+                member.user_in_team_ids = member.work_team_id.member_ids
             elif self.env.context.get("default_work_team_id"):
-                member.user_in_teams_ids = (
+                member.user_in_team_ids = (
                     self.env["work.team"]
                     .browse(self.env.context["default_work_team_id"])
                     .member_ids
                 )
             else:
-                member.user_in_teams_ids = self.env["res.users"]
+                member.user_in_team_ids = self.env["res.users"]
 
     @api.depends("work_team_id")
     def _compute_user_company_ids(self):

@@ -18,10 +18,14 @@ class TelegramController(http.Controller):
     _partner_added_cmds = {"/quiensoy"}
     _internal_user_added_cmds = set()
 
-    @http.route("/telegram/webhook/<string:token>", type="jsonrpc", auth="public", csrf=False)
+    @http.route(
+        "/telegram/webhook/<string:token>", type="jsonrpc", auth="public", csrf=False
+    )
     def webhook(self, token, **kwargs):
         """Main webhook entry point. Finds the bot and dispatches the message."""
-        bot = request.env["telegram.bot"].sudo().search([("token", "=", token)], limit=1)
+        bot = (
+            request.env["telegram.bot"].sudo().search([("token", "=", token)], limit=1)
+        )
         if not bot:
             _logger.warning("Webhook called with an invalid token.")
             return "OK"
@@ -50,7 +54,11 @@ class TelegramController(http.Controller):
             chat_id = message_or_callback["chat"]["id"]
             telegram_username = message_or_callback.get("from", {}).get("username")
 
-        chat = request.env["telegram.chat"].sudo()._find_or_create(chat_id, bot.id, telegram_username)
+        chat = (
+            request.env["telegram.chat"]
+            .sudo()
+            ._find_or_create(chat_id, bot.id, telegram_username)
+        )
         partner = chat.partner_id
         internal_user = partner.user_ids[0] if partner and partner.user_ids else False
         return chat, partner, internal_user
@@ -140,7 +148,9 @@ class TelegramController(http.Controller):
                 command,
                 partner.name if partner else "unlinked user",
             )
-            handler_method(bot, chat, args, partner=partner, internal_user=internal_user)
+            handler_method(
+                bot, chat, args, partner=partner, internal_user=internal_user
+            )
 
     # --- Handlers that can be overriden ---
 
@@ -153,13 +163,19 @@ class TelegramController(http.Controller):
 
     def _handle_callback_query(self, bot, chat, callback_query, partner, internal_user):
         """Default handler for callback queries."""
-        bot.send_message(chat.chat_id, "He recibido una acción, pero no sé cómo procesarla.")
+        bot.send_message(
+            chat.chat_id, "He recibido una acción, pero no sé cómo procesarla."
+        )
 
     # --- Command Handlers ---
 
-    def _handle_start_command(self, bot, chat, args, partner=False, internal_user=False):
+    def _handle_start_command(
+        self, bot, chat, args, partner=False, internal_user=False
+    ):
         """Handles the /start command."""
-        welcome_message = f"¡Bienvenido a *{bot.name}*!\nEscribe /ayuda para ver lo que puedo hacer."
+        welcome_message = (
+            f"¡Bienvenido a *{bot.name}*!\nEscribe /ayuda para ver lo que puedo hacer."
+        )
         bot.send_message(chat.chat_id, welcome_message)
 
     def _handle_help_command(self, bot, chat, args, partner=False, internal_user=False):
@@ -175,7 +191,9 @@ class TelegramController(http.Controller):
         help_parts.extend(base_cmds)
         bot.send_message(chat.chat_id, "\n".join(help_parts))
 
-    def _handle_whoami_command(self, bot, chat, args, partner=False, internal_user=False):
+    def _handle_whoami_command(
+        self, bot, chat, args, partner=False, internal_user=False
+    ):
         """Verifies if the chat is linked to a partner/user and responds."""
         if internal_user:
             user_message = (

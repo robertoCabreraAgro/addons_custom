@@ -4,12 +4,13 @@ This report consolidates sales data from both invoices and POS orders,
 providing comprehensive analytics including margins, collection tracking,
 and year-over-year comparisons.
 """
+
 from odoo import fields, models
 
 
 class SalesMasterReport(models.Model):
     """Consolidated sales analytics report combining invoice and POS data.
-    
+
     This report provides a unified view of sales performance across all channels,
     including detailed margin analysis, collection tracking, and comprehensive
     filtering capabilities for business intelligence.
@@ -25,106 +26,99 @@ class SalesMasterReport(models.Model):
     # CORE DIMENSIONS
     # =====================
     company_id = fields.Many2one(
-        "res.company", 
-        string="Company", 
+        "res.company",
+        string="Company",
         readonly=True,
-        help="Company that generated the transaction"
+        help="Company that generated the transaction",
     )
     move_id = fields.Many2one(
-        "account.move", 
-        string="Invoice/Bill", 
+        "account.move",
+        string="Invoice/Bill",
         readonly=True,
-        help="Related accounting entry (null for POS transactions)"
+        help="Related accounting entry (null for POS transactions)",
     )
     user_id = fields.Many2one(
-        "res.users", 
-        string="Salesperson", 
+        "res.users",
+        string="Salesperson",
         readonly=True,
-        help="User responsible for the sale"
+        help="User responsible for the sale",
     )
     team_id = fields.Many2one(
-        "crm.team", 
-        string="Sales Team", 
+        "crm.team",
+        string="Sales Team",
         readonly=True,
-        help="Sales team assigned to the transaction"
+        help="Sales team assigned to the transaction",
     )
     partner_id = fields.Many2one(
-        "res.partner", 
-        string="Customer", 
+        "res.partner",
+        string="Customer",
         readonly=True,
-        help="Customer who made the purchase"
+        help="Customer who made the purchase",
     )
     commercial_partner_id = fields.Many2one(
         "res.partner",
         string="Commercial Entity",
         readonly=True,
-        help="Main commercial partner (parent company)"
+        help="Main commercial partner (parent company)",
     )
-    
+
     # Product Dimensions
     product_id = fields.Many2one(
         "product.product",
         string="Product Variant",
         readonly=True,
-        help="Specific product variant sold"
+        help="Specific product variant sold",
     )
     product_category_id = fields.Many2one(
         "product.category",
         string="Product Category",
         readonly=True,
-        help="Direct product category"
+        help="Direct product category",
     )
     parent_categ_id = fields.Many2one(
         "product.category",
         string="Parent Category",
         readonly=True,
-        help="Parent level category for grouping"
+        help="Parent level category for grouping",
     )
     root_categ_id = fields.Many2one(
         "product.category",
         string="Root Category",
         readonly=True,
-        help="Top-level category classification"
+        help="Top-level category classification",
     )
     manufacturer_id = fields.Many2one(
-        "res.partner",
-        string="Manufacturer",
-        readonly=True,
-        help="Product manufacturer"
+        "res.partner", string="Manufacturer", readonly=True, help="Product manufacturer"
     )
 
     # =====================
     # TEMPORAL FIELDS
     # =====================
     invoice_date = fields.Date(
-        string="Transaction Date", 
+        string="Transaction Date",
         readonly=True,
-        help="Date when the sale transaction occurred"
+        help="Date when the sale transaction occurred",
     )
 
     # =====================
     # CORE SALES METRICS
     # =====================
     quantity = fields.Float(
-        string="Quantity Sold", 
-        readonly=True,
-        help="Total quantity of products sold"
+        string="Quantity Sold", readonly=True, help="Total quantity of products sold"
     )
     sale_price_total = fields.Float(
-        string="Total Sale Value", 
+        string="Total Sale Value",
         readonly=True,
-        help="Total revenue from the sale (tax included for POS)"
+        help="Total revenue from the sale (tax included for POS)",
     )
     purchase_price = fields.Float(
         string="Avg Purchase Price",
         readonly=True,
         aggregator="avg",
-        help="Weighted average purchase price per unit"
+        help="Weighted average purchase price per unit",
     )
     cost_purchase_total = fields.Float(
-        string="Total Purchase Cost", 
-        readonly=True,
-        help="Total cost of goods sold"
+        string="Total Purchase Cost", readonly=True, help="Total cost of goods sold"
     )
 
     # =====================
@@ -139,7 +133,7 @@ class SalesMasterReport(models.Model):
         ],
         string="Fiscal Treatment",
         readonly=True,
-        help="Type of fiscal treatment applied to the transaction"
+        help="Type of fiscal treatment applied to the transaction",
     )
     sale_channel = fields.Selection(
         selection=[
@@ -148,7 +142,7 @@ class SalesMasterReport(models.Model):
         ],
         string="Sales Channel",
         readonly=True,
-        help="Channel through which the sale was made"
+        help="Channel through which the sale was made",
     )
     payment_state = fields.Selection(
         selection=[
@@ -161,7 +155,7 @@ class SalesMasterReport(models.Model):
         ],
         string="Payment Status",
         readonly=True,
-        help="Current payment status of the transaction"
+        help="Current payment status of the transaction",
     )
 
     # =====================
@@ -171,59 +165,53 @@ class SalesMasterReport(models.Model):
         string="Avg Unit Price",
         readonly=True,
         aggregator="avg",
-        help="Average selling price per unit"
+        help="Average selling price per unit",
     )
     discount = fields.Float(
         string="Avg Discount %",
         readonly=True,
         aggregator="avg",
-        help="Average discount percentage applied"
+        help="Average discount percentage applied",
     )
     margin = fields.Float(
-        string="Total Margin", 
+        string="Total Margin",
         readonly=True,
-        help="Total profit margin (sale price - cost)"
+        help="Total profit margin (sale price - cost)",
     )
     margin_percent = fields.Float(
         string="Margin %",
         readonly=True,
         aggregator="avg",
-        help="Margin percentage (calculated in query)"
+        help="Margin percentage (calculated in query)",
     )
 
     # =====================
     # COLLECTION MANAGEMENT
     # =====================
     invoice_amount_total = fields.Float(
-        string="Invoice Total", 
-        readonly=True,
-        help="Total amount invoiced"
+        string="Invoice Total", readonly=True, help="Total amount invoiced"
     )
     amount_paid = fields.Float(
-        string="Amount Paid", 
-        readonly=True,
-        help="Amount actually paid by customer"
+        string="Amount Paid", readonly=True, help="Amount actually paid by customer"
     )
     amount_due = fields.Float(
-        string="Amount Due", 
-        readonly=True,
-        help="Outstanding amount pending collection"
+        string="Amount Due", readonly=True, help="Outstanding amount pending collection"
     )
     collection_percentage = fields.Float(
         string="Collection %",
         readonly=True,
         aggregator="avg",
-        help="Percentage of invoice amount collected"
+        help="Percentage of invoice amount collected",
     )
     collected_price_total = fields.Float(
         string="Revenue Collected",
         readonly=True,
-        help="Proportional revenue based on collection rate"
+        help="Proportional revenue based on collection rate",
     )
     collected_margin = fields.Float(
-        string="Margin Collected", 
+        string="Margin Collected",
         readonly=True,
-        help="Proportional margin based on collection rate"
+        help="Proportional margin based on collection rate",
     )
 
     # =====================
@@ -232,27 +220,27 @@ class SalesMasterReport(models.Model):
     display_name = fields.Char(
         string="Description",
         compute="_compute_display_name",
-        help="Human-readable description of the sales record"
+        help="Human-readable description of the sales record",
     )
 
     def _compute_display_name(self):
         """Compute human-readable display name for sales records.
-        
+
         Creates a descriptive name combining product and customer information
         for easy identification in lists and reports.
         """
         for record in self:
             parts = []
-            
+
             if record.product_id:
                 parts.append(record.product_id.name)
-            
+
             if record.partner_id:
                 parts.append(f"sold to {record.partner_id.name}")
-                
+
             if record.user_id:
                 parts.append(f"by {record.user_id.name}")
-                
+
             if parts:
                 record.display_name = " ".join(parts)
             else:
@@ -261,10 +249,10 @@ class SalesMasterReport(models.Model):
     @property
     def _table_query(self):
         """Return the SQL query that defines this reporting table.
-        
+
         This property is required by Odoo for SQL view models (_auto=False).
         It returns the complete SQL query that creates the virtual table.
-        
+
         Returns:
             str: Complete SQL query for the sales master report
         """
@@ -272,11 +260,11 @@ class SalesMasterReport(models.Model):
 
     def _query(self):
         """Build the main SQL query for the sales master report.
-        
+
         This method constructs a comprehensive SQL query that combines invoice
         and POS data, providing unified sales analytics. The query uses CTEs
         (Common Table Expressions) for better readability and performance.
-        
+
         Returns:
             str: Complete SQL query with CTEs for data aggregation
         """
@@ -358,10 +346,10 @@ class SalesMasterReport(models.Model):
 
     def _select_invoice_aggregated(self):
         """Select and aggregate invoice line data.
-        
+
         Aggregates accounting move lines with proper cost calculation,
         collection tracking based on payment status, and margin analysis.
-        
+
         Returns:
             str: SQL SELECT clause for invoice data aggregation
         """
@@ -375,7 +363,7 @@ class SalesMasterReport(models.Model):
                 )
             )
         """
-        
+
         # Collection rate calculation
         collection_rate = """
             CASE WHEN move.amount_total > 0 
@@ -383,7 +371,7 @@ class SalesMasterReport(models.Model):
                 ELSE 0 
             END
         """
-        
+
         return f"""
             SELECT
                 -- Primary keys and dimensions
@@ -450,10 +438,10 @@ class SalesMasterReport(models.Model):
 
     def _from_sales(self):
         """Define table joins for invoice data.
-        
+
         Creates proper relationships between accounting moves, products,
         partners, and organizational structures.
-        
+
         Returns:
             str: SQL FROM clause with all necessary joins
         """
@@ -470,10 +458,10 @@ class SalesMasterReport(models.Model):
 
     def _where_sales(self):
         """Define filtering conditions for invoice data.
-        
+
         Filters for validated customer transactions with real fiscal treatment
         and excludes non-product lines (sections, notes, etc.).
-        
+
         Returns:
             str: SQL WHERE clause with filtering conditions
         """
@@ -488,10 +476,10 @@ class SalesMasterReport(models.Model):
 
     def _group_by_sales(self):
         """Define grouping for invoice data aggregation.
-        
+
         Groups by all non-aggregated fields to ensure proper
         data summarization by transaction and product.
-        
+
         Returns:
             str: SQL GROUP BY clause
         """
@@ -514,10 +502,10 @@ class SalesMasterReport(models.Model):
 
     def _select_pos_aggregated(self):
         """Select and aggregate POS order data.
-        
+
         Aggregates Point of Sale transactions which are always fully paid.
         Uses standard_price for cost calculation as POS doesn't track purchase_price.
-        
+
         Returns:
             str: SQL SELECT clause for POS data aggregation
         """
@@ -528,7 +516,7 @@ class SalesMasterReport(models.Model):
                 0
             )
         """
-        
+
         return f"""
             SELECT
                 -- POS transactions don't have move_id
@@ -582,10 +570,10 @@ class SalesMasterReport(models.Model):
 
     def _from_pos(self):
         """Define table joins for POS data.
-        
+
         Creates relationships between POS orders, products,
         and product categories.
-        
+
         Returns:
             str: SQL FROM clause for POS data
         """
@@ -599,10 +587,10 @@ class SalesMasterReport(models.Model):
 
     def _where_pos(self):
         """Define filtering conditions for POS data.
-        
+
         Filters for completed POS transactions with valid products
         and positive quantities.
-        
+
         Returns:
             str: SQL WHERE clause for POS filtering
         """
@@ -615,10 +603,10 @@ class SalesMasterReport(models.Model):
 
     def _group_by_pos(self):
         """Define grouping for POS data aggregation.
-        
+
         Groups by all non-aggregated fields to ensure proper
         data summarization by POS order and product.
-        
+
         Returns:
             str: SQL GROUP BY clause for POS data
         """

@@ -107,9 +107,7 @@ class ProductTemplate(models.Model):
 
     def _compute_count_lot_ids(self):
         for template in self:
-            template.count_lot_ids = template.env[
-                "stock.lot"
-            ].search_count(
+            template.count_lot_ids = template.env["stock.lot"].search_count(
                 [
                     ("product_id", "in", template.product_variant_ids.ids),
                 ]

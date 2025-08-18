@@ -39,11 +39,9 @@ class SaleTargetWizard(models.TransientModel):
         readonly=True,
     )
 
-
     validation_errors = fields.Text(
         string="Validation Issues", compute="_compute_validation_errors", readonly=True
     )
-
 
     @api.depends("partner_ids", "template_id", "date_from", "date_to")
     def _compute_validation_errors(self):
@@ -137,7 +135,9 @@ class SaleTargetWizard(models.TransientModel):
                     "date_from": self.date_from,
                     "date_to": self.date_to,
                     "template_id": self.template_id.id,
-                    "user_id": partner.user_id.id if partner.user_id else self.env.user.id,
+                    "user_id": (
+                        partner.user_id.id if partner.user_id else self.env.user.id
+                    ),
                 }
             )
 

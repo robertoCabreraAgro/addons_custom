@@ -362,24 +362,32 @@ class FleetVehicle(models.Model):
         """Override the method to include fleet managers in addition to account readonly users.
         Allow fleet managers to see account move lines related to their vehicles.
         """
-        has_account_readonly = self.env.user.has_group('account.group_account_readonly')
-        has_fleet_manager = self.env.user.has_group('fleet.fleet_group_manager')
+        has_account_readonly = self.env.user.has_group("account.group_account_readonly")
+        has_fleet_manager = self.env.user.has_group("fleet.fleet_group_manager")
 
         if not (has_account_readonly or has_fleet_manager):
             self.account_move_ids = False
             self.bill_count = 0
             return
 
-        moves = self.env['account.move.line']._read_group(
+        moves = self.env["account.move.line"]._read_group(
             domain=[
-                ('vehicle_id', 'in', self.ids),
-                ('parent_state', '!=', 'cancel'),
-                ('move_id.move_type', 'in', self.env['account.move'].get_purchase_types())
+                ("vehicle_id", "in", self.ids),
+                ("parent_state", "!=", "cancel"),
+                (
+                    "move_id.move_type",
+                    "in",
+                    self.env["account.move"].get_purchase_types(),
+                ),
             ],
-            groupby=['vehicle_id'],
-            aggregates=['move_id:array_agg'],
+            groupby=["vehicle_id"],
+            aggregates=["move_id:array_agg"],
         )
-        vehicle_move_mapping = {vehicle.id: set(move_ids) for vehicle, move_ids in moves}
+        vehicle_move_mapping = {
+            vehicle.id: set(move_ids) for vehicle, move_ids in moves
+        }
         for vehicle in self:
-            vehicle.account_move_ids = [Command.set(vehicle_move_mapping.get(vehicle.id, []))]
+            vehicle.account_move_ids = [
+                Command.set(vehicle_move_mapping.get(vehicle.id, []))
+            ]
             vehicle.bill_count = len(vehicle.account_move_ids)

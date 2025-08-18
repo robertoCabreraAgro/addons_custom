@@ -55,13 +55,11 @@ class ResPartnerProfile(models.Model):
     score_min = fields.Float(
         string="Minimum Score",
         default=0.0,
-        help="Minimum score required for this profile"
+        help="Minimum score required for this profile",
     )
 
     score_max = fields.Float(
-        string="Maximum Score", 
-        default=100.0,
-        help="Maximum score for this profile"
+        string="Maximum Score", default=100.0, help="Maximum score for this profile"
     )
 
     @api.constrains("factor")
@@ -80,9 +78,11 @@ class ResPartnerProfile(models.Model):
         for profile in self:
             if profile.score_min < 0:
                 raise ValidationError("Minimum score cannot be negative.")
-            
+
             if profile.score_max < profile.score_min:
-                raise ValidationError("Maximum score must be greater than or equal to minimum score.")
+                raise ValidationError(
+                    "Maximum score must be greater than or equal to minimum score."
+                )
 
     @api.depends("name")
     def _compute_display_name(self):

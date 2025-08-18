@@ -1,5 +1,3 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 import json
 import random
 
@@ -19,6 +17,261 @@ class WorkTeam(models.Model):
     _description = "Work Team"
     _order = "sequence ASC, create_date DESC, id DESC"
     _check_company_auto = True
+
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        string="Company",
+        index=True,
+    )
+    currency_id = fields.Many2one(
+        related="company_id.currency_id",
+        string="Currency",
+        readonly=True,
+    )
+    user_id = fields.Many2one(
+        comodel_name="res.users",
+        string="Team Leader",
+        check_company=True,
+    )
+    name = fields.Char(
+        string="Work Team",
+        required=True,
+        translate=True,
+    )
+    active = fields.Boolean(
+        default=True,
+        help="If the active field is set to false, "
+        "it will allow you to hide the Work Team without removing it.",
+    )
+    sequence = fields.Integer(
+        string="Sequence",
+        default=10,
+    )
+    # memberships
+    is_membership_multi = fields.Boolean(
+        string="Multiple Memberships Allowed",
+        compute="_compute_is_membership_multi",
+        help="If True, users may belong to several sales teams. "
+        "Otherwise membership is limited to a single sales team.",
+    )
+    member_company_ids = fields.Many2many(
+        comodel_name="res.company",
+        compute="_compute_member_company_ids",
+        help="UX: Limit to team company or all if no company",
+    )
+    member_warning = fields.Text(
+        string="Membership Issue Warning",
+        compute="_compute_member_warning",
+    )
+    work_team_member_ids = fields.One2many(
+        comodel_name="work.team.member",
+        inverse_name="work_team_id",
+        string="Work Team Members",
+        context={"active_test": True},
+        help="Add members to automatically assign their documents to this sales team.",
+    )
+    work_team_member_all_ids = fields.One2many(
+        comodel_name="work.team.member",
+        inverse_name="work_team_id",
+        string="Work Team Members (incl. inactive)",
+        context={"active_test": False},
+    )
+    member_ids = fields.Many2many(
+        comodel_name="res.users",
+        string="Members",
+        domain="['&', ('share', '=', False), ('company_ids', 'in', member_company_ids)]",
+        compute="_compute_member_ids",
+        inverse="_inverse_member_ids",
+        search="_search_member_ids",
+        help="Users assigned to this team.",
+    )
+
+    # UX options
+    color = fields.Integer(
+        string="Color Index",
+        help="The color of the channel",
+    )
+    favorite_user_ids = fields.Many2many(
+        "res.users",
+        "team_favorite_user_rel",
+        "team_id",
+        "user_id",
+        string="Favorite Members",
+        default=lambda self: self._get_default_favorite_user_ids(),
+    )
+    is_favorite = fields.Boolean(
+        string="Show on dashboard",
+        compute="_compute_is_favorite",
+        inverse="_inverse_is_favorite",
+        help="Favorite teams to display them in the dashboard and access them easily.",
+    )
+    dashboard_button_name = fields.Char(
+        string="Dashboard Button",
+        compute="_compute_dashboard_button_name",
+    )
+    dashboard_graph_data = fields.Text(compute="_compute_dashboard_graph")
+
+    # ------------------------------------------------------------
+    # CRUD METHODS
+    # ------------------------------------------------------------
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        teams = super(WorkTeam, self.with_context(mail_create_nosubscribe=True)).create(
+            vals_list
+        )
+        teams.filtered(lambda t: t.member_ids)._add_members_to_favorites()
+        return teams
+
+    def write(self, vals):
+        res = super(WorkTeam, self).write(vals)
+        # manually launch company sanity check
+        if vals.get("company_id"):
+            self.work_team_member_ids._check_company(fnames=["work_team_id"])
+
+        if vals.get("member_ids"):
+            self._add_members_to_favorites()
+        return res
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_default(self):
+        default_teams = [
+            self.env.ref("work_team.salesteam_website_sales"),
+            self.env.ref("work_team.pos_sales_team"),
+        ]
+        for team in self:
+            if team in default_teams:
+                raise UserError(_('Cannot delete default team "%s"', team.name))
+
+    # ------------------------------------------------------------
+    # COMPUTE METHODS
+    # ------------------------------------------------------------
+
+    def _compute_is_favorite(self):
+        for team in self:
+            team.is_favorite = self.env.user in team.favorite_user_ids
+
+    @api.depends("sequence")  # TDE FIXME: force compute in new mode
+    def _compute_is_membership_multi(self):
+        multi_enabled = (
+            self.env["ir.config_parameter"]
+            .sudo()
+            .get_param("work_team.membership_multi", False)
+        )
+        self.is_membership_multi = multi_enabled
+
+    @api.depends("work_team_member_ids.active")
+    def _compute_member_ids(self):
+        for team in self:
+            team.member_ids = team.work_team_member_ids.user_id
+
+    @api.depends("is_membership_multi", "member_ids")
+    def _compute_member_warning(self):
+        """
+        Display a warning message to warn user they are about to archive
+        other memberships. Only valid in mono-membership mode and take into
+        account only active memberships as we may keep several archived
+        memberships.
+        """
+        self.member_warning = False
+        if all(team.is_membership_multi for team in self):
+            return
+        # done in a loop, but to be used in form view only -> not optimized
+        for team in self:
+            member_warning = False
+            other_memberships = self.env["work.team.member"].search(
+                [
+                    ("work_team_id", "!=", team._origin.id if team.ids else False),
+                    ("user_id", "in", team.member_ids.ids),
+                ]
+            )
+            if other_memberships:
+                member_warning = _(
+                    "Adding %(user_names)s in this team will remove them from %(team_names)s.",
+                    user_names=", ".join(other_memberships.mapped("user_id.name")),
+                    team_names=", ".join(other_memberships.mapped("work_team_id.name")),
+                )
+            if member_warning:
+                team.member_warning = (
+                    member_warning
+                    + " "
+                    + _(
+                        "Working in multiple teams? Activate the option under Configuration>Settings."
+                    )
+                )
+
+    # 'name' should not be in the trigger, but as 'company_id' is possibly not present in the view
+    # because it depends on the multi-company group, we use it as fake trigger to force computation
+    @api.depends("company_id", "name")
+    def _compute_member_company_ids(self):
+        """
+        Available companies for members. Either team company if set, either
+        any company if not set on team.
+        """
+        all_companies = self.env["res.company"].search([])
+        for team in self:
+            team.member_company_ids = team.company_id or all_companies
+
+    # ------------------------------------------------------------
+    # INVERSE METHODS
+    # ------------------------------------------------------------
+
+    def _inverse_member_ids(self):
+        for team in self:
+            # pre-save value to avoid having _compute_member_ids interfering
+            # while building membership status
+            memberships = team.work_team_member_ids
+            users_current = team.member_ids
+            users_new = users_current - memberships.user_id
+            # add missing memberships
+            self.env["work.team.member"].create(
+                [{"work_team_id": team.id, "user_id": user.id} for user in users_new]
+            )
+            # activate or deactivate other memberships depending on members
+            for membership in memberships:
+                membership.active = membership.user_id in users_current
+
+    def _inverse_is_favorite(self):
+        sudoed_self = self.sudo()
+        to_fav = sudoed_self.filtered(
+            lambda team: self.env.user not in team.favorite_user_ids
+        )
+        to_fav.write({"favorite_user_ids": [(4, self.env.uid)]})
+        (sudoed_self - to_fav).write({"favorite_user_ids": [(3, self.env.uid)]})
+        return True
+
+    # ------------------------------------------------------------
+    # SEARCH METHODS
+    # ------------------------------------------------------------
+
+    def _search_member_ids(self, operator, value):
+        return [("work_team_member_ids.user_id", operator, value)]
+
+    # ------------------------------------------------------------
+    # ACTIONS
+    # ------------------------------------------------------------
+
+    def action_primary_channel_button(self):
+        """
+        Skeleton function to be overloaded It will return the adequate action
+        depending on the Work Team's options.
+        """
+        return False
+
+    # ------------------------------------------------------------
+    # HELPERS
+    # ------------------------------------------------------------
+
+    def _add_members_to_favorites(self):
+        for team in self:
+            team.favorite_user_ids = [(4, member.id) for member in team.member_ids]
+
+    def _get_default_favorite_user_ids(self):
+        return [(6, 0, [self.env.uid])]
 
     def _get_default_team_id(self, user_id=False, domain=False):
         """Compute default team id for sales related documents. Note that this
@@ -92,229 +345,9 @@ class WorkTeam(models.Model):
 
         return team
 
-    def _get_default_favorite_user_ids(self):
-        return [(6, 0, [self.env.uid])]
-
-    # description
-    name = fields.Char(
-        string="Work Team",
-        required=True,
-        translate=True,
-    )
-    active = fields.Boolean(
-        default=True,
-        help="If the active field is set to false, "
-        "it will allow you to hide the Work Team without removing it.",
-    )
-    sequence = fields.Integer(
-        string="Sequence",
-        default=10,
-    )
-    company_id = fields.Many2one(
-        comodel_name="res.company",
-        string="Company",
-        index=True,
-    )
-    currency_id = fields.Many2one(
-        related="company_id.currency_id",
-        string="Currency",
-        readonly=True,
-    )
-    user_id = fields.Many2one(
-        comodel_name="res.users",
-        string="Team Leader",
-        check_company=True,
-    )
-    # memberships
-    is_membership_multi = fields.Boolean(
-        string="Multiple Memberships Allowed",
-        compute="_compute_is_membership_multi",
-        help="If True, users may belong to several sales teams. "
-        "Otherwise membership is limited to a single sales team.",
-    )
-    member_company_ids = fields.Many2many(
-        comodel_name="res.company",
-        compute="_compute_member_company_ids",
-        help="UX: Limit to team company or all if no company",
-    )
-    member_warning = fields.Text(
-        string="Membership Issue Warning",
-        compute="_compute_member_warning",
-    )
-    work_team_member_ids = fields.One2many(
-        comodel_name="work.team.member",
-        inverse_name="work_team_id",
-        string="Work Team Members",
-        context={"active_test": True},
-        help="Add members to automatically assign their documents to this sales team.",
-    )
-    member_ids = fields.Many2many(
-        comodel_name="res.users",
-        string="Members",
-        domain="['&', ('share', '=', False), ('company_ids', 'in', member_company_ids)]",
-        compute="_compute_member_ids",
-        inverse="_inverse_member_ids",
-        search="_search_member_ids",
-        help="Users assigned to this team.",
-    )
-    work_team_member_all_ids = fields.One2many(
-        comodel_name="work.team.member",
-        inverse_name="work_team_id",
-        string="Work Team Members (incl. inactive)",
-        context={"active_test": False},
-    )
-    # UX options
-    color = fields.Integer(
-        string="Color Index",
-        help="The color of the channel",
-    )
-    favorite_user_ids = fields.Many2many(
-        "res.users",
-        "team_favorite_user_rel",
-        "team_id",
-        "user_id",
-        string="Favorite Members",
-        default=_get_default_favorite_user_ids,
-    )
-    is_favorite = fields.Boolean(
-        string="Show on dashboard",
-        compute="_compute_is_favorite",
-        inverse="_inverse_is_favorite",
-        help="Favorite teams to display them in the dashboard and access them easily.",
-    )
-    dashboard_button_name = fields.Char(
-        string="Dashboard Button",
-        compute="_compute_dashboard_button_name",
-    )
-    dashboard_graph_data = fields.Text(compute="_compute_dashboard_graph")
-
     # ------------------------------------------------------------
-    # CRUD
+    # GRAPH
     # ------------------------------------------------------------
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        teams = super(WorkTeam, self.with_context(mail_create_nosubscribe=True)).create(
-            vals_list
-        )
-        teams.filtered(lambda t: t.member_ids)._add_members_to_favorites()
-        return teams
-
-    def write(self, values):
-        res = super(WorkTeam, self).write(values)
-        # manually launch company sanity check
-        if values.get("company_id"):
-            self.work_team_member_ids._check_company(fnames=["work_team_id"])
-
-        if values.get("member_ids"):
-            self._add_members_to_favorites()
-        return res
-
-    @api.ondelete(at_uninstall=False)
-    def _unlink_except_default(self):
-        default_teams = [
-            self.env.ref("work_team.salesteam_website_sales"),
-            self.env.ref("work_team.pos_sales_team"),
-        ]
-        for team in self:
-            if team in default_teams:
-                raise UserError(_('Cannot delete default team "%s"', team.name))
-
-    # ------------------------------------------------------------
-    # COMPUTE
-    # ------------------------------------------------------------
-
-    @api.depends("sequence")  # TDE FIXME: force compute in new mode
-    def _compute_is_membership_multi(self):
-        multi_enabled = (
-            self.env["ir.config_parameter"]
-            .sudo()
-            .get_param("work_team.membership_multi", False)
-        )
-        self.is_membership_multi = multi_enabled
-
-    @api.depends("work_team_member_ids.active")
-    def _compute_member_ids(self):
-        for team in self:
-            team.member_ids = team.work_team_member_ids.user_id
-
-    def _inverse_member_ids(self):
-        for team in self:
-            # pre-save value to avoid having _compute_member_ids interfering
-            # while building membership status
-            memberships = team.work_team_member_ids
-            users_current = team.member_ids
-            users_new = users_current - memberships.user_id
-            # add missing memberships
-            self.env["work.team.member"].create(
-                [{"work_team_id": team.id, "user_id": user.id} for user in users_new]
-            )
-            # activate or deactivate other memberships depending on members
-            for membership in memberships:
-                membership.active = membership.user_id in users_current
-
-    @api.depends("is_membership_multi", "member_ids")
-    def _compute_member_warning(self):
-        """
-        Display a warning message to warn user they are about to archive
-        other memberships. Only valid in mono-membership mode and take into
-        account only active memberships as we may keep several archived
-        memberships.
-        """
-        self.member_warning = False
-        if all(team.is_membership_multi for team in self):
-            return
-        # done in a loop, but to be used in form view only -> not optimized
-        for team in self:
-            member_warning = False
-            other_memberships = self.env["work.team.member"].search(
-                [
-                    ("work_team_id", "!=", team._origin.id if team.ids else False),
-                    ("user_id", "in", team.member_ids.ids),
-                ]
-            )
-            if other_memberships:
-                member_warning = _(
-                    "Adding %(user_names)s in this team will remove them from %(team_names)s.",
-                    user_names=", ".join(other_memberships.mapped("user_id.name")),
-                    team_names=", ".join(other_memberships.mapped("work_team_id.name")),
-                )
-            if member_warning:
-                team.member_warning = (
-                    member_warning
-                    + " "
-                    + _(
-                        "Working in multiple teams? Activate the option under Configuration>Settings."
-                    )
-                )
-
-    def _search_member_ids(self, operator, value):
-        return [("work_team_member_ids.user_id", operator, value)]
-
-    # 'name' should not be in the trigger, but as 'company_id' is possibly not present in the view
-    # because it depends on the multi-company group, we use it as fake trigger to force computation
-    @api.depends("company_id", "name")
-    def _compute_member_company_ids(self):
-        """
-        Available companies for members. Either team company if set, either
-        any company if not set on team.
-        """
-        all_companies = self.env["res.company"].search([])
-        for team in self:
-            team.member_company_ids = team.company_id or all_companies
-
-    def _compute_is_favorite(self):
-        for team in self:
-            team.is_favorite = self.env.user in team.favorite_user_ids
-
-    def _inverse_is_favorite(self):
-        sudoed_self = self.sudo()
-        to_fav = sudoed_self.filtered(
-            lambda team: self.env.user not in team.favorite_user_ids
-        )
-        to_fav.write({"favorite_user_ids": [(4, self.env.uid)]})
-        (sudoed_self - to_fav).write({"favorite_user_ids": [(3, self.env.uid)]})
-        return True
 
     def _compute_dashboard_button_name(self):
         """
@@ -326,29 +359,6 @@ class WorkTeam(models.Model):
     def _compute_dashboard_graph(self):
         for team in self:
             team.dashboard_graph_data = json.dumps(team._get_dashboard_graph_data())
-
-    # ------------------------------------------------------------
-    # ACTIONS
-    # ------------------------------------------------------------
-
-    def action_primary_channel_button(self):
-        """
-        Skeleton function to be overloaded It will return the adequate action
-        depending on the Work Team's options.
-        """
-        return False
-
-    # ------------------------------------------------------------
-    # TOOLS
-    # ------------------------------------------------------------
-
-    def _add_members_to_favorites(self):
-        for team in self:
-            team.favorite_user_ids = [(4, member.id) for member in team.member_ids]
-
-    # ------------------------------------------------------------
-    # GRAPH
-    # ------------------------------------------------------------
 
     def _graph_get_model(self) -> str:
         """

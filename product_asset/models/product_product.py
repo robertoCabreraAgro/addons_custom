@@ -29,9 +29,7 @@ class ProductProduct(models.Model):
 
     def _compute_count_lot_ids(self):
         for product in self:
-            product.count_lot_ids = product.env[
-                "stock.lot"
-            ].search_count(
+            product.count_lot_ids = product.env["stock.lot"].search_count(
                 [
                     ("product_id", "in", product.ids),
                 ]

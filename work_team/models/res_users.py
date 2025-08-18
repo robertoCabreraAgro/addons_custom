@@ -6,6 +6,10 @@ from odoo import api, fields, models
 class ResUsers(models.Model):
     _inherit = "res.users"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     work_team_ids = fields.Many2many(
         "work.team",
         "work_team_member",
@@ -13,10 +17,10 @@ class ResUsers(models.Model):
         "work_team_id",
         string="Work Teams",
         check_company=True,
-        copy=False,
-        readonly=True,
         compute="_compute_work_team_ids",
+        readonly=True,
         search="_search_work_team_ids",
+        copy=False,
     )
     work_team_member_ids = fields.One2many(
         "work.team.member",
@@ -33,13 +37,14 @@ class ResUsers(models.Model):
         "or to set sales team in invoicing or subscription.",
     )
 
+    # ------------------------------------------------------------
+    # COMPUTE METHODS
+    # ------------------------------------------------------------
+
     @api.depends("work_team_member_ids.active")
     def _compute_work_team_ids(self):
         for user in self:
             user.work_team_ids = user.work_team_member_ids.work_team_id
-
-    def _search_work_team_ids(self, operator, value):
-        return [("work_team_member_ids.work_team_id", operator, value)]
 
     @api.depends(
         "work_team_member_ids.work_team_id",
@@ -55,3 +60,10 @@ class ResUsers(models.Model):
                 user.work_team_id = (
                     sorted_memberships[0].work_team_id if sorted_memberships else False
                 )
+
+    # ------------------------------------------------------------
+    # SEARCH METHODS
+    # ------------------------------------------------------------
+
+    def _search_work_team_ids(self, operator, value):
+        return [("work_team_member_ids.work_team_id", operator, value)]

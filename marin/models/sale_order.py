@@ -46,9 +46,9 @@ class SaleOrder(models.Model):
         return super().create(vals_list)
 
     def write(self, vals):
-        if 'user_id' in vals:
+        if "user_id" in vals:
             self._assign_season_from_salesperson(vals)
-        
+
         res = super().write(vals)
         if "route_id" in vals:
             lines = self.mapped("line_ids").filtered(
@@ -166,7 +166,7 @@ class SaleOrder(models.Model):
         """
         self.line_ids.route_id = self.route_id
 
-    @api.onchange('user_id')
+    @api.onchange("user_id")
     def _onchange_user_id(self):
         if self.user_id and self.user_id.season_id:
             self.season_id = self.user_id.season_id
@@ -178,20 +178,22 @@ class SaleOrder(models.Model):
     # --------------------------------------------------
 
     def _assign_season_from_salesperson(self, vals):
-        user_id = vals.get('user_id')
+        user_id = vals.get("user_id")
         if user_id:
-            user = self.env['res.users'].browse(user_id)
+            user = self.env["res.users"].browse(user_id)
             if user.season_id:
-                vals['season_id'] = user.season_id.id
+                vals["season_id"] = user.season_id.id
             else:
-                template_id = vals.get('sale_order_template_id') or (
+                template_id = vals.get("sale_order_template_id") or (
                     self.sale_order_template_id.id if self else False
                 )
                 if template_id:
-                    template = self.env['sale.order.template'].browse(template_id)
-                    vals['season_id'] = template.season_id.id if template.season_id else False
+                    template = self.env["sale.order.template"].browse(template_id)
+                    vals["season_id"] = (
+                        template.season_id.id if template.season_id else False
+                    )
                 else:
-                    vals['season_id'] = False
+                    vals["season_id"] = False
 
     def action_assign_missing_seasons(self):
         orders_updated = 0
@@ -199,23 +201,22 @@ class SaleOrder(models.Model):
             if not order.season_id and order.user_id and order.user_id.season_id:
                 order.season_id = order.user_id.season_id
                 orders_updated += 1
-        
+
         if orders_updated > 0:
             message = f"Updated {orders_updated} orders with missing seasons"
         else:
             message = "No orders found that need season assignment"
-        
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': {
-                'title': 'Season Assignment Complete',
-                'message': message,
-                'type': 'success' if orders_updated > 0 else 'info',
-                'sticky': False,
-            }
-        }
 
+        return {
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "title": "Season Assignment Complete",
+                "message": message,
+                "type": "success" if orders_updated > 0 else "info",
+                "sticky": False,
+            },
+        }
 
     # --------------------------------------------------
     # ACTION METHODS
@@ -310,19 +311,23 @@ class SaleOrder(models.Model):
             )
             moves._action_cancel()
             line.with_context(avoid_check_unlink=True).unlink()
-    
+
     # Extend original method
     def action_cancel(self):
         """Override to prevent cancellation if there are active invoices."""
         for order in self:
             active_invoices = order.invoice_ids.filtered(
-                lambda inv: inv.state not in ('cancel', 'draft') and inv.move_type == 'out_invoice'
+                lambda inv: inv.state not in ("cancel", "draft")
+                and inv.move_type == "out_invoice"
             )
 
             if active_invoices:
-                invoice_numbers = ', '.join(active_invoices.mapped('name'))
-                raise UserError(_(
-                    "Cannot cancel this sale order because it has been invoiced. Please cancel the invoices first. Related invoice(s): %s"
-                ) % invoice_numbers)
+                invoice_numbers = ", ".join(active_invoices.mapped("name"))
+                raise UserError(
+                    _(
+                        "Cannot cancel this sale order because it has been invoiced. Please cancel the invoices first. Related invoice(s): %s"
+                    )
+                    % invoice_numbers
+                )
 
         return super(SaleOrder, self).action_cancel()
