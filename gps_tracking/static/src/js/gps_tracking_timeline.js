@@ -17,6 +17,7 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
         this.state.selectedDevice = null;
         this.state.firstOdometers = 0; 
         this.state.initialFuel = 0;
+        this.state.leftPanelVisible = true; // Control de visibilidad del panel izquierdo
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         const formattedDate = today.toISOString().slice(0, 16);
@@ -511,6 +512,17 @@ export class GpsTrackingTimeline extends GpsTrackingDashboard {
         this.map.renderSync();
         setTimeout(() => this.map.renderSync(), 100);
         // console.log("Mapa y estado reiniciados completamente.");
+    }
+
+    toggleLeftPanel() {
+        this.state.leftPanelVisible = !this.state.leftPanelVisible;
+        
+        // Notificar al mapa que se redimensione
+        setTimeout(() => {
+            if (this.map) {
+                this.map.updateSize();
+            }
+        }, 300); // Esperar a que termine la transición CSS
     }
 }
 

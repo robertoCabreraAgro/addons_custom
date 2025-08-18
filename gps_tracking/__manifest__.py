@@ -5,6 +5,7 @@
     "summary": "Module to track GPS coordinates and display them on a map",
     "author": "Raúl Alejandro Rodríguez López",
     "website": "https://raulalejandro.com.mx",
+    "license": "LGPL-3",
     "depends": ["base_geoengine", "fleet", "base_approval", "mail"],
     "data": [
         "security/res_group_security.xml",

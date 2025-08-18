@@ -2,6 +2,7 @@
 import { Component, useState, onWillStart, onMounted, useRef, onWillUnmount, onWillUpdateProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { user } from "@web/core/user";
 import { loadJS } from "@web/core/assets";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { SearchBar } from "@web/search/search_bar/search_bar";
@@ -10,11 +11,32 @@ import { GpsSearchbar } from "../components/searchbar/gps_searchbar";
 import { GeofenceDialog } from "../components/geofence_dialog";
 
 // Constants
-const REFRESH_INTERVAL_MS = 1000;
+const REFRESH_INTERVAL_MS = 1000; // 1 second for real-time tracking updates
 const DEFAULT_ZOOM_LEVEL = 15;
 const ANIMATION_DURATION_MS = 500;
 const DEFAULT_STROKE_COLOR = "#3399CC";
 const TRANSPARENT_FILL = "rgba(0, 0, 0, 0)";
+
+// GPS Tracking user group types
+const GPS_USER_GROUPS = {
+    MANAGER: 'manager',
+    PRIVATE: 'private', 
+    VEHICLE_LOAN: 'vehicle_loan',
+    REPORTING: 'reporting',
+    USER: 'user',
+    NONE: 'none'
+};
+
+// Department ID for reporting group
+const REPORTING_DEPARTMENT_ID = 4;
+
+// Base device fields for queries
+const BASE_DEVICE_FIELDS = [
+    "id", "imei", "the_point", "speed", "timestamp", "altitude", 
+    "satellite", "address", "gsm_signal", "ignition", "movement", 
+    "color", "vehicle_id", "license_plate", "driver_name", 
+    "odometer", "real_odometer", "location", "department_id"
+];
 
 export class GpsTrackingDashboard extends Component {
     static props = {
@@ -42,6 +64,8 @@ export class GpsTrackingDashboard extends Component {
             startDate: null,
             endDate: null,
             pathPoints: [],
+            leftPanelVisible: true, // Control de visibilidad del panel izquierdo
+            canCreateGeofence: false, // Permission to create geofences
         });
         this.map = null;
         this.vectorLayer = null;
@@ -58,22 +82,41 @@ export class GpsTrackingDashboard extends Component {
             }
         });
 
-        // Llamar a la función de actualización periódicamente 
-        this.refreshInterval = setInterval(() => {
-            this.refreshData();
-        }, REFRESH_INTERVAL_MS);
+        // Real-time tracking refresh every 1 second
+        this.startAutoRefresh();
+
+        // Pause/resume refresh based on page visibility for performance
+        this.handleVisibilityChange = () => {
+            if (document.hidden) {
+                this.pauseAutoRefresh();
+            } else {
+                this.resumeAutoRefresh();
+            }
+        };
+        document.addEventListener('visibilitychange', this.handleVisibilityChange);
 
         onWillStart(async () => {
             // Cargar los dispositivos inicialmente
             await this.loadDevices();
-            this.state.filteredDevices = [...this.state.devices];
+            
+            // Configurar permisos para crear geofences
+            await this.setupGeofencePermissions();
+            
+            // Configurar visibilidad del panel izquierdo basado en permisos
+            await this.setupLeftPanelVisibility();
+            
+            // Esperar un momento para que se calculen los campos computados y luego refiltrar
+            setTimeout(() => {
+                this.applyDepartmentFilter();
+            }, 2000); // Esperar 2 segundos
+            
             await this.loadOpenLayers();
         });
 
         onMounted(() => {
             if (this.mapContainerRef.el) {
                 this.initializeMap();
-                this.addDeviceMarkers();
+                this.updateDeviceMarkers();
                 this.loadGeofences();
                 // Ejecutar checkGeofenceContext después de que todo esté cargado
                 setTimeout(() => {
@@ -84,7 +127,7 @@ export class GpsTrackingDashboard extends Component {
                 setTimeout(() => {
                     if (this.mapContainerRef.el) {
                         this.initializeMap();
-                        this.addDeviceMarkers();
+                        this.updateDeviceMarkers();
                         setTimeout(() => {
                             this.checkGeofenceContext();
                         }, 800);
@@ -95,37 +138,221 @@ export class GpsTrackingDashboard extends Component {
         });
 
         onWillUnmount(() => {
-            if (this.refreshInterval) {
-                clearInterval(this.refreshInterval);
-            }
+            this.stopAutoRefresh();
+            document.removeEventListener('visibilitychange', this.handleVisibilityChange);
         });
+    }
+
+    /**
+     * Auto-refresh management functions
+     */
+    startAutoRefresh() {
+        if (!this.refreshInterval) {
+            this.refreshInterval = setInterval(() => {
+                this.refreshTrackingData();
+            }, REFRESH_INTERVAL_MS);
+        }
+    }
+
+    pauseAutoRefresh() {
+        if (this.refreshInterval) {
+            clearInterval(this.refreshInterval);
+            this.refreshInterval = null;
+        }
+    }
+
+    resumeAutoRefresh() {
+        if (!this.refreshInterval) {
+            this.startAutoRefresh();
+        }
+    }
+
+    stopAutoRefresh() {
+        if (this.refreshInterval) {
+            clearInterval(this.refreshInterval);
+            this.refreshInterval = null;
+        }
+    }
+
+    /**
+     * Setup geofence creation permissions based on user groups
+     */
+    async setupGeofencePermissions() {
+        try {
+            const userInfo = await this.getUserPermissions();
+            
+            // Only reporting and manager groups can create geofences
+            this.state.canCreateGeofence = (
+                userInfo.group === GPS_USER_GROUPS.REPORTING ||
+                userInfo.group === GPS_USER_GROUPS.MANAGER
+            );
+        } catch (error) {
+            console.error('Error setting up geofence permissions:', error);
+            this.state.canCreateGeofence = false;
+        }
+    }
+
+    /**
+     * Setup left panel visibility based on user permissions and available devices
+     */
+    async setupLeftPanelVisibility() {
+        try {
+            const userInfo = await this.getUserPermissions();
+            
+            // If user is group_gps_tracking_user (no access to any vehicles), hide the left panel
+            if (userInfo.group === GPS_USER_GROUPS.USER) {
+                this.state.leftPanelVisible = false;
+            }
+        } catch (error) {
+            console.error('Error setting up left panel visibility:', error);
+        }
+    }
+
+    /**
+     * Cache for user permissions to avoid repeated server calls
+     */
+    _userPermissionsCache = null;
+
+    /**
+     * Get user permissions with caching
+     */
+    async getUserPermissions() {
+        if (!this._userPermissionsCache) {
+            try {
+                this._userPermissionsCache = await this.orm.call(
+                    'res.users',
+                    'get_gps_tracking_permissions',
+                    []
+                );
+            } catch (error) {
+                console.error('Error getting user permissions:', error);
+                // Fallback permissions for error cases
+                this._userPermissionsCache = { 
+                    group: GPS_USER_GROUPS.REPORTING, 
+                    can_read_private: false 
+                };
+            }
+        }
+        return this._userPermissionsCache;
+    }
+
+    /**
+     * Prepare fields array for device queries based on user permissions
+     */
+    async prepareDeviceFields() {
+        const userInfo = await this.getUserPermissions();
+        const fields = [...BASE_DEVICE_FIELDS];
+        
+        // Add private field only if user has permission
+        if (userInfo.can_read_private) {
+            fields.push("private");
+        }
+        
+        return fields;
+    }
+
+    /**
+     * Generic device loading function with filtering
+     */
+    async loadDevicesWithFiltering(domain = []) {
+        try {
+            const fields = await this.prepareDeviceFields();
+            const devices = await this.orm.searchRead(
+                "gps.tracking.device",
+                domain,
+                fields
+            );
+            
+            return await this.filterDevicesByUserPermissions(devices);
+        } catch (error) {
+            console.error("Error loading devices:", error);
+            return [];
+        }
+    }
+
+    /**
+     * Filter devices based on user permissions and groups
+     */
+    async filterDevicesByUserPermissions(devices) {
+        const userInfo = await this.getUserPermissions();
+        return devices.filter(device => this._isDeviceAllowedForUser(device, userInfo));
+    }
+
+    /**
+     * Check if a specific device is allowed for the current user
+     */
+    _isDeviceAllowedForUser(device, userInfo) {
+        const hasDept = device.department_id && Array.isArray(device.department_id) && device.department_id.length > 0;
+        const deptId = hasDept ? device.department_id[0] : null;
+        const isPrivate = device.hasOwnProperty('private') ? device.private : false;
+
+        // Apply filtering based on user group
+        switch(userInfo.group) {
+            case GPS_USER_GROUPS.MANAGER:
+                return true;
+                
+            case GPS_USER_GROUPS.PRIVATE:
+                return true;
+                
+            case GPS_USER_GROUPS.VEHICLE_LOAN:
+                return !isPrivate;
+                
+            case GPS_USER_GROUPS.REPORTING:
+                return deptId === REPORTING_DEPARTMENT_ID;
+                
+            case GPS_USER_GROUPS.USER:
+                return false;
+                
+            default:
+                return false;
+        }
     }
 
     async _reloadDevicesWithDomain(domain) {
         try {
-            const devices = await this.orm.searchRead(
-                "gps.tracking.device",
-                domain || [],
-                ["id", "imei", "the_point", "speed", "timestamp", "altitude", "satellite", "address", "gsm_signal", "ignition", "movement", "color", "vehicle_id", "license_plate", "driver_name", "odometer", "real_odometer", "location"]
-            );
-            this.state.devices = devices;
-            this.state.filteredDevices = devices;
+            const filteredDevices = await this.loadDevicesWithFiltering(domain || []);
+            
+            this.state.devices = filteredDevices;
+            this.state.filteredDevices = filteredDevices;
         } catch (error) {
             console.error("Error al recargar dispositivos:", error);
+            this.state.devices = [];
+            this.state.filteredDevices = [];
         }
     }
 
     async loadDevices() {
         try {
-            const devices = await this.orm.searchRead(
-                "gps.tracking.device",
-                [],
-                ["id", "imei", "the_point", "speed", "timestamp", "altitude", "satellite", "address", "gsm_signal", "ignition", "movement", "color", "vehicle_id", "license_plate", "driver_name", "odometer", "real_odometer", "location"]
-            );
-            this.state.devices = devices;
+            const filteredDevices = await this.loadDevicesWithFiltering();
+            
+            this.state.devices = filteredDevices;
+            this.state.filteredDevices = filteredDevices;
         } catch (error) {
             console.error("Error al cargar los dispositivos:", error);
             this.state.devices = [];
+            this.state.filteredDevices = [];
+        }
+    }
+
+    async applyDepartmentFilter() {
+        /**
+         * Apply department filtering after computed fields are available.
+         * This method re-reads the devices with department_id and applies filtering.
+         */
+        try {
+            const filteredDevices = await this.loadDevicesWithFiltering();
+            
+            // Update state with filtered devices
+            this.state.devices = filteredDevices;
+            this.state.filteredDevices = filteredDevices;
+            
+            // Update map markers if map is initialized
+            if (this.mapInitialized) {
+                this.updateDeviceMarkers();
+            }
+            
+        } catch (error) {
+            console.error("Error in applyDepartmentFilter:", error);
         }
     }
 
@@ -139,7 +366,41 @@ export class GpsTrackingDashboard extends Component {
         this.state.expandedDevices = new Set(this.state.expandedDevices);
     }
 
-    // Método para refrescar los datos
+    /**
+     * Refresh only tracking data for real-time updates (optimized)
+     */
+    async refreshTrackingData() {
+        if (!this.state.devices || this.state.devices.length === 0) {
+            return;
+        }
+
+        try {
+            const deviceIds = this.state.devices.map(d => d.id);
+            const trackingFields = ["id", "the_point", "speed", "timestamp", "altitude", "address", "gsm_signal", "ignition", "movement"];
+            
+            const updatedDevices = await this.orm.searchRead(
+                "gps.tracking.device",
+                [['id', 'in', deviceIds]],
+                trackingFields
+            );
+
+            // Update existing devices with new tracking data
+            this.state.devices.forEach(device => {
+                const updated = updatedDevices.find(u => u.id === device.id);
+                if (updated) {
+                    Object.assign(device, updated);
+                }
+            });
+
+            // Update map markers with new positions (optimized for real-time)
+            this.updateDevicePositions();
+            
+        } catch (error) {
+            console.error("Error refreshing tracking data:", error);
+        }
+    }
+
+    // Full data refresh (for manual refresh or search changes)
     async refreshData() {
         await this._reloadDevicesWithDomain(this.props.searchDomain || []);
         this.updateDeviceMarkers();
@@ -473,6 +734,43 @@ export class GpsTrackingDashboard extends Component {
         this.updateDeviceMarkers();
     }
 
+    /**
+     * Optimized position update for real-time tracking (doesn't recreate layer)
+     */
+    updateDevicePositions() {
+        if (!this.map || !this.vectorLayer) {
+            // Fallback to full update if layer doesn't exist
+            this.updateDeviceMarkers();
+            return;
+        }
+
+        const vectorSource = this.vectorLayer.getSource();
+        const features = vectorSource.getFeatures();
+
+        // Update existing features with new positions
+        features.forEach(feature => {
+            if (feature.get('feature_type') === 'device') {
+                const imei = feature.get('imei');
+                const device = this.state.devices.find(d => d.imei === imei);
+                
+                if (device && device.the_point) {
+                    try {
+                        const point = JSON.parse(device.the_point);
+                        const newCoords = [point.coordinates[0], point.coordinates[1]];
+                        feature.getGeometry().setCoordinates(newCoords);
+                        
+                        // Update feature properties
+                        feature.set('speed', device.speed);
+                        feature.set('ignition', device.ignition);
+                        feature.set('movement', device.movement);
+                    } catch (error) {
+                        console.error(`Error updating position for device ${imei}:`, error);
+                    }
+                }
+            }
+        });
+    }
+
     updateDeviceMarkers() {
         if (!this.map) {
             return;
@@ -556,6 +854,17 @@ export class GpsTrackingDashboard extends Component {
         };
 
         step();
+    }
+
+    toggleLeftPanel() {
+        this.state.leftPanelVisible = !this.state.leftPanelVisible;
+        
+        // Notificar al mapa que se redimensione
+        setTimeout(() => {
+            if (this.map) {
+                this.map.updateSize();
+            }
+        }, 300); // Esperar a que termine la transición CSS
     }
 
     onCardClick(device) {
@@ -684,7 +993,6 @@ export class GpsTrackingDashboard extends Component {
             
             // Create cleanup function to avoid code duplication
             const cleanupTempFeature = (reason = "cancelled") => {
-                console.log(`Dialog ${reason} - removing temporary features`);
                 
                 if (tempFeature && this.geofenceLayer) {
                     this.geofenceLayer.getSource().removeFeature(tempFeature);
@@ -743,7 +1051,6 @@ export class GpsTrackingDashboard extends Component {
         });
         
         if (featuresToRemove.length > 0) {
-            console.log(`Removed ${featuresToRemove.length} temporary feature(s)`);
         }
     }
 

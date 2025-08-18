@@ -4,7 +4,7 @@
         <field name="name">gps.geofence.list</field>
         <field name="model">gps.geofence</field>
         <field name="arch" type="xml">
-            <list string="Geographic Areas" default_order="sequence,name">
+            <list string="Geographic Areas" default_order="sequence,name" create="false">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="area_type"/>
@@ -82,7 +82,7 @@
         <field name="name">gps.geofence.list.hierarchy</field>
         <field name="model">gps.geofence</field>
         <field name="arch" type="xml">
-            <list string="Geographic Areas Hierarchy">
+            <list string="Geographic Areas Hierarchy" create="false">
                 <field name="name"/>
                 <field name="area_type"/>
                 <field name="partner_id"/>
@@ -131,11 +131,13 @@
         <field name="search_view_id" ref="view_gps_geofence_search"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Create your first geographic area
+                No geographic areas found
             </p>
             <p>
-                Define properties, parcels, warehouses, and cultivation zones
-                with their geographic boundaries and hierarchical relationships.
+                Geographic areas are created from the GPS Dashboard using the 
+                "Create Geographic Area" action. This allows you to define 
+                properties, parcels, warehouses, and cultivation zones with 
+                their geographic boundaries drawn directly on the map.
             </p>
         </field>
     </record>
