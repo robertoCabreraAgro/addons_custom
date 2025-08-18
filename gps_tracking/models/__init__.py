@@ -8,3 +8,4 @@ from . import gps_geofence_type
 from . import fleet_vehicle
 from . import hr_employee
 from . import hr_employee_public
+from . import res_users

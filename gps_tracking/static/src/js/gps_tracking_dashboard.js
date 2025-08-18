@@ -11,11 +11,32 @@ import { GpsSearchbar } from "../components/searchbar/gps_searchbar";
 import { GeofenceDialog } from "../components/geofence_dialog";
 
 // Constants
-const REFRESH_INTERVAL_MS = 1000;
+const REFRESH_INTERVAL_MS = 1000; // 1 second for real-time tracking updates
 const DEFAULT_ZOOM_LEVEL = 15;
 const ANIMATION_DURATION_MS = 500;
 const DEFAULT_STROKE_COLOR = "#3399CC";
 const TRANSPARENT_FILL = "rgba(0, 0, 0, 0)";
+
+// GPS Tracking user group types
+const GPS_USER_GROUPS = {
+    MANAGER: 'manager',
+    PRIVATE: 'private', 
+    VEHICLE_LOAN: 'vehicle_loan',
+    REPORTING: 'reporting',
+    USER: 'user',
+    NONE: 'none'
+};
+
+// Department ID for reporting group
+const REPORTING_DEPARTMENT_ID = 4;
+
+// Base device fields for queries
+const BASE_DEVICE_FIELDS = [
+    "id", "imei", "the_point", "speed", "timestamp", "altitude", 
+    "satellite", "address", "gsm_signal", "ignition", "movement", 
+    "color", "vehicle_id", "license_plate", "driver_name", 
+    "odometer", "real_odometer", "location", "department_id"
+];
 
 export class GpsTrackingDashboard extends Component {
     static props = {
@@ -60,19 +81,25 @@ export class GpsTrackingDashboard extends Component {
             }
         });
 
-        // DESHABILITADO TEMPORALMENTE - Llamar a la función de actualización periódicamente 
-        // this.refreshInterval = setInterval(() => {
-        //     this.refreshData();
-        // }, REFRESH_INTERVAL_MS);
+        // Real-time tracking refresh every 1 second
+        this.startAutoRefresh();
+
+        // Pause/resume refresh based on page visibility for performance
+        this.handleVisibilityChange = () => {
+            if (document.hidden) {
+                this.pauseAutoRefresh();
+            } else {
+                this.resumeAutoRefresh();
+            }
+        };
+        document.addEventListener('visibilitychange', this.handleVisibilityChange);
 
         onWillStart(async () => {
-            console.log('=== onWillStart: Loading devices ===');
             // Cargar los dispositivos inicialmente
             await this.loadDevices();
             
             // Esperar un momento para que se calculen los campos computados y luego refiltrar
             setTimeout(() => {
-                console.log('=== Applying delayed filter after computed fields ===');
                 this.applyDepartmentFilter();
             }, 2000); // Esperar 2 segundos
             
@@ -104,80 +131,165 @@ export class GpsTrackingDashboard extends Component {
         });
 
         onWillUnmount(() => {
-            if (this.refreshInterval) {
-                clearInterval(this.refreshInterval);
-            }
+            this.stopAutoRefresh();
+            document.removeEventListener('visibilitychange', this.handleVisibilityChange);
         });
+    }
+
+    /**
+     * Auto-refresh management functions
+     */
+    startAutoRefresh() {
+        if (!this.refreshInterval) {
+            this.refreshInterval = setInterval(() => {
+                this.refreshTrackingData();
+            }, REFRESH_INTERVAL_MS);
+        }
+    }
+
+    pauseAutoRefresh() {
+        if (this.refreshInterval) {
+            clearInterval(this.refreshInterval);
+            this.refreshInterval = null;
+        }
+    }
+
+    resumeAutoRefresh() {
+        if (!this.refreshInterval) {
+            this.startAutoRefresh();
+        }
+    }
+
+    stopAutoRefresh() {
+        if (this.refreshInterval) {
+            clearInterval(this.refreshInterval);
+            this.refreshInterval = null;
+        }
+    }
+
+    /**
+     * Cache for user permissions to avoid repeated server calls
+     */
+    _userPermissionsCache = null;
+
+    /**
+     * Get user permissions with caching
+     */
+    async getUserPermissions() {
+        if (!this._userPermissionsCache) {
+            try {
+                this._userPermissionsCache = await this.orm.call(
+                    'res.users',
+                    'get_gps_tracking_permissions',
+                    []
+                );
+            } catch (error) {
+                console.error('Error getting user permissions:', error);
+                // Fallback permissions for error cases
+                this._userPermissionsCache = { 
+                    group: GPS_USER_GROUPS.REPORTING, 
+                    can_read_private: false 
+                };
+            }
+        }
+        return this._userPermissionsCache;
+    }
+
+    /**
+     * Prepare fields array for device queries based on user permissions
+     */
+    async prepareDeviceFields() {
+        const userInfo = await this.getUserPermissions();
+        const fields = [...BASE_DEVICE_FIELDS];
+        
+        // Add private field only if user has permission
+        if (userInfo.can_read_private) {
+            fields.push("private");
+        }
+        
+        return fields;
+    }
+
+    /**
+     * Generic device loading function with filtering
+     */
+    async loadDevicesWithFiltering(domain = []) {
+        try {
+            const fields = await this.prepareDeviceFields();
+            const devices = await this.orm.searchRead(
+                "gps.tracking.device",
+                domain,
+                fields
+            );
+            
+            return await this.filterDevicesByUserPermissions(devices);
+        } catch (error) {
+            console.error("Error loading devices:", error);
+            return [];
+        }
+    }
+
+    /**
+     * Filter devices based on user permissions and groups
+     */
+    async filterDevicesByUserPermissions(devices) {
+        const userInfo = await this.getUserPermissions();
+        return devices.filter(device => this._isDeviceAllowedForUser(device, userInfo));
+    }
+
+    /**
+     * Check if a specific device is allowed for the current user
+     */
+    _isDeviceAllowedForUser(device, userInfo) {
+        const hasDept = device.department_id && Array.isArray(device.department_id) && device.department_id.length > 0;
+        const deptId = hasDept ? device.department_id[0] : null;
+        const isPrivate = device.hasOwnProperty('private') ? device.private : false;
+
+        // Apply filtering based on user group
+        switch(userInfo.group) {
+            case GPS_USER_GROUPS.MANAGER:
+                return true;
+                
+            case GPS_USER_GROUPS.PRIVATE:
+                return true;
+                
+            case GPS_USER_GROUPS.VEHICLE_LOAN:
+                return !isPrivate;
+                
+            case GPS_USER_GROUPS.REPORTING:
+                return deptId === REPORTING_DEPARTMENT_ID;
+                
+            case GPS_USER_GROUPS.USER:
+                return false;
+                
+            default:
+                return false;
+        }
     }
 
     async _reloadDevicesWithDomain(domain) {
         try {
-            const devices = await this.orm.searchRead(
-                "gps.tracking.device",
-                domain || [],
-                ["id", "imei", "the_point", "speed", "timestamp", "altitude", "satellite", "address", "gsm_signal", "ignition", "movement", "color", "vehicle_id", "license_plate", "driver_name", "odometer", "real_odometer", "location", "department_id"]
-            );
-            
-            // PRUEBA: Solo mostrar vehículos con department_id = 4
-            console.log('Reload - All devices:', devices.map(d => ({
-                license_plate: d.license_plate, 
-                department_id: d.department_id,
-                dept_id_value: d.department_id ? d.department_id[0] : 'NULL'
-            })));
-            
-            const filteredDevices = devices.filter(device => {
-                // Verificar si tiene department_id y es un array con al menos un elemento
-                const hasDept = device.department_id && Array.isArray(device.department_id) && device.department_id.length > 0;
-                const deptId = hasDept ? device.department_id[0] : null;
-                const isDept4 = deptId === 4;
-                
-                console.log(`Reload Device ${device.license_plate}: raw_dept=${JSON.stringify(device.department_id)}, deptId=${deptId}, isDept4=${isDept4}`);
-                
-                return isDept4;
-            });
-            
-            console.log(`Reload - Total devices: ${devices.length}, Department 4 devices: ${filteredDevices.length}`);
+            const filteredDevices = await this.loadDevicesWithFiltering(domain || []);
             
             this.state.devices = filteredDevices;
             this.state.filteredDevices = filteredDevices;
         } catch (error) {
             console.error("Error al recargar dispositivos:", error);
+            this.state.devices = [];
+            this.state.filteredDevices = [];
         }
     }
 
     async loadDevices() {
         try {
-            const devices = await this.orm.searchRead(
-                "gps.tracking.device",
-                [],
-                ["id", "imei", "the_point", "speed", "timestamp", "altitude", "satellite", "address", "gsm_signal", "ignition", "movement", "color", "vehicle_id", "license_plate", "driver_name", "odometer", "real_odometer", "location", "department_id"]
-            );
-            
-            // PRUEBA: Solo mostrar vehículos con department_id = 4
-            console.log('All devices loaded:', devices.map(d => ({
-                license_plate: d.license_plate, 
-                department_id: d.department_id,
-                dept_id_value: d.department_id ? d.department_id[0] : 'NULL'
-            })));
-            
-            const filteredDevices = devices.filter(device => {
-                // Verificar si tiene department_id y es un array con al menos un elemento
-                const hasDept = device.department_id && Array.isArray(device.department_id) && device.department_id.length > 0;
-                const deptId = hasDept ? device.department_id[0] : null;
-                const isDept4 = deptId === 4;
-                
-                console.log(`Device ${device.license_plate}: raw_dept=${JSON.stringify(device.department_id)}, deptId=${deptId}, isDept4=${isDept4}`);
-                
-                return isDept4;
-            });
-            
-            console.log(`Initial load - Total devices: ${devices.length}, Department 4 devices: ${filteredDevices.length}`);
+            const filteredDevices = await this.loadDevicesWithFiltering();
             
             this.state.devices = filteredDevices;
             this.state.filteredDevices = filteredDevices;
         } catch (error) {
             console.error("Error al cargar los dispositivos:", error);
             this.state.devices = [];
+            this.state.filteredDevices = [];
         }
     }
 
@@ -186,34 +298,8 @@ export class GpsTrackingDashboard extends Component {
          * Apply department filtering after computed fields are available.
          * This method re-reads the devices with department_id and applies filtering.
          */
-        console.log('=== applyDepartmentFilter: Re-reading devices with computed fields ===');
-        
         try {
-            // Re-read devices to get updated computed fields
-            const devices = await this.orm.searchRead(
-                "gps.tracking.device",
-                [],
-                ["id", "imei", "the_point", "speed", "timestamp", "altitude", "satellite", "address", "gsm_signal", "ignition", "movement", "color", "vehicle_id", "license_plate", "driver_name", "odometer", "real_odometer", "location", "department_id"]
-            );
-            
-            console.log('=== applyDepartmentFilter: All devices after re-read ===', devices.map(d => ({
-                license_plate: d.license_plate, 
-                department_id: d.department_id,
-                dept_id_value: d.department_id ? d.department_id[0] : 'NULL'
-            })));
-            
-            // Apply department filtering (currently testing with department_id = 4)
-            const filteredDevices = devices.filter(device => {
-                const hasDept = device.department_id && Array.isArray(device.department_id) && device.department_id.length > 0;
-                const deptId = hasDept ? device.department_id[0] : null;
-                const isDept4 = deptId === 4;
-                
-                console.log(`applyDepartmentFilter - Device ${device.license_plate}: raw_dept=${JSON.stringify(device.department_id)}, deptId=${deptId}, isDept4=${isDept4}`);
-                
-                return isDept4;
-            });
-            
-            console.log(`=== applyDepartmentFilter: Total devices: ${devices.length}, Department 4 devices: ${filteredDevices.length} ===`);
+            const filteredDevices = await this.loadDevicesWithFiltering();
             
             // Update state with filtered devices
             this.state.devices = filteredDevices;
@@ -239,14 +325,43 @@ export class GpsTrackingDashboard extends Component {
         this.state.expandedDevices = new Set(this.state.expandedDevices);
     }
 
-    // Método para refrescar los datos
+    /**
+     * Refresh only tracking data for real-time updates (optimized)
+     */
+    async refreshTrackingData() {
+        if (!this.state.devices || this.state.devices.length === 0) {
+            return;
+        }
+
+        try {
+            const deviceIds = this.state.devices.map(d => d.id);
+            const trackingFields = ["id", "the_point", "speed", "timestamp", "altitude", "address", "gsm_signal", "ignition", "movement"];
+            
+            const updatedDevices = await this.orm.searchRead(
+                "gps.tracking.device",
+                [['id', 'in', deviceIds]],
+                trackingFields
+            );
+
+            // Update existing devices with new tracking data
+            this.state.devices.forEach(device => {
+                const updated = updatedDevices.find(u => u.id === device.id);
+                if (updated) {
+                    Object.assign(device, updated);
+                }
+            });
+
+            // Update map markers with new positions (optimized for real-time)
+            this.updateDevicePositions();
+            
+        } catch (error) {
+            console.error("Error refreshing tracking data:", error);
+        }
+    }
+
+    // Full data refresh (for manual refresh or search changes)
     async refreshData() {
-        console.log('=== refreshData called ===');
         await this._reloadDevicesWithDomain(this.props.searchDomain || []);
-        console.log('=== refreshData: After reload ===', this.state.devices.map(d => ({
-            license_plate: d.license_plate,
-            department: d.department_id
-        })));
         this.updateDeviceMarkers();
     }
 
@@ -578,6 +693,43 @@ export class GpsTrackingDashboard extends Component {
         this.updateDeviceMarkers();
     }
 
+    /**
+     * Optimized position update for real-time tracking (doesn't recreate layer)
+     */
+    updateDevicePositions() {
+        if (!this.map || !this.vectorLayer) {
+            // Fallback to full update if layer doesn't exist
+            this.updateDeviceMarkers();
+            return;
+        }
+
+        const vectorSource = this.vectorLayer.getSource();
+        const features = vectorSource.getFeatures();
+
+        // Update existing features with new positions
+        features.forEach(feature => {
+            if (feature.get('feature_type') === 'device') {
+                const imei = feature.get('imei');
+                const device = this.state.devices.find(d => d.imei === imei);
+                
+                if (device && device.the_point) {
+                    try {
+                        const point = JSON.parse(device.the_point);
+                        const newCoords = [point.coordinates[0], point.coordinates[1]];
+                        feature.getGeometry().setCoordinates(newCoords);
+                        
+                        // Update feature properties
+                        feature.set('speed', device.speed);
+                        feature.set('ignition', device.ignition);
+                        feature.set('movement', device.movement);
+                    } catch (error) {
+                        console.error(`Error updating position for device ${imei}:`, error);
+                    }
+                }
+            }
+        });
+    }
+
     updateDeviceMarkers() {
         if (!this.map) {
             return;
@@ -800,7 +952,6 @@ export class GpsTrackingDashboard extends Component {
             
             // Create cleanup function to avoid code duplication
             const cleanupTempFeature = (reason = "cancelled") => {
-                console.log(`Dialog ${reason} - removing temporary features`);
                 
                 if (tempFeature && this.geofenceLayer) {
                     this.geofenceLayer.getSource().removeFeature(tempFeature);
@@ -859,7 +1010,6 @@ export class GpsTrackingDashboard extends Component {
         });
         
         if (featuresToRemove.length > 0) {
-            console.log(`Removed ${featuresToRemove.length} temporary feature(s)`);
         }
     }
 
