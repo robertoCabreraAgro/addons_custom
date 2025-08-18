@@ -65,6 +65,7 @@ export class GpsTrackingDashboard extends Component {
             endDate: null,
             pathPoints: [],
             leftPanelVisible: true, // Control de visibilidad del panel izquierdo
+            canCreateGeofence: false, // Permission to create geofences
         });
         this.map = null;
         this.vectorLayer = null;
@@ -98,6 +99,12 @@ export class GpsTrackingDashboard extends Component {
             // Cargar los dispositivos inicialmente
             await this.loadDevices();
             
+            // Configurar permisos para crear geofences
+            await this.setupGeofencePermissions();
+            
+            // Configurar visibilidad del panel izquierdo basado en permisos
+            await this.setupLeftPanelVisibility();
+            
             // Esperar un momento para que se calculen los campos computados y luego refiltrar
             setTimeout(() => {
                 this.applyDepartmentFilter();
@@ -109,7 +116,7 @@ export class GpsTrackingDashboard extends Component {
         onMounted(() => {
             if (this.mapContainerRef.el) {
                 this.initializeMap();
-                this.addDeviceMarkers();
+                this.updateDeviceMarkers();
                 this.loadGeofences();
                 // Ejecutar checkGeofenceContext después de que todo esté cargado
                 setTimeout(() => {
@@ -120,7 +127,7 @@ export class GpsTrackingDashboard extends Component {
                 setTimeout(() => {
                     if (this.mapContainerRef.el) {
                         this.initializeMap();
-                        this.addDeviceMarkers();
+                        this.updateDeviceMarkers();
                         setTimeout(() => {
                             this.checkGeofenceContext();
                         }, 800);
@@ -164,6 +171,40 @@ export class GpsTrackingDashboard extends Component {
         if (this.refreshInterval) {
             clearInterval(this.refreshInterval);
             this.refreshInterval = null;
+        }
+    }
+
+    /**
+     * Setup geofence creation permissions based on user groups
+     */
+    async setupGeofencePermissions() {
+        try {
+            const userInfo = await this.getUserPermissions();
+            
+            // Only reporting and manager groups can create geofences
+            this.state.canCreateGeofence = (
+                userInfo.group === GPS_USER_GROUPS.REPORTING ||
+                userInfo.group === GPS_USER_GROUPS.MANAGER
+            );
+        } catch (error) {
+            console.error('Error setting up geofence permissions:', error);
+            this.state.canCreateGeofence = false;
+        }
+    }
+
+    /**
+     * Setup left panel visibility based on user permissions and available devices
+     */
+    async setupLeftPanelVisibility() {
+        try {
+            const userInfo = await this.getUserPermissions();
+            
+            // If user is group_gps_tracking_user (no access to any vehicles), hide the left panel
+            if (userInfo.group === GPS_USER_GROUPS.USER) {
+                this.state.leftPanelVisible = false;
+            }
+        } catch (error) {
+            console.error('Error setting up left panel visibility:', error);
         }
     }
 
@@ -307,7 +348,7 @@ export class GpsTrackingDashboard extends Component {
             
             // Update map markers if map is initialized
             if (this.mapInitialized) {
-                this.addDeviceMarkers();
+                this.updateDeviceMarkers();
             }
             
         } catch (error) {

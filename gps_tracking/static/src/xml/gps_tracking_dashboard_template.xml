@@ -24,7 +24,7 @@
                                         Actualizar
                                     </button>
                                 </li>
-                                <li>
+                                <li t-if="state.canCreateGeofence">
                                     <button class="dropdown-item" type="button" t-on-click="addGeofenceDrawingTool">
                                         Create Geographic Area
                                     </button>

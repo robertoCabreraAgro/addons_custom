@@ -193,7 +193,7 @@ input:checked + .slider:before {
 /* Toggle button for left panel */
 .toggle-panel-btn {
     position: absolute;
-    top: 12%; /* A la altura del selector de tipo de mapa */
+    top: 10%; /* A la altura del selector de tipo de mapa */
     left: 22%; /* Justo al lado del panel izquierdo */
     z-index: 1000;
     width: 40px;
