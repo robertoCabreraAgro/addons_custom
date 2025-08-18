@@ -128,28 +128,24 @@
                     type="object"
                     class="btn-primary"
                     invisible="not future_operator_id" />
-                <button name="action_send_email"
-                    string="Send Email"
-                    type="object"
-                    class="btn-secondary" />
                 <field name="contract_state" widget="statusbar"
                     statusbar_visible="futur,open,expired,closed" />
             </xpath>
 
             <xpath expr="//div[@name='button_box']" position="inside">
-                <button name="action_view_assignation_logs"
+                <button name="action_view_logs_assignation"
                     type="object"
                     class="oe_stat_button"
                     icon="fa-users">
                     <field name="assignment_count" widget="statbutton" string="Assignments" />
                 </button>
-                <button name="action_show_log_cost"
+                <button name="action_view_logs_cost"
                     type="object"
                     class="oe_stat_button"
                     icon="fa-wrench">
                     <field name="service_count" widget="statbutton" string="Services" />
                 </button>
-                <button name="return_action_to_open"
+                <button name="action_view_context"
                     type="object"
                     class="oe_stat_button"
                     icon="fa-file-text-o"
@@ -167,7 +163,7 @@
             </xpath>
 
             <xpath expr="//notebook/page[@name='other_info']" position="before">
-                <page name="personnel" string="Personnel">
+                <page name="personnel" string="Personnel" invisible="asset_type not in ('equipment', 'machinery', 'vehicle')">
                     <group>
                         <group>
                             <field name="operator_id"
@@ -181,7 +177,7 @@
                         </group>
                     </group>
                 </page>
-                <page name="model" string="Model">
+                <page name="model" string="Model" invisible="asset_type not in ('equipment', 'machinery', 'vehicle')">
                     <group name="model_group">
                         <group name="left_model_group">
                             <field name="license_plate" />
@@ -198,7 +194,7 @@
                         </group>
                     </group>
                 </page>
-                <page name="contract_information" string="Contract">
+                <page name="contract_information" string="Contract" invisible="asset_type not in ('equipment', 'machinery', 'vehicle')">
                     <group>
                         <group>
                             <field name="contract_renewal_due_soon" />
@@ -208,7 +204,7 @@
                         </group>
                     </group>
                 </page>
-                <page name="financial_information" string="Financial Information">
+                <page name="financial_information" string="Financial Information" invisible="asset_type not in ('equipment', 'machinery', 'vehicle')">
                     <group name="financial_information">
                         <group>
                             <field name="date_acquisition" />
@@ -223,7 +219,7 @@
                         </group>
                     </group>
                 </page>
-                <page name="vouchers" string="Vouchers">
+                <page name="vouchers" string="Vouchers" invisible="asset_type not in ('equipment', 'machinery', 'vehicle')">
                     <group>
                         <group string="Fuel Card">
                             <field name="fuel_card_id" options="{'no_create': True}" />
@@ -241,7 +237,7 @@
                         </group>
                     </group>
                 </page>
-                <page name="logs" string="Logs">
+                <page name="logs" string="Logs" invisible="asset_type not in ('equipment', 'machinery', 'vehicle')">
                     <field name="log_ids" readonly="1">
                         <list>
                             <field name="date_start" />

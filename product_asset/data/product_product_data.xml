@@ -49,8 +49,8 @@
 	    <field name="vehicle_service" eval="True" />
     </record>
 
-    <record id="product_product_operator_reasignment" model="product.product">
-        <field name="name">Operator reasignment</field>
+    <record id="product_product_operator_reassignment" model="product.product">
+        <field name="name">Operator reassignment</field>
         <field name="uom_id" ref="uom.product_uom_unit"/>
         <field name="categ_id" ref="product_asset.product_category_maintenance_and_repairs" />
         <field name="type">service</field>

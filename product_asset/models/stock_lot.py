@@ -299,22 +299,24 @@ class StockLot(models.Model):
 
     def _compute_count_all(self):
         Log = self.env["product.asset.log"].with_context(active_test=False)
+        contract = self._get_product_contract()
+        reassignment = self._get_product_operator_reassignment()
         contract_data = Log._read_group(
             [
                 ("asset_id", "in", self.ids),
-                ("type", "=", "contract"),
+                ("product_id", "in", contract.ids),
                 ("state", "!=", "closed"),
             ],
             ["asset_id", "active"],
             ["__count"],
         )
         service_data = Log._read_group(
-            [("asset_id", "in", self.ids), ("type", "=", "service")],
+            [("asset_id", "in", self.ids), ("product_id", "not in", contract.ids + reassignment.ids)],
             ["asset_id", "active"],
             ["__count"],
         )
         history_data = Log._read_group(
-            [("asset_id", "in", self.ids), ("type", "=", "driver")],
+            [("asset_id", "in", self.ids), ("product_id", "in", reassignment.ids)],
             ["asset_id"],
             ["__count"],
         )
@@ -432,13 +434,14 @@ class StockLot(models.Model):
         limit_date = fields.Datetime.to_string(
             datetime_today + relativedelta(days=+delay_alert_contract)
         )
+        product = self._get_product_contract()
         res_ids = (
             self.env["product.asset.log"]
             .search(
                 [
                     ("date_end", ">", today),
                     ("date_end", "<", limit_date),
-                    ("type", "=", "contract"),
+                    ("product_id", "in", product.ids),
                     ("state", "in", ["open", "expired"]),
                 ]
             )
@@ -493,7 +496,22 @@ class StockLot(models.Model):
     # ACTION METHODS
     # ------------------------------------------------------------
 
-    def action_view_assignation_logs(self):
+    def action_view_bills(self):
+        self.ensure_one()
+        form_view_ref = self.env.ref("account.view_move_form", False)
+        list_view_ref = self.env.ref("account_fleet.account_move_view_tree", False)
+        action = self.env["ir.actions.act_window"]._for_xml_id(
+            "account.action_move_in_invoice_type"
+        )
+        action.update(
+            {
+                "views": [(list_view_ref.id, "list"), (form_view_ref.id, "form")],
+                "domain": [("id", "in", self.account_move_ids.ids)],
+            }
+        )
+        return action
+
+    def action_view_logs_assignation(self):
         self.ensure_one()
         return {
             "name": _("Assignment Logs"),
@@ -502,37 +520,48 @@ class StockLot(models.Model):
             "view_mode": "list",
             "domain": [("asset_id", "=", self.id)],
             "context": {
-                "default_operator_id": self.operator_id.id,
                 "default_asset_id": self.id,
+                "default_operator_id": self.operator_id.id,
             },
         }
 
-    def action_send_email(self):
-        return {
-            "name": _("Send Email"),
-            "type": "ir.actions.act_window",
-            "res_model": "fleet.vehicle.send.mail",
-            "target": "new",
-            "view_mode": "form",
-            "context": {
-                "default_asset_ids": self.ids,
-            },
-        }
-
-    def action_view_bills(self):
+    def action_view_logs_cost(self):
+        """
+        This opens log view to view and add new log for this vehicle, groupby default to only show effective costs
+        @return: the costs log view
+        """
         self.ensure_one()
-        form_view_ref = self.env.ref("account.view_move_form", False)
-        list_view_ref = self.env.ref("account_fleet.account_move_view_tree", False)
-        result = self.env["ir.actions.act_window"]._for_xml_id(
-            "account.action_move_in_invoice_type"
+        copy_context = dict(self.env.context)
+        copy_context.pop("group_by", None)
+        res = self.env["ir.actions.act_window"]._for_xml_id(
+            "product_asset.action_product_asset_log"
         )
-        result.update(
-            {
-                "domain": [("id", "in", self.account_move_ids.ids)],
-                "views": [(list_view_ref.id, "list"), (form_view_ref.id, "form")],
-            }
+        res.update(
+            context=dict(
+                copy_context,
+                default_asset_id=self.id,
+                search_default_parent_false=True,
+            ),
+            domain=[("asset_id", "=", self.id)],
         )
-        return result
+        return res
+
+    def action_view_context(self):
+        """
+        This opens the xml view specified in xml_id for the current vehicle
+        """
+        self.ensure_one()
+        xml_id = self.env.context.get("xml_id")
+        if xml_id:
+            action = self.env["ir.actions.act_window"]._for_xml_id(f"fleet.{xml_id}")
+            action.update(
+                context=dict(
+                    self.env.context, default_asset_id=self.id, group_by=False
+                ),
+                domain=[("asset_id", "=", self.id)],
+            )
+            return action
+        return False
 
     # ------------------------------------------------------------
     # HELPERS
@@ -552,47 +581,9 @@ class StockLot(models.Model):
             vehicle.operator_id = vehicle.future_operator_id
             vehicle.future_operator_id = False
 
-    def action_show_log_cost(self):
-        """
-        This opens log view to view and add new log for this vehicle, groupby default to only show effective costs
-        @return: the costs log view
-        """
-        self.ensure_one()
-        copy_context = dict(self.env.context)
-        copy_context.pop("group_by", None)
-        res = self.env["ir.actions.act_window"]._for_xml_id(
-            "fleet.fleet_vehicle_costs_action"
-        )
-        res.update(
-            context=dict(
-                copy_context,
-                default_asset_id=self.id,
-                search_default_parent_false=True,
-            ),
-            domain=[("asset_id", "=", self.id)],
-        )
-        return res
-
     def create_driver_history(self, vals):
         for vehicle in self:
             self.env["product.asset.log"].create(vehicle._prepare_driver_history_data(vals))
-
-    def return_action_to_open(self):
-        """
-        This opens the xml view specified in xml_id for the current vehicle
-        """
-        self.ensure_one()
-        xml_id = self.env.context.get("xml_id")
-        if xml_id:
-            res = self.env["ir.actions.act_window"]._for_xml_id(f"fleet.{xml_id}")
-            res.update(
-                context=dict(
-                    self.env.context, default_asset_id=self.id, group_by=False
-                ),
-                domain=[("asset_id", "=", self.id)],
-            )
-            return res
-        return False
 
     def _get_analytic_name(self):
         # This function is used in fleet_account and is overrided in l10n_be_hr_payroll_fleet
@@ -601,6 +592,12 @@ class StockLot(models.Model):
     def _get_product_contract(self):
         product = self.env.ref(
             "product_asset.product_product_insurance", raise_if_not_found=False
+        )
+        return product or self.env["product.product"]
+
+    def _get_product_operator_reassignment(self):
+        product = self.env.ref(
+            "product_asset.product_product_operator_Reassignment", raise_if_not_found=False
         )
         return product or self.env["product.product"]
 
