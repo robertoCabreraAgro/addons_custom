@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
 
-    <record id="hr_payslip_run_form" model="ir.ui.view">
-        <field name="name">hr.payslip.run.form.inherith</field>
+    <record id="hr_payslip_run_kanban" model="ir.ui.view">
+        <field name="name">hr.payslip.run.kanban.inherit</field>
         <field name="model">hr.payslip.run</field>
-        <field name="inherit_id" ref="hr_payroll.hr_payslip_run_form" />
+        <field name="inherit_id" ref="hr_payroll.hr_payslip_run_view_kanban" />
         <field name="arch" type="xml">
-            <xpath expr='//group/group' position="inside">
+            <xpath expr="//span[contains(@class, 'badge')]" position="after">
                 <field name="show_secondary_date_fields" invisible="1" />
-                <label for="secondary_date_from" string="Second Period" invisible="not show_secondary_date_fields" />
-                <div class="o_row" invisible="not show_secondary_date_fields">
-                    <field
-                        name="secondary_date_from"
-                        class="oe_inline o_hr_narrow_field"
-                        readonly="state != 'draft'"
-                    />
- -                  <field name="secondary_date_to" class="oe_inline o_hr_narrow_field" readonly="state != 'draft'" />
+                <div class="small fw-medium d-flex gap-2 align-items-center" invisible="not show_secondary_date_fields">
+                    <span>
+                        <field name="secondary_date_from"/>
+                        <i class="oi oi-arrow-right px-2"></i>
+                        <field name="secondary_date_to"/>
+                    </span>
+                    <span class="badge rounded-pill btn-outline-info btn-addr border">
+                        second period
+                    </span>
                 </div>
             </xpath>
         </field>

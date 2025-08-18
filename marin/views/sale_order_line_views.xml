@@ -9,16 +9,16 @@
                 <field name="order_id" />
                 <field name="partner_id" operator="child_of" />
                 <field name="product_id" />
-                <field name="user_id" />
+                <field name="salesman_id" string="Salesperson" />
                 <filter name="to_invoice" string="To invoice"
                     domain="[('qty_to_invoice', '!=', 0)]"
                     help="Order lines ready to be invoiced" />
                 <filter name="to_deliver" string="To deliver"
-                    domain="[('transfer_state', '=', 'to do')]"
+                    domain="[('qty_delivered', '&lt;', 'product_uom_qty')]"
                     help="Order lines ready to be delivered" />
                 <separator />
                 <filter name="my_sales_order_lines" string="My Sale order lines"
-                    domain="[('user_id', '=', uid)]"
+                    domain="[('salesman_id', '=', uid)]"
                     help="Sale order lines related to a Sale order of mine" />
                 <separator />
                 <filter name="date_order" string="Order Date"
@@ -33,15 +33,17 @@
                     <filter name="group_by_state" string="State"
                         domain="[]"
                         context="{'group_by': 'state'}" />
+                    <!-- Deprecated fields removed in Odoo 18.4 - commenting out
                     <filter name="group_by_transfer_state" string="Delivery status"
                         domain="[]"
                         context="{'group_by': 'transfer_state'}" />
                     <filter name="group_by_invoice_state" string="Invoice status"
                         domain="[]"
                         context="{'group_by': 'invoice_state'}" />
-                    <filter name="group_by_user_id" string="Salesperson"
+                    -->
+                    <filter name="group_by_salesman" string="Salesperson"
                         domain="[]"
-                        context="{'group_by': 'user_id'}" />
+                        context="{'group_by': 'salesman_id'}" />
                 </group>
             </search>
         </field>
@@ -56,22 +58,24 @@
                 editable="bottom"
                 decoration-warning="state=='draft'"
                 decoration-muted="state=='cancel'"
-                decoration-info="invoice_state=='to do'"
+                decoration-info="qty_to_invoice > 0"
                 decoration-success="state=='done'"
             >
                 <field name="company_id" column_invisible="1" />
                 <field name="currency_id" column_invisible="1" />
                 <field name="display_type" column_invisible="1" />
                 <field name="state" column_invisible="1" />
+                <!-- Deprecated fields removed in Odoo 18.4
                 <field name="invoice_state" column_invisible="1" />
                 <field name="transfer_state" column_invisible="1" />
                 <field name="qty_transfered_method" column_invisible="1" />
                 <field name="product_uom_updatable" column_invisible="1" />
-                <field name="product_uom_id" column_invisible="1" />
                 <field name="product_updatable" column_invisible="1" />
+                -->
+                <field name="product_uom_id" column_invisible="1" />
                 <field
                     name="product_template_id"
-                    readonly="not product_updatable"
+                    readonly="state in ['sale', 'done', 'cancel']"
                     context="{
                         'partner_id': parent.partner_id,
                         'pricelist': parent.pricelist_id,
@@ -104,7 +108,7 @@
                 />
                 <field
                     name="product_id"
-                    readonly="not product_updatable"
+                    readonly="state in ['sale', 'done', 'cancel']"
                     context="{'partner_id': partner_id, 'quantity': product_uom_qty, 'uom': product_uom_id, 'company_id': company_id}"
                     force_save="1"
                 />
@@ -115,8 +119,8 @@
                     sum="Ordered"
                     readonly="state in ['done', 'cancel']"
                     context="{'partner_id': partner_id, 'quantity': product_uom_qty, 'uom': product_uom_id, 'company_id': company_id}"
-                    decoration-info="(not display_type and invoice_state == 'to do')"
-                    decoration-bf="(not display_type and invoice_state == 'to do')"
+                    decoration-info="(not display_type and qty_to_invoice > 0)"
+                    decoration-bf="(not display_type and qty_to_invoice > 0)"
                     optional="show"
                 />
                 <field
@@ -151,24 +155,23 @@
                 <field name="price_subtotal" widget="monetary" optional="show" />
                 <field name="price_total" widget="monetary" optional="show" />
                 <field
-                    name="qty_transfered"
+                    name="qty_delivered"
                     string="Delivered Qty"
                     sum="Delivered"
-                    readonly="qty_transfered_method != 'manual'"
-                    decoration-info="(not display_type and invoice_state == 'to do')"
-                    decoration-bf="(not display_type and invoice_state == 'to do')"
+                    decoration-info="(not display_type and qty_to_invoice > 0)"
+                    decoration-bf="(not display_type and qty_to_invoice > 0)"
                     optional="show"
                 />
                 <field
                     name="qty_invoiced"
                     string="Invoiced Qty"
                     sum="Invoiced"
-                    decoration-info="(not display_type and invoice_state == 'to do')"
-                    decoration-bf="(not display_type and invoice_state == 'to do')"
+                    decoration-info="(not display_type and qty_to_invoice > 0)"
+                    decoration-bf="(not display_type and qty_to_invoice > 0)"
                     optional="show"
                 />
                 <field name="qty_to_invoice" string="To invoice Qty" sum="To invoice" optional="hide" />
-                <field name="user_id" optional="show"/>
+                <field name="salesman_id" string="Salesperson" optional="show"/>
                 <field name="customer_lead" readonly="state not in ['draft', 'sent', 'sale']" optional="hide" />
                 <field name="force_company_id" readonly="order_id" options="{'no_create': True}" optional="hide" />
                 <button

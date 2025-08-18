@@ -25,7 +25,7 @@
                     {"no_create": True}
                 </attribute>
             </xpath>
-            <xpath expr="//field[@name='contract_id']" position="attributes">
+            <xpath expr="//field[@name='version_id']" position="attributes">
                 <attribute name="options">
                     {"no_create": True}
                 </attribute>

@@ -28,20 +28,16 @@
         <field name="model">res.users</field>
         <field name="inherit_id" ref="base.view_users_simple_form" />
         <field name="arch" type="xml">
-            <group name="phone_numbers" position="after">
-                <group name="Journals">
-                    <field
-                        name="property_purchase_journal_id"
-                        options="{'no_create': True}"
-                        groups="account.group_account_invoice"
-                    />
-                    <field
-                        name="property_sale_journal_id"
-                        options="{'no_create': True}"
-                        groups="account.group_account_invoice"
-                    />
-                </group>
-            </group>
+            <field name="phone" position="after">
+                <div class="d-flex align-items-baseline w-100" groups="account.group_account_invoice">
+                    <i class="fa fa-fw me-1 fa-book text-primary" title="Purchase Journal"/>
+                    <field name="property_purchase_journal_id" class="w-100" options="{'no_create': True}" placeholder="Purchase Journal"/>
+                </div>
+                <div class="d-flex align-items-baseline w-100" groups="account.group_account_invoice">
+                    <i class="fa fa-fw me-1 fa-book text-primary" title="Sale Journal"/>
+                    <field name="property_sale_journal_id" class="w-100" options="{'no_create': True}" placeholder="Sale Journal"/>
+                </div>
+            </field>
         </field>
     </record>
 

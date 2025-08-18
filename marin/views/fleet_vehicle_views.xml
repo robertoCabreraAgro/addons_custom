@@ -65,9 +65,6 @@
             <xpath expr="//field[@name='vin_sn']" position="attributes">
                 <attribute name="optional">show</attribute>
             </xpath>
-            <xpath expr="//field[@name='engine_sn']" position="attributes">
-                <attribute name="optional">hide</attribute>
-            </xpath>
             <xpath expr="//field[@name='acquisition_date']" position="attributes">
                 <attribute name="optional">hide</attribute>
             </xpath>

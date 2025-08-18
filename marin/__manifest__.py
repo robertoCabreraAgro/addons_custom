@@ -7,7 +7,7 @@
     "website": "https://www.agromarin.mx",
     "license": "OPL-1",
     "category": "Installer",
-    "version": "saas~18.2.0.0.3",
+    "version": "saas~18.4.0.0.1",
     "depends": [
         "sale",
         "sale_management",
@@ -81,6 +81,7 @@
         "data/ir_actions_server_data.xml",
         "data/ir_cron_data.xml",
         "data/res_lang_data.xml",
+        "data/documents_tag_data.xml",
         "data/ir_default_data.xml",
         "data/decimal_precision_data.xml",
         "data/mail_activity_data.xml",

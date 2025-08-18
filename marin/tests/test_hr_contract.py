@@ -5,19 +5,32 @@ from datetime import datetime
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 
-from odoo.addons.hr_contract.tests.test_contract import TestHrContracts
+from odoo.tests import TransactionCase
 
 
 @tagged("test_contracts")
-class TestHRContracts(TestHrContracts):
+class TestHRContracts(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.employee = cls.env['hr.employee'].create({
+            'name': 'Test Employee',
+        })
+        
+    def create_contract(self, active=True, date_start=None, date_end=None):
+        """Create a contract for testing."""
+        return self.env['hr.version'].create({
+            'employee_id': self.employee.id,
+            'active': active,
+            'contract_date_start': date_start,
+            'contract_date_end': date_end,
+            'wage': 5000.0,
+        })
 
     def test_01_hr_contract_incoming_overlapping_contract(self):
         start = datetime.strptime("2015-11-01", "%Y-%m-%d").date()
         end = datetime.strptime("2015-11-30", "%Y-%m-%d").date()
-        self.create_contract("open", "normal", start, end)
+        self.create_contract(True, start, end)
         # Incoming contract
         with self.assertRaises(
             ValidationError,
@@ -25,12 +38,12 @@ class TestHRContracts(TestHrContracts):
         ):
             start = datetime.strptime("2015-11-15", "%Y-%m-%d").date()
             end = datetime.strptime("2015-12-30", "%Y-%m-%d").date()
-            self.create_contract("draft", "done", start, end)
+            self.create_contract(True, start, end)
 
     def test_02_hr_contract_pending_overlapping_contract(self):
         start = datetime.strptime("2015-11-01", "%Y-%m-%d").date()
         end = datetime.strptime("2015-11-30", "%Y-%m-%d").date()
-        self.create_contract("open", "normal", start, end)
+        self.create_contract(True, start, end)
         # Pending contract
         with self.assertRaises(
             ValidationError,
@@ -38,43 +51,43 @@ class TestHRContracts(TestHrContracts):
         ):
             start = datetime.strptime("2015-11-15", "%Y-%m-%d").date()
             end = datetime.strptime("2015-12-30", "%Y-%m-%d").date()
-            self.create_contract("open", "blocked", start, end)
-        # Draft contract -> should not raise
+            self.create_contract(True, start, end)
+        # Inactive contract -> should not raise
         start = datetime.strptime("2015-11-15", "%Y-%m-%d").date()
         end = datetime.strptime("2015-12-30", "%Y-%m-%d").date()
-        self.create_contract("draft", "normal", start, end)
+        self.create_contract(False, start, end)
 
     def test_03_hr_contract_draft_overlapping_contract(self):
         start = datetime.strptime("2015-11-01", "%Y-%m-%d").date()
         end = datetime.strptime("2015-11-30", "%Y-%m-%d").date()
-        self.create_contract("open", "normal", start, end)
-        # Draft contract -> should not raise even if overlapping
+        self.create_contract(True, start, end)
+        # Inactive contract -> should not raise even if overlapping
         start = datetime.strptime("2015-11-15", "%Y-%m-%d").date()
         end = datetime.strptime("2015-12-30", "%Y-%m-%d").date()
-        self.create_contract("draft", "normal", start, end)
+        self.create_contract(False, start, end)
 
     def test_04_hr_contract_overlapping_contract_no_end(self):
         # No end date
         self.create_contract(
-            "open", "normal", datetime.strptime("2015-11-01", "%Y-%m-%d").date()
+            True, datetime.strptime("2015-11-01", "%Y-%m-%d").date()
         )
         with self.assertRaises(ValidationError):
             start = datetime.strptime("2015-11-15", "%Y-%m-%d").date()
             end = datetime.strptime("2015-12-30", "%Y-%m-%d").date()
-            self.create_contract("draft", "done", start, end)
+            self.create_contract(True, start, end)
 
     def test_05_hr_contract_overlapping_contract_no_end_2(self):
         start = datetime.strptime("2015-11-01", "%Y-%m-%d").date()
         end = datetime.strptime("2015-12-30", "%Y-%m-%d").date()
-        self.create_contract("open", "normal", start, end)
+        self.create_contract(True, start, end)
         with self.assertRaises(ValidationError):
             # No end
             self.create_contract(
-                "draft", "done", datetime.strptime("2015-01-01", "%Y-%m-%d").date()
+                True, datetime.strptime("2015-01-01", "%Y-%m-%d").date()
             )
 
     def test_06_hr_contract_year_days(self):
-        contract = self.env["hr.contract"]
+        contract = self.env["hr.version"]
         date1 = datetime.strptime("2015-01-01", "%Y-%m-%d").date()
         date2 = datetime.strptime("2024-02-02", "%Y-%m-%d").date()
         date3 = datetime.strptime("1900-03-03", "%Y-%m-%d").date()

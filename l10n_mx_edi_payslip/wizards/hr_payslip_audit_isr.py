@@ -60,7 +60,7 @@ class HrPayslipAuditIsr(models.TransientModel):
         help="ISR tax amount to be withold in this payslip",
     )
     currency_id = fields.Many2one(
-        related="payslip_id.contract_id.company_id.currency_id",
+        related="payslip_id.version_id.company_id.currency_id",
         help="Currency in company",
     )
 
@@ -90,7 +90,7 @@ class HrPayslipAuditIsr(models.TransientModel):
     def _get_schedule_pay(self, payslip_id):
         """Compute the isr table, Use monthly table if it is the last payslip"""
         if not payslip_id.l10n_mx_edi_is_last_payslip():
-            return payslip_id.contract_id.l10n_mx_edi_schedule_pay_id
+            return payslip_id.version_id.l10n_mx_edi_schedule_pay_id
         return self.env.ref("l10n_mx_edi_payslip.schedule_pay_monthly")
 
     def _get_pretty_tables(self, schedule_pay_id):

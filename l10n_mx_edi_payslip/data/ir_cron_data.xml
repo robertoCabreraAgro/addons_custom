@@ -7,8 +7,8 @@
         <field name="state">code</field>
         <field name="code">
 employees = env['hr.employee'].search([("private_country_id.code","=","MX")])
-contracts = env['hr.contract'].search([
-  ('state', '=', 'open'),
+contracts = env['hr.version'].search([
+  ('active', '=', True),
   ('employee_id', 'in', employees.ids)])
 contracts.l10n_mx_allocate_annual_holidays()
         </field>
@@ -19,15 +19,15 @@ contracts.l10n_mx_allocate_annual_holidays()
 
     <record id="ir_cron_update_si_contract" model="ir.cron">
         <field name="name">Mexico: Actualizar Salario Integrado</field>
-        <field name="model_id" ref="hr_contract.model_hr_contract" />
+        <field name="model_id" ref="hr.model_hr_version" />
         <field name="state">code</field>
         <field name="code">
 mexico_tz = timezone("America/Mexico_City")
 date_mx = datetime.now(mexico_tz)
-contracts = model.search([('state', '=', 'open')])
+contracts = model.search([('active', '=', True)])
 to_update = env[model._name]
 for contract in contracts:
-    date_start = contract.l10n_mx_edi_imss_date or contract.date_start
+    date_start = contract.l10n_mx_edi_imss_date or contract.contract_date_start
     if date_start.day == date_mx.day and date_start.month == date_mx.month and date_start.year != date_mx.year:
         to_update |= contract
 to_update.action_update_current_holidays()
@@ -40,11 +40,11 @@ to_update._compute_integrated_salary()
 
     <record id="ir_cron_update_sdiv_contract" model="ir.cron">
         <field name="name">Mexico: Actualizar Salario Diario Integrado Variable</field>
-        <field name="model_id" ref="hr_contract.model_hr_contract" />
+        <field name="model_id" ref="hr.model_hr_version" />
         <field name="state">code</field>
         <field name="code">
-contracts = env['hr.contract'].search([
-    ('state', '=', 'open'),
+contracts = env['hr.version'].search([
+    ('active', '=', True),
 ])
 contracts.compute_integrated_salary_variable()
         </field>

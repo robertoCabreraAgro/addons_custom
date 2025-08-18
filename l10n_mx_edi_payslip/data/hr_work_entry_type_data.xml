@@ -8,17 +8,17 @@
     </record>
 
     <!-- Holiday -->
-    <record id="hr_work_entry_contract.work_entry_type_legal_leave" model="hr.work.entry.type">
+    <record id="hr_work_entry.work_entry_type_legal_leave" model="hr.work.entry.type">
         <field name="name" eval="'Vacaciones'" />
     </record>
 
-    <record id="hr_work_entry_contract.work_entry_type_sick_leave" model="hr.work.entry.type">
+    <record id="hr_work_entry.work_entry_type_sick_leave" model="hr.work.entry.type">
         <field name="name" eval="'Incapacidad por enfermedad general'" />
         <field name="round_days">FULL</field>
        <field name="round_days_type">HALF-UP</field>
     </record>
 
-    <record id="hr_payroll.hr_work_entry_type_out_of_contract" model="hr.work.entry.type">
+    <record id="hr_work_entry.hr_work_entry_type_out_of_contract" model="hr.work.entry.type">
         <field
             name="unpaid_structure_ids"
             eval="[Command.set([ref('l10n_mx_edi_payslip.payroll_structure_data_01'),
@@ -32,7 +32,7 @@
         />
     </record>
 
-    <record id="hr_work_entry_contract.work_entry_type_unpaid_leave" model="hr.work.entry.type">
+    <record id="hr_work_entry.work_entry_type_unpaid_leave" model="hr.work.entry.type">
         <field name="name" eval="'Ausentismo'" />
         <field name="round_days">FULL</field>
         <field name="round_days_type">HALF-UP</field>
@@ -49,7 +49,7 @@
         />
     </record>
 
-    <record id="hr_work_entry_contract.work_entry_type_leave" model="hr.work.entry.type">
+    <record id="hr_work_entry.work_entry_type_leave" model="hr.work.entry.type">
         <field name="name" eval="'Permiso'" />
         <field name="round_days">FULL</field>
         <field name="round_days_type">HALF-UP</field>

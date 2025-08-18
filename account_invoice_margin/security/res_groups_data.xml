@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
+    <!-- Create the privilege for technical/hidden features -->
+    <record id="res_groups_privilege_technical" model="res.groups.privilege">
+        <field name="name">Technical</field>
+        <field name="description">Privilege for technical/hidden features</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+    <!-- Create the group with the privilege -->
     <record id="group_account_invoice_margin_security" model="res.groups">
         <field name="name">Show Invoice Margin</field>
-        <field name="category_id" ref="base.module_category_hidden" />
+        <field name="privilege_id" ref="res_groups_privilege_technical" />
         <field name="user_ids" eval="[(4, ref('base.user_admin'))]" />
     </record>
 </odoo>

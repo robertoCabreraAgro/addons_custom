@@ -107,7 +107,7 @@
                 <label for="odometer_done" invisible="tracker_id == False or state != 'done'" />
                 <div class="o_row" invisible="tracker_id == False or state != 'done'">
                     <field name="odometer_done" />
-                    <field name="odometer_done_uom_id" readonly="1" />
+                    <field name="odometer_done_unit" readonly="1" />
                 </div>
                 <label for="fuel_done" invisible="tracker_id == False or state != 'done'" />
                 <div class="o_row" invisible="tracker_id == False or state != 'done'">

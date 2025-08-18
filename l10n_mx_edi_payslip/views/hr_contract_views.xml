@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-
-    <record id="hr_contract_view_form" model="ir.ui.view">
-        <field name="name">view.hr.contract.form.inherit.l10n_mx</field>
-        <field name="model">hr.contract</field>
-        <field name="inherit_id" ref="hr_contract.hr_contract_view_form" />
+    <!-- This view has been temporarily disabled for migration to Odoo 18.4
+         TODO: Create new form view for hr.version with Mexican fields -->
+    <!--
+    <record id="hr_version_view_form_l10n_mx" model="ir.ui.view">
+        <field name="name">view.hr.version.form.l10n_mx</field>
+        <field name="model">hr.version</field>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='salary']" position="inside">
                 <label for="l10n_mx_edi_daily_wage" invisible="country_code != 'MX' or wage_type == 'hourly'" />
@@ -131,5 +132,6 @@
             </xpath>
         </field>
     </record>
+    -->
 
 </odoo>

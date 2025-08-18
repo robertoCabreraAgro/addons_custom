@@ -11,6 +11,12 @@ class FleetVehicle(models.Model):
     # FIELDS
     # ------------------------------------------------------------
 
+    log_ids = fields.One2many(
+        comodel_name="fleet.vehicle.log",
+        inverse_name="vehicle_id",
+        string="Vehicle Logs",
+        help="All log entries for this vehicle",
+    )
     department_id = fields.Many2one(
         comodel_name="hr.department",
         string="Department",
@@ -19,7 +25,7 @@ class FleetVehicle(models.Model):
     fuel_card_id = fields.Many2one(
         comodel_name="documents.document",
         domain=lambda self: [
-            ("tag_ids", "in", self.env.ref("marin_data.documents_fleet_fuel_card").ids),
+            ("tag_ids", "in", self.env.ref("marin.documents_fleet_fuel_card").ids),
         ],
         inverse="_inverse_fuel_card_id",
         store=True,
@@ -57,13 +63,18 @@ class FleetVehicle(models.Model):
         "Fuel",
         compute="_compute_fuel_count",
     )
+    fuel_tank_capacity = fields.Float(
+        string="Fuel Tank Capacity",
+        help="Total fuel tank capacity in liters",
+        default=0.0,
+    )
     highway_pass_id = fields.Many2one(
         comodel_name="documents.document",
         domain=lambda self: [
             (
                 "tag_ids",
                 "in",
-                self.env.ref("marin_data.documents_fleet_highway_pass").ids,
+                self.env.ref("marin.documents_fleet_highway_pass").ids,
             ),
         ],
         inverse="_inverse_highway_pass_id",
@@ -133,25 +144,55 @@ class FleetVehicle(models.Model):
                 gps_vehicles |= vehicle
         return super(FleetVehicle, self - gps_vehicles)._compute_odometer()
 
+    def _get_fuel_product_category(self):
+        """Helper method to safely get fuel product category"""
+        try:
+            fuel_product_category = self.env.ref("marin.product_category_fuel", raise_if_not_found=False)
+        except:
+            fuel_product_category = None
+        
+        if not fuel_product_category:
+            # Fallback: search for fuel category by name
+            fuel_product_category = self.env["product.category"].search([("name", "=", "Fuels")], limit=1)
+        
+        return fuel_product_category
+
+    def _get_highway_product_category(self):
+        """Helper method to safely get highway toll product category"""
+        try:
+            highway_product_category = self.env.ref("marin.product_category_highway_toll", raise_if_not_found=False)
+        except:
+            highway_product_category = None
+        
+        if not highway_product_category:
+            # Fallback: search for highway category by name
+            highway_product_category = self.env["product.category"].search([("name", "=", "Highways")], limit=1)
+        
+        return highway_product_category
+
     def _compute_fuel_count(self):
-        fuel_product_category = self.env.ref("marin.product_category_fuel")
+        fuel_product_category = self._get_fuel_product_category()
         for vehicle in self:
-            vehicle.fuel_count = len(
-                vehicle.log_ids.filtered(
-                    lambda l: l.product_category_id == fuel_product_category
+            if fuel_product_category:
+                vehicle.fuel_count = len(
+                    vehicle.log_ids.filtered(
+                        lambda l: l.product_category_id == fuel_product_category
+                    )
                 )
-            )
+            else:
+                vehicle.fuel_count = 0
 
     def _compute_highway_pass_count(self):
-        highway_pass_product_category = self.env.ref(
-            "marin.product_category_highway_toll"
-        )
+        highway_pass_product_category = self._get_highway_product_category()
         for vehicle in self:
-            vehicle.highway_pass_count = len(
-                vehicle.log_ids.filtered(
-                    lambda l: l.product_category_id == highway_pass_product_category
+            if highway_pass_product_category:
+                vehicle.highway_pass_count = len(
+                    vehicle.log_ids.filtered(
+                        lambda l: l.product_category_id == highway_pass_product_category
+                    )
                 )
-            )
+            else:
+                vehicle.highway_pass_count = 0
 
     # Extend original method
     @api.depends(
@@ -192,16 +233,19 @@ class FleetVehicle(models.Model):
     @api.depends("log_ids.amount", "log_ids.state")
     def _compute_fuel_card_balance(self):
         """Calculates the current balance based on fuel credit/debit records"""
-        fuel_product_category = self.env.ref("marin.product_category_fuel")
+        fuel_product_category = self._get_fuel_product_category()
         for vehicle in self:
-            # Find all fuel log records associated with this vehicle (only done state)
-            fuel_logs = self.env["fleet.vehicle.log"].search(
-                [
-                    ("vehicle_id", "=", vehicle.id),
-                    ("product_category_id", "=", fuel_product_category.id),
-                    ("state", "=", "done"),
-                ]
-            )
+            if fuel_product_category:
+                # Find all fuel log records associated with this vehicle (only done state)
+                fuel_logs = self.env["fleet.vehicle.log"].search(
+                    [
+                        ("vehicle_id", "=", vehicle.id),
+                        ("product_category_id", "=", fuel_product_category.id),
+                        ("state", "=", "done"),
+                    ]
+                )
+            else:
+                fuel_logs = self.env["fleet.vehicle.log"]
 
             # Sum all movements (positive credits, negative debits)
             vehicle.fuel_card_balance = (
@@ -212,17 +256,18 @@ class FleetVehicle(models.Model):
     @api.depends("log_ids.amount")
     def _compute_highway_pass_balance(self):
         """Compute current balance based on toll debit/credit records"""
-        highway_pass_product_category = self.env.ref(
-            "marin.product_category_highway_toll"
-        )
+        highway_pass_product_category = self._get_highway_product_category()
         for vehicle in self:
-            # Find all toll records associated with this vehicle
-            highway_logs = self.env["fleet.vehicle.log"].search(
-                [
-                    ("vehicle_id", "=", vehicle.id),
-                    ("product_category_id", "=", highway_pass_product_category.id),
-                ]
-            )
+            if highway_pass_product_category:
+                # Find all toll records associated with this vehicle
+                highway_logs = self.env["fleet.vehicle.log"].search(
+                    [
+                        ("vehicle_id", "=", vehicle.id),
+                        ("product_category_id", "=", highway_pass_product_category.id),
+                    ]
+                )
+            else:
+                highway_logs = self.env["fleet.vehicle.log"]
 
             # Sum all movements (positive credits, negative debits)
             vehicle.highway_pass_balance = (
@@ -255,7 +300,7 @@ class FleetVehicle(models.Model):
         Set the vehicle on the corresponding document, and unset the vehicle on
         previously related documents
         """
-        tag = self.env.ref("marin_data.documents_fleet_fuel_card", False)
+        tag = self.env.ref("marin.documents_fleet_fuel_card", False)
         for vehicle in self:
             doc = vehicle.fuel_card_id
             other_docs = (
@@ -287,7 +332,7 @@ class FleetVehicle(models.Model):
         Set the vehicle on the corresponding document, and unset the vehicle on
         previously related documents
         """
-        tag = self.env.ref("marin_data.documents_fleet_highway_pass", False)
+        tag = self.env.ref("marin.documents_fleet_highway_pass", False)
         for vehicle in self:
             doc = vehicle.highway_pass_id
             other_docs = (
@@ -320,17 +365,20 @@ class FleetVehicle(models.Model):
 
     def action_view_fuel_logs(self):
         self.ensure_one()
-        fuel_product_category = self.env.ref("marin.product_category_fuel")
+        fuel_product_category = self._get_fuel_product_category()
         action = self.env["ir.actions.act_window"]._for_xml_id(
             "fleet.action_fleet_vehicle_log"
         )
-        action["domain"] = [
-            ("vehicle_id", "=", self.id),
-            ("product_category_id", "=", fuel_product_category.id),
-        ]
+        if fuel_product_category:
+            action["domain"] = [
+                ("vehicle_id", "=", self.id),
+                ("product_category_id", "=", fuel_product_category.id),
+            ]
+        else:
+            action["domain"] = [("id", "=", False)]  # Empty domain if category not found
         action["context"] = {
             "default_vehicle_id": self.id,
-            "default_product_category_id": fuel_product_category.id,
+            "default_product_category_id": fuel_product_category.id if fuel_product_category else False,
             "hide_product_category": True,
             "show_vendor": True,
             "search_default_groupby_product_category_id": False,
@@ -339,19 +387,20 @@ class FleetVehicle(models.Model):
 
     def action_view_highway_pass_logs(self):
         self.ensure_one()
-        highway_pass_product_category = self.env.ref(
-            "marin.product_category_highway_toll"
-        )
+        highway_pass_product_category = self._get_highway_product_category()
         action = self.env["ir.actions.act_window"]._for_xml_id(
             "fleet.action_fleet_vehicle_log"
         )
-        action["domain"] = [
-            ("vehicle_id", "=", self.id),
-            ("product_category_id", "=", highway_pass_product_category.id),
-        ]
+        if highway_pass_product_category:
+            action["domain"] = [
+                ("vehicle_id", "=", self.id),
+                ("product_category_id", "=", highway_pass_product_category.id),
+            ]
+        else:
+            action["domain"] = [("id", "=", False)]  # Empty domain if category not found
         action["context"] = {
             "default_vehicle_id": self.id,
-            "default_product_category_id": highway_pass_product_category.id,
+            "default_product_category_id": highway_pass_product_category.id if highway_pass_product_category else False,
             "hide_product_category": True,
             "show_vendor": True,
             "search_default_groupby_product_category_id": False,

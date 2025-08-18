@@ -27,7 +27,7 @@
                     data-hotkey="q"
                 />
             </xpath>            
-            <xpath expr="//div[hasclass('oe_title')]//h1[1]" position="after">
+            <xpath expr="//h1[1]" position="after">
                 <h2 class="row g-0 pb-3 pb-sm-4">
                     <div class="col-auto pb-2 pb-md-0">
                         <label for="expected_area" class="oe_edit_only" />

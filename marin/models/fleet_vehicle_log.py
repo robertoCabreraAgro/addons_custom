@@ -2,10 +2,28 @@ from odoo import fields, models
 
 
 class FleetVehiclelog(models.Model):
-    """Inherit FleetVehiclelog"""
+    """Fleet Vehicle Log - Temporary model for migration"""
 
-    _inherit = "fleet.vehicle.log"
+    _name = "fleet.vehicle.log"
+    _description = "Fleet Vehicle Log"
 
+    # Essential fields for fleet vehicle integration
+    vehicle_id = fields.Many2one(
+        comodel_name="fleet.vehicle",
+        string="Vehicle",
+        required=True,
+        help="Vehicle associated with this log entry",
+    )
+    date = fields.Date(
+        string="Date",
+        default=fields.Date.today,
+        help="Date of the log entry",
+    )
+    name = fields.Char(
+        string="Description",
+        help="Description of the log entry",
+    )
+    
     approval_request_id = fields.Many2one(
         comodel_name="approval.request",
     )
@@ -23,6 +41,26 @@ class FleetVehiclelog(models.Model):
         string="Vendor",
         domain=[("supplier", "=", True)],
         help="Service station or vendor where the fuel was purchased",
+    )
+    amount = fields.Monetary(
+        string="Cost",
+        help="Cost of the service or fuel purchase",
+    )
+    product_category_id = fields.Many2one(
+        comodel_name="product.category",
+        string="Product Category",
+        help="Category of the product/service",
+    )
+    state = fields.Selection([
+        ('new', 'New'),
+        ('running', 'Running'),
+        ('done', 'Done'),
+        ('cancelled', 'Cancelled'),
+    ], default='new', string='Stage', help="Current status of the log entry")
+    currency_id = fields.Many2one(
+        comodel_name="res.currency",
+        string="Currency",
+        default=lambda self: self.env.company.currency_id,
     )
 
     def action_open_upload_wizard(self):

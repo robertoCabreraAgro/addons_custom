@@ -10,6 +10,6 @@ class HrPayslipLine(models.Model):
         help="Journal items created by this payslip line when was validated.",
     )
     l10n_mx_edi_schedule_pay_id = fields.Many2one(
-        related="contract_id.l10n_mx_edi_schedule_pay_id",
+        related="slip_id.version_id.l10n_mx_edi_schedule_pay_id",
         store=True,
     )

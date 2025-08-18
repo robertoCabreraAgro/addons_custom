@@ -1,45 +1,40 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
 
+    <!-- Extend the form view to add Mexican fields -->
     <record id="hr_payslip_run_form" model="ir.ui.view">
         <field name="name">view.hr.payslip.run.form.inherit.l10n_mx</field>
         <field name="model">hr.payslip.run</field>
         <field name="inherit_id" ref="hr_payroll.hr_payslip_run_form" />
         <field name="arch" type="xml">
-            <xpath expr="//header//button[@name='action_validate']" position="attributes">
-                <attribute name="context">{}</attribute>
-            </xpath>
-            <xpath expr="//button[@name='action_draft']" position="after">
-                <button
-                    name="action_payslips_done"
-                    type="object"
-                    invisible="state != 'close'"
-                    string="Confirm payslips"
-                    class="oe_highlight"
-                />
-                <button
-                    name="action_payroll_sent"
-                    type="object"
-                    string="Send by Email"
-                    invisible="state != 'close'"
-                    class="oe_highlight"
-                />
-                <button
-                    name="action_set_overtimes"
-                    type="object"
-                    string="Set Overtimes"
-                    class="oe_highlight"
-                    invisible="country_code != 'MX'"
-                />
-            </xpath>
-            <xpath expr="//field[@name='country_code']" position="before">
+            <xpath expr="//field[@name='schedule_pay']" position="after">
+                <field name="country_id" invisible="1" />
+                <field name="country_code" invisible="1" />
                 <field name="l10n_mx_edi_payment_date" invisible="country_code != 'MX'" />
                 <field name="l10n_mx_edi_productivity_bonus" invisible="country_code != 'MX'" />
             </xpath>
-            <xpath expr="//h1" position="after">
-                <div class="alert alert-warning" role="alert" invisible="not l10n_mx_edi_payment_date_warning">
-                    <field name="l10n_mx_edi_payment_date_warning" />
-                </div>
+        </field>
+    </record>
+
+    <!-- Extend the kanban view to add Mexican buttons -->
+    <record id="hr_payslip_run_view_kanban" model="ir.ui.view">
+        <field name="name">view.hr.payslip.run.kanban.inherit.l10n_mx</field>
+        <field name="model">hr.payslip.run</field>
+        <field name="inherit_id" ref="hr_payroll.hr_payslip_run_view_kanban" />
+        <field name="arch" type="xml">
+            <!-- Add hidden fields for Mexican functionality -->
+            <xpath expr="//field[@name='payment_report_filename']" position="after">
+                <field name="country_code"/>
+            </xpath>
+            <!-- Add Mexican buttons to the menu -->
+            <xpath expr="//button[@name='action_payment_report']" position="after">
+                <button
+                    name="action_validate"
+                    type="object"
+                    invisible="state != '02_verify'"
+                    string="Confirm payslips"
+                    class="btn btn-secondary"
+                />
             </xpath>
         </field>
     </record>

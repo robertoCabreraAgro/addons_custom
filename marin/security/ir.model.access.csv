@@ -58,7 +58,6 @@ access_stock_replenishment_info_readonly,stock.replenishment.info.readonly,stock
 access_stock_picking_label_type_readonly,stock.picking.label.type.readonly,stock.model_picking_label_type,group_stock_readonly,1,0,0,0
 access_stock_lot_label_layout_readonly,stock.lot.label.layout.readonly,stock.model_lot_label_layout,group_stock_readonly,1,0,0,0
 access_stock_replenishment_option_readonly,stock.replenishment.option.readonly,stock.model_stock_replenishment_option,group_stock_readonly,1,0,0,0
-access_stock_lot_report_readonly,stock.lot.report.readonly,stock.model_stock_lot_report,group_stock_readonly,1,0,0,0
 access_report_stock_quantity_readonly,report.stock.quantity.readonly,stock.model_report_stock_quantity,group_stock_readonly,1,0,0,0
 access_stock_traceability_report_readonly,stock.traceability.report.readonly,stock.model_stock_traceability_report,group_stock_readonly,1,0,0,0
 access_stock_return_picking_readonly,stock.return.picking.readonly,stock.model_stock_return_picking,group_stock_readonly,1,0,0,0
@@ -91,7 +90,6 @@ access_product_tag_readonly,product.tag.readonly,product.model_product_tag,group
 access_res_partner_readonly,res.partner.readonly,base.model_res_partner,group_stock_readonly,1,0,0,0
 access_res_partner_restricted,res.partner.restricted,base.model_res_partner,group_partner_restricted,1,1,1,0
 access_quality_check_readonly,quality.check.readonly,quality.model_quality_check,group_stock_readonly,1,0,0,0
-access_stock_picking_batch_readonly,stock.picking.batch.readonly,stock_picking_batch.model_stock_picking_batch,group_stock_readonly,1,0,0,0
 sale_stock.access_stock_picking_salesman,stock.picking salesman,stock.model_stock_picking,sales_team.group_sale_salesman,1,0,0,0
 sale_stock.access_stock_move_salesman,stock_move salesman,stock.model_stock_move,sales_team.group_sale_salesman,1,0,0,0
 access_res_partner_profile_user,res.partner.profile.user,marin.model_res_partner_profile,sales_team.group_sale_salesman,1,0,0,0

@@ -7,10 +7,10 @@ from odoo.osv import expression
 from odoo.tools.translate import _
 
 
-class HrContract(models.Model):
-    """Inherit HrContract"""
+class HrVersion(models.Model):
+    """Inherit HrVersion"""
 
-    _inherit = "hr.contract"
+    _inherit = "hr.version"
 
     #    final_yearly_costs = fields.Monetary(
     #        string="Employee Budget",
@@ -29,46 +29,36 @@ class HrContract(models.Model):
     # Override original method
     @api.constrains(
         "employee_id",
-        "state",
-        "kanban_state",
-        "date_start",
-        "date_end",
+        "active",
+        "contract_date_start",
+        "contract_date_end",
         "structure_type_id",
     )
     def _check_current_contract(self):
         """Two contracts in state [incoming | open | close] cannot overlap"""
         for contract in self.filtered(
-            lambda c: (
-                c.state not in ["draft", "cancel"]
-                or c.state == "draft"
-                and c.kanban_state == "done"
-            )
-            and c.employee_id
+            lambda c: c.active and c.employee_id
         ):
             domain = [
                 ("id", "!=", contract.id),
                 ("employee_id", "=", contract.employee_id.id),
                 ("company_id", "=", contract.company_id.id),
                 ("structure_default_id", "=", contract.structure_default_id.id),
-                "|",
-                ("state", "in", ["open", "close"]),
-                "&",
-                ("state", "=", "draft"),
-                ("kanban_state", "=", "done"),  # replaces incoming
+                ("active", "=", True),
             ]
-            if not contract.date_end:
+            if not contract.contract_date_end:
                 start_domain = []
                 end_domain = [
                     "|",
-                    ("date_end", ">=", contract.date_start),
-                    ("date_end", "=", False),
+                    ("contract_date_end", ">=", contract.contract_date_start),
+                    ("contract_date_end", "=", False),
                 ]
             else:
-                start_domain = [("date_start", "<=", contract.date_end)]
+                start_domain = [("contract_date_start", "<=", contract.contract_date_end)]
                 end_domain = [
                     "|",
-                    ("date_end", ">", contract.date_start),
-                    ("date_end", "=", False),
+                    ("contract_date_end", ">", contract.contract_date_start),
+                    ("contract_date_end", "=", False),
                 ]
             domain = expression.AND([domain, start_domain, end_domain])
             if self.search_count(domain):
@@ -129,7 +119,7 @@ class HrContract(models.Model):
         :rtype: dict
         """
         self.ensure_one()
-        date_from = date_from or self.date_start
+        date_from = date_from or self.contract_date_start
         date_to = date_to or fields.Date.today()
         relative_seniority = relativedelta(date_to, date_from)
         if flag == "r":
@@ -145,7 +135,7 @@ class HrContract(models.Model):
         }
 
     def _get_vacation_days(self, date_from=False, date_to=False):
-        date_from = date_from or self.date_start
+        date_from = date_from or self.contract_date_start
         date_to = date_to or fields.Date.today()
         seniority = self.get_seniority(date_from, date_to)
         seniority = seniority.get("years", 0)

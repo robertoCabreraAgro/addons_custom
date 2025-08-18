@@ -1,6 +1,6 @@
 {
     "name": "Mexican Payroll",
-    "version": "saas~18.2.1.0.0",
+    "version": "saas~18.4.0.0.1",
     "author": "Vauxoo",
     "category": "Localization",
     "website": "http://vauxoo.com",
@@ -61,7 +61,6 @@
         "wizards/hr_payslip_extra_exployees_views.xml",
         "wizards/hr_contract_gross_salary_views.xml",
         "wizards/hr_payslip_audit_isr_views.xml",
-        "wizards/hr_payroll_payslip_employees_views.xml",
         "views/account_move_line_views.xml",
         "views/hr_attendance_views.xml",
         "views/hr_payslip_overtime_views.xml",

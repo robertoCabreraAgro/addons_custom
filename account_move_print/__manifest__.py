@@ -2,7 +2,7 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 {
     "name": "Account Move Print",
-    "version": "saas~18.2.1.0.0",
+    "version": "saas~18.4.0.0.1",
     "category": "Accounting/Accounting",
     "license": "LGPL-3",
     "summary": "Adds the option to print Journal Entries",

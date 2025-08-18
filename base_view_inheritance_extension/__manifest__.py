@@ -3,7 +3,7 @@
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 {
     "name": "Extended view inheritance",
-    "version": "saas~18.2.1.0.0",
+    "version": "saas~18.4.0.0.1",
     "development_status": "Mature",
     "author": "Therp BV,Odoo Community Association (OCA)",
     "license": "LGPL-3",

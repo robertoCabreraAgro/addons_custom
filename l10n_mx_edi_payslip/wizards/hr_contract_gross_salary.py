@@ -67,7 +67,7 @@ class HrContractGrossSalary(models.TransientModel):
 
     def _compute_company_id(self):
         self.company_id = (
-            self.env["hr.contract"]
+            self.env["hr.version"]
             .browse(self._context.get("active_ids", []))
             .company_id
         )
@@ -228,7 +228,7 @@ class HrContractGrossSalary(models.TransientModel):
 
     def get_imss_amount(self, wage):
         """Get IMSS amount if is activated the option (Comes from IMSS Rule)"""
-        contract = self.env["hr.contract"].browse(self._context.get("active_ids", []))
+        contract = self.env["hr.version"].browse(self._context.get("active_ids", []))
         sbc = contract._get_integrated_salary(wage)[1]
         uma = contract.company_id.l10n_mx_edi_uma
         days_work = 31
@@ -265,6 +265,6 @@ class HrContractGrossSalary(models.TransientModel):
 
     def set_wage(self):
         """Assign the calculated amount in the contract"""
-        self.env["hr.contract"].browse(self._context.get("active_ids", [])).write(
+        self.env["hr.version"].browse(self._context.get("active_ids", [])).write(
             {"wage": self.gross_salary}
         )

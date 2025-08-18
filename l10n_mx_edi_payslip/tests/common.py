@@ -20,7 +20,6 @@ class L10nMxEdiPayslipTransactionCase(AccountTestInvoicingCommon):
         self.allocation_obj = self.env["hr.leave.allocation"]
         self.mail_obj = self.env["mail.compose.message"]
         self.payslip_run_obj = self.env["hr.payslip.run"]
-        self.wizard_batch = self.env["hr.payslip.employees"]
         self.employee = self.env.ref("l10n_mx_edi_payslip.mx_employee_qdp")
         self.contract = self.env.ref("l10n_mx_edi_payslip.hr_contract_maria").sudo()
         self.contract.l10n_mx_edi_schedule_pay_id = self.env.ref(
@@ -130,7 +129,7 @@ class L10nMxEdiPayslipTransactionCase(AccountTestInvoicingCommon):
             {
                 "name": "Payslip Test",
                 "employee_id": self.employee.id,
-                "contract_id": self.contract.id,
+                "version_id": self.contract.id,
                 "struct_id": self.struct.id,
                 "date_from": date_from
                 or "%s-%s-01" % (time.strftime("%Y"), time.strftime("%m")),
@@ -144,7 +143,7 @@ class L10nMxEdiPayslipTransactionCase(AccountTestInvoicingCommon):
                             "code": "WORK100",
                             "number_of_days": 15,
                             "number_of_hours": 40,
-                            "contract_id": self.contract.id,
+                            "version_id": self.contract.id,
                             "work_entry_type_id": self.ref(
                                 "hr_work_entry.work_entry_type_attendance"
                             ),
@@ -155,7 +154,7 @@ class L10nMxEdiPayslipTransactionCase(AccountTestInvoicingCommon):
                     Command.create(
                         {
                             "amount": 200.0,
-                            "contract_id": self.contract.id,
+                            "version_id": self.contract.id,
                             "input_type_id": self.ref(
                                 "l10n_mx_edi_payslip.hr_payslip_input_type_perception_005_e"
                             ),
@@ -164,7 +163,7 @@ class L10nMxEdiPayslipTransactionCase(AccountTestInvoicingCommon):
                     Command.create(
                         {
                             "amount": 1,
-                            "contract_id": self.contract.id,
+                            "version_id": self.contract.id,
                             "input_type_id": self.ref(
                                 "l10n_mx_edi_payslip.hr_payslip_input_type_perception_047_e"
                             ),
@@ -173,7 +172,7 @@ class L10nMxEdiPayslipTransactionCase(AccountTestInvoicingCommon):
                     Command.create(
                         {
                             "amount": 300.0,
-                            "contract_id": self.contract.id,
+                            "version_id": self.contract.id,
                             "input_type_id": self.ref(
                                 "l10n_mx_edi_payslip.hr_payslip_input_type_other_payment_003"
                             ),

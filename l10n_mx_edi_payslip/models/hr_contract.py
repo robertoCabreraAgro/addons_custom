@@ -8,8 +8,8 @@ from pytz import timezone
 from odoo import Command, api, fields, models
 
 
-class HrContract(models.Model):
-    _inherit = "hr.contract"
+class HrVersion(models.Model):
+    _inherit = "hr.version"
 
     l10n_mx_edi_daily_wage = fields.Float(
         "Daily Wage",
@@ -255,7 +255,7 @@ class HrContract(models.Model):
         "l10n_mx_edi_christmas_bonus",
         "l10n_mx_edi_holidays",
         "wage",
-        "date_start",
+        "contract_date_start",
         "employee_id",
         "l10n_mx_edi_sdi_variable",
     )
@@ -377,7 +377,7 @@ class HrContract(models.Model):
         mexico_tz = timezone("America/Mexico_City")
         date_mx = datetime.now(mexico_tz)
         for contract in self:
-            date_start = contract.l10n_mx_edi_imss_date or contract.date_start
+            date_start = contract.l10n_mx_edi_imss_date or contract.contract_date_start
             if filter_by_anniversary and (
                 date_start.day != date_mx.day
                 or date_start.month != date_mx.month
@@ -418,7 +418,7 @@ class HrContract(models.Model):
     def get_seniority(self, date_from=False, date_to=False, method="r"):
         """Return seniority between contract's date_start and date_to or today
 
-        :param date_from: start date (default contract.date_start)
+        :param date_from: start date (default contract.contract_date_start)
         :type date_from: str
         :param date_to: end date (default today)
         :type date_to: str
@@ -429,7 +429,7 @@ class HrContract(models.Model):
         :rtype: dict
         """
         self.ensure_one()
-        datetime_start = date_from or self.date_start
+        datetime_start = date_from or self.contract_date_start
         date = date_to or fields.Date.today()
         relative_seniority = relativedelta(date, datetime_start)
         if method == "r":
@@ -455,7 +455,7 @@ class HrContract(models.Model):
         :rtype: int
         """
         date = date_to or fields.Date.today()
-        contract_date = self.date_start
+        contract_date = self.contract_date_start
         if start_year:
             date_start = fields.date(date.year, 1, 1)
             if (contract_date - date_start).days > 0:
@@ -487,7 +487,7 @@ class HrContract(models.Model):
 
     def _regenerate_work_entries_by_calendar(self):
         wizard = self.env["hr.work.entry.regeneration.wizard"]
-        for contract in self.filtered(lambda c: c.employee_id and c.state == "open"):
+        for contract in self.filtered(lambda c: c.employee_id and c.active):
             last_payslip = self.env["hr.payslip"].search(
                 [("employee_id", "=", contract.employee_id.id), ("state", "=", "open")],
                 order="date_from",

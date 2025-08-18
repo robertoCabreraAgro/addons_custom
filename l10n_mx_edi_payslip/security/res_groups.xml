@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo noupdate="1">
+    <record id="payslip_privilege" model="res.groups.privilege">
+        <field name="name">Payslip Management</field>
+        <field name="category_id" ref="base.module_category_hidden" />
+    </record>
+
     <record id="allow_validate_payslip" model="res.groups">
         <field name="name">Allow to Validate Payslip</field>
-        <field name="category_id" ref="base.module_category_hidden" />
+        <field name="privilege_id" ref="payslip_privilege" />
     </record>
 
     <record id="allow_payslip_no_enjoy_days" model="res.groups">
         <field name="name">Allow to pay but no enjoy the time off</field>
+        <field name="privilege_id" ref="payslip_privilege" />
     </record>
 
 </odoo>

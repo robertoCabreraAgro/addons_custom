@@ -1,6 +1,6 @@
 {
     "name": "Account Move Number Sequence",
-    "version": "saas~18.2.1.0.5",
+    "version": "saas~18.4.0.0.1",
     "category": "Accounting",
     "license": "AGPL-3",
     "summary": "Generate journal entry number from sequence",

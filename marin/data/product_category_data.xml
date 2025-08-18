@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
     <record id="product_category_fuel" model="product.category">
-        <field name="parent_id" ref="fleet.product_category_vehicle_services" />
+        <field name="parent_id" ref="product.product_category_expenses" />
         <field name="name">Fuels</field>
     </record>
     <record id="product_category_highway_toll" model="product.category">
-        <field name="parent_id" ref="fleet.product_category_vehicle_services" />
+        <field name="parent_id" ref="product.product_category_expenses" />
         <field name="name">Highways</field>
     </record>
 </odoo>

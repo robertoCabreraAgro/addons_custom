@@ -1,6 +1,6 @@
 {
     "name": "Base Approval",
-    "version": "1.0",
+    "version": "saas~18.4.0.0.1",
     "category": "Human Resources/Approvals",
     "sequence": 190,
     "summary": "Create and validate approvals requests",

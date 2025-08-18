@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
+    <!-- Create the privilege first -->
+    <record id="res_groups_privilege_syngenta" model="res.groups.privilege">
+        <field name="name">Syngenta</field>
+        <field name="description">Privilege for Syngenta EDI functionality</field>
+        <field name="category_id" ref="base.module_category_extra"/>
+    </record>
+
+    <!-- Create the group with the privilege -->
     <record id="group_syngenta_edi" model="res.groups">
         <field name="name">Syngenta EDI</field>
-        <field name="category_id" ref="base.module_category_usability" />
+        <field name="privilege_id" ref="res_groups_privilege_syngenta" />
     </record>
 </odoo>

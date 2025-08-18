@@ -35,8 +35,8 @@ class HrPayslip(models.Model):
         lang = self.employee_id.lang or self.env.user.lang
         week_start = self.env["res.lang"]._get_data(code=lang).week_start
         schedule = (
-            self.contract_id.schedule_pay
-            or self.contract_id.structure_type_id.default_schedule_pay
+            self.version_id.schedule_pay
+            or self.version_id.structure_type_id.default_schedule_pay
         )
         if schedule == "monthly":
             period_name = self._format_date_cached(cache, start_date, "MMMM Y")

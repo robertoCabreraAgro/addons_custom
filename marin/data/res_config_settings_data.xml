@@ -2,7 +2,6 @@
 <odoo noupdate="1">
     <record id="marin_groups" model="res.config.settings">
         <field name="group_product_pricelist">True</field>
-        <field name="group_payslip_display">False</field>
         <field name="group_project_milestone">True</field>
         <field name="group_project_rating">True</field>
         <field name="group_project_recurring_tasks">True</field>
@@ -24,7 +23,6 @@
         <field name="group_mrp_workorder_dependencies">True</field>
         <field name="group_mrp_wo_tablet_timer">True</field>
         <field name="group_mrp_wo_shop_floor">True</field>
-        <field name="group_warning_account">True</field>
         <field name="group_discount_per_so_line">True</field>
         <field name="group_sale_delivery_address">True</field>
         <field name="group_warning_sale">True</field>

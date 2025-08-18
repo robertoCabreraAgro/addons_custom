@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+    <!-- Records with empty arch removed - active field doesn't exist in stock.lot in Odoo 18.4
     <record id="search_product_lot_filter_marin" model="ir.ui.view">
         <field name="name">stock.lot.search</field>
         <field name="model">stock.lot</field>
@@ -21,6 +22,7 @@
             </field>
         </field>
     </record>
+    -->
 
     <record id="view_production_lot_form_marin" model="ir.ui.view">
         <field name="name">stock.lot.form</field>
@@ -28,10 +30,12 @@
         <field name="inherit_id" ref="stock.view_production_lot_form" />
         <field name="priority" eval="200" />
         <field name="arch" type="xml">
+            <!-- active field doesn't exist in stock.lot in Odoo 18.4
             <field name="display_complete" position="before">
                 <widget name="web_ribbon" title="Archived" bg_color="bg-danger" invisible="active" />
                 <field name="active" invisible="1" />
             </field>
+            -->
             <xpath expr="//notebook" position="attributes">
                 <attribute name="invisible">False</attribute>
             </xpath>

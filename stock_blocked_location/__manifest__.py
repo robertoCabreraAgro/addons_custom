@@ -1,6 +1,6 @@
 {
     "name": "Block Location",
-    "version": "saas~18.2.0.0.1",
+    "version": "saas~18.4.0.0.1",
     "summary": "Block outgoing operations from specific stock locations",
     "category": "Warehouse",
     "author": "Robert",

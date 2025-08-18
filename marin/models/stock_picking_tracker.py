@@ -87,10 +87,11 @@ class StockPickingTracker(models.Model):
     # Odometer block
     odometer_start = fields.Float(string="Starting Odometer")
     odometer_end = fields.Float(string="Ending Odometer")
-    odometer_uom_id = fields.Many2one(
-        comodel_name="uom.uom",
-        string="Odometer Unit",
-        related="vehicle_id.odometer_uom_id",
+    odometer_unit = fields.Selection([
+        ('kilometers', 'km'),
+        ('miles', 'mi')
+    ], string="Odometer Unit",
+        related="vehicle_id.odometer_unit",
         readonly=True,
         store=True,
         help="Unit of measurement for the odometer, coming from the vehicle.",

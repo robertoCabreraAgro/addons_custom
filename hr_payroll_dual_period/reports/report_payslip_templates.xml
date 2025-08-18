@@ -8,14 +8,14 @@
                 <t t-set="date_from" t-value="o.secondary_date_from or o.date_from" />
                 <t t-set="date_to" t-value="o.secondary_date_to or o.date_to" />
                 <span
-                    t-if="date_from &lt; o.contract_id.date_start"
-                    t-field="o.contract_id.date_start"
+                    t-if="o.version_id.contract_date_start and date_from &lt; o.version_id.contract_date_start"
+                    t-field="o.version_id.contract_date_start"
                 >Start Date</span>
                 <span t-elif="o.secondary_date_from" t-field="o.secondary_date_from">From</span>
                 <span t-else="" t-field="o.date_from">From</span>
                 <span
-                    t-if="o.contract_id.date_end and date_to &gt; o.contract_id.date_end"
-                    t-field="o.contract_id.date_end"
+                    t-if="o.version_id.contract_date_end and date_to &gt; o.version_id.contract_date_end"
+                    t-field="o.version_id.contract_date_end"
                 >End Date</span>
                 <span t-elif="o.secondary_date_to" t-field="o.secondary_date_to">To</span>
                 <span t-else="" t-field="o.date_to">To</span>

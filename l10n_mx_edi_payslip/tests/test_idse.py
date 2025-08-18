@@ -10,12 +10,12 @@ from odoo.addons.account_reports.tests.common import TestAccountReportsCommon
 class TestHrIdse(TestAccountReportsCommon):
     def setUp(self):
         super().setUp()
-        self.env["hr.contract"].search([]).write({"state": "draft"})
+        self.env["hr.version"].search([]).write({"active": False})
         self.contract = self.env.ref("l10n_mx_edi_payslip.hr_contract_maria").sudo()
-        self.contract.state = "open"
+        self.contract.active = True
         self.contract.company_id = self.env.company
         self.contract.employee_id.company_id = self.env.company
-        self.contract.date_start = "2024-06-01"
+        self.contract.contract_date_start = "2024-06-01"
         self.contract.l10n_mx_edi_sbc = 76648.0
         self.contract.employee_id.company_id.company_registry = "1203256"
 

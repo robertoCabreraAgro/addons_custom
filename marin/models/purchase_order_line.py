@@ -9,7 +9,7 @@ class PurchaseOrderLine(models.Model):
 
     # In core this a related field. We need to trigger its value on view, so we can
     # have it even when we're in a NewId
-    partner_id = fields.Many2one(depends=["product_id"])
+    partner_id = fields.Many2one(comodel_name="res.partner", depends=["product_id"])
 
     # New fields
     transfer_state = fields.Selection(
@@ -47,7 +47,7 @@ class PurchaseOrderLine(models.Model):
                 or self.env.company
             )
 
-    @api.depends("state", "product_uom_qty", "qty_transfered", "qty_to_transfer")
+    @api.depends("state", "product_uom_qty", "qty_received")
     def _compute_transfer_state(self):
         """Compute the Reception Status of a PO line. Possible status:
         -no: if the PO is not in status "purchase", we consider that there is nothing to
@@ -64,14 +64,17 @@ class PurchaseOrderLine(models.Model):
                 line.transfer_state = "no"
                 continue
 
-            if not float_is_zero(line.qty_to_transfer, precision_digits=precision):
-                if float_is_zero(line.qty_transfered, precision_digits=precision):
+            # Calculate remaining quantity to receive
+            qty_to_receive = line.product_uom_qty - line.qty_received
+            
+            if not float_is_zero(qty_to_receive, precision_digits=precision):
+                if float_is_zero(line.qty_received, precision_digits=precision):
                     line.transfer_state = "to do"
-                elif not float_is_zero(line.qty_transfered, precision_digits=precision):
+                elif not float_is_zero(line.qty_received, precision_digits=precision):
                     line.transfer_state = "partially"
-            elif float_is_zero(line.qty_to_transfer, precision_digits=precision):
+            elif float_is_zero(qty_to_receive, precision_digits=precision):
                 compare = float_compare(
-                    line.qty_transfered,
+                    line.qty_received,
                     line.product_uom_qty,
                     precision_digits=precision,
                 )

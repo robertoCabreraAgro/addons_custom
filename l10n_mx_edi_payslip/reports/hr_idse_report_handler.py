@@ -68,11 +68,11 @@ class HrIdseReportHandler(models.AbstractModel):
                 "curp": None,
             }
         ]
-        contracts = self.env["hr.contract"].search(
+        contracts = self.env["hr.version"].search(
             [
-                ("state", "=", "open"),
-                ("date_start", ">=", options["date"]["date_from"]),
-                ("date_start", "<=", options["date"]["date_to"]),
+                ("active", "=", True),
+                ("contract_date_start", ">=", options["date"]["date_from"]),
+                ("contract_date_start", "<=", options["date"]["date_to"]),
             ]
         )
         for contract in contracts:

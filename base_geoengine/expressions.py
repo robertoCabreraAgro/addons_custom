@@ -12,8 +12,6 @@ from odoo.tools import SQL, Query
 from .fields import GeoField
 from .geo_operators import GeoOperator
 
-original___condition_to_sql = BaseModel._condition_to_sql
-
 GEO_OPERATORS = {
     "geo_greater": ">",
     "geo_lesser": "<",
@@ -31,27 +29,27 @@ expression.TERM_OPERATORS = tuple(term_operators_list)
 
 
 def _condition_to_sql(
-    self, alias: str, field_expr: str, operator: str, value, query: Query
+    self, field_expr: str, operator: str, value, model: BaseModel, alias: str, query: Query
 ) -> SQL:
     """
     This method has been monkey patched in order to be able to include
     geo_operators into the Odoo search method.
     """
     if operator in GEO_OPERATORS.keys():
-        current_field = self._fields.get(field_expr)
+        current_field = model._fields.get(field_expr)
         current_operator = GeoOperator(current_field)
         if current_field and isinstance(current_field, GeoField):
             params = []
             if isinstance(value, dict):
-                # We are having indirect geo_operator like (‘geom’, ‘geo_...’,
-                # {‘res.zip.poly’: [‘id’, ‘in’, [1,2,3]] })
+                # We are having indirect geo_operator like ('geom', 'geo_...',
+                # {'res.zip.poly': ['id', 'in', [1,2,3]] })
                 ref_search = value
                 sub_queries = []
                 for key in ref_search:
                     i = key.rfind(".")
                     rel_model = key[0:i]
                     rel_col = key[i + 1 :]
-                    rel_model = self.env[rel_model]
+                    rel_model = model.env[rel_model]
                     # we compute the attributes search on spatial rel
                     if ref_search[key]:
                         rel_alias = (
@@ -65,7 +63,7 @@ def _condition_to_sql(
                             active_test=True,
                             alias=rel_alias,
                         )
-                        self._apply_ir_rules(rel_query, "read")
+                        model._apply_ir_rules(rel_query, "read")
                         if operator == "geo_equal":
                             rel_query.add_where(
                                 f'"{alias}"."{field_expr}" {GEO_OPERATORS[operator]} '
@@ -84,26 +82,20 @@ def _condition_to_sql(
 
                         subquery, subparams = rel_query.subselect("1")
                         sub_query_mogrified = (
-                            self.env.cr.mogrify(subquery, subparams)
+                            model.env.cr.mogrify(subquery, subparams)
                             .decode("utf-8")
                             .replace(f"'{rel_model._table}'", f'"{rel_model._table}"')
                             .replace("%", "%%")
                         )
                         sub_queries.append(f"EXISTS({sub_query_mogrified})")
-                query = " AND ".join(sub_queries)
+                sql_query = " AND ".join(sub_queries)
             else:
-                query = get_geo_func(
-                    current_operator, operator, field_expr, value, params, self._table
+                sql_query = get_geo_func(
+                    current_operator, operator, field_expr, value, params, model._table
                 )
-            return SQL(query, *params)
-    return original___condition_to_sql(
-        self,
-        alias=alias,
-        field_expr=field_expr,
-        operator=operator,
-        value=value,
-        query=query,
-    )
+            return SQL(sql_query, *params)
+    # Call the original method from the field itself
+    return super(GeoField, self)._condition_to_sql(field_expr, operator, value, model, alias, query)
 
 
 def get_geo_func(current_operator, operator, left, value, params, table):
@@ -148,4 +140,5 @@ def where_calc(model, domain, active_test=True, alias=None):
     return query
 
 
-BaseModel._condition_to_sql = _condition_to_sql
+# Instead of monkey patching BaseModel, we need to patch GeoField._condition_to_sql
+# This will be done in the fields.py file where GeoField is defined

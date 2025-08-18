@@ -25,7 +25,7 @@
             <xpath expr="//field[@name='parent_id']" position="attributes">
                 <attribute name="readonly">id and not user_account_user</attribute>
             </xpath>
-            <xpath expr="//div[hasclass('oe_title')]" position="after">
+            <xpath expr="//field[@name='parent_id']" position="after">
                 <div name="options">
                     <span id="customer_span" class="d-inline-block">
                         <field name="customer" readonly="not user_sale_manager" />

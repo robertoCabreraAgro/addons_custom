@@ -1,6 +1,6 @@
 {
     "name": "GPS Tracking",
-    "version": "1.4",
+    "version": "saas~18.4.0.0.1",
     "category": "Fleet Management",
     "summary": "Module to track GPS coordinates and display them on a map",
     "author": "Raúl Alejandro Rodríguez López",
@@ -22,9 +22,9 @@
         "views/gps_tracking_history_views.xml",
         "views/gps_tracking_config_views.xml",
         "views/gps_tracking_device_views.xml",
+        "views/gps_tracking_point_views.xml",
         "views/geoengine_vector_layer_views.xml",
         "views/geoengine_raster_layer_views.xml",
-        "views/gps_tracking_point_views.xml",
         "views/gps_tracking_templates.xml",
         "views/gps_tracking_menus.xml",  # always at last
     ],

@@ -2,7 +2,7 @@
 
 {
     "name": "Avoid Reversal Entries",
-    "version": "saas~18.2.1.0.0",
+    "version": "saas~18.4.0.0.1",
     "author": "Vauxoo",
     "category": "Accounting",
     "license": "LGPL-3",

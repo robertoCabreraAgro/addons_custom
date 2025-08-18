@@ -1,7 +1,7 @@
 {
     "name": "Project Task Description Template",
     "summary": "Add a description template to project tasks",
-    "version": "saas~18.2.0.0.1",
+    "version": "saas~18.4.0.0.1",
     "category": "Project Management",
     "author": "Jarsa, Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/project",

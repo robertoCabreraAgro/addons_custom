@@ -5,7 +5,7 @@
         <field name="model">account.journal</field>
         <field name="inherit_id" ref="account.view_account_journal_form" />
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='autocheck_on_post']" position="after">
+            <xpath expr="//field[@name='restrict_mode_hash_table']" position="after">
                 <field name="l10n_mx_edi_require_uuid" invisible="type != 'purchase'" />
             </xpath>
         </field>

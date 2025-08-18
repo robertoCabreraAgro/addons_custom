@@ -69,9 +69,9 @@ class HrIdseWageReportHandler(models.AbstractModel):
                 "curp": None,
             }
         ]
-        contracts = self.env["hr.contract"].search(
+        contracts = self.env["hr.version"].search(
             [
-                ("state", "=", "open"),
+                ("active", "=", True),
             ]
         )
         date_from = fields.datetime.strptime(

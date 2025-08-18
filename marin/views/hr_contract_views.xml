@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-    <record id="hr_contract_view_form_marin" model="ir.ui.view">
-        <field name="name">hr.contract.form.inherit.marin</field>
-        <field name="model">hr.contract</field>
-        <field name="inherit_id" ref="hr_contract.hr_contract_view_form" />
+    <!-- TODO: Temporarily commented out - hr.version model doesn't have a form view in Odoo 18.4
+         Version records are edited inline in the list view now. Need to review if this custom field
+         (structure_default_id) is still needed and how to add it to the list view if necessary.
+    <record id="hr_version_view_form_marin" model="ir.ui.view">
+        <field name="name">hr.version.form.inherit.marin</field>
+        <field name="model">hr.version</field>
+        <field name="inherit_id" ref="hr.view_hr_version_form" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='structure_type_id'][2]" position="after">
                 <field name="structure_default_id" />
             </xpath>
         </field>
     </record>
+    -->
 </odoo>

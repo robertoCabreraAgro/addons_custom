@@ -14,8 +14,7 @@ class TestPayslipDualPeriod(TransactionCase):
         super().setUpClass()
         cls.payslip_obj = cls.env["hr.payslip"]
         cls.employee = cls.env.ref("hr.employee_qdp")
-        cls.contract = cls.env.ref("hr_payroll.hr_contract_gilles_gravie")
-        cls.contract.state = "open"
+        cls.version = cls.env.ref("hr.employee_gad").current_version_id
         cls.struct_id = cls.env.ref("hr_payroll.structure_worker_001")
 
     def test_001_compute_payslip_name(self):
@@ -27,7 +26,7 @@ class TestPayslipDualPeriod(TransactionCase):
         secondary_date_to = datetime.now().replace(day=10)
         payslip_form = Form(self.env["hr.payslip"])
         payslip_form.employee_id = self.employee
-        payslip_form.contract_id = self.contract
+        payslip_form.version_id = self.version
         payslip_form.struct_id = self.struct_id
         payslip_form.date_from = date_from.strftime("%Y-%m-%d")
         payslip_form.date_to = date_to.strftime("%Y-%m-%d")
@@ -48,7 +47,7 @@ class TestPayslipDualPeriod(TransactionCase):
         format_datet = secondary_date_from.strftime("%Y")
         payslip_name = f"{slip_name} - {payslip.employee_id.legal_name} - {format_datef} {format_datet}"
         self.assertEqual(payslip.name, payslip_name)
-        self.contract.schedule_pay = "quarterly"
+        self.version.schedule_pay = "quarterly"
         secondary_date_to = date_to = date_from + relativedelta(months=3, days=-1)
         payslip_form = Form(payslip)
         payslip_form.date_from = date_from
@@ -58,7 +57,7 @@ class TestPayslipDualPeriod(TransactionCase):
         format_datet = date_from.strftime("%Y")
         payslip_name = f"{slip_name} - {payslip.employee_id.legal_name} - Quarter {format_datef} of {format_datet}"
         self.assertEqual(payslip.name, payslip_name)
-        self.contract.schedule_pay = "annually"
+        self.version.schedule_pay = "annually"
         secondary_date_to = date_to = date_from + relativedelta(years=1, days=-1)
         payslip_form = Form(payslip)
         payslip_form.date_from = date_from
@@ -69,7 +68,7 @@ class TestPayslipDualPeriod(TransactionCase):
             f"{slip_name} - {payslip.employee_id.legal_name} - {format_datef}"
         )
         self.assertEqual(payslip.name, payslip_name)
-        self.contract.schedule_pay = "semi-annually"
+        self.version.schedule_pay = "semi-annually"
         secondary_date_from = date_from = datetime.now().replace(day=1, month=6)
         secondary_date_to = date_to = date_from + relativedelta(months=6, days=-1)
         payslip_form = Form(payslip)
@@ -89,7 +88,7 @@ class TestPayslipDualPeriod(TransactionCase):
             f"{slip_name} - {payslip.employee_id.legal_name} - {format_datef}"
         )
         self.assertEqual(payslip.name, payslip_name)
-        self.contract.schedule_pay = "weekly"
+        self.version.schedule_pay = "weekly"
         secondary_date_from = date_from = datetime.now()
         secondary_date_to = date_to = date_from + relativedelta(days=6)
         payslip_form = Form(payslip)

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+    <!-- TODO: Temporarily commented out - fleet.vehicle.log model no longer exists in Odoo 18.4
+         Need to review if this view is still needed or how to adapt it to new fleet models
     <record id="fleet_vehicle_log_list_view" model="ir.ui.view">
         <field name="name">fleet.vehicle.log.list</field>
         <field name="model">fleet.vehicle.log</field>
@@ -15,4 +17,5 @@
             </xpath>
         </field>
     </record>
+    -->
 </odoo>

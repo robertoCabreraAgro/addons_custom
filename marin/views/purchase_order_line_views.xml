@@ -11,12 +11,12 @@
                 <filter
                     name="not_invoice_related"
                     string="Not Invoice Related"
-                    domain="[('invoice_line_ids', '=', False)]"
+                    domain="[('invoice_lines', '=', False)]"
                 />
                 <filter
                     name="invoice_related"
                     string="Invoice Related"
-                    domain="[('invoice_line_ids', '!=', False)]"
+                    domain="[('invoice_lines', '!=', False)]"
                     context="{'tax_hide': True}"
                 />
             </xpath>
@@ -43,8 +43,10 @@
                 <field name="currency_id" column_invisible="1" />
                 <field name="state" column_invisible="1" />
                 <field name="display_type" column_invisible="1" />
+                <!-- TODO: product_updatable field no longer exists in Odoo 18.4
                 <field name="product_updatable" column_invisible="1" />
-                <field name="qty_transfered_method" column_invisible="1" />
+                -->
+                <field name="qty_received_method" column_invisible="1" />
                 <field name="price_tax" column_invisible="1" />
                 <field
                     name="force_company_id"
@@ -81,7 +83,7 @@
                 <field
                     name="product_id"
                     force_save="1"
-                    readonly="not product_updatable"
+                    readonly="state in ('done', 'cancel')"
                     context="{'partner_id': partner_id, 'quantity': product_uom_qty, 'company_id': company_id}"
                 />
                 <field name="name" readonly="state in ('done', 'cancel')" />
@@ -113,8 +115,8 @@
                     widget="many2many_tags"
                 />
                 <field
-                    name="qty_transfered"
-                    readonly="qty_transfered_method != 'manual'"
+                    name="qty_received"
+                    readonly="qty_received_method != 'manual'"
                     sum="Delivered"
                     optional="show"
                 />

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+    <!-- orderlines_seq_cart setting no longer exists in Odoo 18.4
     <record id="view_res_config_settings_inherit_marin" model="ir.ui.view">
         <field name="name">res.config.settings.inherit.marin</field>
         <field name="model">res.config.settings</field>
@@ -14,6 +15,7 @@
             </xpath>
         </field>
     </record>
+    -->
     <record id="view_res_config_settings_inherit_accounting" model="ir.ui.view">
         <field name="name">res.config.settings.inherit.accounting.marin</field>
         <field name="model">res.config.settings</field>

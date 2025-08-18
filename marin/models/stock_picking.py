@@ -45,10 +45,11 @@ class StockPicking(models.Model):
         tracking=True,
         help="Odometer which the transfer has been processed.",
     )
-    odometer_done_uom_id = fields.Many2one(
-        comodel_name="uom.uom",
-        string="Odometer Unit",
-        related="vehicle_id.odometer_uom_id",
+    odometer_done_unit = fields.Selection([
+        ('kilometers', 'km'),
+        ('miles', 'mi')
+    ], string="Odometer Unit",
+        related="vehicle_id.odometer_unit",
         readonly=True,
         store=True,
         help="Unit of measurement for the odometer, coming from the vehicle.",

@@ -14,7 +14,7 @@ class AccountJournal(models.Model):
         comodel_name="account.account",
         string="Default Receivable Account",
         check_company=True,
-        domain=[("deprecated", "=", False), ("account_type", "=", "asset_receivable")],
+        domain=[("active", "=", True), ("account_type", "=", "asset_receivable")],
         copy=False,
         ondelete="restrict",
         help="It acts as a default account for receivable amount instead of the Company's default",
@@ -23,7 +23,7 @@ class AccountJournal(models.Model):
         comodel_name="account.account",
         string="Default Payable Account",
         check_company=True,
-        domain=[("deprecated", "=", False), ("account_type", "=", "liability_payable")],
+        domain=[("active", "=", True), ("account_type", "=", "liability_payable")],
         copy=False,
         ondelete="restrict",
         help="It acts as a default account for payable amount instead of the Company's default",
@@ -33,7 +33,7 @@ class AccountJournal(models.Model):
         string="Default Refund Account",
         check_company=True,
         domain=[
-            ("deprecated", "=", False),
+            ("active", "=", True),
             (
                 "account_type",
                 "in",
@@ -62,7 +62,7 @@ class AccountJournal(models.Model):
         "account_id",
         string="Allowed accounts",
         check_company=True,
-        domain=[("deprecated", "=", False), ("account_type", "!=", "off_balance")],
+        domain=[("active", "=", True), ("account_type", "!=", "off_balance")],
     )
     user_can_access_ids = fields.Many2many(
         "res.users",

@@ -1,7 +1,7 @@
 {
     "name": "Product asset",
     "summary": "Manage assets",
-    "version": "saas~18.2.1.0.0",
+    "version": "saas~18.4.0.0.1",
     "category": "Uncategorized",
     "author": "Odoo Community Association (OCA)",
     "depends": ["product_manufacturer", "hr"],

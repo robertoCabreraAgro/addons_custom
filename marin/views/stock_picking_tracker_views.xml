@@ -50,7 +50,7 @@
                                     <field name="partner_id" readonly="1"/>
                                     <field name="location_id" readonly="1"/>
                                     <field name="location_dest_id" readonly="1"/>
-                                    <field name="date_planned" readonly="1"/>
+                                    <field name="scheduled_date" readonly="1"/>
                                     <field name="state" readonly="1"/>
                                     <field name="odometer_done"/>
                                     <field name="fuel_done"/>
@@ -64,7 +64,7 @@
                                     <label for="odometer_start"/>
                                     <div class="o_row">
                                         <field name="odometer_start" readonly="state != 'draft'"/>
-                                        <field name="odometer_uom_id"/>
+                                        <field name="odometer_unit"/>
                                         <button name="action_update_odometer_start" type="object" class="btn-link" string="⟳ Update" invisible="state != 'draft'"/>
                                     </div>
                                     <label for="fuel_start"/>
@@ -79,7 +79,7 @@
                                     <label for="odometer_end"/>
                                     <div class="o_row">
                                         <field name="odometer_end" readonly="state != 'in_progress'"/>
-                                        <field name="odometer_uom_id"/>
+                                        <field name="odometer_unit"/>
                                         <button name="action_update_odometer_end" type="object" class="btn-link" string="⟳ Update" invisible="state != 'in_progress'"/>
                                     </div>
                                     <label for="fuel_end"/>
@@ -97,12 +97,12 @@
                                     <label for="odometer_difference"/>
                                     <div class="o_row">
 					<field name="odometer_difference" />
-                                        <field name="odometer_uom_id"/>
+                                        <field name="odometer_unit"/>
                                     </div>
                                     <label for="empty_distance"/>
                                     <div class="o_row">
                                     	<field name="empty_distance"/>
-                                        <field name="odometer_uom_id"/>
+                                        <field name="odometer_unit"/>
                                     </div>
                                 </group>
                                 <group string="Fuel">

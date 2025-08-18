@@ -119,7 +119,7 @@
     <menuitem
         id="hr_payslip_extra_menu"
         name="Extra"
-        parent="hr_work_entry_contract_enterprise.menu_hr_payroll_configuration"
+        parent="hr_payroll.menu_hr_salary_configuration"
         sequence="50"
         action="hr_payslip_extra_action"
     />

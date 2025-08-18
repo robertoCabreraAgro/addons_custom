@@ -44,15 +44,15 @@
                                     >
                                         <t
                                             t-set="l10n_mx_edi_daily_wage"
-                                            t-value="payslip[0].employee_id.contract_id.l10n_mx_edi_daily_wage"
+                                            t-value="payslip[0].version_id.l10n_mx_edi_daily_wage"
                                         />
                                         <t
                                             t-set="days_to_pay"
-                                            t-value="payslip[0].employee_id.contract_id.l10n_mx_edi_schedule_pay_id.days_to_pay"
+                                            t-value="payslip[0].version_id.l10n_mx_edi_schedule_pay_id.days_to_pay"
                                         />
                                         <t
                                             t-set="hours_per_day"
-                                            t-value="payslip[0].employee_id.contract_id.resource_calendar_id.hours_per_day"
+                                            t-value="payslip[0].version_id.resource_calendar_id.hours_per_day"
                                         />
                                         <t
                                             t-set="display_currency"
@@ -60,7 +60,7 @@
                                         />
                                         <t
                                             t-set="l10n_mx_edi_salary_type"
-                                            t-value="payslip[0].employee_id.contract_id._fields['l10n_mx_edi_salary_type'].convert_to_export(payslip[0].employee_id.contract_id['l10n_mx_edi_salary_type'], payslip[0].employee_id.contract_id)"
+                                            t-value="payslip[0].version_id._fields['l10n_mx_edi_salary_type'].convert_to_export(payslip[0].version_id['l10n_mx_edi_salary_type'], payslip[0].version_id)"
                                         />
                                         <div style="page-break-inside: avoid; font-size:12px;">
                                             <br />
@@ -107,7 +107,7 @@
                                                         <span>Registration date: </span>
                                                     </strong>
                                                     <span
-                                                        t-out="payslip[0].employee_id.l10n_mx_edi_imss_date or payslip[0].employee_id.contract_id.date_start"
+                                                        t-out="payslip[0].employee_id.l10n_mx_edi_imss_date or payslip[0].version_id.contract_date_start"
                                                     />
                                                 </div>
                                                 <div class="col-2">
@@ -124,7 +124,7 @@
                                                         <span>SDI: </span>
                                                     </strong>
                                                     <span
-                                                        t-out="payslip[0].employee_id.contract_id.l10n_mx_edi_integrated_salary"
+                                                        t-out="payslip[0].version_id.l10n_mx_edi_integrated_salary"
                                                         t-options="{'widget': 'monetary', 'display_currency': display_currency}"
                                                     />
                                                 </div>
@@ -133,7 +133,7 @@
                                                         <span>SBC: </span>
                                                     </strong>
                                                     <span
-                                                        t-out="payslip[0].employee_id.contract_id.l10n_mx_edi_sbc"
+                                                        t-out="payslip[0].version_id.l10n_mx_edi_sbc"
                                                         t-options="{'widget': 'monetary', 'display_currency': display_currency}"
                                                     />
                                                 </div>
@@ -142,7 +142,7 @@
                                                         <span>Variable SDI: </span>
                                                     </strong>
                                                     <span
-                                                        t-out="payslip[0].employee_id.contract_id.l10n_mx_edi_sdi_variable"
+                                                        t-out="payslip[0].version_id.l10n_mx_edi_sdi_variable"
                                                         t-options="{'widget': 'monetary', 'display_currency': display_currency}"
                                                     />
                                                 </div>

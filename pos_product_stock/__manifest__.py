@@ -1,6 +1,6 @@
 {
     "name": "POS Product Stock",
-    "version": "saas~18.2.0.0.1",
+    "version": "saas~18.4.0.0.1",
     "category": "Point Of Sale",
     "summary": "Quantity of  all Products in each Warehouse",
     "description": "Shows Stock quantity in POS  for all Products in each Warehouse, Odoo 18",

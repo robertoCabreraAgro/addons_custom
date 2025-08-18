@@ -15,14 +15,34 @@ class ResPartner(models.Model):
 
     def _prepare_partner_category_domain(self):
         parents = []
+        
+        def safe_get_category(xml_id, fallback_name):
+            """Safely get partner category by XML ID with fallback"""
+            try:
+                category = self.env.ref(xml_id, raise_if_not_found=False)
+                if not category:
+                    category = self.env["res.partner.category"].search([("name", "=", fallback_name)], limit=1)
+                return category.id if category else None
+            except:
+                category = self.env["res.partner.category"].search([("name", "=", fallback_name)], limit=1)
+                return category.id if category else None
+        
         if self.env.user.has_group("account.group_account_basic"):
-            parents.append(self.env.ref("marin.partner_category_management").id)
+            category_id = safe_get_category("marin.partner_category_management", "Accounting")
+            if category_id:
+                parents.append(category_id)
         if self.env.user.has_group("sales_team.group_sale_manager"):
-            parents.append(self.env.ref("marin.partner_category_commercial").id)
+            category_id = safe_get_category("marin.partner_category_commercial", "Commercial")
+            if category_id:
+                parents.append(category_id)
         if self.env.user.has_group("marin.group_security_compliance"):
-            parents.append(self.env.ref("marin.partner_category_security").id)
+            category_id = safe_get_category("marin.partner_category_security", "Security")
+            if category_id:
+                parents.append(category_id)
         if self.env.user.has_group("purchase.group_purchase_manager"):
-            parents.append(self.env.ref("marin.partner_category_purchase").id)
+            category_id = safe_get_category("marin.partner_category_purchase", "Purchase")
+            if category_id:
+                parents.append(category_id)
         if not parents:
             return [("id", "=", False)]
         return [("parent_id", "!=", False), ("parent_id", "in", parents)]

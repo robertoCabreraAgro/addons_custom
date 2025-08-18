@@ -60,15 +60,6 @@
         <field name="sequence">14</field>
     </record>
 
-    <record id="documents_fleet_fuel_card" model="documents.tag" forcecreate="0">
-        <field name="name">Fuel Card</field>
-        <field name="sequence">15</field>
-    </record>
-
-    <record id="documents_fleet_highway_pass" model="documents.tag" forcecreate="0">
-        <field name="name">Highway Pass</field>
-        <field name="sequence">16</field>
-    </record>
 
     <record id="documents_fleet_gps" model="documents.tag" forcecreate="0">
         <field name="name">GPS</field>

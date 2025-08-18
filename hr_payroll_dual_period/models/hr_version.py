@@ -1,8 +1,8 @@
 from odoo import models
 
 
-class HrPayslipEmployees(models.TransientModel):
-    _inherit = "hr.payslip.employees"
+class HrVersion(models.Model):
+    _inherit = "hr.version"
 
     def compute_sheet(self):
         """Inherit method to assign secondary dates payslip created"""

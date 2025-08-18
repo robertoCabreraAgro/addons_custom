@@ -10,7 +10,7 @@ class SaleOrderLine(models.Model):
     # Extended fields
     # In core this a related field. We need to trigger its value on view, so we can
     # have it even when we're in a NewId
-    partner_id = fields.Many2one(depends=["product_id"])
+    partner_id = fields.Many2one(comodel_name="res.partner", depends=["product_id"])
 
     # New fields
     transfer_state = fields.Selection(
@@ -62,32 +62,35 @@ class SaleOrderLine(models.Model):
                 or self.env.company
             )
 
-    @api.depends("state", "product_uom_qty", "qty_transfered", "qty_to_transfer")
+    @api.depends("state", "product_uom_qty", "qty_delivered")
     def _compute_transfer_state(self):
-        """Compute the Reception Status of a PO line. Possible status:
-        -no: if the PO is not in status "purchase" or "done", we consider that there is nothing to
-         receive. This is also the default value if the conditions of no other status is met.
-        -to do: we refer to the quantity to receive of the line.
-        -partially: the quantity received is lesser than the quantity ordered.
-        -done: the quantity received is equal to the quantity ordered."""
+        """Compute the Delivery Status of a SO line. Possible status:
+        -no: if the SO is not in status "sale", we consider that there is nothing to
+         deliver. This is also the default value if the conditions of no other status is met.
+        -to do: we refer to the quantity to deliver of the line.
+        -partially: the quantity delivered is lesser than the quantity ordered.
+        -done: the quantity delivered is equal to the quantity ordered."""
         precision = self.env["decimal.precision"].precision_get("Product Unit")
         for line in self.filtered(lambda l: not l.display_type):
             if line.state != "sale":
                 line.transfer_state = "no"
                 continue
 
-            if not float_is_zero(line.qty_to_transfer, precision_digits=precision):
-                if float_is_zero(line.qty_transfered, precision_digits=precision):
+            # Calculate remaining quantity to deliver
+            qty_to_deliver = line.product_uom_qty - line.qty_delivered
+            
+            if not float_is_zero(qty_to_deliver, precision_digits=precision):
+                if float_is_zero(line.qty_delivered, precision_digits=precision):
                     line.transfer_state = "to do"
                 else:
                     line.transfer_state = "partially"
-            elif float_is_zero(line.qty_to_transfer, precision_digits=precision):
+            elif float_is_zero(qty_to_deliver, precision_digits=precision):
                 if float_is_zero(line.product_uom_qty, precision_digits=precision):
                     line.transfer_state = "done"
                     continue
 
                 compare = float_compare(
-                    line.qty_transfered,
+                    line.qty_delivered,
                     line.product_uom_qty,
                     precision_digits=precision,
                 )
