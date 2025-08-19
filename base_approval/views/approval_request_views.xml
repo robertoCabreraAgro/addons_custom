@@ -14,6 +14,8 @@
                     domain="[('request_owner_id', '=', uid)]" />
                 <filter name="filter_approvals_to_review" string="My Approvals to Review"
                     domain="[('approver_ids.user_id', '=', uid), ('state', '=', 'pending')]" />
+                <filter name="high_priority" string="High-priority"
+                    domain="[('state', '=', 'pending'), ('priority', '=', '3')]" />
                 <separator />
                 <filter name="filter_approved_requests" string="Approved"
                     domain="[('state', '=', 'approved')]" />
@@ -22,11 +24,15 @@
                 <separator />
                 <filter name="filter_canceled_requests" string="Canceled"
                     domain="[('state', '=', 'cancel')]" />
-                <group string="Group By">
-                    <filter name="groupby_request_owner" string="Request Owner"
-                        context="{'group_by': 'request_owner_id'}" />
+                <group>
                     <filter name="groupby_category_id" string="Category"
                         context="{'group_by': 'category_id'}" />
+                    <filter name="groupby_request_owner" string="Request Owner"
+                        context="{'group_by': 'request_owner_id'}" />
+                    <filter name="groupby_partner_id" string="Request Owner"
+                        context="{'group_by': 'partner_id'}" />
+                    <filter name="groupby_create_date" string="Create date"
+                        context="{'group_by': 'create_date'}" />
                     <filter name="groupby_date" string="Date"
                         context="{'group_by': 'date'}" />
                 </group>
@@ -40,10 +46,15 @@
         <field name="priority">10</field>
         <field name="arch" type="xml">
             <list sample="1" decoration-info="state == 'new'">
+                <field name="create_date" string="Date" optional="show" />
                 <field name="category_id" optional="show" />
                 <field name="name" />
+                <field name="priority" widget="priority" />
+                <field name="partner_id" optional="hide" />
                 <field name="request_owner_id" widget="many2one_avatar_user" />
-                <field name="date" string="Date" optional="show" />
+                <field name="date" string="Date" optional="hide" />
+                <field name="date_planned" string="Planned" optional="hide" />
+                <field name="date_deadline" string="Deadline" optional="hide" />
                 <field name="date_start" string="Request Start" optional="hide" />
                 <field name="date_end" string="Request To" optional="hide" />
                 <field name="date_confirmed" string="Confirm Date" optional="hide" />
@@ -76,18 +87,22 @@
                 <templates>
                     <t t-name="menu">
                         <a t-if="widget.editable" role="menuitem" type="open" class="dropdown-item"
-                            >Edit Request</a>
-                        <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item"
-                           >Delete</a>
+                        >Edit
+                            Request</a>
+                        <a t-if="widget.deletable" role="menuitem" type="delete"
+                            class="dropdown-item"
+                        >Delete</a>
                         <a name="action_approve" role="menuitem" type="object" class="dropdown-item"
                             invisible="user_state != 'pending'"
-                            >Approve</a>
+                        >Approve</a>
                         <a name="action_refuse" role="menuitem" type="object" class="dropdown-item"
                             invisible="user_state != 'pending'"
-                            >Refuse</a>
-                        <a name="action_withdraw" role="menuitem" type="object" class="dropdown-item"
+                        >Refuse</a>
+                        <a name="action_withdraw" role="menuitem" type="object"
+                            class="dropdown-item"
                             invisible="state == 'new' or user_state in ['waiting', 'pending', 'cancel']"
-                           >Withdraw</a>
+                        >
+                            Withdraw</a>
                     </t>
                     <t t-name="card">
                         <div class="ribbon ribbon-top-right"
@@ -136,23 +151,23 @@
                     <widget name="attach_document" string="Attach Document"
                         action="message_post"
                         highlight="1"
-                        invisible="(attachment_number &gt;= 1 and request_owner_id == uid) or request_owner_id != uid" />
+                        invisible="(count_attachment_ids &gt;= 1 and request_owner_id == uid) or request_owner_id != uid" />
                     <button name="action_confirm" string="Submit"
                         type="object" class="btn-primary"
                         data-hotkey="q"
-                        invisible="attachment_number &lt; 1 or not approver_ids or state != 'new'" />
+                        invisible="count_attachment_ids &lt; 1 or not approver_ids or state != 'new'" />
                     <button name="action_confirm" string="Submit"
                         type="object"
                         data-hotkey="q"
-                        invisible="attachment_number &gt;= 1 or not approver_ids or state != 'new'" />
+                        invisible="count_attachment_ids &gt;= 1 or not approver_ids or state != 'new'" />
                     <button name="action_approve" string="Approve"
                         type="object" class="btn-primary"
                         data-hotkey="v"
-                        invisible="(attachment_number &lt; 1 and request_owner_id == uid) or state in ['approved', 'refused', 'cancel'] or user_state != 'pending'" />
+                        invisible="(count_attachment_ids &lt; 1 and request_owner_id == uid) or state in ['approved', 'refused', 'cancel'] or user_state != 'pending'" />
                     <button name="action_approve" string="Approve"
                         type="object" class="btn-primary"
                         data-hotkey="v"
-                        invisible="attachment_number &gt;= 1 or request_owner_id != uid or state in ['approved', 'refused', 'cancel'] or user_state != 'pending'" />
+                        invisible="count_attachment_ids &gt;= 1 or request_owner_id != uid or state in ['approved', 'refused', 'cancel'] or user_state != 'pending'" />
                     <button name="action_refuse" string="Refuse"
                         type="object"
                         data-hotkey="z"
@@ -171,7 +186,7 @@
                         invisible="state in ['new', 'cancel'] or not user_state and not has_access_to_request or request_owner_id != uid" />
                     <widget name="attach_document" string="Attach Document"
                         action="message_post"
-                        invisible="(attachment_number &lt; 1 and request_owner_id == uid)" />
+                        invisible="(count_attachment_ids &lt; 1 and request_owner_id == uid)" />
                     <button name="%(action_report_approval_request)d" string="Print"
                         type="action"
                         invisible="state != 'approved' or approval_type !='purchase'" />
@@ -181,7 +196,7 @@
                 <sheet>
                     <field name="has_date" invisible="1" />
                     <field name="has_date_deadline" invisible="1" />
-                    <field name="has_period" invisible="1" />
+                    <field name="has_date_range" invisible="1" />
                     <field name="has_quantity" invisible="1" />
                     <field name="has_amount" invisible="1" />
                     <field name="has_reference" invisible="1" />
@@ -189,7 +204,7 @@
                     <field name="has_payment_method" invisible="1" />
                     <field name="has_location" invisible="1" />
                     <field name="has_product" invisible="1" />
-                    <field name="requirer_document" invisible="1" />
+                    <field name="has_document" invisible="1" />
                     <field name="approval_minimum" invisible="1" />
                     <field name="approval_type" invisible="1" />
                     <field name="can_change_request_owner" invisible="1" />
@@ -197,8 +212,8 @@
                         <button name="action_get_attachment_view"
                             type="object" class="oe_stat_button"
                             icon="fa-book"
-                            invisible="attachment_number == 0">
-                            <field name="attachment_number" string="Documents" widget="statinfo"
+                            invisible="count_attachment_ids == 0">
+                            <field name="count_attachment_ids" string="Documents" widget="statinfo"
                                 options="{'reload_on_button': true}" />
                         </button>
                     </div>
@@ -218,8 +233,9 @@
                     </div>
                     <group name="group_main">
                         <group name="request_main">
-                            <field name="category_id" readonly="state != 'new'"
-                                force_save="1" />
+                            <field name="category_id"
+                                force_save="1"
+                                readonly="state != 'new'" />
                             <field name="partner_id"
                                 required="has_partner == 'required'"
                                 readonly="state != 'new'"
@@ -228,12 +244,13 @@
                             <field name="request_owner_id" widget="many2one_avatar_user"
                                 domain="[('share', '=', False), ('company_ids', 'in', company_id)]"
                                 readonly="not can_change_request_owner or state != 'new'" />
+                            <field name="priority" widget="priority" />
                             <field name="reference"
                                 required="has_reference == 'required'"
                                 invisible="has_reference == 'no'" />
                             <field name="location"
-                                required="has_location == 'required'"
                                 placeholder="e.g. Brussels"
+                                required="has_location == 'required'"
                                 readonly="state != 'new'"
                                 invisible="has_location == 'no'" />
                         </group>
@@ -246,7 +263,8 @@
                                         readonly="state != 'new'" />
                                 </div>
                             </div>
-                            <label for="date_deadline" string="Date Deadline" invisible="has_date_deadline == 'no'" />
+                            <label for="date_deadline" string="Date Deadline"
+                                invisible="has_date_deadline == 'no'" />
                             <div invisible="has_date_deadline == 'no'">
                                 <div>
                                     <field name="date_deadline" class="oe_inline"
@@ -254,18 +272,28 @@
                                         readonly="state != 'new'" />
                                 </div>
                             </div>
-                            <label for="date_start" string="Period" invisible="has_period == 'no'" />
-                            <div invisible="has_period == 'no'">
+                            <label for="date_planned" string="Date Planned"
+                                invisible="has_date_planned == 'no'" />
+                            <div invisible="has_date_planned == 'no'">
+                                <div>
+                                    <field name="date_planned" class="oe_inline"
+                                        required="has_date_planned == 'required'"
+                                        readonly="state != 'new'" />
+                                </div>
+                            </div>
+                            <label for="date_start" string="Period"
+                                invisible="has_date_range == 'no'" />
+                            <div invisible="has_date_range == 'no'">
                                 <div>
                                     <label for="date_start" class="col-lg-2" string="From:" />
-                                    <field name="date_start" required="has_period == 'required'"
+                                    <field name="date_start" required="has_date_range == 'required'"
                                         readonly="state != 'new'"
                                         class="oe_inline" />
                                 </div>
                                 <div>
                                     <label for="date_end" class="col-lg-2" string="to:" />
                                     <field name="date_end"
-                                        required="has_period == 'required'"
+                                        required="has_date_range == 'required'"
                                         readonly="state != 'new'"
                                         class="oe_inline" />
                                 </div>
@@ -277,9 +305,7 @@
                                 invisible="has_quantity == 'no' or has_product != 'no'" />
                             <field name="amount" invisible="has_amount == 'no'"
                                 required="has_amount == 'required'"
-                                readonly="state != 'new'"/>
-                            <field name="company_id" invisible="1" />
-                            <field name="company_id" groups="base.group_multi_company" />
+                                readonly="state != 'new'" />
                         </group>
                     </group>
                     <notebook>
@@ -339,6 +365,19 @@
                         <page name="description" string="Description">
                             <field name="reason" readonly="state != 'new'" />
                         </page>
+                        <page name="other_info" string="Other Information">
+                            <group name="other_info_group">
+                                <group name="other_info_fields">
+                                </group>
+                                <group name="other_info_fields">
+                                    <field name="company_id" invisible="1" />
+                                    <field name="company_id"
+                                        readonly="state != 'new'"
+                                        options="{'no_create': True}"
+                                        groups="base.group_multi_company" />
+                                </group>
+                            </group>
+                        </page>
                     </notebook>
                 </sheet>
                 <div class="o_attachment_preview" />
@@ -357,7 +396,8 @@
                 No Approvals Requests
             </p>
             <p> Let's go to the <a type="action" class="text-primary"
-                    name="%(base_approval.approval_category_action_new_request)d">new request</a> menu </p>
+                    name="%(base_approval.approval_category_action_new_request)d">new request</a>
+                menu </p>
         </field>
     </record>
 
@@ -382,7 +422,8 @@
                 No Approvals
             </p>
             <p> Let's go to the <a type="action" class="text-primary"
-                    name="%(base_approval.approval_category_action_new_request)d">new request</a> menu </p>
+                    name="%(base_approval.approval_category_action_new_request)d">new request</a>
+                menu </p>
         </field>
     </record>
 

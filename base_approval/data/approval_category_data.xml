@@ -10,7 +10,7 @@
         <field name="image" type="base64" file="base_approval/static/src/img/Suitcase.png" />
         <field name="sequence">1</field>
         <field name="has_date">no</field>
-        <field name="has_period">required</field>
+        <field name="has_date_range">required</field>
         <field name="has_product">no</field>
         <field name="has_quantity">no</field>
         <field name="has_amount">no</field>
@@ -18,7 +18,7 @@
         <field name="has_partner">no</field>
         <field name="has_payment_method">no</field>
         <field name="has_location">required</field>
-        <field name="requirer_document">optional</field>
+        <field name="has_document">optional</field>
         <field name="approval_minimum">1</field>
         <field name="manager_approval">approver</field>
     </record>
@@ -28,7 +28,7 @@
         <field name="image" type="base64" file="base_approval/static/src/img/Books.png" />
         <field name="sequence">10</field>
         <field name="has_date">no</field>
-        <field name="has_period">required</field>
+        <field name="has_date_range">required</field>
         <field name="has_product">required</field>
         <field name="has_quantity">optional</field>
         <field name="has_amount">no</field>
@@ -36,7 +36,7 @@
         <field name="has_partner">no</field>
         <field name="has_payment_method">no</field>
         <field name="has_location">no</field>
-        <field name="requirer_document">optional</field>
+        <field name="has_document">optional</field>
         <field name="approval_minimum">1</field>
     </record>
 
@@ -45,7 +45,7 @@
         <field name="image" type="base64" file="base_approval/static/src/img/Folder.png" />
         <field name="sequence">20</field>
         <field name="has_date">optional</field>
-        <field name="has_period">optional</field>
+        <field name="has_date_range">optional</field>
         <field name="has_product">optional</field>
         <field name="has_quantity">optional</field>
         <field name="has_amount">optional</field>
@@ -53,7 +53,7 @@
         <field name="has_partner">optional</field>
         <field name="has_payment_method">optional</field>
         <field name="has_location">optional</field>
-        <field name="requirer_document">required</field>
+        <field name="has_document">required</field>
         <field name="approval_minimum">1</field>
         <field name="manager_approval">approver</field>
     </record>
@@ -63,7 +63,7 @@
         <field name="image" type="base64" file="base_approval/static/src/img/Contract.png" />
         <field name="sequence">30</field>
         <field name="has_date">no</field>
-        <field name="has_period">no</field>
+        <field name="has_date_range">no</field>
         <field name="has_product">no</field>
         <field name="has_quantity">no</field>
         <field name="has_amount">optional</field>
@@ -71,7 +71,7 @@
         <field name="has_partner">required</field>
         <field name="has_payment_method">no</field>
         <field name="has_location">no</field>
-        <field name="requirer_document">optional</field>
+        <field name="has_document">optional</field>
         <field name="approval_minimum">1</field>
     </record>
 
@@ -80,7 +80,7 @@
         <field name="image" type="base64" file="base_approval/static/src/img/Credit-card.png" />
         <field name="sequence">40</field>
         <field name="has_date">required</field>
-        <field name="has_period">no</field>
+        <field name="has_date_range">no</field>
         <field name="has_product">no</field>
         <field name="has_quantity">no</field>
         <field name="has_amount">required</field>
@@ -88,7 +88,7 @@
         <field name="has_partner">required</field>
         <field name="has_payment_method">required</field>
         <field name="has_location">no</field>
-        <field name="requirer_document">optional</field>
+        <field name="has_document">optional</field>
         <field name="approval_minimum">1</field>
     </record>
 
@@ -97,7 +97,7 @@
         <field name="image" type="base64" file="base_approval/static/src/img/Car.png" />
         <field name="sequence">50</field>
         <field name="has_date">no</field>
-        <field name="has_period">required</field>
+        <field name="has_date_range">required</field>
         <field name="has_product">no</field>
         <field name="has_quantity">no</field>
         <field name="has_amount">no</field>
@@ -105,7 +105,7 @@
         <field name="has_partner">no</field>
         <field name="has_payment_method">no</field>
         <field name="has_location">no</field>
-        <field name="requirer_document">optional</field>
+        <field name="has_document">optional</field>
         <field name="approval_minimum">1</field>
     </record>
 
@@ -114,7 +114,7 @@
         <field name="image" type="base64" file="base_approval/static/src/img/Award.png" />
         <field name="sequence">60</field>
         <field name="has_date">no</field>
-        <field name="has_period">no</field>
+        <field name="has_date_range">no</field>
         <field name="has_product">no</field>
         <field name="has_quantity">no</field>
         <field name="has_amount">no</field>
@@ -122,7 +122,7 @@
         <field name="has_partner">required</field>
         <field name="has_payment_method">no</field>
         <field name="has_location">no</field>
-        <field name="requirer_document">optional</field>
+        <field name="has_document">optional</field>
         <field name="approval_minimum">1</field>
     </record>
 
@@ -131,7 +131,7 @@
         <field name="image" type="base64" file="base_approval/static/src/img/Bag.png" />
         <field name="sequence">70</field>
         <field name="has_date">no</field>
-        <field name="has_period">no</field>
+        <field name="has_date_range">no</field>
         <field name="has_product">no</field>
         <field name="has_quantity">required</field>
         <field name="has_amount">optional</field>
@@ -139,7 +139,7 @@
         <field name="has_partner">no</field>
         <field name="has_payment_method">no</field>
         <field name="has_location">no</field>
-        <field name="requirer_document">optional</field>
+        <field name="has_document">optional</field>
         <field name="approval_minimum">1</field>
     </record>
 

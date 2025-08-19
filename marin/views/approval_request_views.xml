@@ -6,9 +6,11 @@
         <field name="model">approval.request</field>
         <field name="inherit_id" ref="base_approval.approval_request_view_tree" />
         <field name="arch" type="xml">
-            <xpath expr="//list" position="inside">
+            <xpath expr="//field[@name='category_id']" position="after">
                 <field name="journal_id"
                     optional="hide" />
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="vehicle_id"
                     optional="hide" />
                 <field name="odometer" string="Odometer"

@@ -39,11 +39,16 @@ class ApprovalRequest(models.Model):
         string="Approval Subject",
         tracking=True,
     )
+    priority = fields.Selection(
+        selection=[("0", "Very Low"), ("1", "Low"), ("2", "Normal"), ("3", "High")],
+        string="Priority",
+    )
     date = fields.Datetime(string="Date")
-    date_start = fields.Datetime(string="Date start")
-    date_end = fields.Datetime(string="Date end")
-    date_deadline = fields.Datetime(string="Date Deadline")
     date_confirmed = fields.Datetime(string="Date Confirmed")
+    date_deadline = fields.Datetime(string="Date Deadline")
+    date_end = fields.Datetime(string="Date end")
+    date_planned = fields.Datetime(string="Date Planned")
+    date_start = fields.Datetime(string="Date start")
     location = fields.Char(string="Location")
     partner_id = fields.Many2one(
         comodel_name="res.partner",
@@ -103,9 +108,9 @@ class ApprovalRequest(models.Model):
         domain=[("res_model", "=", "approval.request")],
         string="Attachments",
     )
-    attachment_number = fields.Integer(
+    count_attachment_ids = fields.Integer(
         string="Number of Attachments",
-        compute="_compute_attachment_number",
+        compute="_compute_count_attachment_ids",
     )
 
     product_line_ids = fields.One2many(
@@ -122,10 +127,11 @@ class ApprovalRequest(models.Model):
         string="Can Change Request Owner",
         compute="_compute_has_access_to_request",
     )
-
+    automated_sequence = fields.Boolean(related="category_id.automated_sequence")
     has_date = fields.Selection(related="category_id.has_date")
     has_date_deadline = fields.Selection(related="category_id.has_date_deadline")
-    has_period = fields.Selection(related="category_id.has_period")
+    has_date_planned = fields.Selection(related="category_id.has_date_planned")
+    has_date_range = fields.Selection(related="category_id.has_date_range")
     has_quantity = fields.Selection(related="category_id.has_quantity")
     has_amount = fields.Selection(related="category_id.has_amount")
     has_reference = fields.Selection(related="category_id.has_reference")
@@ -133,12 +139,11 @@ class ApprovalRequest(models.Model):
     has_payment_method = fields.Selection(related="category_id.has_payment_method")
     has_location = fields.Selection(related="category_id.has_location")
     has_product = fields.Selection(related="category_id.has_product")
-    requirer_document = fields.Selection(related="category_id.requirer_document")
+    has_document = fields.Selection(related="category_id.has_document")
     approval_minimum = fields.Integer(related="category_id.approval_minimum")
+    manager_approval = fields.Selection(related="category_id.manager_approval")
     approval_type = fields.Selection(related="category_id.approval_type")
     approve_sequentially = fields.Boolean(related="category_id.approve_sequentially")
-    automated_sequence = fields.Boolean(related="category_id.automated_sequence")
-    manager_approval = fields.Selection(related="category_id.manager_approval")
 
     # ------------------------------------------------------------
     # CONSTRAINTS
@@ -250,14 +255,14 @@ class ApprovalRequest(models.Model):
     # COMPUTE METHODS
     # ------------------------------------------------------------
 
-    def _compute_attachment_number(self):
+    def _compute_count_attachment_ids(self):
         domain = [("res_model", "=", "approval.request"), ("res_id", "in", self.ids)]
         attachment_data = self.env["ir.attachment"]._read_group(
             domain, ["res_id"], ["__count"]
         )
         attachment = dict(attachment_data)
         for request in self:
-            request.attachment_number = attachment.get(request.id, 0)
+            request.count_attachment_ids = attachment.get(request.id, 0)
 
     @api.depends_context("uid")
     @api.depends("request_owner_id")
@@ -387,7 +392,7 @@ class ApprovalRequest(models.Model):
         self.ensure_one()
         self._check_manager_approval_constraints()
         self._check_enough_approvers()
-        self._check_requirer_document_has_attachment()
+        self._check_has_document_has_attachment()
         approvers = self.approver_ids
         if self.approve_sequentially:
             approvers = approvers.filtered(
@@ -578,8 +583,8 @@ class ApprovalRequest(models.Model):
                 )
             )
 
-    def _check_requirer_document_has_attachment(self):
-        if self.requirer_document == "required" and not self.attachment_number:
+    def _check_has_document_has_attachment(self):
+        if self.has_document == "required" and not self.count_attachment_ids:
             raise UserError(_("You have to attach at least one document."))
 
     def _check_manager_approval_constraints(self):

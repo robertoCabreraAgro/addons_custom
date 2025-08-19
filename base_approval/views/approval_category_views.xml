@@ -135,9 +135,6 @@
                             <field name="sequence_code"
                                 required="automated_sequence"
                                 invisible="not automated_sequence" />
-                            <field name="company_id"
-                                options="{'no_create': True}"
-                                groups="base.group_multi_company" />
                         </group>
                     </group>
                     <group name="group_two">
@@ -145,10 +142,10 @@
                     </group>
                     <notebook>
                         <page name="options" string="Options">
-                            <group name="group_two">
-                                <group name="option_settings" string="Fields">
+                            <group name="options_group">
+                                <group name="options_fields" string="Fields">
                                     <field name="active" invisible="1" />
-                                    <field name="requirer_document" string="Document" widget="radio"
+                                    <field name="has_document" string="Document" widget="radio"
                                         options="{'horizontal': true}" />
                                     <field name="has_partner" string="Contact" widget="radio"
                                         options="{'horizontal': true}" />
@@ -159,7 +156,10 @@
                                     <field name="has_date_deadline" string="Date Deadline"
                                         widget="radio"
                                         options="{'horizontal': true}" />
-                                    <field name="has_period" string="Period" widget="radio"
+                                    <field name="has_date_planned" string="Date Planned"
+                                        widget="radio"
+                                        options="{'horizontal': true}" />
+                                    <field name="has_date_range" string="Period" widget="radio"
                                         options="{'horizontal': true}" />
                                     <field name="has_product" string="Product" widget="radio"
                                         force_save="1"
@@ -174,11 +174,10 @@
                                     <field name="has_location" string="Location" widget="radio"
                                         options="{'horizontal': true}" />
                                 </group>
-                                <group name="approvers" string="Approvers">
+                                <group name="options_approvers" string="Approvers">
                                     <field name="manager_approval" />
                                     <separator colspan="2" />
                                     <field name="approver_ids" />
-                                    <field name="group_ids" />
                                     <field name="approve_sequentially"
                                         invisible="approval_minimum == 0" />
                                     <field name="approval_minimum" />
@@ -189,6 +188,18 @@
                                             title="Invalid minimum approvals" />
                                         <field name="invalid_minimum_warning" nolabel="1" />
                                     </div>
+                                </group>
+                            </group>
+                        </page>
+                        <page name="other_info" string="Other Information">
+                            <group name="other_info_group">
+                                <group name="other_info_fields">
+                                </group>
+                                <group name="other_info_fields">
+                                    <field name="company_id" invisible="1" />
+                                    <field name="company_id"
+                                        options="{'no_create': True}"
+                                        groups="base.group_multi_company" />
                                 </group>
                             </group>
                         </page>

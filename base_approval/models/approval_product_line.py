@@ -14,6 +14,7 @@ class ApprovalProductLine(models.Model):
     approval_request_id = fields.Many2one(
         comodel_name="approval.request",
         required=True,
+        ondelete="cascade",
     )
     company_id = fields.Many2one(
         related="approval_request_id.company_id",

@@ -66,9 +66,15 @@ class ApprovalCategory(models.Model):
         required=True,
         default="no",
     )
-    has_period = fields.Selection(
+    has_date_planned = fields.Selection(
         CATEGORY_SELECTION,
-        string="Has Period",
+        string="Has Date Planned",
+        required=True,
+        default="no",
+    )
+    has_date_range = fields.Selection(
+        CATEGORY_SELECTION,
+        string="Has Date Range",
         required=True,
         default="no",
     )
@@ -116,7 +122,7 @@ class ApprovalCategory(models.Model):
         required=True,
         default="no",
     )
-    requirer_document = fields.Selection(
+    has_document = fields.Selection(
         [("required", "Required"), ("optional", "Optional")],
         string="Documents",
         required=True,
@@ -152,10 +158,6 @@ class ApprovalCategory(models.Model):
         comodel_name="approval.category.approver",
         inverse_name="category_id",
         string="Approvers",
-    )
-    group_ids = fields.Many2many(
-        comodel_name="res.groups",
-        string="Groups",
     )
     invalid_minimum = fields.Boolean(compute="_compute_invalid_minimum")
     invalid_minimum_warning = fields.Char(compute="_compute_invalid_minimum")
