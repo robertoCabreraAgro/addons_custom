@@ -18,7 +18,7 @@ class ResPartner(models.Model):
         parents = []
         if self.env.user.has_group("account.group_account_basic"):
             parents.append(self.env.ref("marin.partner_category_management").id)
-        if self.env.user.has_group("sales_team.group_sale_manager"):
+        if self.env.user.has_group("sales_team.group_sale_salesman_all_leads"):
             parents.append(self.env.ref("marin.partner_category_commercial").id)
         if self.env.user.has_group("marin.group_security_compliance"):
             parents.append(self.env.ref("marin.partner_category_security").id)
