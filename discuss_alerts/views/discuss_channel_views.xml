@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- View discuss.channel form -->
+    <record id="view_discuss_channel_form" model="ir.ui.view">
+        <field name="name">view.discuss.channel.form</field>
+        <field name="model">discuss.channel</field>
+        <field name="inherit_id" ref="mail.discuss_channel_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='extra_info']" position="after">
+                <page string="Alert settings" groups="base.group_no_one">
+                    <field name="alert_model_id" invisible="1"/> <!-- required for the domain widget model option when the user is not in debug -->
+                    <group>
+                        <group>
+                            <field name="alert_enabled" widget="boolean_toggle"/>
+                            <field name="alert_active" widget="boolean_toggle"/>
+                            <field name="alert_model_id"/>
+                            <field name="alert_template_id"/>
+                            <field name="alert_last_execution"/>
+                        </group>
+                        <group>
+                            <field name="alert_domain" widget="domain" options="{'foldable': True, 'model': 'alert_model_id'}"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
