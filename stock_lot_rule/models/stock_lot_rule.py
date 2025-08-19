@@ -345,6 +345,7 @@ class StockLotRule(models.Model):
             str: Suggested complete lot name
         """
         self.ensure_one()
+
         if not partial_name or not product:
             return partial_name
 
@@ -378,9 +379,9 @@ class StockLotRule(models.Model):
         # Build complete data: start with defaults, override with extracted data
         complete_data = {}
         for placeholder in required_placeholders:
-            complete_data[placeholder] = extracted_data.get(
-                placeholder
-            ) or defaults.get(placeholder)
+            complete_data[placeholder] = extracted_data.get(placeholder) or defaults.get(placeholder)
+            if placeholder == "product_id":
+                complete_data[placeholder] = defaults.get(placeholder)
 
         # Try to generate the lot name
         try:
