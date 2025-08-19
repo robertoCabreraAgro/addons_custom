@@ -320,7 +320,7 @@
                         </page>
                         <page name="approvers" string="Approver(s)">
                             <field name="approver_ids" mode="list,kanban"
-                                readonly="state != 'new'">
+                                readonly="1">
                                 <list
                                     editable="bottom"
                                     no_open="1"
