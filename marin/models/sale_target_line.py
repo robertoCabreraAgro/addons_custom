@@ -120,6 +120,14 @@ class SaleTargetLine(models.Model):
         help="Percentage of target completion (sold_amount / target_amount * 100)",
     )
 
+    manufacturer_id = fields.Many2one(
+        'res.partner',
+        string="Manufacturer",
+        compute='_compute_manufacturer_id',
+        store=True,
+        help="Manufacturer of the product in this target line."
+    )
+
     @api.depends("quantity", "target_id.hectares", "target_id.factor")
     def _compute_target_quantity(self):
         """Calculate target quantity as template quantity × hectares × profile factor."""
@@ -183,3 +191,12 @@ class SaleTargetLine(models.Model):
                 line.target_percentage = min(percentage, 100.0)
             else:
                 line.target_percentage = 0.0
+
+    @api.depends('product_id', 'product_id.manufacturer_id')
+    def _compute_manufacturer_id(self):
+        """Compute manufacturer from the related product.
+        This allows filtering and grouping sales targets by manufacturer
+        for production planning purposes.
+        """
+        for line in self:
+            line.manufacturer_id = line.product_id.manufacturer_id if line.product_id else False

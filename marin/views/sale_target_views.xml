@@ -44,6 +44,7 @@
                             <field name="line_ids">
                                 <list editable="bottom">
                                     <field name="product_id" />
+                                    <field name="manufacturer_id"/>
                                     <field name="quantity" invisible="1" />
                                     <field name="target_quantity" readonly="1" />
                                     <field name="price_unit" widget="monetary" />
@@ -54,6 +55,7 @@
                                     <group>
                                         <group>
                                             <field name="product_id" />
+                                            <field name="manufacturer_id"/>
                                             <field name="quantity" invisible="1"/>
                                             <field name="price_unit" widget="monetary" />
                                         </group>
@@ -106,6 +108,7 @@
                 <field name="user_id" />
                 <separator />
                 <filter string="My Targets" name="my_targets" domain="[('user_id', '=', uid)]" />
+                <separator/>
                 <filter
                     string="Current Period"
                     name="current_period"
@@ -137,6 +140,7 @@
                 <field name="profile_id" readonly="1"/>
                 <field name="hectares" readonly="1"/>
                 <field name="product_id"/>
+                <field name="manufacturer_id" optional="show"/>
                 <field name="quantity"/>
                 <field name="target_quantity" readonly="1"/>
                 <field name="price_unit" widget="monetary"/>
@@ -160,6 +164,7 @@
                 <field name="user_id"/>
                 <field name="season_id"/>
                 <field name="product_id"/>
+                <field name="manufacturer_id"/>
                 <field name="template_id"/>
                 <field name="profile_id"/>
                 <separator/>
@@ -171,6 +176,7 @@
                     <filter string="Salesperson" name="group_salesperson" context="{'group_by': 'user_id'}"/>
                     <filter string="Season" name="group_season" context="{'group_by': 'season_id'}"/>
                     <filter string="Product" name="group_product" context="{'group_by': 'product_id'}"/>
+                    <filter string="Manufacturer" name="group_manufacturer" context="{'group_by': 'manufacturer_id'}"/>
                     <filter string="Template" name="group_template" context="{'group_by': 'template_id'}"/>
                     <filter string="Profile" name="group_profile" context="{'group_by': 'profile_id'}"/>
                 </group>

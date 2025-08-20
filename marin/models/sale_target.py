@@ -75,6 +75,7 @@ class SaleTarget(models.Model):
         "target_id",
         string="Target Lines",
     )
+    
     user_id = fields.Many2one(
         "res.users",
         string="Salesperson",
@@ -192,6 +193,7 @@ class SaleTarget(models.Model):
     def _compute_ideal_gap(self):
         for target in self:
             target.ideal_gap = target.target_amount - target.ideal_amount
+
 
     @api.constrains("date_from", "date_to", "partner_id")
     def _check_overlapping_periods(self):
