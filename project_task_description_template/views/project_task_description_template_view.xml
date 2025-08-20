@@ -16,6 +16,12 @@
                                 name="company_id"
                                 groups="base.group_multi_company"
                             />
+                            <field
+                                name="project_ids"
+                                widget="many2many_tags"
+                                placeholder="All projects if empty"
+                                options="{'color_field': 'color', 'no_open': True, 'no_create': True}"
+                            />
                         </group>
                     </group>
                     <notebook>
@@ -37,6 +43,12 @@
                 <field
                     name="company_id"
                     groups="base.group_multi_company"
+                    optional="show"
+                />
+                <field
+                    name="project_ids"
+                    widget="many2many_tags"
+                    options="{'color_field': 'color'}"
                     optional="show"
                 />
             </list>
