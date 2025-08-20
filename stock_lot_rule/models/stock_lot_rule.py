@@ -10,9 +10,7 @@ class StockLotRule(models.Model):
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _order = "name"
 
-    name = fields.Char(
-        string="Name", required=True, tracking=True, help="Name of the lot rule schema"
-    )
+    name = fields.Char(string="Name", required=True, tracking=True, help="Name of the lot rule schema")
 
     format_pattern = fields.Char(
         string="Format Pattern",
@@ -96,15 +94,11 @@ class StockLotRule(models.Model):
 
             # Check if pattern contains at least one date placeholder
             date_placeholders = ["%(yy)s", "%(yyyy)s", "%(mm)s", "%(dd)s"]
-            has_date = any(
-                placeholder in record.format_pattern
-                for placeholder in date_placeholders
-            )
+            has_date = any(placeholder in record.format_pattern for placeholder in date_placeholders)
 
             if not has_date:
                 raise ValidationError(
-                    _("Format pattern must contain at least one date placeholder: %s")
-                    % ", ".join(date_placeholders)
+                    _("Format pattern must contain at least one date placeholder: %s") % ", ".join(date_placeholders)
                 )
 
             # Check if pattern contains product placeholder (optional for simple date-only formats)
@@ -114,9 +108,7 @@ class StockLotRule(models.Model):
                 or "%(ref)s" in record.format_pattern
             )
             # Only require product placeholder if pattern seems to need it (contains separators)
-            pattern_has_separators = any(
-                sep in record.format_pattern for sep in ["-", " - ", "_", ".", "|"]
-            )
+            pattern_has_separators = any(sep in record.format_pattern for sep in ["-", " - ", "_", ".", "|"])
             if pattern_has_separators and not has_product_placeholder:
                 raise ValidationError(
                     _(
@@ -178,8 +170,7 @@ class StockLotRule(models.Model):
             match = re.match(pattern_regex, lot_name)
             if not match:
                 raise ValidationError(
-                    _("Lot name '%s' doesn't match the expected format pattern: %s")
-                    % (lot_name, self.format_pattern)
+                    _("Lot name '%s' doesn't match the expected format pattern: %s") % (lot_name, self.format_pattern)
                 )
 
             # Extract date components from the match
@@ -199,9 +190,7 @@ class StockLotRule(models.Model):
                     year = 1900 + yy
 
             if not year:
-                raise ValidationError(
-                    _("Could not extract year from lot name '%s'") % lot_name
-                )
+                raise ValidationError(_("Could not extract year from lot name '%s'") % lot_name)
 
             # Get month
             month = 1  # Default to January if no month specified
@@ -209,10 +198,7 @@ class StockLotRule(models.Model):
                 month = int(date_info["mm"])
                 if month < 1 or month > 12:
                     raise ValidationError(
-                        _(
-                            "Invalid month in lot name '%s'. Month must be between 01 and 12"
-                        )
-                        % lot_name
+                        _("Invalid month in lot name '%s'. Month must be between 01 and 12") % lot_name
                     )
 
             # Get day
@@ -220,10 +206,7 @@ class StockLotRule(models.Model):
             if "dd" in date_info:
                 day = int(date_info["dd"])
                 if day < 1 or day > 31:
-                    raise ValidationError(
-                        _("Invalid day in lot name '%s'. Day must be between 01 and 31")
-                        % lot_name
-                    )
+                    raise ValidationError(_("Invalid day in lot name '%s'. Day must be between 01 and 31") % lot_name)
 
             # Create manufacturing date
             manufacture_date = datetime(year, month, day)
@@ -238,9 +221,7 @@ class StockLotRule(models.Model):
             return manufacture_date
 
         except (ValueError, TypeError, re.error) as e:
-            raise ValidationError(
-                _("Error parsing lot name '%s': %s") % (lot_name, str(e))
-            )
+            raise ValidationError(_("Error parsing lot name '%s': %s") % (lot_name, str(e)))
 
     def _create_regex_from_pattern(self):
         """
@@ -345,12 +326,11 @@ class StockLotRule(models.Model):
             str: Suggested complete lot name
         """
         self.ensure_one()
-
         if not partial_name or not product:
             return partial_name
 
         # Early return if already valid
-        result = self._verify_lot_name_format(partial_name, product.id)
+        result = self._verify_lot_name_format(partial_name, product_id=product.id, ref_value=ref_value)
         if result["valid"]:
             return partial_name
 
@@ -380,18 +360,18 @@ class StockLotRule(models.Model):
         complete_data = {}
         for placeholder in required_placeholders:
             complete_data[placeholder] = extracted_data.get(placeholder) or defaults.get(placeholder)
-            if placeholder == "product_id":
+            if placeholder in ["product_id", "ref"]:
                 complete_data[placeholder] = defaults.get(placeholder)
 
         # Try to generate the lot name
         try:
             suggested_name = self.format_pattern % complete_data
-            return self._sanitize_lot_name(suggested_name, product.id)
+            return self._sanitize_lot_name(suggested_name, product.id, ref_value)
         except Exception:
             # Ultimate fallback
             return partial_name
 
-    def _sanitize_lot_name(self, lot_name, product_id):
+    def _sanitize_lot_name(self, lot_name, product_id, ref_value=None):
         """
         Sanitize lot name and return it if valid, empty string otherwise.
 
@@ -402,7 +382,7 @@ class StockLotRule(models.Model):
         Returns:
             str: Valid lot name or empty string
         """
-        validation = self._verify_lot_name_format(lot_name, product_id)
+        validation = self._verify_lot_name_format(lot_name, product_id=product_id, ref_value=ref_value)
         return lot_name if validation["valid"] else ""
 
     def _extract_partial_data(self, partial_name, required_placeholders):
@@ -440,22 +420,14 @@ class StockLotRule(models.Model):
             if segment["type"] == "date":
                 segment_length = segment["length"]
                 if current_pos + segment_length <= len(partial_name):
-                    segment_value = partial_name[
-                        current_pos : current_pos + segment_length
-                    ]
+                    segment_value = partial_name[current_pos : current_pos + segment_length]
 
                     # Validate date segment
-                    if self._validate_date_segment(
-                        segment["placeholder"], segment_value
-                    ):
-                        placeholder_name = (
-                            segment["placeholder"].replace("%(", "").replace(")s", "")
-                        )
+                    if self._validate_date_segment(segment["placeholder"], segment_value):
+                        placeholder_name = segment["placeholder"].replace("%(", "").replace(")s", "")
 
                         # Normalize date values for 2-digit parameters
-                        normalized_value = self._normalize_date_value(
-                            segment_value, placeholder_name
-                        )
+                        normalized_value = self._normalize_date_value(segment_value, placeholder_name)
                         extracted_data[placeholder_name] = normalized_value
 
                         # Add related date formats
@@ -468,27 +440,18 @@ class StockLotRule(models.Model):
                 else:
                     # Partial segment - try to extract what we can
                     remaining = partial_name[current_pos:]
-                    if remaining and self._validate_date_segment(
-                        segment["placeholder"], remaining, partial=True
-                    ):
-                        placeholder_name = (
-                            segment["placeholder"].replace("%(", "").replace(")s", "")
-                        )
+                    if remaining and self._validate_date_segment(segment["placeholder"], remaining, partial=True):
+                        placeholder_name = segment["placeholder"].replace("%(", "").replace(")s", "")
 
                         # Normalize partial date values for 2-digit parameters
-                        normalized_value = self._normalize_date_value(
-                            remaining, placeholder_name
-                        )
+                        normalized_value = self._normalize_date_value(remaining, placeholder_name)
                         extracted_data[placeholder_name] = normalized_value
                     break
             elif segment["type"] == "literal":
                 # Skip literal characters if they match
                 literal_length = len(segment["value"])
                 if current_pos + literal_length <= len(partial_name):
-                    if (
-                        partial_name[current_pos : current_pos + literal_length]
-                        == segment["value"]
-                    ):
+                    if partial_name[current_pos : current_pos + literal_length] == segment["value"]:
                         current_pos += literal_length
                     else:
                         break
@@ -523,11 +486,7 @@ class StockLotRule(models.Model):
             placeholder_name = match.group(1)
 
             segment = {
-                "type": (
-                    "date"
-                    if placeholder_name in ["yy", "yyyy", "mm", "dd"]
-                    else "other"
-                ),
+                "type": ("date" if placeholder_name in ["yy", "yyyy", "mm", "dd"] else "other"),
                 "placeholder": placeholder,
                 "name": placeholder_name,
             }
@@ -611,7 +570,7 @@ class StockLotRule(models.Model):
 
         return value
 
-    def _verify_lot_name_format(self, lot_name, product_id=None):
+    def _verify_lot_name_format(self, lot_name, product_id=None, ref_value=None):
         """
         Validate if a lot name complies with the rule's format pattern.
 
@@ -642,12 +601,8 @@ class StockLotRule(models.Model):
             # Match the lot name against the pattern
             match = re.match(pattern_regex, lot_name)
             if not match:
-                result["error"] = (
-                    f"Lot name '{lot_name}' doesn't match expected format: {self.format_pattern}"
-                )
-                result["message"] = (
-                    f"❌ Formato incorrecto. Esperado: {self.format_pattern}"
-                )
+                result["error"] = f"Lot name '{lot_name}' doesn't match expected format: {self.format_pattern}"
+                result["message"] = f"❌ Formato incorrecto. Esperado: {self.format_pattern}"
                 return result
 
             # Extract components
@@ -670,9 +625,7 @@ class StockLotRule(models.Model):
             if "mm" in date_info:
                 month = int(date_info["mm"])
                 if month < 1 or month > 12:
-                    result["error"] = (
-                        f"Invalid month '{month}'. Must be between 01 and 12"
-                    )
+                    result["error"] = f"Invalid month '{month}'. Must be between 01 and 12"
                     result["message"] = f"❌ Mes inválido: {month}"
                     return result
 
@@ -698,9 +651,7 @@ class StockLotRule(models.Model):
             if product_id and "product_id" in date_info:
                 extracted_product_id = date_info["product_id"]
                 if str(product_id) != extracted_product_id:
-                    result["error"] = (
-                        f"Product ID mismatch. Expected: {product_id}, Found: {extracted_product_id}"
-                    )
+                    result["error"] = f"Product ID mismatch. Expected: {product_id}, Found: {extracted_product_id}"
                     result["message"] = (
                         f"❌ ID de producto no coincide. Esperado: {product_id}, Encontrado: {extracted_product_id}"
                     )
@@ -708,17 +659,24 @@ class StockLotRule(models.Model):
 
             # Validate reference if present (allow VENDOR_LOT_NUMBER placeholder)
             if "ref" in date_info:
-                ref_value = date_info["ref"]
-                if not ref_value:
+                extracted_ref = date_info["ref"]
+                ref_value = ref_value or extracted_ref
+                if ref_value != extracted_ref:
+                    result["error"] = f"Reference mismatch. Expected: {ref_value}, Found: {extracted_ref}"
+                    result["message"] = (
+                        f"❌ Referencia de producto no coincide. Esperado: {ref_value}, Encontrado: {extracted_ref}"
+                    )
+                    return result
+
+                elif not ref_value:
                     result["error"] = "Reference field cannot be empty"
                     result["message"] = "❌ Campo de referencia vacío"
                     return result
+
                 # Allow VENDOR_LOT_NUMBER as valid placeholder
                 elif ref_value == "VENDOR_LOT_NUMBER":
                     result["valid"] = True
-                    result["message"] = (
-                        f"⚠️ Placeholder válido, requiere referencia: {lot_name}"
-                    )
+                    result["message"] = f"⚠️ Placeholder válido, requiere referencia: {lot_name}"
                     return result
 
             # If all validations pass
@@ -737,9 +695,7 @@ class StockLotRule(models.Model):
     def _compute_product_count(self):
         """Compute the number of products using this lot rule."""
         for rule in self:
-            rule.product_count = self.env["product.template"].search_count(
-                [("lot_rule_id", "=", rule.id)]
-            )
+            rule.product_count = self.env["product.template"].search_count([("lot_rule_id", "=", rule.id)])
 
     def action_view_products(self):
         """Action to view products using this lot rule."""
@@ -758,9 +714,7 @@ class StockLotRule(models.Model):
         """Prevent deletion of rules with associated records."""
         for rule in self:
             # Check if rule has products associated
-            product_count = self.env["product.template"].search_count(
-                [("lot_rule_id", "=", rule.id)]
-            )
+            product_count = self.env["product.template"].search_count([("lot_rule_id", "=", rule.id)])
 
             if product_count > 0:
                 raise ValidationError(
@@ -772,9 +726,7 @@ class StockLotRule(models.Model):
                 )
 
             # Check if rule has lots associated
-            lot_count = self.env["stock.lot"].search_count(
-                [("lot_rule_id", "=", rule.id)]
-            )
+            lot_count = self.env["stock.lot"].search_count([("lot_rule_id", "=", rule.id)])
 
             if lot_count > 0:
                 raise ValidationError(

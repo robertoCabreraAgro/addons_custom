@@ -71,9 +71,7 @@ class StockLot(models.Model):
         """Override create to automatically compute dates from lot name"""
         # Optimize product calls for batch processing
         product_ids = [
-            vals.get("product_id")
-            for vals in vals_list
-            if vals.get("product_id") and "lot_rule_id" not in vals
+            vals.get("product_id") for vals in vals_list if vals.get("product_id") and "lot_rule_id" not in vals
         ]
 
         if product_ids:
@@ -92,9 +90,7 @@ class StockLot(models.Model):
 
     def _send_simple_notification(self, message, warning=True):
         self.ensure_one()
-        title = (
-            self.env._("Lot Rule Warning") if warning else self.env._("Notification")
-        )
+        title = self.env._("Lot Rule Warning") if warning else self.env._("Notification")
         return self.env["bus.bus"]._sendone(
             self.env.user.partner_id,
             "simple_notification",
@@ -111,17 +107,13 @@ class StockLot(models.Model):
         """Compute expiration, use, removal and alert dates from manufacturing date"""
         for lot in self:
             # Get lot rule (check lot first, then product)
-            lot_rule = lot.lot_rule_id or (
-                lot.product_id and lot.product_id.lot_rule_id
-            )
+            lot_rule = lot.lot_rule_id or (lot.product_id and lot.product_id.lot_rule_id)
 
             if not lot.manufacture_date or not lot_rule:
                 # If no manufacture_date or lot_rule, keep manual values (don't reset)
                 continue
 
-            manufacture_datetime = datetime.combine(
-                lot.manufacture_date, datetime.min.time()
-            )
+            manufacture_datetime = datetime.combine(lot.manufacture_date, datetime.min.time())
 
             # Compute dates using the lot rule
             expiration_date = lot_rule._get_expiration_date(manufacture_datetime)
@@ -150,9 +142,7 @@ class StockLot(models.Model):
         lot_ref = "VENDOR_LOT_NUMBER"
 
         # Try to generate suggested name
-        suggested_name = lot_rule._generate_lot_name(
-            self.name, self.product_id, lot_ref
-        )
+        suggested_name = lot_rule._generate_lot_name(self.name, self.product_id, lot_ref)
 
         # Apply suggested name if different from current
         if suggested_name and suggested_name != self.name:
@@ -174,9 +164,7 @@ class StockLot(models.Model):
         """Constraint to validate lot name compliance with lot rule"""
         for lot in self:
             # Get lot rule (cache once)
-            lot_rule = lot.lot_rule_id or (
-                lot.product_id and lot.product_id.lot_rule_id
-            )
+            lot_rule = lot.lot_rule_id or (lot.product_id and lot.product_id.lot_rule_id)
             if not lot_rule or not lot.name:
                 continue
 
@@ -205,9 +193,7 @@ class StockLot(models.Model):
     def _compute_ref(self):
         """Compute reference from lot name using lot rule."""
         for lot in self:
-            lot_rule = lot.lot_rule_id or (
-                lot.product_id and lot.product_id.lot_rule_id
-            )
+            lot_rule = lot.lot_rule_id or (lot.product_id and lot.product_id.lot_rule_id)
             lot_ref = lot.ref
 
             if not lot_rule or not lot.name:
@@ -244,9 +230,7 @@ class StockLot(models.Model):
     def _compute_manufacture_date(self):
         """Compute manufacture date from lot name using lot rule."""
         for lot in self:
-            lot_rule = lot.lot_rule_id or (
-                lot.product_id and lot.product_id.lot_rule_id
-            )
+            lot_rule = lot.lot_rule_id or (lot.product_id and lot.product_id.lot_rule_id)
 
             if not lot_rule or not lot.name:
                 lot.manufacture_date = False
@@ -254,8 +238,6 @@ class StockLot(models.Model):
 
             try:
                 manufacture_date = lot_rule._get_manufacture_date(lot.name)
-                lot.manufacture_date = (
-                    manufacture_date.date() if manufacture_date else False
-                )
+                lot.manufacture_date = manufacture_date.date() if manufacture_date else False
             except Exception:
                 lot.manufacture_date = False
