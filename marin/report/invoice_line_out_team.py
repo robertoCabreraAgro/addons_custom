@@ -278,7 +278,8 @@ class InvoiceLineOutTeam(models.Model):
                 gl.quarter ASC
         """
 
-    def _is_populated(self, table):
+    def _is_populated(self):
+        table = AsIs(self._table)
         self._cr.execute(
             f"SELECT relispopulated FROM pg_class WHERE relname = '{table}' and relkind = 'm'"
         )

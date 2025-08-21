@@ -11,6 +11,9 @@ access_fleet_vehicle_account_invoice,access.fleet.vehicle.account.invoice,fleet.
 access_account_move_cash_discount_wizard,access.account.move.cash.discount.wizard,marin.model_account_invoice_cash_discount,group_account_move_cash_discount,1,1,1,1
 access_account_authorize_debt_wizard,access.account.authorize.debt.wizard,marin.model_authorize_debt_wizard,group_account_debt_manager,1,1,1,1
 access_invoice_line_in_report,access.invoice.line.in.report,marin.model_invoice_line_in_report,account.group_account_invoice,1,0,0,0
+access_invoice_line_out_report,access.invoice.line.out.report,marin.model_invoice_line_out_report,account.group_account_invoice,1,0,0,0
+access_invoice_line_out_team_report,access.invoice.line.out.team.report,marin.model_invoice_line_out_team_report,account.group_account_invoice,1,0,0,0
+access_invoice_line_out_team_yearly_report,access.invoice.line.out.team.yearly.report,marin.model_invoice_line_out_team_yearly_report,account.group_account_invoice,1,0,0,0
 access_account_move_line_price_history,access.account.move.line.price.history,marin.model_invoice_line_price_history,account.group_account_invoice,1,1,1,1
 access_account_move_line_price_history_line,access.account.move.line.price.history.line,marin.model_invoice_line_price_history_line,account.group_account_invoice,1,1,1,1
 access_pos_cash_transfer_wizard,access.pos.cash.transfer.wizard,marin.model_pos_cash_transfer_wizard,point_of_sale.group_pos_user,1,1,1,0
