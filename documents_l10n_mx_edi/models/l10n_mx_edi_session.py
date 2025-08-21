@@ -25,6 +25,11 @@ class Session(models.Model):
     _order = "create_date desc"
 
     name = fields.Char(required=True, copy=False, readonly=True, default="/")
+    show_create_cfdi_button = fields.Boolean(
+        string='Show CFDI button',
+        compute='_compute_show_create_cfdi_button',
+        help='Determine if Create from CFDI button should be visible'
+    )
     company_id = fields.Many2one(
         "res.company",
         "Company",
@@ -79,6 +84,27 @@ class Session(models.Model):
         ],
     )
 
+    @api.depends('document_ids', 'document_ids.res_model', 'document_ids.tag_ids')
+    def _compute_show_create_cfdi_button(self):
+        """
+        Calculates whether the button to create a CFDI should be visible.
+
+        This button is displayed if one of the associated documents is not
+        a 'documento.document' (i.e., a real record such as an invoice)
+        and has the "income" tag (l10n_mx_edi_tag_ingreso).
+        """
+        tag_income = self.env.ref('documents_l10n_mx_edi.documents_l10n_mx_edi_tag_ingreso', raise_if_not_found=False)
+
+        if not tag_income:
+            for record in self:
+                record.show_create_cfdi_button = False
+            return
+        for record in self:
+            record.show_create_cfdi_button = any(
+                doc.res_model == 'documents.document' and tag_income in doc.tag_ids
+                for doc in record.document_ids
+            )
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
@@ -107,6 +133,36 @@ class Session(models.Model):
                     name = sequence.next_by_id()
                 vals["name"] = name
         return super().create(vals_list)
+
+    def action_create_from_cfdi(self):
+        """
+        Opens a wizard to create records from CFDI documents.
+
+        This method filters the documents attached to a record to identify
+        those that can be converted into a CFDI (invoice, payment, etc.).
+        The wizard opens with the valid documents preselected..
+        """
+        tag_income = self.env.ref('documents_l10n_mx_edi.documents_l10n_mx_edi_tag_ingreso', raise_if_not_found=False)
+
+        if not tag_income:
+            valid_document_ids = []
+        else:
+            valid_documents = self.document_ids.filtered(
+                lambda d: d.res_model == 'documents.document' and tag_income in d.tag_ids
+            )
+            valid_document_ids = valid_documents.ids
+
+        return {
+            "name": self.env._("MX EDI to record"),
+            "type": "ir.actions.act_window",
+            "res_model": "documents.mx_edi_to_record_wizard",
+            "view_mode": "form",
+            "target": "new",
+            "views": [(False, "form")],
+            "context": {
+                "default_document_ids": valid_document_ids or False,
+            },
+        }
 
     def action_request_cfdi(self, esignature=None):
         """Request CFDI download from SAT by a given date range.

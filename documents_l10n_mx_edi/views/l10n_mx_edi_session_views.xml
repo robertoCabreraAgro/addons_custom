@@ -73,6 +73,14 @@
                         class="btn-primary"
                         invisible="request_state != '3' or request_status_code == '5008' or document_ids"
                     />
+                    <button
+                        name="action_create_from_cfdi"
+                        string="Create from CFDI"
+                        type="object"
+                        class="btn-primary"
+                        invisible="show_create_cfdi_button == False"
+                    />
+                    <field name="show_create_cfdi_button" invisible="1" />
                     <field name="request_state" widget="statusbar" statusbar_visible="1,2,3" />
                 </header>
                 <sheet>
