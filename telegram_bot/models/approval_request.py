@@ -28,10 +28,15 @@ class ApprovalRequest(models.Model):
         help="Bank statement lines already used in other approval requests.",
     )
 
+    bank_statement_date_to = fields.Date(
+        string="Bank Statement Date To",
+        compute="_compute_bank_statement_date_to",
+        help="End date for bank statement line search based on payment method.",
+    )
     bank_statement_line_id = fields.Many2one(
         comodel_name="account.bank.statement.line",
         string="Bank Statement Line",
-        domain="[('date', '=', date), ('amount', '=', amount), ('is_reconciled', '=', False), ('id', 'not in', used_bank_statement_line_ids)]",
+        domain="[('date', '>=', date), ('date', '<=', bank_statement_date_to), ('amount', '=', amount), ('is_reconciled', '=', False), ('id', 'not in', used_bank_statement_line_ids)]",
         help="Select the bank transaction that corresponds to this payment.",
     )
     operation_type_id = fields.Many2one(
@@ -57,6 +62,26 @@ class ApprovalRequest(models.Model):
             used_approvals = self.search(domain)
             used_lines = used_approvals.mapped("bank_statement_line_id")
             record.used_bank_statement_line_ids = used_lines
+
+    @api.depends("date", "telegram_data")
+    def _compute_bank_statement_date_to(self):
+        """Compute end date for bank statement search based on payment method."""
+        for record in self:
+            if not record.date:
+                record.bank_statement_date_to = False
+                continue
+            
+            # Get payment method from telegram_data
+            payment_method = ""
+            if record.telegram_data:
+                payment_method = record.telegram_data.get("payment_method", "")
+            
+            # For credit card (TC), allow up to 7 days after the payment date
+            if payment_method == "TC":
+                record.bank_statement_date_to = fields.Date.add(record.date, days=7)
+            else:
+                # For other payment methods, use the same date
+                record.bank_statement_date_to = record.date
 
     @api.depends("telegram_data")
     def _compute_telegram_data_formatted(self):
