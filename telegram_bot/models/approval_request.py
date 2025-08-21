@@ -70,14 +70,14 @@ class ApprovalRequest(models.Model):
             if not record.date:
                 record.bank_statement_date_to = False
                 continue
-            
+
             # Get payment method from telegram_data
             payment_method = ""
             if record.telegram_data:
                 payment_method = record.telegram_data.get("payment_method", "")
-            
-            # For credit card (TC), allow up to 7 days after the payment date
-            if payment_method == "TC":
+
+            # For card (TC, TD), allow up to 7 days after the payment date
+            if payment_method == "TC" or payment_method == "TD":
                 record.bank_statement_date_to = fields.Date.add(record.date, days=7)
             else:
                 # For other payment methods, use the same date
