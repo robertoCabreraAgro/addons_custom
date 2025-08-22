@@ -55,6 +55,13 @@ class StockPickingType(models.Model):
         help="Users that can validate pickings of this type of operation.",
     )
 
+    require_responsible = fields.Boolean(
+        string="Require Responsible",
+        default=False,
+        help="If checked, picking operations of this type will require "
+             "a responsible person to be specified before validation."
+    )
+
     # This is a bug fix
     @api.constrains("active")
     def _check_active(self):

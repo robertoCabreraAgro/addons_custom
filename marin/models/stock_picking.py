@@ -63,6 +63,7 @@ class StockPicking(models.Model):
     show_sale_lines = fields.Boolean(compute="_compute_show_sale_lines")
     show_mark_as_todo = fields.Boolean(compute="_compute_custom_permissions")
     show_validate = fields.Boolean(compute="_compute_custom_permissions")
+    require_responsible = fields.Boolean(related="picking_type_id.require_responsible", readonly=True, store=False)
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
@@ -87,40 +88,29 @@ class StockPicking(models.Model):
 
     @api.depends("picking_type_id", "state")
     def _compute_suitable_location_dest_ids(self):
-        self.suitable_location_dest_ids = self.env["stock.location"].search(
-            [("usage", "=", "internal")]
-        )
+        self.suitable_location_dest_ids = self.env["stock.location"].search([("usage", "=", "internal")])
         for picking in self.filtered(
-            lambda p: p.state not in ("cancel", "done")
-            and p.picking_type_id.code in ("internal", "incoming")
+            lambda p: p.state not in ("cancel", "done") and p.picking_type_id.code in ("internal", "incoming")
         ):
             self.suitable_location_dest_ids = self.suitable_location_dest_ids.filtered(
-                lambda location: location.warehouse_id
-                == picking.picking_type_id.warehouse_id
+                lambda location: location.warehouse_id == picking.picking_type_id.warehouse_id
             )
 
     @api.depends("picking_type_id", "state")
     def _compute_suitable_location_ids(self):
-        self.suitable_location_ids = self.env["stock.location"].search(
-            [("usage", "=", "internal")]
-        )
+        self.suitable_location_ids = self.env["stock.location"].search([("usage", "=", "internal")])
         for picking in self.filtered(
-            lambda p: p.state not in ("cancel", "done")
-            and p.picking_type_id.code in ("internal", "outgoing")
+            lambda p: p.state not in ("cancel", "done") and p.picking_type_id.code in ("internal", "outgoing")
         ):
             self.suitable_location_ids = self.suitable_location_ids.filtered(
-                lambda location: location.warehouse_id
-                == picking.picking_type_id.warehouse_id
+                lambda location: location.warehouse_id == picking.picking_type_id.warehouse_id
             )
 
     @api.depends("picking_type_id", "location_id")
     def _compute_suitable_product_ids(self):
-        suitable_product_ids = self.env["product.product"].search(
-            [("type", "=", "consu")]
-        )
+        suitable_product_ids = self.env["product.product"].search([("type", "=", "consu")])
         for picking in self.filtered(
-            lambda p: p.state not in ("cancel", "done")
-            and p.picking_type_id.code in ("internal", "outgoing")
+            lambda p: p.state not in ("cancel", "done") and p.picking_type_id.code in ("internal", "outgoing")
         ):
             code = picking.picking_type_id.code
             if code == "internal":
@@ -143,22 +133,14 @@ class StockPicking(models.Model):
     @api.depends("group_id")
     def _compute_show_purchase_lines(self):
         for rec in self:
-            order = rec.env["purchase.order"].search(
-                [("procurement_group_id", "=", rec.group_id.id)]
-            )
-            to_from_supplier = (
-                rec.location_id.usage == "supplier"
-                or rec.location_dest_id.usage == "supplier"
-            )
+            order = rec.env["purchase.order"].search([("procurement_group_id", "=", rec.group_id.id)])
+            to_from_supplier = rec.location_id.usage == "supplier" or rec.location_dest_id.usage == "supplier"
             rec.show_purchase_lines = bool(order and to_from_supplier)
 
     @api.depends("sale_id")
     def _compute_show_sale_lines(self):
         for rec in self:
-            to_from_customer = (
-                rec.location_dest_id.usage == "customer"
-                or rec.location_id.usage == "customer"
-            )
+            to_from_customer = rec.location_dest_id.usage == "customer" or rec.location_id.usage == "customer"
             rec.show_sale_lines = bool(rec.sale_id and to_from_customer)
 
     # -------------------------------------------------------------------------
@@ -182,9 +164,7 @@ class StockPicking(models.Model):
         return self.with_context(ctx).sale_id.get_formview_action()
 
     def action_view_moves(self):
-        action = self.env["ir.actions.act_window"]._for_xml_id(
-            "stock.stock_move_action"
-        )
+        action = self.env["ir.actions.act_window"]._for_xml_id("stock.stock_move_action")
         action["domain"] = [("id", "in", self.move_ids.ids)]
         action["context"] = {
             "search_default_future": 1,
@@ -196,11 +176,25 @@ class StockPicking(models.Model):
 
     def _action_done(self):
         res = super()._action_done()
-        for picking in self.filtered(
-            lambda p: p.picking_type_id.code == "outgoing" and p.vehicle_id
-        ):
+        for picking in self.filtered(lambda p: p.picking_type_id.code == "outgoing" and p.vehicle_id):
             picking._update_gps_tracking_information()
         return res
+
+    def button_validate(self):
+        """Override to add responsible validation."""
+        for picking in self:
+            if picking.require_responsible and not picking.user_id:
+                raise UserError(
+                    self.env._(
+                        "The responsible person is required for %s operations. "
+                        "Please specify who is responsible for this %s."
+                    )
+                    % (
+                        picking.picking_type_id.name,
+                        "reception" if picking.picking_type_id.code == "incoming" else "delivery",
+                    )
+                )
+        return super().button_validate()
 
     # backport V17
     def action_draft(self):
@@ -222,18 +216,12 @@ class StockPicking(models.Model):
 
     def _update_gps_tracking_information(self, date=False):
         for picking in self:
-            fuel_data = (
-                picking.vehicle_id.get_fuel_at(date)
-                if date
-                else picking.vehicle_id.get_current_fuel()
-            )
+            fuel_data = picking.vehicle_id.get_fuel_at(date) if date else picking.vehicle_id.get_current_fuel()
             fuel_level = fuel_data.get("percentage", 0) if fuel_data else 0
             picking.write(
                 {
                     "odometer_done": (
-                        picking.vehicle_id.get_odometer_at(date)
-                        if date
-                        else picking.vehicle_id.get_current_odometer()
+                        picking.vehicle_id.get_odometer_at(date) if date else picking.vehicle_id.get_current_odometer()
                     ),
                     "fuel_done": fuel_level,
                 }
@@ -245,13 +233,9 @@ class StockPicking(models.Model):
 
     def _prepare_compute_custom_permissions(self):
         self.ensure_one()
-        show_mark_as_todo = (
-            self.state == "draft"
-            and self.env.user in self.picking_type_id.can_todo_user_ids
-        )
+        show_mark_as_todo = self.state == "draft" and self.env.user in self.picking_type_id.can_todo_user_ids
         show_validate = (
-            self.state in ("confirmed", "assigned")
-            and self.env.user in self.picking_type_id.can_validate_user_ids
+            self.state in ("confirmed", "assigned") and self.env.user in self.picking_type_id.can_validate_user_ids
         )
         return {
             "show_mark_as_todo": show_mark_as_todo,
@@ -279,9 +263,7 @@ class StockPicking(models.Model):
             lambda pick: pick.state != "assigned"
             and not (
                 pick.state == "confirmed"
-                and pick.move_ids.filtered(
-                    lambda sm: sm.state in ["partially_available", "assigned"]
-                )
+                and pick.move_ids.filtered(lambda sm: sm.state in ["partially_available", "assigned"])
             )
         )
         if invalid_pickings:

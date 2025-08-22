@@ -28,6 +28,7 @@
                     <field name="suitable_product_ids" invisible="True" />
                     <field name="suitable_location_dest_ids" invisible="True" />
                     <field name="suitable_location_ids" invisible="True" />
+                    <field name="require_responsible" invisible="1"/>
                 </div>
             </xpath>
             <xpath expr="//button[@name='action_confirm']" position="attributes">
@@ -77,6 +78,17 @@
             </xpath>
             <xpath expr="//field[@name='owner_id']" position="attributes">
                 <attribute name="readonly">state != 'draft'</attribute>
+            </xpath>
+            <xpath expr="//field[@name='user_id']" position="replace" />
+            <xpath expr="//field[@name='backorder_id']" position="before">
+                <field name="user_id"
+                    widget="many2one_avatar_user"
+                    domain="[('share', '=', False)]"
+                    invisible="not require_responsible"
+                    required="require_responsible and state not in ['cancel', 'done']"
+                    readonly="state in ['cancel', 'done']"
+                    groups="stock.group_stock_user"
+                />
             </xpath>
             <xpath expr="//page[@name='operations']/field[@name='move_ids_without_package']/list/field[@name='product_id']" position="attributes">
                 <attribute name="options">{"no_create": True}</attribute>

@@ -30,6 +30,12 @@
                     <field name="route_ids" options="{'no_create': True}" widget="many2many_tags" />
                 </group>
             </xpath>
+            <xpath expr="//group[@name='first']/group[last()]" position="inside">
+                    <field
+                        name="require_responsible"
+                        groups="stock.group_stock_manager"
+                    />
+            </xpath>
             <xpath expr="//sheet" position="after">
                 <chatter />
             </xpath>
