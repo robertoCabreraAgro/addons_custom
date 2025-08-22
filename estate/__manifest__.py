@@ -6,16 +6,12 @@
     'depends': [
         'base'
         ],
-
-'data': [
-    'views/estate_property_views.xml',
-    'security/ir.model.access.csv',
-],
-
+        
+    'data': [
+        'views/estate_property_views.xml',
+        'security/ir.model.access.csv',
+    ],
     'installable': True,
     'application': True,
     'auto_install': False,
 }
-
-
-

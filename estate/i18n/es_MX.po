@@ -1,0 +1,183 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* estate
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~18.2+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-08-22 17:39+0000\n"
+"PO-Revision-Date: 2025-08-22 17:39+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: estate
+#: model:ir.model.fields,field_description:estate.field_estate_property__active
+msgid "Active"
+msgstr "Activo"
+
+#. module: estate
+#: model:ir.model.fields,field_description:estate.field_estate_property__bedrooms
+msgid "Bedrooms"
+msgstr "Recámaras"
+
+#. module: estate
+#: model:ir.model.fields.selection,name:estate.selection__estate_property__state__cancelled
+msgid "Cancelado"
+msgstr "Cancelado"
+
+#. module: estate
+#: model:ir.model.fields,field_description:estate.field_estate_property__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: estate
+#: model:ir.model.fields,field_description:estate.field_estate_property__create_date
+msgid "Created on"
+msgstr "Creado el"
+
+#. module: estate
+#: model:ir.model.fields,field_description:estate.field_estate_property__date_availability
+msgid "Date Availability"
+msgstr "Fecha de Disponibilidad"
+
+#. module: estate
+#: model:ir.model.fields,field_description:estate.field_estate_property__description
+msgid "Description"
+msgstr "Descripción"
+
+#. module: estate
+#: model:ir.model.fields,field_description:estate.field_estate_property__display_name
+msgid "Display Name"
+msgstr "Nombre para Mostrar"
+
+#. module: estate
+#: model:ir.model.fields,field_description:estate.field_estate_property__state
+msgid "Estado"
+msgstr "Estado"
+
+#. module: estate
+#: model:ir.model.fields.selection,name:estate.selection__estate_property__garden_orientation__east
+msgid "Este"
+msgstr "Este"
+
+#. module: estate
+#: model:ir.model.fields,field_description:estate.field_estate_property__expected_price
+msgid "Expected Price"
+msgstr "Precio Esperado"
+
+#. module: estate
+#: model:ir.model.fields,field_description:estate.field_estate_property__facades
+msgid "Facades"
+msgstr "Fachadas"
+
+#. module: estate
+#: model:ir.model.fields,field_description:estate.field_estate_property__garage
+msgid "Garage"
+msgstr "Garaje"
+
+#. module: estate
+#: model:ir.model.fields,field_description:estate.field_estate_property__garden
+msgid "Garden"
+msgstr "Jardín"
+
+#. module: estate
+#: model:ir.model.fields,field_description:estate.field_estate_property__garden_area
+msgid "Garden Area"
+msgstr "Área del Jardín"
+
+#. module: estate
+#: model:ir.model.fields,field_description:estate.field_estate_property__garden_orientation
+msgid "Garden Orientation"
+msgstr "Orientación del Jardín"
+
+#. module: estate
+#: model:ir.model.fields,field_description:estate.field_estate_property__id
+msgid "ID"
+msgstr "ID"
+
+#. module: estate
+#: model:ir.model.fields,field_description:estate.field_estate_property__write_uid
+msgid "Last Updated by"
+msgstr "Última Actualización por"
+
+#. module: estate
+#: model:ir.model.fields,field_description:estate.field_estate_property__write_date
+msgid "Last Updated on"
+msgstr "Última Actualización el"
+
+#. module: estate
+#: model:ir.model.fields,field_description:estate.field_estate_property__living_area
+msgid "Living Area"
+msgstr "Área Habitable"
+
+#. module: estate
+#: model:ir.model.fields,field_description:estate.field_estate_property__name
+msgid "Name"
+msgstr "Nombre"
+
+#. module: estate
+#: model:ir.model.fields.selection,name:estate.selection__estate_property__garden_orientation__north
+msgid "Norte"
+msgstr "Norte"
+
+#. module: estate
+#: model:ir.model.fields.selection,name:estate.selection__estate_property__state__new
+msgid "Nuevo"
+msgstr "Nuevo"
+
+#. module: estate
+#: model:ir.model.fields.selection,name:estate.selection__estate_property__garden_orientation__west
+msgid "Oeste"
+msgstr "Oeste"
+
+#. module: estate
+#: model:ir.model.fields.selection,name:estate.selection__estate_property__state__offer_accepted
+msgid "Oferta Aceptada"
+msgstr "Oferta Aceptada"
+
+#. module: estate
+#: model:ir.model.fields.selection,name:estate.selection__estate_property__state__offer_received
+msgid "Oferta Recibida"
+msgstr "Oferta Recibida"
+
+#. module: estate
+#: model:ir.model.fields,field_description:estate.field_estate_property__postcode
+msgid "Postcode"
+msgstr "Código Postal"
+
+#. module: estate
+#: model:ir.actions.act_window,name:estate.estate_property_action
+#: model:ir.ui.menu,name:estate.estate_first_level_menu
+#: model:ir.ui.menu,name:estate.estate_property_menu_action
+msgid "Properties"
+msgstr "Propiedades"
+
+#. module: estate
+#: model:ir.ui.menu,name:estate.estate_menu_root
+msgid "Real Estate"
+msgstr "Bienes Raíces"
+
+#. module: estate
+#: model:ir.model,name:estate.model_estate_property
+msgid "Real Estate Property"
+msgstr "Propiedad Inmobiliaria"
+
+#. module: estate
+#: model:ir.model.fields,field_description:estate.field_estate_property__selling_price
+msgid "Selling Price"
+msgstr "Precio de Venta"
+
+#. module: estate
+#: model:ir.model.fields.selection,name:estate.selection__estate_property__garden_orientation__south
+msgid "Sur"
+msgstr "Sur"
+
+#. module: estate
+#: model:ir.model.fields.selection,name:estate.selection__estate_property__state__sold
+msgid "Vendido"
+msgstr "Vendido"
