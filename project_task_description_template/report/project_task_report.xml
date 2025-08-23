@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="0">
+    <data>
+
+        <template id="project_task_layout">
+            <!-- company assignment -->
+            <t t-set="company" t-value="company_id or (o and o.company_id.sudo()) or res_company"/>
+            <t t-set="current_date" t-value="context_timestamp(datetime.datetime.now()).strftime(env['res.lang']._get_data(code=env.user.lang).date_format)"/>
+
+            <div class="header" style="font-size: 15px;">
+                <div class="row">
+                    <!-- Task Information (Left Column) -->
+                    <div class="col-6">
+                        <div class="task-info" style="padding-top:10px">
+                            <div name="date">
+                                <strong>Date:</strong>
+                                <span t-esc="current_date"/>
+                            </div>
+                            <div name="reference">
+                                <strong>Reference:</strong>
+                                <span t-esc="doc.id"/>
+                            </div>
+                            <div name="project_name">
+                                <strong>Project:</strong>
+                                <span t-esc="doc.project_id.name"/>
+                            </div>
+                            <div name="client_name">
+                                <strong>Client:</strong>
+                                <span t-esc="doc.partner_id.name"/>
+                            </div>
+                            <div name="responsible">
+                                <strong>Responsible:</strong>
+                                <span t-esc="', '.join(user.name for user in doc.user_ids)"/>
+                            </div>
+                            <div name="stage">
+                                <strong>Stage:</strong>
+                                <span t-esc="doc.stage_id.name if doc.stage_id else ''"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Company Info (Right Column) -->
+                    <div class="col-6" name="logo_and_company_address">
+                        <div class="d-flex flex-column align-items-center">
+                            <div class="d-flex justify-content-center mb-2">
+                                <img t-if="company.logo"
+                                    class="o_company_logo_small"
+                                    t-att-src="image_data_uri(company.logo)"
+                                    alt="Logo"
+                                    style="max-width: 170px; max-height: 170px; object-fit: contain;"/>
+                            </div>
+                            <div class="text-center w-100">
+                                <ul class="list-unstyled text-center"
+                                    name="company_address_list"
+                                    style="padding: 0; margin: 0; font-size: 0.85em; line-height: 1;">
+                                    <li t-if="company.is_company_details_empty">
+                                        <span t-field="company.partner_id"
+                                            t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/>
+                                    </li>
+                                    <li t-else="">
+                                        <span t-field="company.company_details"/>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div t-attf-class="article o_report_layout_standard o_company_#{company.id}_layout {{ 'o_report_layout_background' if company.layout_background in ['Geometric', 'Custom'] else '' }}"
+                t-attf-style="background-image: url({{bg_image}});"
+                t-att-data-oe-model="o and o._name"
+                t-att-data-oe-id="o and o.id"
+                t-att-data-oe-lang="o and o.env.context.get('lang')">
+                <t t-out="0"/>
+            </div>
+
+            <!-- Footer -->
+            <div class="footer o_standard_footer">
+                <div t-if="report_type == 'pdf'" class="text-center text-muted" style="font-size: 12px;">
+                    Page: <span class="page"/> of <span class="topage"/><br/>
+                    Date: <strong t-esc="current_date"/>
+                </div>
+            </div>
+        </template>
+
+        <!-- Main report template -->
+        <template id="project_task_report_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="project_task_description_template.project_task_layout">
+                        <div class="page">
+                            <!-- Title report-->
+                            <div>
+                                <div class="row mb-3">
+                                    <div class="text-center">
+                                        <h3 class="report-title">ACTIVITY REPORT</h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Task Content -->
+                            <div>
+                                <!-- Title -->
+                                <div class="mb-3">
+                                    <h3><strong><span t-esc="doc.name"/></strong></h3>
+                                </div>
+
+                                <!-- Description -->
+                                <div>
+                                    <div>
+                                        <t t-if="doc.description">
+                                            <t t-out="doc.description"/>
+                                        </t>
+                                        <t t-else="">
+                                            <p><em>No description available</em></p>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+    </data>
+
+    <record id="action_project_task_report" model="ir.actions.report">
+        <field name="name">Activity Report</field>
+        <field name="model">project.task</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">project_task_description_template.project_task_report_template</field>
+        <field name="report_file">project_task_description_template.project_task_report_template</field>
+        <field name="print_report_name">object.get_report_filename()</field>
+        <field name="binding_model_id" ref="project.model_project_task"/>
+        <field name="paperformat_id" ref="project_task_description_template.paperformat_project_task_report"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

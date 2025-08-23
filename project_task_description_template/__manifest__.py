@@ -11,6 +11,8 @@
     "data": [
         "security/ir.model.access.csv",
         "security/ir_rule_data.xml",
+        'data/paperformat.xml',
+        'report/project_task_report.xml',
         "views/project_task_view.xml",
         "views/project_task_description_template_view.xml",
     ],

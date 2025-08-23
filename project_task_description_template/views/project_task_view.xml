@@ -8,6 +8,14 @@
             <xpath expr="//field[@name='tag_ids']" position="after">
                 <field name="description_template_id" />
             </xpath>
+            <xpath expr="//header" position="inside">
+                <button name="action_print_task_report"
+                        string="Print"
+                        type="object"
+                        class="btn-primary"
+                        groups="project.group_project_user"
+                        icon="fa-print"/>
+            </xpath>
         </field>
     </record>
 </odoo>
