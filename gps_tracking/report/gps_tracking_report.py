@@ -12,7 +12,7 @@ class GpsTrackingReport(models.Model):
     date = fields.Date(string="Date")
     device_id = fields.Many2one("gps.tracking.device", string="Device")
     imei = fields.Char(string="IMEI", readonly=True)
-    vehicle_id = fields.Many2one("fleet.vehicle", string="Vehicle", readonly=True)
+    asset_id = fields.Many2one("stock.lot", string="Vehicle", readonly=True)
     avg_speed = fields.Float(string="Average Speed")
     max_speed = fields.Float(string="Maximum Speed")
     total_distance = fields.Float(string="Total Distance")
@@ -29,7 +29,7 @@ class GpsTrackingReport(models.Model):
                     DATE(p.timestamp) AS date,
                     p.device_id,
                     d.imei AS imei,
-                    d.vehicle_id AS vehicle_id,
+                    d.asset_id AS asset_id,
                     AVG(p.speed) AS avg_speed,
                     MAX(p.speed) AS max_speed,
                     MAX(p.odometer) - MIN(p.odometer) AS total_distance,
@@ -40,7 +40,7 @@ class GpsTrackingReport(models.Model):
                 JOIN
                     gps_tracking_device d ON p.device_id = d.id
                 GROUP BY
-                    DATE(p.timestamp), p.device_id, d.imei, d.vehicle_id
+                    DATE(p.timestamp), p.device_id, d.imei, d.asset_id
             )
         """
             % (self._table,)
@@ -56,7 +56,7 @@ class GpsTrackingReport(models.Model):
 
         return {
             "name": "Tracking Points for {} on {}".format(
-                self.vehicle_id.name, self.date
+                self.asset_id.name, self.date
             ),
             "type": "ir.actions.act_window",
             "res_model": "gps.tracking.point",

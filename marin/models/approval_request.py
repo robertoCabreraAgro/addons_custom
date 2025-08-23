@@ -33,9 +33,10 @@ class ApprovalRequest(models.Model):
         compute="_compute_count_purchase_order",
     )
     vehicle_id = fields.Many2one(
-        comodel_name="fleet.vehicle",
+        comodel_name="stock.lot",
         string="Vehicle",
         compute="_compute_vehicle_id",
+        domain="[('asset_type', '=', 'vehicle')]",
         store=True,
         readonly=False,
     )
@@ -44,7 +45,7 @@ class ApprovalRequest(models.Model):
         help="Enter the vehicle's current odometer reading.",
     )
     log_ids = fields.One2many(
-        comodel_name="fleet.vehicle.log",
+        comodel_name="product.asset.log",
         inverse_name="approval_request_id",
         string="Log",
     )
@@ -53,8 +54,11 @@ class ApprovalRequest(models.Model):
     def _compute_vehicle_id(self):
         for request in self:
             if request.request_owner_id:
-                vehicle = self.env["fleet.vehicle"].search(
-                    [("driver_id", "=", request.request_owner_id.employee_id.id)],
+                vehicle = self.env["stock.lot"].search(
+                    [
+                        ("asset_type", "=", "vehicle"),
+                        ("driver_id", "=", request.request_owner_id.employee_id.id),
+                    ],
                     limit=1,
                 )
                 request.vehicle_id = vehicle if vehicle else False
@@ -78,7 +82,7 @@ class ApprovalRequest(models.Model):
     def action_confirm(self):
         for request in self:
             request._check_approval_type_purchase_has_product()
-            if request.approval_type == "fleet_vehicle_log" and not request.odometer:
+            if request.approval_type == "product_asset_log" and not request.odometer:
                 raise UserError(_("You cannot create a log without odometer value."))
         return super().action_confirm()
 
@@ -151,12 +155,12 @@ class ApprovalRequest(models.Model):
             )
             line.purchase_order_line_id = new_purchase_order.line_ids[0].id
 
-    def action_create_fleet_vehicle_log(self):
+    def action_create_product_asset_log(self):
         self.ensure_one()
-        self.env["fleet.vehicle.log"].create(
+        self.env["product.asset.log"].create(
             {
                 "approval_request_id": self.id,
-                "vehicle_id": self.vehicle_id.id,
+                "asset_id": self.vehicle_id.id,
                 "odometer": self.odometer,
                 "state": "done",
                 "date": self.date,  # TODO ROberto implement logic for date when all approvers have finished
@@ -202,14 +206,14 @@ class ApprovalRequest(models.Model):
         }
         return action
 
-    def action_view_fleet_vehicle_log(self):
+    def action_view_product_asset_log(self):
         self.ensure_one()
         log_ids = self.log_ids.ids
         domain = [("id", "in", log_ids)]
         action = {
             "name": _("Logs"),
             "type": "ir.actions.act_window",
-            "res_model": "fleet.vehicle.log",
+            "res_model": "product.asset.log",
             "view_type": "list",
             "view_mode": "list,form",
             "context": clean_context(self.env.context),

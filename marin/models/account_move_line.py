@@ -207,10 +207,10 @@ class AccountMoveLine(models.Model):
                 line.account_id = line.move_id.journal_id.default_account_id
 
     # Extend original method
-    @api.depends("account_id", "partner_id", "product_id", "vehicle_id")
+    @api.depends("account_id", "partner_id", "product_id", "asset_id")
     def _compute_analytic_distribution(self):
         vehicle_lines = self.filtered(
-            lambda line: line.vehicle_id and line.display_type == "product"
+            lambda line: line.asset_id and line.display_type == "product"
         )
         super(AccountMoveLine, self - vehicle_lines)._compute_analytic_distribution()
         cache = {}
@@ -256,7 +256,7 @@ class AccountMoveLine(models.Model):
                 "partner_id": self.partner_id.id,
                 "product_categ_id": self.product_id.categ_id.id,
                 "product_id": self.product_id.id,
-                "vehicle_id": self.vehicle_id.id,
+                "vehicle_id": self.asset_id.id,
             }
         )
 
@@ -272,7 +272,7 @@ class AccountMoveLine(models.Model):
             {
                 "amount_taxinc": self.price_total * sign,
                 "date_impacted": self.date,
-                "vehicle_id": self.vehicle_id and self.vehicle_id.id or False,
+                "vehicle_id": self.asset_id and self.asset_id.id or False,
             }
         )
         return res

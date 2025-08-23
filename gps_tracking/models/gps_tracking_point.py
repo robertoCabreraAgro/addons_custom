@@ -19,10 +19,10 @@ class GpsTrackingPoint(models.Model):
         required=True,
         ondelete="cascade",
     )
-    vehicle_id = fields.Many2one(
-        comodel_name="fleet.vehicle",
-        string="Vehícle",
-        related="device_id.vehicle_id",
+    asset_id = fields.Many2one(
+        comodel_name="stock.lot",
+        string="Vehicle",
+        related="device_id.asset_id",
         store=True,
         readonly=True,
     )
@@ -33,8 +33,8 @@ class GpsTrackingPoint(models.Model):
     )
     driver_id = fields.Many2one(
         comodel_name="hr.employee",
-        string="Conductor",
-        related="vehicle_id.driver_id",
+        string="Driver",
+        related="asset_id.operator_id",
         store=True,
         readonly=True,
     )

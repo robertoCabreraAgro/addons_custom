@@ -34,8 +34,9 @@ class StockPickingTracker(models.Model):
         required=True,
     )
     vehicle_id = fields.Many2one(
-        comodel_name="fleet.vehicle",
+        comodel_name="stock.lot",
         string="Vehicle",
+        domain="[('asset_type', '=', 'vehicle')]",
         tracking=True,
     )
     driver_id = fields.Many2one(
@@ -182,7 +183,7 @@ class StockPickingTracker(models.Model):
     @api.depends("vehicle_id")
     def _compute_driver_id(self):
         for tracker in self:
-            tracker.driver_id = tracker.vehicle_id.driver_id
+            tracker.driver_id = tracker.vehicle_id.operator_id
 
     @api.depends("driver_id")
     def _compute_driver_department_id(self):

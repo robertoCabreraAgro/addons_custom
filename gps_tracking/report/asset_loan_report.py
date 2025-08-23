@@ -4,8 +4,8 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
-class FleetVehicleLoanReport(models.Model):
-    _name = "fleet.vehicle.loan.report"
+class AssetLoanReport(models.Model):
+    _name = "asset.loan.report"
     _description = "Reporte de préstamos de vehículos"
     _auto = False
     _order = "date_start desc"
@@ -118,7 +118,7 @@ class FleetVehicleLoanReport(models.Model):
         SELECT
             (row_number() OVER ())::integer AS id,
             tdv.username,
-            fv.name AS vehiculo,
+            sl.name AS vehiculo,
             tdv.work_hours_status,
             start_point.real_odometer AS odometer_start,
             end_point.real_odometer AS odometer_end,
@@ -158,8 +158,8 @@ class FleetVehicleLoanReport(models.Model):
             gps_tracking_device AS gtd
             ON tdv.device_id = gtd.id
         LEFT JOIN
-            fleet_vehicle AS fv
-            ON gtd.vehicle_id = fv.id
+            stock_lot AS sl
+            ON gtd.asset_id = sl.id
         WHERE
             tdv.start_point_id IS NOT NULL
         ORDER BY
@@ -168,9 +168,9 @@ class FleetVehicleLoanReport(models.Model):
 
     def refresh_data(self):
         """Method called by the UI action to refresh the report data"""
-        _logger.info("Refreshing report data for fleet_vehicle_loan_report")
+        _logger.info("Refreshing report data for asset_loan_report")
         try:
-            self.env.cr.execute("DROP VIEW IF EXISTS fleet_vehicle_loan_report")
+            self.env.cr.execute("DROP VIEW IF EXISTS asset_loan_report")
             self.init()
             return {
                 "type": "ir.actions.client",

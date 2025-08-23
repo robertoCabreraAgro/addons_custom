@@ -11,7 +11,7 @@ class Documents(models.Model):
 
     legal_number = fields.Char("Legal number")
     vehicle_id = fields.Many2one(
-        comodel_name="fleet.vehicle",
+        comodel_name="stock.lot",
         string="Vehicle",
         compute="_compute_vehicle_id",
         search="_search_vehicle_id",
@@ -39,12 +39,13 @@ class Documents(models.Model):
 
     @api.depends("res_id", "res_model")
     def _compute_vehicle_id(self):
-        vehicle = self.env["fleet.vehicle"]
+        vehicle = self.env["stock.lot"]
         for document in self:
             document.vehicle_id = (
-                document.res_model == "fleet.vehicle"
+                document.res_model == "stock.lot"
                 and vehicle.browse(document.res_id)
-            )
+                and vehicle.browse(document.res_id).asset_type == "vehicle"
+            ) or False
 
     @api.model
     def _search_related_vehicle_field(self, operator, value, Model):
@@ -72,5 +73,5 @@ class Documents(models.Model):
     @api.model
     def _search_vehicle_id(self, operator, value):
         return self._search_related_vehicle_field(
-            operator, value, self.env["fleet.vehicle"]
+            operator, value, self.env["stock.lot"]
         )

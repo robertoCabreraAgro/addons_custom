@@ -7,12 +7,12 @@ class GpsTrackingDevice(models.Model):
     _inherit = "gps.tracking.device"
 
     department_id = fields.Many2one(
-        related="vehicle_id.department_id",
+        related="asset_id.operator_id.department_id",
         store=True,
         string="Department",
     )
     driver_name = fields.Char(
-        related="vehicle_id.driver_id.name",
+        related="asset_id.operator_id.name",
         store=True,
         string="Driver",
         readonly=True,

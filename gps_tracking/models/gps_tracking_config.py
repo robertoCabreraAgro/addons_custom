@@ -97,7 +97,7 @@ class GpsTrackingConfig(models.Model):
         Args:
             fuel_percentage (float): Fuel level as percentage (0-100)
             fuel_deciliters (float): Fuel level in deciliters
-            vehicle (fleet.vehicle): Vehicle record to get tank capacity from
+            vehicle (stock.lot): Vehicle record to get tank capacity from
 
         Returns:
             float: Fuel level in liters, or False if cannot be determined
@@ -113,9 +113,9 @@ class GpsTrackingConfig(models.Model):
             self.reports_fuel_percentage
             and fuel_percentage is not None
             and vehicle
-            and vehicle.fuel_tank_capacity
+            and vehicle.product_id.fuel_tank_capacity
         ):
-            return (fuel_percentage / 100.0) * vehicle.fuel_tank_capacity
+            return (fuel_percentage / 100.0) * vehicle.product_id.fuel_tank_capacity
 
         return False
 
@@ -127,7 +127,7 @@ class GpsTrackingConfig(models.Model):
         Args:
             fuel_percentage (float): Fuel level as percentage (0-100)
             fuel_deciliters (float): Fuel level in deciliters
-            vehicle (fleet.vehicle): Vehicle record to get tank capacity from
+            vehicle (stock.lot): Vehicle record to get tank capacity from
 
         Returns:
             float: Fuel level as percentage, or False if cannot be determined
@@ -143,9 +143,9 @@ class GpsTrackingConfig(models.Model):
             self.reports_fuel_volume
             and fuel_deciliters is not None
             and vehicle
-            and vehicle.fuel_tank_capacity
+            and vehicle.product_id.fuel_tank_capacity
         ):
             fuel_liters = fuel_deciliters / 10.0  # Convert deciliters to liters
-            return (fuel_liters / vehicle.fuel_tank_capacity) * 100.0
+            return (fuel_liters / vehicle.product_id.fuel_tank_capacity) * 100.0
 
         return False

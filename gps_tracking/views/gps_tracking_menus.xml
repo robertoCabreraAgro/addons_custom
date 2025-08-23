@@ -45,9 +45,9 @@
                 action="action_gps_tracking_point_report"
                 sequence="40" />
 
-            <menuitem id="menu_fleet_vehicle_loan_report"
+            <menuitem id="menu_asset_loan_report"
                 name="Préstamos de Vehículos"
-                action="action_fleet_vehicle_loan_report"
+                action="action_asset_loan_report"
                 groups="group_gps_tracking_vehicle_loan"
                 sequence="50" />
         </menuitem>

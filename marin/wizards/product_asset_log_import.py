@@ -15,9 +15,9 @@ from odoo.exceptions import UserError
 _logger = logging.getLogger(__name__)
 
 
-class FleetVehicleLogImport(models.TransientModel):
-    _name = "fleet.vehicle.log.import"
-    _description = "Import Vehicle Logs"
+class ProductAssetLogImport(models.TransientModel):
+    _name = "product.asset.log.import"
+    _description = "Import Asset Logs"
 
     filename = fields.Char()
     file = fields.Binary(required=True)
@@ -31,7 +31,7 @@ class FleetVehicleLogImport(models.TransientModel):
         default="effectivale",
         required=True,
     )
-    vehicle_ids = fields.Many2many(comodel_name="fleet.vehicle", string="Vehicles")
+    vehicle_ids = fields.Many2many(comodel_name="stock.lot", string="Assets", domain="[('asset_type', '=', 'vehicle')]")
     test_mode = fields.Boolean(default=True)
     test_display = fields.Selection(
         [
@@ -48,7 +48,7 @@ class FleetVehicleLogImport(models.TransientModel):
         res = super().default_get(fields_list)
 
         # Check if we are in the context of an action from the list view
-        if self._context.get("active_model") == "fleet.vehicle":
+        if self._context.get("active_model") == "stock.lot":
             vehicle_ids = self._context.get("active_ids", [])
             # Preload IDs of selected vehicles
             res["vehicle_ids"] = [(6, 0, vehicle_ids)] if vehicle_ids else [(5, 0, 0)]
@@ -78,7 +78,7 @@ class FleetVehicleLogImport(models.TransientModel):
         if not filter_vehicles:
             # If no filter, search all vehicles with fuel card
             domain = [("fuel_card_id", "!=", False)]
-            filter_vehicles = self.env["fleet.vehicle"].search(domain)
+            filter_vehicles = self.env["stock.lot"].search(domain)
 
         # Search for the vehicle with matching fuel card number
         for v in filter_vehicles:
@@ -159,9 +159,9 @@ class FleetVehicleLogImport(models.TransientModel):
         highway_pass_number = self._clean_highway_pass_number(highway_pass_number)
 
         if not filter_vehicles:
-            # If no filter, search all vehicles with highway pass
-            domain = [("highway_pass_id", "!=", False)]
-            filter_vehicles = self.env["fleet.vehicle"].search(domain)
+            # If no filter, search all assets with highway pass
+            domain = [("highway_pass_id", "!=", False), ("asset_type", "=", "vehicle")]
+            filter_vehicles = self.env["stock.lot"].search(domain)
 
         # Search for the vehicle with matching highway pass number
         for v in filter_vehicles:
@@ -177,9 +177,9 @@ class FleetVehicleLogImport(models.TransientModel):
             file_content (str): Base64 encoded XLS file content
 
         Returns:
-            tuple: (list of fleet.vehicle.log values, list of error messages)
+            tuple: (list of product.asset.log values, list of error messages)
         """
-        fleet_vehicle_log = self.env["fleet.vehicle.log"]
+        asset_log = self.env["product.asset.log"]
         fuel_category = self.env.ref("marin.product_category_fuel")
         fuel_debit_product = self.env.ref("marin.product_product_fuel_debit")
         fuel_credit_product = self.env.ref("marin.product_product_fuel_credit")
@@ -212,8 +212,8 @@ class FleetVehicleLogImport(models.TransientModel):
                 raise UserError(self.env._("Missing columns: %s", ", ".join(missing)))
 
             # Define the vehicles to update their logs
-            filter_vehicles = self.vehicle_ids or self.env["fleet.vehicle"].search(
-                [("fuel_card_id", "!=", False)]
+            filter_vehicles = self.vehicle_ids or self.env["stock.lot"].search(
+                [("fuel_card_id", "!=", False), ("asset_type", "=", "vehicle")]
             )
 
             logs = []
@@ -283,7 +283,7 @@ class FleetVehicleLogImport(models.TransientModel):
                     # Prepare log values
                     log_vals = {
                         "date": log_date,
-                        "vehicle_id": vehicle.id,
+                        "asset_id": vehicle.id,
                         "amount": amount,
                         "odometer": (
                             float(row[column_map["Km FIN"]])
@@ -308,9 +308,9 @@ class FleetVehicleLogImport(models.TransientModel):
                     }
 
                     # Check for duplicate records (done state)
-                    existing_done_record = fleet_vehicle_log.search(
+                    existing_done_record = asset_log.search(
                         [
-                            ("vehicle_id", "=", log_vals["vehicle_id"]),
+                            ("asset_id", "=", log_vals["asset_id"]),
                             ("date", "=", log_vals["date"]),
                             ("amount", "=", log_vals["amount"]),
                             ("qty_fuel", "=", log_vals["qty_fuel"]),
@@ -328,9 +328,9 @@ class FleetVehicleLogImport(models.TransientModel):
                         continue
 
                     # Check for existing 'new' record from CFDI (for verification)
-                    existing_new_record = fleet_vehicle_log.search(
+                    existing_new_record = asset_log.search(
                         [
-                            ("vehicle_id", "=", log_vals["vehicle_id"]),
+                            ("asset_id", "=", log_vals["asset_id"]),
                             ("date", "=", log_vals["date"]),
                             ("qty_fuel", "=", log_vals["qty_fuel"]),
                             ("product_category_id", "=", fuel_category.id),
@@ -393,9 +393,9 @@ class FleetVehicleLogImport(models.TransientModel):
             file_content (str): Base64 encoded CSV file content
 
         Returns:
-            tuple: (list of fleet.vehicle.log values, list of error messages)
+            tuple: (list of product.asset.log values, list of error messages)
         """
-        fleet_vehicle_log = self.env["fleet.vehicle.log"]
+        asset_log = self.env["product.asset.log"]
         highway_pass_category = self.env.ref("marin.product_category_highway_toll")
         highway_pass_debit_product = self.env.ref("marin.product_product_highway_debit")
         highway_pass_credit_product = self.env.ref(
@@ -430,8 +430,8 @@ class FleetVehicleLogImport(models.TransientModel):
                 raise UserError(self.env._("Missing columns: %s", ", ".join(missing)))
 
             # Define the vehicles to update their logs
-            filter_vehicles = self.vehicle_ids or self.env["fleet.vehicle"].search(
-                [("highway_pass_id", "!=", False)]
+            filter_vehicles = self.vehicle_ids or self.env["stock.lot"].search(
+                [("highway_pass_id", "!=", False), ("asset_type", "=", "vehicle")]
             )
 
             logs = []
@@ -519,7 +519,7 @@ class FleetVehicleLogImport(models.TransientModel):
                     # Prepare log values
                     log_vals = {
                         "date": log_datetime,
-                        "vehicle_id": vehicle.id,
+                        "asset_id": vehicle.id,
                         "amount": amount,
                         "state": "done",
                         "notes": notes,
@@ -528,9 +528,9 @@ class FleetVehicleLogImport(models.TransientModel):
                     }
 
                     # Check for duplicate records
-                    existing_record = fleet_vehicle_log.search(
+                    existing_record = asset_log.search(
                         [
-                            ("vehicle_id", "=", log_vals["vehicle_id"]),
+                            ("asset_id", "=", log_vals["asset_id"]),
                             ("date", "=", log_vals["date"]),
                             ("amount", "=", log_vals["amount"]),
                             ("notes", "=", log_vals["notes"]),
@@ -573,9 +573,9 @@ class FleetVehicleLogImport(models.TransientModel):
             file_content (str): Base64 encoded CSV file content
 
         Returns:
-            tuple: (list of fleet.vehicle.log values, list of error messages)
+            tuple: (list of product.asset.log values, list of error messages)
         """
-        fleet_vehicle_log = self.env["fleet.vehicle.log"]
+        asset_log = self.env["product.asset.log"]
         highway_pass_category = self.env.ref("marin.product_category_highway_toll")
         highway_pass_debit_product = self.env.ref("marin.product_product_highway_debit")
         highway_pass_credit_product = self.env.ref(
@@ -609,7 +609,7 @@ class FleetVehicleLogImport(models.TransientModel):
                 raise UserError(self.env._("Missing columns: %s", ", ".join(missing)))
 
             # Define the vehicles to update their logs
-            filter_vehicles = self.vehicle_ids or self.env["fleet.vehicle"].search(
+            filter_vehicles = self.vehicle_ids or self.env["stock.lot"].search(
                 [("highway_pass_name", "!=", False)]
             )
 
@@ -718,7 +718,7 @@ class FleetVehicleLogImport(models.TransientModel):
                     # Prepare log values
                     log_vals = {
                         "date": log_datetime,
-                        "vehicle_id": vehicle.id,
+                        "asset_id": vehicle.id,
                         "amount": amount,
                         "state": "done",
                         "notes": notes,
@@ -727,9 +727,9 @@ class FleetVehicleLogImport(models.TransientModel):
                     }
 
                     # Check for duplicate records
-                    existing_record = fleet_vehicle_log.search(
+                    existing_record = asset_log.search(
                         [
-                            ("vehicle_id", "=", log_vals["vehicle_id"]),
+                            ("asset_id", "=", log_vals["asset_id"]),
                             ("date", "=", log_vals["date"]),
                             ("amount", "=", log_vals["amount"]),
                             ("notes", "=", log_vals["notes"]),
@@ -808,7 +808,7 @@ class FleetVehicleLogImport(models.TransientModel):
         # Create records
         try:
             with self.env.cr.savepoint():
-                self.env["fleet.vehicle.log"].create(log_values_list)
+                self.env["product.asset.log"].create(log_values_list)
         except Exception as e:
             raise UserError(self.env._("Error creating logs: %s", str(e)))
 

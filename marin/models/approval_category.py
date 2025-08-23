@@ -15,7 +15,7 @@ class ApprovalCategory(models.Model):
     # Inherited fields
     approval_type = fields.Selection(
         selection_add=[
-            ("fleet_vehicle_log", "Create fleet log"),
+            ("product_asset_log", "Create asset log"),
             ("entry", "Create Journal Entry"),
             ("in_invoice", "Create Vendor Bill"),
             ("in_refund", "Create Vendor Refund"),
@@ -64,7 +64,7 @@ class ApprovalCategory(models.Model):
             self.has_quantity = "required"
         elif self.approval_type == "entry":
             self.has_amount = "required"
-        elif self.approval_type == "fleet_vehicle_log":
+        elif self.approval_type == "product_asset_log":
             self.has_date = "required"
             self.has_vehicle = "required"
             self.has_odometer = "required"

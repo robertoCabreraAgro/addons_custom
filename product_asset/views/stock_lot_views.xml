@@ -99,16 +99,8 @@
                 <field name="service_activity" optional="show" widget="badge"
                     decoration-danger="service_activity == 'overdue'"
                     decoration-warning="service_activity == 'today'" />
-                <field name="fuel_card_id" optional="show" string="Fuel Card" />
-                <field name="fuel_card_budget" optional="show" string="Budget (FC)" />
-                <field name="fuel_card_balance" optional="show" string="Balance (FC)" />
                 <field name="fuel_card_balance_to_reload" optional="show" string="To Reload (FC)"
                     sum="Total to reload" />
-                <field name="highway_pass_id" optional="show" string="Highway Pass" />
-                <field name="highway_pass_budget" string="Budget (HWP)" optional="show" />
-                <field name="highway_pass_balance" string="Balance (HWP)" optional="show" />
-                <field name="highway_pass_balance_to_reload" string="To Reload (HWP)"
-                    optional="show" sum="Total to reload" />
                 <field name="activity_ids" widget="list_activity" optional="show" />
                 <field name="contract_state" optional="show" widget="badge" />
                 <field name="company_id" optional="hide" groups="base.group_multi_company" />
@@ -148,8 +140,7 @@
                 <button name="action_view_context"
                     type="object"
                     class="oe_stat_button"
-                    icon="fa-file-text-o"
-                    context="{'xml_id': 'fleet_vehicle_log_contract_action'}">
+                    icon="fa-file-text-o">
                     <field name="contract_count" widget="statbutton" string="Contracts" />
                 </button>
                 <button name="action_view_bills"

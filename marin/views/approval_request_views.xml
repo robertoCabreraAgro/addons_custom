@@ -48,7 +48,7 @@
                         widget="statinfo"
                         groups="purchase.group_purchase_user" />
                 </button>
-                <button name="action_view_fleet_vehicle_log" string="Logs"
+                <button name="action_view_product_asset_log" string="Logs"
                     type="object" class="oe_stat_button"
                     icon="fa-credit-card"
                     invisible="not log_ids" />
@@ -64,10 +64,10 @@
                     data-hotkey="g"
                     invisible="approval_type != 'purchase' or state != 'approved' or count_purchase_order &gt; 0"
                     groups="purchase.group_purchase_user" />
-                <button name="action_create_fleet_vehicle_log" string="Create Log"
+                <button name="action_create_product_asset_log" string="Create Log"
                     type="object" class="btn-primary"
                     data-hotkey="g"
-                    invisible="approval_type != 'fleet_vehicle_log' or state != 'approved' or log_ids"
+                    invisible="approval_type != 'product_asset_log' or state != 'approved' or log_ids"
                     groups="purchase.group_purchase_user" />
             </xpath>
             <xpath expr="//group[@name='request_main']" position="inside">

@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <list>
                 <field name="timestamp" />
-                <field name="vehicle_id" />
+                <field name="asset_id" />
                 <field name="latitude" />
                 <field name="longitude" />
                 <field name="altitude" />
@@ -56,8 +56,8 @@
         <field name="arch" type="xml">
             <search>
                 <!-- Campos básicos de búsqueda -->
-                <field name="vehicle_id" string="Vehicle"
-                    filter_domain="[('vehicle_id', 'ilike', self)]" />
+                <field name="asset_id" string="Vehicle"
+                    filter_domain="[('asset_id', 'ilike', self)]" />
                 <field name="driver_name" string="Driver"
                     filter_domain="[('driver_name', 'ilike', self)]" />
                 <field name="device_id" string="Device"
@@ -99,7 +99,7 @@
                 <!-- Agrupaciones -->
                 <group expand="0" string="Group By">
                     <filter string="Vehicle" name="group_vehicle"
-                        context="{'group_by': 'vehicle_id'}" />
+                        context="{'group_by': 'asset_id'}" />
                     <filter string="Device" name="group_device" context="{'group_by': 'device_id'}" />
                     <filter string="Date" name="group_date" context="{'group_by': 'timestamp:day'}" />
                     <filter string="Hour" name="group_hour" context="{'group_by': 'timestamp:hour'}" />

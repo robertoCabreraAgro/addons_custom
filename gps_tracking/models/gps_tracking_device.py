@@ -22,13 +22,14 @@ class GpsTrackingDevice(models.Model):
         required=True,
         help="Configuration for interpreting GPS device data",
     )
-    vehicle_id = fields.Many2one(
-        comodel_name="fleet.vehicle",
-        string="Vehícle",
-        help="Vehículo asociado al dispositivo GPS",
+    asset_id = fields.Many2one(
+        comodel_name="stock.lot",
+        string="Vehicle",
+        domain="[('asset_type', '=', 'vehicle')]",
+        help="Vehicle associated with the GPS device",
     )
     license_plate = fields.Char(
-        related="vehicle_id.license_plate",
+        related="asset_id.license_plate",
         store=True,
         string="Plate",
     )
@@ -38,15 +39,21 @@ class GpsTrackingDevice(models.Model):
         store=True,
     )
     location = fields.Char(
-        related="vehicle_id.location",
+        related="asset_id.location",
         store=True,
         string="Location",
     )
     model_id = fields.Many2one(
-        related="vehicle_id.model_id",
+        related="asset_id.product_id.manufacturer_id",
         store=True,
-        comodel_name="fleet.vehicle.model",
-        string="Model",
+        comodel_name="res.partner",
+        string="Manufacturer",
+    )
+    department_id = fields.Many2one(
+        related="asset_id.operator_id.department_id",
+        store=True,
+        comodel_name="hr.department",
+        string="Department",
     )
     allowed_tracking_point = fields.One2many(
         comodel_name="gps.tracking.point",
@@ -185,11 +192,11 @@ class GpsTrackingDevice(models.Model):
                 order="timestamp desc",
             )
 
-    @api.depends("vehicle_id.driver_id", "vehicle_id.location")
+    @api.depends("asset_id.operator_id", "asset_id.location")
     def _compute_driver_name(self):
         for device in self:
             device.driver_name = (
-                device.vehicle_id.driver_id.name if device.vehicle_id.driver_id else ""
+                device.asset_id.operator_id.name if device.asset_id.operator_id else ""
             )
 
     @api.depends("tracking_points.timestamp")
@@ -224,11 +231,11 @@ class GpsTrackingDevice(models.Model):
             else:
                 device.history_route = False
 
-    @api.constrains("vehicle_id", "config_id")
+    @api.constrains("asset_id", "config_id")
     def _check_vehicle_config_association(self):
         """Validate that device has configuration when associated with vehicle."""
         for device in self:
-            if device.vehicle_id and not device.config_id:
+            if device.asset_id and not device.config_id:
                 raise ValueError(
                     "GPS device must have a configuration assigned before "
                     "associating it with a vehicle."
@@ -265,12 +272,12 @@ class GpsTrackingDevice(models.Model):
         percentage = self.config_id.get_fuel_level_percentage(
             fuel_percentage=fuel_percentage,
             fuel_deciliters=fuel_deciliters,
-            vehicle=self.vehicle_id,
+            vehicle=self.asset_id,
         )
         liters = self.config_id.get_fuel_level_liters(
             fuel_percentage=fuel_percentage,
             fuel_deciliters=fuel_deciliters,
-            vehicle=self.vehicle_id,
+            vehicle=self.asset_id,
         )
 
         if percentage is False and liters is False:

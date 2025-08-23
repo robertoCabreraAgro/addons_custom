@@ -101,13 +101,12 @@ class StockLot(models.Model):
         help="This fields is required by Accounting to group according to its needs.",
     )
 
-    fuel_card_id = fields.Char()
     fuel_card_id = fields.Many2one(
         comodel_name="documents.document",
         # domain=lambda self: [
         #     ("tag_ids", "in", self.env.ref("marin_data.documents_fleet_fuel_card").ids),
         # ],
-        # inverse="_inverse_fuel_card_id",
+        inverse="_inverse_fuel_card_id",
         store=True,
         readonly=False,
     )
@@ -131,6 +130,14 @@ class StockLot(models.Model):
         default=0.0,
         help="Recommended starting balance for the fuel card at the beginning of the period",
     )
+    fuel_tank_capacity = fields.Integer(
+        string="Tank capacity",
+        related="product_id.fuel_tank_capacity",
+        store=True,
+        readonly=False,
+        help="Fuel tank capacity in liters",
+        tracking=True,
+    )
     fuel_card_balance = fields.Float(
         digits="Product Price",
         compute="_compute_fuel_card_balance",
@@ -143,7 +150,6 @@ class StockLot(models.Model):
         store=True,
         help="Amount required to reach the recommended fuel card balance.",
     )
-    highway_pass_id = fields.Char()
     highway_pass_id = fields.Many2one(
         comodel_name="documents.document",
         # domain=lambda self: [
@@ -153,7 +159,7 @@ class StockLot(models.Model):
         #         self.env.ref("marin_data.documents_fleet_highway_pass").ids,
         #     ),
         # ],
-        # inverse="_inverse_highway_pass_id",
+        inverse="_inverse_highway_pass_id",
         store=True,
         readonly=False,
     )
@@ -217,6 +223,13 @@ class StockLot(models.Model):
         readonly=True,
         help="Odometer measure of the asset",
     )
+    odometer_uom_id = fields.Many2one(
+        comodel_name="uom.uom",
+        string="Odometer Unit",
+        default=lambda self: self.env.ref("uom.product_uom_km", False),
+        help="Unit of measurement for the odometer readings",
+        tracking=True,
+    )
     assignment_count = fields.Integer(
         string="Drivers History Count",
         compute="_compute_count_all",
@@ -243,11 +256,15 @@ class StockLot(models.Model):
         string="Has Contracts to renew",
         compute="_compute_contract_reminder",
         search="_search_contract_renewal_due_soon",
+        compute_sudo=False,
+        store=True,
     )
     contract_renewal_overdue = fields.Boolean(
         string="Has Contracts Overdue",
         compute="_compute_contract_reminder",
         search="_search_get_overdue_contract_reminder",
+        compute_sudo=False,
+        store=True,
     )
     contract_state = fields.Selection(
         selection=[
@@ -259,6 +276,7 @@ class StockLot(models.Model):
         string="Last Contract State",
         required=False,
         compute="_compute_contract_reminder",
+        compute_sudo=False,
         store=True,
     )
 
@@ -301,7 +319,12 @@ class StockLot(models.Model):
     # ------------------------------------------------------------
 
     def _compute_fuel_card_count(self):
-        fuel_card_product = self.env.ref("product_asset.product_product_fuel_credit")
+        fuel_card_product = self.env.ref("product_asset.product_product_fuel_credit", False)
+        if not fuel_card_product:
+            for asset in self:
+                asset.fuel_card_count = 0
+            return
+            
         for asset in self:
             asset.fuel_card_count = len(
                 asset.log_ids.filtered(lambda l: l.product_id == fuel_card_product)
@@ -309,8 +332,13 @@ class StockLot(models.Model):
 
     def _compute_highway_pass_count(self):
         highway_pass_product = self.env.ref(
-            "product_asset.product_product_highway_credit"
+            "product_asset.product_product_highway_credit", False
         )
+        if not highway_pass_product:
+            for asset in self:
+                asset.highway_pass_count = 0
+            return
+            
         for asset in self:
             asset.highway_pass_count = len(
                 asset.log_ids.filtered(lambda l: l.product_id == highway_pass_product)
@@ -318,17 +346,25 @@ class StockLot(models.Model):
 
     def _compute_count_all(self):
         Log = self.env["product.asset.log"].with_context(active_test=False)
-        assignment = self._get_product_operator_assignment()
-        contract = self._get_product_contract()
-        assignment_data = Log._read_group(
-            [("asset_id", "in", self.ids), ("product_id", "in", assignment.ids)],
-            ["asset_id"],
-            ["__count"],
-        )
+        
+        # Get category references with fallback during installation
+        try:
+            contract_category = self.env.ref("product_asset.product_category_insurance_and_policies")
+            assignment_category = self.env.ref("product_asset.product_category_maintenance_and_repairs")
+            service_categories = self.env.ref("product_asset.product_category_fuel") + \
+                               self.env.ref("product_asset.product_category_highway_toll")
+        except ValueError:
+            # During installation, external IDs may not be available yet
+            for vehicle in self:
+                vehicle.contract_count = 0
+                vehicle.service_count = 0
+                vehicle.assignment_count = 0
+            return
+        
         contract_data = Log._read_group(
             [
                 ("asset_id", "in", self.ids),
-                ("product_id", "in", contract.ids),
+                ("product_category_id", "=", contract_category.id),
                 ("state", "!=", "closed"),
             ],
             ["asset_id", "active"],
@@ -337,27 +373,35 @@ class StockLot(models.Model):
         service_data = Log._read_group(
             [
                 ("asset_id", "in", self.ids),
-                ("product_id", "not in", contract.ids + assignment.ids),
+                ("product_category_id", "in", service_categories.ids),
             ],
             ["asset_id", "active"],
             ["__count"],
         )
+        history_data = Log._read_group(
+            [
+                ("asset_id", "in", self.ids),
+                ("product_category_id", "=", assignment_category.id)
+            ],
+            ["asset_id"],
+            ["__count"],
+        )
 
-        mapped_assignment_data = defaultdict(lambda: 0)
         mapped_contract_data = defaultdict(lambda: defaultdict(lambda: 0))
         mapped_service_data = defaultdict(lambda: defaultdict(lambda: 0))
+        mapped_history_data = defaultdict(lambda: 0)
 
-        for asset, count in assignment_data:
-            mapped_assignment_data[asset.id] = count
-        for asset, active, count in contract_data:
-            mapped_contract_data[asset.id][active] = count
-        for asset, active, count in service_data:
-            mapped_service_data[asset.id][active] = count
+        for vehicle, active, count in contract_data:
+            mapped_contract_data[vehicle.id][active] = count
+        for vehicle, active, count in service_data:
+            mapped_service_data[vehicle.id][active] = count
+        for vehicle, count in history_data:
+            mapped_history_data[vehicle.id] = count
 
-        for asset in self:
-            asset.assignment_count = mapped_assignment_data[asset.id]
-            asset.contract_count = mapped_contract_data[asset.id][asset.active]
-            asset.service_count = mapped_service_data[asset.id][asset.active]
+        for vehicle in self:
+            vehicle.contract_count = mapped_contract_data[vehicle.id][vehicle.active]
+            vehicle.service_count = mapped_service_data[vehicle.id][vehicle.active]
+            vehicle.assignment_count = mapped_history_data[vehicle.id]
 
     @api.depends("model_id")
     def _compute_image_128(self):
@@ -403,6 +447,13 @@ class StockLot(models.Model):
         fuel_product_category = self.env.ref(
             "product_asset.product_category_fuel", False
         )
+        
+        # If category doesn't exist during installation, set balance to opening balance
+        if not fuel_product_category:
+            for vehicle in self:
+                vehicle.fuel_card_balance = vehicle.fuel_card_openning_balance
+            return
+            
         for vehicle in self:
             # Find all fuel log records associated with this vehicle (only done state)
             fuel_logs = self.env["product.asset.log"].search(
@@ -425,6 +476,13 @@ class StockLot(models.Model):
         highway_pass_product_category = self.env.ref(
             "product_asset.product_category_highway_toll", False
         )
+        
+        # If category doesn't exist during installation, set balance to opening balance
+        if not highway_pass_product_category:
+            for vehicle in self:
+                vehicle.highway_pass_balance = vehicle.highway_pass_openning_balance
+            return
+            
         for vehicle in self:
             # Find all toll records associated with this vehicle
             highway_logs = self.env["product.asset.log"].search(
@@ -463,13 +521,21 @@ class StockLot(models.Model):
             params.get_param("hr_fleet.delay_alert_contract", default=30)
         )
         current_date = fields.Date.context_today(self)
-        product = self._get_product_contract()
+        try:
+            contract_category = self.env.ref("product_asset.product_category_insurance_and_policies")
+        except ValueError:
+            # During installation, external IDs may not be available yet
+            for vehicle in self:
+                vehicle.contract_renewal_overdue = False
+                vehicle.contract_renewal_due_soon = False
+                vehicle.contract_state = ""
+            return
         data = self.env["product.asset.log"]._read_group(
             domain=[
                 ("asset_id", "in", self.ids),
                 ("state", "!=", "closed"),
                 ("date_end", "!=", False),
-                ("product_id", "in", product.ids),
+                ("product_category_id", "=", contract_category.id),
             ],
             groupby=["asset_id", "state"],
             aggregates=["date_end:max"],
@@ -567,14 +633,18 @@ class StockLot(models.Model):
         limit_date = fields.Datetime.to_string(
             datetime_today + relativedelta(days=+delay_alert_contract)
         )
-        product = self._get_product_contract()
+        try:
+            contract_category = self.env.ref("product_asset.product_category_insurance_and_policies")
+        except ValueError:
+            # During installation, return empty results
+            return []
         res_ids = (
             self.env["product.asset.log"]
             .search(
                 [
                     ("date_end", ">", today),
                     ("date_end", "<", limit_date),
-                    ("product_id", "in", product.ids),
+                    ("product_category_id", "=", contract_category.id),
                     ("state", "in", ["open", "expired"]),
                 ]
             )
@@ -646,17 +716,18 @@ class StockLot(models.Model):
 
     def action_view_logs_assignation(self):
         self.ensure_one()
-        return {
-            "name": _("Assignment Logs"),
-            "type": "ir.actions.act_window",
-            "res_model": "product.asset.log",
-            "view_mode": "list",
-            "domain": [("asset_id", "=", self.id)],
-            "context": {
-                "default_asset_id": self.id,
-                "default_operator_id": self.operator_id.id,
-            },
+        assignment_product_category = self.env.ref("product_asset.product_category_maintenance_and_repairs")
+        action = self.env['ir.actions.act_window']._for_xml_id('product_asset.action_product_asset_log')
+        action["domain"] = [
+            ("asset_id", "=", self.id),
+            ("product_category_id", "=", assignment_product_category.id),
+        ]
+        action['context'] = {
+            "default_asset_id": self.id,
+            "default_operator_id": self.operator_id.id,
+            "default_product_category_id": assignment_product_category.id,
         }
+        return action
 
     def action_view_logs_cost(self):
         """
@@ -664,37 +735,37 @@ class StockLot(models.Model):
         @return: the costs log view
         """
         self.ensure_one()
-        copy_context = dict(self.env.context)
-        copy_context.pop("group_by", None)
-        res = self.env["ir.actions.act_window"]._for_xml_id(
+        service_categories = self.env.ref("product_asset.product_category_fuel") + \
+                           self.env.ref("product_asset.product_category_highway_toll")
+        action = self.env["ir.actions.act_window"]._for_xml_id(
             "product_asset.action_product_asset_log"
         )
-        res.update(
-            context=dict(
-                copy_context,
-                default_asset_id=self.id,
-                search_default_parent_false=True,
-            ),
-            domain=[("asset_id", "=", self.id)],
-        )
-        return res
+        action["domain"] = [
+            ("asset_id", "=", self.id),
+            ("product_category_id", "in", service_categories.ids),
+        ]
+        action['context'] = {
+            "default_asset_id": self.id,
+            "search_default_parent_false": True,
+        }
+        return action
 
     def action_view_context(self):
         """
-        This opens the xml view specified in xml_id for the current vehicle
+        This opens the xml view specified in xml_id for the current vehicle (contracts)
         """
         self.ensure_one()
-        xml_id = self.env.context.get("xml_id")
-        if xml_id:
-            action = self.env["ir.actions.act_window"]._for_xml_id(f"fleet.{xml_id}")
-            action.update(
-                context=dict(
-                    self.env.context, default_asset_id=self.id, group_by=False
-                ),
-                domain=[("asset_id", "=", self.id)],
-            )
-            return action
-        return False
+        contract_product_category = self.env.ref("product_asset.product_category_insurance_and_policies")
+        action = self.env['ir.actions.act_window']._for_xml_id('product_asset.action_product_asset_log')
+        action["domain"] = [
+            ("asset_id", "=", self.id),
+            ("product_category_id", "=", contract_product_category.id),
+        ]
+        action['context'] = {
+            "default_asset_id": self.id,
+            "default_product_category_id": contract_product_category.id,
+        }
+        return action
 
     # ------------------------------------------------------------
     # HELPERS

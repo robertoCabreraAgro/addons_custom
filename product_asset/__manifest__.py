@@ -26,4 +26,5 @@
     ],
     "license": "LGPL-3",
     "installable": True,
+    "post_init_hook": "post_init_hook",
 }

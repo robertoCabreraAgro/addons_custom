@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <!-- The action_view_bills button is already included in product_asset.view_production_lot_form -->
+    <!-- This view extends the existing button to show the bill_count field -->
+    <record id="stock_lot_view_form" model="ir.ui.view">
+        <field name="name">stock.lot.form.account_product_asset</field>
+        <field name="model">stock.lot</field>
+        <field name="inherit_id" ref="product_asset.view_production_lot_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_view_bills']" position='replace'>
+                <button name="action_view_bills"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-credit-card"
+                    help="Show the vendor bills for this asset">
+                    <field name="bill_count" widget="statinfo" string="Bills"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

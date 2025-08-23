@@ -57,8 +57,8 @@
                             </button>
                         </div>
                         <div t-if="state.expandedDevices.has(device.imei)" class="card_body">
-                            <div t-if="device.vehicle_id">
-                                <span>Vehículo: <t t-esc="device.vehicle_id[1]"/></span> <!-- Mostrar el nombre del vehículo -->
+                            <div t-if="device.asset_id">
+                                <span>Vehículo: <t t-esc="device.asset_id[1]"/></span> <!-- Mostrar el nombre del vehículo -->
                             </div>
                             <div t-if="device.department_id">
                                 <span>Departamento: <t t-esc="device.department_id[1]"/></span>

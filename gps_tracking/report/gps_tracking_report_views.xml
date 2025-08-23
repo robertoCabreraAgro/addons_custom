@@ -8,7 +8,7 @@
 
                 <!-- Time dimensions -->
                 <field name="date" type="row" interval="day" />
-                <field name="vehicle_id" type="row" />
+                <field name="asset_id" type="row" />
 
                 <!-- Core metrics -->
                 <field name="avg_speed" type="measure" string="Average Speed" />
@@ -28,7 +28,7 @@
             <graph string="GPS Tracking Analysis" type="line">
                 <field name="date" type="x" />
                 <field name="avg_speed" type="measure" />
-                <field name="vehicle_id" type="row" />
+                <field name="asset_id" type="row" />
             </graph>
         </field>
     </record>
@@ -39,7 +39,7 @@
         <field name="arch" type="xml">
             <list string="GPS Tracking Analysis">
                 <field name="date" />
-                <field name="vehicle_id" />
+                <field name="asset_id" />
                 <field name="avg_speed" />
                 <field name="max_speed" />
                 <field name="total_distance" />

@@ -6,5 +6,5 @@ from . import pos_cash_transfer_wizard
 from . import purchase_order_line_price_history
 from . import sale_order_line_price_history
 from . import stock_quant_lot_update
-from . import fleet_vehicle_log_import
+from . import product_asset_log_import
 from . import sale_target_wizard

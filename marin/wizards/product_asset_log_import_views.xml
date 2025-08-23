@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <!-- Form View for the Import Wizard -->
-    <record id="view_fleet_vehicle_log_import_form" model="ir.ui.view">
-        <field name="name">fleet.vehicle.log.import.form</field>
-        <field name="model">fleet.vehicle.log.import</field>
+    <record id="view_product_asset_log_import_form" model="ir.ui.view">
+        <field name="name">product.asset.log.import.form</field>
+        <field name="model">product.asset.log.import</field>
         <field name="arch" type="xml">
-            <form string="Import Vehicle Logs">
+            <form string="Import Asset Logs">
                 <sheet>
                     <group>
                         <field
@@ -103,11 +103,11 @@
     </record>
 
     <!-- Action to open the Import Wizard -->
-    <record id="action_fleet_vehicle_log_import" model="ir.actions.act_window">
-        <field name="name">Import Vehicle Logs</field>
-        <field name="res_model">fleet.vehicle.log.import</field>
+    <record id="action_product_asset_log_import" model="ir.actions.act_window">
+        <field name="name">Import Asset Logs</field>
+        <field name="res_model">product.asset.log.import</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
-        <field name="binding_model_id" ref="fleet.model_fleet_vehicle" />
+        <field name="binding_model_id" ref="stock.model_stock_lot" />
     </record>
 </odoo>

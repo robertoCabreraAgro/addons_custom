@@ -1,10 +1,10 @@
 from odoo import fields, models
 
 
-class FleetVehiclelog(models.Model):
-    """Inherit FleetVehiclelog"""
+class ProductAssetLog(models.Model):
+    """Extend product.asset.log with fleet vehicle log functionality"""
 
-    _inherit = "fleet.vehicle.log"
+    _inherit = "product.asset.log"
 
     approval_request_id = fields.Many2one(
         comodel_name="approval.request",
@@ -29,7 +29,7 @@ class FleetVehiclelog(models.Model):
         return {
             "type": "ir.actions.act_window",
             "name": "Importar Logs",
-            "res_model": "fleet.vehicle.log.import",
+            "res_model": "product.asset.log.import",
             "view_mode": "form",
             "target": "new",
         }

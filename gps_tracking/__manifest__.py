@@ -1,12 +1,12 @@
 {
     "name": "GPS Tracking",
-    "version": "1.4",
+    "version": "1.5",
     "category": "Fleet Management",
     "summary": "Module to track GPS coordinates and display them on a map",
     "author": "Raúl Alejandro Rodríguez López",
     "website": "https://raulalejandro.com.mx",
     "license": "LGPL-3",
-    "depends": ["base_geoengine", "fleet", "base_approval", "mail"],
+    "depends": ["base_geoengine", "product_asset", "base_approval", "mail", "hr"],
     "data": [
         "security/res_group_security.xml",
         "security/ir_rule_security.xml",
@@ -15,7 +15,7 @@
         "data/ir_actions_server.xml",
         "data/gps_geofence_type_data.xml",
         "report/gps_tracking_report_views.xml",
-        "report/fleet_vehicle_loan_report_views.xml",
+        "report/asset_loan_report_views.xml",
         "views/hr_employee_views.xml",
         "views/hr_employee_public_views.xml",
         "views/gps_geofence_views.xml",

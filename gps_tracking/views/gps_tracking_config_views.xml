@@ -41,7 +41,7 @@
                             <field name="device_ids" readonly="1">
                                 <list>
                                     <field name="imei"/>
-                                    <field name="vehicle_id"/>
+                                    <field name="asset_id"/>
                                     <field name="license_plate"/>
                                     <field name="driver_name"/>
                                 </list>

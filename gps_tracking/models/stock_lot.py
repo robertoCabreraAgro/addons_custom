@@ -3,12 +3,12 @@ from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
-class FleetVehicle(models.Model):
-    _inherit = "fleet.vehicle"
+class StockLot(models.Model):
+    _inherit = "stock.lot"
 
     gps_device_ids = fields.One2many(
         comodel_name="gps.tracking.device",
-        inverse_name="vehicle_id",
+        inverse_name="asset_id",
         string="GPS Devices",
         help="GPS tracking devices associated with this vehicle",
     )

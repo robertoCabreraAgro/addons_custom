@@ -574,9 +574,10 @@ class L10nMxEdiDocument(models.Model):
 
     def _search_vehicle_ecc12(self, line_ecc12_element):
         domain_vehicle = [
-            ("fuel_card_name", "=", line_ecc12_element.get("Identificador"))
+            ("fuel_card_name", "=", line_ecc12_element.get("Identificador")),
+            ("asset_type", "=", "vehicle"),
         ]
-        vehicle_exist = self.env["fleet.vehicle"].search(
+        vehicle_exist = self.env["stock.lot"].search(
             domain_vehicle, limit=1, order="id asc"
         )
         return vehicle_exist
@@ -607,9 +608,9 @@ class L10nMxEdiDocument(models.Model):
             ecc12_node (etree._Element): XML node of the ECC12 complement
 
         Returns:
-            list: List of created fleet.vehicle.log records
+            list: List of created product.asset.log records
         """
-        fleet_vehicle_log = self.env["fleet.vehicle.log"]
+        asset_log = self.env["product.asset.log"]
         fuel_category = self.env.ref("marin.product_category_fuel")
         fuel_debit_product = self.env.ref("marin.product_product_fuel_debit")
         fuel_credit_product = self.env.ref("marin.product_product_fuel_credit")
@@ -653,7 +654,7 @@ class L10nMxEdiDocument(models.Model):
             # Prepare log values
             log_vals = {
                 "date": log_date,
-                "vehicle_id": vehicle.id,
+                "asset_id": vehicle.id,
                 "amount": amount,
                 "odometer": 0,  # ECC12 doesn't provide odometer
                 "state": "new",
@@ -666,9 +667,9 @@ class L10nMxEdiDocument(models.Model):
             }
 
             # Check for duplicate records (without notes to avoid conflicts between Efectivale and ECC12)
-            existing_record = fleet_vehicle_log.search(
+            existing_record = asset_log.search(
                 [
-                    ("vehicle_id", "=", log_vals["vehicle_id"]),
+                    ("asset_id", "=", log_vals["asset_id"]),
                     ("date", "=", log_vals["date"]),
                     ("amount", "=", log_vals["amount"]),
                     ("qty_fuel", "=", log_vals["qty_fuel"]),
@@ -680,7 +681,7 @@ class L10nMxEdiDocument(models.Model):
 
             if not existing_record:
                 # Create the vehicle log record
-                created_log = fleet_vehicle_log.create(log_vals)
+                created_log = asset_log.create(log_vals)
                 created_logs.append(created_log)
                 _logger.info(
                     "Created vehicle log for vehicle %s: %s liters on %s",
@@ -775,7 +776,7 @@ class L10nMxEdiDocument(models.Model):
                             line.get("FolioOperacion"),
                             line.get("ClaveEstacion"),
                         ),
-                        "vehicle_id": vehicle.id or False,
+                        "asset_id": vehicle.id or False,
                         "quantity": quantity,
                         "price_unit": price_unit / quantity if quantity else 0.0,
                         "tax_ids": [Command.set(tax_ids)] if tax_ids else False,
@@ -790,7 +791,7 @@ class L10nMxEdiDocument(models.Model):
                     Command.create(
                         {
                             "name": self.env._("Fuel - IEPS"),
-                            "vehicle_id": vehicle.id or False,
+                            "asset_id": vehicle.id or False,
                             "quantity": 1.0,
                             "price_unit": (total_amount - price_unit) + ieps_amount,
                             "tax_ids": (
