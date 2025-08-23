@@ -47,7 +47,7 @@ class ProductAssetLog(models.Model):
     product_category_id = fields.Many2one(
         related="product_id.categ_id",
         store=True,
-        string="Asset Manager",
+        string="Product Category",
     )
     active = fields.Boolean(default=True)
     state = fields.Selection(

@@ -4,7 +4,13 @@
     "version": "1.0",
     "category": "Uncategorized",
     "author": "Odoo Community Association (OCA)",
-    "depends": ["uom_extended", "product_manufacturer", "hr"],
+    "depends": [
+        "uom_extended",
+        "product_manufacturer",
+        "hr",
+        "documents_product",
+        "stock",
+    ],
     "data": [
         "security/security.xml",
         "security/ir.model.access.csv",
@@ -14,6 +20,7 @@
         "data/product_attribute_data.xml",
         "views/product_template_views.xml",
         "views/stock_lot_views.xml",
+        "views/documents_document_views.xml",
         "views/product_asset_log_views.xml",
         "views/product_asset_menuitem.xml",
     ],

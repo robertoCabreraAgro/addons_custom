@@ -19,11 +19,11 @@
                         context="{'group_by': 'product_id'}" />
                     <filter name="groupby_product_category_id" string="Service Type"
                         context="{'group_by': 'product_category_id'}" />
-                    <filter name="groupby_operator_id" string="Fleet Manager"
+                    <filter name="groupby_operator_id" string="Operator"
                         context="{'group_by': 'operator_id'}" />
-                    <filter name="groupby_asset_manager_id" string="Fleet Manager"
+                    <filter name="groupby_asset_manager_id" string="Asset Manager"
                         context="{'group_by': 'asset_manager_id'}" />
-                    <filter name="groupby_vendor_id" string="Fleet Manager"
+                    <filter name="groupby_vendor_id" string="Vendor"
                         context="{'group_by': 'vendor_id'}" />
                 </group>
             </search>
@@ -159,13 +159,11 @@
                         </group>
                     </group>
                     <group>
-                        <group name="1" string="Date">
+                        <group name="1" string="Contract">
                             <field name="date_start" />
                             <field name="date_end" />
                         </group>
-                        <group name="2" string="Date">
-                            <field name="date_start" />
-                            <field name="date_end" />
+                        <group name="2">
                         </group>
                     </group>
                     <separator string="Notes" />

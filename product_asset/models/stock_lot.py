@@ -30,18 +30,16 @@ class StockLot(models.Model):
         domain='[("company_id", "in", (company_id, False))]',
         copy=False,
         tracking=True,
-        help="Driver address of the vehicle",
     )
     future_operator_id = fields.Many2one(
         comodel_name="hr.employee",
         string="Future Driver",
         domain='[("company_id", "in", (company_id, False))]',
-        tracking=True,
         copy=False,
-        help="Next Driver Address of the vehicle",
+        tracking=True,
     )
     location = fields.Char(
-        help="Location of the vehicle (garage, ...)",
+        help="Location of the asset (garage, ...)",
     )
     model_year = fields.Char(
         string="Model Year",
@@ -61,19 +59,19 @@ class StockLot(models.Model):
     license_plate = fields.Char(
         copy=False,
         tracking=True,
-        help="License plate number of the vehicle (i = plate number for a car)",
+        help="License plate number of the asset (eg plate number for a car)",
     )
     vin_sn = fields.Char(
-        string="Chassis Number",
+        string="Chassis SN",
         copy=False,
         tracking=True,
-        help="Unique number written on the vehicle chassis (VIN/SN number).",
+        help="Unique number written on an asset's chassis (VIN/SN number).",
     )
     engine_sn = fields.Char(
         string="Engine SN",
         copy=False,
         tracking=True,
-        help="Unique number written on the vehicle engine.",
+        help="Unique number written on the asset's engine.",
     )
 
     # Financial fields
@@ -81,13 +79,13 @@ class StockLot(models.Model):
         string="Registration Date",
         copy=False,
         tracking=True,
-        help="Date of vehicle registration",
+        help="Date of asset's registration",
     )
     date_write_off = fields.Date(
         string="Cancellation Date",
         copy=False,
         tracking=True,
-        help='Date when the vehicle"s license plate has been cancelled/removed.',
+        help="Date when the asset's license plate has been cancelled/removed.",
     )
     value_original = fields.Float(
         string="Catalog Value (VAT Incl.)",
@@ -104,23 +102,23 @@ class StockLot(models.Model):
     )
 
     fuel_card_id = fields.Char()
-    # fuel_card_id = fields.Many2one(
-    #     comodel_name="documents.document",
-    #     domain=lambda self: [
-    #         ("tag_ids", "in", self.env.ref("marin_data.documents_fleet_fuel_card").ids),
-    #     ],
-    #     inverse="_inverse_fuel_card_id",
-    #     store=True,
-    #     readonly=False,
-    # )
-    # fuel_card_name = fields.Char(
-    #     compute="_compute_fuel_card_name",
-    #     store=True,
-    # )
-    # fuel_card_count = fields.Integer(
-    #     "Fuel",
-    #     compute="_compute_fuel_card_count",
-    # )
+    fuel_card_id = fields.Many2one(
+        comodel_name="documents.document",
+        # domain=lambda self: [
+        #     ("tag_ids", "in", self.env.ref("marin_data.documents_fleet_fuel_card").ids),
+        # ],
+        # inverse="_inverse_fuel_card_id",
+        store=True,
+        readonly=False,
+    )
+    fuel_card_name = fields.Char(
+        compute="_compute_fuel_card_name",
+        store=True,
+    )
+    fuel_card_count = fields.Integer(
+        "Fuel",
+        compute="_compute_fuel_card_count",
+    )
     fuel_card_openning_balance = fields.Float(
         digits="Product Price",
         default=0.0,
@@ -135,38 +133,38 @@ class StockLot(models.Model):
     )
     fuel_card_balance = fields.Float(
         digits="Product Price",
-        # compute="_compute_fuel_card_balance",
-        # store=True,
+        compute="_compute_fuel_card_balance",
+        store=True,
         help="Current balance available on fuel card",
     )
     fuel_card_balance_to_reload = fields.Float(
         digits="Product Price",
-        # compute="_compute_fuel_card_balance_to_reload",
-        # store=True,
+        compute="_compute_fuel_card_balance_to_reload",
+        store=True,
         help="Amount required to reach the recommended fuel card balance.",
     )
     highway_pass_id = fields.Char()
-    # highway_pass_id = fields.Many2one(
-    #     comodel_name="documents.document",
-    #     domain=lambda self: [
-    #         (
-    #             "tag_ids",
-    #             "in",
-    #             self.env.ref("marin_data.documents_fleet_highway_pass").ids,
-    #         ),
-    #     ],
-    #     inverse="_inverse_highway_pass_id",
-    #     store=True,
-    #     readonly=False,
-    # )
-    # highway_pass_name = fields.Char(
-    #     compute="_compute_highway_pass_name",
-    #     store=True,
-    # )
-    # highway_pass_count = fields.Integer(
-    #     "Highway Pass",
-    #     compute="_compute_highway_pass_count",
-    # )
+    highway_pass_id = fields.Many2one(
+        comodel_name="documents.document",
+        # domain=lambda self: [
+        #     (
+        #         "tag_ids",
+        #         "in",
+        #         self.env.ref("marin_data.documents_fleet_highway_pass").ids,
+        #     ),
+        # ],
+        # inverse="_inverse_highway_pass_id",
+        store=True,
+        readonly=False,
+    )
+    highway_pass_name = fields.Char(
+        compute="_compute_highway_pass_name",
+        store=True,
+    )
+    highway_pass_count = fields.Integer(
+        "Highway Pass",
+        compute="_compute_highway_pass_count",
+    )
     highway_pass_openning_balance = fields.Float(
         digits="Product Price",
         default=0.0,
@@ -182,16 +180,21 @@ class StockLot(models.Model):
     highway_pass_balance = fields.Float(
         string="Current higway pass balance",
         digits="Product Price",
-        # compute="_compute_highway_pass_balance",
-        # store=True,
+        compute="_compute_highway_pass_balance",
+        store=True,
         help="Current available amount in the toll card",
     )
     highway_pass_balance_to_reload = fields.Float(
         string="Toll Balance to Reload",
         digits="Product Price",
-        # compute="_compute_highway_pass_balance_to_reload",
-        # store=True,
+        compute="_compute_highway_pass_balance_to_reload",
+        store=True,
         help="Amount needed to reach the monthly toll budget",
+    )
+
+    area = fields.Integer(
+        string="Area",
+        help="Area of the asset in square meters",
     )
 
     log_ids = fields.One2many(
@@ -212,18 +215,18 @@ class StockLot(models.Model):
         string="Odometer",
         compute="_compute_odometer",
         readonly=True,
-        help="Odometer measure of the vehicle",
+        help="Odometer measure of the asset",
     )
     assignment_count = fields.Integer(
         string="Drivers History Count",
         compute="_compute_count_all",
     )
-    service_count = fields.Integer(
-        string="Services",
-        compute="_compute_count_all",
-    )
     contract_count = fields.Integer(
         string="Contracts",
+        compute="_compute_count_all",
+    )
+    service_count = fields.Integer(
+        string="Services",
         compute="_compute_count_all",
     )
     date_first_contract = fields.Date(
@@ -268,14 +271,14 @@ class StockLot(models.Model):
         lots = super().create(vals_list)
         for lot, vals in zip(lots, vals_list):
             if vals.get("operator_id"):
-                lot.create_driver_history(vals)
+                lot.create_operator_assignment_log(vals)
         return lots
 
     def write(self, vals):
         if "operator_id" in vals and vals["operator_id"]:
             operator_id = vals["operator_id"]
             for lot in self.filtered(lambda v: v.operator_id.id != operator_id):
-                lot.create_driver_history(vals)
+                lot.create_operator_assignment_log(vals)
 
         if "active" in vals and not vals["active"]:
             self.env["product.asset.log"].search(
@@ -297,10 +300,31 @@ class StockLot(models.Model):
     # COMPUTE METHODS
     # ------------------------------------------------------------
 
+    def _compute_fuel_card_count(self):
+        fuel_card_product = self.env.ref("product_asset.product_product_fuel_credit")
+        for asset in self:
+            asset.fuel_card_count = len(
+                asset.log_ids.filtered(lambda l: l.product_id == fuel_card_product)
+            )
+
+    def _compute_highway_pass_count(self):
+        highway_pass_product = self.env.ref(
+            "product_asset.product_product_highway_credit"
+        )
+        for asset in self:
+            asset.highway_pass_count = len(
+                asset.log_ids.filtered(lambda l: l.product_id == highway_pass_product)
+            )
+
     def _compute_count_all(self):
         Log = self.env["product.asset.log"].with_context(active_test=False)
+        assignment = self._get_product_operator_assignment()
         contract = self._get_product_contract()
-        reassignment = self._get_product_operator_reassignment()
+        assignment_data = Log._read_group(
+            [("asset_id", "in", self.ids), ("product_id", "in", assignment.ids)],
+            ["asset_id"],
+            ["__count"],
+        )
         contract_data = Log._read_group(
             [
                 ("asset_id", "in", self.ids),
@@ -313,32 +337,27 @@ class StockLot(models.Model):
         service_data = Log._read_group(
             [
                 ("asset_id", "in", self.ids),
-                ("product_id", "not in", contract.ids + reassignment.ids),
+                ("product_id", "not in", contract.ids + assignment.ids),
             ],
             ["asset_id", "active"],
             ["__count"],
         )
-        history_data = Log._read_group(
-            [("asset_id", "in", self.ids), ("product_id", "in", reassignment.ids)],
-            ["asset_id"],
-            ["__count"],
-        )
 
+        mapped_assignment_data = defaultdict(lambda: 0)
         mapped_contract_data = defaultdict(lambda: defaultdict(lambda: 0))
         mapped_service_data = defaultdict(lambda: defaultdict(lambda: 0))
-        mapped_history_data = defaultdict(lambda: 0)
 
-        for vehicle, active, count in contract_data:
-            mapped_contract_data[vehicle.id][active] = count
-        for vehicle, active, count in service_data:
-            mapped_service_data[vehicle.id][active] = count
-        for vehicle, count in history_data:
-            mapped_history_data[vehicle.id] = count
+        for asset, count in assignment_data:
+            mapped_assignment_data[asset.id] = count
+        for asset, active, count in contract_data:
+            mapped_contract_data[asset.id][active] = count
+        for asset, active, count in service_data:
+            mapped_service_data[asset.id][active] = count
 
-        for vehicle in self:
-            vehicle.contract_count = mapped_contract_data[vehicle.id][vehicle.active]
-            vehicle.service_count = mapped_service_data[vehicle.id][vehicle.active]
-            vehicle.assignment_count = mapped_history_data[vehicle.id]
+        for asset in self:
+            asset.assignment_count = mapped_assignment_data[asset.id]
+            asset.contract_count = mapped_contract_data[asset.id][asset.active]
+            asset.service_count = mapped_service_data[asset.id][asset.active]
 
     @api.depends("model_id")
     def _compute_image_128(self):
@@ -348,16 +367,93 @@ class StockLot(models.Model):
             else:
                 product.image_128 = product.image_1920
 
+    @api.depends("fuel_card_id")
+    def _compute_fuel_card_name(self):
+        for asset in self:
+            name = ""
+            if asset.fuel_card_id:
+                name = asset.fuel_card_id.name.split(".", 1)[0]
+                name = name.replace("Efecticard ", "")
+            asset.fuel_card_name = name
+
+    @api.depends("highway_pass_id")
+    def _compute_highway_pass_name(self):
+        for asset in self:
+            name = ""
+            if asset.highway_pass_id:
+                name = asset.highway_pass_id.name.split(".", 1)[0]
+                name = name.replace("IMDM ", "")
+            asset.highway_pass_name = name
+
     @api.depends("log_ids")
     def _compute_service_activity(self):
-        for vehicle in self:
+        for asset in self:
             activities_state = set(
                 state
-                for state in vehicle.log_ids.mapped("activity_state")
+                for state in asset.log_ids.mapped("activity_state")
                 if state and state != "planned"
             )
-            vehicle.service_activity = (
+            asset.service_activity = (
                 sorted(activities_state)[0] if activities_state else "none"
+            )
+
+    @api.depends("log_ids.state", "log_ids.amount")
+    def _compute_fuel_card_balance(self):
+        """Calculates the current balance based on fuel credit/debit records"""
+        fuel_product_category = self.env.ref(
+            "product_asset.product_category_fuel", False
+        )
+        for vehicle in self:
+            # Find all fuel log records associated with this vehicle (only done state)
+            fuel_logs = self.env["product.asset.log"].search(
+                [
+                    ("asset_id", "=", vehicle.id),
+                    ("product_category_id", "=", fuel_product_category.id),
+                    ("state", "=", "done"),
+                ]
+            )
+
+            # Sum all movements (positive credits, negative debits)
+            vehicle.fuel_card_balance = (
+                vehicle.fuel_card_openning_balance
+                + sum(fuel_logs.mapped("amount")) * -1
+            )  # logs are considered cost of the vehicle, the balance in favor is negative
+
+    @api.depends("log_ids.state", "log_ids.amount")
+    def _compute_highway_pass_balance(self):
+        """Compute current balance based on toll debit/credit records"""
+        highway_pass_product_category = self.env.ref(
+            "product_asset.product_category_highway_toll", False
+        )
+        for vehicle in self:
+            # Find all toll records associated with this vehicle
+            highway_logs = self.env["product.asset.log"].search(
+                [
+                    ("asset_id", "=", vehicle.id),
+                    ("product_category_id", "=", highway_pass_product_category.id),
+                ]
+            )
+
+            # Sum all movements (positive credits, negative debits)
+            vehicle.highway_pass_balance = (
+                vehicle.highway_pass_openning_balance
+                + sum(highway_logs.mapped("amount")) * -1
+            )  # logs are considered cost of the vehicle, the balance in favor is negative
+
+    @api.depends("fuel_card_budget", "fuel_card_balance")
+    def _compute_fuel_card_balance_to_reload(self):
+        """Calculates the balance that needs to be reloaded based on monthly load and current balance"""
+        for vehicle in self:
+            vehicle.fuel_card_balance_to_reload = max(
+                0, vehicle.fuel_card_budget - vehicle.fuel_card_balance
+            )
+
+    @api.depends("highway_pass_budget", "highway_pass_balance")
+    def _compute_highway_pass_balance_to_reload(self):
+        """Compute the balance that needs to be reloaded based on monthly budget and current balance"""
+        for vehicle in self:
+            vehicle.highway_pass_balance_to_reload = max(
+                0, vehicle.highway_pass_budget - vehicle.highway_pass_balance
             )
 
     @api.depends("log_ids")
@@ -389,28 +485,62 @@ class StockLot(models.Model):
                     "state": state,
                     "date_end": date_end,
                 }
-        for vehicle in self:
-            vehicle_data = prepared_data.get(vehicle.id)
-            if vehicle_data:
-                diff_time = (vehicle_data["date_end"] - current_date).days
-                vehicle.contract_renewal_overdue = diff_time < 0
-                vehicle.contract_renewal_due_soon = (
-                    not vehicle.contract_renewal_overdue
+        for asset in self:
+            asset_data = prepared_data.get(asset.id)
+            if asset_data:
+                diff_time = (asset_data["date_end"] - current_date).days
+                asset.contract_renewal_overdue = diff_time < 0
+                asset.contract_renewal_due_soon = (
+                    not asset.contract_renewal_overdue
                     and (diff_time < delay_alert_contract)
                 )
-                vehicle.contract_state = vehicle_data["state"]
+                asset.contract_state = asset_data["state"]
             else:
-                vehicle.contract_renewal_overdue = False
-                vehicle.contract_renewal_due_soon = False
-                vehicle.contract_state = ""
+                asset.contract_renewal_overdue = False
+                asset.contract_renewal_due_soon = False
+                asset.contract_state = ""
 
     @api.depends("log_ids", "log_ids.odometer")
     def _compute_odometer(self):
-        for vehicle in self:
-            if vehicle.log_ids:
-                vehicle.odometer = max(vehicle.log_ids.mapped("odometer"))
+        for asset in self:
+            if asset.log_ids:
+                asset.odometer = max(asset.log_ids.mapped("odometer"))
             else:
-                vehicle.odometer = 0.0
+                asset.odometer = 0.0
+
+    # ------------------------------------------------------------
+    # INVERSE METHODS
+    # ------------------------------------------------------------
+
+    def _inverse_fuel_card_id(self):
+        """
+        Set the asset on the corresponding document
+        """
+        for asset in self:
+            doc = asset.fuel_card_id
+            if doc:
+                doc.sudo().write(
+                    {
+                        "res_model": asset._name,
+                        "res_id": asset.id,
+                        "is_editable_attachment": True,
+                    }
+                )
+
+    def _inverse_highway_pass_id(self):
+        """
+        Set the asset on the corresponding document
+        """
+        for asset in self:
+            doc = asset.highway_pass_id
+            if doc:
+                doc.sudo().write(
+                    {
+                        "res_model": asset._name,
+                        "res_id": asset.id,
+                        "is_editable_attachment": True,
+                    }
+                )
 
     # ------------------------------------------------------------
     # SEARCH METHODS
@@ -584,10 +714,10 @@ class StockLot(models.Model):
             vehicle.operator_id = vehicle.future_operator_id
             vehicle.future_operator_id = False
 
-    def create_driver_history(self, vals):
+    def create_operator_assignment_log(self, vals):
         for vehicle in self:
             self.env["product.asset.log"].create(
-                vehicle._prepare_driver_history_data(vals)
+                vehicle._prepare_operator_assignment_data(vals)
             )
 
     def _get_analytic_name(self):
@@ -600,20 +730,20 @@ class StockLot(models.Model):
         )
         return product or self.env["product.product"]
 
-    def _get_product_operator_reassignment(self):
+    def _get_product_operator_assignment(self):
         product = self.env.ref(
-            "product_asset.product_product_operator_Reassignment",
+            "product_asset.product_product_operator_assignment",
             raise_if_not_found=False,
         )
         return product or self.env["product.product"]
 
-    def _prepare_driver_history_data(self, vals):
+    def _prepare_operator_assignment_data(self, vals):
         self.ensure_one()
-        product = self.env.ref("product_asset.product_product_operator_reasignment")
+        assignment = self._get_product_operator_assignment()
         return {
             "asset_id": self.id,
             "operator_id": vals["operator_id"],
-            "product_id": product.id or False,
+            "product_id": assignment.id or False,
             "date_start": fields.Date.today(),
             "odometer": self.odometer,
         }

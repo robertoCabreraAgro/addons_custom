@@ -22,7 +22,7 @@ class ProductTemplate(models.Model):
     # Technical fields
     power = fields.Integer(
         string="Power",
-        help="Power in kW of the vehicle",
+        help="Power in kW of the asset",
     )
     power_uom_name = fields.Char(
         string="Power unit of measure label",
@@ -30,7 +30,7 @@ class ProductTemplate(models.Model):
     )
     co2 = fields.Float(
         string="CO2 Emissions",
-        help="CO2 emissions of the vehicle",
+        help="CO2 emissions of the asset",
     )
     fuel_efficiency_theoretical = fields.Float(
         aggregator="avg",
@@ -76,6 +76,7 @@ class ProductTemplate(models.Model):
         string="Seats Number",
         help="Number of seats of the vehicle",
     )
+
     count_lot_ids = fields.Integer(
         compute="_compute_count_lot_ids",
         string="Lots Count",
