@@ -35,14 +35,10 @@
                 </t>
             </ControlPanel>
         <div class="o_gps_tracking_dashboard">
-            <!-- Toggle button for left panel -->
-            <button 
-                class="btn btn-outline-secondary toggle-panel-btn" 
-                type="button" 
-                t-on-click="toggleLeftPanel"
-                title="Toggle Vehicle List">
+            <!-- Toggle button fixed to the side - always visible -->
+            <div class="panel-toggle-fixed" t-on-click="toggleLeftPanel" t-att-title="state.leftPanelVisible ? 'Hide Vehicle List' : 'Show Vehicle List'">
                 <i t-att-class="state.leftPanelVisible ? 'fa fa-chevron-left' : 'fa fa-chevron-right'"></i>
-            </button>
+            </div>
             
             <div class="o_gps_tracking_kanban" t-att-class="{'hidden': !state.leftPanelVisible}">
                 <t t-foreach="state.filteredDevices" t-as="device" t-key="device.imei">
