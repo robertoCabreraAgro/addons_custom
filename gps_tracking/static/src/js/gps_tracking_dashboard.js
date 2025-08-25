@@ -34,8 +34,8 @@ const REPORTING_DEPARTMENT_ID = 4;
 const BASE_DEVICE_FIELDS = [
     "id", "imei", "the_point", "speed", "timestamp", "altitude", 
     "satellite", "address", "gsm_signal", "ignition", "movement", 
-    "color", "vehicle_id", "license_plate", "driver_name", 
-    "odometer", "real_odometer", "location", "department_id"
+    "color", "vehicle_id", "license_plate",
+    "odometer", "real_odometer", "location", "department_id", "driver_name"
 ];
 
 export class GpsTrackingDashboard extends Component {
