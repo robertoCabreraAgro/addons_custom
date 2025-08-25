@@ -139,7 +139,7 @@ msgid ""
 "Page: <span class=\"page\"/> of <span class=\"topage\"/><br/>\n"
 "                    Date:"
 msgstr ""
-"Page: <span class=\"pág\"/> de <span class=\"topage\"/><br/>\n"
+"pág: <span class=\"page\"/> de <span class=\"topage\"/><br/>\n"
 "                    Fecha:"
 
 #. module: project_task_description_template
