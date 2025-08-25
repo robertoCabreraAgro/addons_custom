@@ -11,10 +11,10 @@ class GpsTrackingDevice(models.Model):
         store=True,
         string="Department",
     )
-
-    @api.depends(
-        "vehicle_id.driver_id", "vehicle_id.location", "vehicle_id.department_id"
+    
+    driver_name = fields.Char(
+        related="vehicle_id.driver_id.name",
+        store=True,
+        string="Driver",
+        readonly=True,
     )
-    def _compute_driver_name(self):
-        """Override to include department dependency"""
-        return super()._compute_driver_name()

@@ -3,12 +3,10 @@
 import { GpsTrackingDashboard } from "@gps_tracking/js/gps_tracking_dashboard";
 import { patch } from "@web/core/utils/patch";
 
-// Extend GpsTrackingDashboard to include department_id field
+// Extend GpsTrackingDashboard to include driver_name and department_id fields
 patch(GpsTrackingDashboard.prototype, {
     
     async _reloadDevicesWithDomain(domain) {
-        console.log("Recargando con domain:", domain);
-        // Llama a searchRead en gps.tracking.device con ese domain
         try {
             const devices = await this.orm.searchRead(
                 "gps.tracking.device",
@@ -17,9 +15,8 @@ patch(GpsTrackingDashboard.prototype, {
             );
             this.state.devices = devices;
             this.state.filteredDevices = devices;
-            // Actualizar marcadores si lo deseas, etc.
         } catch (error) {
-            console.error("Error al recargar dispositivos:", error);
+            console.error("Error loading devices:", error);
         }
     },
 
@@ -32,7 +29,7 @@ patch(GpsTrackingDashboard.prototype, {
             );
             this.state.devices = devices;
         } catch (error) {
-            console.error("Error al cargar los dispositivos:", error);
+            console.error("Error loading devices:", error);
             this.state.devices = [];
         }
     }

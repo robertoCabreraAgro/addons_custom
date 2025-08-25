@@ -1,47 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
-    <!-- Extend GPS tracking device search view to add department filters -->
+    <!-- Extend GPS tracking device search view to add department and driver filters -->
     <record id="view_gps_tracking_device_search_inherit" model="ir.ui.view">
         <field name="name">gps.tracking.device.search.inherit</field>
         <field name="model">gps.tracking.device</field>
         <field name="inherit_id" ref="gps_tracking.view_gps_tracking_device_search"/>
         <field name="arch" type="xml">
-            <field name="location" position="after">
-                <field name="department_id" />
+            <!-- Add driver_name and department_id as first search fields -->
+            <field name="model_id" position="before">
+                <field name="driver_name" string="Conductor"/>
+                <field name="department_id" string="Departamento"/>
             </field>
-            <filter name="without_location" position="after">
+            
+            <!-- Add additional filters -->
+            <filter name="with_location" position="before">
+                <filter string="Con Conductor" name="with_driver" domain="[('driver_name', '!=', False)]"/>
+                <filter string="Sin Conductor" name="without_driver" domain="[('driver_name', '=', False)]"/>
+                <separator/>
                 <filter string="Con Departamento" name="with_department" domain="[('department_id', '!=', False)]"/>
                 <filter string="Sin Departamento" name="without_department" domain="[('department_id', '=', False)]"/>
+                <separator/>
             </filter>
-            <filter name="group_by_location" position="before">
+            
+            <!-- Add group by filters -->
+            <filter name="group_by_config" position="before">
+                <filter string="Conductor" name="group_by_driver" context="{'group_by': 'driver_name'}"/>
                 <filter string="Departamento" name="group_by_department" context="{'group_by': 'department_id'}"/>
             </filter>
         </field>
     </record>
 
-    <!-- Extend GPS tracking device list view to add department field -->
+    <!-- Extend GPS tracking device list view to add department and driver fields -->
     <record id="view_gps_tracking_device_list_inherit" model="ir.ui.view">
         <field name="name">gps.tracking.device.list.inherit</field>
         <field name="model">gps.tracking.device</field>
         <field name="inherit_id" ref="gps_tracking.view_gps_tracking_device_list"/>
         <field name="arch" type="xml">
-            <field name="driver_name" position="after">
+            <field name="license_plate" position="after">
+                <field name="driver_name" optional="show" />
                 <field name="department_id" optional="show" />
             </field>
         </field>
     </record>
 
-    <!-- Extend GPS tracking device form view to add department field -->
+    <!-- Extend GPS tracking device form view to add department and driver fields -->
     <record id="view_gps_tracking_device_form_inherit" model="ir.ui.view">
         <field name="name">gps.tracking.device.form.inherit</field>
         <field name="model">gps.tracking.device</field>
         <field name="inherit_id" ref="gps_tracking.view_gps_tracking_device_form"/>
         <field name="arch" type="xml">
             <field name="location" position="before">
-                <field name="department_id" />
+                <field name="driver_name" readonly="1"/>
+                <field name="department_id" readonly="1"/>
             </field>
         </field>
     </record>
-
 </odoo>
