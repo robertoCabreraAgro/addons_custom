@@ -20,7 +20,6 @@ _logger = logging.getLogger(__name__)
 class GpsGeofence(models.Model):
     _name = "gps.geofence"
     _description = "Geographic Area Management"
-    _inherit = ["mail.thread", "mail.activity.mixin"]
     _rec_name = "name"
     _order = "sequence, name"
     _parent_name = "parent_id"
