@@ -7,20 +7,17 @@
             <field name="sequence">20</field>
         </record>
 
-        <!-- Grupo de Usuario Estate Manager -->
         <record id="group_estate_manager" model="res.groups">
             <field name="name">Estate Manager</field>
             <field name="category_id" ref="base.module_category_sales"/>
             <field name="implied_ids" eval="[(4, ref('group_estate_user'))]"/>
         </record>
 
-        <!-- Grupo de Usuario Estate User -->
         <record id="group_estate_user" model="res.groups">
             <field name="name">Estate User</field>
             <field name="category_id" ref="base.module_category_sales"/>
         </record>
 
-        <!-- Reglas de acceso para Estate Property -->
         <record id="estate_property_rule_user" model="ir.rule">
             <field name="name">Estate Property User Rule</field>
             <field name="model_id" ref="model_estate_property"/>
@@ -35,7 +32,6 @@
             <field name="groups" eval="[(4, ref('group_estate_manager'))]"/>
         </record>
 
-        <!-- Reglas de acceso para Estate Property Offer -->
         <record id="estate_offer_rule_user" model="ir.rule">
             <field name="name">Estate Offer User Rule</field>
             <field name="model_id" ref="model_estate_property_offer"/>

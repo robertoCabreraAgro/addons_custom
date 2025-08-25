@@ -22,6 +22,7 @@ class EstatePropertyOffer(models.Model):
         ('check_validity_positive', 'CHECK(validity >= 0)', 'Validity must be positive.'),
     ]
 
+
     @api.depends('create_date', 'validity')
     def _compute_date_deadline(self):
         for offer in self:

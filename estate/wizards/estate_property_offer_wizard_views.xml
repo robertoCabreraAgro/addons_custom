@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Vista formulario para el wizard de ofertas -->
+
     <record id="view_estate_offer_wizard_form" model="ir.ui.view">
         <field name="name">estate.property.offer.wizard.form</field>
         <field name="model">estate.property.offer.wizard</field>
@@ -28,7 +28,6 @@
         </field>
     </record>
 
-    <!-- Acción de ventana para el wizard -->
     <act_window id="action_estate_offer_wizard"
                 name="Create Multiple Offers"
                 res_model="estate.property.offer.wizard"

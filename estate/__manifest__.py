@@ -23,13 +23,11 @@
         'report/estate_property_report_views.xml',
     ],
 
-    'installable': True,
-    'application': True,  # importante para que aparezca en la home
-    'auto_install': False,
+        'installable': True,
+        'application': True,
+        'auto_install': False,
 
-    'assets': {
+        'assets': {
 
     },
-
-    'license': 'LGPL-3',
 }

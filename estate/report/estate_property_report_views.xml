@@ -12,6 +12,7 @@
         paperformat="a4"
     />
 
+
     <!-- Acción de servidor para el reporte -->
     <record id="action_server_estate_property_report" model="ir.actions.server">
         <field name="name">Generate Property Report</field>

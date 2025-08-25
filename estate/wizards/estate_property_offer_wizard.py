@@ -20,5 +20,4 @@ class EstatePropertyOfferWizard(models.TransientModel):
                 'property_id': property.id,
                 'validity': self.validity,
             })
-        
         return {'type': 'ir.actions.act_window_close'}
