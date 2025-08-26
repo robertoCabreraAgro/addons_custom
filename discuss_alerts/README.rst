@@ -14,7 +14,7 @@ Discuss Alerts
 
 |badge1| |badge2| |badge3|
 
-This module extends Odoo's Discuss (chat) functionality to enable automated alerts 
+This module extends Odoo's Discuss (chat) functionality to enable automated alerts
 and notifications in discussion channels based on configurable criteria.
 
 **Table of contents**
