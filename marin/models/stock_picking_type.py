@@ -59,7 +59,7 @@ class StockPickingType(models.Model):
         string="Require Responsible",
         default=False,
         help="If checked, picking operations of this type will require "
-             "a responsible person to be specified before validation."
+        "a responsible person to be specified before validation.",
     )
 
     # This is a bug fix

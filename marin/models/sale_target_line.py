@@ -121,11 +121,11 @@ class SaleTargetLine(models.Model):
     )
 
     manufacturer_id = fields.Many2one(
-        'res.partner',
+        "res.partner",
         string="Manufacturer",
-        compute='_compute_manufacturer_id',
+        compute="_compute_manufacturer_id",
         store=True,
-        help="Manufacturer of the product in this target line."
+        help="Manufacturer of the product in this target line.",
     )
 
     @api.depends("quantity", "target_id.hectares", "target_id.factor")
@@ -192,11 +192,13 @@ class SaleTargetLine(models.Model):
             else:
                 line.target_percentage = 0.0
 
-    @api.depends('product_id', 'product_id.manufacturer_id')
+    @api.depends("product_id", "product_id.manufacturer_id")
     def _compute_manufacturer_id(self):
         """Compute manufacturer from the related product.
         This allows filtering and grouping sales targets by manufacturer
         for production planning purposes.
         """
         for line in self:
-            line.manufacturer_id = line.product_id.manufacturer_id if line.product_id else False
+            line.manufacturer_id = (
+                line.product_id.manufacturer_id if line.product_id else False
+            )

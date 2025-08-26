@@ -83,7 +83,9 @@ class AccountMove(models.Model):
         """
         for move in self:
             if any(
-                il.display_type == "product" and not bool(il.purchase_line_ids) and bool(il.product_id)
+                il.display_type == "product"
+                and not bool(il.purchase_line_ids)
+                and bool(il.product_id)
                 for il in move.invoice_line_ids
             ):
                 move.hide_purchase_matching = False
@@ -111,12 +113,17 @@ class AccountMove(models.Model):
                 invoice.company_id.account_use_credit_limit
                 and invoice.state == "draft"
                 and invoice.commercial_partner_id
-                and invoice.commercial_partner_id.credit_limit_available < amount_total_currency
+                and invoice.commercial_partner_id.credit_limit_available
+                < amount_total_currency
             )
             if show_warning:
-                future_credit = invoice.commercial_partner_id.credit + amount_total_currency
-                invoice.partner_credit_warning = invoice.commercial_partner_id._build_credit_warning_message(
-                    future_credit, invoice.company_id.currency_id
+                future_credit = (
+                    invoice.commercial_partner_id.credit + amount_total_currency
+                )
+                invoice.partner_credit_warning = (
+                    invoice.commercial_partner_id._build_credit_warning_message(
+                        future_credit, invoice.company_id.currency_id
+                    )
                 )
 
     @api.depends("move_type")
@@ -141,7 +148,9 @@ class AccountMove(models.Model):
         maximum date from all payment term lines.
         """
         moves_to_compute = self.filtered(
-            lambda move: move.invoice_payment_term_id and move.invoice_date and not move.line_ids
+            lambda move: move.invoice_payment_term_id
+            and move.invoice_date
+            and not move.line_ids
         )
         for move in moves_to_compute:
             invoice_payment_terms = move.invoice_payment_term_id._compute_terms(
@@ -155,12 +164,16 @@ class AccountMove(models.Model):
                 untaxed_amount_currency=1.0,
                 cash_rounding=move.invoice_cash_rounding_id,
             )
-            move.invoice_date_due = max(d["date"] for d in invoice_payment_terms["line_ids"])
+            move.invoice_date_due = max(
+                d["date"] for d in invoice_payment_terms["line_ids"]
+            )
 
         return super(AccountMove, self - moves_to_compute)._compute_invoice_date_due()
 
     # Override original method
-    @api.depends("move_type", "company_currency_id", "origin_payment_id", "statement_line_id")
+    @api.depends(
+        "move_type", "company_currency_id", "origin_payment_id", "statement_line_id"
+    )
     def _compute_l10n_mx_edi_is_cfdi_needed(self):
         for move in self:
             move.l10n_mx_edi_is_cfdi_needed = (
@@ -179,16 +192,26 @@ class AccountMove(models.Model):
     def _compute_l10n_mx_edi_cfdi_to_public(self):
         for move in self:
             if move.move_type == "out_refund" and "global_sent" in set(
-                move._l10n_mx_edi_get_refund_original_invoices().mapped("l10n_mx_edi_cfdi_state")
+                move._l10n_mx_edi_get_refund_original_invoices().mapped(
+                    "l10n_mx_edi_cfdi_state"
+                )
             ):
                 move.l10n_mx_edi_cfdi_to_public = True
-            elif move.partner_id and move.l10n_mx_edi_is_cfdi_needed and not move.l10n_mx_edi_cfdi_to_public:
-                cfdi_values = self.env["l10n_mx_edi.document"]._get_company_cfdi_values(move.company_id)
+            elif (
+                move.partner_id
+                and move.l10n_mx_edi_is_cfdi_needed
+                and not move.l10n_mx_edi_cfdi_to_public
+            ):
+                cfdi_values = self.env["l10n_mx_edi.document"]._get_company_cfdi_values(
+                    move.company_id
+                )
                 self.env["l10n_mx_edi.document"]._add_customer_cfdi_values(
                     cfdi_values,
                     customer=move.partner_id,
                 )
-                move.l10n_mx_edi_cfdi_to_public = cfdi_values["receptor"]["rfc"] == "XAXX010101000"
+                move.l10n_mx_edi_cfdi_to_public = (
+                    cfdi_values["receptor"]["rfc"] == "XAXX010101000"
+                )
             else:
                 move.l10n_mx_edi_cfdi_to_public = False
 
@@ -203,7 +226,10 @@ class AccountMove(models.Model):
     def _compute_l10n_mx_edi_payment_policy(self):
         for move in self:
             move.l10n_mx_edi_payment_policy = False
-            if move.is_sale_document(include_receipts=True) and move.l10n_mx_edi_is_cfdi_needed:
+            if (
+                move.is_sale_document(include_receipts=True)
+                and move.l10n_mx_edi_is_cfdi_needed
+            ):
                 move.l10n_mx_edi_payment_policy = "PUE"
                 if (
                     move.move_type == "out_invoice"
@@ -273,7 +299,9 @@ class AccountMove(models.Model):
 
         # User permissions
         user_authorized = self._context.get("debt_authorized") or (
-            self.env.user.has_group("partner_credit_checks.allow_to_validate_credit_checks")
+            self.env.user.has_group(
+                "partner_credit_checks.allow_to_validate_credit_checks"
+            )
             and self.env.user.has_group("marin.group_account_debt_manager")
         )
         if not user_authorized:
@@ -281,11 +309,17 @@ class AccountMove(models.Model):
 
         # Financial conditions
         invoices_elegible = self.filtered(
-            lambda i: (i.move_type == "out_invoice" and not i.invoice_payment_term_id.is_immediate)
+            lambda i: (
+                i.move_type == "out_invoice"
+                and not i.invoice_payment_term_id.is_immediate
+            )
         )
         for invoice in invoices_elegible:
             # Partner conditions
-            partner_eligible = invoice.partner_id.credit_status != "legal" and invoice.partner_credit_warning
+            partner_eligible = (
+                invoice.partner_id.credit_status != "legal"
+                and invoice.partner_credit_warning
+            )
 
             if partner_eligible:
                 return self.action_authorize_debt_wizard()
@@ -364,7 +398,9 @@ class AccountMove(models.Model):
             "res_model": "approval.request",
             "view_mode": "list,form",
             "view_type": "list",
-            "context": clean_context(self.env.context),  # avoid 'default_name' context key propagation
+            "context": clean_context(
+                self.env.context
+            ),  # avoid 'default_name' context key propagation
             "domain": domain,
         }
         return action
@@ -378,7 +414,10 @@ class AccountMove(models.Model):
             "dest_address_id": False,  # False since only supported in stock
             "date_order": self.invoice_date,
             "fiscal_position_id": (
-                self.fiscal_position_id or self.fiscal_position_id._get_fiscal_position(self.commercial_partner_id)
+                self.fiscal_position_id
+                or self.fiscal_position_id._get_fiscal_position(
+                    self.commercial_partner_id
+                )
             ).id,
             "payment_term_id": self.invoice_payment_term_id.id,
             "origin": self.name,
@@ -389,7 +428,9 @@ class AccountMove(models.Model):
         self.ensure_one()
         purchase_line_vals = {}
         fpos = purchase.fiscal_position_id
-        for line in move.invoice_line_ids.filtered(lambda ln: ln.display_type == "product"):
+        for line in move.invoice_line_ids.filtered(
+            lambda ln: ln.display_type == "product"
+        ):
             taxes = fpos.map_tax(line.product_id.supplier_tax_ids)
             if taxes:
                 taxes = taxes.filtered(lambda t: t.company_id.id == self.company_id.id)
@@ -413,7 +454,11 @@ class AccountMove(models.Model):
     def create_purchase_order(self):
         for move in self:
             if any(not line.product_id for line in move.invoice_line_ids):
-                raise UserError(self.env._("Some move lines does not have a product set. Please review"))
+                raise UserError(
+                    self.env._(
+                        "Some move lines does not have a product set. Please review"
+                    )
+                )
 
             purchase_exist = self.env["purchase.order"].search(
                 [
@@ -424,12 +469,18 @@ class AccountMove(models.Model):
             )
             if purchase_exist and len(purchase_exist) >= 1:
                 raise UserError(
-                    self.env._("More than one Purchase Orders with the same origin have been found. Please review")
+                    self.env._(
+                        "More than one Purchase Orders with the same origin have been found. Please review"
+                    )
                 )
 
             if not purchase_exist:
-                purchase_exist = self.env["purchase.order"].create(self._prepare_purchase_order_vals())
-                purchase_line_vals = self._prepare_purchase_line_vals(move, purchase_exist)
+                purchase_exist = self.env["purchase.order"].create(
+                    self._prepare_purchase_order_vals()
+                )
+                purchase_line_vals = self._prepare_purchase_line_vals(
+                    move, purchase_exist
+                )
                 for line, vals in purchase_line_vals.items():
                     move_line = self.env["account.move.line"].browse(int(line))
                     po_line = self.env["purchase.order.line"].create(vals)
@@ -438,10 +489,14 @@ class AccountMove(models.Model):
 
     @api.depends("state", "l10n_mx_edi_cfdi_state", "l10n_mx_edi_cfdi_sat_state")
     def _compute_l10n_mx_edi_update_sat_needed(self):
-        purchase_moves = self.filtered(lambda m: m.is_purchase_document() and m.l10n_mx_edi_invoice_document_ids)
+        purchase_moves = self.filtered(
+            lambda m: m.is_purchase_document() and m.l10n_mx_edi_invoice_document_ids
+        )
         for move in purchase_moves:
             move.l10n_mx_edi_update_sat_needed = True
-        return super(AccountMove, self - purchase_moves)._compute_l10n_mx_edi_update_sat_needed()
+        return super(
+            AccountMove, self - purchase_moves
+        )._compute_l10n_mx_edi_update_sat_needed()
 
     def _get_sat_status_cancellation_message(self):
         """Generate the message body for cancellation notification."""
@@ -470,9 +525,14 @@ class AccountMove(models.Model):
         Returns:
             account.move.line: Lines with residual amount that can be reconciled
         """
-        account_type = "asset_receivable" if move.move_type in ["out_invoice", "out_refund"] else "liability_payable"
+        account_type = (
+            "asset_receivable"
+            if move.move_type in ["out_invoice", "out_refund"]
+            else "liability_payable"
+        )
         return move.line_ids.filtered(
-            lambda inv_line: inv_line.account_id.account_type == account_type and inv_line.amount_residual
+            lambda inv_line: inv_line.account_id.account_type == account_type
+            and inv_line.amount_residual
         )
 
     def _build_payment_search_domain(self, move, invoice_line, date_range=None):
@@ -486,11 +546,19 @@ class AccountMove(models.Model):
         Returns:
             list: Domain for searching payment lines
         """
-        account_type = "asset_receivable" if move.move_type in ["out_invoice", "out_refund"] else "liability_payable"
+        account_type = (
+            "asset_receivable"
+            if move.move_type in ["out_invoice", "out_refund"]
+            else "liability_payable"
+        )
 
         domain = [
             ("account_id.account_type", "=", account_type),
-            ("partner_id.commercial_partner_id", "=", move.partner_id.commercial_partner_id.id),
+            (
+                "partner_id.commercial_partner_id",
+                "=",
+                move.partner_id.commercial_partner_id.id,
+            ),
             ("reconciled", "=", False),
             ("parent_state", "=", "posted"),
             ("id", "!=", invoice_line.id),  # Not the same line
@@ -513,7 +581,9 @@ class AccountMove(models.Model):
 
         return domain
 
-    def _prepare_reconciliation_result(self, reconciled_count, partially_reconciled_count, errors, title_suffix):
+    def _prepare_reconciliation_result(
+        self, reconciled_count, partially_reconciled_count, errors, title_suffix
+    ):
         """Prepare standardized result notification for reconciliation methods.
 
         Args:
@@ -527,13 +597,24 @@ class AccountMove(models.Model):
         """
         message_parts = []
         if reconciled_count > 0:
-            message_parts.append(self.env._("%s invoice(s) reconciled successfully.", reconciled_count))
+            message_parts.append(
+                self.env._("%s invoice(s) reconciled successfully.", reconciled_count)
+            )
         if partially_reconciled_count > 0:
-            message_parts.append(self.env._("%s invoice(s) partially reconciled.", partially_reconciled_count))
+            message_parts.append(
+                self.env._(
+                    "%s invoice(s) partially reconciled.", partially_reconciled_count
+                )
+            )
 
         if not message_parts:
-            if not partially_reconciled_count:  # Only for methods that don't track partial reconciliation
-                message = self.env._("No invoices could be reconciled with %s criteria.", title_suffix.lower())
+            if (
+                not partially_reconciled_count
+            ):  # Only for methods that don't track partial reconciliation
+                message = self.env._(
+                    "No invoices could be reconciled with %s criteria.",
+                    title_suffix.lower(),
+                )
             else:
                 message = self.env._("No invoices could be reconciled.")
         else:
@@ -574,17 +655,28 @@ class AccountMove(models.Model):
                 invoice_lines = self._get_invoice_reconcilable_lines(move)
 
                 if not invoice_lines:
-                    errors.append(self.env._("Invoice %s has no lines to reconcile", move.name))
+                    errors.append(
+                        self.env._("Invoice %s has no lines to reconcile", move.name)
+                    )
                     continue
 
                 # Search for payment lines with ideal criteria
                 for invoice_line in invoice_lines:
                     domain = self._build_payment_search_domain(
-                        move, invoice_line, date_range={"date_from": move.invoice_date, "date_to": move.invoice_date}
+                        move,
+                        invoice_line,
+                        date_range={
+                            "date_from": move.invoice_date,
+                            "date_to": move.invoice_date,
+                        },
                     )
                     # Add exact amount match for ideal criteria
-                    domain.append(("amount_residual", "=", -invoice_line.amount_residual))
-                    payment_line = self.env["account.move.line"].search(domain, order="date asc, id asc", limit=1)
+                    domain.append(
+                        ("amount_residual", "=", -invoice_line.amount_residual)
+                    )
+                    payment_line = self.env["account.move.line"].search(
+                        domain, order="date asc, id asc", limit=1
+                    )
 
                     if payment_line:
                         # Perform reconciliation
@@ -628,7 +720,9 @@ class AccountMove(models.Model):
                 invoice_lines = self._get_invoice_reconcilable_lines(move)
 
                 if not invoice_lines:
-                    errors.append(self.env._("Invoice %s has no lines to reconcile", move.name))
+                    errors.append(
+                        self.env._("Invoice %s has no lines to reconcile", move.name)
+                    )
                     continue
 
                 # Calculate date range (1 month before to 2 months after)
@@ -639,12 +733,18 @@ class AccountMove(models.Model):
                 # Search for payment lines with semi-ideal criteria
                 for invoice_line in invoice_lines:
                     domain = self._build_payment_search_domain(
-                        move, invoice_line, date_range={"date_from": date_from, "date_to": date_to}
+                        move,
+                        invoice_line,
+                        date_range={"date_from": date_from, "date_to": date_to},
                     )
                     # Add exact amount match for semi-ideal criteria
-                    domain.append(("amount_residual", "=", -invoice_line.amount_residual))
+                    domain.append(
+                        ("amount_residual", "=", -invoice_line.amount_residual)
+                    )
 
-                    payment_lines = self.env["account.move.line"].search(domain, order="date asc, id asc", limit=1)
+                    payment_lines = self.env["account.move.line"].search(
+                        domain, order="date asc, id asc", limit=1
+                    )
 
                     if payment_lines:
                         # Perform reconciliation
@@ -665,7 +765,9 @@ class AccountMove(models.Model):
                 errors.append(self.env._("Error reconciling %s: %s", move.name, str(e)))
 
         # Prepare result message
-        return self._prepare_reconciliation_result(reconciled_count, 0, errors, "Semi-Ideal")
+        return self._prepare_reconciliation_result(
+            reconciled_count, 0, errors, "Semi-Ideal"
+        )
 
     def action_auto_reconcile_no_ideal(self):
         """Auto-reconcile using no-ideal criteria: same partner, exact amount, no date restriction (oldest payment first)."""
@@ -687,16 +789,24 @@ class AccountMove(models.Model):
                 invoice_lines = self._get_invoice_reconcilable_lines(move)
 
                 if not invoice_lines:
-                    errors.append(self.env._("Invoice %s has no lines to reconcile", move.name))
+                    errors.append(
+                        self.env._("Invoice %s has no lines to reconcile", move.name)
+                    )
                     continue
 
                 # Search for payment lines with no-ideal criteria (no date restriction)
                 for invoice_line in invoice_lines:
-                    domain = self._build_payment_search_domain(move, invoice_line)  # No date_range
+                    domain = self._build_payment_search_domain(
+                        move, invoice_line
+                    )  # No date_range
                     # Add exact amount match for no-ideal criteria
-                    domain.append(("amount_residual", "=", -invoice_line.amount_residual))
+                    domain.append(
+                        ("amount_residual", "=", -invoice_line.amount_residual)
+                    )
                     payment_line = self.env["account.move.line"].search(
-                        domain, order="date asc, id asc", limit=1  # Oldest payment first
+                        domain,
+                        order="date asc, id asc",
+                        limit=1,  # Oldest payment first
                     )
 
                     if payment_line:
@@ -718,7 +828,9 @@ class AccountMove(models.Model):
                 errors.append(self.env._("Error reconciling %s: %s", move.name, str(e)))
 
         # Prepare result message
-        return self._prepare_reconciliation_result(reconciled_count, 0, errors, "No-Ideal")
+        return self._prepare_reconciliation_result(
+            reconciled_count, 0, errors, "No-Ideal"
+        )
 
     def action_auto_reconcile_multi_payment(self):
         """Auto-reconcile using multi-payment criteria: find combinations of payments that sum to invoice amount."""
@@ -741,7 +853,9 @@ class AccountMove(models.Model):
                 invoice_lines = self._get_invoice_reconcilable_lines(move)
 
                 if not invoice_lines:
-                    errors.append(self.env._("Invoice %s has no lines to reconcile", move.name))
+                    errors.append(
+                        self.env._("Invoice %s has no lines to reconcile", move.name)
+                    )
                     continue
 
                 # Calculate date range (1 month before to 2 months after)
@@ -754,16 +868,22 @@ class AccountMove(models.Model):
 
                     # Search for all potential payment lines
                     domain = self._build_payment_search_domain(
-                        move, invoice_line, date_range={"date_from": date_from, "date_to": date_to}
+                        move,
+                        invoice_line,
+                        date_range={"date_from": date_from, "date_to": date_to},
                     )
 
-                    payment_lines = self.env["account.move.line"].search(domain, order="date asc, id asc")
+                    payment_lines = self.env["account.move.line"].search(
+                        domain, order="date asc, id asc"
+                    )
 
                     if not payment_lines:
                         continue
 
                     # Try combinations of payments to match the invoice amount
-                    payment_amounts = [(line, abs(line.amount_residual)) for line in payment_lines]
+                    payment_amounts = [
+                        (line, abs(line.amount_residual)) for line in payment_lines
+                    ]
 
                     # Try combinations from size 1 to min(5, len(payment_amounts))
                     max_combination_size = min(5, len(payment_amounts))
@@ -777,13 +897,15 @@ class AccountMove(models.Model):
                     # If valid combinations found, select the best one (prefer fewer payments, then oldest)
                     if valid_combinations:
                         # Sort by: 1) fewer payments first, 2) oldest date first
-                        valid_combinations.sort(key=lambda x: (x["size"], x["oldest_date"]))
+                        valid_combinations.sort(
+                            key=lambda x: (x["size"], x["oldest_date"])
+                        )
                         best_combination = valid_combinations[0]
 
                         # Perform reconciliation with the best combination
-                        lines_to_reconcile = invoice_line + self.env["account.move.line"].browse(
-                            [line.id for line in best_combination["lines"]]
-                        )
+                        lines_to_reconcile = invoice_line + self.env[
+                            "account.move.line"
+                        ].browse([line.id for line in best_combination["lines"]])
                         lines_to_reconcile.reconcile()
                         # Add post-message to invoice
                         move.message_post(
@@ -802,9 +924,13 @@ class AccountMove(models.Model):
                 errors.append(self.env._("Error reconciling %s: %s", move.name, str(e)))
 
         # Prepare result message
-        return self._prepare_reconciliation_result(reconciled_count, 0, errors, "Multi-Payment")
+        return self._prepare_reconciliation_result(
+            reconciled_count, 0, errors, "Multi-Payment"
+        )
 
-    def _find_payment_combinations(self, payment_amounts, target_amount, max_combination_size):
+    def _find_payment_combinations(
+        self, payment_amounts, target_amount, max_combination_size
+    ):
         """Find valid payment combinations that match the target amount."""
         valid_combinations = []
 
@@ -869,13 +995,19 @@ class AccountMove(models.Model):
                     # Continue applying payments until this invoice line is fully reconciled
                     # or no more suitable payments are available
 
-                    while abs(invoice_line.amount_residual) > 0.01:  # Continue until fully paid
+                    while (
+                        abs(invoice_line.amount_residual) > 0.01
+                    ):  # Continue until fully paid
                         # Search for ALL available payment lines from same partner (no date restrictions)
-                        domain = self._build_payment_search_domain(move, invoice_line)  # No date_range
+                        domain = self._build_payment_search_domain(
+                            move, invoice_line
+                        )  # No date_range
 
                         # Get oldest available payment first
                         payment_line = self.env["account.move.line"].search(
-                            domain, order="date asc, id asc", limit=1  # Oldest payment first
+                            domain,
+                            order="date asc, id asc",
+                            limit=1,  # Oldest payment first
                         )
 
                         if not payment_line:
@@ -892,12 +1024,15 @@ class AccountMove(models.Model):
                         # Track the payment application
                         payments_applied.append(
                             {
-                                "payment_ref": payment_line.move_id.name or payment_line.name,
+                                "payment_ref": payment_line.move_id.name
+                                or payment_line.name,
                                 "amount": min(payment_amount, remaining_invoice_amount),
                                 "date": payment_line.date,
                             }
                         )
-                        total_applied_amount += min(payment_amount, remaining_invoice_amount)
+                        total_applied_amount += min(
+                            payment_amount, remaining_invoice_amount
+                        )
                         invoice_reconciled = True
 
                         # Refresh the invoice line to get updated residual
@@ -926,7 +1061,9 @@ class AccountMove(models.Model):
                                 payment["date"],
                             )
 
-                        move.message_post(body=Markup(message_body), message_type="notification")
+                        move.message_post(
+                            body=Markup(message_body), message_type="notification"
+                        )
                         reconciled_count += 1
                     else:
                         # Invoice partially reconciled
@@ -947,7 +1084,9 @@ class AccountMove(models.Model):
                                 payment["date"],
                             )
 
-                        move.message_post(body=Markup(message_body), message_type="notification")
+                        move.message_post(
+                            body=Markup(message_body), message_type="notification"
+                        )
                         partially_reconciled_count += 1
 
             except Exception as e:

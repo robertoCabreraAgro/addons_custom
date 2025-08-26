@@ -11,7 +11,6 @@ class GpsTrackingDevice(models.Model):
         store=True,
         string="Department",
     )
-    
     driver_name = fields.Char(
         related="vehicle_id.driver_id.name",
         store=True,
