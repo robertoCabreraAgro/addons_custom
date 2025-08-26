@@ -60,6 +60,11 @@ msgid "Alert Channel"
 msgstr "Canal de alerta"
 
 #. module: discuss_alerts
+#: model:ir.model.fields,field_description:discuss_alerts.field_discuss_channel__alert_frequency
+msgid "Alert Frequency"
+msgstr "Frecuencia de alerta"
+
+#. module: discuss_alerts
 #: model:ir.model.fields,field_description:discuss_alerts.field_discuss_channel__alert_domain
 msgid "Alert domain"
 msgstr "Dominio de alerta"
@@ -86,6 +91,11 @@ msgid "Alert: Sale Test"
 msgstr "Alerta: Prueba ventas"
 
 #. module: discuss_alerts
+#: model:ir.model.fields.selection,name:discuss_alerts.selection__discuss_channel__alert_frequency__daily
+msgid "Daily"
+msgstr "Diario"
+
+#. module: discuss_alerts
 #: model:ir.actions.server,name:discuss_alerts.ir_cron_discuss_channel_alert_ir_actions_server
 msgid "Discuss Channel Alert Notification"
 msgstr "Notificación de alerta del canal de discusión"
@@ -104,6 +114,16 @@ msgstr "Nombre en pantalla"
 #: model_terms:ir.ui.view,arch_db:discuss_alerts.view_discuss_channel_form
 msgid "Domain"
 msgstr "Dominio"
+
+#. module: discuss_alerts
+#: model_terms:ir.ui.view,arch_db:discuss_alerts.view_discuss_channel_form
+msgid "Frequency"
+msgstr "Frecuencia"
+
+#. module: discuss_alerts
+#: model:ir.model.fields.selection,name:discuss_alerts.selection__discuss_channel__alert_frequency__hourly
+msgid "Hourly"
+msgstr "Cada hora"
 
 #. module: discuss_alerts
 #: model:ir.model.fields,field_description:discuss_alerts.field_discuss_channel__id
@@ -126,9 +146,19 @@ msgid "Model"
 msgstr "Modelo"
 
 #. module: discuss_alerts
+#: model:ir.model.fields.selection,name:discuss_alerts.selection__discuss_channel__alert_frequency__monthly
+msgid "Monthly"
+msgstr "Mensual"
+
+#. module: discuss_alerts
 #: model:ir.model.fields,field_description:discuss_alerts.field_discuss_channel__alert_template_body
 msgid "Template Body"
 msgstr "Contenido de plantilla"
+
+#. module: discuss_alerts
+#: model:ir.model.fields.selection,name:discuss_alerts.selection__discuss_channel__alert_frequency__weekly
+msgid "Weekly"
+msgstr "Semanal"
 
 #. module: discuss_alerts
 #: model:mail.template,subject:discuss_alerts.email_alert_sale_test

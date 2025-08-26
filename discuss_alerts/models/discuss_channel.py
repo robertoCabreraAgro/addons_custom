@@ -1,5 +1,6 @@
 import ast
 import logging
+from datetime import timedelta
 
 from odoo import api, fields, models
 
@@ -27,15 +28,34 @@ class DiscussChannel(models.Model):
         inverse="_inverse_alert_template_body",
         store=False,
     )
+    alert_frequency = fields.Selection(
+        selection=[
+            ("hourly", "Hourly"),
+            ("daily", "Daily"),
+            ("weekly", "Weekly"),
+            ("monthly", "Monthly"),
+        ],
+        string="Frequency",
+        default="daily",
+        help="Minimum time interval between alert executions",
+    )
 
     @api.depends("alert_template_id")
     def _compute_alert_template_body(self):
         """Compute template body from selected template"""
         for channel in self:
+            alert_template_body = False
             if channel.alert_template_id:
-                channel.alert_template_body = channel.alert_template_id.body_html
-            else:
-                channel.alert_template_body = False
+                alert_template_body = channel.alert_template_id.body_html
+
+            channel.alert_template_body = alert_template_body
+
+    @api.onchange("alert_model_id")
+    def _onchange_alert_model_id(self):
+        """Clear template when model changes"""
+        if self.alert_model_id:
+            self.alert_template_id = False
+            self.alert_domain = "[]"
 
     def _inverse_alert_template_body(self):
         """Update template body when edited"""
@@ -52,18 +72,41 @@ class DiscussChannel(models.Model):
         )
         return self._cr.fetchall()
 
+    def _should_send_alert(self):
+        """Check if enough time has passed based on alert frequency"""
+        if not self.alert_last_execution or not self.alert_frequency:
+            return True
+
+        now = fields.Datetime.now()
+        last_execution = self.alert_last_execution
+
+        frequency_deltas = {
+            "hourly": timedelta(hours=1),
+            "daily": timedelta(days=1),
+            "weekly": timedelta(weeks=1),
+            "monthly": timedelta(days=30),  # Approximate month
+        }
+
+        required_interval = frequency_deltas.get(self.alert_frequency, timedelta(days=1))
+        time_since_last = now - last_execution
+
+        return time_since_last >= required_interval
+
     @api.model
     def _process_alert_channels(self):
         """Cron job that processes channels with alerts enabled"""
         alert_channels = self.search([("is_alert_channel", "=", True), ("active", "=", True)])
         for channel in alert_channels:
+            if not channel._should_send_alert():
+                continue
+
             records = channel._evaluate_alert_domain()
             if records:
                 for record in records:
                     channel.message_post(
                         body=channel._render_alert_message(record), author_id=None, message_type="comment"
                     )
-                    channel.alert_last_execution = fields.Datetime.now()
+                channel.alert_last_execution = fields.Datetime.now()
 
     def _evaluate_alert_domain(self):
         """Evaluate configured domain with date filters"""
@@ -73,14 +116,13 @@ class DiscussChannel(models.Model):
         # Convert the base domain
         base_domain = ast.literal_eval(self.alert_domain or "[]")
 
-        # Create date domain
-        date_domain = [("create_date", "<=", fields.Datetime.now())]
-        if self.alert_last_execution:
-            date_domain = date_domain + [("create_date", ">", self.alert_last_execution)]
+        # Only add date filters if we have a base domain
+        # The frequency check is now handled at the channel level
+        if self.alert_domain:
+            return self.env[self.alert_model_id].search(base_domain)
 
-        full_domain = base_domain + date_domain if self.alert_domain else date_domain
-
-        return self.env[self.alert_model_id].search(full_domain)
+        # If no domain is specified, return empty recordset
+        return self.env[self.alert_model_id].browse()
 
     def _render_alert_message(self, record):
         """Renders the template content"""
