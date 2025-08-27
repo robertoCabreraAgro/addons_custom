@@ -146,13 +146,8 @@ class StockLot(models.Model):
         if not lot_rule:
             return
 
-        # Initialize lot_ref with placeholder (ref will be computed automatically)
-        lot_ref = "VENDOR_LOT_NUMBER"
-
         # Try to generate suggested name
-        suggested_name = lot_rule._generate_lot_name(
-            self.name, self.product_id, lot_ref
-        )
+        suggested_name = lot_rule._generate_lot_name(self.name, self.product_id)
 
         # Apply suggested name if different from current
         if suggested_name and suggested_name != self.name:
