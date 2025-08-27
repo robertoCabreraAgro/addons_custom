@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="documents_tag_equipment_doc" model="documents.tag" forcecreate="0">
+        <field name="name">Equipment > Equipment Documents</field>
+        <field name="sequence">14</field>
+    </record>
+
+    <record id="documents_tag_vehicle_doc" model="documents.tag" forcecreate="0">
+        <field name="name">Fleet > Vehicles Documents</field>
+        <field name="sequence">14</field>
+    </record>
+
+    <record id="documents_tag_machinery_doc" model="documents.tag" forcecreate="0">
+        <field name="name">Machinery > Machinery Documents</field>
+        <field name="sequence">14</field>
+    </record>
+
+    <record id="documents_tag_property_doc" model="documents.tag" forcecreate="0">
+        <field name="name">Properties > Properties Documents</field>
+        <field name="sequence">14</field>
+    </record>
+
+    <record id="documents_tag_fine" model="documents.tag" forcecreate="0">
+        <field name="name">Fleet > Fine</field>
+        <field name="sequence">15</field>
+    </record>
+
+</odoo>
