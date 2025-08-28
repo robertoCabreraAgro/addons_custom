@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mrp_workcenter_view_kanban_inherit" model="ir.ui.view">
+        <field name="name">mrp.workcenter.kanban.inherit</field>
+        <field name="model">mrp.workcenter</field>
+        <field name="inherit_id" ref="mrp.mrp_workcenter_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='o_wo']" position="inside">
+                <button name="action_planning_action_workcenter_schedule"
+                        type="object"
+                        t-attf-class="btn #{record.planning_slot_count.value == 0 ? 'btn-secondary' : 'btn-primary'}"
+                        class="btn btn-primary"
+                        context="{'search_default_workcenter_id': id}"
+                        groups="mrp.group_mrp_user,planning.group_planning_user">
+                    <i class="fa fa-calendar"/> Planning Schedule
+                    <field name="planning_slot_count"
+                        decoration-success="planning_slot_count > 0"
+                        decoration-muted="planning_slot_count == 0"
+                        widget="badge" nolabel="1"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

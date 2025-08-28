@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem
+        id="menu_mrp_planning_schedule"
+        name="Schedule"
+        parent="mrp.mrp_planning_menu_root"
+        sequence="30"
+        groups="planning.group_planning_user,planning.group_planning_manager"
+    >
+        <menuitem
+            id="planning_menu_schedule_by_resource"
+            name="By Resource"
+            action="action_server_planning_schedule_by_resource"
+            sequence="10"
+        />
+        <menuitem
+            id="planning_menu_schedule_by_role"
+            name="By Role"
+            action="action_server_planning_schedule_by_role"
+            sequence="20"
+        />
+        <menuitem
+            id="menu_mrp_planning_schedule_by_workcenter"
+            name="By Workcenter"
+            action="action_server_planning_slot_by_workcenter"
+            sequence="30"
+        />
+        <menuitem
+            id="menu_mrp_planning_schedule_by_product"
+            name="By Product"
+            action="action_server_planning_slot_by_product"
+            sequence="40"
+        />
+    </menuitem>
+</odoo>

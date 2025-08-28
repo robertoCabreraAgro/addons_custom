@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_planning_slot_user,planning.slot.user,model_planning_slot,planning_mrp.group_planning_manufacturing_user,1,1,1,0
+access_planning_slot_manager,planning.slot.manager,model_planning_slot,planning_mrp.group_planning_manufacturing_manager,1,1,1,1
+access_mrp_workcenter_user,mrp.workcenter.user,mrp.model_mrp_workcenter,planning_mrp.group_planning_manufacturing_user,1,0,0,0
+access_mrp_workcenter_manager,mrp.workcenter.manager,mrp.model_mrp_workcenter,planning_mrp.group_planning_manufacturing_manager,1,1,1,1

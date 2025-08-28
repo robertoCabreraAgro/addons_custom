@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vista Form para planning.slot con los nuevos campos -->
+    <record id="planning_slot_view_form_inherit" model="ir.ui.view">
+        <field name="name">planning.slot.view.form.inherit</field>
+        <field name="model">planning.slot</field>
+        <field name="inherit_id" ref="planning.planning_view_form"/>
+        <field name="arch" type="xml">
+            <field name="role_id" position="after">
+                <field name="workcenter_id"/>
+                <field name="product_id"/>
+            </field>
+            <xpath expr="//field[@name='state']" position="attributes">
+                <attribute name="statusbar_visible">draft,published,cancelled</attribute>
+            </xpath>
+            <xpath expr="//sheet" position="after">
+                <chatter/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Vista Gantt agrupada por workcenter -->
+    <record id="planning_slot_view_gantt_workcenter" model="ir.ui.view">
+        <field name="name">planning.slot.gantt.workcenter</field>
+        <field name="model">planning.slot</field>
+        <field name="arch" type="xml">
+            <gantt
+                js_class="planning_gantt"
+                form_view_id="%(planning.planning_view_form_in_gantt)d"
+                date_start="start_datetime"
+                date_stop="end_datetime"
+                default_group_by="workcenter_id"
+                string="Planning by Workcenter"
+                default_range="week"
+                default_scale="week"
+                color="color"
+                plan="false"
+                total_row="True"
+                scales="day,week,month,year"
+                precision="{'day': 'hour:full', 'week': 'day:full', 'month': 'day:full', 'year': 'day:full'}"
+                decoration-info="state == 'draft'"
+                decoration-warning="publication_warning or (request_to_switch and not is_past and not allow_self_unassign)"
+                decoration-danger="overlap_slot_count > 0"
+                display_unavailability="1"
+                sample="1"
+                progress_bar="resource_id"
+                pill_label="True">
+
+                <field name="workcenter_id"/>
+                <field name="product_id"/>
+                <field name="resource_id"/>
+                <field name="allocated_hours"/>
+                <field name="recurrency_id" />
+                <field name="repeat" invisible="1"/>
+                <field name="state"/>
+                <field name="publication_warning"/>
+                <field name="request_to_switch"/>
+                <field name="allow_self_unassign"/>
+                <field name="is_past"/>
+                <field name="resource_type"/>
+                <field name="overlap_slot_count"/>
+                <field name="allocated_percentage"/>
+                <field name="name"/>
+                <templates>
+                    <div t-name="gantt-popover">
+                        <div id="allocated_hours"><strong>Allocated Time — </strong> <t t-esc="allocatedHoursFormatted"/> <t t-if="resource_type == 'user'"> (<t t-esc="allocatedPercentageFormatted"/>%)</t></div>
+                        <div>
+                            <t t-esc="start_datetime.toFormat('f ')"/>
+                            <i class="fa fa-long-arrow-right" title="Arrow"/>
+                            <t t-esc="end_datetime.toFormat(' f')"/>
+                        </div>
+                        <p class="mt-2 mb-0" t-if="name"><t t-esc="name.slice(0, 200) + (name.length > 200?'…':'')" /></p>
+                        <p t-if="publication_warning and !overlap_slot_count" class="text-warning mt-2 mb-0">
+                            Some changes were made since this shift was published.
+                        </p>
+                        <p t-if="request_to_switch and !is_past and !allow_self_unassign" class="text-warning mt-2 mb-0">
+                            <span>The employee assigned would like to switch shifts with someone else.</span>
+                        </p>
+                        <p t-if="overlap_slot_count" class="text-danger mt-2 mb-0">
+                            <t t-esc="overlap_slot_count"/> other shift(s) in conflict.
+                        </p>
+                    </div>
+                </templates>
+            </gantt>
+        </field>
+    </record>
+
+    <!-- Vista Gantt agrupada por producto -->
+    <record id="planning_slot_view_gantt_product" model="ir.ui.view">
+        <field name="name">planning.slot.gantt.product</field>
+        <field name="model">planning.slot</field>
+        <field name="arch" type="xml">
+            <gantt
+                js_class="planning_gantt"
+                form_view_id="%(planning.planning_view_form_in_gantt)d"
+                date_start="start_datetime"
+                date_stop="end_datetime"
+                default_group_by="product_id"
+                string="Planning by Product"
+                default_range="week"
+                default_scale="week"
+                color="color"
+                plan="false"
+                total_row="True"
+                scales="day,week,month,year"
+                precision="{'day': 'hour:full', 'week': 'day:full', 'month': 'day:full', 'year': 'day:full'}"
+                decoration-info="state == 'draft'"
+                decoration-warning="publication_warning or (request_to_switch and not is_past and not allow_self_unassign)"
+                decoration-danger="overlap_slot_count > 0"
+                display_unavailability="1"
+                sample="1"
+                progress_bar="resource_id"
+                pill_label="True">
+
+                <field name="workcenter_id"/>
+                <field name="product_id"/>
+                <field name="resource_id"/>
+                <field name="allocated_hours"/>
+                <field name="recurrency_id" />
+                <field name="repeat" invisible="1"/>
+                <field name="state"/>
+                <field name="publication_warning"/>
+                <field name="request_to_switch"/>
+                <field name="allow_self_unassign"/>
+                <field name="is_past"/>
+                <field name="resource_type"/>
+                <field name="overlap_slot_count"/>
+                <field name="allocated_percentage"/>
+                <field name="name"/>
+                <templates>
+                    <div t-name="gantt-popover">
+                        <div id="allocated_hours"><strong>Allocated Time — </strong> <t t-esc="allocatedHoursFormatted"/> <t t-if="resource_type == 'user'"> (<t t-esc="allocatedPercentageFormatted"/>%)</t></div>
+                        <div>
+                            <t t-esc="start_datetime.toFormat('f ')"/>
+                            <i class="fa fa-long-arrow-right" title="Arrow"/>
+                            <t t-esc="end_datetime.toFormat(' f')"/>
+                        </div>
+                        <p class="mt-2 mb-0" t-if="name"><t t-esc="name.slice(0, 200) + (name.length > 200?'…':'')" /></p>
+                        <p t-if="publication_warning and !overlap_slot_count" class="text-warning mt-2 mb-0">
+                            Some changes were made since this shift was published.
+                        </p>
+                        <p t-if="request_to_switch and !is_past and !allow_self_unassign" class="text-warning mt-2 mb-0">
+                            <span>The employee assigned would like to switch shifts with someone else.</span>
+                        </p>
+                        <p t-if="overlap_slot_count" class="text-danger mt-2 mb-0">
+                            <t t-esc="overlap_slot_count"/> other shift(s) in conflict.
+                        </p>
+                    </div>
+                </templates>
+            </gantt>
+        </field>
+    </record>
+
+    <!-- Actions by Workcenter -->
+    <record id="action_planning_slot_by_workcenter" model="ir.actions.act_window">
+        <field name="name">Planning by Workcenter</field>
+        <field name="res_model">planning.slot</field>
+        <field name="view_mode">gantt,calendar,list,form,kanban,pivot,graph</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'gantt', 'view_id': ref('planning_slot_view_gantt_workcenter')}),
+            (0, 0, {'view_mode': 'calendar'}),
+            (0, 0, {'view_mode': 'list'}),
+            (0, 0, {'view_mode': 'form'}),
+            (0, 0, {'view_mode': 'kanban'}),
+            (0, 0, {'view_mode': 'pivot'}),
+            (0, 0, {'view_mode': 'graph'})]"/>
+        <!-- <field name="context">{'search_default_workcenter_id': active_id}</field> -->
+        <field name="domain">[('workcenter_id', '!=', False)]</field>
+    </record>
+
+    <record id="action_server_planning_slot_by_workcenter" model="ir.actions.server">
+        <field name="name">Planning by Workcenter</field>
+        <field name="model_id" ref="planning.model_planning_slot"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = model.get_action_planning_slot_by_workcenter()
+        </field>
+    </record>
+
+    <!-- Actions by Product -->
+    <record id="action_planning_slot_by_product" model="ir.actions.act_window">
+        <field name="name">Planning by Product</field>
+        <field name="res_model">planning.slot</field>
+        <field name="view_mode">gantt,calendar,list,form,kanban,pivot,graph</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'gantt', 'view_id': ref('planning_slot_view_gantt_product')}),
+            (0, 0, {'view_mode': 'calendar'}),
+            (0, 0, {'view_mode': 'list'}),
+            (0, 0, {'view_mode': 'form'}),
+            (0, 0, {'view_mode': 'kanban'}),
+            (0, 0, {'view_mode': 'pivot'}),
+            (0, 0, {'view_mode': 'graph'})]"/>
+        <field name="domain">[('product_id', '!=', False)]</field>
+    </record>
+
+    <record id="action_server_planning_slot_by_product" model="ir.actions.server">
+        <field name="name">Planning by Product</field>
+        <field name="model_id" ref="planning.model_planning_slot"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = model.get_action_planning_slot_by_product()
+        </field>
+    </record>
+
+    <!-- Actions by Resource -->
+    <record id="action_server_planning_schedule_by_resource" model="ir.actions.server">
+        <field name="name">planning by Resource</field>
+        <field name="model_id" ref="planning.model_planning_slot"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = model.get_action_planning_slot_by_resource()
+        </field>
+    </record>
+
+    <!-- Actions by Role -->
+    <record id="action_server_planning_schedule_by_role" model="ir.actions.server">
+        <field name="name">Planning by Role</field>
+        <field name="model_id" ref="planning.model_planning_slot"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = model.get_action_planning_slot_by_role()
+        </field>
+    </record>
+</odoo>

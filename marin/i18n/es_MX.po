@@ -3615,6 +3615,11 @@ msgid "Product standar price"
 msgstr ""
 
 #. module: marin
+#: model:ir.model.fields,field_description:marin.field_res_config_settings__module_planning_mrp
+msgid "Production itinerary"
+msgstr "Itinerario de producción"
+
+#. module: marin
 #: model:res.partner.category,name:marin.partner_category_1042
 msgid "Production size - Big holder (up to 30mdp)"
 msgstr ""
