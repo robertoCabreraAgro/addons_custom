@@ -1,13 +1,13 @@
 from odoo import fields, models
 
 
-class FleetVehicle(models.Model):
-    _name = "stock.lot"
+class StockLot(models.Model):
     _inherit = ["stock.lot", "documents.mixin"]
 
-    documents_settings_fleet = fields.Boolean(
-        related="company_id.documents_settings_fleet",
-        string="Centralize Fleet Documents",
+    documents_settings_asset = fields.Boolean(
+        compute="_compute_documents_settings_asset",
+        string="Centralize Asset Documents",
+        help="When enabled for this asset type, opening attachments uses the configured folder and tags.",
     )
     count_document = fields.Integer(
         string="Documents",
@@ -25,27 +25,76 @@ class FleetVehicle(models.Model):
             record.count_document = mapped_data.get(record.id, 0)
 
     def _get_document_folder(self):
-        return self.company_id.documents_folder_fleet_id
+        asset_type = self.product_id.product_tmpl_id.asset_type or 'product'
+
+        folder_field_mapping = {
+            'equipment': 'documents_folder_equipment_id',
+            'machinery': 'documents_folder_machinery_id',
+            'property': 'documents_folder_property_id',
+            'vehicle': 'documents_folder_fleet_id',
+            'product': 'documents_folder_equipment_id',  # Default
+        }
+
+        folder_field = folder_field_mapping.get(asset_type, 'documents_folder_equipment_id')
+        return getattr(self.company_id, folder_field, self.env['documents.document'])
 
     def _get_document_owner(self):
         """User can see only their own documents in the fleet folder (see _get_document_vals_access_rights)."""
         return self.env.user
 
     def _get_document_tags(self):
-        return self.company_id.documents_tags_fleet
+        asset_type = self.product_id.product_tmpl_id.asset_type or 'product'
+
+        tags_field_mapping = {
+            'equipment': 'documents_tags_equipment',
+            'machinery': 'documents_tags_machinery',
+            'property': 'documents_tags_property',
+            'vehicle': 'documents_tags_fleet',
+            'product': 'documents_tags_equipment',  # Default
+        }
+
+        tags_field = tags_field_mapping.get(asset_type, 'documents_tags_equipment')
+        return getattr(self.company_id, tags_field, self.env['documents.tag'])
 
     def _check_create_documents(self):
+        asset_type = self.product_id.product_tmpl_id.asset_type or 'product'
+
+        settings_field_mapping = {
+            'equipment': 'documents_settings_equipment',
+            'machinery': 'documents_settings_machinery',
+            'property': 'documents_settings_property',
+            'vehicle': 'documents_settings_fleet',
+            'product': 'documents_settings_equipment',  # Default
+        }
+
+        settings_field = settings_field_mapping.get(asset_type, 'documents_settings_equipment')
         return (
-            self.company_id.documents_settings_fleet
+            getattr(self.company_id, settings_field, False)
             and super()._check_create_documents()
         )
 
+    def _compute_documents_settings_asset(self):
+        """Compute if documents are enabled for this asset type."""
+        for record in self:
+            asset_type = record.product_id.product_tmpl_id.asset_type or 'equipment'
+
+            settings_field_mapping = {
+                'equipment': 'documents_settings_equipment',
+                'machinery': 'documents_settings_machinery',
+                'property': 'documents_settings_property',
+                'vehicle': 'documents_settings_fleet',
+                'product': 'documents_settings_equipment',  # Default
+            }
+
+            settings_field = settings_field_mapping.get(asset_type, 'documents_settings_equipment')
+            record.documents_settings_asset = getattr(record.company_id, settings_field, False)
+
     def action_view_attachments(self):
         self.ensure_one()
-        if not self.company_id.documents_settings_fleet:
+        if not self.documents_settings_asset:
             return True
-        fleet_folder = self._get_document_folder()
-        fleet_tags = self._get_document_tags()
+        asset_folder = self._get_document_folder()
+        asset_tags = self._get_document_tags()
         action = self.env["ir.actions.actions"]._for_xml_id(
             "documents.document_action_preference"
         )
@@ -59,7 +108,7 @@ class FleetVehicle(models.Model):
         action["context"] = {
             "default_res_id": self.id,
             "default_res_model": self._name,
-            "searchpanel_default_folder_id": fleet_folder.id,
-            "searchpanel_default_tag_ids": fleet_tags.ids,
+            "searchpanel_default_folder_id": asset_folder.id,
+            "searchpanel_default_tag_ids": asset_tags.ids,
         }
         return action
