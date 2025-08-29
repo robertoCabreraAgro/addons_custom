@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
     <record model="ir.ui.view" id="geo_raster_view_form">
@@ -85,8 +85,8 @@
     </record>
 
     <menuitem
-        name="Raster Layer Management"
         id="geoengine_raster_layer_menu"
+        name="Raster Layer Management"
         parent="geoengine_base_view_menu"
         action="geo_engine_view_rater_action"
         groups="group_geoengine_admin"

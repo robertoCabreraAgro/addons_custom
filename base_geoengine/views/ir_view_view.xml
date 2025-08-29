@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
     <record model="ir.ui.view" id="geoengine_view_form">
@@ -22,12 +22,6 @@
             </notebook>
         </field>
     </record>
-    <menuitem
-        name="GeoEngine Services"
-        id="geoengine_base_view_menu"
-        parent="base.menu_custom"
-        groups="group_geoengine_admin"
-    />
 
     <record id="geo_engine_view_action" model="ir.actions.act_window">
         <field name="name">Views</field>
@@ -39,8 +33,15 @@
     </record>
 
     <menuitem
-        name="View Management"
+        id="geoengine_base_view_menu"
+        name="GeoEngine Services"
+        parent="base.menu_custom"
+        groups="group_geoengine_admin"
+    />
+
+    <menuitem
         id="geoengine_view_menu"
+        name="View Management"
         parent="geoengine_base_view_menu"
         action="geo_engine_view_action"
         groups="group_geoengine_admin"
