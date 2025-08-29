@@ -709,8 +709,8 @@
     </record>
 
     <record id="document_1619560" model="documents.document">
-        <field name="name">1619560</field>
-        <field name="datas" type="base64" file="marin_data/data/files/IMDM 1619560.txt" />
+        <field name="name">Efecticard 1619560</field>
+        <field name="datas" type="base64" file="marin_data/data/files/1619560.txt" />
         <field name="folder_id" ref="documents_product_asset.document_folder_fleet" />
         <field name="tag_ids"
             eval="[
@@ -719,8 +719,8 @@
     </record>
 
     <record id="document_1619561" model="documents.document">
-        <field name="name">1619561</field>
-        <field name="datas" type="base64" file="marin_data/data/files/IMDM 1619561.txt" />
+        <field name="name">Efecticard 1619561</field>
+        <field name="datas" type="base64" file="marin_data/data/files/1619561.txt" />
         <field name="folder_id" ref="documents_product_asset.document_folder_fleet" />
         <field name="tag_ids"
             eval="[
@@ -729,8 +729,8 @@
     </record>
 
     <record id="document_1619562" model="documents.document">
-        <field name="name">1619562</field>
-        <field name="datas" type="base64" file="marin_data/data/files/IMDM 1619562.txt" />
+        <field name="name">Efecticard 1619562</field>
+        <field name="datas" type="base64" file="marin_data/data/files/1619562.txt" />
         <field name="folder_id" ref="documents_product_asset.document_folder_fleet" />
         <field name="tag_ids"
             eval="[
@@ -739,8 +739,8 @@
     </record>
 
     <record id="document_1619563" model="documents.document">
-        <field name="name">1619563</field>
-        <field name="datas" type="base64" file="marin_data/data/files/IMDM 1619563.txt" />
+        <field name="name">Efecticard 1619563</field>
+        <field name="datas" type="base64" file="marin_data/data/files/1619563.txt" />
         <field name="folder_id" ref="documents_product_asset.document_folder_fleet" />
         <field name="tag_ids"
             eval="[
