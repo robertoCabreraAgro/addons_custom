@@ -8,7 +8,7 @@ class GeoOperator:
         self.geo_field = geo_field
 
     def _get_direct_como_op_sql(self, table, col, value, params, op=""):
-        """provide raw sql for geater and lesser operators"""
+        """provide raw sql for greater and lesser operators"""
         if isinstance(value, int | float):
             return f" ST_Area({table}.{col}) {op} {value}"
         else:
@@ -32,16 +32,11 @@ class GeoOperator:
 
     def get_geo_lesser_sql(self, table, col, value, params):
         """Returns raw sql for geo_lesser operator
-        (used for area comparison)"""
+        (used for area comparison)
+        """
         return self._get_direct_como_op_sql(table, col, value, params, op="<")
 
-    def get_geo_equal_sql(
-        self,
-        table,
-        col,
-        value,
-        params,
-    ):
+    def get_geo_equal_sql(self, table, col, value, params):
         """Returns raw sql for geo_equal operator
         (used for equality comparison)
         """

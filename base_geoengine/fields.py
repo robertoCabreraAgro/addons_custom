@@ -2,6 +2,7 @@
 # Copyright 2016 Yannick Payot (Camptocamp SA)
 # Copyright 2023 ACSONE SA/NV
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+
 import json
 import logging
 from operator import attrgetter
@@ -13,6 +14,7 @@ from . import geo_convertion_helper as convert
 from .geo_db import create_geo_column, create_geo_index
 
 logger = logging.getLogger(__name__)
+
 try:
     import geojson
     from shapely.geometry import Point, shape
