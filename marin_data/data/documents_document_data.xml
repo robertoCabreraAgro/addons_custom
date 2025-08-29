@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
+
     <!-- Sub Folders -->
     <record id="documents_control_folder" model="documents.document" forcecreate="0">
         <field name="name">Control</field>
@@ -1224,4 +1225,41 @@
             Command.link(ref('documents_product_asset.documents_tag_highway_pass')),
         ]" />
     </record>
+
+    <record id="document_imdm_1619561" model="documents.document">
+        <field name="name">IMDM 1619561</field>
+        <field name="datas" type="base64" file="marin_data/data/files/IMDM 1619561.txt" />
+        <field name="folder_id" ref="documents_product_asset.document_folder_fleet" />
+        <field name="tag_ids" eval="[
+            Command.link(ref('documents_product_asset.documents_tag_highway_pass')),
+        ]" />
+    </record>
+
+    <record id="document_imdm_1619560" model="documents.document">
+        <field name="name">IMDM 1619560</field>
+        <field name="datas" type="base64" file="marin_data/data/files/IMDM 1619560.txt" />
+        <field name="folder_id" ref="documents_product_asset.document_folder_fleet" />
+        <field name="tag_ids" eval="[
+            Command.link(ref('documents_product_asset.documents_tag_highway_pass')),
+        ]" />
+    </record>
+
+    <record id="document_imdm_1619562" model="documents.document">
+        <field name="name">IMDM 1619562</field>
+        <field name="datas" type="base64" file="marin_data/data/files/IMDM 1619562.txt" />
+        <field name="folder_id" ref="documents_product_asset.document_folder_fleet" />
+        <field name="tag_ids" eval="[
+            Command.link(ref('documents_product_asset.documents_tag_highway_pass')),
+        ]" />
+    </record>
+
+    <record id="document_imdm_1619563" model="documents.document">
+        <field name="name">IMDM 1619563</field>
+        <field name="datas" type="base64" file="marin_data/data/files/IMDM 1619563.txt" />
+        <field name="folder_id" ref="documents_product_asset.document_folder_fleet" />
+        <field name="tag_ids" eval="[
+            Command.link(ref('documents_product_asset.documents_tag_highway_pass')),
+        ]" />
+    </record>
+
 </odoo>
