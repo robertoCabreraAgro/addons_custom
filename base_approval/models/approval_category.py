@@ -15,6 +15,7 @@ CATEGORY_SELECTION = [
 class ApprovalCategory(models.Model):
     _name = "approval.category"
     _description = "Approval Category"
+    _inherit = ["mail.thread"]
     _check_company_auto = True
     _order = "sequence, id"
 
@@ -27,6 +28,7 @@ class ApprovalCategory(models.Model):
         string="Company",
         default=lambda self: self.env.company,
         copy=False,
+        tracking=True,
         index=True,
     )
     name = fields.Char(
@@ -34,7 +36,7 @@ class ApprovalCategory(models.Model):
         translate=True,
         required=True,
     )
-    active = fields.Boolean(default=True)
+    active = fields.Boolean(default=True, tracking=True,)
     sequence = fields.Integer(string="Sequence")
     automated_sequence = fields.Boolean(
         string="Automated Sequence?",
@@ -59,42 +61,49 @@ class ApprovalCategory(models.Model):
         string="Has Date",
         required=True,
         default="no",
+        tracking=True,
     )
     has_date_deadline = fields.Selection(
         CATEGORY_SELECTION,
         string="Has Date Deadline",
         required=True,
         default="no",
+        tracking=True,
     )
     has_date_planned = fields.Selection(
         CATEGORY_SELECTION,
         string="Has Date Planned",
         required=True,
         default="no",
+        tracking=True,
     )
     has_date_range = fields.Selection(
         CATEGORY_SELECTION,
         string="Has Date Range",
         required=True,
         default="no",
+        tracking=True,
     )
     has_partner = fields.Selection(
         CATEGORY_SELECTION,
         string="Has Contact",
         required=True,
         default="no",
+        tracking=True,
     )
     has_payment_method = fields.Selection(
         CATEGORY_SELECTION,
         string="Has Payment",
         required=True,
         default="no",
+        tracking=True,
     )
     has_product = fields.Selection(
         CATEGORY_SELECTION,
         string="Has Product",
         required=True,
         default="no",
+        tracking=True,
         help="Additional products that should be specified on the request.",
     )
     has_quantity = fields.Selection(
@@ -102,18 +111,21 @@ class ApprovalCategory(models.Model):
         string="Has Quantity",
         required=True,
         default="no",
+        tracking=True,
     )
     has_amount = fields.Selection(
         CATEGORY_SELECTION,
         string="Has Amount",
         required=True,
         default="no",
+        tracking=True,
     )
     has_reference = fields.Selection(
         CATEGORY_SELECTION,
         string="Has Reference",
         required=True,
         default="no",
+        tracking=True,
         help="An additional reference that should be specified on the request.",
     )
     has_location = fields.Selection(
@@ -121,21 +133,25 @@ class ApprovalCategory(models.Model):
         string="Has Location",
         required=True,
         default="no",
+        tracking=True,
     )
     has_document = fields.Selection(
         [("required", "Required"), ("optional", "Optional")],
         string="Documents",
         required=True,
         default="optional",
+        tracking=True,
     )
     approval_minimum = fields.Integer(
         string="Minimum Approval",
         required=True,
         default="1",
+        tracking=True,
     )
     manager_approval = fields.Selection(
         [("approver", "Is Approver"), ("required", "Is Required Approver")],
         string="Employee's Manager",
+        tracking=True,
         help="""How the employee's manager interacts with this type of approval.
 
         Empty: do nothing
@@ -146,11 +162,13 @@ class ApprovalCategory(models.Model):
     approval_type = fields.Selection(
         string="Approval Type",
         selection=[],
+        tracking=True,
         help="Allows you to define which documents you would like "
         "to create once the request has been approved",
     )
     approve_sequentially = fields.Boolean(
         string="Approvers Sequence?",
+        tracking=True,
         help="If checked, the approvers have to approve in sequence (one after the other). "
         "If Employee's Manager is selected as approver, they will be the first in line.",
     )
