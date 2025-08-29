@@ -36,6 +36,7 @@
             <field name="groups" eval="[Command.link(ref('fleet_group_manager'))]" />
         </record>
 
+
     </data>
 
 </odoo>

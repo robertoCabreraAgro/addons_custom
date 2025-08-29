@@ -14,3 +14,9 @@ access_gps_geofence_type_manager,gps.geofence.type manager,model_gps_geofence_ty
 access_asset_loan_report_vehicle_loan,asset.loan.report.vehicle_loan,model_asset_loan_report,group_gps_tracking_vehicle_loan,1,1,1,1
 access_gps_tracking_report_reporting,gps.tracking.report.reporting,model_gps_tracking_report,group_gps_tracking_reporting,1,1,1,1
 access_hr_employee_public_restricted,hr.employee.public.restricted,hr.model_hr_employee_public,group_gps_tracking_vehicle_loan,1,1,0,0
+access_stock_lot_user,stock.lot.user,stock.model_stock_lot,group_gps_tracking_user,1,0,0,0
+access_stock_lot_vehicle_loan,stock.lot.vehicle_loan,stock.model_stock_lot,group_gps_tracking_vehicle_loan,1,1,0,0
+access_stock_lot_manager,stock.lot.manager,stock.model_stock_lot,group_gps_tracking_manager,1,1,1,1
+access_product_asset_log_gps_user,product.asset.log.gps.user,product_asset.model_product_asset_log,group_gps_tracking_user,1,0,0,0
+access_product_asset_log_vehicle_loan,product.asset.log.vehicle.loan,product_asset.model_product_asset_log,group_gps_tracking_vehicle_loan,1,1,1,0
+access_product_asset_log_gps_manager,product.asset.log.gps.manager,product_asset.model_product_asset_log,group_gps_tracking_manager,1,1,1,1

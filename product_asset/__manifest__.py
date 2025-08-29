@@ -18,6 +18,7 @@
         "data/product_category_data.xml",
         "data/product_product_data.xml",
         "data/product_attribute_data.xml",
+        "data/mail_message_subtype_data.xml",
         "views/product_template_views.xml",
         "views/stock_lot_views.xml",
         "views/documents_document_views.xml",
