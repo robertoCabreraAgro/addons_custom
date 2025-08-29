@@ -48,4 +48,102 @@
         <field name="perm_create" eval="True" />
         <field name="perm_unlink" eval="True" />
     </record>
+
+    <!-- Reglas de seguridad para stock.lot (vehículos migrados) -->
+    
+    <!-- Usuarios normales: solo pueden ver lotes que son vehículos -->
+    <record id="rule_stock_lot_vehicle_user" model="ir.rule">
+        <field name="name">User: see vehicle lots</field>
+        <field name="model_id" ref="stock.model_stock_lot" />
+        <field name="domain_force">[('asset_type', '=', 'vehicle')]</field>
+        <field name="groups" eval="[(4, ref('group_gps_tracking_user'))]" />
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="False" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+
+    <!-- Responsables comerciales: pueden ver vehículos -->
+    <record id="rule_stock_lot_vehicle_reporting" model="ir.rule">
+        <field name="name">Reporting: see vehicle lots</field>
+        <field name="model_id" ref="stock.model_stock_lot" />
+        <field name="domain_force">[('asset_type', '=', 'vehicle')]</field>
+        <field name="groups" eval="[(4, ref('group_gps_tracking_reporting'))]" />
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="False" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+
+    <!-- Fleet Manager: puede editar vehículos (incluidos asignaciones de operadores) -->
+    <record id="rule_stock_lot_vehicle_loan_manager" model="ir.rule">
+        <field name="name">Fleet Manager: manage vehicle lots</field>
+        <field name="model_id" ref="stock.model_stock_lot" />
+        <field name="domain_force">[('asset_type', '=', 'vehicle')]</field>
+        <field name="groups" eval="[(4, ref('group_gps_tracking_vehicle_loan'))]" />
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+
+    <!-- Usuarios con acceso privado: pueden ver todos los vehículos -->
+    <record id="rule_stock_lot_vehicle_private_access" model="ir.rule">
+        <field name="name">Private Access: see all vehicle lots</field>
+        <field name="model_id" ref="stock.model_stock_lot" />
+        <field name="domain_force">[('asset_type', '=', 'vehicle')]</field>
+        <field name="groups" eval="[(4, ref('group_gps_tracking_private'))]" />
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+
+    <!-- Administradores: acceso total a vehículos -->
+    <record id="rule_stock_lot_vehicle_administrator" model="ir.rule">
+        <field name="name">Administrator: full access to vehicle lots</field>
+        <field name="model_id" ref="stock.model_stock_lot" />
+        <field name="domain_force">[('asset_type', '=', 'vehicle')]</field>
+        <field name="groups" eval="[(4, ref('group_gps_tracking_manager'))]" />
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="True" />
+    </record>
+
+    <!-- Reglas de seguridad para product.asset.log (logs de vehículos) -->
+    
+    <record id="rule_product_asset_log_gps_user" model="ir.rule">
+        <field name="name">GPS User: see vehicle asset logs</field>
+        <field name="model_id" ref="product_asset.model_product_asset_log" />
+        <field name="domain_force">[('asset_id.asset_type', '=', 'vehicle')]</field>
+        <field name="groups" eval="[(4, ref('group_gps_tracking_user'))]" />
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="False" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+
+    <record id="rule_product_asset_log_vehicle_loan" model="ir.rule">
+        <field name="name">Fleet Manager: manage vehicle asset logs</field>
+        <field name="model_id" ref="product_asset.model_product_asset_log" />
+        <field name="domain_force">[('asset_id.asset_type', '=', 'vehicle')]</field>
+        <field name="groups" eval="[(4, ref('group_gps_tracking_vehicle_loan'))]" />
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+
+    <record id="rule_product_asset_log_gps_manager" model="ir.rule">
+        <field name="name">GPS Manager: full access to vehicle asset logs</field>
+        <field name="model_id" ref="product_asset.model_product_asset_log" />
+        <field name="domain_force">[('asset_id.asset_type', '=', 'vehicle')]</field>
+        <field name="groups" eval="[(4, ref('group_gps_tracking_manager'))]" />
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="True" />
+    </record>
+
 </odoo>

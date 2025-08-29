@@ -300,7 +300,7 @@ class StockLot(models.Model):
     def _track_subtype(self, init_values):
         self.ensure_one()
         if "operator_id" in init_values or "future_operator_id" in init_values:
-            return self.env.ref("fleet.mt_fleet_driver_updated")
+            return self.env.ref("product_asset.mt_asset_driver_updated")
 
         return super()._track_subtype(init_values)
 
