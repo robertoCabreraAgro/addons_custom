@@ -132,6 +132,56 @@ class HrAttendanceTelegramController(TelegramController):
             order="check_in desc",
         )
 
+    def _get_active_workorders(self, employee):
+        """Get all active workorders for the employee where they are currently working.
+
+        :param employee: The hr.employee record
+        :return: mrp.workorder recordset with active workorders where the employee is working
+        """
+        if not employee or not employee.user_id:
+            return request.env['mrp.workorder'].sudo()
+
+        # Search for workorders in progress that have active productivity records for this user
+        # We replicate the logic from _compute_working_users since is_user_working is non-stored
+        productivity_records = request.env['mrp.workcenter.productivity'].sudo().search([
+            ('user_id', '=', employee.user_id.id),
+            ('date_end', '=', False),  # Active (no end date)
+            ('loss_type', 'in', ['productive', 'performance'])
+        ])
+        
+        # Get the workorders from these productivity records
+        return productivity_records.mapped('workorder_id')
+
+    def _stop_employee_workorders(self, employee, reason='attendance_checkout'):
+        """Stop all active workorders for the given employee.
+
+        :param employee: The hr.employee record
+        :param reason: String describing the reason for stopping (for logging)
+        :return: Number of workorders stopped
+        """
+        active_workorders = self._get_active_workorders(employee)
+
+        if not active_workorders:
+            return 0
+
+        stopped_count = 0
+        for workorder in active_workorders:
+            try:
+                # Use the existing method to stop productivity tracking for this user
+                workorder.with_user(employee.user_id).end_previous(doall=False)
+                stopped_count += 1
+                _logger.info(
+                    "Stopped workorder %s for employee %s due to %s",
+                    workorder.name, employee.name, reason
+                )
+            except Exception as e:
+                _logger.error(
+                    "Error stopping workorder %s for employee %s: %s",
+                    workorder.name, employee.name, str(e)
+                )
+
+        return stopped_count
+
     def _handle_check_in_command(
         self, bot, chat, args, partner=False, internal_user=False
     ):
@@ -205,14 +255,23 @@ class HrAttendanceTelegramController(TelegramController):
         try:
             # Update the attendance record with the check-out time
             attendance.write({"check_out": check_out_time})
+
+            # Stop any active workorders for this employee
+            employee = partner.sudo().employee_ids[0]
+            stopped_workorders = self._stop_employee_workorders(employee, 'check_out')
+
             formatted_time = check_out_time.astimezone(
                 pytz.timezone(user_tz_str)
             ).strftime("%H:%M")
             user_name = internal_user.name if internal_user else partner.name
-            bot.send_message(
-                chat.chat_id,
-                f"Se ha registrado tu salida a las {formatted_time}. ¡Hasta luego, {user_name}!",
-            )
+
+            # Create message including workorder information if any were stopped
+            message = f"Se ha registrado tu salida a las {formatted_time}. ¡Hasta luego, {user_name}!"
+            if stopped_workorders > 0:
+                message += f"\n\nSe han pausado automáticamente {stopped_workorders} órdenes de trabajo activas."
+
+            bot.send_message(chat.chat_id, message)
+
         except ValidationError as e:
             attendance.write({"check_out": False})
             bot.send_message(chat.chat_id, f"Error: {e}")
@@ -243,13 +302,21 @@ class HrAttendanceTelegramController(TelegramController):
             return
         # Update the attendance record with the lunch start time
         attendance.write({"lunch_out": lunch_out_time})
+
+        # Stop any active workorders for this employee
+        employee = partner.sudo().employee_ids[0]
+        stopped_workorders = self._stop_employee_workorders(employee, 'lunch_out')
+
         formatted_time = lunch_out_time.astimezone(pytz.timezone(user_tz_str)).strftime(
             "%H:%M"
         )
-        bot.send_message(
-            chat.chat_id,
-            f"Se ha registrado tu salida a comer a las {formatted_time}. ¡Buen provecho!",
-        )
+
+        # Create message including workorder information if any were stopped
+        message = f"Se ha registrado tu salida a comer a las {formatted_time}. ¡Buen provecho!"
+        if stopped_workorders > 0:
+            message += f"\n\nSe han pausado automáticamente {stopped_workorders} órdenes de trabajo activas."
+
+        bot.send_message(chat.chat_id, message)
 
     def _handle_lunch_in_command(
         self, bot, chat, args, partner=False, internal_user=False
