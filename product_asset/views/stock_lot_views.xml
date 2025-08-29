@@ -129,27 +129,19 @@
                     type="object"
                     class="oe_stat_button"
                     icon="fa-users">
-                    <field name="assignment_count" widget="statbutton" string="Assignments" />
+                    <field name="count_assignment" widget="statbutton" string="Assignments" />
                 </button>
                 <button name="action_view_logs_cost"
                     type="object"
                     class="oe_stat_button"
                     icon="fa-wrench">
-                    <field name="service_count" widget="statbutton" string="Services" />
+                    <field name="count_service" widget="statbutton" string="Services" />
                 </button>
                 <button name="action_view_context"
                     type="object"
                     class="oe_stat_button"
                     icon="fa-file-text-o">
-                    <field name="contract_count" widget="statbutton" string="Contracts" />
-                </button>
-                <button name="action_view_bills"
-                    type="object"
-                    class="oe_stat_button"
-                    icon="fa-credit-card">
-                    <div class="o_field_widget o_stat_info">
-                        <span class="o_stat_text">Bills</span>
-                    </div>
+                    <field name="count_contract" widget="statbutton" string="Contracts" />
                 </button>
             </xpath>
 

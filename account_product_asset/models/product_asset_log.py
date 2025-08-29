@@ -5,6 +5,10 @@ from odoo.exceptions import UserError
 class ProductAssetLog(models.Model):
     _inherit = "product.asset.log"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     account_move_line_id = fields.Many2one(
         comodel_name="account.move.line",
         string="Accounting Entry",
@@ -14,16 +18,20 @@ class ProductAssetLog(models.Model):
         string="Bill State",
     )
     asset_id = fields.Many2one(
-        compute="_compute_asset_id", 
+        compute="_compute_asset_id",
         store=True,
         readonly=False,
     )
     amount = fields.Monetary(
-        compute="_compute_amount", 
+        compute="_compute_amount",
         store=True,
         inverse="_inverse_amount",
         readonly=False,
     )
+
+    # ------------------------------------------------------------
+    # CRUD METHODS
+    # ------------------------------------------------------------
 
     @api.ondelete(at_uninstall=False)
     def _unlink_if_no_linked_bill(self):
@@ -31,9 +39,15 @@ class ProductAssetLog(models.Model):
         if self.env.context.get("ignore_linked_bill_constraint"):
             return
         if any(log.account_move_line_id for log in self):
-            raise UserError(_(
-                "You cannot delete log services records because one or more of them were created from a bill."
-            ))
+            raise UserError(
+                _(
+                    "You cannot delete log services records because one or more of them were created from a bill."
+                )
+            )
+
+    # ------------------------------------------------------------
+    # COMPUTE METHODS
+    # ------------------------------------------------------------
 
     @api.depends("account_move_line_id.asset_id")
     def _compute_asset_id(self):
@@ -50,13 +64,23 @@ class ProductAssetLog(models.Model):
         for log in self:
             log.amount = log.account_move_line_id.debit
 
+    # ------------------------------------------------------------
+    # INVERSE METHODS
+    # ------------------------------------------------------------
+
     def _inverse_amount(self):
         """Prevent modification of amount for logs linked to accounting entries."""
         if any(service.account_move_line_id for service in self):
-            raise UserError(_(
-                "You cannot modify amount of services linked to an account move line. "
-                "Do it on the related accounting entry instead."
-            ))
+            raise UserError(
+                _(
+                    "You cannot modify amount of services linked to an account move line. "
+                    "Do it on the related accounting entry instead."
+                )
+            )
+
+    # ------------------------------------------------------------
+    # ACTIONS
+    # ------------------------------------------------------------
 
     def action_open_account_move(self):
         """Open the related accounting move."""

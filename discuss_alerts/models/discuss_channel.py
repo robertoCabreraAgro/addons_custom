@@ -1,5 +1,6 @@
 import ast
 import logging
+
 from datetime import timedelta
 
 from odoo import api, fields, models
@@ -16,8 +17,12 @@ class DiscussChannel(models.Model):
         default=False,
         help="Enable this to dedicate this channel exclusively for system alerts",
     )
-    alert_last_execution = fields.Datetime(string="Last execution", default=fields.Datetime.now)
-    alert_model_id = fields.Selection(selection="_list_all_models", string="Alert model")
+    alert_last_execution = fields.Datetime(
+        string="Last execution", default=fields.Datetime.now
+    )
+    alert_model_id = fields.Selection(
+        selection="_list_all_models", string="Alert model"
+    )
     alert_template_id = fields.Many2one(
         comodel_name="mail.template",
         string="Alert template",
@@ -87,7 +92,9 @@ class DiscussChannel(models.Model):
             "monthly": timedelta(days=30),  # Approximate month
         }
 
-        required_interval = frequency_deltas.get(self.alert_frequency, timedelta(days=1))
+        required_interval = frequency_deltas.get(
+            self.alert_frequency, timedelta(days=1)
+        )
         time_since_last = now - last_execution
 
         return time_since_last >= required_interval
@@ -95,7 +102,9 @@ class DiscussChannel(models.Model):
     @api.model
     def _process_alert_channels(self):
         """Cron job that processes channels with alerts enabled"""
-        alert_channels = self.search([("is_alert_channel", "=", True), ("active", "=", True)])
+        alert_channels = self.search(
+            [("is_alert_channel", "=", True), ("active", "=", True)]
+        )
         for channel in alert_channels:
             if not channel._should_send_alert():
                 continue
@@ -104,7 +113,9 @@ class DiscussChannel(models.Model):
             if records:
                 for record in records:
                     channel.message_post(
-                        body=channel._render_alert_message(record), author_id=None, message_type="comment"
+                        body=channel._render_alert_message(record),
+                        author_id=None,
+                        message_type="comment",
                     )
                 channel.alert_last_execution = fields.Datetime.now()
 
@@ -130,7 +141,9 @@ class DiscussChannel(models.Model):
             lang = self.env.user.lang or "en_US"
 
             template_in_lang = self.alert_template_id.with_context(lang=lang)
-            rendered_content = template_in_lang._render_field("body_html", record.ids)[record.id]
+            rendered_content = template_in_lang._render_field("body_html", record.ids)[
+                record.id
+            ]
             return rendered_content
         except Exception as e:
             _logger.error("Error rendering alert template: %s", e)

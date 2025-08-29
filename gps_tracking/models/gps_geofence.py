@@ -25,28 +25,27 @@ class GpsGeofence(models.Model):
     _parent_name = "parent_id"
     _parent_store = True
 
-    name = fields.Char(string="Area Name", required=True, tracking=True)
+    name = fields.Char(string="Area Name", required=True)
     geometry = fields.GeoPolygon(string="Geographic Boundary", required=True)
     color = fields.Char(
         string="Hex Color",
         default=lambda self: self._get_default_color(),
-        tracking=True,
     )
-    active = fields.Boolean(string="Active", default=True, tracking=True)
+    active = fields.Boolean(string="Active", default=True)
 
     # New expanded fields
     sequence = fields.Integer(
-        string="Sequence", default=lambda self: self._get_default_sequence()
+        string="Sequence",
+        default=lambda self: self._get_default_sequence(),
     )
     partner_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         string="Client",
         domain=["|", ("customer", "=", True), ("customer_rank", ">", 0)],
         help="Client associated with this geographic area",
-        tracking=True,
     )
     area_type = fields.Selection(
-        [
+        selection=[
             ("property", "Property"),
             ("structure", "Structure"),
             ("parcel", "Parcel"),
@@ -56,38 +55,36 @@ class GpsGeofence(models.Model):
         string="Area Type",
         required=True,
         default="property",
-        tracking=True,
     )
 
     parent_id = fields.Many2one(
-        "gps.geofence",
+        comodel_name="gps.geofence",
         string="Parent Area",
-        help="Parent geographic area for hierarchical organization",
-        tracking=True,
         index=True,
+        help="Parent geographic area for hierarchical organization",
     )
     parent_path = fields.Char(index=True)
     child_ids = fields.One2many("gps.geofence", "parent_id", string="Sub-areas")
-
     main_entrance_point = fields.GeoPoint(
         string="Main Entrance Coordinates",
         help="GPS coordinates for the main entrance point",
     )
-
     description = fields.Text(string="Description")
     surface = fields.Float(
         string="Surface (ha)",
-        help="Automatically calculated area in hectares",
-        readonly=True,
         digits=(10, 4),
+        readonly=True,
+        help="Automatically calculated area in hectares",
     )
-
     # Computed fields
     child_count = fields.Integer(
-        string="Sub-areas Count", compute="_compute_child_count"
+        string="Sub-areas Count",
+        compute="_compute_child_count",
     )
     full_name = fields.Char(
-        string="Full Name", compute="_compute_full_name", store=True
+        string="Full Name",
+        compute="_compute_full_name",
+        store=True,
     )
 
     def _get_default_color(self):
@@ -324,9 +321,6 @@ class GpsGeofence(models.Model):
                 coords.append(coords[0])
 
             geojson = {"type": "Polygon", "coordinates": [coords]}
-
-            # Create Shapely geometry in EPSG:4326 (lat/lng)
-            geom_4326 = shape(geojson)
 
             # Transform to Web Mercator (EPSG:3857) for accurate area calculation
             geom_3857 = self._project_to_srid(geojson, from_srid=4326, to_srid=3857)

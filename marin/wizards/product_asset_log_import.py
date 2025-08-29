@@ -3,10 +3,10 @@ import logging
 import os
 import re
 import traceback
+
 from csv import reader as csv_filereader
 from datetime import datetime
 from io import BytesIO, StringIO
-
 from pyexcel_xls import get_data as get_sheets
 
 from odoo import api, fields, models
@@ -31,7 +31,11 @@ class ProductAssetLogImport(models.TransientModel):
         default="effectivale",
         required=True,
     )
-    vehicle_ids = fields.Many2many(comodel_name="stock.lot", string="Assets", domain="[('asset_type', '=', 'vehicle')]")
+    vehicle_ids = fields.Many2many(
+        comodel_name="stock.lot",
+        string="Assets",
+        domain="[('asset_type', '=', 'vehicle')]",
+    )
     test_mode = fields.Boolean(default=True)
     test_display = fields.Selection(
         [

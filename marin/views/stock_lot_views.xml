@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+
     <record id="search_product_lot_filter_marin" model="ir.ui.view">
         <field name="name">stock.lot.search</field>
         <field name="model">stock.lot</field>
         <field name="inherit_id" ref="stock.search_product_lot_filter" />
         <field name="arch" type="xml">
             <field name="product_id" position="after">
-                <filter name="archived" string="Archived" domain="[('active', '=', False)]" />
+                <filter name="archived" string="Archived"
+                    domain="[('active', '=', False)]" />
             </field>
         </field>
     </record>
@@ -53,24 +55,6 @@
 
             <xpath expr="//field[@name='sale_order_ids']" position="attributes">
                 <attribute name="groups">sales_team.group_sale_salesman_all_leads</attribute>
-            </xpath>
-
-            <!-- Add fuel and highway pass buttons for vehicle assets -->
-            <xpath expr="//div[@name='button_box']" position="inside">
-                <button name="action_view_fuel_logs"
-                    type="object" class="oe_stat_button"
-                    icon="fa-tint"
-                    invisible="asset_type != 'vehicle'"
-                    help="show the fuel logs for this vehicle">
-                    <field name="fuel_card_count" string="Fuel" widget="statinfo" />
-                </button>
-                <button name="action_view_highway_pass_logs"
-                    type="object" class="oe_stat_button"
-                    icon="fa-road"
-                    invisible="asset_type != 'vehicle'"
-                    help="show the highway pass logs for this vehicle">
-                    <field name="highway_pass_count" string="Highway" widget="statinfo" />
-                </button>
             </xpath>
 
         </field>

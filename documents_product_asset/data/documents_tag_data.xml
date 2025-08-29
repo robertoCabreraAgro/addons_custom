@@ -2,28 +2,63 @@
 <odoo noupdate="1">
 
     <record id="documents_tag_equipment_doc" model="documents.tag" forcecreate="0">
-        <field name="name">Equipment > Equipment Documents</field>
+        <field name="name">Equipment Documents</field>
         <field name="sequence">14</field>
     </record>
 
-    <record id="documents_tag_vehicle_doc" model="documents.tag" forcecreate="0">
-        <field name="name">Fleet > Vehicles Documents</field>
+    <record id="documents_tag_fleet_doc" model="documents.tag" forcecreate="0">
+        <field name="name">Fleet Documents</field>
         <field name="sequence">14</field>
     </record>
 
     <record id="documents_tag_machinery_doc" model="documents.tag" forcecreate="0">
-        <field name="name">Machinery > Machinery Documents</field>
+        <field name="name">Machinery Documents</field>
         <field name="sequence">14</field>
     </record>
 
     <record id="documents_tag_property_doc" model="documents.tag" forcecreate="0">
-        <field name="name">Properties > Properties Documents</field>
+        <field name="name">Properties Documents</field>
         <field name="sequence">14</field>
     </record>
 
     <record id="documents_tag_fine" model="documents.tag" forcecreate="0">
-        <field name="name">Fleet > Fine</field>
+        <field name="name">Fine</field>
         <field name="sequence">15</field>
+    </record>
+
+    <record id="documents_tag_plate" model="documents.tag" forcecreate="0">
+        <field name="name">Vehicle plate</field>
+        <field name="sequence">15</field>
+    </record>
+
+    <record id="documents_tag_environmental_verification" model="documents.tag" forcecreate="0">
+        <field name="name">Environmental verification</field>
+        <field name="sequence">13</field>
+    </record>
+
+    <record id="documents_tag_fuel_card" model="documents.tag" forcecreate="0">
+        <field name="name">Fuel Card</field>
+        <field name="sequence">15</field>
+    </record>
+
+    <record id="documents_tag_insurance_policy" model="documents.tag" forcecreate="0">
+        <field name="name">Insurance policy</field>
+        <field name="sequence">15</field>
+    </record>
+
+    <record id="documents_tag_highway_pass" model="documents.tag" forcecreate="0">
+        <field name="name">Highway Pass</field>
+        <field name="sequence">15</field>
+    </record>
+
+    <record id="documents_tag_gps" model="documents.tag" forcecreate="0">
+        <field name="name">GPS</field>
+        <field name="sequence">15</field>
+    </record>
+
+    <record id="documents_tag_drivers_licence" model="documents.tag" forcecreate="0">
+        <field name="name">Driver Licence</field>
+        <field name="sequence">12</field>
     </record>
 
 </odoo>

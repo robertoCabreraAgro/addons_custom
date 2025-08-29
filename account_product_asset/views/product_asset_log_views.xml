@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+
     <record id='view_form_product_asset_log' model='ir.ui.view'>
         <field name="name">product.asset.log.form.account</field>
         <field name="model">product.asset.log</field>
@@ -28,4 +29,5 @@
             </xpath>
         </field>
     </record>
+
 </odoo>

@@ -4,6 +4,10 @@ from odoo import fields, models
 class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     documents_settings_equipment = fields.Boolean(
         related="company_id.documents_settings_equipment",
         string="Equipment",

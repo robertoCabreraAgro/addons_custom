@@ -7,7 +7,7 @@
         Adds asset data to documents
     """,
     "website": "",
-    "depends": ["documents", "product_asset"],
+    "depends": ["documents_product", "product_asset"],
     "data": [
         "data/documents_folder_data.xml",
         "data/documents_tag_data.xml",

@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
 import logging
+
 from odoo import api, SUPERUSER_ID
 
 _logger = logging.getLogger(__name__)
@@ -11,27 +11,27 @@ def migrate(cr, version):
     Migrates references from fleet.vehicle to stock.lot (product_asset)
     """
     _logger.info("Starting GPS Tracking migration from fleet to product_asset...")
-    
+
     env = api.Environment(cr, SUPERUSER_ID, {})
-    
+
     try:
         # 1. Update gps_tracking_device references
         _migrate_gps_device_references(cr, env)
-        
-        # 2. Update gps_tracking_point references  
+
+        # 2. Update gps_tracking_point references
         _migrate_gps_point_references(cr, env)
-        
+
         # 3. Update asset_loan_report SQL view
         _migrate_report_views(cr, env)
-        
+
         # 4. Validate migration success
         _validate_migration(cr, env)
-        
+
         # 5. Create performance indexes for GPS queries
         _create_gps_indexes(cr, env)
-        
+
         _logger.info("GPS Tracking migration completed successfully!")
-        
+
     except Exception as e:
         _logger.error(f"GPS Tracking migration failed: {str(e)}")
         cr.rollback()
@@ -41,22 +41,25 @@ def migrate(cr, version):
 def _migrate_gps_device_references(cr, env):
     """Migrate gps.tracking.device.vehicle_id references to asset_id"""
     _logger.info("Migrating GPS device references from vehicle_id to asset_id...")
-    
+
     # Get all devices with vehicle_id (old column) pointing to fleet.vehicle
-    cr.execute("""
+    cr.execute(
+        """
         SELECT id, vehicle_id 
         FROM gps_tracking_device 
         WHERE vehicle_id IS NOT NULL
-    """)
+    """
+    )
     devices_data = cr.fetchall()
-    
+
     migrated_count = 0
     failed_count = 0
-    
+
     for device_id, old_vehicle_id in devices_data:
         try:
             # Find corresponding stock.lot by matching key fields
-            cr.execute("""
+            cr.execute(
+                """
                 SELECT sl.id 
                 FROM stock_lot sl
                 JOIN fleet_vehicle fv ON (
@@ -67,58 +70,74 @@ def _migrate_gps_device_references(cr, env):
                 WHERE fv.id = %s 
                 AND sl.asset_type = 'vehicle'
                 LIMIT 1
-            """, (old_vehicle_id,))
-            
+            """,
+                (old_vehicle_id,),
+            )
+
             result = cr.fetchone()
             if result:
                 new_asset_id = result[0]
                 # Update the new asset_id column
-                cr.execute("""
+                cr.execute(
+                    """
                     UPDATE gps_tracking_device 
                     SET asset_id = %s 
                     WHERE id = %s
-                """, (new_asset_id, device_id))
+                """,
+                    (new_asset_id, device_id),
+                )
                 migrated_count += 1
-                _logger.debug(f"Device {device_id}: fleet.vehicle({old_vehicle_id}) -> stock.lot({new_asset_id})")
+                _logger.debug(
+                    f"Device {device_id}: fleet.vehicle({old_vehicle_id}) -> stock.lot({new_asset_id})"
+                )
             else:
-                _logger.warning(f"No matching stock.lot found for device {device_id} with vehicle {old_vehicle_id}")
+                _logger.warning(
+                    f"No matching stock.lot found for device {device_id} with vehicle {old_vehicle_id}"
+                )
                 failed_count += 1
-                
+
         except Exception as e:
             _logger.error(f"Error migrating device {device_id}: {str(e)}")
             failed_count += 1
-    
+
     # After migration, clear the old vehicle_id column to avoid confusion
-    cr.execute("""
+    cr.execute(
+        """
         UPDATE gps_tracking_device 
         SET vehicle_id = NULL 
         WHERE vehicle_id IS NOT NULL
-    """)
+    """
+    )
     cleared_count = cr.rowcount
-    
-    _logger.info(f"GPS devices migration: {migrated_count} migrated, {failed_count} failed, {cleared_count} old references cleared")
+
+    _logger.info(
+        f"GPS devices migration: {migrated_count} migrated, {failed_count} failed, {cleared_count} old references cleared"
+    )
 
 
 def _migrate_gps_point_references(cr, env):
     """Migrate gps.tracking.point asset references"""
     _logger.info("Migrating GPS point references from vehicle_id to asset_id...")
-    
+
     # First, get total count for progress tracking
-    cr.execute("""
+    cr.execute(
+        """
         SELECT COUNT(*) 
         FROM gps_tracking_point 
         WHERE vehicle_id IS NOT NULL
-    """)
+    """
+    )
     total_points = cr.fetchone()[0]
     _logger.info(f"Total GPS points to migrate: {total_points}")
-    
+
     if total_points == 0:
         _logger.info("No GPS points to migrate")
         return
-    
+
     # Create a mapping table of fleet_vehicle.id -> stock_lot.id for faster lookups
     _logger.info("Creating fleet-to-asset mapping table...")
-    cr.execute("""
+    cr.execute(
+        """
         CREATE TEMPORARY TABLE temp_vehicle_mapping AS (
             SELECT DISTINCT 
                 fv.id as fleet_vehicle_id,
@@ -131,71 +150,85 @@ def _migrate_gps_point_references(cr, env):
             )
             WHERE sl.asset_type = 'vehicle'
         )
-    """)
+    """
+    )
     mapping_count = cr.rowcount
     _logger.info(f"Created mapping for {mapping_count} fleet vehicles to assets")
-    
+
     # Bulk update GPS points using the mapping table
     _logger.info("Performing bulk update of GPS points...")
-    cr.execute("""
+    cr.execute(
+        """
         UPDATE gps_tracking_point 
         SET asset_id = tvm.stock_lot_id
         FROM temp_vehicle_mapping tvm
         WHERE gps_tracking_point.vehicle_id = tvm.fleet_vehicle_id
         AND gps_tracking_point.vehicle_id IS NOT NULL
-    """)
+    """
+    )
     migrated_count = cr.rowcount
-    
+
     # Count failed migrations (points without matching assets)
-    cr.execute("""
+    cr.execute(
+        """
         SELECT COUNT(*) 
         FROM gps_tracking_point gtp
         WHERE gtp.vehicle_id IS NOT NULL 
         AND gtp.asset_id IS NULL
-    """)
+    """
+    )
     failed_count = cr.fetchone()[0]
-    
+
     if failed_count > 0:
         _logger.warning(f"Found {failed_count} GPS points without matching assets")
         # Log some examples for debugging
-        cr.execute("""
+        cr.execute(
+            """
             SELECT DISTINCT gtp.vehicle_id, fv.name, fv.license_plate
             FROM gps_tracking_point gtp
             LEFT JOIN fleet_vehicle fv ON gtp.vehicle_id = fv.id
             WHERE gtp.vehicle_id IS NOT NULL 
             AND gtp.asset_id IS NULL
             LIMIT 5
-        """)
+        """
+        )
         examples = cr.fetchall()
         for vehicle_id, name, license_plate in examples:
-            _logger.warning(f"  - Vehicle {vehicle_id}: {name} ({license_plate}) has no matching asset")
-    
+            _logger.warning(
+                f"  - Vehicle {vehicle_id}: {name} ({license_plate}) has no matching asset"
+            )
+
     # Clear the old vehicle_id column
     _logger.info("Clearing old vehicle_id references...")
-    cr.execute("""
+    cr.execute(
+        """
         UPDATE gps_tracking_point 
         SET vehicle_id = NULL 
         WHERE vehicle_id IS NOT NULL
-    """)
+    """
+    )
     cleared_count = cr.rowcount
-    
+
     # Drop the temporary mapping table
     cr.execute("DROP TABLE IF EXISTS temp_vehicle_mapping")
-    
-    _logger.info(f"GPS points migration: {migrated_count} migrated, {failed_count} failed, {cleared_count} old references cleared")
+
+    _logger.info(
+        f"GPS points migration: {migrated_count} migrated, {failed_count} failed, {cleared_count} old references cleared"
+    )
 
 
 def _migrate_report_views(cr, env):
     """Update SQL views to use stock_lot instead of fleet_vehicle"""
     _logger.info("Migrating report views...")
-    
+
     try:
         # Drop and recreate asset_loan_report view
         cr.execute("DROP VIEW IF EXISTS asset_loan_report")
         cr.execute("DROP VIEW IF EXISTS fleet_vehicle_loan_report")
-        
+
         # Recreate the view with updated query (stock_lot instead of fleet_vehicle)
-        cr.execute("""
+        cr.execute(
+            """
             CREATE OR REPLACE VIEW asset_loan_report AS (
                 WITH
                 -- Step 1: Define trip segments.
@@ -339,10 +372,11 @@ def _migrate_report_views(cr, env):
                 ORDER BY
                     tdv.start_time
             )
-        """)
-        
+        """
+        )
+
         _logger.info("Report views migrated successfully")
-        
+
     except Exception as e:
         _logger.error(f"Error migrating report views: {str(e)}")
         raise
@@ -351,39 +385,47 @@ def _migrate_report_views(cr, env):
 def _validate_migration(cr, env):
     """Validate that migration was successful"""
     _logger.info("Validating migration results...")
-    
+
     # Check devices without valid vehicle references
-    cr.execute("""
+    cr.execute(
+        """
         SELECT COUNT(*) 
         FROM gps_tracking_device gtd
         LEFT JOIN stock_lot sl ON gtd.vehicle_id = sl.id
         WHERE gtd.vehicle_id IS NOT NULL AND sl.id IS NULL
-    """)
+    """
+    )
     orphaned_devices = cr.fetchone()[0]
-    
+
     # Check total devices migrated
-    cr.execute("""
+    cr.execute(
+        """
         SELECT COUNT(*) 
         FROM gps_tracking_device 
         WHERE vehicle_id IS NOT NULL
-    """)
+    """
+    )
     total_devices_with_vehicle = cr.fetchone()[0]
-    
+
     # Check total points with vehicle
-    cr.execute("""
+    cr.execute(
+        """
         SELECT COUNT(*)
         FROM gps_tracking_point
         WHERE vehicle_id IS NOT NULL
-    """)
+    """
+    )
     total_points_with_vehicle = cr.fetchone()[0]
-    
+
     _logger.info(f"Migration validation results:")
     _logger.info(f"  - Devices with vehicle: {total_devices_with_vehicle}")
     _logger.info(f"  - Points with vehicle: {total_points_with_vehicle}")
     _logger.info(f"  - Orphaned devices: {orphaned_devices}")
-    
+
     if orphaned_devices > 0:
-        _logger.warning(f"Found {orphaned_devices} devices with invalid vehicle references")
+        _logger.warning(
+            f"Found {orphaned_devices} devices with invalid vehicle references"
+        )
     else:
         _logger.info("All device references are valid!")
 
@@ -391,31 +433,37 @@ def _validate_migration(cr, env):
 def _create_gps_indexes(cr, env):
     """Create critical indexes to optimize GPS tracking point queries"""
     _logger.info("Creating GPS performance indexes...")
-    
+
     try:
         # Index for driver_id and timestamp queries (most critical for asset loan report)
         _logger.info("Creating driver + timestamp index...")
-        cr.execute("""
+        cr.execute(
+            """
             CREATE INDEX IF NOT EXISTS idx_gps_tracking_point_driver_timestamp 
             ON gps_tracking_point (driver_id, timestamp)
-        """)
-        
+        """
+        )
+
         # Index for device_id and timestamp queries (most critical for asset loan report)
         _logger.info("Creating device + timestamp index...")
-        cr.execute("""
+        cr.execute(
+            """
             CREATE INDEX IF NOT EXISTS idx_gps_tracking_point_device_timestamp 
             ON gps_tracking_point (device_id, timestamp)
-        """)
-        
+        """
+        )
+
         # B-tree index for timestamp range queries (optimizes BETWEEN operations)
         _logger.info("Creating timestamp btree index...")
-        cr.execute("""
+        cr.execute(
+            """
             CREATE INDEX IF NOT EXISTS idx_gps_tracking_point_timestamp_btree 
             ON gps_tracking_point USING btree (timestamp)
-        """)
-        
+        """
+        )
+
         _logger.info("GPS performance indexes created successfully")
-        
+
     except Exception as e:
         _logger.error(f"Error creating GPS indexes: {str(e)}")
         # Don't raise - indexes are performance optimization, not critical

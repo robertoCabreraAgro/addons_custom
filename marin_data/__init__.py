@@ -879,10 +879,6 @@ def _post_init_marin(env):
         noupdate=True,
         kind="data",
     )
-
-    tools.convert.convert_file(
-        env, "marin_data", "data/documents_tag_data.xml", None, mode="init", kind="data"
-    )
     tools.convert.convert_file(
         env,
         "marin_data",
