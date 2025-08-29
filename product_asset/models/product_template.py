@@ -17,6 +17,7 @@ class ProductTemplate(models.Model):
             ("vehicle", "Vehicle"),
         ],
         default="product",
+        change_default=True,
     )
 
     # Technical fields

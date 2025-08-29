@@ -6,7 +6,7 @@
     "website": "https://www.agromarin.mx",
     "author": "Agro Marin",
     "license": "OPL-1",
-    "depends": ["stock", "product_expiry", "mail"],
+    "depends": ["stock", "product_expiry"],
     "data": [
         "security/ir.model.access.csv",
         "data/stock_lot_rule_data.xml",

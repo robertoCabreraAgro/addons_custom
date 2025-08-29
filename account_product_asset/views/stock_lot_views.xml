@@ -11,10 +11,7 @@
                     type="object"
                     class="oe_stat_button"
                     icon="fa-credit-card">
-                    <div class="o_field_widget o_stat_info">
-                        <span class="o_stat_text">Bills</span>
-                    </div>
-                    <field name="count_bill" widget="statinfo" string="Bills"/>
+                    <field name="count_bill" string="Bills" widget="statinfo"/>
                 </button>
             </xpath>
         </field>

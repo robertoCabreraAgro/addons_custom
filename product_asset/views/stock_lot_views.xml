@@ -58,23 +58,6 @@
         </field>
     </record>
 
-    <!-- Kanban View -->
-    <record id="view_kanban_stock_lotn" model="ir.ui.view">
-        <field name="name">stock.lot.kanban</field>
-        <field name="model">stock.lot</field>
-        <field name="arch" type="xml">
-            <kanban group_create="false" group_delete="false">
-                <templates>
-                    <t t-name="card">
-                        <field name="name" class="fw-bolder fs-5" />
-                        <field name="product_id" class="small" />
-                        <field name="activity_ids" widget="kanban_activity" />
-                    </t>
-                </templates>
-            </kanban>
-        </field>
-    </record>
-
     <!-- List View -->
     <record id="view_list_stock_lot" model="ir.ui.view">
         <field name="name">stock.lot.fleet.tree</field>
@@ -96,15 +79,33 @@
                 <field name="date_write_off" optional="hide" />
                 <field name="value_original" optional="hide" />
                 <field name="value_residual" optional="hide" />
-                <field name="service_activity" optional="show" widget="badge"
+                <field name="fuel_card_balance_to_reload" string="To Reload (FC)"
+                    sum="Total to reload" optional="show" />
+                <field name="service_activity" widget="badge"
                     decoration-danger="service_activity == 'overdue'"
-                    decoration-warning="service_activity == 'today'" />
-                <field name="fuel_card_balance_to_reload" optional="show" string="To Reload (FC)"
-                    sum="Total to reload" />
+                    decoration-warning="service_activity == 'today'"
+                    optional="show" />
+                <field name="contract_state" widget="badge" optional="show" />
                 <field name="activity_ids" widget="list_activity" optional="show" />
-                <field name="contract_state" optional="show" widget="badge" />
                 <field name="company_id" optional="hide" groups="base.group_multi_company" />
             </list>
+        </field>
+    </record>
+
+    <!-- Kanban View -->
+    <record id="view_kanban_stock_lot" model="ir.ui.view">
+        <field name="name">stock.lot.kanban</field>
+        <field name="model">stock.lot</field>
+        <field name="arch" type="xml">
+            <kanban group_create="false" group_delete="false">
+                <templates>
+                    <t t-name="card">
+                        <field name="name" class="fw-bolder fs-5" />
+                        <field name="product_id" class="small" />
+                        <field name="activity_ids" widget="kanban_activity" />
+                    </t>
+                </templates>
+            </kanban>
         </field>
     </record>
 
@@ -121,27 +122,31 @@
                     class="btn-primary"
                     invisible="not future_operator_id" />
                 <field name="contract_state" widget="statusbar"
-                    statusbar_visible="futur,open,expired,closed" />
+                    statusbar_visible="futur,open,expired,closed"
+                    invisible="asset_type not in ('equipment', 'machinery', 'vehicle')" />
             </xpath>
 
             <xpath expr="//div[@name='button_box']" position="inside">
                 <button name="action_view_logs_assignation"
                     type="object"
                     class="oe_stat_button"
-                    icon="fa-users">
-                    <field name="count_assignment" widget="statbutton" string="Assignments" />
+                    icon="fa-users"
+                    invisible="asset_type == 'product'">
+                    <field name="count_assignment" string="Assignments" widget="statbutton" />
                 </button>
                 <button name="action_view_logs_cost"
                     type="object"
                     class="oe_stat_button"
-                    icon="fa-wrench">
-                    <field name="count_service" widget="statbutton" string="Services" />
+                    icon="fa-wrench"
+                    invisible="asset_type == 'product'">
+                    <field name="count_service" string="Services" widget="statbutton" />
                 </button>
-                <button name="action_view_context"
+                <button name="action_view_logs_contract"
                     type="object"
                     class="oe_stat_button"
-                    icon="fa-file-text-o">
-                    <field name="count_contract" widget="statbutton" string="Contracts" />
+                    icon="fa-file-text-o"
+                    invisible="asset_type == 'product'">
+                    <field name="count_contract" string="Contracts" widget="statbutton" />
                 </button>
             </xpath>
 

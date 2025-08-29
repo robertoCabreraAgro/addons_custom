@@ -1,5 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
+    <!-- Stock Lot Search View - Add Lot Rule Filter -->
+    <record id="stock_lot_search_view_lot_rule" model="ir.ui.view">
+        <field name="name">stock.lot.search.lot.rule</field>
+        <field name="model">stock.lot</field>
+        <field name="inherit_id" ref="stock.search_product_lot_filter"/>
+        <field name="priority" eval="200" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field name="ref"/>
+            </xpath>
+            <xpath expr="//group[@expand='0']" position="inside">
+                <filter name="group_by_lot_rule" string="Lot Rule"
+                    context="{'group_by': 'lot_rule_id'}"/>
+                <filter name="group_by_manufacture_date" string="Manufacturing Date"
+                    context="{'group_by': 'manufacture_date'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Stock Lot List View - Add Lot Rule Field -->
+    <record id="stock_lot_list_view_lot_rule" model="ir.ui.view">
+        <field name="name">stock.lot.list.lot.rule</field>
+        <field name="model">stock.lot</field>
+        <field name="inherit_id" ref="stock.view_production_lot_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field name="lot_rule_id" optional="hide"/>
+                <field name="manufacture_date" optional="show"/>
+            </xpath>
+        </field>
+    </record>
     
     <!-- Stock Lot Form View - Add Lot Rule Field -->
     <record id="stock_lot_form_view_lot_rule" model="ir.ui.view">
@@ -17,38 +49,6 @@
             <xpath expr="//field[@name='ref']" position="attributes">
                 <attribute name="readonly">lot_rule_id</attribute>
                 <attribute name="placeholder">Vendor lot number or reference identifier</attribute>
-            </xpath>
-        </field>
-    </record>
-
-    <!-- Stock Lot List View - Add Lot Rule Field -->
-    <record id="stock_lot_list_view_lot_rule" model="ir.ui.view">
-        <field name="name">stock.lot.list.lot.rule</field>
-        <field name="model">stock.lot</field>
-        <field name="inherit_id" ref="stock.view_production_lot_tree"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='product_id']" position="after">
-                <field name="lot_rule_id" optional="hide"/>
-                <field name="manufacture_date" optional="show"/>
-                <field name="ref" optional="hide"/>
-            </xpath>
-        </field>
-    </record>
-
-    <!-- Stock Lot Search View - Add Lot Rule Filter -->
-    <record id="stock_lot_search_view_lot_rule" model="ir.ui.view">
-        <field name="name">stock.lot.search.lot.rule</field>
-        <field name="model">stock.lot</field>
-        <field name="inherit_id" ref="stock.search_product_lot_filter"/>
-        <field name="priority" eval="200" />
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='product_id']" position="after">
-                <field name="manufacture_date"/>
-                <field name="ref"/>
-            </xpath>
-            <xpath expr="//group[@expand='0']" position="inside">
-                <filter name="group_by_lot_rule" string="Lot Rule" context="{'group_by': 'lot_rule_id'}"/>
-                <filter name="group_by_manufacture_date" string="Manufacturing Date" context="{'group_by': 'manufacture_date'}"/>
             </xpath>
         </field>
     </record>

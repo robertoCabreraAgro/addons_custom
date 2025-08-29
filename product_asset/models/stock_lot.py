@@ -24,6 +24,10 @@ class StockLot(models.Model):
         store=True,
         string="Asset Type",
     )
+    type_name = fields.Char(
+        string="Type Name",
+        compute="_compute_type_name",
+    )
     asset_manager_id = fields.Many2one(
         comodel_name="hr.employee",
         string="Manager",
@@ -400,13 +404,23 @@ class StockLot(models.Model):
             vehicle.count_service = mapped_service_data[vehicle.id][vehicle.active]
             vehicle.count_assignment = mapped_history_data[vehicle.id]
 
-    @api.depends("model_id")
-    def _compute_image_128(self):
-        for product in self:
-            if product.model_id:
-                product.image_128 = product.manufacturer_id.image_128
-            else:
-                product.image_128 = product.image_1920
+    @api.depends("product_id", "asset_type")
+    def _compute_type_name(self):
+        for lot in self:
+            if lot.product_id.tracking == "serial":
+                lot.type_name = _("Serial Number")
+            elif lot.product_id.tracking == "lot":
+                lot.type_name = _("Lot Number")
+            elif lot.asset_type == "vehicle":
+                lot.type_name = _("Vehicle")
+
+    # @api.depends("model_id")
+    # def _compute_image_128(self):
+    #     for product in self:
+    #         if product.model_id:
+    #             product.image_128 = product.manufacturer_id.image_128
+    #         else:
+    #             product.image_128 = product.image_1920
 
     @api.depends("fuel_card_id")
     def _compute_fuel_card_name(self):
@@ -744,7 +758,7 @@ class StockLot(models.Model):
         }
         return action
 
-    def action_view_context(self):
+    def action_view_logs_contract(self):
         """
         This opens the xml view specified in xml_id for the current vehicle (contracts)
         """
