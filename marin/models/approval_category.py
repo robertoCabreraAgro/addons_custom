@@ -31,18 +31,21 @@ class ApprovalCategory(models.Model):
         string="Has Journal",
         required=True,
         default="no",
+        tracking=True,
     )
     has_vehicle = fields.Selection(
         selection=CATEGORY_SELECTION,
         string="Has Vehicle",
         required=True,
         default="no",
+        tracking=True,
     )
     has_odometer = fields.Selection(
         selection=CATEGORY_SELECTION,
         string="Has Odometer",
         required=True,
         default="no",
+        tracking=True,
     )
 
     # ------------------------------------------------------------
