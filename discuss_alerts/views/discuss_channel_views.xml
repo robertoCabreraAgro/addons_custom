@@ -35,7 +35,7 @@
                         </group>
                     </group>
                     <group>
-                        <field name="alert_last_execution" readonly="0" />
+                        <field name="alert_last_execution" readonly="1" />
                     </group>
                 </page>
             </xpath>
