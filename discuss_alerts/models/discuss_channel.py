@@ -1,8 +1,11 @@
 import ast
+import json
 import logging
 from datetime import timedelta
-
+from urllib.parse import urlencode, quote
 from odoo import api, fields, models
+from odoo.exceptions import UserError
+from markupsafe import Markup
 
 _logger = logging.getLogger(__name__)
 
@@ -18,16 +21,6 @@ class DiscussChannel(models.Model):
     )
     alert_last_execution = fields.Datetime(string="Last execution", default=fields.Datetime.now)
     alert_model_id = fields.Selection(selection="_list_all_models", string="Alert model")
-    alert_template_id = fields.Many2one(
-        comodel_name="mail.template",
-        string="Alert template",
-    )
-    alert_template_body = fields.Html(
-        string="Template Body",
-        compute="_compute_alert_template_body",
-        inverse="_inverse_alert_template_body",
-        store=False,
-    )
     alert_frequency = fields.Selection(
         selection=[
             ("hourly", "Hourly"),
@@ -40,28 +33,11 @@ class DiscussChannel(models.Model):
         help="Minimum time interval between alert executions",
     )
 
-    @api.depends("alert_template_id")
-    def _compute_alert_template_body(self):
-        """Compute template body from selected template"""
-        for channel in self:
-            alert_template_body = False
-            if channel.alert_template_id:
-                alert_template_body = channel.alert_template_id.body_html
-
-            channel.alert_template_body = alert_template_body
-
     @api.onchange("alert_model_id")
     def _onchange_alert_model_id(self):
         """Clear template when model changes"""
         if self.alert_model_id:
-            self.alert_template_id = False
             self.alert_domain = "[]"
-
-    def _inverse_alert_template_body(self):
-        """Update template body when edited"""
-        for channel in self:
-            if channel.alert_template_id:
-                channel.alert_template_id.body_html = channel.alert_template_body
 
     @api.model
     def _list_all_models(self):
@@ -102,16 +78,21 @@ class DiscussChannel(models.Model):
 
             records = channel._evaluate_alert_domain()
             if records:
-                for record in records:
-                    channel.message_post(
-                        body=channel._render_alert_message(record), author_id=None, message_type="comment"
-                    )
+                action_url = channel.generate_action_url(records)
+                message_body = channel._build_alert_message(records, action_url)
+
+                channel.message_post(
+                    body=Markup(message_body),
+                    subject="Critical Tracking Points Summary",
+                    message_type='comment',
+                    subtype_xmlid='mail.mt_comment',
+                )
                 channel.alert_last_execution = fields.Datetime.now()
 
     def _evaluate_alert_domain(self):
         """Evaluate configured domain with date filters"""
         if not self.alert_model_id:
-            return self.env[self.alert_model_id].browse()
+            return self.env["ir.model"].browse()
 
         # Convert the base domain
         base_domain = ast.literal_eval(self.alert_domain or "[]")
@@ -122,16 +103,96 @@ class DiscussChannel(models.Model):
             return self.env[self.alert_model_id].search(base_domain)
 
         # If no domain is specified, return empty recordset
-        return self.env[self.alert_model_id].browse()
+        return self.env["ir.model"].browse()
 
-    def _render_alert_message(self, record):
-        """Renders the template content"""
-        try:
-            lang = self.env.user.lang or "en_US"
+    def _build_alert_message(self, records, action_url):
+        message = f"""
+            <p><strong>{len(records)} critical tracking points</strong> have been identified.</p>
+            <p>You can review them by clicking the following button:</p>
+            <br/>
+            <a href="{action_url}"
+            style="background-color: #875A7B; color: #FFFFFF; padding: 10px 20px;
+                    text-decoration: none; border-radius: 5px; font-weight: bold;"
+            data-oe-model="{records._name}"
+            data-oe-ids="[{','.join(map(str, records.ids))}]">
+                View Critical Points
+            </a>
+            <br/>
+        """
+        return message
 
-            template_in_lang = self.alert_template_id.with_context(lang=lang)
-            rendered_content = template_in_lang._render_field("body_html", record.ids)[record.id]
-            return rendered_content
-        except Exception as e:
-            _logger.error("Error rendering alert template: %s", e)
-            return self.alert_template_id.body_html or ""
+    def generate_action_url(self, records):
+        """
+        Generate a direct URL to a filtered list view using Odoo's modern URL structure.
+
+        Args:
+        records: Recordset for which the URL will be generated.
+
+        Returns:
+        str: Complete URL to the Odoo action with domain filter.
+
+        Raises:
+        UserError: If no suitable window action is found for the model.
+        """
+        # If recordset is empty, nothing to show
+        if not records:
+            return ""
+
+        # 1. Get system base URL
+        base_url = self.env["ir.config_parameter"].sudo().get_param("web.base.url")
+        if not base_url:
+            raise UserError("System base URL (web.base.url) is not configured.")
+
+        model_name = records._name
+
+        # 2. Search for a window action for the model
+        action = self.env["ir.actions.act_window"].search([
+            ("res_model", "=", model_name),
+            ("view_mode", "=like", "%list%"),
+        ], limit=1)
+
+        if not action:
+            action = self.env["ir.actions.act_window"].search([
+                ("res_model", "=", model_name),
+            ], limit=1)
+
+        # 3. If no action exists, create URL without action
+        if not action:
+            # Alternative: direct model/view approach
+            domain = [('id', 'in', records.ids)]
+            params = {
+                'model': model_name,
+                'view_type': 'list',
+                'domain': json.dumps(domain),
+            }
+            query_string = urlencode(params)
+            return f"{base_url}/web#{query_string}"
+
+        # 4. Build the domain filter
+        domain = [('id', 'in', records.ids)]
+
+        # 5. Build action context - this is the correct format for Odoo 16+
+        action_context = {
+            'active_model': model_name,
+            'active_ids': records.ids,
+            'active_id': records.ids[0] if records.ids else False,
+            'search_default_filter': True,
+        }
+
+        # 6. The correct URL format for Odoo with action and domain
+        # Domain needs to be passed as a state parameter
+        state = {
+            'domain': domain,
+            'context': action_context,
+        }
+
+        # Create the URL with proper encoding
+        url = f"{base_url}/web#action={action.id}&model={model_name}&view_type=list"
+
+        # Add the domain as a cids parameter (client IDs)
+        if records.ids:
+            url += f"&cids={','.join(map(str, records.ids))}"
+            # Alternative: encode the full state
+            url += f"&active_domain={quote(json.dumps(domain))}"
+
+        return url

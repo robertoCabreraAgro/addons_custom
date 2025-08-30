@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-19 13:24+0000\n"
-"PO-Revision-Date: 2025-08-19 13:24+0000\n"
+"POT-Creation-Date: 2025-08-30 13:20+0000\n"
+"PO-Revision-Date: 2025-08-30 13:20+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,53 +16,9 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: discuss_alerts
-#: model:mail.template,body_html:discuss_alerts.email_alert_sale_test
-msgid ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"                <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"                    <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in ('draft', 'sent') else 'order'\"/>\n"
-"                    Hello,\n"
-"                    <br/><br/>\n"
-"                    Your <t t-out=\"doc_name or ''\">quotation</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"/>\n"
-"                    <t t-if=\"object.origin\">\n"
-"                        (with reference: <t t-out=\"object.origin or ''\">S00052</t> )\n"
-"                    </t>\n"
-"                    amounting in <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span> is ready for review.\n"
-"                    Do not hesitate to contact us if you have any questions.\n"
-"                    <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
-"                        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
-"                    </t>\n"
-"                </p>\n"
-"            </div>\n"
-"        "
-msgstr ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"                <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"                    <t t-set=\"doc_name\" t-value=\"'cotización' if object.state in ('draft', 'sent') else 'orden'\"/>\n"
-"                    Hola,\n"
-"                    <br/><br/>\n"
-"                    Su <t t-out=\"doc_name or ''\">cotización</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"/>\n"
-"                    <t t-if=\"object.origin\">\n"
-"                        (con referencia: <t t-out=\"object.origin or ''\">S00052</t>)\n"
-"                    </t>\n"
-"                    por un total de <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$10.00</span> está lista para su revisión.\n"
-"                    No dude en contactarnos si tiene alguna pregunta.\n"
-"                    <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
-"                        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
-"                    </t>\n"
-"                </p>\n"
-"            </div>\n"
-"        "
-
-#. module: discuss_alerts
 #: model:ir.model.fields,field_description:discuss_alerts.field_discuss_channel__is_alert_channel
 msgid "Alert Channel"
 msgstr "Canal de alerta"
-
-#. module: discuss_alerts
-#: model:ir.model.fields,field_description:discuss_alerts.field_discuss_channel__alert_frequency
-msgid "Alert Frequency"
-msgstr "Frecuencia de alerta"
 
 #. module: discuss_alerts
 #: model:ir.model.fields,field_description:discuss_alerts.field_discuss_channel__alert_domain
@@ -78,17 +34,6 @@ msgstr "Modelo de alerta"
 #: model_terms:ir.ui.view,arch_db:discuss_alerts.view_discuss_channel_form
 msgid "Alert settings"
 msgstr "Configuración de alerta"
-
-#. module: discuss_alerts
-#: model:ir.model.fields,field_description:discuss_alerts.field_discuss_channel__alert_template_id
-msgid "Alert template"
-msgstr "Plantilla de alerta"
-
-#. module: discuss_alerts
-#: model:mail.template,description:discuss_alerts.email_alert_sale_test
-#: model:mail.template,name:discuss_alerts.email_alert_sale_test
-msgid "Alert: Sale Test"
-msgstr "Alerta: Prueba ventas"
 
 #. module: discuss_alerts
 #: model:ir.model.fields.selection,name:discuss_alerts.selection__discuss_channel__alert_frequency__daily
@@ -116,9 +61,15 @@ msgid "Domain"
 msgstr "Dominio"
 
 #. module: discuss_alerts
+#: model:ir.model.fields,help:discuss_alerts.field_discuss_channel__is_alert_channel
+msgid "Enable this to dedicate this channel exclusively for system alerts"
+msgstr "Habilite esta opción para dedicar este canal exclusivamente para alertas del sistema."
+
+#. module: discuss_alerts
+#: model:ir.model.fields,field_description:discuss_alerts.field_discuss_channel__alert_frequency
 #: model_terms:ir.ui.view,arch_db:discuss_alerts.view_discuss_channel_form
 msgid "Frequency"
-msgstr "Frecuencia"
+msgstr "Frecuencia de alerta"
 
 #. module: discuss_alerts
 #: model:ir.model.fields.selection,name:discuss_alerts.selection__discuss_channel__alert_frequency__hourly
@@ -136,9 +87,9 @@ msgid "Last execution"
 msgstr "Fecha de última ejecución"
 
 #. module: discuss_alerts
-#: model_terms:ir.ui.view,arch_db:discuss_alerts.view_discuss_channel_form
-msgid "Message"
-msgstr "Mensaje"
+#: model:ir.model.fields,help:discuss_alerts.field_discuss_channel__alert_frequency
+msgid "Minimum time interval between alert executions"
+msgstr "Intervalo de tiempo mínimo entre ejecuciones de alertas"
 
 #. module: discuss_alerts
 #: model_terms:ir.ui.view,arch_db:discuss_alerts.view_discuss_channel_form
@@ -151,18 +102,6 @@ msgid "Monthly"
 msgstr "Mensual"
 
 #. module: discuss_alerts
-#: model:ir.model.fields,field_description:discuss_alerts.field_discuss_channel__alert_template_body
-msgid "Template Body"
-msgstr "Contenido de plantilla"
-
-#. module: discuss_alerts
 #: model:ir.model.fields.selection,name:discuss_alerts.selection__discuss_channel__alert_frequency__weekly
 msgid "Weekly"
 msgstr "Semanal"
-
-#. module: discuss_alerts
-#: model:mail.template,subject:discuss_alerts.email_alert_sale_test
-msgid ""
-"{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
-"'Quotation' or 'Order' }} (Ref {{ object.name or 'n/a' }})"
-msgstr ""

@@ -11,8 +11,5 @@
         "data/ir_cron_data.xml",
         "views/discuss_channel_views.xml",
     ],
-    "demo": [
-        "demo/mail_template_data.xml",
-    ],
     "installable": True,
 }

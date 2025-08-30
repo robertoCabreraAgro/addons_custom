@@ -20,7 +20,6 @@
             <xpath expr="//page[@name='privacy']" position="after">
                 <page string="Alert settings" groups="base.group_no_one" invisible="not is_alert_channel">
                     <field name="alert_model_id" invisible="1" />
-                    <field name="alert_template_id" invisible="1" />
                     <group>
                         <group>
                             <field name="alert_model_id" string="Model" required="is_alert_channel" />
@@ -33,19 +32,10 @@
                         </group>
                         <group>
                             <field name="alert_frequency" string="Frequency" required="is_alert_channel" />
-                            <field
-                                name="alert_template_id"
-                                domain="[('model_id.model', '=', alert_model_id)]"
-                                required="is_alert_channel"
-                            />
                         </group>
                     </group>
-                    <separator string="Message" invisible="not alert_template_id" />
-                    <group invisible="not alert_template_id" col="1">
-                        <field name="alert_template_body" widget="html" nolabel="1" colspan="2" readonly="0" />
-                    </group>
                     <group>
-                        <field name="alert_last_execution" readonly="1" />
+                        <field name="alert_last_execution" readonly="0" />
                     </group>
                 </page>
             </xpath>
