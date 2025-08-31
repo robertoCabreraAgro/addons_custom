@@ -92,6 +92,15 @@ class ProductAssetLog(models.Model):
         string="Cost",
         tracking=True,
     )
+    qty_fuel = fields.Float(
+        string="Fuel Quantity (Liters)",
+        help="Quantity of fuel added to the vehicle",
+    )
+    efficiency = fields.Float(
+        string="Efficiency (km/L)",
+        aggregator="avg",
+        help="Fuel efficiency in kilometers per liter",
+    )
     inv_ref = fields.Char("Vendor Reference")
     notes = fields.Text()
     days_left = fields.Integer(

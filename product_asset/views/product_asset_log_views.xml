@@ -44,6 +44,8 @@
                 <field name="vendor_id" optional="show" />
                 <field name="product_category_id" optional="show" />
                 <field name="product_id" optional="show" />
+                <field name="qty_fuel" optional="hidden" />
+                <field name="efficiency" optional="hidden" />
                 <field name="amount" sum="Total" widget="monetary" optional="show" />
                 <field name="odometer" optional="show" />
                 <field name="state"
