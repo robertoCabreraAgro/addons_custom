@@ -58,7 +58,7 @@
 
     <record id="documents_tag_drivers_licence" model="documents.tag" forcecreate="0">
         <field name="name">Driver Licence</field>
-        <field name="sequence">12</field>
+        <field name="sequence">15</field>
     </record>
 
 </odoo>

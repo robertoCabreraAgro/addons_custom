@@ -6,14 +6,34 @@ class GpsTrackingDevice(models.Model):
 
     _inherit = "gps.tracking.device"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     department_id = fields.Many2one(
-        related="asset_id.operator_id.department_id",
+        comodel_name="hr.department",
+        compute="_compute_asset_info",
         store=True,
-        string="Department",
-    )
-    driver_name = fields.Char(
-        related="asset_id.operator_id.name",
-        store=True,
-        string="Driver",
         readonly=True,
     )
+    driver_name = fields.Char(
+        compute="_compute_asset_info",
+        store=True,
+        readonly=True,
+    )
+
+    # ------------------------------------------------------------
+    # COMPUTE METHODS
+    # ------------------------------------------------------------
+
+    @api.depends("asset_ids")
+    def _compute_asset_info(self):
+        """Compute asset related information"""
+        for device in self:
+            if device.asset_ids:
+                asset = device.asset_ids[0]
+                device.department_id = asset.operator_id.department_id
+                device.driver_name = asset.operator_id.name
+            else:
+                device.department_id = False
+                device.driver_name = False

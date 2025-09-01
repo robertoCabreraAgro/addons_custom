@@ -11,10 +11,10 @@ class StockPickingTracker(models.Model):
     # Main block
     name = fields.Char(
         string="Reference",
-        copy=False,
-        readonly=True,
-        index=True,
         default=lambda self: self.env._("New"),
+        readonly=True,
+        copy=False,
+        index=True,
     )
     allowed_picking_ids = fields.One2many(
         comodel_name="stock.picking",
@@ -47,14 +47,14 @@ class StockPickingTracker(models.Model):
         readonly=False,
     )
     driver_department_id = fields.Many2one(
-        "hr.department",
+        comodel_name="hr.department",
         compute="_compute_driver_department_id",
         store=True,
         compute_sudo=True,
     )
     driver_is_commercial = fields.Boolean(compute="_compute_driver_is_commercial")
     state = fields.Selection(
-        [
+        selection=[
             ("draft", "Draft"),
             ("in_progress", "In Progress"),
             ("done", "Done"),
@@ -66,11 +66,11 @@ class StockPickingTracker(models.Model):
         copy=False,
     )
     user_id = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
         string="Responsible",
-        tracking=True,
         default=lambda self: self.env.user,
         check_company=True,
+        tracking=True,
     )
     company_id = fields.Many2one(
         comodel_name="res.company",
@@ -89,11 +89,10 @@ class StockPickingTracker(models.Model):
     odometer_start = fields.Float(string="Starting Odometer")
     odometer_end = fields.Float(string="Ending Odometer")
     odometer_uom_id = fields.Many2one(
-        comodel_name="uom.uom",
-        string="Odometer Unit",
         related="vehicle_id.odometer_uom_id",
-        readonly=True,
         store=True,
+        string="Odometer Unit",
+        readonly=True,
         help="Unit of measurement for the odometer, coming from the vehicle.",
     )
     odometer_difference = fields.Float(
@@ -113,10 +112,10 @@ class StockPickingTracker(models.Model):
         help="Percentage (%) of fuel level at the end of the route",
     )
     fuel_uom_id = fields.Many2one(
-        "uom.uom",
+        comodel_name="uom.uom",
         string="Fuel Unit",
-        readonly=True,
         default=lambda self: self.env.ref("uom.product_uom_litre"),
+        readonly=True,
         help="Unit of measurement for fuel, coming from the vehicle.",
     )
     fuel_consumption = fields.Float(
@@ -148,10 +147,10 @@ class StockPickingTracker(models.Model):
         help="Fuel efficiency calculated as distance per fuel unit.",
     )
     fuel_efficiency_uom_id = fields.Many2one(
-        "uom.uom",
+        comodel_name="uom.uom",
         string="Fuel Efficiency Unit",
-        readonly=True,
         default=lambda self: self.env.ref("marin.uom_km_per_liter").id,
+        readonly=True,
     )
 
     @api.depends("company_id", "picking_type_id", "state")
@@ -406,8 +405,7 @@ class StockPickingTracker(models.Model):
     def action_update_fuel_start(self):
         """Action to get fuel level from GPS at start a route"""
         self.ensure_one()
-        fuel_data = self.vehicle_id.get_current_fuel()
-        self.fuel_start = fuel_data.get("percentage", 0) if fuel_data else 0
+        self.fuel_start = self.vehicle_id.gps_device_id.get_fuel_level_percentage()
 
     def action_update_odometer_end(self):
         """Action to get odometer from GPS at end a route"""
@@ -417,8 +415,7 @@ class StockPickingTracker(models.Model):
     def action_update_fuel_end(self):
         """Action to get fuel level from GPS at end a route"""
         self.ensure_one()
-        fuel_data = self.vehicle_id.get_current_fuel()
-        self.fuel_end = fuel_data.get("percentage", 0) if fuel_data else 0
+        self.fuel_end = self.vehicle_id.gps_device_id.get_fuel_level_percentage()
 
     def action_view_pickings(self):
         self.ensure_one()

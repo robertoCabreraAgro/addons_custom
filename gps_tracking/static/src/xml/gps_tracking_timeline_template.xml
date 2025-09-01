@@ -39,14 +39,14 @@
             <div class="panel-toggle-fixed" t-on-click="toggleLeftPanel" t-att-title="state.leftPanelVisible ? 'Hide Vehicle List' : 'Show Vehicle List'">
                 <i t-att-class="state.leftPanelVisible ? 'fa fa-chevron-left' : 'fa fa-chevron-right'"></i>
             </div>
-            
+
             <!-- Kanban de dispositivos -->
             <div class="o_gps_tracking_kanban" t-att-class="{'hidden': !state.leftPanelVisible}">
                 <t t-foreach="state.filteredDevices" t-as="device" t-key="device.imei">
                     <div class="o_gps_tracking_card" 
                          t-att-class="{'active': state.activeDevice === device}" 
                          t-on-click.prevent="() => this.onCardClick(device)">
-                        
+
                         <!-- Checkbox para activar/desactivar la vista -->
                         <div class="kanban_header_container">
                             <input type="checkbox" t-att-checked="state.activeDevices.includes(device.imei)" 
@@ -62,9 +62,8 @@
                         </div>
                         
                         <div t-if="state.expandedDevices.has(device.imei)" class="card_body">
-                            <!-- Información del dispositivo -->
                             <div t-if="device.asset_id">
-                                <span>Vehículo: <t t-esc="device.asset_id[1]"/></span> <!-- Mostrar el nombre del vehículo -->
+                                <span>Vehículo: <t t-esc="device.asset_id.name"/></span> 
                             </div>
                             <div t-if="device.driver_name">
                                 <span>Conductor: <t t-esc="device.driver_name"/></span>
@@ -75,10 +74,6 @@
                             <div class="kanban_info">
                                 <span>Odómetro:</span> <t t-esc="device.odometer"/>
                             </div>
-                            <!-- <div class="kanban_info">
-                                <i class="fa fa-map"></i>
-                                <span>Dirección:</span> <t t-esc="device.address"/>
-                            </div> -->
                         </div>
                     </div>
                 </t>

@@ -686,7 +686,7 @@ class StockLot(models.Model):
         today = fields.Date.context_today(self)
         # get the id of vehicles that have overdue contracts
         # but exclude those for which a new contract has already been created for them
-        asset_ids = self.env["fleet.vehicle"]._search(
+        asset_ids = self.env["stock.lot"]._search(
             [
                 (
                     "contract_ids",

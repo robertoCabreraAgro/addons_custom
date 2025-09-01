@@ -19,6 +19,7 @@ class GpsTrackingPoint(models.Model):
         ondelete="cascade",
     )
     asset_id = fields.Many2one(
+        comodel_name="stock.lot",
         compute="_compute_asset_id",
         store=True,
         readonly=True,

@@ -93,6 +93,7 @@
         "data/approval_category_data.xml",
         "data/res_partner_hectares_range_data.xml",
         "data/discuss_channel_data.xml",
+        "data/documents_tag_data.xml",
         # "report/report_deliveryslip.xml",
         # "report/report_stock_picking_operations.xml",
         # "report/report_invoice.xml",

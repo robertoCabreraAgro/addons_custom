@@ -1,16 +1,20 @@
-import logging
-from datetime import datetime, timedelta
-from odoo import api, fields, models
-from pyproj import Transformer
-from pytz import timezone, utc
+from datetime import timedelta
+from pytz import utc
 
-_logger = logging.getLogger(__name__)
+from odoo import api, fields, models
 
 
 class GpsTrackingDevice(models.Model):
     _name = "gps.tracking.device"
     _description = "GPS Tracking Device"
     _rec_name = "imei"
+
+    INACTIVITY_THRESHOLD_HOURS = 2
+    INACTIVITY_WARNING_HOURS = 1.5
+
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
 
     imei = fields.Char(
         string="IMEI",
@@ -22,110 +26,67 @@ class GpsTrackingDevice(models.Model):
         required=True,
         help="Configuration for interpreting GPS device data",
     )
+    asset_ids = fields.One2many(
+        comodel_name="stock.lot",
+        inverse_name="gps_device_id",
+    )
     asset_id = fields.Many2one(
         comodel_name="stock.lot",
-        string="Vehicle",
-        domain="[('asset_type', '=', 'vehicle')]",
-        help="Vehicle associated with the GPS device",
-    )
-    license_plate = fields.Char(
-        related="asset_id.license_plate",
+        string="Assigned Asset",
+        compute="_compute_asset_id",
         store=True,
-        string="Plate",
+        readonly=True,
+        help="Main asset assigned to this GPS device",
     )
-    driver_name = fields.Char(
-        string="Driver",
-        compute="_compute_driver_name",
-        store=True,
-    )
-    location = fields.Char(
-        related="asset_id.location",
-        store=True,
-        string="Location",
-    )
-    model_id = fields.Many2one(
-        related="asset_id.product_id.manufacturer_id",
-        store=True,
-        comodel_name="res.partner",
-        string="Manufacturer",
-    )
-    department_id = fields.Many2one(
-        related="asset_id.operator_id.department_id",
-        store=True,
-        comodel_name="hr.department",
-        string="Department",
-    )
-    allowed_tracking_point = fields.One2many(
-        comodel_name="gps.tracking.point",
-        compute="_compute_allowed_tracking_point",
-        string="Allowed Tracking Points",
-    )
-    tracking_points = fields.One2many(
+    tracking_point_ids = fields.One2many(
         comodel_name="gps.tracking.point",
         inverse_name="device_id",
         string="Tracking Points",
     )
+    allowed_tracking_point_ids = fields.One2many(
+        comodel_name="gps.tracking.point",
+        string="Allowed Tracking Points",
+        compute="_compute_allowed_tracking_point_ids",
+    )
+    # Last point related fields
     last_point_id = fields.Many2one(
         comodel_name="gps.tracking.point",
         string="Last Tracking Point",
+        compute="_compute_last_point_id",
     )
-    speed = fields.Float(
-        related="last_point_id.speed",
-        store=True,
-        string="Speed",
-    )
-    satellite = fields.Integer(
+    satellites = fields.Integer(
         related="last_point_id.satellites",
-        store=True,
-        string="Satélites",
     )
     timestamp = fields.Datetime(
         related="last_point_id.timestamp",
-        store=True,
-        string="Timestamp",
     )
     altitude = fields.Float(
         related="last_point_id.altitude",
-        store=True,
-        string="Altitude",
-    )
-    address = fields.Char(
-        related="last_point_id.address",
-        store=True,
-        string="Address",
     )
     the_point = fields.GeoPoint(
-        string="Current Position",
         related="last_point_id.the_point",
-        store=True,
-    )
-    history_route = fields.GeoLine(
-        string="History Route",
-    )
-    gsm_signal = fields.Integer(
-        related="last_point_id.gsm_signal",
-        store=True,
-        string="GSM Signal",
+        string="Current Position",
     )
     ignition = fields.Integer(
         related="last_point_id.ignition",
-        store=True,
-        string="Ignition",
     )
     movement = fields.Integer(
         related="last_point_id.movement",
-        store=True,
-        string="Movement",
     )
-    total_odometer = fields.Integer(
-        related="last_point_id.total_odometer", store=True, string="Total Odometer"
+    speed = fields.Float(
+        related="last_point_id.speed",
     )
     odometer = fields.Integer(
-        related="last_point_id.odometer", store=True, string="Odometer"
+        related="last_point_id.odometer",
+        string="Odometer",
+    )
+    total_odometer = fields.Integer(
+        related="last_point_id.total_odometer",
     )
     real_odometer = fields.Float(
-        related="last_point_id.real_odometer", store=True, string="Real Odometer"
+        related="last_point_id.real_odometer",
     )
+
     color = fields.Selection(
         selection=[
             ("#FF0000", "Rojo"),
@@ -135,113 +96,101 @@ class GpsTrackingDevice(models.Model):
             ("#800080", "Morado"),
             ("#000000", "Negro"),
         ],
-        string="Color de Recorrido",
+        string="Color of the Route",
         default="#FF0000",
+    )
+    inactivity_state = fields.Selection(
+        selection=[
+            ("active", "Active"),
+            ("warning", "Warning - Inactive Soon"),
+            ("inactive_alert", "Inactive Alert"),
+            ("unknown", "Unknown Status"),
+        ],
+        string="Inactivity State",
+        compute="_compute_inactivity_state",
+        store=True,
+    )
+    last_activity_hours = fields.Float(
+        string="Hours Since Last Activity",
+        compute="_compute_inactivity_state",
+        store=True,
+        help="Number of hours since the device last reported",
     )
     private = fields.Boolean(
         default=False,
         groups="gps_tracking.group_gps_tracking_private",
         help="If checked, only users with specific access rights can see this device",
     )
-    inactivity_status = fields.Selection(
-        selection=[
-            ("active", "Activo"),
-            ("inactive_alert", "Inactivo"),
-        ],
-        string="Estado de Inactividad",
-        compute="_compute_inactivity_status",
-        store=False,
-    )
+
+    # ------------------------------------------------------------
+    # CONSTRAINTS
+    # ------------------------------------------------------------
 
     _unique_code = models.Constraint(
         "unique (imei)",
         "This IMEI already exists",
     )
 
-    def _compute_inactivity_status(self):
-        """
-        Calcula el estado de inactividad de un dispositivo basado en el último reporte.
-        Un dispositivo se considera inactivo si no ha reportado en las últimas 2 horas.
-        """
-        now_utc = datetime.now(utc)
+    # ------------------------------------------------------------
+    # COMPUTE METHODS
+    # ------------------------------------------------------------
 
+    @api.depends("asset_ids")
+    def _compute_asset_id(self):
         for device in self:
-            if not device.timestamp:
-                device.inactivity_status = "inactive_alert"
-                continue
+            device.asset_id = device.asset_ids[:1] if device.asset_ids else False
 
-            last_report_utc = fields.Datetime.to_datetime(device.timestamp).replace(
-                tzinfo=utc
-            )
-
-            inactive_duration = now_utc - last_report_utc
-
-            if inactive_duration >= timedelta(hours=2):
-                device.inactivity_status = "inactive_alert"
-            else:
-                device.inactivity_status = "active"
-
-    @api.depends("tracking_points")
-    def _compute_allowed_tracking_point(self):
-        now = datetime.now()
+    @api.depends("tracking_point_ids")
+    def _compute_allowed_tracking_point_ids(self):
+        now = fields.Datetime.now()
         last_week = now - timedelta(days=7)
 
         for device in self:
-            device.allowed_tracking_point = self.env["gps.tracking.point"].search(
+            device.allowed_tracking_point_ids = self.env["gps.tracking.point"].search(
                 [("device_id", "=", device.id), ("timestamp", ">=", last_week)],
                 order="timestamp desc",
             )
 
-    @api.depends("asset_id.operator_id", "asset_id.location")
-    def _compute_driver_name(self):
+    @api.depends("tracking_point_ids.timestamp")
+    def _compute_last_point_id(self):
         for device in self:
-            device.driver_name = (
-                device.asset_id.operator_id.name if device.asset_id.operator_id else ""
-            )
-
-    @api.depends("tracking_points.timestamp")
-    def _compute_last_point(self):
-        for device in self:
-            last_point = device.tracking_points.sorted(
+            last_point = device.tracking_point_ids.sorted(
                 key=lambda p: p.timestamp, reverse=True
             )[:1]
             device.last_point_id = last_point.id if last_point else False
 
-            if last_point:
-                _logger.info(
-                    f"Dispositivo {device.id}: Último punto actualizado a {last_point.id} con timestamp {last_point.timestamp}"
-                )
-            else:
-                _logger.warning(
-                    f"Dispositivo {device.id}: No se encontraron puntos para actualizar el último punto."
-                )
+    @api.depends("timestamp")
+    def _compute_inactivity_state(self):
+        """
+        Compute device inactivity state based on last report timestamp.
 
-    @api.depends("tracking_points.latitude", "tracking_points.longitude")
-    def _compute_history_route(self):
-        transformer = Transformer.from_crs(4326, 3857, always_xy=True)
+        States:
+        - active: Device reported within warning threshold
+        - warning: Device approaching inactivity threshold (optional)
+        - inactive_alert: Device exceeded inactivity threshold
+        - unknown: No timestamp available
+
+        The thresholds can be configured via system parameters or model constants.
+        """
+        inactive_threshold = self._get_inactivity_threshold()
+        warning_threshold = self._get_warning_threshold()
+
+        now_utc = fields.Datetime.now()
+
         for device in self:
-            points = device.tracking_points.sorted("timestamp")
-            coords = []
-            for point in points:
-                if point.latitude and point.longitude:
-                    x, y = transformer.transform(point.longitude, point.latitude)
-                    coords.append(f"{x} {y}")
-            if len(coords) > 1:
-                device.history_route = f"LINESTRING({', '.join(coords)})"
-            else:
-                device.history_route = False
-
-    @api.constrains("asset_id", "config_id")
-    def _check_vehicle_config_association(self):
-        """Validate that device has configuration when associated with vehicle."""
-        for device in self:
-            if device.asset_id and not device.config_id:
-                raise ValueError(
-                    "GPS device must have a configuration assigned before "
-                    "associating it with a vehicle."
+            try:
+                device._set_device_inactivity_state(
+                    now_utc, inactive_threshold, warning_threshold
                 )
+            except Exception as e:
+                device.inactivity_state = "unknown"
+                device.last_activity_hours = 0.0
 
-    def get_fuel_at(self, target_datetime):
+    # ------------------------------------------------------------
+    # HELPERS
+    # ------------------------------------------------------------
+
+    def get_fuel_level_percentage(self, target_datetime):
         """Get fuel level at specific datetime based on configuration.
 
         Args:
@@ -251,41 +200,194 @@ class GpsTrackingDevice(models.Model):
             dict: Dictionary with 'percentage' and 'liters' keys, or False if not available
         """
         self.ensure_one()
-        if not self.config_id:
-            raise ValueError("Device must have a configuration to get fuel reading")
-
+        target_datetime = target_datetime or fields.Datetime.now()
         # Find the closest tracking point to the target datetime
         point = self.env["gps.tracking.point"].search(
             [("device_id", "=", self.id), ("timestamp", "<=", target_datetime)],
             order="timestamp desc",
             limit=1,
         )
-
         if not point:
             return False
 
-        # Get fuel data from point
         fuel_percentage = point.fuel_level
-        fuel_deciliters = point.fuel_level_l  # This field is in deciliters
+        if fuel_percentage:
+            return fuel_percentage
 
-        # Convert based on configuration
-        percentage = self.config_id.get_fuel_level_percentage(
-            fuel_percentage=fuel_percentage,
-            fuel_deciliters=fuel_deciliters,
-            vehicle=self.asset_id,
-        )
-        liters = self.config_id.get_fuel_level_liters(
-            fuel_percentage=fuel_percentage,
-            fuel_deciliters=fuel_deciliters,
-            vehicle=self.asset_id,
-        )
+        # If device provides volume, convert to percentage
+        fuel_deciliters = point.fuel_level_l
+        if fuel_deciliters and self.asset_ids[0].fuel_tank_capacity:
+            fuel_percentage = (
+                (fuel_deciliters * 10) / self.config_id.fuel_tank_capacity
+            ) * 100
+            return fuel_percentage or 0.0
 
-        if percentage is False and liters is False:
+    def get_odometer(self, target_datetime=False):
+        """Get odometer reading at specific datetime using real_odometer field.
+
+        Args:
+            target_datetime (datetime): Target datetime for odometer reading
+
+        Returns:
+            float: Odometer value from real_odometer field or False if not available
+        """
+        self.ensure_one()
+        target_datetime = target_datetime or fields.Datetime.now()
+        # Find the closest tracking point to the target datetime
+        point = self.env["gps.tracking.point"].search(
+            [("device_id", "=", self.id), ("timestamp", "<=", target_datetime)],
+            order="timestamp desc",
+            limit=1,
+        )
+        if not point:
             return False
 
-        return {
-            "percentage": percentage,
-            "liters": liters,
-            "raw_percentage": fuel_percentage,
-            "raw_deciliters": fuel_deciliters,
+        return point.real_odometer
+
+    @api.model
+    def _get_inactivity_threshold(self):
+        """
+        Get inactivity threshold from configuration.
+        Can be overridden to use system parameters or company-specific settings.
+
+        :return: timedelta object representing the threshold
+        """
+        param_obj = self.env["ir.config_parameter"].sudo()
+        hours = float(
+            param_obj.get_param(
+                "gps_tracking.inactivity_threshold_hours",
+                default=self.INACTIVITY_THRESHOLD_HOURS,
+            )
+        )
+        return timedelta(hours=hours)
+
+    @api.model
+    def _get_warning_threshold(self):
+        """
+        Get warning threshold from configuration.
+
+        :return: timedelta object or None if warning state is disabled
+        """
+        # Option to disable warning state
+        param_obj = self.env["ir.config_parameter"].sudo()
+        warning_enabled = param_obj.get_param(
+            "gps_tracking.inactivity_warning_enabled", default="True"
+        )
+
+        if warning_enabled.lower() == "false":
+            return None
+
+        hours = float(
+            param_obj.get_param(
+                "gps_tracking.inactivity_warning_hours",
+                default=self.INACTIVITY_WARNING_HOURS,
+            )
+        )
+        return timedelta(hours=hours)
+
+    @api.model
+    def get_inactivity_statistics(self):
+        """
+        Get statistics about device inactivity states.
+        Useful for dashboards and reports.
+
+        :return: Dictionary with statistics
+        """
+        domain = []
+        if self._context.get("active_ids"):
+            domain = [("id", "in", self._context["active_ids"])]
+
+        devices = self.search(domain)
+
+        stats = {
+            "total": len(devices),
+            "active": len(devices.filtered(lambda d: d.inactivity_state == "active")),
+            "warning": len(devices.filtered(lambda d: d.inactivity_state == "warning")),
+            "inactive": len(
+                devices.filtered(lambda d: d.inactivity_state == "inactive_alert")
+            ),
+            "unknown": len(devices.filtered(lambda d: d.inactivity_state == "unknown")),
+            "avg_hours_inactive": (
+                sum(devices.mapped("last_activity_hours")) / len(devices)
+                if devices
+                else 0
+            ),
         }
+
+        return stats
+
+    def _send_inactivity_alerts(self, devices):
+        """
+        Send alerts for inactive devices.
+        Override this method to implement custom alert logic.
+
+        :param devices: Recordset of inactive devices
+        """
+        for device in devices:
+            # Check if alert was already sent recently
+            if self._should_send_alert(device):
+                # Implement your alert logic here
+                pass
+
+    def _set_device_inactivity_state(
+        self, now_utc, inactive_threshold, warning_threshold
+    ):
+        """
+        Set the inactivity state for a single device.
+
+        :param now_utc: Current UTC datetime
+        :param inactive_threshold: Timedelta for inactive alert
+        :param warning_threshold: Timedelta for warning state
+        """
+        if not self.timestamp:
+            self.inactivity_state = "unknown"
+            self.last_activity_hours = 0.0
+            return
+
+        # Ensure timestamp is timezone-aware (Odoo stores as UTC)
+        last_report_utc = fields.Datetime.to_datetime(self.timestamp)
+        if not last_report_utc.tzinfo:
+            last_report_utc = last_report_utc.replace(tzinfo=utc)
+
+        # Calculate duration since last report
+        inactive_duration = now_utc - last_report_utc
+        hours_inactive = inactive_duration.total_seconds() / 3600
+        self.last_activity_hours = round(hours_inactive, 2)
+
+        # Determine state based on thresholds
+        if inactive_duration >= inactive_threshold:
+            self.inactivity_state = "inactive_alert"
+        elif warning_threshold and inactive_duration >= warning_threshold:
+            self.inactivity_state = "warning"
+        else:
+            self.inactivity_state = "active"
+
+    # ------------------------------------------------------------
+    # VALIDATIONS
+    # ------------------------------------------------------------
+
+    @api.model
+    def check_and_alert_inactive_devices(self):
+        """
+        Cron job method to check for inactive devices and send alerts.
+        Can be called from a scheduled action.
+        """
+        inactive_devices = self.search([("inactivity_state", "=", "inactive_alert")])
+
+        if inactive_devices:
+            # Trigger notifications, emails, etc.
+            self._send_inactivity_alerts(inactive_devices)
+
+        return True
+
+    def _should_send_alert(self, device):
+        """
+        Check if an alert should be sent for this device.
+        Prevents alert spam by checking last alert time.
+
+        :param device: Device record
+        :return: Boolean indicating if alert should be sent
+        """
+        # Implement logic to prevent duplicate alerts
+        # e.g., check last alert timestamp, alert frequency settings, etc.
+        return True

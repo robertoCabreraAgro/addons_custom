@@ -1,6 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_gps_tracking_data_history_user,gps_tracking_data_history_user,model_gps_tracking_data_history,group_gps_tracking_user,1,0,0,0
-access_gps_tracking_data_history_manager,gps_tracking_data_history_manager,model_gps_tracking_data_history,group_gps_tracking_manager,1,1,1,1
 access_gps_tracking_config_user,gps.tracking.config.user,model_gps_tracking_config,gps_tracking.group_gps_tracking_user,1,0,0,0
 access_gps_tracking_config_manager,gps.tracking.config.manager,model_gps_tracking_config,gps_tracking.group_gps_tracking_manager,1,1,1,1
 access_gps_tracking_device_user,gps.tracking.device.user,model_gps_tracking_device,gps_tracking.group_gps_tracking_user,1,0,0,0

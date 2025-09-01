@@ -247,19 +247,11 @@ class StockPicking(models.Model):
 
     def _update_gps_tracking_information(self, date=False):
         for picking in self:
-            fuel_data = (
-                picking.vehicle_id.get_fuel_at(date)
-                if date
-                else picking.vehicle_id.get_current_fuel()
-            )
-            fuel_level = fuel_data.get("percentage", 0) if fuel_data else 0
+            fuel_level = picking.vehicle_id.gps_device_id.get_fuel_level_percentage(date)
+            odometer = picking.vehicle_id.gps_device_id.get_odometer(date)
             picking.write(
                 {
-                    "odometer_done": (
-                        picking.vehicle_id.get_odometer_at(date)
-                        if date
-                        else picking.vehicle_id.get_current_odometer()
-                    ),
+                    "odometer_done": odometer,
                     "fuel_done": fuel_level,
                 }
             )
