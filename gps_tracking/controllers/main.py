@@ -1,7 +1,6 @@
 import logging
 
 from datetime import datetime, timedelta, timezone
-from functools import wraps
 from typing import Dict, Any, Optional, Tuple
 
 from odoo import http
@@ -10,35 +9,7 @@ from odoo.http import request
 _logger = logging.getLogger(__name__)
 
 
-def log_webhook_activity(func):
-    """Decorator to log webhook activity and performance"""
-
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        start_time = datetime.now()
-        remote_addr = request.httprequest.remote_addr
-
-        try:
-            result = func(*args, **kwargs)
-            duration = (datetime.now() - start_time).total_seconds()
-            _logger.info(
-                "GPS webhook processed successfully from %s in %.3fs",
-                remote_addr,
-                duration,
-            )
-            return result
-        except Exception as e:
-            duration = (datetime.now() - start_time).total_seconds()
-            _logger.error(
-                "GPS webhook failed from %s after %.3fs: %s",
-                remote_addr,
-                duration,
-                str(e),
-                exc_info=True,
-            )
-            raise
-
-    return wrapper
+# Removed log_webhook_activity decorator - logging is now handled directly in webhook method
 
 
 class GPSWebhook(http.Controller):
@@ -106,7 +77,7 @@ class GPSWebhook(http.Controller):
 
     # Data quality constraints for Teltonika devices
     MIN_SATELLITES_FOR_ACCURACY = 4  # Minimum satellites for good GPS accuracy
-    MAX_REASONABLE_SPEED = 200  # Maximum reasonable speed in km/h for ground vehicles
+    MAX_REASONABLE_SPEED = 300  # Maximum reasonable speed in km/h for ground vehicles
     MIN_COORDINATE_PRECISION = 5  # Minimum decimal places for coordinates
     MAX_DUPLICATE_TIME_WINDOW = 30  # Seconds to check for duplicate points
     MAX_SPEED_CHANGE_PER_MINUTE = 100  # km/h - detect unrealistic speed changes
@@ -122,10 +93,9 @@ class GPSWebhook(http.Controller):
         methods=["GET", "POST"],
         csrf=False,
     )
-    @log_webhook_activity
     def gps_webhook(self, **kwargs) -> bytes:
         """
-        Webhook endpoint with comprehensive data quality validation.
+        Webhook endpoint with comprehensive data quality validation and integrated logging.
 
         Receives GPS data from IoT devices, validates data quality,
         and stores tracking points in the database.
@@ -142,6 +112,18 @@ class GPSWebhook(http.Controller):
         Returns:
             Success (0x01) or failure (0x00) response byte
         """
+        # Initialize performance tracking and logging
+        start_time = datetime.now()
+        remote_addr = request.httprequest.remote_addr if request.httprequest else "unknown"
+        imei = "unknown"
+        processing_stats = {
+            'validation_start': datetime.now(),
+            'validation_time': 0,
+            'db_operation_time': 0,
+            'quality_checks_passed': 0,
+            'quality_checks_failed': 0
+        }
+        
         try:
             # Extract JSON data from request
             json_data = request.get_json_data()
@@ -152,43 +134,48 @@ class GPSWebhook(http.Controller):
             # Extract payload from JSON structure
             payload = self._extract_payload(json_data)
             if not payload:
-                _logger.warning("Failed to extract payload from JSON data")
                 return self.RESPONSE_FAILURE
 
             # Get device IMEI
+            # TODO - Support alternative identifiers if needed for example not Teltonika devices
             imei = payload.get("14")
             if not imei:
-                _logger.warning("No IMEI found in payload")
+                _logger.warning("No IMEI found in payload from %s", remote_addr)
                 return self.RESPONSE_FAILURE
 
             # Find device by IMEI
-            device = self._find_device(imei)
+            device = self._get_device(imei)
             if not device:
-                _logger.warning("Device not found for IMEI: %s", imei)
                 return self.RESPONSE_FAILURE
 
             # Prepare tracking point values
-            vals = self._prepare_tracking_point_vals(payload, device.id)
+            vals = self._prepare_tracking_point_vals(device.id, payload)
+            #TODO we need another mechanism to retur self.RESPONSE_FAILURE if no valid data
             if not vals.get("timestamp"):
                 _logger.warning("No valid timestamp in GPS data for device %s", imei)
                 return self.RESPONSE_FAILURE
 
             # === DATA QUALITY VALIDATION ===
+            
+            processing_stats['validation_start'] = datetime.now()
 
-            # 1. Basic GPS quality validation
-            is_quality_valid, quality_error = self._validate_gps_quality(vals)
+            # 1. Basic GPS quality validation (including speed validation)
+            is_quality_valid, quality_error = self._validate_gps_quality(vals, device.id)
             if not is_quality_valid:
+                processing_stats['quality_checks_failed'] += 1
                 _logger.warning(
-                    "GPS quality validation failed for device %s: %s",
-                    imei,
-                    quality_error,
+                    "GPS quality validation failed for device %s from %s: %s",
+                    imei, remote_addr, quality_error,
                 )
                 # For non-critical quality issues, log but don't reject
                 if (
                     "satellites" not in quality_error.lower()
                     and "precision" not in quality_error.lower()
                 ):
+                    self._log_webhook_failure(start_time, remote_addr, imei, f"Quality validation failed: {quality_error}", processing_stats)
                     return self.RESPONSE_FAILURE
+            else:
+                processing_stats['quality_checks_passed'] += 1
 
             # 2. Check for duplicate points
             timestamp = vals.get("timestamp")
@@ -196,63 +183,124 @@ class GPSWebhook(http.Controller):
             longitude = vals.get("longitude")
 
             if self._is_duplicate_point(device.id, timestamp, latitude, longitude):
-                _logger.info("Duplicate GPS point ignored for device %s", imei)
+                _logger.info("Duplicate GPS point ignored for device %s from %s", imei, remote_addr)
+                self._log_webhook_success(start_time, remote_addr, imei, "Duplicate point ignored", processing_stats, vals)
                 return self.RESPONSE_SUCCESS  # Return success to avoid device retries
 
-            # 3. Validate temporal sequence and speed changes
-            speed = vals.get("speed", 0)
+            # 3. Validate temporal sequence
             is_sequence_valid, sequence_warning = self._validate_temporal_sequence(
-                device.id, timestamp, speed
+                device.id, timestamp
             )
 
             if not is_sequence_valid:
+                processing_stats['quality_checks_failed'] += 1
                 _logger.warning(
-                    "Temporal validation failed for device %s: %s",
-                    imei,
-                    sequence_warning,
+                    "Temporal validation failed for device %s from %s: %s",
+                    imei, remote_addr, sequence_warning,
                 )
                 # For temporal issues, we might want to be more lenient
                 if "future" in sequence_warning.lower():
+                    self._log_webhook_failure(start_time, remote_addr, imei, f"Temporal validation failed: {sequence_warning}", processing_stats)
                     return self.RESPONSE_FAILURE  # Reject future timestamps
                 # For speed change issues, log but accept (might be valid rapid acceleration/deceleration)
+            else:
+                processing_stats['quality_checks_passed'] += 1
+
+            processing_stats['validation_time'] = (datetime.now() - processing_stats['validation_start']).total_seconds()
 
             # === CREATE TRACKING POINT ===
-
+            
+            db_start_time = datetime.now()
             new_point = self._create_tracking_point(vals)
             if not new_point:
-                _logger.error("Failed to create tracking point for device %s", imei)
+                processing_stats['db_operation_time'] = (datetime.now() - db_start_time).total_seconds()
+                self._log_webhook_failure(start_time, remote_addr, imei, "Failed to create tracking point", processing_stats)
                 return self.RESPONSE_FAILURE
 
             # Update device's last point
             self._update_device_last_point(device, new_point.id)
+            processing_stats['db_operation_time'] = (datetime.now() - db_start_time).total_seconds()
 
-            # Log successful processing with quality metrics
-            quality_info = {
-                "satellites": vals.get("satellites", "N/A"),
-                "speed": vals.get("speed", "N/A"),
-                "fuel_level": vals.get("fuel_level", "N/A"),
-                "quality_valid": is_quality_valid,
-            }
-            _logger.debug(
-                "GPS point processed successfully for device %s: %s", imei, quality_info
-            )
+            # Log successful processing with comprehensive metrics
+            self._log_webhook_success(start_time, remote_addr, imei, "Point processed successfully", processing_stats, vals)
 
             return self.RESPONSE_SUCCESS
 
         except Exception as e:
-            _logger.error(
-                "Unexpected error in GPS webhook for device %s: %s",
-                locals().get("imei", "unknown"),
-                e,
-                exc_info=True,
-            )
+            self._log_webhook_failure(start_time, remote_addr, imei, f"Unexpected error: {str(e)}", processing_stats)
             return self.RESPONSE_FAILURE
+
+    # ------------------------------------------------------------
+    # LOGGING HELPERS
+    # ------------------------------------------------------------
+
+    def _log_webhook_success(self, start_time: datetime, remote_addr: str, imei: str, 
+                           message: str, processing_stats: dict, vals: dict = None):
+        """
+        Log successful webhook processing with comprehensive metrics.
+        
+        Args:
+            start_time: Request start time
+            remote_addr: Remote IP address
+            imei: Device IMEI
+            message: Success message
+            processing_stats: Processing performance statistics
+            vals: GPS values dictionary (optional)
+        """
+        total_duration = (datetime.now() - start_time).total_seconds()
+        
+        # Prepare quality metrics
+        quality_metrics = {}
+        if vals:
+            quality_metrics = {
+                'satellites': vals.get('satellites', 'N/A'),
+                'speed': vals.get('speed', 'N/A'),
+                'fuel_level': vals.get('fuel_level', 'N/A'),
+                'engine_temp': vals.get('engine_temperature', 'N/A'),
+                'coordinates': f"({vals.get('latitude', 'N/A')}, {vals.get('longitude', 'N/A')})"
+            }
+        
+        # Log with structured format for monitoring systems
+        _logger.info(
+            "GPS_WEBHOOK_SUCCESS device=%s ip=%s duration=%.3fs validation=%.3fs db=%.3fs "
+            "quality_passed=%d quality_failed=%d message='%s' metrics=%s",
+            imei, remote_addr, total_duration,
+            processing_stats.get('validation_time', 0),
+            processing_stats.get('db_operation_time', 0),
+            processing_stats.get('quality_checks_passed', 0),
+            processing_stats.get('quality_checks_failed', 0),
+            message, quality_metrics
+        )
+
+    def _log_webhook_failure(self, start_time: datetime, remote_addr: str, imei: str,
+                           error_message: str, processing_stats: dict):
+        """
+        Log failed webhook processing with error details and performance metrics.
+        
+        Args:
+            start_time: Request start time
+            remote_addr: Remote IP address
+            imei: Device IMEI
+            error_message: Failure reason
+            processing_stats: Processing performance statistics
+        """
+        total_duration = (datetime.now() - start_time).total_seconds()
+        
+        # Log with structured format for monitoring and alerting
+        _logger.error(
+            "GPS_WEBHOOK_FAILURE device=%s ip=%s duration=%.3fs validation=%.3fs db=%.3fs "
+            "quality_passed=%d quality_failed=%d error='%s'",
+            imei, remote_addr, total_duration,
+            processing_stats.get('validation_time', 0),
+            processing_stats.get('db_operation_time', 0),
+            processing_stats.get('quality_checks_passed', 0),
+            processing_stats.get('quality_checks_failed', 0),
+            error_message
+        )
 
     # ------------------------------------------------------------
     # HELPERS
     # ------------------------------------------------------------
-
-    # ==================== Request Processing Methods ====================
 
     def _extract_payload(self, json_data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         """
@@ -265,10 +313,6 @@ class GPSWebhook(http.Controller):
             Extracted payload or None if extraction fails
         """
         try:
-            if not json_data:
-                _logger.debug("Empty JSON data received")
-                return None
-
             # Navigate through the expected structure
             state = json_data.get("state", {})
             if not isinstance(state, dict):
@@ -299,7 +343,7 @@ class GPSWebhook(http.Controller):
         """
         try:
             if field_name == "latitude_longitude":
-                lat, lng = self._parse_coordinates(value)
+                lat, lng = self._parse_latlong_coordinates(value)
                 if lat is not None and lng is not None:
                     vals["latitude"] = lat
                     vals["longitude"] = lng
@@ -324,7 +368,7 @@ class GPSWebhook(http.Controller):
             )
 
     def _prepare_tracking_point_vals(
-        self, payload: Dict[str, Any], device_id: int
+        self, device_id: int, payload: Dict[str, Any]
     ) -> Dict[str, Any]:
         """
         Prepare values for creating tracking point record
@@ -360,7 +404,7 @@ class GPSWebhook(http.Controller):
     # DATABASE OPERATIONS
     # ------------------------------------------------------------
 
-    def _find_device(self, imei: str) -> Optional[Any]:
+    def _get_device(self, imei: str) -> Optional[Any]:
         """
         Find GPS tracking device by IMEI
 
@@ -413,7 +457,7 @@ class GPSWebhook(http.Controller):
     # DATA PROCESING METHODS
     # ------------------------------------------------------------
 
-    def _parse_coordinates(
+    def _parse_latlong_coordinates(
         self, latlng_str: str
     ) -> Tuple[Optional[float], Optional[float]]:
         """
@@ -498,41 +542,47 @@ class GPSWebhook(http.Controller):
         except (ValueError, TypeError):
             return False
 
-    def _validate_gps_quality(self, vals: Dict[str, Any]) -> tuple[bool, str]:
+    def _validate_gps_quality(self, vals: Dict[str, Any], device_id: int = None) -> tuple[bool, str]:
         """
         Comprehensive GPS data quality validation.
 
         Args:
             vals: Dictionary of processed GPS values
+            device_id: GPS device ID for advanced validations (optional)
 
         Returns:
             Tuple of (is_valid, error_message)
         """
-        # 1. Validate GPS accuracy
-        is_valid, error = self._validate_gps_accuracy(vals)
-        if not is_valid:
-            return False, error
-
-        # 2. Validate coordinate quality
+        # 1. Validate coordinate quality
         is_valid, error = self._validate_coordinate_quality(vals)
         if not is_valid:
             return False, error
 
-        # 3. Validate vehicle parameters
-        is_valid, error = self._validate_vehicle_parameters(vals)
-        if not is_valid:
-            return False, error
+        # 2. Validate GPS accuracy
+        is_valid, error = self._validate_gps_accuracy(vals)
+        # if not is_valid:
+        #     return False, error
 
-        # 4. Validate electrical systems
+        # 3. Validate speed parameters (includes speed change validation if device_id provided)
+        is_valid, error = self._validate_speed_parameters(vals, device_id)
+        # if not is_valid:
+        #     return False, error
+
+        # 4. Validate vehicle parameters
+        is_valid, error = self._validate_vehicle_parameters(vals)
+        # if not is_valid:
+        #     return False, error
+
+        # 5. Validate electrical systems
         is_valid, error = self._validate_electrical_parameters(vals)
-        if not is_valid:
-            return False, error
+        # if not is_valid:
+        #     return False, error
 
         return True, "Valid"
 
     def _validate_gps_accuracy(self, vals: Dict[str, Any]) -> tuple[bool, str]:
         """
-        Validate GPS signal accuracy based on satellite count and speed.
+        Validate GPS signal accuracy based on satellite count.
 
         Args:
             vals: Dictionary of processed GPS values
@@ -546,14 +596,6 @@ class GPSWebhook(http.Controller):
             return (
                 False,
                 f"Low GPS accuracy: only {satellites} satellites (minimum: {self.MIN_SATELLITES_FOR_ACCURACY})",
-            )
-
-        # Validate speed reasonableness
-        speed = vals.get("speed", 0)
-        if speed and speed > self.MAX_REASONABLE_SPEED:
-            return (
-                False,
-                f"Unrealistic speed detected: {speed} km/h (maximum: {self.MAX_REASONABLE_SPEED})",
             )
 
         return True, "GPS accuracy valid"
@@ -668,16 +710,65 @@ class GPSWebhook(http.Controller):
 
         return True, "Electrical parameters valid"
 
+    def _validate_speed_parameters(self, vals: Dict[str, Any], device_id: int = None) -> tuple[bool, str]:
+        """
+        Validate speed-related parameters including absolute speed and speed changes.
+
+        Args:
+            vals: Dictionary of processed GPS values
+            device_id: GPS device ID for temporal speed change validation (optional)
+
+        Returns:
+            Tuple of (is_valid, error_message)
+        """
+        # Validate absolute speed reasonableness
+        speed = vals.get("speed", 0)
+        if speed and speed > self.MAX_REASONABLE_SPEED:
+            return (
+                False,
+                f"Unrealistic speed detected: {speed} km/h (maximum: {self.MAX_REASONABLE_SPEED})",
+            )
+
+        # Validate speed change rate if device_id is provided
+        if device_id and speed:
+            try:
+                # Get the last GPS point for this device
+                last_point = (
+                    request.env["gps.tracking.point"]
+                    .sudo()
+                    .search(
+                        [("device_id", "=", device_id)], order="timestamp desc", limit=1
+                    )
+                )
+
+                if last_point and last_point.speed and vals.get("timestamp"):
+                    time_diff = (vals.get("timestamp") - last_point.timestamp).total_seconds()
+                    time_minutes = abs(time_diff) / 60
+                    
+                    if time_minutes > 0:
+                        speed_change = abs(speed - last_point.speed)
+                        speed_change_per_minute = speed_change / time_minutes
+
+                        if speed_change_per_minute > self.MAX_SPEED_CHANGE_PER_MINUTE:
+                            return (
+                                False,
+                                f"Unrealistic speed change: {speed_change:.1f} km/h in {time_minutes:.1f} minutes",
+                            )
+            except Exception as e:
+                # Don't fail validation on speed change calculation errors
+                pass
+
+        return True, "Speed parameters valid"
+
     def _validate_temporal_sequence(
-        self, device_id: int, new_timestamp: datetime, new_speed: float = 0
+        self, device_id: int, new_timestamp: datetime
     ) -> tuple[bool, str]:
         """
-        Validate temporal sequence and detect unrealistic changes.
+        Validate temporal sequence focusing purely on time-based validations.
 
         Args:
             device_id: GPS device ID
             new_timestamp: Timestamp of new GPS point
-            new_speed: Speed from new GPS point
 
         Returns:
             Tuple of (is_valid, warning_message)
@@ -712,23 +803,17 @@ class GPSWebhook(http.Controller):
                     f"Timestamp too far in future: {future_diff/60:.1f} minutes",
                 )
 
-            # Check for unrealistic speed changes
-            if last_point.speed and new_speed:
-                time_minutes = abs(time_diff) / 60
-                if time_minutes > 0:
-                    speed_change = abs(new_speed - last_point.speed)
-                    speed_change_per_minute = speed_change / time_minutes
+            # Check for points too far in the past (more than 24 hours)
+            if time_diff < -86400:  # More than 24 hours in the past
+                return (
+                    False,
+                    f"Timestamp too far in past: {abs(time_diff/3600):.1f} hours ago",
+                )
 
-                    if speed_change_per_minute > self.MAX_SPEED_CHANGE_PER_MINUTE:
-                        return (
-                            False,
-                            f"Unrealistic speed change: {speed_change:.1f} km/h in {time_minutes:.1f} minutes",
-                        )
-
-            return True, "Valid sequence"
+            return True, "Valid temporal sequence"
 
         except Exception as e:
-            return True, "Validation error - allowing point"
+            return True, "Temporal validation error - allowing point"
 
     def _is_duplicate_point(
         self,
