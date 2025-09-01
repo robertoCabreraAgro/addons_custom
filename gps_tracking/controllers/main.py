@@ -81,6 +81,8 @@ class GPSWebhook(http.Controller):
     MIN_COORDINATE_PRECISION = 5  # Minimum decimal places for coordinates
     MAX_DUPLICATE_TIME_WINDOW = 30  # Seconds to check for duplicate points
     MAX_SPEED_CHANGE_PER_MINUTE = 100  # km/h - detect unrealistic speed changes
+    MIN_ENGINE_TEMP = -40  # °C
+    MAX_ENGINE_TEMP = 150  # °C
 
     # ------------------------------------------------------------
     # MAIN WEBHOOK ENDPOINT
@@ -432,6 +434,11 @@ class GPSWebhook(http.Controller):
                 if processed_odo is not None:
                     vals[field_name] = processed_odo
 
+            elif field_name == "engine_temperature":
+                processed_odo = self._process_engine_temperature(value)
+                if processed_odo is not None:
+                    vals[field_name] = processed_odo
+
             else:
                 # Store value directly for other fields
                 vals[field_name] = value
@@ -593,6 +600,24 @@ class GPSWebhook(http.Controller):
         except (ValueError, TypeError) as e:
             return None
 
+    def _process_engine_temperature(self, value: float) -> Optional[float]:
+        """
+        Process odometer value (convert from meters to kilometers)
+
+        Args:
+            value: Odometer value in meters
+
+        Returns:
+            Odometer value in kilometers or None if invalid
+        """
+        try:
+            temperature_value = float(value) / 10.0
+            if temperature_value < 0:
+                return None
+            return temperature_value
+        except (ValueError, TypeError) as e:
+            return None
+
     # ------------------------------------------------------------
     # VALIDATIONS
     # ------------------------------------------------------------
@@ -732,10 +757,10 @@ class GPSWebhook(http.Controller):
         """
         # Validate engine temperature
         engine_temp = vals.get("engine_temperature", 0)
-        if engine_temp and (engine_temp < -40 or engine_temp > 150):
+        if engine_temp and (engine_temp < self.MIN_ENGINE_TEMP or engine_temp > self.MAX_ENGINE_TEMP):
             return (
                 False,
-                f"Invalid engine temperature: {engine_temp}°C (range: -40 to 150°C)",
+                f"Invalid engine temperature: {engine_temp}°C (range: {self.MIN_ENGINE_TEMP} to {self.MAX_ENGINE_TEMP}°C)",
             )
 
         # Validate fuel level
