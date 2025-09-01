@@ -26,8 +26,8 @@ class ResUsers(models.Model):
     )
     season_id = fields.Many2one(
         comodel_name="date.range",
-        string="AG Season",
-        domain="[('type_id.name', '=', 'AG Season')]",
+        string="Default AG Season",
+        domain="[('type_id.name', '=', 'AG')]",
         help="Default AG season for this user's sales orders",
     )
 
