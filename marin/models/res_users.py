@@ -6,6 +6,10 @@ class ResUsers(models.Model):
 
     _inherit = "res.users"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     property_purchase_journal_id = fields.Many2one(
         comodel_name="account.journal",
         string="Default Purchase Journal",

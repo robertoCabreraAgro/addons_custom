@@ -1,16 +1,20 @@
 import re
+
 from collections import Counter
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import frozendict
-from odoo.tools.translate import _
 
 
 class AccountMoveLine(models.Model):
     """Inherit AccountMoveLine"""
 
     _inherit = "account.move.line"
+
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
 
     # Extended fields
     move_type = fields.Selection(store=True)
@@ -31,16 +35,9 @@ class AccountMoveLine(models.Model):
         tracking=True,
     )
 
-    @api.onchange("name")
-    def _inverse_name(self):
-        for line in self:
-            if line.name and not line.product_id:
-                line._conditional_add_to_compute(
-                    "account_id",
-                    lambda aml: (
-                        aml.display_type == "product" and aml.move_id.is_invoice(True)
-                    ),
-                )
+    # ------------------------------------------------------------
+    # COMPUTE METHODS
+    # ------------------------------------------------------------
 
     # Override original method
     def _compute_account_id(self):
@@ -241,11 +238,30 @@ class AccountMoveLine(models.Model):
                 else lines.filtered(lambda line: line.product_id == line.product_id)
             )
 
+    # ------------------------------------------------------------
+    # ONCHANGE METHODS
+    # ------------------------------------------------------------
+
+    @api.onchange("name")
+    def _inverse_name(self):
+        for line in self:
+            if line.name and not line.product_id:
+                line._conditional_add_to_compute(
+                    "account_id",
+                    lambda aml: (
+                        aml.display_type == "product" and aml.move_id.is_invoice(True)
+                    ),
+                )
+
     @api.onchange("purchase_line_ids")
     def _onchange_purchase_line(self):
         for line in self:
             if line.purchase_line_ids:
                 line.product_id = line.purchase_line_ids.product_id
+
+    # ------------------------------------------------------------
+    # HELPERS
+    # ------------------------------------------------------------
 
     def _prepare_compute_analytic_distribution(self):
         return frozendict(
@@ -276,6 +292,10 @@ class AccountMoveLine(models.Model):
             }
         )
         return res
+
+    # ------------------------------------------------------------
+    # VALIDATIONS
+    # ------------------------------------------------------------
 
     # Override original method
     def _check_constrains_account_id_journal_id(self):

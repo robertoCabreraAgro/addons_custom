@@ -7,6 +7,10 @@ class ResCompany(models.Model):
 
     _inherit = "res.company"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     code = fields.Char(string="Short Code", size=6)
     complete_name = fields.Char(compute="_compute_complete_name", store=True)
 

@@ -9,9 +9,9 @@ class ProductProduct(models.Model):
     # ------------------------------------------------------------
 
     lot_ids = fields.One2many(
-        "stock.lot",
-        "product_id",
-        "Lots",
+        comodel_name="stock.lot",
+        inverse_name="product_id",
+        string="Lots",
         readonly=True,
     )
     vehicle_name = fields.Char(

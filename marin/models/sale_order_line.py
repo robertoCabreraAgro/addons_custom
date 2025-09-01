@@ -7,6 +7,10 @@ class SaleOrderLine(models.Model):
 
     _inherit = "sale.order.line"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     # Extended fields
     # In core this a related field. We need to trigger its value on view, so we can
     # have it even when we're in a NewId

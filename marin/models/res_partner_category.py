@@ -11,6 +11,10 @@ class ResPartnerCategory(models.Model):
 
     _inherit = "res.partner.category"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     score_value = fields.Float(
         string="Score Value",
         default=0.0,

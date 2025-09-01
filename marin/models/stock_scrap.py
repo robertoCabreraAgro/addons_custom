@@ -6,6 +6,10 @@ class StockScrap(models.Model):
 
     _inherit = "stock.scrap"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     lot_id = fields.Many2one(domain="lot_domain")
     lot_domain = fields.Binary("Lot domain", compute="_compute_lot_domain")
 

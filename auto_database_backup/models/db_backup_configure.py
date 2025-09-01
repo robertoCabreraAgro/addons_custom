@@ -16,7 +16,7 @@ from datetime import timedelta
 from nextcloud import NextCloud
 from requests.auth import HTTPBasicAuth
 from werkzeug import urls
-from odoo import api, fields, models, _
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.misc import find_pg_tool, exec_pg_environ
 from odoo.http import request

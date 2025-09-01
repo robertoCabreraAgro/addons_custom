@@ -8,6 +8,10 @@ class StockMoveLine(models.Model):
 
     _inherit = "stock.move.line"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     move_id = fields.Many2one(ondelete="cascade")
     location_availability = fields.Float(
         "From availability",

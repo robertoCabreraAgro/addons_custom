@@ -10,6 +10,10 @@ class SaleTarget(models.Model):
     _order = "date_from desc, partner_id"
     _rec_name = "name"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     name = fields.Char(
         string="Target Name",
         compute="_compute_name",

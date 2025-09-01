@@ -15,6 +15,10 @@ class AccountMove(models.Model):
 
     _inherit = "account.move"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     # Extended fields
     invoice_date = fields.Date(
         compute="_compute_invoice_date",

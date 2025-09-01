@@ -1,14 +1,17 @@
 import base64
 
-from odoo import api, Command, fields, models, tools
+from odoo import _, api, Command, fields, models, tools
 from odoo.exceptions import UserError, RedirectWarning
-from odoo.tools.translate import _
 
 
 class AccountJournal(models.Model):
     """Inherit AccountJournal"""
 
     _inherit = "account.journal"
+
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
 
     default_receivable_account_id = fields.Many2one(
         comodel_name="account.account",
@@ -45,7 +48,7 @@ class AccountJournal(models.Model):
         help="It acts as a default account for refunds",
     )
     x_treatment = fields.Selection(
-        [
+        selection=[
             ("not_fiscal_simulated", "Not Fiscal simulated"),
             ("not_fiscal_real", "Not Fiscal real"),
             ("fiscal_simulated", "Fiscal simulated"),
@@ -73,6 +76,10 @@ class AccountJournal(models.Model):
         help="Users that can visualize entries of this journal.",
     )
 
+    # ------------------------------------------------------------
+    # CONSTRAINTS
+    # ------------------------------------------------------------
+
     @api.constrains(
         "type", "default_receivable_account_id", "default_payable_account_id"
     )
@@ -94,23 +101,31 @@ class AccountJournal(models.Model):
                 )
             )
 
-    def _is_bbva_mx(self):
-        return self.bank_id == self.env.ref("l10n_mx.acc_bank_012_BBVA_BANCOMER")
+    # ------------------------------------------------------------
+    # ONCHANGE METHODS
+    # ------------------------------------------------------------
 
-    def _check_bbva_mx_attachment(self, attachment):
-        self.ensure_one()
-        if self._is_bbva_mx():
-            file_content = base64.b64decode(attachment.datas)
-            file_name = attachment.name.lower().strip()
-            if file_name.endswith(".txt"):
-                return self.env["bbva.parser"]._validate_header(
-                    file_content, file_type="txt"
-                )
-            elif file_name.endswith((".xls", ".xlsx")):
-                return self.env["bbva.parser"]._validate_header(
-                    file_content, file_type="xlsx"
-                )
-        return False
+    @api.onchange("x_treatment")
+    def _onchange_x_treatment(self):
+        """Determine if the UUID is required based on the tax treatment of the journal."""
+        for journal in self:
+            journal.l10n_mx_edi_require_uuid = (
+                journal.x_treatment in ["fiscal_simulated", "fiscal_real"]
+                and journal.type == "purchase"
+            )
+
+    # ------------------------------------------------------------
+    # HELPERS
+    # ------------------------------------------------------------
+
+    @api.onchange("x_treatment")
+    def _onchange_x_treatment(self):
+        """Determine if the UUID is required based on the tax treatment of the journal."""
+        for journal in self:
+            journal.l10n_mx_edi_require_uuid = (
+                journal.x_treatment in ["fiscal_simulated", "fiscal_real"]
+                and journal.type == "purchase"
+            )
 
     def _import_bbva_mx_bank_statement(self, attachments):
         if any(not a.raw for a in attachments):
@@ -296,11 +311,24 @@ class AccountJournal(models.Model):
             return journal._import_bbva_mx_bank_statement(attachments)
         return super().create_document_from_attachment(attachment_ids)
 
-    @api.onchange("x_treatment")
-    def _onchange_x_treatment(self):
-        """Determine if the UUID is required based on the tax treatment of the journal."""
-        for journal in self:
-            journal.l10n_mx_edi_require_uuid = (
-                journal.x_treatment in ["fiscal_simulated", "fiscal_real"]
-                and journal.type == "purchase"
-            )
+    # ------------------------------------------------------------
+    # VALIDATIONS
+    # ------------------------------------------------------------
+
+    def _is_bbva_mx(self):
+        return self.bank_id == self.env.ref("l10n_mx.acc_bank_012_BBVA_BANCOMER")
+
+    def _check_bbva_mx_attachment(self, attachment):
+        self.ensure_one()
+        if self._is_bbva_mx():
+            file_content = base64.b64decode(attachment.datas)
+            file_name = attachment.name.lower().strip()
+            if file_name.endswith(".txt"):
+                return self.env["bbva.parser"]._validate_header(
+                    file_content, file_type="txt"
+                )
+            elif file_name.endswith((".xls", ".xlsx")):
+                return self.env["bbva.parser"]._validate_header(
+                    file_content, file_type="xlsx"
+                )
+        return False

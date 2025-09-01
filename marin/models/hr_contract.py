@@ -12,6 +12,10 @@ class HrContract(models.Model):
 
     _inherit = "hr.contract"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     #    final_yearly_costs = fields.Monetary(
     #        string="Employee Budget",
     #        compute="_compute_final_yearly_costs",

@@ -12,6 +12,10 @@ class SaleOrderTemplate(models.Model):
 
     _inherit = "sale.order.template"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     season_id = fields.Many2one(
         "date.range",
         string="AG Season",

@@ -1,4 +1,5 @@
 import re
+
 from itertools import product
 from dateutil.relativedelta import relativedelta
 
@@ -11,6 +12,10 @@ class AccountBankStatementLine(models.Model):
 
     _inherit = "account.bank.statement.line"
 
+    # ------------------------------------------------------------
+    # CRUD METHODS
+    # ------------------------------------------------------------
+
     @api.model_create_multi
     def create(self, vals_list):
         res = super().create(vals_list)
@@ -19,6 +24,10 @@ class AccountBankStatementLine(models.Model):
             if partner:
                 absl.partner_id = partner
         return res
+
+    # ------------------------------------------------------------
+    # HELPERS
+    # ------------------------------------------------------------
 
     def _compute_st_lines_to_reconcile(
         self,

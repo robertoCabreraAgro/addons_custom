@@ -1,4 +1,4 @@
-from odoo import api, fields, models, _
+from odoo import _, api, fields, models
 
 GOOGLE_AUTH_ENDPOINT = "https://accounts.google.com/o/oauth2/auth"
 GOOGLE_TOKEN_ENDPOINT = "https://accounts.google.com/o/oauth2/token"

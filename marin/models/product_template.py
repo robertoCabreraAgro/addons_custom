@@ -6,6 +6,10 @@ class ProductTemplate(models.Model):
 
     _inherit = "product.template"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     sale_ok = fields.Boolean(
         compute="_compute_sale_ok",
         store=True,

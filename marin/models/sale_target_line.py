@@ -12,6 +12,10 @@ class SaleTargetLine(models.Model):
     _description = "Sales Target Line"
     _order = "target_id, product_id"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     target_id = fields.Many2one(
         "sale.target",
         string="Sales Target",

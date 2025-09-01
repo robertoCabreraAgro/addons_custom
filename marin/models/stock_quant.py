@@ -1,13 +1,16 @@
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.osv import expression
-from odoo.tools.translate import _
 
 
 class StockQuant(models.Model):
     """Inherit StockQuant"""
 
     _inherit = "stock.quant"
+
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
 
     # Extend core fields
     warehouse_id = fields.Many2one(

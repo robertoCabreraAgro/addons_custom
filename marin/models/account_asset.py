@@ -13,6 +13,10 @@ class AccountAsset(models.Model):
 
     _inherit = "account.asset"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     location = fields.Char(string="Location")
 
     has_property_identification = fields.Selection(

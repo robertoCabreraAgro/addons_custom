@@ -2,13 +2,16 @@ from collections import defaultdict
 
 from odoo import models, fields, api
 from odoo.osv.expression import OR
-from odoo.tools.translate import _
 
 
 class MrpBom(models.Model):
     """Inherit MrpBom"""
 
     _inherit = "mrp.bom"
+
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
 
     x_type = fields.Selection(
         [

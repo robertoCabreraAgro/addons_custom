@@ -1,7 +1,7 @@
 from collections import defaultdict
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, _
+from odoo import _, api, fields, models
 
 
 class StockLot(models.Model):

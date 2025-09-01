@@ -1,40 +1,48 @@
-from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
+from odoo import _, api, fields, models
 from odoo.addons.l10n_mx_edi.models.l10n_mx_edi_document import USAGE_SELECTION
-
-import logging
-
-_logger = logging.getLogger(__name__)
 
 
 class AccountMoveOperationFromEntry(models.TransientModel):
     _name = "account.move.operation.from.entry"
     _description = "Start Operation From Existing Entry"
 
-    st_line_id = fields.Many2one("account.bank.statement.line", string="Source Entry")
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
+    st_line_id = fields.Many2one(
+        comodel_name="account.bank.statement.line",
+        string="Source Entry",
+    )
     operation_type_id = fields.Many2one(
-        "account.move.operation.type",
+        comodel_name="account.move.operation.type",
         string="Operation Type",
         required=True,
         domain="[('company_id', 'in', (company_id, False)), ('sub_operation', '=', False)]",
     )
-    partner_id = fields.Many2one("res.partner", string="Partner", required=True)
+    partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Partner",
+        required=True,
+    )
     reference = fields.Char(string="Reference")
     amount = fields.Monetary(string="Amount", currency_field="currency_id")
     currency_id = fields.Many2one(
-        "res.currency",
+        comodel_name="res.currency",
         string="Currency",
         required=True,
         default=lambda self: self.env.company.currency_id.id,
     )
     company_id = fields.Many2one(
-        "res.company",
+        comodel_name="res.company",
         string="Company",
         required=True,
         default=lambda self: self.env.company,
     )
     action_line_ids = fields.One2many(
-        "account.move.operation.from.entry.line", "wizard_id", string="Actions"
+        "account.move.operation.from.entry.line",
+        "wizard_id",
+        string="Actions",
     )
     diff_partner = fields.Boolean(
         related="operation_type_id.diff_partner",
@@ -42,18 +50,21 @@ class AccountMoveOperationFromEntry(models.TransientModel):
     )
     multicompany = fields.Boolean(related="operation_type_id.multicompany")
     diff_partner_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         string="CN Partner",
         domain=["|", ("parent_id", "=", False), ("is_company", "=", True)],
     )
-    target_company_id = fields.Many2one("res.company", string="Target Company")
+    target_company_id = fields.Many2one(
+        comodel_name="res.company",
+        string="Target Company",
+    )
     move_id = fields.Many2one(
-        "account.move",
+        comodel_name="account.move",
         string="Related Move",
         help="If this operation is related to a specific move, you can link it here.",
     )
     l10n_mx_edi_payment_method_id = fields.Many2one(
-        "l10n_mx_edi.payment.method",
+        comodel_name="l10n_mx_edi.payment.method",
         string="Método de pago SAT",
     )
     l10n_mx_edi_usage = fields.Selection(
@@ -93,8 +104,11 @@ class AccountMoveOperationFromEntry(models.TransientModel):
         if ctx.get("l10n_mx_edi_usage") and "l10n_mx_edi_usage" in self._fields:
             res["l10n_mx_edi_usage"] = ctx["l10n_mx_edi_usage"]
 
-        _logger.info("Default values for operation wizard: %s", res)
         return res
+
+    # ------------------------------------------------------------
+    # ONCHANGE METHODS
+    # ------------------------------------------------------------
 
     @api.onchange("operation_type_id")
     def _onchange_operation_type_id(self):
@@ -122,6 +136,10 @@ class AccountMoveOperationFromEntry(models.TransientModel):
 
         if vals_list:
             self.action_line_ids = [(0, 0, vals) for vals in vals_list]
+
+    # ------------------------------------------------------------
+    # ACTION METHODS
+    # ------------------------------------------------------------
 
     def action_create_operation(self):
         """Create an operation from this wizard"""
@@ -170,11 +188,11 @@ class AccountMoveOperationFromEntry(models.TransientModel):
 
         return {
             "name": _("Account Operation"),
-            "view_mode": "form",
-            "res_model": "account.move.operation",
-            "res_id": operation.id,
             "type": "ir.actions.act_window",
+            "res_model": "account.move.operation",
+            "view_mode": "form",
             "target": "current",
+            "res_id": operation.id,
         }
 
 
@@ -182,12 +200,23 @@ class AccountMoveOperationFromEntryLine(models.TransientModel):
     _name = "account.move.operation.from.entry.line"
     _description = "Operation From Entry Lines"
 
-    wizard_id = fields.Many2one("account.move.operation.from.entry", string="Wizard")
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
+    wizard_id = fields.Many2one(
+        comodel_name="account.move.operation.from.entry",
+        string="Wizard",
+    )
     action_id = fields.Many2one(
-        "account.move.operation.action", string="Action", required=True, readonly=True
+        comodel_name="account.move.operation.action",
+        string="Action",
+        required=True,
+        readonly=True,
     )
     name = fields.Char(string="Description", required=True, readonly=True)
     executed = fields.Boolean(string="Already Executed")
     document_id = fields.Many2one(
-        "account.bank.statement.line", string="Existing Document"
+        comodel_name="account.bank.statement.line",
+        string="Existing Document",
     )

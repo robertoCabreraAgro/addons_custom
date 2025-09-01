@@ -6,6 +6,10 @@ class ProductCategory(models.Model):
 
     _inherit = "product.category"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     property_account_income_refund_id = fields.Many2one(
         "account.account",
         "Income Refund Account",

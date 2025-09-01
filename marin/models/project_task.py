@@ -7,6 +7,10 @@ class Task(models.Model):
 
     _inherit = "project.task"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     # Used in all project tasks
     lost_reason_id = fields.Many2one(
         "project.task.lost.reason",

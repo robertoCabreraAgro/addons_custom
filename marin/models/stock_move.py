@@ -6,6 +6,10 @@ class StockMove(models.Model):
 
     _inherit = "stock.move"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     picking_id = fields.Many2one(ondelete="cascade")
     purchase_line_id = fields.Many2one(readonly=False)
     allowed_purchase_line_ids = fields.Many2many(

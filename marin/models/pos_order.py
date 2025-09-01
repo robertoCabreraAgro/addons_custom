@@ -6,6 +6,10 @@ class PosOrder(models.Model):
 
     _inherit = "pos.order"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     margin = fields.Monetary(compute="_compute_margin", store=True)
     margin_percent = fields.Float(
         string="Margin (%)", compute="_compute_margin", digits=(12, 4), store=True

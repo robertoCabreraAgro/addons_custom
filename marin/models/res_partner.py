@@ -14,22 +14,12 @@ class ResPartner(models.Model):
 
     _inherit = "res.partner"
 
-    def _prepare_partner_category_domain(self):
-        parents = []
-        if self.env.user.has_group("account.group_account_basic"):
-            parents.append(self.env.ref("marin.partner_category_management").id)
-        if self.env.user.has_group("sales_team.group_sale_salesman_all_leads"):
-            parents.append(self.env.ref("marin.partner_category_commercial").id)
-        if self.env.user.has_group("marin.group_security_compliance"):
-            parents.append(self.env.ref("marin.partner_category_security").id)
-        if self.env.user.has_group("purchase.group_purchase_manager"):
-            parents.append(self.env.ref("marin.partner_category_purchase").id)
-        if not parents:
-            return [("id", "=", False)]
-        return [("parent_id", "!=", False), ("parent_id", "in", parents)]
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
 
     # Extend core fields
-    category_id = fields.Many2many(domain=_prepare_partner_category_domain)
+    category_id = fields.Many2many(domain=lambda self: self._prepare_partner_category_domain())
 
     # New fields
     mobile = fields.Char()
@@ -165,24 +155,6 @@ class ResPartner(models.Model):
         help="Number of days since the last sale order from this customer",
     )
 
-    def _prepare_compute_group(self):
-        return {
-            "user_account_user": self.env.user.has_group("account.group_account_user"),
-            "user_debt_manager": self.env.user.has_group(
-                "marin.group_account_debt_manager"
-            ),
-            "user_hr_user": self.env.user.has_group("marin.group_hr_user"),
-            "user_hr_manager": self.env.user.has_group("marin.group_hr_manager"),
-            "user_purchase_manager": self.env.user.has_group(
-                "purchase.group_purchase_manager"
-            ),
-            "user_sale_manager": self.env.user.has_group(
-                "sales_team.group_sale_manager"
-            ),
-            "user_stock_user": self.env.user.has_group("marin.group_stock_user"),
-            "user_stock_manager": self.env.user.has_group("marin.group_stock_manager"),
-        }
-
     def _compute_group(self):
         for partner in self:
             vals = self._prepare_compute_group()
@@ -220,6 +192,38 @@ class ResPartner(models.Model):
                 age_range = self.env["res.partner.age.range"].browse()
             if partner.age_range_id != age_range:
                 partner.age_range_id = age_range
+
+    def _prepare_partner_category_domain(self):
+        parents = []
+        if self.env.user.has_group("account.group_account_basic"):
+            parents.append(self.env.ref("marin.partner_category_management").id)
+        if self.env.user.has_group("sales_team.group_sale_salesman_all_leads"):
+            parents.append(self.env.ref("marin.partner_category_commercial").id)
+        if self.env.user.has_group("marin.group_security_compliance"):
+            parents.append(self.env.ref("marin.partner_category_security").id)
+        if self.env.user.has_group("purchase.group_purchase_manager"):
+            parents.append(self.env.ref("marin.partner_category_purchase").id)
+        if not parents:
+            return [("id", "=", False)]
+        return [("parent_id", "!=", False), ("parent_id", "in", parents)]
+
+    def _prepare_compute_group(self):
+        return {
+            "user_account_user": self.env.user.has_group("account.group_account_user"),
+            "user_debt_manager": self.env.user.has_group(
+                "marin.group_account_debt_manager"
+            ),
+            "user_hr_user": self.env.user.has_group("marin.group_hr_user"),
+            "user_hr_manager": self.env.user.has_group("marin.group_hr_manager"),
+            "user_purchase_manager": self.env.user.has_group(
+                "purchase.group_purchase_manager"
+            ),
+            "user_sale_manager": self.env.user.has_group(
+                "sales_team.group_sale_manager"
+            ),
+            "user_stock_user": self.env.user.has_group("marin.group_stock_user"),
+            "user_stock_manager": self.env.user.has_group("marin.group_stock_manager"),
+        }
 
     @api.model
     def _cron_update_age_range_id(self):

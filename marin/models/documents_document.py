@@ -9,6 +9,10 @@ class Documents(models.Model):
 
     _inherit = "documents.document"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     legal_number = fields.Char("Legal number")
     vehicle_id = fields.Many2one(
         comodel_name="stock.lot",

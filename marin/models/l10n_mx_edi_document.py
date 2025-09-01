@@ -1,17 +1,20 @@
 import logging
 
+from datetime import datetime, timedelta
 from requests.exceptions import ConnectTimeout, HTTPError, RequestException
+from zeep import Client, Transport
 
 from odoo import api, fields, models, tools
-from odoo.osv import expression
-from datetime import datetime, timedelta
-from zeep import Client, Transport
 
 _logger = logging.getLogger(__name__)
 
 
 class L10nMxEdiDocument(models.Model):
     _inherit = "l10n_mx_edi.document"
+
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
 
     last_sat_state_sync_date = fields.Datetime(
         string="Last SAT Status Sync", readonly=True, default=fields.Datetime.now

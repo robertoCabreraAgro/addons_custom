@@ -18,6 +18,10 @@ class ResPartnerDateRange(models.Model):
             age_from = last_age_range.age_to + 1
         return age_from
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     name = fields.Char(required=True)
     age_from = fields.Integer(
         string="From", required=True, default=lambda self: self._default_age_from()

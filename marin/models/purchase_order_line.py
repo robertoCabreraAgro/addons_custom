@@ -7,6 +7,10 @@ class PurchaseOrderLine(models.Model):
 
     _inherit = "purchase.order.line"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     # In core this a related field. We need to trigger its value on view, so we can
     # have it even when we're in a NewId
     partner_id = fields.Many2one(depends=["product_id"])

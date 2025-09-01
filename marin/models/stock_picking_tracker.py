@@ -8,6 +8,10 @@ class StockPickingTracker(models.Model):
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _order = "id desc"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     # Main block
     name = fields.Char(
         string="Reference",

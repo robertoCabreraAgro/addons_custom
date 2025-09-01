@@ -8,6 +8,10 @@ class StockPickingType(models.Model):
 
     _inherit = "stock.picking.type"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     default_location_src_id = fields.Many2one(
         tracking=True,
     )

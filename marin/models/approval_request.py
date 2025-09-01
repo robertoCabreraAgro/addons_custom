@@ -11,6 +11,10 @@ class ApprovalRequest(models.Model):
 
     _inherit = "approval.request"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     has_journal = fields.Selection(
         related="category_id.has_journal",
     )

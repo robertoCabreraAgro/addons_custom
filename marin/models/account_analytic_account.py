@@ -6,6 +6,10 @@ class AccountAnalyticLine(models.Model):
 
     _inherit = "account.analytic.line"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     date_impacted = fields.Date(
         string="Date impacted",
         required=True,

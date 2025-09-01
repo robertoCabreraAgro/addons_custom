@@ -9,6 +9,10 @@ class AccountPayment(models.Model):
 
     _inherit = "account.payment"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     journal_type = fields.Selection(
         related="journal_id.type",
         string="Journal type",
