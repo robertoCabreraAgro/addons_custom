@@ -11,7 +11,7 @@
                         <field
                             name="vehicle_ids"
                             widget="many2many_tags"
-                            options="{'color_field': 'color', 'no_create_edit': True, 'no_quick_create': True}"
+                            options="{'no_create_edit': True, 'no_quick_create': True}"
                             placeholder="Import logs for all vehicles"
                         />
                     </group>
