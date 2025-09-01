@@ -30,7 +30,7 @@ class GpsTrackingPoint(models.Model):
         store=True,
         readonly=True,
     )
-    timestamp = fields.Datetime(string="Timestamp", required=True)
+    timestamp = fields.Datetime(string="Timestamp", required=True, index=True)
     priority = fields.Integer(string="Priority")
     angle = fields.Float(string="Angle")
     altitude = fields.Float(string="Altitude")
