@@ -145,7 +145,6 @@ class GpsTrackingDevice(models.Model):
     def _compute_allowed_tracking_point_ids(self):
         now = fields.Datetime.now()
         last_week = now - timedelta(days=7)
-
         for device in self:
             device.allowed_tracking_point_ids = self.env["gps.tracking.point"].search(
                 [("device_id", "=", device.id), ("timestamp", ">=", last_week)],
@@ -158,21 +157,25 @@ class GpsTrackingDevice(models.Model):
         to avoid loading millions of records into memory.
         """
         for device in self:
-            # Use SQL query to get the latest point efficiently
-            self.env.cr.execute("""
-                SELECT
-                    id
-                FROM
-                    gps_tracking_point
-                WHERE
-                    device_id = %s
-                ORDER BY
-                    timestamp DESC
-                LIMIT 1
-            """, (device.id,))
+            device.last_point_id = False
 
-            result = self.env.cr.fetchone()
-            device.last_point_id = result[0] if result else False
+        query = """
+            SELECT DISTINCT ON (device_id)
+                device_id, id
+            FROM
+                gps_tracking_point 
+            WHERE
+                device_id = ANY(%s) 
+                AND timestamp IS NOT NULL
+            ORDER BY
+                device_id, timestamp DESC, id DESC
+        """
+        self.env.cr.execute(query, (list(self.ids),))
+        results = self.env.cr.fetchall()
+        device_to_point = dict(results)
+        for device in self:
+            if device.id in device_to_point:
+                device.last_point_id = device_to_point[device.id]
 
     @api.depends("timestamp")
     def _compute_inactivity_state(self):
@@ -189,9 +192,7 @@ class GpsTrackingDevice(models.Model):
         """
         inactive_threshold = self._get_inactivity_threshold()
         warning_threshold = self._get_warning_threshold()
-
         now_utc = fields.Datetime.now()
-
         for device in self:
             try:
                 device._set_device_inactivity_state(
