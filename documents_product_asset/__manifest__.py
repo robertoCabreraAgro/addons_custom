@@ -15,7 +15,7 @@
         "data/res_company_data.xml",
         "views/documents_document_views.xml",
         "views/stock_lot_views.xml",
-        "views/res_config_settings_views.xml",
+        "wizard/res_config_settings_views.xml",
     ],
     "installable": True,
     "auto_install": True,

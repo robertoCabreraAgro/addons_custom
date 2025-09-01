@@ -1,4 +1,5 @@
 from . import models
+from . import wizard
 
 
 def _documents_product_asset_post_init(env):
