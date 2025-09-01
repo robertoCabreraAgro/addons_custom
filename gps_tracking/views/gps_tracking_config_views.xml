@@ -1,59 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- GPS Tracking Configuration Form View -->
-    <record id="view_gps_tracking_config_form" model="ir.ui.view">
-        <field name="name">gps.tracking.config.form</field>
+    <!-- GPS Tracking Configuration Search View -->
+    <record id="view_gps_tracking_config_search" model="ir.ui.view">
+        <field name="name">gps.tracking.config.search</field>
         <field name="model">gps.tracking.config</field>
         <field name="arch" type="xml">
-            <form string="GPS Tracking Configuration">
-                <sheet>
-                    <div class="oe_title">
-                        <h1>
-                            <field name="name" placeholder="Configuration Name"/>
-                        </h1>
-                    </div>
-                    <group>
-                        <group string="Statistics">
-                            <field name="device_count"/>
-                        </group>
-                    </group>
-                    
-                    <notebook>
-                        <page string="Odometer Configuration">
-                            <group>
-                                <field name="reports_odometer"/>
-                                <field name="odometer_correction_factor" digits="[10,6]"/>
-                            </group>
-                        </page>
-                        
-                        <page string="Fuel Configuration">
-                            <group>
-                                <group string="Fuel Reporting Capabilities">
-                                    <field name="reports_fuel_percentage"/>
-                                    <field name="reports_fuel_volume"/>
-                                    <field name="reports_historical_consumption"/>
-                                </group>
-                            </group>
-                        </page>
-                        
-                        <page string="Associated Devices">
-                            <field name="device_ids" readonly="1">
-                                <list>
-                                    <field name="imei"/>
-                                    <field name="asset_id"/>
-                                    <field name="license_plate"/>
-                                    <field name="driver_name"/>
-                                </list>
-                            </field>
-                        </page>
-                        
-                        <page string="Notes">
-                            <field name="notes" nolabel="1" placeholder="Additional notes about this configuration..."/>
-                        </page>
-                    </notebook>
-                </sheet>
-            </form>
+            <search string="GPS Tracking Configurations">
+                <field name="name" />
+                <separator />
+                <filter name="reports_odometer" string="Reports Odometer"
+                    domain="[('reports_odometer', '=', True)]" />
+                <filter name="fuel_percentage" string="Reports Fuel Percentage"
+                    domain="[('reports_fuel_percentage', '=', True)]" />
+                <filter name="fuel_volume" string="Reports Fuel Volume"
+                    domain="[('reports_fuel_volume', '=', True)]" />
+                <separator />
+                <group expand="0" string="Group By">
+                    <filter name="group_fuel_reporting" string="Fuel Reporting"
+                        context="{'group_by': 'reports_fuel_percentage'}" />
+                </group>
+            </search>
         </field>
     </record>
 
@@ -63,34 +30,72 @@
         <field name="model">gps.tracking.config</field>
         <field name="arch" type="xml">
             <list string="GPS Tracking Configurations">
-                <field name="name"/>
-                <field name="reports_odometer"/>
-                <field name="reports_fuel_percentage"/>
-                <field name="reports_fuel_volume"/>
-                <field name="reports_historical_consumption"/>
-                <field name="odometer_correction_factor" digits="[10,6]"/>
-                <field name="device_count"/>
+                <field name="name" />
+                <field name="reports_odometer" />
+                <field name="fuel_reading" />
+                <field name="reports_fuel_percentage" />
+                <field name="reports_fuel_volume" />
+                <field name="reports_historical_consumption" />
+                <field name="odometer_correction_factor" digits="[10,6]" />
+                <field name="count_device_ids" />
             </list>
         </field>
     </record>
 
-    <!-- GPS Tracking Configuration Search View -->
-    <record id="view_gps_tracking_config_search" model="ir.ui.view">
-        <field name="name">gps.tracking.config.search</field>
+    <!-- GPS Tracking Configuration Form View -->
+    <record id="view_gps_tracking_config_form" model="ir.ui.view">
+        <field name="name">gps.tracking.config.form</field>
         <field name="model">gps.tracking.config</field>
         <field name="arch" type="xml">
-            <search string="GPS Tracking Configurations">
-                <field name="name"/>
-                <separator/>
-                <filter string="Reports Odometer" name="reports_odometer" domain="[('reports_odometer', '=', True)]"/>
-                <filter string="Reports Fuel Percentage" name="fuel_percentage" domain="[('reports_fuel_percentage', '=', True)]"/>
-                <filter string="Reports Fuel Volume" name="fuel_volume" domain="[('reports_fuel_volume', '=', True)]"/>
-                <separator/>
-                <group expand="0" string="Group By">
-                    <filter string="Fuel Reporting" name="group_fuel_reporting" 
-                            context="{'group_by': 'reports_fuel_percentage'}"/>
-                </group>
-            </search>
+            <form string="GPS Tracking Configuration">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Configuration Name" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Statistics">
+                            <field name="count_device_ids" />
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Odometer Configuration">
+                            <group>
+                                <field name="reports_odometer" />
+                                <field name="odometer_correction_factor" digits="[10,6]" />
+                            </group>
+                        </page>
+
+                        <page string="Fuel Configuration">
+                            <group>
+                                <group string="Fuel Reporting Capabilities">
+                                    <field name="fuel_reading" />
+                                    <field name="reports_fuel_percentage" />
+                                    <field name="reports_fuel_volume" />
+                                    <field name="reports_historical_consumption" />
+                                </group>
+                            </group>
+                        </page>
+
+<!--                         <page string="Associated Devices">
+                            <field name="device_ids" readonly="1">
+                                <list>
+                                    <field name="imei" />
+                                    <field name="vehicle_id" />
+                                    <field name="license_plate" />
+                                </list>
+                            </field>
+                        </page>
+ -->
+                        <page string="Notes">
+                            <field name="notes" nolabel="1"
+                                placeholder="Additional notes about this configuration" />
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
         </field>
     </record>
 

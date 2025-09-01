@@ -1,4 +1,3 @@
-from . import gps_tracking_history
 from . import geoengine_raster_layer
 from . import gps_tracking_config
 from . import gps_tracking_device

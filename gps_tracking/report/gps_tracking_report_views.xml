@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
     <record id="view_gps_tracking_report_pivot" model="ir.ui.view">
         <field name="name">gps.tracking.report.pivot</field>
         <field name="model">gps.tracking.report</field>
@@ -45,7 +46,8 @@
                 <field name="total_distance" />
                 <field name="fuel_consumed" />
                 <field name="engine_hours" />
-                <button name="action_view_tracking_points" type="object" string="View Details"
+                <button name="action_view_tracking_point_ids" string="View Details"
+                    type="object"
                     class="btn btn-link float-end" />
             </list>
         </field>
@@ -66,4 +68,5 @@
             </p>
         </field>
     </record>
+
 </odoo>

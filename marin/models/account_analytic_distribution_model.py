@@ -6,11 +6,13 @@ class AccountAnalyticDistributionModel(models.Model):
 
     _inherit = "account.analytic.distribution.model"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     vehicle_id = fields.Many2one(
-        "stock.lot",
-        "Vehicle",
-        domain="[('asset_type', '=', 'vehicle')]",
-        ondelete="cascade",
+        comodel_name="stock.lot",
+        string="Asset",
         help="Select a vehicle for which the analytic distribution will be used (e.g. create new customer "
         "invoice or Sales order if we select this vehicle, it will automatically take this as an analytic account)",
     )

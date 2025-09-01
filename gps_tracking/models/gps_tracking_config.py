@@ -6,6 +6,10 @@ class GpsTrackingConfig(models.Model):
     _description = "GPS Tracking Configuration"
     _rec_name = "name"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     name = fields.Char(
         string="Configuration Name",
         required=True,
@@ -29,6 +33,14 @@ class GpsTrackingConfig(models.Model):
     )
 
     # Fuel configuration
+    fuel_reading = fields.Selection(
+        selection=[
+            ("percentage", "As Percentage of tank capacity"),
+            ("volume", "As Volume (Deciliters)"),
+            ("percentage_volumen", "Both Percentage and Volume"),
+        ],
+        string="Fuel Reading Type",
+    )
     reports_fuel_percentage = fields.Boolean(
         string="Reports Fuel Percentage",
         default=True,
@@ -46,27 +58,24 @@ class GpsTrackingConfig(models.Model):
     )
 
     notes = fields.Text(
-        string="Notes", help="Additional notes about this configuration"
+        string="Notes",
+        help="Additional notes about this configuration",
     )
-
-    # Related devices
     device_ids = fields.One2many(
         comodel_name="gps.tracking.device",
         inverse_name="config_id",
         string="Associated Devices",
         help="Devices using this configuration",
     )
-    device_count = fields.Integer(
+    count_device_ids = fields.Integer(
         string="Device Count",
-        compute="_compute_device_count",
+        compute="_compute_count_device_ids",
         help="Number of devices using this configuration",
     )
 
-    @api.depends("device_ids")
-    def _compute_device_count(self):
-        """Compute the number of devices using this configuration."""
-        for config in self:
-            config.device_count = len(config.device_ids)
+    # ------------------------------------------------------------
+    # CONSTRAINTS
+    # ------------------------------------------------------------
 
     @api.constrains("odometer_correction_factor")
     def _check_odometer_correction_factor(self):
@@ -74,6 +83,20 @@ class GpsTrackingConfig(models.Model):
         for config in self:
             if config.odometer_correction_factor <= 0:
                 raise ValueError("Odometer correction factor must be positive")
+
+    # ------------------------------------------------------------
+    # COMPUTE METHODS
+    # ------------------------------------------------------------
+
+    @api.depends("device_ids")
+    def _compute_count_device_ids(self):
+        """Compute the number of devices using this configuration."""
+        for config in self:
+            config.count_device_ids = len(config.device_ids)
+
+    # ------------------------------------------------------------
+    # HELPERS
+    # ------------------------------------------------------------
 
     def get_corrected_odometer(self, raw_odometer):
         """Apply correction factor to raw odometer reading.
@@ -85,67 +108,4 @@ class GpsTrackingConfig(models.Model):
             float: Corrected odometer value
         """
         self.ensure_one()
-        if not raw_odometer:
-            return 0.0
         return raw_odometer * self.odometer_correction_factor
-
-    def get_fuel_level_liters(
-        self, fuel_percentage=None, fuel_deciliters=None, vehicle=None
-    ):
-        """Get fuel level in liters based on configuration.
-
-        Args:
-            fuel_percentage (float): Fuel level as percentage (0-100)
-            fuel_deciliters (float): Fuel level in deciliters
-            vehicle (stock.lot): Vehicle record to get tank capacity from
-
-        Returns:
-            float: Fuel level in liters, or False if cannot be determined
-        """
-        self.ensure_one()
-
-        # If device reports volume directly, convert from deciliters to liters
-        if self.reports_fuel_volume and fuel_deciliters is not None:
-            return fuel_deciliters / 10.0  # Convert deciliters to liters
-
-        # If device reports percentage and we have tank capacity, convert it
-        if (
-            self.reports_fuel_percentage
-            and fuel_percentage is not None
-            and vehicle
-            and vehicle.product_id.fuel_tank_capacity
-        ):
-            return (fuel_percentage / 100.0) * vehicle.product_id.fuel_tank_capacity
-
-        return False
-
-    def get_fuel_level_percentage(
-        self, fuel_percentage=None, fuel_deciliters=None, vehicle=None
-    ):
-        """Get fuel level as percentage based on configuration.
-
-        Args:
-            fuel_percentage (float): Fuel level as percentage (0-100)
-            fuel_deciliters (float): Fuel level in deciliters
-            vehicle (stock.lot): Vehicle record to get tank capacity from
-
-        Returns:
-            float: Fuel level as percentage, or False if cannot be determined
-        """
-        self.ensure_one()
-
-        # If device reports percentage directly, use it
-        if self.reports_fuel_percentage and fuel_percentage is not None:
-            return fuel_percentage
-
-        # If device reports deciliters and we have tank capacity, convert it
-        if (
-            self.reports_fuel_volume
-            and fuel_deciliters is not None
-            and vehicle
-            and vehicle.product_id.fuel_tank_capacity
-        ):
-            fuel_liters = fuel_deciliters / 10.0  # Convert deciliters to liters
-            return (fuel_liters / vehicle.product_id.fuel_tank_capacity) * 100.0
-
-        return False

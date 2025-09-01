@@ -19,13 +19,11 @@ class StockLot(models.Model):
         help="Original expiration date before reconditioning",
     )
 
-    # Vehicle-related fields (migrated from fleet_vehicle.py)
     department_id = fields.Many2one(
         comodel_name="hr.department",
         string="Department",
     )
 
-    # Add domain to show only documents with the 'Fuel Card' tag
     fuel_card_id = fields.Many2one(
         domain=lambda self: [
             (

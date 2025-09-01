@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-from odoo import api, fields, models, tools
+from odoo import fields, models, tools
 
 
 class GpsTrackingReport(models.Model):
@@ -9,10 +9,14 @@ class GpsTrackingReport(models.Model):
     _auto = False
     _order = "date desc"
 
-    date = fields.Date(string="Date")
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     device_id = fields.Many2one("gps.tracking.device", string="Device")
     imei = fields.Char(string="IMEI", readonly=True)
-    asset_id = fields.Many2one("stock.lot", string="Vehicle", readonly=True)
+    asset_id = fields.Many2one("stock.lot", string="Asset", readonly=True)
+    date = fields.Date(string="Date", readonly=True)
     avg_speed = fields.Float(string="Average Speed")
     max_speed = fields.Float(string="Maximum Speed")
     total_distance = fields.Float(string="Total Distance")
@@ -42,11 +46,15 @@ class GpsTrackingReport(models.Model):
                 GROUP BY
                     DATE(p.timestamp), p.device_id, d.imei, d.asset_id
             )
-        """
+            """
             % (self._table,)
         )
 
-    def action_view_tracking_points(self):
+    # ------------------------------------------------------------
+    # ACTIONS
+    # ------------------------------------------------------------
+
+    def action_view_tracking_point_ids(self):
         """
         Botón de acción para ver los puntos de rastreo detallados de este segmento
         """

@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-        <!-- Sequence for GPS Tracking Configuration -->
-        <record id="seq_gps_tracking_config" model="ir.sequence">
-            <field name="name">GPS Tracking Configuration Sequence</field>
-            <field name="code">gps.tracking.config</field>
-            <field name="prefix">GPS/CONFIG/</field>
-            <field name="padding">4</field>
-            <field name="number_increment">1</field>
-            <field name="number_next">1</field>
-            <field name="implementation">no_gap</field>
-            <field name="company_id"/>
-        </record>
+
+    <!-- Sequence for GPS Tracking Configuration -->
+    <record id="seq_gps_tracking_config" model="ir.sequence">
+        <field name="name">GPS Tracking Configuration Sequence</field>
+        <field name="code">gps.tracking.config</field>
+        <field name="prefix">GPS/CONFIG/</field>
+        <field name="padding">4</field>
+        <field name="number_increment">1</field>
+        <field name="number_next">1</field>
+        <field name="implementation">no_gap</field>
+        <field name="company_id" />
+    </record>
+
 </odoo>

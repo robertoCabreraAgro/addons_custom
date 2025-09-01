@@ -1,5 +1,66 @@
 <odoo>
 
+    <!-- Vista search para puntos de seguimiento -->
+    <record id="view_gps_tracking_point_search" model="ir.ui.view">
+        <field name="name">gps.tracking.point.search</field>
+        <field name="model">gps.tracking.point</field>
+        <field name="arch" type="xml">
+            <search>
+                <!-- Campos básicos de búsqueda -->
+                <field name="vehicle_id" string="Vehicle"
+                    filter_domain="[('vehicle_id', 'ilike', self)]" />
+                <field name="device_id" string="Device"
+                    filter_domain="[('device_id', 'ilike', self)]" />
+
+                <!-- Filtros predefinidos -->
+                <filter name="today" string="Today"
+                    domain="[('timestamp', '&gt;=', context_today().strftime('%Y-%m-%d')), ('timestamp', '&lt;=', context_today().strftime('%Y-%m-%d 23:59:59'))]" />
+                <filter name="last_day" string="Last 24 Hours"
+                    domain="[('timestamp', '&gt;=', datetime.datetime.now() - datetime.timedelta(days=1))]" />
+                <filter name="this_week" string="This Week"
+                    domain="[('timestamp', '&gt;', datetime.datetime.now() - datetime.timedelta(days=7))]" />
+
+                <!-- Filtros para estados del vehículo -->
+                <separator>
+                    <filter name="moving" string="Moving"
+                        domain="[('movement', '=', 1)]" />
+                    <filter name="stopped" string="Stopped"
+                        domain="[('movement', '=', 0)]" />
+                    <filter name="ignition_on" string="Ignition On"
+                        domain="[('ignition', '=', 1)]" />
+                    <filter name="ignition_off" string="Ignition Off"
+                        domain="[('ignition', '=', 0)]" />
+                </separator>
+
+                <!-- Filtros para valores específicos -->
+                <separator>
+                    <filter name="high_speed" string="High Speed (&gt;80)"
+                        domain="[('speed', '&gt;', 80)]" />
+                    <filter name="low_fuel" string="Low Fuel (&lt;20)"
+                        domain="[('fuel_level', '&lt;', 20)]" />
+                    <filter name="high_temp" string="High Engine Temp (&gt;95)"
+                        domain="[('engine_temperature', '&gt;', 95)]" />
+                    <filter name="high_rpm" string="High Engine RPM (&gt;3000)"
+                        domain="[('engine_speed_rpm', '&gt;', 3000)]" />
+                    <filter name="low_battery" string="Low Battery (&lt;11.5)"
+                        domain="[('battery_voltage', '&lt;', 11.5)]" />
+                </separator>
+
+                <!-- Agrupaciones -->
+                <group expand="0" string="Group By">
+                    <filter name="group_vehicle" string="Vehicle"
+                        context="{'group_by': 'vehicle_id'}" />
+                    <filter name="group_device" string="Device"
+                        context="{'group_by': 'device_id'}" />
+                    <filter name="group_date" string="Date"
+                        context="{'group_by': 'timestamp:day'}" />
+                    <filter name="group_hour" string="Hour"
+                        context="{'group_by': 'timestamp:hour'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
     <!-- Vista lista para puntos de seguimiento -->
     <record id="view_tracking_point_list" model="ir.ui.view">
         <field name="name">gps.tracking.point.list</field>
@@ -7,7 +68,7 @@
         <field name="arch" type="xml">
             <list>
                 <field name="timestamp" />
-                <field name="asset_id" />
+                <field name="vehicle_id" />
                 <field name="latitude" />
                 <field name="longitude" />
                 <field name="altitude" />
@@ -29,7 +90,6 @@
                 <field name="parking_brake_state" optional="hide" />
                 <field name="central_lock" optional="hide" />
                 <field name="isf_check_engine_indicator" optional="hide" />
-                <field name="gsm_signal" optional="hide" />
                 <field name="active_gsm_operator" optional="hide" />
                 <field name="sleep_mode" optional="hide" />
                 <field name="gnss_status" optional="hide" />
@@ -44,67 +104,7 @@
                 <field name="event_id" optional="hide" />
                 <field name="event_type" optional="hide" />
                 <field name="priority" optional="hide" />
-                <field name="address" optional="hide" />
             </list>
-        </field>
-    </record>
-
-    <!-- Vista search para puntos de seguimiento -->
-    <record id="view_gps_tracking_point_search" model="ir.ui.view">
-        <field name="name">gps.tracking.point.search</field>
-        <field name="model">gps.tracking.point</field>
-        <field name="arch" type="xml">
-            <search>
-                <!-- Campos básicos de búsqueda -->
-                <field name="asset_id" string="Vehicle"
-                    filter_domain="[('asset_id', 'ilike', self)]" />
-                <field name="driver_name" string="Driver"
-                    filter_domain="[('driver_name', 'ilike', self)]" />
-                <field name="device_id" string="Device"
-                    filter_domain="[('device_id', 'ilike', self)]" />
-
-                <!-- Filtros predefinidos -->
-                <filter string="Today" name="today"
-                    domain="[('timestamp', '&gt;=', context_today().strftime('%Y-%m-%d')), ('timestamp', '&lt;=', context_today().strftime('%Y-%m-%d 23:59:59'))]" />
-                <filter string="Last 24 Hours" name="last_day"
-                    domain="[('timestamp', '&gt;=', datetime.datetime.now() - datetime.timedelta(days=1))]" />
-                <filter string="This Week" name="this_week"
-                    domain="[('timestamp', '&gt;', datetime.datetime.now() - datetime.timedelta(days=7))]" />
-
-                <!-- Filtros para estados del vehículo -->
-                <separator>
-                    <filter string="Moving" name="moving" domain="[('movement', '=', 1)]" />
-                    <filter string="Stopped" name="stopped" domain="[('movement', '=', 0)]" />
-                    <filter string="Ignition On" name="ignition_on" domain="[('ignition', '=', 1)]" />
-                    <filter string="Ignition Off" name="ignition_off"
-                        domain="[('ignition', '=', 0)]" />
-                </separator>
-
-                <!-- Filtros para valores específicos -->
-                <separator>
-                    <filter string="High Speed (&gt;80)" name="high_speed"
-                        domain="[('speed', '&gt;', 80)]" />
-                    <filter string="Low Fuel (&lt;20)" name="low_fuel"
-                        domain="[('fuel_level', '&lt;', 20)]" />
-                    <filter string="High Engine Temp (&gt;95)" name="high_temp"
-                        domain="[('engine_temperature', '&gt;', 95)]" />
-                    <filter string="High Engine RPM (&gt;3000)" name="high_rpm"
-                        domain="[('engine_speed_rpm', '&gt;', 3000)]" />
-                    <filter string="Low Battery (&lt;11.5)" name="low_battery"
-                        domain="[('battery_voltage', '&lt;', 11.5)]" />
-                    <filter string="Weak GSM Signal (&lt;10)" name="weak_signal"
-                        domain="[('gsm_signal', '&lt;', 10)]" />
-                </separator>
-
-                <!-- Agrupaciones -->
-                <group expand="0" string="Group By">
-                    <filter string="Vehicle" name="group_vehicle"
-                        context="{'group_by': 'asset_id'}" />
-                    <filter string="Device" name="group_device" context="{'group_by': 'device_id'}" />
-                    <filter string="Date" name="group_date" context="{'group_by': 'timestamp:day'}" />
-                    <filter string="Hour" name="group_hour" context="{'group_by': 'timestamp:hour'}" />
-                </group>
-            </search>
         </field>
     </record>
 
@@ -115,11 +115,8 @@
         <field name="model">gps.tracking.point</field>
         <field name="arch" type="xml">
             <geoengine>
-                <field name="the_point"
-                    string="Position"
+                <field name="the_point" string="Position"
                     options='{"color": "#00FF00", "opacity": 0.8}' />
-                <!-- Templates para mostrar información en los puntos en el mapa -->
-
             </geoengine>
         </field>
     </record>

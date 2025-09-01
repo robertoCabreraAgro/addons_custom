@@ -5,20 +5,15 @@
         <field name="model">gps.tracking.device</field>
         <field name="arch" type="xml">
             <search string="Buscar Dispositivo">
-                <field name="driver_name" />
-                <field name="model_id" />
-                <field name="license_plate" />
                 <field name="imei" />
-                <field name="location" />
                 <field name="config_id" />
-                <filter string="Con Ubicación" name="with_location" domain="[('location', '!=', False)]"/>
-                <filter string="Sin Ubicación" name="without_location" domain="[('location', '=', False)]"/>
-                <filter string="Con Configuración" name="with_config" domain="[('config_id', '!=', False)]"/>
-                <filter string="Sin Configuración" name="without_config" domain="[('config_id', '=', False)]"/>
+                <filter name="with_config" string="Con Configuración"
+                    domain="[('config_id', '!=', False)]" />
+                <filter name="without_config" string="Sin Configuración"
+                    domain="[('config_id', '=', False)]" />
                 <group expand="0" string="Agrupar por">
-                    <filter string="Configuración GPS" name="group_by_config" context="{'group_by': 'config_id'}"/>
-                    <filter string="Ubicación" name="group_by_location" context="{'group_by': 'location'}"/>
-                    <filter string="Modelo de Vehículo" name="group_by_model" context="{'group_by': 'model_id'}"/>
+                    <filter name="group_by_config" string="Configuración GPS"
+                        context="{'group_by': 'config_id'}" />
                 </group>
             </search>
         </field>
@@ -29,17 +24,17 @@
         <field name="name">gps.tracking.device.list</field>
         <field name="model">gps.tracking.device</field>
         <field name="arch" type="xml">
-            <list string="GPS Tracking Devices" decoration-danger="inactivity_status == 'inactive_alert'">
+            <list string="GPS Tracking Devices"
+                decoration-danger="inactivity_state == 'inactive_alert'">
                 <field name="imei" />
                 <field name="config_id" />
-                <field name="license_plate" />
-                <field name="driver_name" />
-                <field name="location" optional="hide" />
-                <field name="model_id" />
                 <field name="real_odometer" />
                 <field name="speed" />
                 <field name="timestamp" />
-                <field name="inactivity_status" widget="badge" decoration-success="inactivity_status == 'active'" decoration-warning="inactivity_status == 'inactive_off_hours'" decoration-danger="inactivity_status == 'inactive_alert'"/>
+                <field name="inactivity_state" widget="badge"
+                    decoration-success="inactivity_state == 'active'"
+                    decoration-warning="inactivity_state == 'inactive_off_hours'"
+                    decoration-danger="inactivity_state == 'inactive_alert'" />
             </list>
         </field>
     </record>
@@ -89,13 +84,9 @@
                         <group>
                             <field name="imei" />
                             <field name="config_id" />
-                            <field name="asset_id" />
-                            <field name="license_plate" />
-                            <field name="driver_name" />
                             <field name="color" />
                         </group>
                         <group>
-                            <field name="location" />
                             <field name="last_point_id" />
                             <field name="timestamp" />
                             <field name="odometer" />
@@ -104,7 +95,7 @@
                     </group>
                     <notebook>
                         <page string="Tracking Points">
-                            <field name="allowed_tracking_point" default_order="timestamp desc">
+                            <field name="allowed_tracking_point_ids" default_order="timestamp desc">
                                 <list limit="50">
                                     <field name="timestamp" />
                                     <field name="latitude" />
@@ -148,20 +139,11 @@
                                 </list>
                             </field>
                         </page>
-                        <!-- Pestaña History Route
-                        <page string="History Route">
-                            <geoengine>
-                                <field name="history_route" 
-                                        string="History Route" 
-                                        options='{"color": "#0000FF", "strokeWidth": 4}'/>
-                            </geoengine>
-                        </page> -->
                     </notebook>
                 </sheet>
             </form>
         </field>
     </record>
-
 
     <!-- Acción para mostrar los dispositivos GPS en vistas list y form -->
     <record id="action_gps_tracking_device" model="ir.actions.act_window">

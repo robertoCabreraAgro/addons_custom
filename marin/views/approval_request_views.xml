@@ -2,7 +2,7 @@
 <odoo>
 
     <record id="approval_request_view_tree" model="ir.ui.view">
-        <field name="name">approval.request.tree.inherit</field>
+        <field name="name">approval.request.tree</field>
         <field name="model">approval.request</field>
         <field name="inherit_id" ref="base_approval.approval_request_view_tree" />
         <field name="arch" type="xml">
@@ -20,7 +20,7 @@
     </record>
 
     <record id="approval_request_view_form" model="ir.ui.view">
-        <field name="name">approval.request.form.inherit</field>
+        <field name="name">approval.request.form</field>
         <field name="model">approval.request</field>
         <field name="inherit_id" ref="base_approval.approval_request_view_form" />
         <field name="arch" type="xml">
@@ -31,16 +31,18 @@
             </xpath>
             <xpath expr="//button[@name='action_get_attachment_view']" position="after">
                 <button name="action_view_account_move"
-                    type="object" class="oe_stat_button"
+                    type="object"
+                    class="oe_stat_button"
                     icon="fa-credit-card"
                     invisible="count_account_move == 0"
                     groups="account.group_account_basic">
                     <field name="count_account_move" string="Journal Entries"
                         widget="statinfo"
-                        groups="account.group_account_basic"/>
+                        groups="account.group_account_basic" />
                 </button>
                 <button name="action_view_purchase_order"
-                    type="object" class="oe_stat_button"
+                    type="object"
+                    class="oe_stat_button"
                     icon="fa-credit-card"
                     invisible="count_purchase_order == 0"
                     groups="purchase.group_purchase_user">
@@ -49,23 +51,27 @@
                         groups="purchase.group_purchase_user" />
                 </button>
                 <button name="action_view_product_asset_log" string="Logs"
-                    type="object" class="oe_stat_button"
+                    type="object"
+                    class="oe_stat_button"
                     icon="fa-credit-card"
                     invisible="not log_ids" />
             </xpath>
             <xpath expr="//button[@name='action_confirm']" position="after">
                 <button name="action_create_account_moves" string="Create Journal Entry"
-                    type="object" class="btn-primary"
+                    type="object"
+                    class="btn-primary"
                     data-hotkey="g"
                     invisible="approval_type not in ('in_invoice', 'in_refund', 'out_invoice', 'out_refund', 'entry') or state != 'approved' or count_account_move &gt; 0"
                     groups="account.group_account_basic" />
                 <button name="action_create_purchase_orders" string="Create RFQ's"
-                    type="object" class="btn-primary"
+                    type="object"
+                    class="btn-primary"
                     data-hotkey="g"
                     invisible="approval_type != 'purchase' or state != 'approved' or count_purchase_order &gt; 0"
                     groups="purchase.group_purchase_user" />
                 <button name="action_create_product_asset_log" string="Create Log"
-                    type="object" class="btn-primary"
+                    type="object"
+                    class="btn-primary"
                     data-hotkey="g"
                     invisible="approval_type != 'product_asset_log' or state != 'approved' or log_ids"
                     groups="purchase.group_purchase_user" />
@@ -74,8 +80,8 @@
                 <field name="journal_id"
                     required="has_journal == 'required'"
                     readonly="state != 'new'"
-                    invisible="has_journal == 'no'"
-                    domain="[('type', '=', 'purchase'), ('x_treatment', 'in', ['fiscal_real', 'not_fiscal_real'])]" />
+                    domain="[('type', '=', 'purchase'), ('x_treatment', 'in', ['fiscal_real', 'not_fiscal_real'])]"
+                    invisible="has_journal == 'no'" />
                 <field name="vehicle_id"
                     required="has_vehicle == 'required'"
                     readonly="state != 'new'"
@@ -87,4 +93,5 @@
             </xpath>
         </field>
     </record>
+
 </odoo>

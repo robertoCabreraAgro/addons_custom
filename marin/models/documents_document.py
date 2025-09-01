@@ -44,7 +44,6 @@ class Documents(models.Model):
             document.vehicle_id = (
                 document.res_model == "stock.lot"
                 and vehicle.browse(document.res_id)
-                and vehicle.browse(document.res_id).asset_type == "vehicle"
             ) or False
 
     @api.model

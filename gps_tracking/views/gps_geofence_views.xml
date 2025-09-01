@@ -1,22 +1,81 @@
 <odoo>
+
+    <!-- Search View -->
+    <record id="view_gps_geofence_search" model="ir.ui.view">
+        <field name="name">gps.geofence.search</field>
+        <field name="model">gps.geofence</field>
+        <field name="arch" type="xml">
+            <search string="Search Geographic Areas">
+                <field name="name" />
+                <field name="partner_id" />
+                <field name="parent_id" />
+                <field name="area_type" />
+                <separator />
+                <filter name="active" string="Active"
+                    domain="[('active', '=', True)]" />
+                <filter name="inactive" string="Inactive"
+                    domain="[('active', '=', False)]" />
+                <separator />
+                <filter name="properties" string="Properties"
+                    domain="[('area_type', '=', 'property')]" />
+                <filter name="parcels" string="Parcels"
+                    domain="[('area_type', '=', 'parcel')]" />
+                <filter name="warehouses" string="Warehouses"
+                    domain="[('area_type', '=', 'warehouse')]" />
+                <filter name="cultivation_zones" string="Cultivation Zones"
+                    domain="[('area_type', '=', 'cultivation_zone')]" />
+                <separator />
+                <filter name="with_parent" string="Sub-areas"
+                    domain="[('parent_id', '!=', False)]" />
+                <filter name="without_parent" string="Main Areas"
+                    domain="[('parent_id', '=', False)]" />
+                <group expand="0" string="Group By">
+                    <filter name="group_partner" string="Client"
+                        context="{'group_by': 'partner_id'}" />
+                    <filter name="group_area_type" string="Area Type"
+                        context="{'group_by': 'area_type'}" />
+                    <filter name="group_parent" string="Parent Area"
+                        context="{'group_by': 'parent_id'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- List View for Hierarchical Display -->
+    <record id="view_gps_geofence_list_hierarchy" model="ir.ui.view">
+        <field name="name">gps.geofence.list.hierarchy</field>
+        <field name="model">gps.geofence</field>
+        <field name="arch" type="xml">
+            <list string="Geographic Areas Hierarchy" create="false">
+                <field name="name" />
+                <field name="area_type" />
+                <field name="parent_id" />
+                <field name="partner_id" />
+                <field name="surface" />
+                <field name="color" widget="color" />
+            </list>
+        </field>
+    </record>
+
     <!-- List View -->
     <record id="view_gps_geofence_list" model="ir.ui.view">
         <field name="name">gps.geofence.list</field>
         <field name="model">gps.geofence</field>
         <field name="arch" type="xml">
             <list string="Geographic Areas" default_order="sequence,name" create="false">
-                <field name="sequence" widget="handle"/>
-                <field name="name"/>
-                <field name="area_type"/>
-                <field name="partner_id"/>
-                <field name="parent_id"/>
-                <field name="child_count" string="Sub-areas"/>
-                <field name="surface" string="Size (ha)"/>
-                <field name="color" widget="color"/>
-                <field name="main_entrance_point" column_invisible="True"/>
-                <button name="action_view_in_dashboard" type="object" string="" 
-                        class="btn-link" icon="fa-map-marker" 
-                        title="View this geofence in GPS Dashboard"/>
+                <field name="sequence" widget="handle" />
+                <field name="name" />
+                <field name="area_type" />
+                <field name="parent_id" />
+                <field name="partner_id" />
+                <field name="surface" string="Size (ha)" />
+                <field name="color" widget="color" />
+                <field name="count_child_ids" string="Sub-areas" />
+                <button name="action_view_in_dashboard" string=""
+                    type="object"
+                    class="btn-link"
+                    icon="fa-map-marker"
+                    title="View this geofence in GPS Dashboard" />
             </list>
         </field>
     </record>
@@ -28,45 +87,49 @@
         <field name="arch" type="xml">
             <form string="Geographic Area">
                 <header>
-                    <button name="action_view_in_dashboard" type="object" string="View in Dashboard" 
-                            class="oe_highlight" icon="fa-map-marker"/>
+                    <button name="action_view_in_dashboard" string="View in Dashboard"
+                        type="object"
+                        class="oe_highlight"
+                        icon="fa-map-marker" />
                 </header>
                 <sheet>
                     <div class="oe_title">
                         <h1>
-                            <field name="name" placeholder="Area name..."/>
+                            <field name="name" placeholder="Area name..." />
                         </h1>
                         <h3>
-                            <field name="area_type"/>
+                            <field name="area_type" />
                         </h3>
                     </div>
                     <group>
                         <group string="Basic Information">
-                            <field name="partner_id" options="{'no_create': True}"/>
-                            <field name="parent_id" domain="[('id', '!=', id)]" options="{'no_create': True}"/>
-                            <field name="full_name" readonly="1"/>
+                            <field name="partner_id"
+                                options="{'no_create': True}" />
+                            <field name="parent_id"
+                                domain="[('id', '!=', id)]"
+                                options="{'no_create': True}" />
                         </group>
                         <group string="Visual Properties">
-                            <field name="color" widget="color"/>
-                            <field name="sequence"/>
-                            <field name="surface" readonly="1" string="Surface (hectares)"/>
+                            <field name="color" widget="color" />
+                            <field name="sequence" />
+                            <field name="surface" string="Surface (hectares)" readonly="1" />
                         </group>
                     </group>
                     <group string="Geographic Data">
-                        <field name="geometry"/>
-                        <field name="main_entrance_point"/>
+                        <field name="geometry" />
+                        <field name="main_entrance_point" />
                     </group>
                     <group string="Description">
-                        <field name="description" nolabel="1"/>
+                        <field name="description" nolabel="1" />
                     </group>
                     <notebook>
                         <page string="Sub-areas" invisible="not child_ids">
                             <field name="child_ids" readonly="1">
                                 <list>
-                                    <field name="sequence" widget="handle"/>
-                                    <field name="name"/>
-                                    <field name="area_type"/>
-                                    <field name="surface"/>
+                                    <field name="sequence" widget="handle" />
+                                    <field name="name" />
+                                    <field name="area_type" />
+                                    <field name="surface" />
                                 </list>
                             </field>
                         </page>
@@ -76,66 +139,20 @@
         </field>
     </record>
 
-    <!-- List View for Hierarchical Display -->
-    <record id="view_gps_geofence_list_hierarchy" model="ir.ui.view">
-        <field name="name">gps.geofence.list.hierarchy</field>
-        <field name="model">gps.geofence</field>
-        <field name="arch" type="xml">
-            <list string="Geographic Areas Hierarchy" create="false">
-                <field name="name"/>
-                <field name="area_type"/>
-                <field name="partner_id"/>
-                <field name="parent_id"/>
-                <field name="surface"/>
-                <field name="color" widget="color"/>
-            </list>
-        </field>
-    </record>
-
-    <!-- Search View -->
-    <record id="view_gps_geofence_search" model="ir.ui.view">
-        <field name="name">gps.geofence.search</field>
-        <field name="model">gps.geofence</field>
-        <field name="arch" type="xml">
-            <search string="Search Geographic Areas">
-                <field name="name"/>
-                <field name="partner_id"/>
-                <field name="area_type"/>
-                <field name="parent_id"/>
-                <separator/>
-                <filter name="active" string="Active" domain="[('active', '=', True)]"/>
-                <filter name="inactive" string="Inactive" domain="[('active', '=', False)]"/>
-                <separator/>
-                <filter name="properties" string="Properties" domain="[('area_type', '=', 'property')]"/>
-                <filter name="parcels" string="Parcels" domain="[('area_type', '=', 'parcel')]"/>
-                <filter name="warehouses" string="Warehouses" domain="[('area_type', '=', 'warehouse')]"/>
-                <filter name="cultivation_zones" string="Cultivation Zones" domain="[('area_type', '=', 'cultivation_zone')]"/>
-                <separator/>
-                <filter name="with_parent" string="Sub-areas" domain="[('parent_id', '!=', False)]"/>
-                <filter name="without_parent" string="Main Areas" domain="[('parent_id', '=', False)]"/>
-                <group expand="0" string="Group By">
-                    <filter name="group_partner" string="Client" context="{'group_by': 'partner_id'}"/>
-                    <filter name="group_area_type" string="Area Type" context="{'group_by': 'area_type'}"/>
-                    <filter name="group_parent" string="Parent Area" context="{'group_by': 'parent_id'}"/>
-                </group>
-            </search>
-        </field>
-    </record>
-
     <!-- Main Action -->
     <record id="action_gps_geofence" model="ir.actions.act_window">
         <field name="name">Geographic Areas</field>
         <field name="res_model">gps.geofence</field>
         <field name="view_mode">list,form</field>
-        <field name="search_view_id" ref="view_gps_geofence_search"/>
+        <field name="search_view_id" ref="view_gps_geofence_search" />
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 No geographic areas found
             </p>
             <p>
-                Geographic areas are created from the GPS Dashboard using the 
-                "Create Geographic Area" action. This allows you to define 
-                properties, parcels, warehouses, and cultivation zones with 
+                Geographic areas are created from the GPS Dashboard using the
+                "Create Geographic Area" action. This allows you to define
+                properties, parcels, warehouses, and cultivation zones with
                 their geographic boundaries drawn directly on the map.
             </p>
         </field>
@@ -146,7 +163,7 @@
         <field name="name">Geographic Areas Hierarchy</field>
         <field name="res_model">gps.geofence</field>
         <field name="view_mode">list,form</field>
-        <field name="view_id" ref="view_gps_geofence_list_hierarchy"/>
-        <field name="search_view_id" ref="view_gps_geofence_search"/>
+        <field name="view_id" ref="view_gps_geofence_list_hierarchy" />
+        <field name="search_view_id" ref="view_gps_geofence_search" />
     </record>
 </odoo>

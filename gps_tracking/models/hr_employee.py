@@ -4,6 +4,10 @@ from odoo import fields, models
 class HrEmployee(models.Model):
     _inherit = "hr.employee"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     enable_vehicle_loan = fields.Boolean(
         string="Enable Vehicle Loan Report",
         default=False,

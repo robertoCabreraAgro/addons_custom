@@ -93,7 +93,6 @@
         "data/approval_category_data.xml",
         "data/res_partner_hectares_range_data.xml",
         "data/discuss_channel_data.xml",
-        "data/documents_tag_data.xml",
         # "report/report_deliveryslip.xml",
         # "report/report_stock_picking_operations.xml",
         # "report/report_invoice.xml",
@@ -162,7 +161,7 @@
         "wizards/stock_quant_lot_update.xml",
         "wizards/product_asset_log_import_views.xml",
         "wizards/sale_target_wizard.xml",
-        "views/menuitem_views.xml",  # always at last to avoid precedence problems
+        "views/menuitem_views.xml",
     ],
     "pre_init_hook": "_pre_init_marin",
     "assets": {
@@ -171,9 +170,6 @@
             "marin/static/src/js/**/*",
             "marin/static/src/xml/**/*",
         ],
-        # "point_of_sale._assets_pos": [
-        #     "marin/static/src/pos/app/**/*",
-        # ],
     },
     "installable": True,
     "application": True,

@@ -1,42 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo>
-    <data noupdate="1">
-        <!-- Predefined Area Types -->
-        <record id="geofence_type_property" model="gps.geofence.type">
-            <field name="name">Property</field>
-            <field name="code">property</field>
-            <field name="color">#2563EB</field>
-            <field name="sequence">10</field>
-            <field name="description">Main property or estate area</field>
-        </record>
-        <record id="geofence_type_structure" model="gps.geofence.type">
-            <field name="name">Structure</field>
-            <field name="code">structure</field>
-            <field name="color">#DC2626</field>
-            <field name="sequence">11</field>
-            <field name="description">Storage and structure facilities</field>
-        </record>
-        <record id="geofence_type_parcel" model="gps.geofence.type">
-            <field name="name">Parcel</field>
-            <field name="code">parcel</field>
-            <field name="color">#16A34A</field>
-            <field name="sequence">11</field>
-            <field name="description">Land parcel</field>
-        </record>
-        <record id="geofence_type_treatment" model="gps.geofence.type">
-            <field name="name">Treatment</field>
-            <field name="code">treatment</field>
-            <field name="color">#CA8A04</field>
-            <field name="sequence">12</field>
-            <field name="description">Land parcel subdivision</field>
-        </record>
-        <record id="geofence_type_demo_parcel" model="gps.geofence.type">
-            <field name="name">Demo Parcel</field>
-            <field name="code">demo_parcel</field>
-            <field name="color">#4B5563</field>
-            <field name="sequence">13</field>
-            <field name="description">Demonstration parcel areas</field>
-        </record>
+<odoo noupdate="1">
 
-    </data>
+    <record id="geofence_type_property" model="gps.geofence.type">
+        <field name="name">Property</field>
+        <field name="code">property</field>
+        <field name="color">#2563EB</field>
+        <field name="sequence">10</field>
+        <field name="description">Main property or estate area</field>
+    </record>
+
+    <record id="geofence_type_structure" model="gps.geofence.type">
+        <field name="name">Structure</field>
+        <field name="code">structure</field>
+        <field name="color">#DC2626</field>
+        <field name="sequence">11</field>
+        <field name="description">Storage and structure facilities</field>
+    </record>
+
+    <record id="geofence_type_parcel" model="gps.geofence.type">
+        <field name="name">Parcel</field>
+        <field name="code">parcel</field>
+        <field name="color">#16A34A</field>
+        <field name="sequence">11</field>
+        <field name="description">Land parcel</field>
+    </record>
+
+    <record id="geofence_type_treatment" model="gps.geofence.type">
+        <field name="name">Treatment</field>
+        <field name="code">treatment</field>
+        <field name="color">#CA8A04</field>
+        <field name="sequence">12</field>
+        <field name="description">Land parcel subdivision</field>
+    </record>
+
+    <record id="geofence_type_demo_parcel" model="gps.geofence.type">
+        <field name="name">Demo Parcel</field>
+        <field name="code">demo_parcel</field>
+        <field name="color">#4B5563</field>
+        <field name="sequence">13</field>
+        <field name="description">Demonstration parcel areas</field>
+    </record>
+
 </odoo>

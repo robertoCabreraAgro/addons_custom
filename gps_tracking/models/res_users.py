@@ -6,7 +6,6 @@ class ResUsers(models.Model):
 
     _inherit = "res.users"
 
-    # GPS Tracking group constants
     GPS_GROUP_MAPPING = [
         ("gps_tracking.group_gps_tracking_manager", "manager", True),
         ("gps_tracking.group_gps_tracking_private", "private", True),
@@ -14,6 +13,10 @@ class ResUsers(models.Model):
         ("gps_tracking.group_gps_tracking_reporting", "reporting", False),
         ("gps_tracking.group_gps_tracking_user", "user", False),
     ]
+
+    # ------------------------------------------------------------
+    # HEKLPERS
+    # ------------------------------------------------------------
 
     @api.model
     def get_gps_tracking_permissions(self):

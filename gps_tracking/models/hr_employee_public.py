@@ -4,11 +4,19 @@ from odoo import fields, models
 class HrEmployeePublic(models.Model):
     _inherit = "hr.employee.public"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     enable_vehicle_loan = fields.Boolean(
         string="Enable Vehicle Loan Report",
         default=False,
         help="If checked, this employee's trips will be included in the vehicle loan report.",
     )
+
+    # ------------------------------------------------------------
+    # ACTIONS
+    # ------------------------------------------------------------
 
     def action_enable_vehicle_loan_report(self):
         """Server action to enable vehicle loan report for selected employees."""

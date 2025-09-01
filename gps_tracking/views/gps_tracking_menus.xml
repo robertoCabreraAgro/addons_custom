@@ -1,7 +1,10 @@
 <odoo>
-    <menuitem id="gps_tracking_menu_root" name="GPS Tracking" sequence="130"
-        groups="group_gps_tracking_user"
-        web_icon="gps_tracking,static/description/icon.png">
+
+    <menuitem id="gps_tracking_menu_root"
+        name="GPS Tracking"
+        sequence="130"
+        web_icon="gps_tracking,static/description/icon.png"
+        groups="group_gps_tracking_user">
 
         <menuitem id="menu_gps_tracking_dashboard"
             name="Dashboard"
@@ -11,8 +14,8 @@
         <menuitem id="menu_gps_tracking_timeline"
             name="Timeline"
             action="action_gps_tracking_client_action_timeline"
-            groups="group_gps_tracking_reporting"
-            sequence="20" />
+            sequence="20"
+            groups="group_gps_tracking_reporting" />
 
         <menuitem id="menu_gps_tracking_operations"
             name="Operations"
@@ -21,8 +24,8 @@
             <menuitem id="menu_gps_tracking_device"
                 name="Devices"
                 action="action_gps_tracking_device"
-                groups="group_gps_tracking_reporting"
-                sequence="10" />
+                sequence="10"
+                groups="group_gps_tracking_reporting" />
 
             <menuitem id="menu_gps_geofence"
                 name="Geographic Areas"
@@ -32,8 +35,8 @@
 
         <menuitem id="menu_gps_tracking_reporting"
             name="Reporting"
-            groups="group_gps_tracking_reporting"
-            sequence="40">
+            sequence="40"
+            groups="group_gps_tracking_reporting">
 
             <menuitem id="menu_gps_tracking_report"
                 name="Daily Perfomance Summary"
@@ -45,17 +48,17 @@
                 action="action_gps_tracking_point_report"
                 sequence="40" />
 
-            <menuitem id="menu_asset_loan_report"
+            <menuitem id="menu_fleet_vehicle_loan_report"
                 name="Préstamos de Vehículos"
-                action="action_asset_loan_report"
-                groups="group_gps_tracking_vehicle_loan"
-                sequence="50" />
+                action="action_fleet_vehicle_loan_report"
+                sequence="50"
+                groups="group_gps_tracking_vehicle_loan" />
         </menuitem>
 
         <menuitem id="menu_gps_tracking_configuration"
             name="Configuration"
-            groups="group_gps_tracking_manager"
-            sequence="50">
+            sequence="50"
+            groups="group_gps_tracking_manager">
 
             <menuitem id="menu_gps_tracking_config"
                 name="Device configurations"
@@ -68,4 +71,5 @@
                 sequence="20" />
         </menuitem>
     </menuitem>
+
 </odoo>

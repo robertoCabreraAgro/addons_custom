@@ -1,5 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
+    <!-- Search View -->
+    <record id="view_gps_geofence_type_search" model="ir.ui.view">
+        <field name="name">gps.geofence.type.search</field>
+        <field name="model">gps.geofence.type</field>
+        <field name="arch" type="xml">
+            <search string="Search Area Types">
+                <field name="name"/>
+                <field name="code"/>
+                <separator/>
+                <filter name="active" string="Active" domain="[('active', '=', True)]"/>
+                <filter name="inactive" string="Inactive" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- List View -->
+    <record id="view_gps_geofence_type_list" model="ir.ui.view">
+        <field name="name">gps.geofence.type.list</field>
+        <field name="model">gps.geofence.type</field>
+        <field name="arch" type="xml">
+            <list string="Area Type Configuration" default_order="sequence,name">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="color" widget="color"/>
+                <field name="count_geofence" string="Areas Count"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
     <!-- Form View -->
     <record id="view_gps_geofence_type_form" model="ir.ui.view">
         <field name="name">gps.geofence.type.form</field>
@@ -10,8 +42,8 @@
                     <div class="oe_button_box" name="button_box">
                         <button name="action_view_geofences" type="object" 
                                 class="oe_stat_button" icon="fa-map-marker"
-                                invisible="geofence_count == 0">
-                            <field name="geofence_count" widget="statinfo" string="Areas"/>
+                                invisible="count_geofence == 0">
+                            <field name="count_geofence" widget="statinfo" string="Areas"/>
                         </button>
                     </div>
                     <div class="oe_title">
@@ -29,7 +61,7 @@
                             <field name="active" widget="boolean_toggle"/>
                         </group>
                         <group string="Statistics">
-                            <field name="geofence_count" readonly="1"/>
+                            <field name="count_geofence" readonly="1"/>
                         </group>
                     </group>
                     <group string="Description">
@@ -37,37 +69,6 @@
                     </group>
                 </sheet>
             </form>
-        </field>
-    </record>
-
-    <!-- List View -->
-    <record id="view_gps_geofence_type_list" model="ir.ui.view">
-        <field name="name">gps.geofence.type.list</field>
-        <field name="model">gps.geofence.type</field>
-        <field name="arch" type="xml">
-            <list string="Area Type Configuration" default_order="sequence,name">
-                <field name="sequence" widget="handle"/>
-                <field name="name"/>
-                <field name="code"/>
-                <field name="color" widget="color"/>
-                <field name="geofence_count" string="Areas Count"/>
-                <field name="active" widget="boolean_toggle"/>
-            </list>
-        </field>
-    </record>
-
-    <!-- Search View -->
-    <record id="view_gps_geofence_type_search" model="ir.ui.view">
-        <field name="name">gps.geofence.type.search</field>
-        <field name="model">gps.geofence.type</field>
-        <field name="arch" type="xml">
-            <search string="Search Area Types">
-                <field name="name"/>
-                <field name="code"/>
-                <separator/>
-                <filter name="active" string="Active" domain="[('active', '=', True)]"/>
-                <filter name="inactive" string="Inactive" domain="[('active', '=', False)]"/>
-            </search>
         </field>
     </record>
 
@@ -87,4 +88,5 @@
             </p>
         </field>
     </record>
+
 </odoo>
