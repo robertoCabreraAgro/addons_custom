@@ -13,6 +13,7 @@
         "data/documents_tag_data.xml",
         "data/ir_actions_server_data.xml",
         "data/res_company_data.xml",
+        "views/documents_document_views.xml",
         "views/stock_lot_views.xml",
         "views/res_config_settings_views.xml",
     ],

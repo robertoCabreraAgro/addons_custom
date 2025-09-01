@@ -15,6 +15,34 @@ class StockLot(models.Model):
         string="Centralize Asset's Documents",
         help="When enabled for this asset type, opening attachments uses the configured folder and tags.",
     )
+    fuel_card_id = fields.Many2one(
+        comodel_name="documents.document",
+        inverse="_inverse_fuel_card_id",
+        store=True,
+        readonly=False,
+    )
+    fuel_card_name = fields.Char(
+        compute="_compute_fuel_card_name",
+        store=True,
+    )
+    count_fuel_card = fields.Integer(
+        "Fuel cards count",
+        compute="_compute_count_fuel_card",
+    )
+    highway_pass_id = fields.Many2one(
+        comodel_name="documents.document",
+        inverse="_inverse_highway_pass_id",
+        store=True,
+        readonly=False,
+    )
+    highway_pass_name = fields.Char(
+        compute="_compute_highway_pass_name",
+        store=True,
+    )
+    count_highway_pass = fields.Integer(
+        "Highway passes count",
+        compute="_compute_count_highway_pass",
+    )
     count_document = fields.Integer(
         string="Documents",
         compute="_compute_count_document",
@@ -33,6 +61,34 @@ class StockLot(models.Model):
         mapped_data = dict(document_data)
         for record in self:
             record.count_document = mapped_data.get(record.id, 0)
+
+    def _compute_count_fuel_card(self):
+        fuel_card_product = self.env.ref(
+            "product_asset.product_product_fuel_credit", False
+        )
+        if not fuel_card_product:
+            for asset in self:
+                asset.count_fuel_card = 0
+            return
+
+        for asset in self:
+            asset.count_fuel_card = len(
+                asset.log_ids.filtered(lambda l: l.product_id == fuel_card_product)
+            )
+
+    def _compute_count_highway_pass(self):
+        highway_pass_product = self.env.ref(
+            "product_asset.product_product_highway_credit", False
+        )
+        if not highway_pass_product:
+            for asset in self:
+                asset.count_highway_pass = 0
+            return
+
+        for asset in self:
+            asset.count_highway_pass = len(
+                asset.log_ids.filtered(lambda l: l.product_id == highway_pass_product)
+            )
 
     @api.depends("product_id")
     def _compute_documents_settings_asset(self):
@@ -54,6 +110,40 @@ class StockLot(models.Model):
             record.documents_settings_asset = getattr(
                 record.company_id, settings_field, False
             )
+
+    # ------------------------------------------------------------
+    # INVERSE METHODS
+    # ------------------------------------------------------------
+
+    def _inverse_fuel_card_id(self):
+        """
+        Set the asset on the corresponding document
+        """
+        for asset in self:
+            doc = asset.fuel_card_id
+            if doc:
+                doc.sudo().write(
+                    {
+                        "res_model": asset._name,
+                        "res_id": asset.id,
+                        "is_editable_attachment": True,
+                    }
+                )
+
+    def _inverse_highway_pass_id(self):
+        """
+        Set the asset on the corresponding document
+        """
+        for asset in self:
+            doc = asset.highway_pass_id
+            if doc:
+                doc.sudo().write(
+                    {
+                        "res_model": asset._name,
+                        "res_id": asset.id,
+                        "is_editable_attachment": True,
+                    }
+                )
 
     # ------------------------------------------------------------
     # ACTIONS

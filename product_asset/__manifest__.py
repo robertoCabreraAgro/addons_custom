@@ -8,7 +8,6 @@
         "uom_extended",
         "product_manufacturer",
         "hr",
-        "documents_product",
         "stock",
     ],
     "data": [
@@ -21,7 +20,6 @@
         "data/mail_message_subtype_data.xml",
         "views/product_template_views.xml",
         "views/stock_lot_views.xml",
-        "views/documents_document_views.xml",
         "views/product_asset_log_views.xml",
         "views/product_asset_menuitem.xml",
     ],

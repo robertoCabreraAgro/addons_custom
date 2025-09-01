@@ -113,20 +113,6 @@ class StockLot(models.Model):
         help="This fields is required by Accounting to group according to its needs.",
     )
 
-    fuel_card_id = fields.Many2one(
-        comodel_name="documents.document",
-        inverse="_inverse_fuel_card_id",
-        store=True,
-        readonly=False,
-    )
-    fuel_card_name = fields.Char(
-        compute="_compute_fuel_card_name",
-        store=True,
-    )
-    count_fuel_card = fields.Integer(
-        "Fuel cards count",
-        compute="_compute_count_fuel_card",
-    )
     fuel_card_budget = fields.Float(
         string="Monthly fuel budget",
         digits="Product Price",
@@ -150,20 +136,6 @@ class StockLot(models.Model):
         compute="_compute_fuel_card_balance_to_reload",
         store=True,
         help="Amount required to reach the recommended fuel card balance.",
-    )
-    highway_pass_id = fields.Many2one(
-        comodel_name="documents.document",
-        inverse="_inverse_highway_pass_id",
-        store=True,
-        readonly=False,
-    )
-    highway_pass_name = fields.Char(
-        compute="_compute_highway_pass_name",
-        store=True,
-    )
-    count_highway_pass = fields.Integer(
-        "Highway passes count",
-        compute="_compute_count_highway_pass",
     )
     highway_pass_budget = fields.Float(
         string="Monthly highway pass budget",
@@ -224,17 +196,17 @@ class StockLot(models.Model):
         tracking=True,
         help="Unit of measurement for the odometer readings",
     )
-    count_assignment = fields.Integer(
-        string="Drivers History Count",
-        compute="_compute_count_all",
+    count_logs_assignment = fields.Integer(
+        string="Drivers History",
+        compute="_compute_count_logs_all",
     )
-    count_contract = fields.Integer(
+    count_logs_contract = fields.Integer(
         string="Contracts",
-        compute="_compute_count_all",
+        compute="_compute_count_logs_all",
     )
-    count_service = fields.Integer(
+    count_logs_service = fields.Integer(
         string="Services",
-        compute="_compute_count_all",
+        compute="_compute_count_logs_all",
     )
     date_first_contract = fields.Date(
         string="First Contract Date",
@@ -312,35 +284,7 @@ class StockLot(models.Model):
     # COMPUTE METHODS
     # ------------------------------------------------------------
 
-    def _compute_count_fuel_card(self):
-        fuel_card_product = self.env.ref(
-            "product_asset.product_product_fuel_credit", False
-        )
-        if not fuel_card_product:
-            for asset in self:
-                asset.count_fuel_card = 0
-            return
-
-        for asset in self:
-            asset.count_fuel_card = len(
-                asset.log_ids.filtered(lambda l: l.product_id == fuel_card_product)
-            )
-
-    def _compute_count_highway_pass(self):
-        highway_pass_product = self.env.ref(
-            "product_asset.product_product_highway_credit", False
-        )
-        if not highway_pass_product:
-            for asset in self:
-                asset.count_highway_pass = 0
-            return
-
-        for asset in self:
-            asset.count_highway_pass = len(
-                asset.log_ids.filtered(lambda l: l.product_id == highway_pass_product)
-            )
-
-    def _compute_count_all(self):
+    def _compute_count_logs_all(self):
         Log = self.env["product.asset.log"].with_context(active_test=False)
 
         # Get category references with fallback during installation
@@ -357,9 +301,9 @@ class StockLot(models.Model):
         except ValueError:
             # During installation, external IDs may not be available yet
             for vehicle in self:
-                vehicle.count_contract = 0
-                vehicle.count_service = 0
-                vehicle.count_assignment = 0
+                vehicle.count_logs_contract = 0
+                vehicle.count_logs_service = 0
+                vehicle.count_logs_assignment = 0
             return
 
         contract_data = Log._read_group(
@@ -400,9 +344,9 @@ class StockLot(models.Model):
             mapped_history_data[vehicle.id] = count
 
         for vehicle in self:
-            vehicle.count_contract = mapped_contract_data[vehicle.id][vehicle.active]
-            vehicle.count_service = mapped_service_data[vehicle.id][vehicle.active]
-            vehicle.count_assignment = mapped_history_data[vehicle.id]
+            vehicle.count_logs_contract = mapped_contract_data[vehicle.id][vehicle.active]
+            vehicle.count_logs_service = mapped_service_data[vehicle.id][vehicle.active]
+            vehicle.count_logs_assignment = mapped_history_data[vehicle.id]
 
     @api.depends("product_id", "asset_type")
     def _compute_type_name(self):
@@ -588,40 +532,6 @@ class StockLot(models.Model):
                 asset.odometer = max(asset.log_ids.mapped("odometer"))
             else:
                 asset.odometer = 0.0
-
-    # ------------------------------------------------------------
-    # INVERSE METHODS
-    # ------------------------------------------------------------
-
-    def _inverse_fuel_card_id(self):
-        """
-        Set the asset on the corresponding document
-        """
-        for asset in self:
-            doc = asset.fuel_card_id
-            if doc:
-                doc.sudo().write(
-                    {
-                        "res_model": asset._name,
-                        "res_id": asset.id,
-                        "is_editable_attachment": True,
-                    }
-                )
-
-    def _inverse_highway_pass_id(self):
-        """
-        Set the asset on the corresponding document
-        """
-        for asset in self:
-            doc = asset.highway_pass_id
-            if doc:
-                doc.sudo().write(
-                    {
-                        "res_model": asset._name,
-                        "res_id": asset.id,
-                        "is_editable_attachment": True,
-                    }
-                )
 
     # ------------------------------------------------------------
     # SEARCH METHODS

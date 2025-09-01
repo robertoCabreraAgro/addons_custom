@@ -132,21 +132,21 @@
                     class="oe_stat_button"
                     icon="fa-users"
                     invisible="asset_type == 'product'">
-                    <field name="count_assignment" string="Assignments" widget="statbutton" />
+                    <field name="count_logs_assignment" string="Assignments" widget="statbutton" />
                 </button>
                 <button name="action_view_logs_cost"
                     type="object"
                     class="oe_stat_button"
                     icon="fa-wrench"
                     invisible="asset_type == 'product'">
-                    <field name="count_service" string="Services" widget="statbutton" />
+                    <field name="count_logs_service" string="Services" widget="statbutton" />
                 </button>
                 <button name="action_view_logs_contract"
                     type="object"
                     class="oe_stat_button"
                     icon="fa-file-text-o"
                     invisible="asset_type == 'product'">
-                    <field name="count_contract" string="Contracts" widget="statbutton" />
+                    <field name="count_logs_contract" string="Contracts" widget="statbutton" />
                 </button>
             </xpath>
 
@@ -210,15 +210,11 @@
                 <page name="vouchers" string="Vouchers" invisible="asset_type not in ('equipment', 'machinery', 'vehicle')">
                     <group>
                         <group string="Fuel Card">
-                            <field name="fuel_card_id" options="{'no_create': True}" />
-                            <field name="fuel_card_name" invisible="True" />
                             <field name="fuel_card_budget" string="Budget" />
                             <field name="fuel_card_balance" string="Current balance" />
                             <field name="fuel_card_balance_to_reload" string="Amount to reload" />
                         </group>
                         <group string="Highway Pass">
-                            <field name="highway_pass_id" options="{'no_create': True}" />
-                            <field name="highway_pass_name" invisible="True" />
                             <field name="highway_pass_budget" string="Budget" />
                             <field name="highway_pass_balance" string="Current balance" />
                             <field name="highway_pass_balance_to_reload" string="Amount to reload" />
