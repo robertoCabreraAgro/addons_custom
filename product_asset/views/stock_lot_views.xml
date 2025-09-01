@@ -79,8 +79,14 @@
                 <field name="date_write_off" optional="hide" />
                 <field name="value_original" optional="hide" />
                 <field name="value_residual" optional="hide" />
+                <field name="fuel_card_budget" optional="show" string="Budget (FC)" />
+                <field name="fuel_card_balance" optional="show" string="Balance (FC)" />
                 <field name="fuel_card_balance_to_reload" string="To Reload (FC)"
                     sum="Total to reload" optional="show" />
+                <field name="highway_pass_budget" string="Budget (HWP)" optional="show" />
+                <field name="highway_pass_balance" string="Balance (HWP)" optional="show" />
+                <field name="highway_pass_balance_to_reload" string="To Reload (HWP)"
+                    optional="show" sum="Total to reload" />
                 <field name="service_activity" widget="badge"
                     decoration-danger="service_activity == 'overdue'"
                     decoration-warning="service_activity == 'today'"
