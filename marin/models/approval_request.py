@@ -54,6 +54,10 @@ class ApprovalRequest(models.Model):
         string="Log",
     )
 
+    # ------------------------------------------------------------
+    # COMPUTE METHODS
+    # ------------------------------------------------------------
+
     @api.depends("request_owner_id")
     def _compute_vehicle_id(self):
         for request in self:
@@ -61,7 +65,7 @@ class ApprovalRequest(models.Model):
                 vehicle = self.env["stock.lot"].search(
                     [
                         ("asset_type", "=", "vehicle"),
-                        ("driver_id", "=", request.request_owner_id.employee_id.id),
+                        ("operator_id", "=", request.request_owner_id.employee_id.id),
                     ],
                     limit=1,
                 )
@@ -78,6 +82,10 @@ class ApprovalRequest(models.Model):
         for request in self:
             purchases = request.product_line_ids.purchase_order_line_id.order_id
             request.count_purchase_order = len(purchases)
+
+    # ------------------------------------------------------------
+    # ACTIONS
+    # ------------------------------------------------------------
 
     def action_approve(self, approver=None):
         self._check_approval_type_purchase_has_product()
@@ -102,62 +110,11 @@ class ApprovalRequest(models.Model):
         self._create_account_moves()
         # self._log_po_creation_to_chatter()
 
-    def _create_account_moves(self):
-        for line in self.product_line_ids:
-            account_move = self.env["account.move"].create(
-                line._prepare_account_move_values_from_approval()
-            )
-            line.account_move_id = account_move.id
-
     def action_create_purchase_orders(self):
         """Create and/or modifier Purchase Orders."""
         self.ensure_one()
         self._create_purchase_orders()
         self._log_po_creation_to_chatter()
-
-    def _create_purchase_orders(self):
-        for line in self.product_line_ids:
-            # pol_domain = line._get_purchase_order_line_for_approval_matching_domain()
-            # purchase_lines = self.env["purchase.order.lne"].search(pol_domain)
-            # if purchase_lines:
-            #    # Existing RFQ found: check if we must modify an existing
-            #    # purchase order line or create a new one.
-            #    purchase_line = purchase_lines[0]
-            #    line.purchase_order_line_id = purchase_line.id
-            #    purchase_line.product_qty += line.quantity
-            #    purchase_order = purchase_line.order_id
-            #    else:
-            #        # No purchase order line found, create one.
-            #        purchase_order = purchase_orders[0]
-            #        po_line_vals = {
-            #            "order_id": purchase_order.id,
-            #            "product_id": line.product_id.id,
-            #            "product_uom_id": line.product_uom_id.id,
-            #            "product_qty": line.quantity,
-            #        }
-            #        new_po_line = self.env["purchase.order.line"].create(po_line_vals)
-            #        line._compute_tax_id()
-            #        line.purchase_order_line_id = new_po_line.id
-            #        purchase_order.line_ids = [(4, new_po_line.id)]
-            #    # Add the request name on the purchase order `origin` field.
-            #    new_origin = set([self.name])
-            #    if purchase_order.origin:
-            #        missing_origin = new_origin - set(purchase_order.origin.split(", "))
-            #        if missing_origin:
-            #            purchase_order.write(
-            #                {
-            #                    "origin": purchase_order.origin
-            #                    + ", "
-            #                    + ", ".join(missing_origin)
-            #                }
-            #            )
-            #    else:
-            #        purchase_order.write({"origin": ", ".join(new_origin)})
-            # No RFQ found: create a new one.
-            new_purchase_order = self.env["purchase.order"].create(
-                line._prepare_purchase_order_values_from_approval()
-            )
-            line.purchase_order_line_id = new_purchase_order.line_ids[0].id
 
     def action_create_product_asset_log(self):
         self.ensure_one()
@@ -224,6 +181,61 @@ class ApprovalRequest(models.Model):
             "domain": domain,
         }
         return action
+
+    # ------------------------------------------------------------
+    # HELPERS
+    # ------------------------------------------------------------
+
+    def _create_account_moves(self):
+        for line in self.product_line_ids:
+            account_move = self.env["account.move"].create(
+                line._prepare_account_move_values_from_approval()
+            )
+            line.account_move_id = account_move.id
+
+    def _create_purchase_orders(self):
+        for line in self.product_line_ids:
+            # pol_domain = line._get_purchase_order_line_for_approval_matching_domain()
+            # purchase_lines = self.env["purchase.order.lne"].search(pol_domain)
+            # if purchase_lines:
+            #    # Existing RFQ found: check if we must modify an existing
+            #    # purchase order line or create a new one.
+            #    purchase_line = purchase_lines[0]
+            #    line.purchase_order_line_id = purchase_line.id
+            #    purchase_line.product_qty += line.quantity
+            #    purchase_order = purchase_line.order_id
+            #    else:
+            #        # No purchase order line found, create one.
+            #        purchase_order = purchase_orders[0]
+            #        po_line_vals = {
+            #            "order_id": purchase_order.id,
+            #            "product_id": line.product_id.id,
+            #            "product_uom_id": line.product_uom_id.id,
+            #            "product_qty": line.quantity,
+            #        }
+            #        new_po_line = self.env["purchase.order.line"].create(po_line_vals)
+            #        line._compute_tax_id()
+            #        line.purchase_order_line_id = new_po_line.id
+            #        purchase_order.line_ids = [(4, new_po_line.id)]
+            #    # Add the request name on the purchase order `origin` field.
+            #    new_origin = set([self.name])
+            #    if purchase_order.origin:
+            #        missing_origin = new_origin - set(purchase_order.origin.split(", "))
+            #        if missing_origin:
+            #            purchase_order.write(
+            #                {
+            #                    "origin": purchase_order.origin
+            #                    + ", "
+            #                    + ", ".join(missing_origin)
+            #                }
+            #            )
+            #    else:
+            #        purchase_order.write({"origin": ", ".join(new_origin)})
+            # No RFQ found: create a new one.
+            new_purchase_order = self.env["purchase.order"].create(
+                line._prepare_purchase_order_values_from_approval()
+            )
+            line.purchase_order_line_id = new_purchase_order.line_ids[0].id
 
     def _cancel_approval_request(self):
         purchase_orders = self.sudo().product_line_ids.purchase_order_line_id.order_id
@@ -346,6 +358,10 @@ class ApprovalRequest(models.Model):
                 for purchase_order in purchase_orders_data
             ),
         }
+
+    # ------------------------------------------------------------
+    # VALIDATIONS
+    # ------------------------------------------------------------
 
     def _check_approval_type_purchase_has_product(self):
         if self.approval_type == "purchase" and not self.product_line_ids:
