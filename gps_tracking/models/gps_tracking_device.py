@@ -52,8 +52,6 @@ class GpsTrackingDevice(models.Model):
     last_point_id = fields.Many2one(
         comodel_name="gps.tracking.point",
         string="Last Tracking Point",
-        compute="_compute_last_point_id",
-        store=True,
     )
     satellites = fields.Integer(
         related="last_point_id.satellites",
@@ -150,32 +148,6 @@ class GpsTrackingDevice(models.Model):
                 [("device_id", "=", device.id), ("timestamp", ">=", last_week)],
                 order="timestamp desc",
             )
-
-    @api.depends("tracking_point_ids.timestamp")
-    def _compute_last_point_id(self):
-        """Compute the last tracking point for each device using SQL query
-        to avoid loading millions of records into memory.
-        """
-        for device in self:
-            device.last_point_id = False
-
-        query = """
-            SELECT DISTINCT ON (device_id)
-                device_id, id
-            FROM
-                gps_tracking_point 
-            WHERE
-                device_id = ANY(%s) 
-                AND timestamp IS NOT NULL
-            ORDER BY
-                device_id, timestamp DESC, id DESC
-        """
-        self.env.cr.execute(query, (list(self.ids),))
-        results = self.env.cr.fetchall()
-        device_to_point = dict(results)
-        for device in self:
-            if device.id in device_to_point:
-                device.last_point_id = device_to_point[device.id]
 
     @api.depends("timestamp")
     def _compute_inactivity_state(self):

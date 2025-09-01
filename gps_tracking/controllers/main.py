@@ -1,6 +1,6 @@
 import logging
 
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from functools import wraps
 from typing import Dict, Any, Optional, Tuple
 
@@ -104,101 +104,153 @@ class GPSWebhook(http.Controller):
     MIN_LONGITUDE = -180.0
     MAX_LONGITUDE = 180.0
 
-    # ==================== Validation Methods ====================
+    # Data quality constraints for Teltonika devices
+    MIN_SATELLITES_FOR_ACCURACY = 4  # Minimum satellites for good GPS accuracy
+    MAX_REASONABLE_SPEED = 200  # Maximum reasonable speed in km/h for ground vehicles
+    MIN_COORDINATE_PRECISION = 5  # Minimum decimal places for coordinates
+    MAX_DUPLICATE_TIME_WINDOW = 30  # Seconds to check for duplicate points
+    MAX_SPEED_CHANGE_PER_MINUTE = 100  # km/h - detect unrealistic speed changes
 
-    def _validate_timestamp(self, timestamp: int) -> bool:
-        """Validate timestamp is within reasonable bounds"""
-        return (
-            isinstance(timestamp, (int, float))
-            and self.MIN_TIMESTAMP <= timestamp <= self.MAX_TIMESTAMP
-        )
+    # ------------------------------------------------------------
+    # MAIN WEBHOOK ENDPOINT
+    # ------------------------------------------------------------
 
-    def _validate_coordinates(self, lat: float, lng: float) -> bool:
-        """Validate GPS coordinates are within valid ranges"""
+    @http.route(
+        "/gps/webhook",
+        type="jsonrpc",
+        auth="public",
+        methods=["GET", "POST"],
+        csrf=False,
+    )
+    @log_webhook_activity
+    def gps_webhook(self, **kwargs) -> bytes:
+        """
+        Webhook endpoint with comprehensive data quality validation.
+
+        Receives GPS data from IoT devices, validates data quality,
+        and stores tracking points in the database.
+
+        Flow:
+        1. Extract and validate JSON payload
+        2. Find device by IMEI
+        3. Process and validate GPS data fields
+        4. Perform data quality validation
+        5. Check for duplicates and temporal sequence
+        6. Create tracking point record
+        7. Update device's last known position
+
+        Returns:
+            Success (0x01) or failure (0x00) response byte
+        """
         try:
-            lat_float = float(lat)
-            lng_float = float(lng)
-            return (
-                self.MIN_LATITUDE <= lat_float <= self.MAX_LATITUDE
-                and self.MIN_LONGITUDE <= lng_float <= self.MAX_LONGITUDE
+            # Extract JSON data from request
+            json_data = request.get_json_data()
+            if not json_data:
+                _logger.warning("Empty JSON data received")
+                return self.RESPONSE_FAILURE
+
+            # Extract payload from JSON structure
+            payload = self._extract_payload(json_data)
+            if not payload:
+                _logger.warning("Failed to extract payload from JSON data")
+                return self.RESPONSE_FAILURE
+
+            # Get device IMEI
+            imei = payload.get("14")
+            if not imei:
+                _logger.warning("No IMEI found in payload")
+                return self.RESPONSE_FAILURE
+
+            # Find device by IMEI
+            device = self._find_device(imei)
+            if not device:
+                _logger.warning("Device not found for IMEI: %s", imei)
+                return self.RESPONSE_FAILURE
+
+            # Prepare tracking point values
+            vals = self._prepare_tracking_point_vals(payload, device.id)
+            if not vals.get("timestamp"):
+                _logger.warning("No valid timestamp in GPS data for device %s", imei)
+                return self.RESPONSE_FAILURE
+
+            # === DATA QUALITY VALIDATION ===
+
+            # 1. Basic GPS quality validation
+            is_quality_valid, quality_error = self._validate_gps_quality(vals)
+            if not is_quality_valid:
+                _logger.warning(
+                    "GPS quality validation failed for device %s: %s",
+                    imei,
+                    quality_error,
+                )
+                # For non-critical quality issues, log but don't reject
+                if (
+                    "satellites" not in quality_error.lower()
+                    and "precision" not in quality_error.lower()
+                ):
+                    return self.RESPONSE_FAILURE
+
+            # 2. Check for duplicate points
+            timestamp = vals.get("timestamp")
+            latitude = vals.get("latitude")
+            longitude = vals.get("longitude")
+
+            if self._is_duplicate_point(device.id, timestamp, latitude, longitude):
+                _logger.info("Duplicate GPS point ignored for device %s", imei)
+                return self.RESPONSE_SUCCESS  # Return success to avoid device retries
+
+            # 3. Validate temporal sequence and speed changes
+            speed = vals.get("speed", 0)
+            is_sequence_valid, sequence_warning = self._validate_temporal_sequence(
+                device.id, timestamp, speed
             )
-        except (ValueError, TypeError):
-            return False
 
-    # ==================== Data Processing Methods ====================
+            if not is_sequence_valid:
+                _logger.warning(
+                    "Temporal validation failed for device %s: %s",
+                    imei,
+                    sequence_warning,
+                )
+                # For temporal issues, we might want to be more lenient
+                if "future" in sequence_warning.lower():
+                    return self.RESPONSE_FAILURE  # Reject future timestamps
+                # For speed change issues, log but accept (might be valid rapid acceleration/deceleration)
 
-    def _parse_coordinates(
-        self, latlng_str: str
-    ) -> Tuple[Optional[float], Optional[float]]:
-        """
-        Parse latitude and longitude from comma-separated string
+            # === CREATE TRACKING POINT ===
 
-        Args:
-            latlng_str: Comma-separated latitude,longitude string
+            new_point = self._create_tracking_point(vals)
+            if not new_point:
+                _logger.error("Failed to create tracking point for device %s", imei)
+                return self.RESPONSE_FAILURE
 
-        Returns:
-            Tuple of (latitude, longitude) or (None, None) if invalid
-        """
-        try:
-            if not latlng_str or "," not in latlng_str:
-                _logger.warning("Invalid coordinate format: %s", latlng_str)
-                return None, None
+            # Update device's last point
+            self._update_device_last_point(device, new_point.id)
 
-            lat_str, lng_str = latlng_str.split(",", 1)
-            lat = float(lat_str.strip())
-            lng = float(lng_str.strip())
-
-            if not self._validate_coordinates(lat, lng):
-                _logger.warning("Coordinates out of range: lat=%s, lng=%s", lat, lng)
-                return None, None
-
-            return lat, lng
-        except (ValueError, AttributeError) as e:
-            _logger.warning("Failed to parse coordinates '%s': %s", latlng_str, e)
-            return None, None
-
-    def _process_timestamp(self, timestamp_ms: int) -> Optional[datetime]:
-        """
-        Convert millisecond timestamp to datetime
-
-        Args:
-            timestamp_ms: Timestamp in milliseconds
-
-        Returns:
-            Datetime object or None if invalid
-        """
-        try:
-            if not self._validate_timestamp(timestamp_ms):
-                _logger.warning("Invalid timestamp: %s", timestamp_ms)
-                return None
-
-            # Convert from milliseconds to seconds and create datetime
-            return datetime.fromtimestamp(timestamp_ms / 1000, tz=timezone.utc).replace(
-                tzinfo=None
+            # Log successful processing with quality metrics
+            quality_info = {
+                "satellites": vals.get("satellites", "N/A"),
+                "speed": vals.get("speed", "N/A"),
+                "fuel_level": vals.get("fuel_level", "N/A"),
+                "quality_valid": is_quality_valid,
+            }
+            _logger.debug(
+                "GPS point processed successfully for device %s: %s", imei, quality_info
             )
-        except (ValueError, OSError, TypeError) as e:
-            _logger.warning("Failed to process timestamp %s: %s", timestamp_ms, e)
-            return None
 
-    def _process_odometer(self, value: float) -> Optional[float]:
-        """
-        Process odometer value (convert from meters to kilometers)
+            return self.RESPONSE_SUCCESS
 
-        Args:
-            value: Odometer value in meters
+        except Exception as e:
+            _logger.error(
+                "Unexpected error in GPS webhook for device %s: %s",
+                locals().get("imei", "unknown"),
+                e,
+                exc_info=True,
+            )
+            return self.RESPONSE_FAILURE
 
-        Returns:
-            Odometer value in kilometers or None if invalid
-        """
-        try:
-            odometer_value = float(value) / 1000.0
-            if odometer_value < 0:
-                _logger.warning("Negative odometer value: %s", odometer_value)
-                return None
-            return odometer_value
-        except (ValueError, TypeError) as e:
-            _logger.warning("Failed to process odometer %s: %s", value, e)
-            return None
+    # ------------------------------------------------------------
+    # HELPERS
+    # ------------------------------------------------------------
 
     # ==================== Request Processing Methods ====================
 
@@ -304,7 +356,9 @@ class GPSWebhook(http.Controller):
 
         return vals
 
-    # ==================== Database Operations ====================
+    # ------------------------------------------------------------
+    # DATABASE OPERATIONS
+    # ------------------------------------------------------------
 
     def _find_device(self, imei: str) -> Optional[Any]:
         """
@@ -341,7 +395,6 @@ class GPSWebhook(http.Controller):
         new_point = tracking_point.create(vals)
         return new_point
 
-
     def _update_device_last_point(self, device: Any, point_id: int) -> bool:
         """
         Update device's last tracking point reference
@@ -356,67 +409,386 @@ class GPSWebhook(http.Controller):
         device.sudo().write({"last_point_id": point_id})
         return True
 
-    # ==================== Main Webhook Endpoint ====================
+    # ------------------------------------------------------------
+    # DATA PROCESING METHODS
+    # ------------------------------------------------------------
 
-    @http.route(
-        "/gps/webhook",
-        type="jsonrpc",
-        auth="public",
-        methods=["GET", "POST"],
-        csrf=False,
-    )
-    @log_webhook_activity
-    def gps_webhook(self, **kwargs) -> bytes:
+    def _parse_coordinates(
+        self, latlng_str: str
+    ) -> Tuple[Optional[float], Optional[float]]:
         """
-        Main webhook endpoint for GPS tracking data
+        Parse latitude and longitude from comma-separated string
 
-        Receives GPS data from IoT devices, validates it,
-        and stores tracking points in the database.
-
-        Flow:
-        1. Extract and validate JSON payload
-        2. Find device by IMEI
-        3. Process and validate GPS data fields
-        4. Create tracking point record
-        5. Update device's last known position
+        Args:
+            latlng_str: Comma-separated latitude,longitude string
 
         Returns:
-            Success (0x01) or failure (0x00) response byte
+            Tuple of (latitude, longitude) or (None, None) if invalid
         """
         try:
-            # Extract JSON data from request
-            json_data = request.get_json_data()
-            if not json_data:
-                return self.RESPONSE_FAILURE
+            if not latlng_str or "," not in latlng_str:
+                return None, None
+            lat_str, lng_str = latlng_str.split(",", 1)
+            lat = float(lat_str.strip())
+            lng = float(lng_str.strip())
+            if not self._validate_coordinates(lat, lng):
+                return None, None
+            return lat, lng
+        except (ValueError, AttributeError) as e:
+            return None, None
 
-            # Extract payload from JSON structure
-            payload = self._extract_payload(json_data)
-            if not payload:
-                return self.RESPONSE_FAILURE
+    def _process_timestamp(self, timestamp_ms: int) -> Optional[datetime]:
+        """
+        Convert millisecond timestamp to datetime
 
-            # Get device IMEI
-            imei = payload.get("14")
-            if not imei:
-                return self.RESPONSE_FAILURE
+        Args:
+            timestamp_ms: Timestamp in milliseconds
 
-            # Find device by IMEI
-            device = self._find_device(imei)
-            if not device:
-                return self.RESPONSE_FAILURE
+        Returns:
+            Datetime object or None if invalid
+        """
+        try:
+            if not self._validate_timestamp(timestamp_ms):
+                return None
+            # Convert from milliseconds to seconds and create datetime
+            return datetime.fromtimestamp(timestamp_ms / 1000, tz=timezone.utc).replace(
+                tzinfo=None
+            )
+        except (ValueError, OSError, TypeError) as e:
+            return None
 
-            # Prepare tracking point values
-            vals = self._prepare_tracking_point_vals(payload, device.id)
+    def _process_odometer(self, value: float) -> Optional[float]:
+        """
+        Process odometer value (convert from meters to kilometers)
 
-            # Create tracking point
-            new_point = self._create_tracking_point(vals)
-            if not new_point:
-                return self.RESPONSE_FAILURE
+        Args:
+            value: Odometer value in meters
 
-            # Update device's last point
-            self._update_device_last_point(device, new_point.id)
+        Returns:
+            Odometer value in kilometers or None if invalid
+        """
+        try:
+            odometer_value = float(value) / 1000.0
+            if odometer_value < 0:
+                return None
+            return odometer_value
+        except (ValueError, TypeError) as e:
+            return None
 
-            return self.RESPONSE_SUCCESS
+    # ------------------------------------------------------------
+    # VALIDATIONS
+    # ------------------------------------------------------------
+
+    def _validate_timestamp(self, timestamp: int) -> bool:
+        """Validate timestamp is within reasonable bounds"""
+        return (
+            isinstance(timestamp, (int, float))
+            and self.MIN_TIMESTAMP <= timestamp <= self.MAX_TIMESTAMP
+        )
+
+    def _validate_coordinates(self, lat: float, lng: float) -> bool:
+        """Validate GPS coordinates are within valid ranges"""
+        try:
+            lat_float = float(lat)
+            lng_float = float(lng)
+            return (
+                self.MIN_LATITUDE <= lat_float <= self.MAX_LATITUDE
+                and self.MIN_LONGITUDE <= lng_float <= self.MAX_LONGITUDE
+            )
+        except (ValueError, TypeError):
+            return False
+
+    def _validate_gps_quality(self, vals: Dict[str, Any]) -> tuple[bool, str]:
+        """
+        Comprehensive GPS data quality validation.
+
+        Args:
+            vals: Dictionary of processed GPS values
+
+        Returns:
+            Tuple of (is_valid, error_message)
+        """
+        # 1. Validate GPS accuracy
+        is_valid, error = self._validate_gps_accuracy(vals)
+        if not is_valid:
+            return False, error
+
+        # 2. Validate coordinate quality
+        is_valid, error = self._validate_coordinate_quality(vals)
+        if not is_valid:
+            return False, error
+
+        # 3. Validate vehicle parameters
+        is_valid, error = self._validate_vehicle_parameters(vals)
+        if not is_valid:
+            return False, error
+
+        # 4. Validate electrical systems
+        is_valid, error = self._validate_electrical_parameters(vals)
+        if not is_valid:
+            return False, error
+
+        return True, "Valid"
+
+    def _validate_gps_accuracy(self, vals: Dict[str, Any]) -> tuple[bool, str]:
+        """
+        Validate GPS signal accuracy based on satellite count and speed.
+
+        Args:
+            vals: Dictionary of processed GPS values
+
+        Returns:
+            Tuple of (is_valid, error_message)
+        """
+        # Check GPS accuracy based on satellite count
+        satellites = vals.get("satellites", 0)
+        if satellites and satellites < self.MIN_SATELLITES_FOR_ACCURACY:
+            return (
+                False,
+                f"Low GPS accuracy: only {satellites} satellites (minimum: {self.MIN_SATELLITES_FOR_ACCURACY})",
+            )
+
+        # Validate speed reasonableness
+        speed = vals.get("speed", 0)
+        if speed and speed > self.MAX_REASONABLE_SPEED:
+            return (
+                False,
+                f"Unrealistic speed detected: {speed} km/h (maximum: {self.MAX_REASONABLE_SPEED})",
+            )
+
+        return True, "GPS accuracy valid"
+
+    def _validate_coordinate_quality(self, vals: Dict[str, Any]) -> tuple[bool, str]:
+        """
+        Validate GPS coordinate quality and precision.
+
+        Args:
+            vals: Dictionary of processed GPS values
+
+        Returns:
+            Tuple of (is_valid, error_message)
+        """
+        lat = vals.get("latitude")
+        lng = vals.get("longitude")
+
+        if lat is None or lng is None:
+            return True, "No coordinates to validate"
+
+        # Check if coordinates have sufficient precision
+        lat_precision = len(str(lat).split(".")[-1]) if "." in str(lat) else 0
+        lng_precision = len(str(lng).split(".")[-1]) if "." in str(lng) else 0
+
+        if (
+            lat_precision < self.MIN_COORDINATE_PRECISION
+            or lng_precision < self.MIN_COORDINATE_PRECISION
+        ):
+            return (
+                False,
+                f"Low coordinate precision: lat={lat_precision}, lng={lng_precision} decimals (minimum: {self.MIN_COORDINATE_PRECISION})",
+            )
+
+        # Check for obviously invalid coordinates (0,0 or repeated patterns)
+        if lat == 0.0 and lng == 0.0:
+            return False, "Invalid coordinates: (0,0) - GPS not acquired"
+
+        # Check for repeated coordinate patterns that indicate GPS issues
+        lat_str = str(lat)
+        lng_str = str(lng)
+        if (
+            len(set(lat_str.replace(".", "").replace("-", ""))) <= 2
+            or len(set(lng_str.replace(".", "").replace("-", ""))) <= 2
+        ):
+            return False, f"Suspicious coordinate pattern: lat={lat}, lng={lng}"
+
+        return True, "Coordinate quality valid"
+
+    def _validate_vehicle_parameters(self, vals: Dict[str, Any]) -> tuple[bool, str]:
+        """
+        Validate vehicle-specific parameters like engine temperature and fuel level.
+
+        Args:
+            vals: Dictionary of processed GPS values
+
+        Returns:
+            Tuple of (is_valid, error_message)
+        """
+        # Validate engine temperature
+        engine_temp = vals.get("engine_temperature", 0)
+        if engine_temp and (engine_temp < -40 or engine_temp > 150):
+            return (
+                False,
+                f"Invalid engine temperature: {engine_temp}°C (range: -40 to 150°C)",
+            )
+
+        # Validate fuel level
+        fuel_level = vals.get("fuel_level", 0)
+        if fuel_level and (fuel_level < 0 or fuel_level > 100):
+            return False, f"Invalid fuel level: {fuel_level}% (range: 0-100%)"
+
+        # Validate engine RPM
+        engine_rpm = vals.get("engine_speed_rpm", 0)
+        if engine_rpm and (engine_rpm < 0 or engine_rpm > 8000):
+            return False, f"Invalid engine RPM: {engine_rpm} (range: 0-8000 RPM)"
+
+        return True, "Vehicle parameters valid"
+
+    def _validate_electrical_parameters(self, vals: Dict[str, Any]) -> tuple[bool, str]:
+        """
+        Validate electrical system parameters like voltage readings.
+
+        Args:
+            vals: Dictionary of processed GPS values
+
+        Returns:
+            Tuple of (is_valid, error_message)
+        """
+        # Validate external voltage (vehicle battery)
+        external_voltage = vals.get("external_voltage", 0)
+        if external_voltage and (external_voltage < 6 or external_voltage > 30):
+            return (
+                False,
+                f"Invalid external voltage: {external_voltage}V (typical range: 6-30V)",
+            )
+
+        # Validate internal battery voltage (device battery)
+        battery_voltage = vals.get("battery_voltage", 0)
+        if battery_voltage and (battery_voltage < 3 or battery_voltage > 5):
+            return (
+                False,
+                f"Invalid battery voltage: {battery_voltage}V (typical range: 3-5V)",
+            )
+
+        # Validate battery current
+        battery_current = vals.get("battery_current", 0)
+        if battery_current and abs(battery_current) > 5000:  # 5A in mA
+            return (
+                False,
+                f"Invalid battery current: {battery_current}mA (typical range: -5000 to 5000mA)",
+            )
+
+        return True, "Electrical parameters valid"
+
+    def _validate_temporal_sequence(
+        self, device_id: int, new_timestamp: datetime, new_speed: float = 0
+    ) -> tuple[bool, str]:
+        """
+        Validate temporal sequence and detect unrealistic changes.
+
+        Args:
+            device_id: GPS device ID
+            new_timestamp: Timestamp of new GPS point
+            new_speed: Speed from new GPS point
+
+        Returns:
+            Tuple of (is_valid, warning_message)
+        """
+        try:
+            # Get the last GPS point for this device
+            last_point = (
+                request.env["gps.tracking.point"]
+                .sudo()
+                .search(
+                    [("device_id", "=", device_id)], order="timestamp desc", limit=1
+                )
+            )
+
+            if not last_point:
+                return True, "No previous point for comparison"
+
+            # Check for duplicate timestamps
+            time_diff = (new_timestamp - last_point.timestamp).total_seconds()
+            if abs(time_diff) < 1:  # Less than 1 second difference
+                return (
+                    False,
+                    f"Duplicate or too-close timestamp: {abs(time_diff):.1f}s from last point",
+                )
+
+            # Check for points too far in the future
+            now = datetime.now()
+            future_diff = (new_timestamp - now).total_seconds()
+            if future_diff > 300:  # More than 5 minutes in the future
+                return (
+                    False,
+                    f"Timestamp too far in future: {future_diff/60:.1f} minutes",
+                )
+
+            # Check for unrealistic speed changes
+            if last_point.speed and new_speed:
+                time_minutes = abs(time_diff) / 60
+                if time_minutes > 0:
+                    speed_change = abs(new_speed - last_point.speed)
+                    speed_change_per_minute = speed_change / time_minutes
+
+                    if speed_change_per_minute > self.MAX_SPEED_CHANGE_PER_MINUTE:
+                        return (
+                            False,
+                            f"Unrealistic speed change: {speed_change:.1f} km/h in {time_minutes:.1f} minutes",
+                        )
+
+            return True, "Valid sequence"
 
         except Exception as e:
-            _logger.error("Unexpected error in GPS webhook: %s", e, exc_info=True)
-            return self.RESPONSE_FAILURE
+            return True, "Validation error - allowing point"
+
+    def _is_duplicate_point(
+        self,
+        device_id: int,
+        timestamp: datetime,
+        latitude: float = None,
+        longitude: float = None,
+    ) -> bool:
+        """
+        Check for duplicate GPS points within time window.
+
+        Args:
+            device_id: GPS device ID
+            timestamp: Point timestamp
+            latitude: GPS latitude (optional)
+            longitude: GPS longitude (optional)
+
+        Returns:
+            True if duplicate detected
+        """
+        try:
+            # Define time window for duplicate detection
+            time_window_start = timestamp - timedelta(
+                seconds=self.MAX_DUPLICATE_TIME_WINDOW
+            )
+            time_window_end = timestamp + timedelta(
+                seconds=self.MAX_DUPLICATE_TIME_WINDOW
+            )
+
+            # Search for points in the time window
+            domain = [
+                ("device_id", "=", device_id),
+                ("timestamp", ">=", time_window_start),
+                ("timestamp", "<=", time_window_end),
+            ]
+
+            # If coordinates provided, also check for spatial duplicates
+            if latitude is not None and longitude is not None:
+                # Allow small coordinate differences (about 1 meter precision)
+                lat_tolerance = 0.00001
+                lng_tolerance = 0.00001
+
+                domain.extend(
+                    [
+                        ("latitude", ">=", latitude - lat_tolerance),
+                        ("latitude", "<=", latitude + lat_tolerance),
+                        ("longitude", ">=", longitude - lng_tolerance),
+                        ("longitude", "<=", longitude + lng_tolerance),
+                    ]
+                )
+
+            existing_points = (
+                request.env["gps.tracking.point"].sudo().search(domain, limit=1)
+            )
+
+            if existing_points:
+
+                return True
+
+            return False
+
+        except Exception as e:
+            return False  # Don't block on validation errors
