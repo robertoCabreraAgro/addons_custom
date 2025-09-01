@@ -53,6 +53,7 @@ class GpsTrackingDevice(models.Model):
         comodel_name="gps.tracking.point",
         string="Last Tracking Point",
         compute="_compute_last_point_id",
+        store=True,
     )
     satellites = fields.Integer(
         related="last_point_id.satellites",
@@ -153,11 +154,25 @@ class GpsTrackingDevice(models.Model):
 
     @api.depends("tracking_point_ids.timestamp")
     def _compute_last_point_id(self):
+        """Compute the last tracking point for each device using SQL query
+        to avoid loading millions of records into memory.
+        """
         for device in self:
-            last_point = device.tracking_point_ids.sorted(
-                key=lambda p: p.timestamp, reverse=True
-            )[:1]
-            device.last_point_id = last_point.id if last_point else False
+            # Use SQL query to get the latest point efficiently
+            self.env.cr.execute("""
+                SELECT
+                    id
+                FROM
+                    gps_tracking_point
+                WHERE
+                    device_id = %s
+                ORDER BY
+                    timestamp DESC
+                LIMIT 1
+            """, (device.id,))
+
+            result = self.env.cr.fetchone()
+            device.last_point_id = result[0] if result else False
 
     @api.depends("timestamp")
     def _compute_inactivity_state(self):

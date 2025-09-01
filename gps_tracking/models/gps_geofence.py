@@ -29,8 +29,8 @@ class GpsGeofence(models.Model):
     # FIELDS
     # ------------------------------------------------------------
 
-    name = fields.Char(string="Area Name", required=True, tracking=True)
-    active = fields.Boolean(string="Active", default=True, tracking=True)
+    name = fields.Char(string="Area Name", required=True)
+    active = fields.Boolean(string="Active", default=True)
     sequence = fields.Integer(
         string="Sequence",
         default=lambda self: self._get_default_sequence(),
@@ -47,12 +47,10 @@ class GpsGeofence(models.Model):
         string="Area Type",
         required=True,
         default="property",
-        tracking=True,
     )
     parent_id = fields.Many2one(
         comodel_name="gps.geofence",
         string="Parent Area",
-        tracking=True,
         index=True,
         help="Parent geographic area for hierarchical organization",
     )
@@ -62,13 +60,11 @@ class GpsGeofence(models.Model):
         comodel_name="res.partner",
         string="Client",
         domain=["|", ("customer", "=", True), ("customer_rank", ">", 0)],
-        tracking=True,
         help="Client associated with this geographic area",
     )
     color = fields.Char(
         string="Hex Color",
         default=lambda self: self._get_default_color(),
-        tracking=True,
     )
     description = fields.Text(string="Description")
     main_entrance_point = fields.GeoPoint(

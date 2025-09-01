@@ -7,23 +7,23 @@
         <field name="inherit_id" ref="gps_tracking.view_gps_tracking_device_search"/>
         <field name="arch" type="xml">
             <!-- Add driver_name and department_id as first search fields -->
-            <field name="model_id" position="before">
+            <field name="config_id" position="after">
                 <field name="driver_name" string="Conductor"/>
                 <field name="department_id" string="Departamento"/>
             </field>
             
             <!-- Add additional filters -->
-            <filter name="with_location" position="before">
+            <filter name="without_config" position="after">
+                <separator/>
                 <filter string="Con Conductor" name="with_driver" domain="[('driver_name', '!=', False)]"/>
                 <filter string="Sin Conductor" name="without_driver" domain="[('driver_name', '=', False)]"/>
                 <separator/>
                 <filter string="Con Departamento" name="with_department" domain="[('department_id', '!=', False)]"/>
                 <filter string="Sin Departamento" name="without_department" domain="[('department_id', '=', False)]"/>
-                <separator/>
             </filter>
             
             <!-- Add group by filters -->
-            <filter name="group_by_config" position="before">
+            <filter name="group_by_config" position="after">
                 <filter string="Conductor" name="group_by_driver" context="{'group_by': 'driver_name'}"/>
                 <filter string="Departamento" name="group_by_department" context="{'group_by': 'department_id'}"/>
             </filter>
@@ -36,7 +36,7 @@
         <field name="model">gps.tracking.device</field>
         <field name="inherit_id" ref="gps_tracking.view_gps_tracking_device_list"/>
         <field name="arch" type="xml">
-            <field name="license_plate" position="after">
+            <field name="config_id" position="after">
                 <field name="driver_name" optional="show" />
                 <field name="department_id" optional="show" />
             </field>
@@ -49,7 +49,7 @@
         <field name="model">gps.tracking.device</field>
         <field name="inherit_id" ref="gps_tracking.view_gps_tracking_device_form"/>
         <field name="arch" type="xml">
-            <field name="location" position="before">
+            <field name="private" position="after">
                 <field name="driver_name" readonly="1"/>
                 <field name="department_id" readonly="1"/>
             </field>

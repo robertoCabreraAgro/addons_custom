@@ -33,7 +33,6 @@
                 <field name="timestamp" />
                 <field name="inactivity_state" widget="badge"
                     decoration-success="inactivity_state == 'active'"
-                    decoration-warning="inactivity_state == 'inactive_off_hours'"
                     decoration-danger="inactivity_state == 'inactive_alert'" />
             </list>
         </field>
@@ -61,10 +60,6 @@
                         </ul>
                     </t>
                 </templates>
-                <!-- Mostrar la ruta histórica -->
-                <field name="history_route"
-                    string="History Route"
-                    options='{"color": "#0000FF", "strokeWidth": 4}' />
                 <!-- Mostrar los puntos de seguimiento -->
                 <field name="the_point"
                     string="Current Position"
@@ -135,7 +130,6 @@
                                     <field name="event_id" optional="hide" />
                                     <field name="event_type" optional="hide" />
                                     <field name="priority" optional="hide" />
-                                    <field name="address" optional="hide" />
                                 </list>
                             </field>
                         </page>

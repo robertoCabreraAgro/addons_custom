@@ -50,7 +50,7 @@
 
             <menuitem id="menu_fleet_vehicle_loan_report"
                 name="Préstamos de Vehículos"
-                action="action_fleet_vehicle_loan_report"
+                action="action_asset_loan_report"
                 sequence="50"
                 groups="group_gps_tracking_vehicle_loan" />
         </menuitem>

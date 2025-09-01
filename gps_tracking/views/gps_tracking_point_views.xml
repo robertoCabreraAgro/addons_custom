@@ -7,8 +7,8 @@
         <field name="arch" type="xml">
             <search>
                 <!-- Campos básicos de búsqueda -->
-                <field name="vehicle_id" string="Vehicle"
-                    filter_domain="[('vehicle_id', 'ilike', self)]" />
+                <field name="asset_id" string="Vehicle"
+                    filter_domain="[('asset_id', 'ilike', self)]" />
                 <field name="device_id" string="Device"
                     filter_domain="[('device_id', 'ilike', self)]" />
 
@@ -49,7 +49,7 @@
                 <!-- Agrupaciones -->
                 <group expand="0" string="Group By">
                     <filter name="group_vehicle" string="Vehicle"
-                        context="{'group_by': 'vehicle_id'}" />
+                        context="{'group_by': 'asset_id'}" />
                     <filter name="group_device" string="Device"
                         context="{'group_by': 'device_id'}" />
                     <filter name="group_date" string="Date"
@@ -68,7 +68,7 @@
         <field name="arch" type="xml">
             <list>
                 <field name="timestamp" />
-                <field name="vehicle_id" />
+                <field name="asset_id" />
                 <field name="latitude" />
                 <field name="longitude" />
                 <field name="altitude" />
