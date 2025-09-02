@@ -33,9 +33,9 @@ const REPORTING_DEPARTMENT_ID = 4;
 // Base device fields for queries
 const BASE_DEVICE_FIELDS = [
     "id", "imei", "the_point", "speed", "timestamp", "altitude", 
-    "satellite", "address", "gsm_signal", "ignition", "movement", 
-    "color", "asset_id", "license_plate", "driver_name", 
-    "odometer", "real_odometer", "location", "department_id"
+    "satellites", "ignition", "movement", 
+    "color", "asset_id", "driver_name", 
+    "odometer", "real_odometer", "department_id"
 ];
 
 export class GpsTrackingDashboard extends Component {
@@ -263,10 +263,47 @@ export class GpsTrackingDashboard extends Component {
                 fields
             );
             
-            return await this.filterDevicesByUserPermissions(devices);
+            const filteredDevices = await this.filterDevicesByUserPermissions(devices);
+            
+            // Add license_plate from related asset
+            await this.addLicensePlateToDevices(filteredDevices);
+            
+            return filteredDevices;
         } catch (error) {
             console.error("Error loading devices:", error);
             return [];
+        }
+    }
+
+    /**
+     * Add license_plate to devices from their related assets
+     */
+    async addLicensePlateToDevices(devices) {
+        const assetIds = devices
+            .filter(device => device.asset_id && device.asset_id[0])
+            .map(device => device.asset_id[0]);
+        
+        if (assetIds.length === 0) return;
+        
+        try {
+            const assets = await this.orm.searchRead(
+                "stock.lot",
+                [['id', 'in', assetIds]],
+                ['id', 'license_plate']
+            );
+            
+            const assetMap = {};
+            assets.forEach(asset => {
+                assetMap[asset.id] = asset.license_plate;
+            });
+            
+            devices.forEach(device => {
+                if (device.asset_id && device.asset_id[0]) {
+                    device.license_plate = assetMap[device.asset_id[0]] || '';
+                }
+            });
+        } catch (error) {
+            console.error("Error loading asset license plates:", error);
         }
     }
 
@@ -376,7 +413,7 @@ export class GpsTrackingDashboard extends Component {
 
         try {
             const deviceIds = this.state.devices.map(d => d.id);
-            const trackingFields = ["id", "the_point", "speed", "timestamp", "altitude", "address", "gsm_signal", "ignition", "movement"];
+            const trackingFields = ["id", "the_point", "speed", "timestamp", "altitude", "ignition", "movement", "asset_id"];
             
             const updatedDevices = await this.orm.searchRead(
                 "gps.tracking.device",
@@ -622,7 +659,7 @@ export class GpsTrackingDashboard extends Component {
 
         // Crear capas base para diferentes tipos de vista
         this.baseLayers = {
-            satellite: new ol.layer.Tile({
+            satellites: new ol.layer.Tile({
                 title: 'Satellite',
                 type: 'base',
                 visible: true,
@@ -1148,7 +1185,7 @@ export class GpsTrackingDashboard extends Component {
         layerSwitcherDiv.style.cssText = 'top: 10px; right: 10px; background: rgba(255,255,255,0.9); border-radius: 6px; padding: 8px; display: flex; gap: 5px; box-shadow: 0 2px 8px rgba(0,0,0,0.2);';
         
         const layers = [
-            { key: 'satellite', label: '🛰️', title: 'Vista Satelital' },
+            { key: 'satellites', label: '🛰️', title: 'Vista Satelital' },
             { key: 'roads', label: '🚗', title: 'Solo Carreteras' }
         ];
 
@@ -1156,7 +1193,7 @@ export class GpsTrackingDashboard extends Component {
             const button = document.createElement('button');
             button.innerHTML = layer.label;
             button.title = layer.title;
-            button.className = layer.key === 'satellite' ? 'active' : '';
+            button.className = layer.key === 'satellites' ? 'active' : '';
             button.style.cssText = 'padding: 6px 8px; border: 1px solid #ddd; background: white; cursor: pointer; border-radius: 4px; font-size: 16px; min-width: 35px; transition: all 0.2s;';
             
             button.onclick = () => {

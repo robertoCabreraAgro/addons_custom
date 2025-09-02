@@ -48,7 +48,7 @@
                             <input type="checkbox" t-att-checked="state.activeDevices.includes(device.imei)" 
                                 t-on-click.prevent="() => this.toggleDeviceVisibility(device)"/>
                             <div class="card_header">
-                                <strong><t t-esc="device.license_plate"/></strong>
+                                <strong><t t-esc="device.license_plate || device.imei"/></strong>
                             </div>
                             <!-- Botón de flecha para expandir -->
                             <button class="expand_button" 
@@ -65,9 +65,6 @@
                             </div>
                             <div t-if="device.driver_name">
                                 <span>Conductor: <t t-esc="device.driver_name"/></span>
-                            </div>
-                            <div t-if="device.location" class="kanban_info">
-                                <span>Ubicación: <t t-esc="device.location"/></span>
                             </div>
                             <!-- Velocidad -->
                             <div class="kanban_info">
@@ -97,12 +94,6 @@
                                     <t t-if="device.movement == 1">En movimiento</t>
                                     <t t-if="device.movement == 0">Estacionado</t>
                                 </span>
-                            </div>
-                            <!-- Coordenadas -->
-                            <div class="kanban_info">
-                                <i class="fa fa-map"></i>
-                                <span>Dirección:</span> 
-                                <t t-esc="device.address"/>
                             </div>
                         </div>
                     </div>
