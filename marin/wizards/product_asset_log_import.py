@@ -184,9 +184,9 @@ class ProductAssetLogImport(models.TransientModel):
             tuple: (list of product.asset.log values, list of error messages)
         """
         asset_log = self.env["product.asset.log"]
-        fuel_category = self.env.ref("marin.product_category_fuel")
-        fuel_debit_product = self.env.ref("marin.product_product_fuel_debit")
-        fuel_credit_product = self.env.ref("marin.product_product_fuel_credit")
+        fuel_category = self.env.ref("product_asset.product_category_fuel")
+        fuel_debit_product = self.env.ref("product_asset.product_product_fuel_debit")
+        fuel_credit_product = self.env.ref("product_asset.product_product_fuel_credit")
         try:
             # Decode and load the Excel file
             file_data = base64.b64decode(file_content)
@@ -400,10 +400,10 @@ class ProductAssetLogImport(models.TransientModel):
             tuple: (list of product.asset.log values, list of error messages)
         """
         asset_log = self.env["product.asset.log"]
-        highway_pass_category = self.env.ref("marin.product_category_highway_toll")
-        highway_pass_debit_product = self.env.ref("marin.product_product_highway_debit")
+        highway_pass_category = self.env.ref("product_asset.product_category_highway_toll")
+        highway_pass_debit_product = self.env.ref("product_asset.product_product_highway_debit")
         highway_pass_credit_product = self.env.ref(
-            "marin.product_product_highway_credit"
+            "product_asset.product_product_highway_credit"
         )
         try:
             # Decode and load the CSV file
@@ -580,10 +580,10 @@ class ProductAssetLogImport(models.TransientModel):
             tuple: (list of product.asset.log values, list of error messages)
         """
         asset_log = self.env["product.asset.log"]
-        highway_pass_category = self.env.ref("marin.product_category_highway_toll")
-        highway_pass_debit_product = self.env.ref("marin.product_product_highway_debit")
+        highway_pass_category = self.env.ref("product_asset.product_category_highway_toll")
+        highway_pass_debit_product = self.env.ref("product_asset.product_product_highway_debit")
         highway_pass_credit_product = self.env.ref(
-            "marin.product_product_highway_credit"
+            "product_asset.product_product_highway_credit"
         )
         try:
             # Decode and load the CSV file
