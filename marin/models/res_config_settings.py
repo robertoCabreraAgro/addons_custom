@@ -78,3 +78,6 @@ class ResConfigSettings(models.TransientModel):
         string="Mandatory Contact Fields",
         help="Fields that must be completed when restricted contact creation is enabled",
     )
+
+    # Restricted MRP planning configuration
+    module_planning_mrp = fields.Boolean(string='Production itinerary')
