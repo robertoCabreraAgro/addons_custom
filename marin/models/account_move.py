@@ -550,18 +550,12 @@ class AccountMove(models.Model):
         Returns:
             list: Domain for searching payment lines
         """
-        account_type = (
-            "asset_receivable"
-            if move.move_type in ["out_invoice", "out_refund"]
-            else "liability_payable"
-        )
-
         domain = [
-            ("account_id.account_type", "=", account_type),
+            ("account_id", "=", invoice_line.account_id.id),
             (
-                "partner_id.commercial_partner_id",
-                "=",
-                move.partner_id.commercial_partner_id.id,
+                "partner_id",
+                "in",
+                [move.partner_id.id, move.partner_id.commercial_partner_id.id]
             ),
             ("reconciled", "=", False),
             ("parent_state", "=", "posted"),
@@ -975,6 +969,7 @@ class AccountMove(models.Model):
         moves_by_age = self.sorted(lambda m: m.invoice_date or m.date)
 
         for move in moves_by_age:
+            
             try:
                 # Validations
                 if move.state != "posted":
