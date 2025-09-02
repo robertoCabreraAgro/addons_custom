@@ -6,8 +6,14 @@
 ## Quick Context
 - **Platform**: Odoo 18.0 (saas-18.2), Python 3.11+, PostgreSQL with PostGIS
 - **Repository**: 40+ custom Odoo modules for agricultural ERP with Mexican localization
-- **Task System**: Every change requires Task ID from `/planning/` directory
+- **Task System**: Every change requires Task ID from `/home/<USER>/instancias/planning/` directory
 - **Branch Format**: `18.2-t<TASK_ID>-<INITIALS>`
+- **Coding Standard**: Use `pre-commit-vauxoo` to check quality, consistency and adherence to project standards
+- **Commit Messages**:
+   - Use conventional format: `[TAG] module: description`
+   - Tags: IMP (improvement), FIX (bug fix), ADD (new feature), REF (refactor)
+   - Keep messages concise but descriptive
+   - Maximum 80 characters per line
 
 ## Critical Odoo 18.0 Changes
 ```xml
@@ -24,18 +30,6 @@ _search_display_name() replaces _name_search()
 _has_cycle() replaces _check_recursion()
 self.env.user.has_group() replaces user_has_groups()
 check_access() unifies check_access_rights() and check_access_rule()
-```
-
-## Commands
-```bash
-# Module operations
-./odoo-bin -u module_name -d db_name              # Update module
-./odoo-bin -u module_name -d db_name --test-enable # Run tests
-./odoo-bin shell -d db_name                       # Interactive shell
-
-# Development
-./odoo-bin scaffold module_name /path/to/addons   # Create module
-./odoo-bin -d db_name --dev=all                   # Debug mode
 ```
 
 ## AgroMarin Coding Standards
@@ -99,16 +93,7 @@ class Model(models.Model):
     def _check_date(self):
     
     # 5. Actions (action_*)
-    def action_confirm(self):
-    
-    # 6. Business Logic (_do_*, _post_*)
-    def _post_invoice(self):
-    
-    # 7. Helpers (_get_*, _prepare_*, _find_*)
-    def _prepare_invoice_line(self):
-    
-    # 8. Tools (format_*, calculate_*)
-    def format_reference(self):
+    def action_confirm(self):   - Write messages in English
     
     # 9. Integrations (_call_*, _sync_*)
     def _call_sat_api(self):
@@ -118,8 +103,6 @@ class Model(models.Model):
 - **English only** for all code, comments, variables
 - **Docstrings required** for all methods and classes
 - **Double quotes** for all strings
-- **Type hints** where applicable
-- **Tests** for business logic
 
 ### Docstring Template
 ```python
@@ -137,47 +120,55 @@ def method_name(self, param1, param2):
         ValidationError: When validation fails
     """
 ```
+## File naming
+Odoo modules follow a standardized structure to facilitate navigation and code maintenance. Let's use an `agriculture_management` module as example with main models: `farm.field` and `harvest.order`.
 
-## Module Structure
-```
-module_name/
-├── __manifest__.py      # Dependencies: base, stock, sale, etc.
-├── models/             # One file per model
-├── views/              # XML views (use record ids: view_model_form)
-├── security/           # ir.model.access.csv, security rules
-├── data/              # Default data
-├── tests/             # Test classes inheriting TransactionCase
-└── i18n/              # Translations (es_MX.po primary)
-```
+**Models (`/models/`)**
+- One file per main model: `farm_field.py`, `harvest_order.py`
+- Inherited models in separate files: `res_partner.py`, `product_product.py`
+- If only one model exists, use the module name
+
+**Security (`/security/`)**
+Three main files:
+- `ir.model.access.csv` - Access rights definition
+- `agriculture_management_groups.xml` - User groups (farmers, supervisors, managers)
+- `farm_field_security.xml`, `harvest_order_security.xml` - Record rules per model
+
+**Views (`/views/`)**
+- Backend views: `farm_field_views.xml`, `harvest_order_views.xml`
+- Main menus: `agriculture_management_menus.xml` (optional)
+- QWeb templates: `harvest_order_templates.xml` (portal/reports)
+- Inherited views: `res_partner_views.xml`
+
+**Data (`/data/`)**
+Split by purpose and model:
+- `farm_field_data.xml` - Initial data (crop types, seasons)
+- `harvest_order_demo.xml` - Demo data
+- `mail_data.xml` - Email templates for harvest notifications
+
+**Controllers (`/controllers/`)**
+- Main controller: `agriculture_management.py` (avoid `main.py`)
+- Inherited controllers: `portal.py` (for farmer portal access)
+
+**Wizards (`/wizard/`)**
+- `crop_planning_wizard.py`
+- `crop_planning_wizard_views.xml`
+
+**Reports (`/report/`)**
+- Statistical reports: `harvest_analysis_report.py`, `harvest_analysis_report_views.xml`
+- Printable reports:
+  - `harvest_order_reports.xml` (actions, paperformat)
+  - `harvest_order_templates.xml` (QWeb templates)
 
 ## Task Workflow
-1. Check `/planning/<TASK_ID>.md` for requirements
+1. Check `/home/<USER>/instancias/planning/<TASK_ID>.md` for requirements
 2. **Check if module has README.md and read it**
 3. Create branch: `18.2-t<TASK_ID>-<INITIALS>`
-4. Implement following all standards above
-5. Include tests and documentation
+4. Run `pre-commit-vauxoo -t all -p <MODULE_NAME>`
+5. Create commit(s): `[TAG] module: description`
 6. Update module version in `__manifest__.py`
 
-## Common Patterns
-```python
-# Record creation with context
-with self.env.cr.savepoint():
-    record = self.env['model'].with_context(skip_validation=True).create(vals)
-
-# Batch operations
-self.env['model'].search([]).filtered(lambda r: r.active)._process_batch()
-
-# Mexican tax calculation
-self.env['l10n_mx.edi.document']._get_cfdi_values()
-```
-
-## Testing Requirements
-- Use `TransactionCase` for database operations
-- Test Mexican fiscal validations
-- Cover agricultural business cases
-- Mock external API calls (SAT, GPS services)
-
 ## File References
-- See `/planning/` for task specifications
+- See `/home/<USER>/instancias/planning/` for task specifications
 - Check `marin/__manifest__.py` for full dependency tree
 - Review `l10n_mx_edi*/` for Mexican compliance examples
