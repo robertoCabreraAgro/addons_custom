@@ -1687,3 +1687,81 @@ class L10nMxEdiDocument(models.Model):
                 exc_info=True,
             )
             raise UserError(self.env._("An unexpected error occurred: %s", e))
+
+    def l10n_mx_ws_request_download_by_uuid(self, certificate, private_key, token, uuid):
+        """Request individual CFDI download by UUID using SolicitaDescargaFolio service.
+
+        Args:
+            certificate: X509 certificate object
+            private_key: Private key object
+            token: Valid SAT authentication token
+            uuid: UUID of the CFDI to download
+
+        Returns:
+            dict: Contains request_id, status_code, and message from SAT
+
+        Raises:
+            ValidationError: If UUID format is invalid or service fails
+        """
+        # Validate UUID format
+        if not uuid or not self.env["l10n_mx_edi.session"]._validate_uuid_format(uuid):
+            raise ValidationError(
+                self.env._("Invalid UUID format: %s", uuid)
+            )
+        # Extract requester's VAT from certificate
+        requester_vat = self._get_requester_vat(certificate)
+
+        # Prepare request parameters - Note: Only UUID and RfcSolicitante for this service
+        request_params = {
+            "RfcSolicitante": requester_vat,
+            "UUID": uuid.upper(),
+            "TipoSolicitud": "CFDI"  # Always CFDI for individual downloads
+        }
+
+        # SOAP envelope for SolicitaDescargaFolio service
+        envelop = """
+            <s:Envelope
+                xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"
+                xmlns:des="http://DescargaMasivaTerceros.sat.gob.mx">
+                <s:Header/>
+                <s:Body>
+                    <des:SolicitaDescargaFolio>
+                        <des:solicitud UUID="" RfcSolicitante="" TipoSolicitud="CFDI"/>
+                    </des:SolicitaDescargaFolio>
+                </s:Body>
+            </s:Envelope>
+        """
+
+        xpath = "s:Body/des:SolicitaDescargaFolio/des:solicitud"
+
+
+        # Build and sign SOAP request
+        data = self.prepare_soap_data(
+            certificate, private_key, request_params, envelop, xpath, token
+        )
+
+        # Configure service endpoint - Same base URL, different action
+        url = "https://cfdidescargamasivasolicitud.clouda.sat.gob.mx/SolicitaDescargaService.svc"
+        soap_action = "http://DescargaMasivaTerceros.sat.gob.mx/ISolicitaDescargaService/SolicitaDescargaFolio"
+        headers = self.get_headers(soap_action, token)
+
+        # Response namespace mapping
+        external_nsmap = {
+            "": "http://DescargaMasivaTerceros.sat.gob.mx",
+            "s": "http://schemas.xmlsoap.org/soap/envelope/",
+            "h": "http://DescargaMasivaTerceros.sat.gob.mx",
+        }
+
+        result_xpath = "s:Body/SolicitaDescargaFolioResponse/SolicitaDescargaFolioResult"
+
+        _logger.info("Requesting CFDI download for UUID: %s", uuid)
+
+        # Execute SOAP request
+        communication = self.check_comm(
+            url, data, headers, result_xpath, external_nsmap
+        )
+        return {
+            "request_id": communication.get("IdSolicitud"),
+            "status_code": communication.get("CodEstatus"),
+            "message": communication.get("Mensaje"),
+        }

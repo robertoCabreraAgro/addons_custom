@@ -20,6 +20,11 @@
                     decoration-danger="request_state in ('4', '5', '6')"
                 />
                 <field name="company_id" />
+                <field name="download_type"
+                    widget="badge"
+                    decoration-info="download_type == 'uuid'"
+                    decoration-muted="download_type == 'massive'"/>
+                <field name="uuid" optional="hide"/>
                 <field name="document_ids" column_invisible="1" />
                 <button
                     name="action_request_cfdi"
@@ -83,20 +88,33 @@
                     </div>
                     <group>
                         <group>
-                            <field name="request_mode" readonly="request_state != '0'" />
-                            <field
-                                name="range_type"
-                                invisible="request_mode != 'playwright'"
+                            <field name="download_type"
                                 readonly="request_state != '0'"
-                                required="request_mode == 'playwright'"
-                            />
-                            <field
-                                name="date_from"
-                                invisible="request_mode != 'api'"
+                                widget="radio"/>
+
+                            <!-- Date fields - only visible for massive download -->
+                            <field name="request_mode"
+                                invisible="download_type != 'massive'"
+                                readonly="request_state != '0'"/>
+                            <field name="range_type"
+                                invisible="download_type != 'massive' or request_mode != 'playwright'"
                                 readonly="request_state != '0'"
-                                required="request_mode == 'api'"
-                            />
-                            <field name="date_to" invisible="request_mode == False" readonly="request_state != '0'" />
+                                required="download_type == 'massive' and request_mode == 'playwright'"/>
+                            <field name="date_from"
+                                invisible="download_type != 'massive' or request_mode != 'api'"
+                                readonly="request_state != '0'"
+                                required="download_type == 'massive' and request_mode == 'api'"/>
+                            <field name="date_to"
+                                invisible="download_type != 'massive'"
+                                readonly="request_state != '0'"
+                                required="download_type == 'massive'"/>
+
+                            <!-- UUID field - only visible for UUID download -->
+                            <field name="uuid"
+                                invisible="download_type != 'uuid'"
+                                readonly="request_state != '0'"
+                                required="download_type == 'uuid'"
+                                placeholder="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"/>
                         </group>
                         <group>
                             <field name="uuid" invisible="1" />
@@ -211,11 +229,21 @@
                     ('request_status_code', '!=', '5008'),
                     ('document_ids', '=', False)]"
                 />
-
+                <!-- filters for download type -->
+                <filter string="Descarga Masiva"
+                        name="massive_download"
+                        domain="[('download_type', '=', 'massive')]"/>
+                <filter string="Por UUID"
+                        name="uuid_download"
+                        domain="[('download_type', '=', 'uuid')]"/>
+                <separator/>
                 <!-- Group -->
                 <group expand="0" string="Group By">
                     <filter string="Date" name="group_by_date_to" context="{'group_by': 'date_to'}" />
                     <filter string="State" name="group_by_state" context="{'group_by': 'request_state'}" />
+                    <filter string="Tipo de Descarga"
+                            name="group_by_download_type"
+                            context="{'group_by': 'download_type'}"/>
                 </group>
             </search>
         </field>

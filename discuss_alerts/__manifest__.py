@@ -12,7 +12,7 @@
         "views/discuss_channel_views.xml",
     ],
     "demo": [
-        "demo/mail_template_data.xml",
+        "demo/mail_template_demo.xml",
     ],
     "installable": True,
 }

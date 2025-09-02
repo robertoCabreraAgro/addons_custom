@@ -5,6 +5,7 @@ import os
 import time
 import zipfile
 from datetime import datetime, timedelta
+from odoo.exceptions import ValidationError
 
 import pytz
 from markupsafe import Markup
@@ -31,11 +32,16 @@ class Session(models.Model):
         default=lambda self: self.env.company,
         readonly=True,
     )
-    uuid = fields.Char("UUID", readonly=True, copy=False)
+    uuid = fields.Char(
+        string="UUID/Folio Fiscal",
+        size=36,
+        help="UUID del CFDI a descargar (formato: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX)",
+        copy=False
+    )
     token = fields.Char(readonly=True, copy=False)
     token_expiration = fields.Datetime(readonly=True, copy=False)
     date_from = fields.Datetime("Date from")
-    date_to = fields.Datetime("Date to", required=True)
+    date_to = fields.Datetime("Date to", required=False)
     request = fields.Char("Request ID", readonly=True, copy=False)
     request_status_code = fields.Char("Request code", readonly=True, copy=False)
     request_state = fields.Selection(
@@ -78,6 +84,16 @@ class Session(models.Model):
             ("month", "By month"),
         ],
     )
+    download_type = fields.Selection(
+        selection=[
+            ('massive', 'Descarga Masiva'),
+            ('uuid', 'Por Folio (UUID)')
+        ],
+        string="Tipo de Descarga",
+        default='massive',
+        required=True,
+        help="Seleccione 'Descarga Masiva' para descargar por rango de fechas o 'Por Folio' para descargar un CFDI específico"
+    )
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -108,9 +124,34 @@ class Session(models.Model):
                 vals["name"] = name
         return super().create(vals_list)
 
-    def action_request_cfdi(self, esignature=None):
-        """Request CFDI download from SAT by a given date range.
+    @api.constrains('download_type', 'uuid', 'date_from', 'date_to')
+    def _check_download_type_requirements(self):
+        """Validate that required fields are filled based on download type."""
+        for record in self:
+            if record.download_type == 'uuid':
+                if not record.uuid:
+                    raise ValidationError(
+                        self.env._("UUID is required when download type is 'Por Folio'")
+                    )
+                if not self._validate_uuid_format(record.uuid):
+                    raise ValidationError(
+                        self.env._("Invalid UUID format. Expected: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX")
+                    )
+            elif record.download_type == 'massive':
+                if not record.date_from or not record.date_to:
+                    raise ValidationError(
+                        self.env._("Date range is required when download type is 'Descarga Masiva'")
+                    )
+                if record.date_from > record.date_to:
+                    raise ValidationError(
+                        self.env._("'Date from' must be before 'Date to'")
+                    )
 
+    def action_request_cfdi(self, esignature=None):
+        """Request CFDI download from SAT based on download_type.
+
+        For 'massive': Downloads CFDIs by date range
+        For 'uuid': Downloads a single CFDI by UUID
         Args:
             esignature (record): Electronic signature record with certificate data
 
@@ -126,52 +167,52 @@ class Session(models.Model):
             or self.company_id.l10n_mx_edi_esignature_ids.get_valid_esignature()
         )
 
+        if not esignature:
+            self.message_post(body=self.env._("No valid electronic signature found"))
+            return
+
         certificate = esignature.get_cert_data()[1]
         private_key = esignature.get_pk_data()[1]
+
+        # Generate/refresh token
         try:
             token_res = mx_edi_document.l10n_mx_ws_generate_token(
                 certificate, private_key
             )
-            self.write(
-                {
-                    "token": token_res["token"],
-                    "token_expiration": datetime.fromisoformat(token_res["expires"]),
-                }
-            )
+            self.write({
+                "token": token_res["token"],
+                "token_expiration": datetime.fromisoformat(token_res["expires"]),
+            })
         except Exception as e:
             self.message_post(body=self.env._("Token generation error: %s") % str(e))
             return
 
-        if self.request_mode:
-            if self.request_mode == "playwright":
-                try:
-                    request_res = (
-                        mx_edi_document.l10n_mx_ws_request_download_playwright(
-                            esignature, self.date_to, self.request_type, self.range_type
-                        )
+        # Route to appropriate service based on download_type
+        try:
+            if self.download_type == 'uuid':
+                # Individual CFDI download by UUID
+                request_res = mx_edi_document.l10n_mx_ws_request_download_by_uuid(
+                    certificate,
+                    private_key,
+                    self.token,
+                    self.uuid
+                )
+
+                # Log specific UUID request in chatter
+                self.message_post(
+                    body=self.env._(
+                        "Individual CFDI download requested for UUID: %s",
+                        self.uuid
                     )
-                    if (
-                        request_res["request_id"]
-                        == "00000000-0000-0000-0000-000000000000"
-                    ):
-                        self.write(
-                            {
-                                "request": request_res["request_id"],
-                                "request_status_code": "5008",
-                                "request_message": request_res["message"],
-                                "request_state": "3",
-                                "request_mode": self.request_mode,
-                                "range_type": self.range_type,
-                            }
-                        )
-                        return
-                    request_mode = self.request_mode
-                    range_type = self.range_type
-                except Exception as e_playwright:
-                    _logger.error("Playwright request failed: %s.", e_playwright)
-                    return
-            else:
-                try:
+                )
+
+            elif self.download_type == 'massive':
+                # Existing massive download logic
+                if self.request_mode == "playwright":
+                    request_res = mx_edi_document.l10n_mx_ws_request_download_playwright(
+                        esignature, self.date_to, self.request_type, self.range_type
+                    )
+                else:
                     request_res = mx_edi_document.l10n_mx_ws_request_download(
                         certificate,
                         private_key,
@@ -181,79 +222,30 @@ class Session(models.Model):
                             "date_to": self.date_to,
                             "cfdi_state": "Vigente",
                             "request_type": self.request_type,
-                        },
-                    )
-                    request_mode = self.request_mode
-                    range_type = False
-                except Exception:
-                    _logger.error("Standard web service request failed.", exc_info=True)
-                    return
-        else:
-            try:
-                # 1. First attempt with Playwright
-                request_res = mx_edi_document.l10n_mx_ws_request_download_playwright(
-                    esignature, self.date_to, self.request_type, "month"
-                )
-                if request_res["request_id"] == "00000000-0000-0000-0000-000000000000":
-                    self.write(
-                        {
-                            "request": request_res["request_id"],
-                            "request_status_code": "5008",
-                            "request_message": request_res["message"],
-                            "request_state": "3",
-                            "request_mode": "playwright",
-                            "range_type": "month",
                         }
                     )
-                    return
-                request_mode = "playwright"
-                range_type = "month"
-
-            except Exception as e_playwright:
-                # 2. Fallback to standard web service
-                _logger.warning(
-                    "Playwright request failed: %s. Falling back to SAT web service.",
-                    e_playwright,
+            else:
+                raise ValidationError(
+                    self.env._("Invalid download type: %s", self.download_type)
                 )
-                try:
-                    request_res = mx_edi_document.l10n_mx_ws_request_download(
-                        certificate,
-                        private_key,
-                        self.token,
-                        {
-                            "date_from": self.date_from,
-                            "date_to": self.date_to,
-                            "cfdi_state": "Vigente",
-                            "request_type": self.request_type,
-                        },
-                    )
-                    request_mode = "api"
-                    range_type = False
-                except Exception as e_ws:
-                    # If both methods fail, post the final error and stop.
-                    _logger.error(
-                        "Standard web service request also failed.", exc_info=True
-                    )
-                    error_message = self.env._(
-                        "Both browser automation and the standard web service failed.\n\n"
-                        "Browser automation error: %s\n\nStandard web service error: %s",
-                        str(e_playwright),
-                        str(e_ws),
-                    )
-                    self.message_post(body=error_message)
-                    self.write({"request_state": "4"})  # Set state to Error
-                    return
 
-        self.write(
-            {
+            # Update session with response
+            self.write({
                 "request": request_res["request_id"],
                 "request_status_code": request_res["status_code"],
                 "request_message": request_res["message"],
                 "request_state": "1" if request_res["status_code"] == "5000" else "0",
-                "request_mode": request_mode,
-                "range_type": range_type,
-            }
-        )
+            })
+
+        except Exception as e:
+            error_message = self.env._(
+                "Request failed for download type '%s': %s",
+                self.download_type,
+                str(e)
+            )
+            self.message_post(body=error_message)
+            self.write({"request_state": "4"})
+            _logger.error(error_message, exc_info=True)
 
     def action_verify_cfdi(self, esignature=None, max_retries=2, waiting_sec=0):
         self.ensure_one()
@@ -516,6 +508,13 @@ class Session(models.Model):
                 _logger.warning(error_message)
 
     @api.model
+    def _validate_uuid_format(self, uuid):
+        """Validate UUID format using regex."""
+        import re
+        pattern = r'^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$'
+        return bool(re.match(pattern, uuid.upper() if uuid else ''))
+
+    @api.model
     def _generate_time_blocks(self, company_id):
         """Creates a single download session spanning from the beginning of the
         current month to the end of yesterday.
@@ -578,6 +577,7 @@ class Session(models.Model):
                     "company_id": company_id,
                     "date_from": date_from_utc,
                     "date_to": date_to_utc,
+                    "download_type": "massive",  # Always massive for automatic sessions
                 }
             )
             _logger.info(
@@ -620,7 +620,7 @@ class Session(models.Model):
                 ("request_state", "in", ["1", "2"]),
                 ("count_verify", "<=", max_verify_allowed),
             ],
-            order="date_from asc",
+            order="date_from asc, id asc"
         )
 
     @api.model
