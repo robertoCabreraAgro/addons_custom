@@ -85,17 +85,17 @@ class PosLineReport(models.Model):
     def init(self):
         table = AsIs(self._table)
         query = AsIs(self._query())
-        self._cr.execute(f"DROP MATERIALIZED view IF EXISTS {table} CASCADE")
-        if self._context.get("with_data"):
+        self.env.cr.execute(f"DROP MATERIALIZED view IF EXISTS {table} CASCADE")
+        if self.env.context.get("with_data"):
             # When calling with that context it will create the view and populate it
-            self._cr.execute(f"CREATE MATERIALIZED VIEW {table} AS ({query})")
+            self.env.cr.execute(f"CREATE MATERIALIZED VIEW {table} AS ({query})")
         else:
             # To avoid long time to update the module we create the view without data
             # and later be populated by the cron that executes the method refresh()
-            self._cr.execute(
+            self.env.cr.execute(
                 f"CREATE MATERIALIZED VIEW {table} AS ({query}) WITH NO DATA"
             )
-        self._cr.execute(f"CREATE UNIQUE INDEX id_{table} ON {table} (line_id)")
+        self.env.cr.execute(f"CREATE UNIQUE INDEX id_{table} ON {table} (line_id)")
 
     # ------------------------------------------------------------
     # SQL

@@ -6,9 +6,12 @@
         <field name="arch" type="xml">
             <search string="Sale Agreements Search">
                 <field name="partner_id" />
+                <field name="agreement_type" />
+                <separator />
                 <filter name="inactive" string="Archived" domain="[('active', '=', False)]" />
-                <group expand="0" string="Group By...">
-                    <filter name="agreement_type" string="Type" domain="[]" context="{'group_by': 'agreement_type'}" />
+                <separator />
+                <group>
+                    <filter name="group_by_agreement_type" string="Type" context="{'group_by': 'agreement_type'}" />
                 </group>
             </search>
         </field>

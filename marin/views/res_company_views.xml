@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <record id="view_res_company_search" model="ir.ui.view">
+        <field name="name">res.company.search</field>
         <field name="model">res.company</field>
         <field name="arch" type="xml">
             <search>
@@ -19,7 +20,7 @@
                 <separator />
                 <filter name="inactive" string="Archived" domain="[('active', '=', False)]" />
                 <separator />
-                <group name="group_by" expand="0" string="Group By">
+                <group name="group_by">
                     <filter name="group_country" string="Country" context="{'group_by': 'country_id'}" />
                 </group>
             </search>

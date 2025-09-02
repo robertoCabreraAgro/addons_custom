@@ -68,7 +68,8 @@
                         ('date_start', '>=', (context_today() - relativedelta(days=7)).strftime('%Y-%m-%d'))
                     ]"
                 />
-                <group expand="0" string="Agrupar por">
+                <separator />
+                <group>
                     <filter name="group_by_user" string="Usuario" context="{'group_by': 'username'}" />
                     <filter name="group_by_vehicle" string="Vehículo"
                         context="{'group_by': 'vehiculo'}" />

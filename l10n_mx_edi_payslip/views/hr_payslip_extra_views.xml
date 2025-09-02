@@ -97,7 +97,7 @@
                     help="Done Payslip Extras"
                 />
                 <filter string="Date" name="date_filter" date="date" default_period="month-1" />
-                <group expand="0" string="Group By">
+                <group>
                     <filter string="Status" name="state" context="{'group_by': 'state'}" />
                     <filter
                         string="Company"

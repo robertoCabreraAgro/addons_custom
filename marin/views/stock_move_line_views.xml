@@ -23,7 +23,7 @@
                 <attribute name="string">Lot/SN</attribute>
                 <attribute name="options">{"no_create": True}</attribute>
             </xpath>
-            <xpath expr="//field[@name='result_package_id'][2]" position="attributes">
+            <xpath expr="//field[@name='result_package_id']" position="attributes">
                 <attribute name="optional">hide</attribute>
             </xpath>
             <xpath expr="//field[@name='owner_id']" position="attributes">

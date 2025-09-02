@@ -213,7 +213,8 @@
                 />
 
                 <!-- Group -->
-                <group expand="0" string="Group By">
+                <separator />
+                <group>
                     <filter string="Date" name="group_by_date_to" context="{'group_by': 'date_to'}" />
                     <filter string="State" name="group_by_state" context="{'group_by': 'request_state'}" />
                 </group>

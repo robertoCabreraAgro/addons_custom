@@ -2,7 +2,7 @@
 
 {
     "name": "Work Teams",
-    "version": "saas~18.4.0.0.1",
+    "version": "1.1",
     "category": "Sales/Sales",
     "summary": "Work Teams",
     "description": """

@@ -23,7 +23,7 @@
                 />
                 <filter domain="[('payment_state', '=', 'paid')]" name="paid_invoices" help="Paid Invoices" />
                 <filter domain="[('parent_state', '=', 'cancel')]" name="cancel_invoices" help="Cancelled Invoices" />
-                <group expand="0" string="Group By">
+                <group>
                     <filter name="group_by_move_type" string="Invoice Type" context="{'group_by':'move_type'}" />
                     <filter name="group_by_move_state" string="Invoice State" context="{'group_by':'parent_state'}" />
                     <filter

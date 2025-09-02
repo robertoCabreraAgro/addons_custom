@@ -1,6 +1,6 @@
 {
     "name": "Product manufacturer",
-    "version": "saas~18.4.0.0.1",
+    "version": "1.1",
     "summary": "Adds manufacturers and attributes on the product view.",
     "website": "https://github.com/OCA/product-attribute",
     "author": "Odoo Community Association (OCA)",

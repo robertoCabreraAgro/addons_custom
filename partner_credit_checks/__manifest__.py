@@ -1,6 +1,6 @@
 {
     "name": "Partner Credit Checks",
-    "version": "saas~18.4.0.0.1",
+    "version": "1.1",
     "depends": ["base", "account", "sale", "documents"],
     "author": "Agro Marin",
     "category": "Finance",

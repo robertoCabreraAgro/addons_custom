@@ -7,10 +7,11 @@
             <search string="Sale Lines Search">
                 <field name="partner_id" />
                 <field name="product_id" />
-                <group expand="0" string="Group By...">
-                    <filter name="agreement" string="Agreement" domain="[]" context="{'group_by': 'agreement_id'}" />
-                    <filter name="document" string="Document" domain="[]" context="{'group_by': 'report_id'}" />
-                    <filter name="partner" string="Customer" domain="[]" context="{'group_by': 'partner_id'}" />
+                <separator />
+                <group>
+                    <filter name="group_by_agreement" string="Agreement" context="{'group_by': 'agreement_id'}" />
+                    <filter name="group_by_document" string="Document" context="{'group_by': 'report_id'}" />
+                    <filter name="group_by_partner" string="Customer" context="{'group_by': 'partner_id'}" />
                 </group>
             </search>
         </field>

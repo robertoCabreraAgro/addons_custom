@@ -27,7 +27,7 @@
                 <filter string="Business Pillar" name="business_pillar" domain="[('strategic_segment', '=', 'business_pillar')]"/>
                 <filter string="Seasonal Niche" name="seasonal_niche" domain="[('strategic_segment', '=', 'seasonal_niche')]"/>
                 <filter string="Marginal Product" name="marginal_product" domain="[('strategic_segment', '=', 'marginal_product')]"/>
-                <group expand="1" string="Group By">
+                <group>
                     <filter
                         string="Warehouse"
                         name="group_by_warehouse"

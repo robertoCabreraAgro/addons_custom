@@ -1,7 +1,7 @@
 {
     "name": "Stock Lot Rules",
     "summary": "Configure lot nomenclature rules with automatic date calculation",
-    "version": "saas~18.4.0.0.1",
+    "version": "1.1",
     "category": "Inventory",
     "website": "https://www.agromarin.mx",
     "author": "Agro Marin",

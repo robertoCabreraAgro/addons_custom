@@ -84,8 +84,9 @@
         <field name="arch" type="xml">
             <search string="Sale Agreements Search">
                 <field name="name" string="Document" filter_domain="[('name', 'ilike', self)]" />
-                <group expand="0" string="Group By">
-                    <filter string="Date" name="order_month" domain="[]" context="{'group_by': 'date'}" />
+                <separator />
+                <group>
+                    <filter string="Date" name="group_by_order_month" context="{'group_by': 'date'}" />
                 </group>
             </search>
         </field>

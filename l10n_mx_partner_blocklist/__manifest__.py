@@ -8,7 +8,7 @@
     "sell to block partners",
     "license": "LGPL-3",
     "category": "Hidden",
-    "version": "saas~18.4.0.0.1",
+    "version": "1.1",
     "depends": [
         "l10n_mx_edi",
         "contacts",

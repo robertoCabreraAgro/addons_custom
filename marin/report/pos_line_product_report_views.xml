@@ -77,7 +77,7 @@
                 <field name="config_id" />
                 <field name="product_id" />
                 <field name="product_category_id" />
-                <group expand="0" string="Group By">
+                <group>
                     <filter name="group_by_config_id" string="Terminal" context="{'group_by':'config_id'}" />
                     <filter name="group_by_product" string="Product" context="{'group_by':'product_id'}" />
                     <filter

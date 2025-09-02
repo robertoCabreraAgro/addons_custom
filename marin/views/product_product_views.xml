@@ -30,9 +30,6 @@
             <xpath expr="//field[@name='qty_available']" position="attributes">
                 <attribute name="optional">hidden</attribute>
             </xpath>
-            <xpath expr="//button[@name='%(stock.action_view_inventory_tree)d']" position="attributes">
-                <attribute name="invisible">True</attribute>
-            </xpath>
         </field>
     </record>
 </odoo>

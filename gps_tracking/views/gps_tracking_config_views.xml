@@ -86,7 +86,7 @@
                 <filter string="Reports Fuel Percentage" name="fuel_percentage" domain="[('reports_fuel_percentage', '=', True)]"/>
                 <filter string="Reports Fuel Volume" name="fuel_volume" domain="[('reports_fuel_volume', '=', True)]"/>
                 <separator/>
-                <group expand="0" string="Group By">
+                <group>
                     <filter string="Fuel Reporting" name="group_fuel_reporting" 
                             context="{'group_by': 'reports_fuel_percentage'}"/>
                 </group>

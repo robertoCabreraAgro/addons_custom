@@ -251,10 +251,10 @@ class StockNeed(models.Model):
         table = AsIs(self._table)
         query = AsIs(self._query())
         self.create_function_convert_uom()
-        self._cr.execute("DROP MATERIALIZED view IF EXISTS %s CASCADE", (table,))
-        if self._context.get("with_data"):
+        self.env.cr.execute("DROP MATERIALIZED view IF EXISTS %s CASCADE", (table,))
+        if self.env.context.get("with_data"):
             # When calling with that context it will create the view and populate it
-            self._cr.execute(
+            self.env.cr.execute(
                 "CREATE MATERIALIZED VIEW %s AS (%s)",
                 (
                     table,
@@ -264,17 +264,17 @@ class StockNeed(models.Model):
         else:
             # To avoid long time to update the module we create the view without data
             # and later be populated by the cron that executes the method refresh()
-            self._cr.execute(
+            self.env.cr.execute(
                 "CREATE MATERIALIZED VIEW %s AS (%s) WITH NO DATA",
                 (
                     table,
                     query,
                 ),
             )
-        self._cr.execute("CREATE UNIQUE INDEX id_%s ON %s(product_id)", (table, table))
+        self.env.cr.execute("CREATE UNIQUE INDEX id_%s ON %s(product_id)", (table, table))
 
     def create_function_convert_uom(self):
-        self._cr.execute(
+        self.env.cr.execute(
             """
             CREATE OR REPLACE FUNCTION convert_uom(
                 prod int, qty float, from_uom_id int, to_uom_id int)

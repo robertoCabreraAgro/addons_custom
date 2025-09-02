@@ -56,7 +56,7 @@
                 <separator/>
                 <filter string="Active" name="active" domain="[('active', '=', True)]"/>
                 <filter string="Inactive" name="inactive" domain="[('active', '=', False)]"/>
-                <group expand="0" string="Group By">
+                <group>
                     <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}"/>
                 </group>
             </search>

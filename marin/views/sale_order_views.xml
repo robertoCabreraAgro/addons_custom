@@ -48,7 +48,7 @@
                     domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]" />
                 <filter name="activities_upcoming_all" string="Future Activities"
                     domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]" />
-                <group string="Group By" expand="0">
+                <group>
                     <filter name="commercial_partner_groupby" string="Customer Entity"
                         domain="[]"
                         context="{'group_by': 'commercial_partner_id'}" />

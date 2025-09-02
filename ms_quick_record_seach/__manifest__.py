@@ -1,6 +1,6 @@
 {
     "name": "Command Palette Record Search",
-    "version": "saas~18.4.0.0.1",
+    "version": "1.1",
     "summary": "Search Odoo records from the command palette",
     "author": "Mohammed Shahil",
     "website": "http://www.shahil.info",

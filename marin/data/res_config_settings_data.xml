@@ -43,12 +43,9 @@
         <field name="documents_hr_settings" eval="True" />
         <field name="documents_product_settings" eval="True" />
         <field name="documents_recruitment_settings" eval="True" />
-<!--         <field name="documents_l10n_mx_edi_folder_settings" eval="True" />
- -->        <field name="documents_account_settings" eval="True" />
         <field name="recruitment_extract_show_ocr_option_selection">manual_send</field>
         <field name="expense_extract_show_ocr_option_selection">manual_send</field>
         <field name="default_picking_policy">one</field>
-        <field name="stock_move_sms_validation" eval="False" />
         <field name="display_invoice_amount_total_words" eval="True" />
         <field name="use_invoice_terms" eval="True" />
         <field name="account_use_credit_limit" eval="True" />
@@ -59,9 +56,9 @@
         <field name="totals_below_sections" eval="True" />
         <field name="update_stock_quantities">real</field>
         <field name="portal_confirmation_sign" eval="False" />
-        <field name="allow_out_of_stock_order" eval="False" />
-        <field name="show_availability" eval="True" />
-        <field name="available_threshold" eval="12.0" />
+        <field name="default_allow_out_of_stock_order" eval="False" />
+        <field name="default_show_availability" eval="True" />
+        <field name="default_available_threshold" eval="12.0" />
         <field name="website_sale_prevent_zero_price_sale" eval="True" />
         <field name="auth_signup_reset_password" eval="False" />
         <field name="auth_signup_uninvited">b2b</field>

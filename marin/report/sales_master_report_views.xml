@@ -36,7 +36,7 @@
                     domain="[('payment_state', '=', 'not_paid')]" />
                 <filter name="partial" string="Partial"
                     domain="[('payment_state', '=', 'partial')]" />
-                <group expand="0" string="Group by">
+                <group>
                     <filter string="Company" name="group_company"
                         context="{'group_by': 'company_id'}" />
                     <filter string="Product" name="group_product"

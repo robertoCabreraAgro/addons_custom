@@ -1,6 +1,6 @@
 {
     "name": "GPS Tracking",
-    "version": "saas~18.4.0.0.1",
+    "version": "1.1",
     "category": "Fleet Management",
     "summary": "Module to track GPS coordinates and display them on a map",
     "author": "Raúl Alejandro Rodríguez López",

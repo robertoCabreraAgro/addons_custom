@@ -55,9 +55,10 @@
         <field name="model">res.partner.blacklist</field>
         <field name="arch" type="xml">
             <search string="Partner Blacklist">
-                <group expand="0" string="Extended Filters...">
-                    <field name="vat" />
-                    <field name="taxpayer_name" />
+                <field name="vat" />
+                <field name="taxpayer_name" />
+                <separator />
+                <group>
                 </group>
             </search>
         </field>

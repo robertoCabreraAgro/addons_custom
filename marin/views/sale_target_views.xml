@@ -110,7 +110,7 @@
                     domain="[('date_from', '&lt;=', context_today()), ('date_to', '&gt;=', context_today())]"
                 />
                 <separator />
-                <group expand="0" string="Group By">
+                <group>
                     <filter string="Customer" name="group_partner" context="{'group_by': 'partner_id'}" />
                     <filter string="Salesperson" name="group_user" context="{'group_by': 'user_id'}" />
                     <filter string="Season" name="group_season" context="{'group_by': 'season_id'}" />

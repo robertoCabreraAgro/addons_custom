@@ -66,7 +66,7 @@
             <search string="Disciplinary Warning">
                 <field name="employee_id" />
                 <field name="name" />
-                <group expand="0" string="Group By">
+                <group>
                     <filter string="Employee" name="employee" context="{'group_by': 'employee_id'}" />
                     <filter
                         string="Company"

@@ -39,8 +39,6 @@ access_stock_lot_readonly,stock.lot.readonly,stock.model_stock_lot,group_stock_r
 access_stock_move_readonly,stock.move.readonly,stock.model_stock_move,group_stock_readonly,1,0,0,0
 access_stock_move_line_readonly,stock.move.line.readonly,stock.model_stock_move_line,group_stock_readonly,1,0,0,0
 access_stock_quant_readonly,stock.quant.readonly,stock.model_stock_quant,group_stock_readonly,1,0,0,0
-access_stock_quant_package_readonly,stock.quant.package.readonly,stock.model_stock_quant_package,group_stock_readonly,1,0,0,0
-access_stock_package_level_readonly,stock.package.level.readonly,stock.model_stock_package_level,group_stock_readonly,1,0,0,0
 access_stock_rule_readonly,stock.rule.readonly,stock.model_stock_rule,group_stock_readonly,1,0,0,0
 access_stock_route_readonly,stock.route.readonly,stock.model_stock_route,group_stock_readonly,1,0,0,0
 access_stock_putaway_rule_readonly,stock.putaway.rule.readonly,stock.model_stock_putaway_rule,group_stock_readonly,1,0,0,0
@@ -89,7 +87,6 @@ access_product_pricelist_item_readonly,product.pricelist.item.readonly,product.m
 access_product_tag_readonly,product.tag.readonly,product.model_product_tag,group_stock_readonly,1,0,0,0
 access_res_partner_readonly,res.partner.readonly,base.model_res_partner,group_stock_readonly,1,0,0,0
 access_res_partner_restricted,res.partner.restricted,base.model_res_partner,group_partner_restricted,1,1,1,0
-access_quality_check_readonly,quality.check.readonly,quality.model_quality_check,group_stock_readonly,1,0,0,0
 sale_stock.access_stock_picking_salesman,stock.picking salesman,stock.model_stock_picking,sales_team.group_sale_salesman,1,0,0,0
 sale_stock.access_stock_move_salesman,stock_move salesman,stock.model_stock_move,sales_team.group_sale_salesman,1,0,0,0
 access_res_partner_profile_user,res.partner.profile.user,marin.model_res_partner_profile,sales_team.group_sale_salesman,1,0,0,0

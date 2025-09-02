@@ -79,7 +79,6 @@ class SyngentaCommercialAgreement(models.Model):
         "syngenta.sale.report.line",
         "agreement_id",
         "Sale Lines",
-        auto_join=True,
         copy=True,
     )
     count_line = fields.Integer(compute="_compute_count_line")

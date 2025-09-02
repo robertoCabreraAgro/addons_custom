@@ -19,9 +19,10 @@
                     string="Product"
                     filter_domain="[('report_line_ids.product_id', 'ilike', self)]"
                 />
-                <group expand="0" string="Group By">
-                    <filter name="customer" string="Customer" domain="[]" context="{'group_by': 'partner_id'}" />
-                    <filter name="order_month" string="Date" domain="[]" context="{'group_by': 'date'}" />
+                <separator />
+                <group>
+                    <filter name="group_by_customer" string="Customer" context="{'group_by': 'partner_id'}" />
+                    <filter name="group_by_order_month" string="Date" context="{'group_by': 'date'}" />
                 </group>
             </search>
         </field>

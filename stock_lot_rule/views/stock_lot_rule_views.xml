@@ -117,7 +117,8 @@
                 <filter name="yy_format" string="2-digit Year" domain="[('format_pattern', 'ilike', '%%(yy)s')]"/>
                 <filter name="yyyy_format" string="4-digit Year" domain="[('format_pattern', 'ilike', '%%(yyyy)s')]"/>
                 <filter name="with_day" string="With Day" domain="[('format_pattern', 'ilike', '%%(dd)s')]"/>
-                <group expand="0" string="Group By">
+                <separator />
+                <group>
                     <filter name="group_by_active" string="Active" context="{'group_by': 'active'}"/>
                 </group>
             </search>

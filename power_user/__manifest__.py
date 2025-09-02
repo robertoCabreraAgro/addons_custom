@@ -6,7 +6,7 @@
     "category": "Productivity/Productivity",
     "author": "Luis Marin",
     "website": "https://github.com/YvanDotet/query_deluxe/",
-    "version": "saas~18.4.0.0.1",
+    "version": "1.1",
     "depends": [
         "base",
         "mail",

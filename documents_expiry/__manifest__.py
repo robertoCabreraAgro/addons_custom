@@ -4,7 +4,7 @@
     "author": "Luis Marin",
     "website": "https://agromarin.mx",
     "category": "Productivity/Documents",
-    "version": "saas~18.4.0.0.1",
+    "version": "1.1",
     "depends": ["documents"],
     "data": [
         "data/data.xml",

@@ -59,9 +59,9 @@
         <field name="profile_id" string="Profile" />
         <separator />
         <filter string="Classification not in sync with computed" name="has_flag" domain="[('level_mismatch','=',True)]" />
-        <group expand="1" string="Group By">
-          <filter string="Level" name="group_by_level" domain="[]" context="{'group_by': 'level_id'}" />
-          <filter string="Profile" name="group_by_profile" domain="[]" context="{'group_by': 'profile_id'}" />
+        <group>
+          <filter string="Level" name="group_by_level" context="{'group_by': 'level_id'}" />
+          <filter string="Profile" name="group_by_profile" context="{'group_by': 'profile_id'}" />
         </group>
       </search>
     </field>

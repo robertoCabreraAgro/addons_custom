@@ -97,7 +97,7 @@
                 </separator>
 
                 <!-- Agrupaciones -->
-                <group expand="0" string="Group By">
+                <group>
                     <filter string="Vehicle" name="group_vehicle"
                         context="{'group_by': 'vehicle_id'}" />
                     <filter string="Device" name="group_device" context="{'group_by': 'device_id'}" />

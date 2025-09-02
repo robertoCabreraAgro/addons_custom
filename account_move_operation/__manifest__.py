@@ -1,6 +1,6 @@
 {
     "name": "Account Move Operations",
-    "version": "saas~18.4.0.0.1",
+    "version": "1.1",
     "category": "Accounting",
     "summary": "Templates for recurring accounting operations",
     "author": "Vauxoo",

@@ -7,7 +7,7 @@
     "website": "https://www.vauxoo.com",
     "license": "OPL-1",
     "category": "Installer",
-    "version": "saas~18.4.0.0.1",
+    "version": "1.1",
     "depends": [
         "product_manufacturer",
     ],

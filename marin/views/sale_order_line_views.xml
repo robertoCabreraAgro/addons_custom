@@ -23,7 +23,7 @@
                 <separator />
                 <filter name="date_order" string="Order Date"
                     date="date_order" />
-                <group expand="0" string="Group By">
+                <group>
                     <filter name="group_by_order_id" string="Order"
                         domain="[]"
                         context="{'group_by': 'order_id'}" />

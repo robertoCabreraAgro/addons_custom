@@ -78,7 +78,7 @@
             <xpath expr="//field[@name='owner_id']" position="attributes">
                 <attribute name="readonly">state != 'draft'</attribute>
             </xpath>
-            <xpath expr="//page[@name='operations']/field[@name='move_ids_without_package']/list/field[@name='product_id']" position="attributes">
+            <xpath expr="//page[@name='operations']/field[@name='move_ids']/list/field[@name='product_id']" position="attributes">
                 <attribute name="options">{"no_create": True}</attribute>
                 <attribute name="domain">[('id', 'in', (parent.suitable_product_ids))]</attribute>
             </xpath>
@@ -115,13 +115,13 @@
                     <span>%</span>
                 </div>
             </xpath>
-            <xpath expr="//page[@name='operations']/field[@name='move_ids_without_package']/list/field[@name='lot_ids']" position="attributes">
+            <xpath expr="//page[@name='operations']/field[@name='move_ids']/list/field[@name='lot_ids']" position="attributes">
                 <attribute name="readonly">1</attribute>
-            <xpath expr="//page[@name='operations']/field[@name='move_ids_without_package']/list/field[@name='quantity']" position="replace">
+            </xpath>
+            <xpath expr="//page[@name='operations']/field[@name='move_ids']/list/field[@name='quantity']" position="replace">
                 <field name="quantity" string="Quantity" readonly="1"
                     column_invisible="parent.state=='draft'"
                     decoration-danger="product_uom_qty and quantity > product_uom_qty and parent.state not in ['done', 'cancel']"/>
-            </xpath>
             </xpath>
         </field>
     </record>

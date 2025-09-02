@@ -46,7 +46,7 @@
                 <field name="manufacture_date"/>
                 <field name="ref"/>
             </xpath>
-            <xpath expr="//group[@expand='0']" position="inside">
+            <xpath expr="//search//group" position="inside">
                 <filter name="group_by_lot_rule" string="Lot Rule" context="{'group_by': 'lot_rule_id'}"/>
                 <filter name="group_by_manufacture_date" string="Manufacturing Date" context="{'group_by': 'manufacture_date'}"/>
             </xpath>

@@ -1,6 +1,6 @@
 {
     "name": "Telegram Bot",
-    "version": "saas~18.4.0.0.1",
+    "version": "1.1",
     "category": "Technical",
     "summary": "Module to use telegram bot for Odoo processes.",
     "license": "OPL-1",

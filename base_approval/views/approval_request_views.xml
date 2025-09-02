@@ -22,7 +22,7 @@
                 <separator />
                 <filter name="filter_canceled_requests" string="Canceled"
                     domain="[('state', '=', 'cancel')]" />
-                <group string="Group By">
+                <group>
                     <filter name="groupby_request_owner" string="Request Owner"
                         context="{'group_by': 'request_owner_id'}" />
                     <filter name="groupby_category_id" string="Category"

@@ -196,12 +196,12 @@ class GeoField(fields.Field):
                 self.string,
             )
             if self.gist_index:
-                create_geo_index(model._cr, self.name, model._table)
+                create_geo_index(model.env.cr, self.name, model._table)
             return
 
         if column["udt_name"] == self.column_type[0]:
             if self.gist_index:
-                create_geo_index(model._cr, self.name, model._table)
+                create_geo_index(model.env.cr, self.name, model._table)
             return
 
         self.update_geo_db_column(model)

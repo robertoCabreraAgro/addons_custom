@@ -1,6 +1,6 @@
 {
     "name": "Mexico - Multiple Fiscal Regimes",
-    "version": "saas~18.4.0.0.1",
+    "version": "1.1",
     "category": "Accounting/Localizations",
     "summary": "Allow multiple fiscal regimes per partner in Mexican localization",
     "description": """

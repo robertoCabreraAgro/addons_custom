@@ -1,6 +1,6 @@
 {
     "name": "CFDI file management",
-    "version": "saas~18.4.0.0.1",
+    "version": "1.1",
     "summary": """Download CFDI files from SAT
         portal for its further processing and management.""",
     "category": "Localization/Mexico",

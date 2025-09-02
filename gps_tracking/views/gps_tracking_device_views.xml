@@ -15,7 +15,8 @@
                 <filter string="Sin Ubicación" name="without_location" domain="[('location', '=', False)]"/>
                 <filter string="Con Configuración" name="with_config" domain="[('config_id', '!=', False)]"/>
                 <filter string="Sin Configuración" name="without_config" domain="[('config_id', '=', False)]"/>
-                <group expand="0" string="Agrupar por">
+                <separator />
+                <group>
                     <filter string="Configuración GPS" name="group_by_config" context="{'group_by': 'config_id'}"/>
                     <filter string="Ubicación" name="group_by_location" context="{'group_by': 'location'}"/>
                     <filter string="Modelo de Vehículo" name="group_by_model" context="{'group_by': 'model_id'}"/>
