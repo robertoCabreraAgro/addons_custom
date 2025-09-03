@@ -9,9 +9,6 @@ from odoo.http import request
 _logger = logging.getLogger(__name__)
 
 
-# Removed log_webhook_activity decorator - logging is now handled directly in webhook method
-
-
 class GPSWebhook(http.Controller):
     """
     Controller for handling GPS tracking webhooks
@@ -64,9 +61,6 @@ class GPSWebhook(http.Controller):
         "953": "isf_check_engine_indicator",
     }
 
-    # Special field handlers
-    SPECIAL_FIELDS = {"latitude_longitude", "timestamp", "odometer"}
-
     # Validation constraints
     MIN_TIMESTAMP = 946684800000  # Jan 1, 2000 in milliseconds
     MAX_TIMESTAMP = 2147483647000  # Jan 19, 2038 in milliseconds
@@ -74,8 +68,6 @@ class GPSWebhook(http.Controller):
     MAX_LATITUDE = 90.0
     MIN_LONGITUDE = -180.0
     MAX_LONGITUDE = 180.0
-
-    # Data quality constraints for Teltonika devices
     MIN_SATELLITES_FOR_ACCURACY = 4  # Minimum satellites for good GPS accuracy
     MAX_REASONABLE_SPEED = 300  # Maximum reasonable speed in km/h for ground vehicles
     MIN_COORDINATE_PRECISION = 5  # Minimum decimal places for coordinates
@@ -141,7 +133,7 @@ class GPSWebhook(http.Controller):
                 return self.RESPONSE_FAILURE
 
             # Get device IMEI
-            # TODO - Support alternative identifiers if needed for example not Teltonika devices
+            # TODO - Support alternative identifiers for example not Teltonika devices
             imei = payload.get("14")
             if not imei:
                 _logger.warning("No IMEI found in payload from %s", remote_addr)
@@ -161,33 +153,20 @@ class GPSWebhook(http.Controller):
 
             # === DATA QUALITY VALIDATION ===
 
-            processing_stats["validation_start"] = datetime.now()
-
             # 1. Basic GPS quality validation (including speed validation)
             is_quality_valid, quality_error = self._validate_gps_quality(
                 vals, device.id
             )
             if not is_quality_valid:
                 processing_stats["quality_checks_failed"] += 1
-                _logger.warning(
-                    "GPS quality validation failed for device %s from %s: %s",
-                    imei,
+                self._log_webhook_failure(
+                    start_time,
                     remote_addr,
-                    quality_error,
+                    imei,
+                    f"Quality validation failed: {quality_error}",
+                    processing_stats,
                 )
-                # For non-critical quality issues, log but don't reject
-                if (
-                    "satellites" not in quality_error.lower()
-                    and "precision" not in quality_error.lower()
-                ):
-                    self._log_webhook_failure(
-                        start_time,
-                        remote_addr,
-                        imei,
-                        f"Quality validation failed: {quality_error}",
-                        processing_stats,
-                    )
-                    return self.RESPONSE_FAILURE
+                return self.RESPONSE_FAILURE
             else:
                 processing_stats["quality_checks_passed"] += 1
 
@@ -407,41 +386,41 @@ class GPSWebhook(http.Controller):
             return None
 
     def _process_field_value(
-        self, vals: Dict[str, Any], field_name: str, value: Any
+        self, tracking_point_vals: Dict[str, Any], field_name: str, value: Any
     ) -> None:
         """
         Process individual field value based on field type
 
         Args:
+            vals: Dictionary to store processed values
             field_name: Model field name
             value: Raw value from GPS data
-            vals: Dictionary to store processed values
         """
         try:
             if field_name == "latitude_longitude":
-                lat, lng = self._parse_latlong_coordinates(value)
+                lat, lng = self._process_latlong_coordinates(value)
                 if lat is not None and lng is not None:
-                    vals["latitude"] = lat
-                    vals["longitude"] = lng
+                    tracking_point_vals["latitude"] = lat
+                    tracking_point_vals["longitude"] = lng
 
             elif field_name == "timestamp":
                 processed_ts = self._process_timestamp(value)
                 if processed_ts:
-                    vals[field_name] = processed_ts
+                    tracking_point_vals[field_name] = processed_ts
 
             elif field_name == "odometer":
                 processed_odo = self._process_odometer(value)
                 if processed_odo is not None:
-                    vals[field_name] = processed_odo
+                    tracking_point_vals[field_name] = processed_odo
 
             elif field_name == "engine_temperature":
-                processed_odo = self._process_engine_temperature(value)
-                if processed_odo is not None:
-                    vals[field_name] = processed_odo
+                processed_et = self._process_engine_temperature(value)
+                if processed_et is not None:
+                    tracking_point_vals[field_name] = processed_et
 
             else:
                 # Store value directly for other fields
-                vals[field_name] = value
+                tracking_point_vals[field_name] = value
 
         except Exception as e:
             _logger.warning(
@@ -461,25 +440,23 @@ class GPSWebhook(http.Controller):
         Returns:
             Dictionary of field values for tracking point
         """
-        vals = {"device_id": device_id}
-
-        # Get available fields from the model
+        tracking_point_vals = {"device_id": device_id}
         tracking_point_model = request.env["gps.tracking.point"].sudo()
         available_fields = set(tracking_point_model._fields.keys())
 
         # Process each mapped field
-        for gps_field, model_field in self.FIELD_MAPPING.items():
-            if gps_field not in payload:
+        for iot_field, model_field in self.FIELD_MAPPING.items():
+            if iot_field not in payload:
                 continue
 
             if model_field not in available_fields:
                 continue
 
-            value = payload[gps_field]
+            value = payload[iot_field]
             if value is not None:
-                self._process_field_value(vals, model_field, value)
+                self._process_field_value(tracking_point_vals, model_field, value)
 
-        return vals
+        return tracking_point_vals
 
     # ------------------------------------------------------------
     # DATABASE OPERATIONS
@@ -538,7 +515,7 @@ class GPSWebhook(http.Controller):
     # DATA PROCESING METHODS
     # ------------------------------------------------------------
 
-    def _parse_latlong_coordinates(
+    def _process_latlong_coordinates(
         self, latlng_str: str
     ) -> Tuple[Optional[float], Optional[float]]:
         """
@@ -665,7 +642,7 @@ class GPSWebhook(http.Controller):
         #     return False, error
 
         # 3. Validate speed parameters (includes speed change validation if device_id provided)
-        is_valid, error = self._validate_speed_parameters(vals, device_id)
+        is_valid, error = self._validate_speed_parameters(device_id, vals)
         # if not is_valid:
         #     return False, error
 
@@ -717,9 +694,12 @@ class GPSWebhook(http.Controller):
         if lat is None or lng is None:
             return True, "No coordinates to validate"
 
+        lat_str = str(lat)
+        lng_str = str(lng)
+
         # Check if coordinates have sufficient precision
-        lat_precision = len(str(lat).split(".")[-1]) if "." in str(lat) else 0
-        lng_precision = len(str(lng).split(".")[-1]) if "." in str(lng) else 0
+        lat_precision = len(lat_str.split(".")[-1]) if "." in lat_str else 0
+        lng_precision = len(lng_str.split(".")[-1]) if "." in lng_str else 0
 
         if (
             lat_precision < self.MIN_COORDINATE_PRECISION
@@ -733,15 +713,6 @@ class GPSWebhook(http.Controller):
         # Check for obviously invalid coordinates (0,0 or repeated patterns)
         if lat == 0.0 and lng == 0.0:
             return False, "Invalid coordinates: (0,0) - GPS not acquired"
-
-        # Check for repeated coordinate patterns that indicate GPS issues
-        lat_str = str(lat)
-        lng_str = str(lng)
-        if (
-            len(set(lat_str.replace(".", "").replace("-", ""))) <= 2
-            or len(set(lng_str.replace(".", "").replace("-", ""))) <= 2
-        ):
-            return False, f"Suspicious coordinate pattern: lat={lat}, lng={lng}"
 
         return True, "Coordinate quality valid"
 
@@ -757,7 +728,9 @@ class GPSWebhook(http.Controller):
         """
         # Validate engine temperature
         engine_temp = vals.get("engine_temperature", 0)
-        if engine_temp and (engine_temp < self.MIN_ENGINE_TEMP or engine_temp > self.MAX_ENGINE_TEMP):
+        if engine_temp and (
+            engine_temp < self.MIN_ENGINE_TEMP or engine_temp > self.MAX_ENGINE_TEMP
+        ):
             return (
                 False,
                 f"Invalid engine temperature: {engine_temp}°C (range: {self.MIN_ENGINE_TEMP} to {self.MAX_ENGINE_TEMP}°C)",
@@ -812,14 +785,14 @@ class GPSWebhook(http.Controller):
         return True, "Electrical parameters valid"
 
     def _validate_speed_parameters(
-        self, vals: Dict[str, Any], device_id: int = None
+        self, device_id: int = None, vals: Dict[str, Any]
     ) -> tuple[bool, str]:
         """
         Validate speed-related parameters including absolute speed and speed changes.
 
         Args:
-            vals: Dictionary of processed GPS values
             device_id: GPS device ID for temporal speed change validation (optional)
+            vals: Dictionary of processed GPS values
 
         Returns:
             Tuple of (is_valid, error_message)
@@ -829,7 +802,7 @@ class GPSWebhook(http.Controller):
         if speed and speed > self.MAX_REASONABLE_SPEED:
             return (
                 False,
-                f"Unrealistic speed detected: {speed} km/h (maximum: {self.MAX_REASONABLE_SPEED})",
+                f"Unrealistic speed detected: {speed} km/h (maximum: {self.MAX_REASONABLE_SPEED} km/h)",
             )
 
         # Validate speed change rate if device_id is provided
