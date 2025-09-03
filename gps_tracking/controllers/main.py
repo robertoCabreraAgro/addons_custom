@@ -142,19 +142,16 @@ class GPSWebhook(http.Controller):
             # Find device by IMEI
             device = self._get_device(imei)
             if not device:
+                _logger.warning("No device found in database from %s", remote_addr)
                 return self.RESPONSE_FAILURE
 
             # Prepare tracking point values
             vals = self._prepare_tracking_point_vals(device.id, payload)
-            if not vals.get("timestamp"):
-                _logger.warning("No valid timestamp in GPS data for device %s", imei)
-                return self.RESPONSE_FAILURE
 
             is_quality_valid, quality_error = self._validate_data_quality(
-                vals, device.id
+                device.id, vals, processing_stats
             )
             if not is_quality_valid:
-                processing_stats["quality_checks_failed"] += 1
                 self._log_webhook_failure(
                     start_time,
                     remote_addr,
@@ -163,8 +160,6 @@ class GPSWebhook(http.Controller):
                     processing_stats,
                 )
                 return self.RESPONSE_FAILURE
-            else:
-                processing_stats["quality_checks_passed"] += 1
 
             # 2. Check for duplicate points
             timestamp = vals.get("timestamp")
@@ -792,7 +787,7 @@ class GPSWebhook(http.Controller):
     # ------------------------------------------------------------
 
     def _validate_data_quality(
-        self, vals: Dict[str, Any], device_id: int = None
+        self, device_id: int, vals: Dict[str, Any], processing_stats: Dict[str, Any]
     ) -> tuple[bool, str]:
         """
         Optimized comprehensive GPS data quality validation with configurable severity levels.
@@ -802,6 +797,7 @@ class GPSWebhook(http.Controller):
         Args:
             vals: Dictionary of processed GPS values
             device_id: GPS device ID for advanced validations (optional)
+            processing_stats: Processing statistics dictionary to track validation results (optional)
 
         Returns:
             Tuple of (is_valid, error_message)
@@ -810,7 +806,7 @@ class GPSWebhook(http.Controller):
         config = self._get_validation_config()
 
         # Cache recent points for multiple validations (replaces 3+ duplicate queries)
-        recent_points = self._get_recent_points_cache(device_id) if device_id else None
+        recent_points = self._get_recent_points_cache(device_id)
 
         # Collect errors and warnings with configurable severity
         errors = []
@@ -818,6 +814,11 @@ class GPSWebhook(http.Controller):
 
         # Define validation rules with severity levels
         validation_rules = [
+            (
+                "timestamp_quality",
+                self._validate_timestamp,
+                "critical",
+            ),
             (
                 "coordinate_quality",
                 self._validate_coordinates,
@@ -843,12 +844,21 @@ class GPSWebhook(http.Controller):
         for rule_name, validator_func, severity in validation_rules:
             try:
                 is_valid, message = validator_func(vals, config, recent_points)
-                if not is_valid:
+
+                # Track validation statistics
+                if is_valid:
+                    processing_stats["quality_checks_passed"] += 1
+                elif not is_valid:
+                    processing_stats["quality_checks_failed"] += 1
                     if severity == "critical":
                         errors.append(f"{rule_name}: {message}")
-                    else:
+                        continue
+                    elif severity == "warning":
                         warnings.append(f"{rule_name}: {message}")
+
             except Exception as e:
+                # Count exceptions as failed checks
+                processing_stats["quality_checks_failed"] += 1
                 _logger.warning(f"Validation error in {rule_name}: {e}")
 
         # Return failure only for critical errors
@@ -886,15 +896,65 @@ class GPSWebhook(http.Controller):
 
         return True, f"{param_name} valid"
 
-    def _validate_timestamp(self, timestamp: int) -> bool:
-        """Validate timestamp is within reasonable bounds"""
-        return (
-            isinstance(timestamp, (int, float))
-            and self.MIN_TIMESTAMP <= timestamp <= self.MAX_TIMESTAMP
-        )
+    def _validate_timestamp(
+        self, vals: Dict[str, Any], config: dict
+    ) -> tuple[bool, str]:
+        """
+        Critical timestamp validation using cached config.
+
+        Args:
+            vals: Dictionary of processed GPS values
+            config: Pre-loaded validation configuration
+
+        Returns:
+            Tuple of (is_valid, error_message)
+        """
+        timestamp = vals.get("timestamp")
+
+        # Check if timestamp exists
+        if not timestamp:
+            return False, "Missing timestamp in GPS data"
+
+        # Validate timestamp is datetime object
+        if not isinstance(timestamp, datetime):
+            return (
+                False,
+                f"Invalid timestamp type: expected datetime, got {type(timestamp).__name__}",
+            )
+
+        # Check timestamp bounds (not too far in past/future)
+        now = datetime.now()
+        time_diff = (timestamp - now).total_seconds()
+
+        # Check for future timestamps (more than 5 minutes ahead)
+        if time_diff > 300:  # 5 minutes
+            return (
+                False,
+                f"Timestamp too far in future: {time_diff/60:.1f} minutes ahead",
+            )
+
+        # Check for very old timestamps (more than configured max time gap)
+        max_past_hours = config.get("max_time_gap_hours", 24)
+        max_past_seconds = max_past_hours * 3600
+
+        if time_diff < -max_past_seconds:
+            return (
+                False,
+                f"Timestamp too old: {abs(time_diff/3600):.1f} hours ago (maximum: {max_past_hours} hours)",
+            )
+
+        # Check for minimum realistic timestamp (year 2000+)
+        min_year_2000 = datetime(2000, 1, 1)
+        if timestamp < min_year_2000:
+            return (
+                False,
+                f"Timestamp before year 2000: {timestamp.strftime('%Y-%m-%d %H:%M:%S')}",
+            )
+
+        return True, "Timestamp quality valid"
 
     def _validate_coordinates(
-        self, vals: Dict[str, Any], config: dict, recent_points
+        self, vals: Dict[str, Any], config: dict
     ) -> tuple[bool, str]:
         """
         Optimized coordinate validation using pre-loaded config and generic range validator.
@@ -902,7 +962,6 @@ class GPSWebhook(http.Controller):
         Args:
             vals: Dictionary of processed GPS values
             config: Pre-loaded validation configuration
-            recent_points: Cached recent points (unused for coordinates)
 
         Returns:
             Tuple of (is_valid, error_message)
@@ -937,7 +996,7 @@ class GPSWebhook(http.Controller):
         return True, "Coordinate quality valid"
 
     def _validate_gps_accuracy(
-        self, vals: Dict[str, Any], config: dict, recent_points
+        self, vals: Dict[str, Any], config: dict
     ) -> tuple[bool, str]:
         """
         Optimized GPS accuracy validation using pre-loaded config.
@@ -945,7 +1004,6 @@ class GPSWebhook(http.Controller):
         Args:
             vals: Dictionary of processed GPS values
             config: Pre-loaded validation configuration
-            recent_points: Cached recent points (unused for GPS accuracy)
 
         Returns:
             Tuple of (is_valid, error_message)
@@ -969,7 +1027,7 @@ class GPSWebhook(http.Controller):
         return True, "GPS accuracy valid"
 
     def _validate_comprehensive_parameters(
-        self, vals: Dict[str, Any], config: dict, recent_points
+        self, vals: Dict[str, Any], config: dict
     ) -> tuple[bool, str]:
         """
         Consolidated validation for vehicle, electrical, and network parameters.
@@ -980,7 +1038,6 @@ class GPSWebhook(http.Controller):
         Args:
             vals: Dictionary of processed GPS values
             config: Pre-loaded validation configuration
-            recent_points: Cached recent points (unused for parameter validation)
 
         Returns:
             Tuple of (is_valid, error_message)
