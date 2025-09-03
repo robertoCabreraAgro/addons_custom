@@ -611,9 +611,9 @@ class L10nMxEdiDocument(models.Model):
             list: List of created product.asset.log records
         """
         asset_log = self.env["product.asset.log"]
-        fuel_category = self.env.ref("marin.product_category_fuel")
-        fuel_debit_product = self.env.ref("marin.product_product_fuel_debit")
-        fuel_credit_product = self.env.ref("marin.product_product_fuel_credit")
+        fuel_category = self.env.ref("product_asset.product_category_fuel")
+        fuel_debit_product = self.env.ref("product_asset.product_product_fuel_debit")
+        fuel_credit_product = self.env.ref("product_asset.product_product_fuel_credit")
         ns = {"ecc12": "http://www.sat.gob.mx/EstadoDeCuentaCombustible12"}
 
         created_logs = []

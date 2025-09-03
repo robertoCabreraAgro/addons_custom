@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="group_planning_manufacturing_user" model="res.groups">
+        <field name="name">Planning Manufacturing User</field>
+        <field name="category_id" ref="base.module_category_manufacturing"/>
+        <field name="implied_ids" eval="[(4, ref('planning.group_planning_user')), (4, ref('mrp.group_mrp_user'))]"/>
+    </record>
+
+    <record id="group_planning_manufacturing_manager" model="res.groups">
+        <field name="name">Planning Manufacturing Manager</field>
+        <field name="category_id" ref="base.module_category_manufacturing"/>
+        <field name="implied_ids" eval="[(4, ref('group_planning_manufacturing_user')), (4, ref('planning.group_planning_manager')), (4, ref('mrp.group_mrp_manager'))]"/>
+    </record>
+</odoo>

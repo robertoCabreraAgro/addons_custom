@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vista Search para planning.slot con los nuevos campos -->
+    <record id="planning_view_search_inherit" model="ir.ui.view">
+        <field name="name">planning.slot.view.search.inherit</field>
+        <field name="model">planning.slot</field>
+        <field name="inherit_id" ref="planning.planning_view_search_base"/>
+        <field name="arch" type="xml">
+            <field name="role_id" position="after">
+                <field name="workcenter_id" invisible="not context.get('show_planning_mrp')" groups="planning.group_planning_user" />
+                <field name="product_id" invisible="not context.get('show_planning_mrp')" groups="planning.group_planning_user" />
+            </field>
+            <xpath expr="//filter[@name='group_by_role']" position="after">
+                <filter name="group_by_product" string="Product" context="{'group_by': 'product_id'}"/>
+                <filter name="group_by_workcenter" string="Workcenter" context="{'group_by': 'workcenter_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Vista Form para planning.slot con los nuevos campos -->
+    <record id="planning_slot_view_form_inherit" model="ir.ui.view">
+        <field name="name">planning.slot.view.form.inherit</field>
+        <field name="model">planning.slot</field>
+        <field name="inherit_id" ref="planning.planning_view_form"/>
+        <field name="arch" type="xml">
+            <field name="role_id" position="after">
+                <field name="workcenter_id" invisible="not context.get('show_planning_mrp')" />
+                <field name="product_id" invisible="not context.get('show_planning_mrp')" />
+            </field>
+            <xpath expr="//field[@name='state']" position="attributes">
+                <attribute name="statusbar_visible">draft,published,cancelled</attribute>
+            </xpath>
+            <xpath expr="//sheet" position="after">
+                <chatter/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_planning_slot_with_default_project" model="ir.actions.act_window">
+        <field name="name">Planning</field>
+        <field name="res_model">planning.slot</field>
+        <field name="view_mode">list,form,calendar</field>
+    </record>
+
+    <!-- Actions by Workcenter -->
+    <record id="action_server_planning_slot_by_workcenter" model="ir.actions.server">
+        <field name="name">Planning by Workcenter</field>
+        <field name="model_id" ref="planning.model_planning_slot"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = model.get_action_planning_slot_by_workcenter()
+        </field>
+    </record>
+
+    <record id="action_server_planning_slot_by_product" model="ir.actions.server">
+        <field name="name">Planning by Product</field>
+        <field name="model_id" ref="planning.model_planning_slot"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = model.get_action_planning_slot_by_product()
+        </field>
+    </record>
+
+    <!-- Actions by Resource -->
+    <record id="action_server_planning_slot_by_resource" model="ir.actions.server">
+        <field name="name">planning by Resource</field>
+        <field name="model_id" ref="planning.model_planning_slot"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = model.get_action_planning_slot_by_resource()
+        </field>
+    </record>
+
+    <!-- Actions by Role -->
+    <record id="action_server_planning_slot_by_role" model="ir.actions.server">
+        <field name="name">Planning by Role</field>
+        <field name="model_id" ref="planning.model_planning_slot"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = model.get_action_planning_slot_by_role()
+        </field>
+    </record>
+</odoo>
