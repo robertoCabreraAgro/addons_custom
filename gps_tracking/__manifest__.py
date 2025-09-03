@@ -11,6 +11,7 @@
         "security/ir_rule_security.xml",
         "security/ir.model.access.csv",
         "data/gps_tracking_config_data.xml",
+        "data/ir_config_parameter_data.xml",
         "data/ir_actions_server.xml",
         "data/gps_geofence_type_data.xml",
         "report/gps_tracking_report_views.xml",

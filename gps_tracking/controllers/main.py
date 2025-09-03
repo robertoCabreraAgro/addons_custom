@@ -222,28 +222,36 @@ class GPSWebhook(http.Controller):
                 datetime.now() - processing_stats["validation_start"]
             ).total_seconds()
 
-            # === CREATE TRACKING POINT ===
+            # === CREATE TRACKING POINT WITH TRANSACTION MANAGEMENT ===
 
             db_start_time = datetime.now()
-            new_point = self._create_tracking_point(vals)
-            if not new_point:
+            
+            # Use savepoint for atomic database operations
+            try:
+                with request.env.cr.savepoint():
+                    # Create tracking point within transaction
+                    new_point = self._create_tracking_point(vals)
+                    if not new_point:
+                        raise Exception("Failed to create tracking point record")
+
+                    # Update device's last point reference within same transaction
+                    self._update_device_last_point(device, new_point.id)
+                    
+                    processing_stats["db_operation_time"] = (
+                        datetime.now() - db_start_time
+                    ).total_seconds()
+                    
+            except Exception as db_error:
+                # Transaction automatically rolled back due to savepoint context
                 processing_stats["db_operation_time"] = (
                     datetime.now() - db_start_time
                 ).total_seconds()
+                
+                error_msg = f"Database transaction failed: {str(db_error)}"
                 self._log_webhook_failure(
-                    start_time,
-                    remote_addr,
-                    imei,
-                    "Failed to create tracking point",
-                    processing_stats,
+                    start_time, remote_addr, imei, error_msg, processing_stats
                 )
                 return self.RESPONSE_FAILURE
-
-            # Update device's last point
-            self._update_device_last_point(device, new_point.id)
-            processing_stats["db_operation_time"] = (
-                datetime.now() - db_start_time
-            ).total_seconds()
 
             # Log successful processing with comprehensive metrics
             self._log_webhook_success(
@@ -660,7 +668,7 @@ class GPSWebhook(http.Controller):
 
     def _validate_gps_accuracy(self, vals: Dict[str, Any]) -> tuple[bool, str]:
         """
-        Validate GPS signal accuracy based on satellite count.
+        Validate GPS signal accuracy based on satellite count and HDOP.
 
         Args:
             vals: Dictionary of processed GPS values
@@ -668,12 +676,31 @@ class GPSWebhook(http.Controller):
         Returns:
             Tuple of (is_valid, error_message)
         """
+        # Get validation parameters from system config
+        param_obj = request.env["ir.config_parameter"].sudo()
+        min_satellites = int(param_obj.get_param(
+            "gps_tracking.validation.min_satellites", 
+            default=self.MIN_SATELLITES_FOR_ACCURACY
+        ))
+        max_hdop = float(param_obj.get_param(
+            "gps_tracking.validation.max_hdop",
+            default=5.0
+        ))
+        
         # Check GPS accuracy based on satellite count
         satellites = vals.get("satellites", 0)
-        if satellites and satellites < self.MIN_SATELLITES_FOR_ACCURACY:
+        if satellites and satellites < min_satellites:
             return (
                 False,
-                f"Low GPS accuracy: only {satellites} satellites (minimum: {self.MIN_SATELLITES_FOR_ACCURACY})",
+                f"Low GPS accuracy: only {satellites} satellites (minimum: {min_satellites})",
+            )
+
+        # Check HDOP if available
+        hdop = vals.get("gnss_hdop", 0)
+        if hdop and hdop > max_hdop:
+            return (
+                False,
+                f"Poor GPS precision: HDOP {hdop} exceeds maximum {max_hdop}",
             )
 
         return True, "GPS accuracy valid"
@@ -693,6 +720,49 @@ class GPSWebhook(http.Controller):
 
         if lat is None or lng is None:
             return True, "No coordinates to validate"
+
+        # Get validation parameters from system config
+        param_obj = request.env["ir.config_parameter"].sudo()
+        min_lat = float(param_obj.get_param(
+            "gps_tracking.validation.min_latitude",
+            default=self.MIN_LATITUDE
+        ))
+        max_lat = float(param_obj.get_param(
+            "gps_tracking.validation.max_latitude",
+            default=self.MAX_LATITUDE
+        ))
+        min_lng = float(param_obj.get_param(
+            "gps_tracking.validation.min_longitude", 
+            default=self.MIN_LONGITUDE
+        ))
+        max_lng = float(param_obj.get_param(
+            "gps_tracking.validation.max_longitude",
+            default=self.MAX_LONGITUDE
+        ))
+        zero_tolerance = float(param_obj.get_param(
+            "gps_tracking.validation.zero_coordinate_tolerance",
+            default=0.001
+        ))
+
+        # Check coordinate bounds
+        if not (min_lat <= lat <= max_lat):
+            return (
+                False,
+                f"Invalid latitude {lat}: must be between {min_lat} and {max_lat}",
+            )
+
+        if not (min_lng <= lng <= max_lng):
+            return (
+                False,
+                f"Invalid longitude {lng}: must be between {min_lng} and {max_lng}",
+            )
+
+        # Check for suspicious zero coordinates (likely invalid data)
+        if abs(lat) < zero_tolerance and abs(lng) < zero_tolerance:
+            return (
+                False,
+                f"Suspicious zero coordinates: lat={lat}, lng={lng}",
+            )
 
         lat_str = str(lat)
         lng_str = str(lng)
@@ -718,7 +788,7 @@ class GPSWebhook(http.Controller):
 
     def _validate_vehicle_parameters(self, vals: Dict[str, Any]) -> tuple[bool, str]:
         """
-        Validate vehicle-specific parameters like engine temperature and fuel level.
+        Validate vehicle-specific parameters like speed, fuel level and engine hours.
 
         Args:
             vals: Dictionary of processed GPS values
@@ -726,31 +796,56 @@ class GPSWebhook(http.Controller):
         Returns:
             Tuple of (is_valid, error_message)
         """
-        # Validate engine temperature
-        engine_temp = vals.get("engine_temperature", 0)
-        if engine_temp and (
-            engine_temp < self.MIN_ENGINE_TEMP or engine_temp > self.MAX_ENGINE_TEMP
-        ):
-            return (
-                False,
-                f"Invalid engine temperature: {engine_temp}°C (range: {self.MIN_ENGINE_TEMP} to {self.MAX_ENGINE_TEMP}°C)",
-            )
+        # Get validation parameters from system config
+        param_obj = request.env["ir.config_parameter"].sudo()
+        max_fuel_level = float(param_obj.get_param(
+            "gps_tracking.validation.max_fuel_level",
+            default=100.0
+        ))
+        max_engine_hours = int(param_obj.get_param(
+            "gps_tracking.validation.max_engine_hours",
+            default=50000
+        ))
+        min_external_voltage = float(param_obj.get_param(
+            "gps_tracking.validation.min_external_voltage",
+            default=8.0
+        ))
+        max_external_voltage = float(param_obj.get_param(
+            "gps_tracking.validation.max_external_voltage",
+            default=30.0
+        ))
 
         # Validate fuel level
         fuel_level = vals.get("fuel_level", 0)
-        if fuel_level and (fuel_level < 0 or fuel_level > 100):
-            return False, f"Invalid fuel level: {fuel_level}% (range: 0-100%)"
+        if fuel_level and (fuel_level < 0 or fuel_level > max_fuel_level):
+            return False, f"Invalid fuel level: {fuel_level}% (range: 0-{max_fuel_level}%)"
+
+        # Validate engine hours
+        engine_hours = vals.get("engine_total_hours", 0)
+        if engine_hours and engine_hours > max_engine_hours:
+            return (
+                False,
+                f"Invalid engine hours: {engine_hours} (maximum: {max_engine_hours})",
+            )
 
         # Validate engine RPM
         engine_rpm = vals.get("engine_speed_rpm", 0)
         if engine_rpm and (engine_rpm < 0 or engine_rpm > 8000):
             return False, f"Invalid engine RPM: {engine_rpm} (range: 0-8000 RPM)"
 
+        # Validate external voltage (vehicle battery)
+        external_voltage = vals.get("external_voltage", 0)
+        if external_voltage and (external_voltage < min_external_voltage or external_voltage > max_external_voltage):
+            return (
+                False,
+                f"Invalid external voltage: {external_voltage}V (range: {min_external_voltage}-{max_external_voltage}V)",
+            )
+
         return True, "Vehicle parameters valid"
 
     def _validate_electrical_parameters(self, vals: Dict[str, Any]) -> tuple[bool, str]:
         """
-        Validate electrical system parameters like voltage readings.
+        Validate electrical system parameters like voltage.
 
         Args:
             vals: Dictionary of processed GPS values
@@ -758,20 +853,23 @@ class GPSWebhook(http.Controller):
         Returns:
             Tuple of (is_valid, error_message)
         """
-        # Validate external voltage (vehicle battery)
-        external_voltage = vals.get("external_voltage", 0)
-        if external_voltage and (external_voltage < 6 or external_voltage > 30):
-            return (
-                False,
-                f"Invalid external voltage: {external_voltage}V (typical range: 6-30V)",
-            )
+        # Get validation parameters from system config
+        param_obj = request.env["ir.config_parameter"].sudo()
+        min_internal_voltage = float(param_obj.get_param(
+            "gps_tracking.validation.min_internal_voltage",
+            default=2.5
+        ))
+        max_internal_voltage = float(param_obj.get_param(
+            "gps_tracking.validation.max_internal_voltage",
+            default=5.5
+        ))
 
         # Validate internal battery voltage (device battery)
         battery_voltage = vals.get("battery_voltage", 0)
-        if battery_voltage and (battery_voltage < 3 or battery_voltage > 5):
+        if battery_voltage and (battery_voltage < min_internal_voltage or battery_voltage > max_internal_voltage):
             return (
                 False,
-                f"Invalid battery voltage: {battery_voltage}V (typical range: 3-5V)",
+                f"Invalid battery voltage: {battery_voltage}V (range: {min_internal_voltage}-{max_internal_voltage}V)",
             )
 
         # Validate battery current
@@ -783,6 +881,37 @@ class GPSWebhook(http.Controller):
             )
 
         return True, "Electrical parameters valid"
+
+    def _validate_network_parameters(self, vals: Dict[str, Any]) -> tuple[bool, str]:
+        """
+        Validate network system parameters like GSM signal readings.
+
+        Args:
+            vals: Dictionary of processed GPS values
+
+        Returns:
+            Tuple of (is_valid, error_message)
+        """
+        # Get validation parameters from system config
+        param_obj = request.env["ir.config_parameter"].sudo()
+        min_gsm_signal = int(param_obj.get_param(
+            "gps_tracking.validation.min_gsm_signal",
+            default=0
+        ))
+        max_gsm_signal = int(param_obj.get_param(
+            "gps_tracking.validation.max_gsm_signal",
+            default=31
+        ))
+
+        # Validate GSM signal strength
+        gsm_signal = vals.get("gsm_signal", 0)
+        if gsm_signal and (gsm_signal < min_gsm_signal or gsm_signal > max_gsm_signal):
+            return (
+                False,
+                f"Invalid battery voltage: {battery_voltage}V (typical range: 3-5V)",
+            )
+
+        return True, "Network parameters valid"
 
     def _validate_speed_parameters(
         self, device_id: int = None, vals: Dict[str, Any]
@@ -797,12 +926,33 @@ class GPSWebhook(http.Controller):
         Returns:
             Tuple of (is_valid, error_message)
         """
-        # Validate absolute speed reasonableness
+        # Get validation parameters from system config
+        param_obj = request.env["ir.config_parameter"].sudo()
+        max_realistic_speed = float(param_obj.get_param(
+            "gps_tracking.validation.max_realistic_speed",
+            default=self.MAX_REASONABLE_SPEED
+        ))
+        max_speed_change = float(param_obj.get_param(
+            "gps_tracking.validation.max_speed_change_kmh_per_sec",
+            default=10.0
+        ))
+        speed_window_seconds = int(param_obj.get_param(
+            "gps_tracking.validation.speed_validation_window_seconds",
+            default=30
+        ))
+
+        # Validate speed (basic range check)
         speed = vals.get("speed", 0)
-        if speed and speed > self.MAX_REASONABLE_SPEED:
+        if speed and speed > max_realistic_speed:
             return (
                 False,
-                f"Unrealistic speed detected: {speed} km/h (maximum: {self.MAX_REASONABLE_SPEED} km/h)",
+                f"Unrealistic speed: {speed} km/h (maximum: {max_realistic_speed} km/h)",
+            )
+
+        if speed < 0:
+            return (
+                False,
+                f"Invalid negative speed: {speed} km/h",
             )
 
         # Validate speed change rate if device_id is provided
@@ -821,16 +971,16 @@ class GPSWebhook(http.Controller):
                     time_diff = (
                         vals.get("timestamp") - last_point.timestamp
                     ).total_seconds()
-                    time_minutes = abs(time_diff) / 60
 
-                    if time_minutes > 0:
+                    # Only validate if within the validation window
+                    if 0 < abs(time_diff) <= speed_window_seconds:
                         speed_change = abs(speed - last_point.speed)
-                        speed_change_per_minute = speed_change / time_minutes
+                        speed_change_per_second = speed_change / abs(time_diff)
 
-                        if speed_change_per_minute > self.MAX_SPEED_CHANGE_PER_MINUTE:
+                        if speed_change_per_second > max_speed_change:
                             return (
                                 False,
-                                f"Unrealistic speed change: {speed_change:.1f} km/h in {time_minutes:.1f} minutes",
+                                f"Unrealistic speed change: {speed_change:.1f} km/h in {abs(time_diff):.1f} seconds",
                             )
             except Exception as e:
                 # Don't fail validation on speed change calculation errors
@@ -851,6 +1001,17 @@ class GPSWebhook(http.Controller):
         Returns:
             Tuple of (is_valid, warning_message)
         """
+        # Get validation parameters from system config
+        param_obj = request.env["ir.config_parameter"].sudo()
+        max_time_gap_hours = float(param_obj.get_param(
+            "gps_tracking.validation.max_time_gap_hours",
+            default=24.0
+        ))
+        min_time_interval_seconds = int(param_obj.get_param(
+            "gps_tracking.validation.min_time_interval_seconds",
+            default=1
+        ))
+
         try:
             # Get the last GPS point for this device
             last_point = (
@@ -866,10 +1027,10 @@ class GPSWebhook(http.Controller):
 
             # Check for duplicate timestamps
             time_diff = (new_timestamp - last_point.timestamp).total_seconds()
-            if abs(time_diff) < 1:  # Less than 1 second difference
+            if abs(time_diff) < min_time_interval_seconds:
                 return (
                     False,
-                    f"Duplicate or too-close timestamp: {abs(time_diff):.1f}s from last point",
+                    f"Duplicate or too-frequent timestamp: {abs(time_diff):.1f}s interval (minimum: {min_time_interval_seconds}s)",
                 )
 
             # Check for points too far in the future
@@ -881,11 +1042,12 @@ class GPSWebhook(http.Controller):
                     f"Timestamp too far in future: {future_diff/60:.1f} minutes",
                 )
 
-            # Check for points too far in the past (more than 24 hours)
-            if time_diff < -86400:  # More than 24 hours in the past
+            # Check for points too far in the past
+            max_gap_seconds = max_time_gap_hours * 3600
+            if time_diff < -max_gap_seconds:
                 return (
                     False,
-                    f"Timestamp too far in past: {abs(time_diff/3600):.1f} hours ago",
+                    f"Timestamp too far in past: {abs(time_diff/3600):.1f} hours ago (maximum: {max_time_gap_hours} hours)",
                 )
 
             return True, "Valid temporal sequence"
@@ -901,7 +1063,7 @@ class GPSWebhook(http.Controller):
         longitude: float = None,
     ) -> bool:
         """
-        Check for duplicate GPS points within time window.
+        Enhanced duplicate detection with performance optimizations.
 
         Args:
             device_id: GPS device ID
@@ -912,46 +1074,88 @@ class GPSWebhook(http.Controller):
         Returns:
             True if duplicate detected
         """
-        try:
-            # Define time window for duplicate detection
-            time_window_start = timestamp - timedelta(
-                seconds=self.MAX_DUPLICATE_TIME_WINDOW
-            )
-            time_window_end = timestamp + timedelta(
-                seconds=self.MAX_DUPLICATE_TIME_WINDOW
-            )
+        # Get validation parameters from system config
+        param_obj = request.env["ir.config_parameter"].sudo()
+        duplicate_time_window = int(param_obj.get_param(
+            "gps_tracking.validation.duplicate_time_window_seconds",
+            default=10
+        ))
+        coordinate_tolerance = float(param_obj.get_param(
+            "gps_tracking.validation.duplicate_coordinate_tolerance",
+            default=0.00001
+        ))
+        extended_window = int(param_obj.get_param(
+            "gps_tracking.validation.duplicate_extended_window_seconds",
+            default=300
+        ))
 
-            # Search for points in the time window
+        try:
+            # Optimize: Check only recent points for better performance
+            # Most duplicates occur within seconds, not the full window
+            time_window_start = timestamp - timedelta(seconds=duplicate_time_window)
+            time_window_end = timestamp + timedelta(seconds=duplicate_time_window)
+
+            # Use more efficient query with proper indexing
             domain = [
                 ("device_id", "=", device_id),
                 ("timestamp", ">=", time_window_start),
                 ("timestamp", "<=", time_window_end),
             ]
 
-            # If coordinates provided, also check for spatial duplicates
-            if latitude is not None and longitude is not None:
-                # Allow small coordinate differences (about 1 meter precision)
-                lat_tolerance = 0.00001
-                lng_tolerance = 0.00001
-
-                domain.extend(
-                    [
-                        ("latitude", ">=", latitude - lat_tolerance),
-                        ("latitude", "<=", latitude + lat_tolerance),
-                        ("longitude", ">=", longitude - lng_tolerance),
-                        ("longitude", "<=", longitude + lng_tolerance),
-                    ]
-                )
-
-            existing_points = (
-                request.env["gps.tracking.point"].sudo().search(domain, limit=1)
-            )
-
-            if existing_points:
-
+            # Performance optimization: Use count instead of search when coordinates not needed
+            if latitude is None or longitude is None:
+                # Simple timestamp-based duplicate check (faster)
+                duplicate_count = request.env["gps.tracking.point"].sudo().search_count(domain)
+                return duplicate_count > 0
+            
+            # Enhanced spatial duplicate detection using configurable tolerance
+            # Use SQL query for better performance with spatial checks
+            query = """
+                SELECT id FROM gps_tracking_point 
+                WHERE device_id = %s 
+                AND timestamp >= %s 
+                AND timestamp <= %s
+                AND ABS(latitude - %s) <= %s
+                AND ABS(longitude - %s) <= %s
+                LIMIT 1
+            """
+            
+            request.env.cr.execute(query, (
+                device_id, time_window_start, time_window_end,
+                latitude, coordinate_tolerance, longitude, coordinate_tolerance
+            ))
+            
+            result = request.env.cr.fetchone()
+            if result:
                 return True
+            
+            # If no duplicates found in recent window, check extended window if needed
+            if duplicate_time_window < extended_window:
+                extended_start = timestamp - timedelta(seconds=extended_window)
+                extended_end = timestamp + timedelta(seconds=extended_window)
+                
+                # Check extended window (less likely to find duplicates here)
+                extended_query = """
+                    SELECT id FROM gps_tracking_point 
+                    WHERE device_id = %s 
+                    AND timestamp >= %s 
+                    AND timestamp < %s
+                    AND ABS(latitude - %s) <= %s
+                    AND ABS(longitude - %s) <= %s
+                    LIMIT 1
+                """
+                
+                request.env.cr.execute(extended_query, (
+                    device_id, extended_start, time_window_start,
+                    latitude, coordinate_tolerance, longitude, coordinate_tolerance
+                ))
+                
+                extended_result = request.env.cr.fetchone()
+                if extended_result:
+                    return True
 
             return False
 
         except Exception as e:
+            _logger.warning("Error in duplicate detection: %s", e)
             return False  # Don't block on validation errors
