@@ -108,7 +108,6 @@
         "views/account_move_line_views.xml",
         "views/account_payment_views.xml",
         "views/documents_document_views.xml",
-        "views/gps_tracking_device_views.xml",
         "views/hr_expense_views.xml",
         "views/hr_contract_views.xml",
         "views/hr_payslip_views.xml",

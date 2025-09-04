@@ -12,7 +12,6 @@ from . import account_reconcile_model
 from . import documents_document
 from . import documents_tag
 from . import product_asset_log
-from . import gps_tracking_device
 from . import hr_contract
 from . import hr_payslip
 from . import hr_payslip_run

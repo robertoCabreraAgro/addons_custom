@@ -6,14 +6,17 @@
         <field name="arch" type="xml">
             <search string="Buscar Dispositivo">
                 <field name="imei" />
+                <field name="asset_id" />
                 <field name="config_id" />
                 <filter name="with_config" string="Con Configuración"
                     domain="[('config_id', '!=', False)]" />
                 <filter name="without_config" string="Sin Configuración"
                     domain="[('config_id', '=', False)]" />
-                <group expand="0" string="Agrupar por">
+                <group>
                     <filter name="group_by_config" string="Configuración GPS"
                         context="{'group_by': 'config_id'}" />
+                    <filter name="group_by_asset" string="Configuración GPS"
+                        context="{'group_by': 'asset_id'}" />
                 </group>
             </search>
         </field>
@@ -26,8 +29,9 @@
         <field name="arch" type="xml">
             <list string="GPS Tracking Devices"
                 decoration-danger="inactivity_state == 'inactive_alert'">
-                <field name="imei" />
                 <field name="config_id" />
+                <field name="imei" />
+                <field name="asset_id" />
                 <field name="real_odometer" />
                 <field name="speed" />
                 <field name="timestamp" />
@@ -49,7 +53,6 @@
                 <field name="speed" invisible="1"></field>
                 <field name="altitude" invisible="1"></field>
                 <field name="timestamp" invisible="1"></field>
-                <!-- Plantillas para info_box -->
                 <templates>
                     <t t-name="info_box">
                         <b>IMEI: <t t-esc="record.imei.value" /></b>
@@ -60,7 +63,6 @@
                         </ul>
                     </t>
                 </templates>
-                <!-- Mostrar los puntos de seguimiento -->
                 <field name="the_point"
                     string="Current Position"
                     options='{"fillColor": "#00FF00", "strokeColor": "#FF0000", "pointRadius": 8}' />
@@ -82,7 +84,8 @@
                             <field name="color" />
                         </group>
                         <group>
-                            <field name="last_point_id" />
+                            <field name="asset_id" />
+                            <field name="last_point_id" invisible="1" />
                             <field name="timestamp" />
                             <field name="odometer" />
                             <field name="private" />
