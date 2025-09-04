@@ -8,3 +8,4 @@ from . import sale_order_line_price_history
 from . import stock_quant_lot_update
 from . import product_asset_log_import
 from . import sale_target_wizard
+from . import res_config_settings
