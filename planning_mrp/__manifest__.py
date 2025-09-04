@@ -11,14 +11,14 @@
         "mrp",
         "hr",
     ],
-    'data': [
-        'security/res_groups_security.xml',
-        'security/ir.model.access.csv',
-        'views/res_config_settings_views.xml',
-        'views/mrp_workcenter_views.xml',
-        'views/planning_slot_views.xml',
-        'views/planning_mrp_menus.xml',
+    "data": [
+        "security/res_groups_security.xml",
+        "security/ir.model.access.csv",
+        "views/res_config_settings_views.xml",
+        "views/mrp_workcenter_views.xml",
+        "views/planning_slot_views.xml",
+        "views/planning_mrp_menus.xml",
     ],
-    'installable': True,
-    'application': True,
+    "installable": True,
+    "application": True,
 }

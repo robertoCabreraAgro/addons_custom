@@ -6,9 +6,7 @@ class LinkToRecordWizard(models.TransientModel):
 
     def link_to(self):
         res = super().link_to()
-        fc_tag = self.env.ref(
-            "documents_product_asset.documents_tag_fuel_card", False
-        )
+        fc_tag = self.env.ref("documents_product_asset.documents_tag_fuel_card", False)
         hp_tag = self.env.ref(
             "documents_product_asset.documents_tag_highway_pass", False
         )

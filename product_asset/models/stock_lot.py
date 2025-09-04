@@ -344,7 +344,9 @@ class StockLot(models.Model):
             mapped_history_data[vehicle.id] = count
 
         for vehicle in self:
-            vehicle.count_logs_contract = mapped_contract_data[vehicle.id][vehicle.active]
+            vehicle.count_logs_contract = mapped_contract_data[vehicle.id][
+                vehicle.active
+            ]
             vehicle.count_logs_service = mapped_service_data[vehicle.id][vehicle.active]
             vehicle.count_logs_assignment = mapped_history_data[vehicle.id]
 

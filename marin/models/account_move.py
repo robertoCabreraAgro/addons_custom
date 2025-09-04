@@ -555,7 +555,7 @@ class AccountMove(models.Model):
             (
                 "partner_id",
                 "in",
-                [move.partner_id.id, move.partner_id.commercial_partner_id.id]
+                [move.partner_id.id, move.partner_id.commercial_partner_id.id],
             ),
             ("reconciled", "=", False),
             ("parent_state", "=", "posted"),
@@ -969,7 +969,7 @@ class AccountMove(models.Model):
         moves_by_age = self.sorted(lambda m: m.invoice_date or m.date)
 
         for move in moves_by_age:
-            
+
             try:
                 # Validations
                 if move.state != "posted":

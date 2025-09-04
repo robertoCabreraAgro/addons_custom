@@ -19,7 +19,9 @@ class ResPartner(models.Model):
     # ------------------------------------------------------------
 
     # Extend core fields
-    category_id = fields.Many2many(domain=lambda self: self._prepare_partner_category_domain())
+    category_id = fields.Many2many(
+        domain=lambda self: self._prepare_partner_category_domain()
+    )
 
     # New fields
     mobile = fields.Char()

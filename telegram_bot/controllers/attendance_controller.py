@@ -139,20 +139,26 @@ class HrAttendanceTelegramController(TelegramController):
         :return: mrp.workorder recordset with active workorders where the employee is working
         """
         if not employee or not employee.user_id:
-            return request.env['mrp.workorder'].sudo()
+            return request.env["mrp.workorder"].sudo()
 
         # Search for workorders in progress that have active productivity records for this user
         # We replicate the logic from _compute_working_users since is_user_working is non-stored
-        productivity_records = request.env['mrp.workcenter.productivity'].sudo().search([
-            ('user_id', '=', employee.user_id.id),
-            ('date_end', '=', False),  # Active (no end date)
-            ('loss_type', 'in', ['productive', 'performance'])
-        ])
-        
-        # Get the workorders from these productivity records
-        return productivity_records.mapped('workorder_id')
+        productivity_records = (
+            request.env["mrp.workcenter.productivity"]
+            .sudo()
+            .search(
+                [
+                    ("user_id", "=", employee.user_id.id),
+                    ("date_end", "=", False),  # Active (no end date)
+                    ("loss_type", "in", ["productive", "performance"]),
+                ]
+            )
+        )
 
-    def _stop_employee_workorders(self, employee, reason='attendance_checkout'):
+        # Get the workorders from these productivity records
+        return productivity_records.mapped("workorder_id")
+
+    def _stop_employee_workorders(self, employee, reason="attendance_checkout"):
         """Stop all active workorders for the given employee.
 
         :param employee: The hr.employee record
@@ -172,12 +178,16 @@ class HrAttendanceTelegramController(TelegramController):
                 stopped_count += 1
                 _logger.info(
                     "Stopped workorder %s for employee %s due to %s",
-                    workorder.name, employee.name, reason
+                    workorder.name,
+                    employee.name,
+                    reason,
                 )
             except Exception as e:
                 _logger.error(
                     "Error stopping workorder %s for employee %s: %s",
-                    workorder.name, employee.name, str(e)
+                    workorder.name,
+                    employee.name,
+                    str(e),
                 )
 
         return stopped_count
@@ -258,7 +268,7 @@ class HrAttendanceTelegramController(TelegramController):
 
             # Stop any active workorders for this employee
             employee = partner.sudo().employee_ids[0]
-            stopped_workorders = self._stop_employee_workorders(employee, 'check_out')
+            stopped_workorders = self._stop_employee_workorders(employee, "check_out")
 
             formatted_time = check_out_time.astimezone(
                 pytz.timezone(user_tz_str)
@@ -305,7 +315,7 @@ class HrAttendanceTelegramController(TelegramController):
 
         # Stop any active workorders for this employee
         employee = partner.sudo().employee_ids[0]
-        stopped_workorders = self._stop_employee_workorders(employee, 'lunch_out')
+        stopped_workorders = self._stop_employee_workorders(employee, "lunch_out")
 
         formatted_time = lunch_out_time.astimezone(pytz.timezone(user_tz_str)).strftime(
             "%H:%M"

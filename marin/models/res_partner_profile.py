@@ -35,7 +35,9 @@ class ResPartnerProfile(models.Model):
         help="Used to order profiles. Lower values have higher precedence.",
     )
     company_id = fields.Many2one(
-        "res.company", string="Company", default=lambda self: self.env.company,
+        "res.company",
+        string="Company",
+        default=lambda self: self.env.company,
     )
     category_ids = fields.Many2many(
         "res.partner.category",

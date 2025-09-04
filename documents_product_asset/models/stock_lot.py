@@ -3,6 +3,7 @@ from odoo import api, fields, models
 
 class StockLot(models.Model):
     """Extend stock.lot with Documents integration and asset-type aware defaults."""
+
     _name = "stock.lot"
     _inherit = ["stock.lot", "documents.mixin"]
 

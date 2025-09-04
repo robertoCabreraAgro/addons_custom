@@ -46,8 +46,7 @@ class Documents(models.Model):
         vehicle = self.env["stock.lot"]
         for document in self:
             document.vehicle_id = (
-                document.res_model == "stock.lot"
-                and vehicle.browse(document.res_id)
+                document.res_model == "stock.lot" and vehicle.browse(document.res_id)
             ) or False
 
     @api.model

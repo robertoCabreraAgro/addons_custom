@@ -80,4 +80,4 @@ class ResConfigSettings(models.TransientModel):
     )
 
     # Restricted MRP planning configuration
-    module_planning_mrp = fields.Boolean(string='Production itinerary')
+    module_planning_mrp = fields.Boolean(string="Production itinerary")

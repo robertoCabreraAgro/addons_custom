@@ -909,7 +909,6 @@ class GpsGeofence(models.Model):
             if self._check_spatial_containment(new_geom, geofence):
                 spatial_containers.append(geofence)
 
-
         if not spatial_containers:
             return container_info
 

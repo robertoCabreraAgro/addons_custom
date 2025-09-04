@@ -400,8 +400,12 @@ class ProductAssetLogImport(models.TransientModel):
             tuple: (list of product.asset.log values, list of error messages)
         """
         asset_log = self.env["product.asset.log"]
-        highway_pass_category = self.env.ref("product_asset.product_category_highway_toll")
-        highway_pass_debit_product = self.env.ref("product_asset.product_product_highway_debit")
+        highway_pass_category = self.env.ref(
+            "product_asset.product_category_highway_toll"
+        )
+        highway_pass_debit_product = self.env.ref(
+            "product_asset.product_product_highway_debit"
+        )
         highway_pass_credit_product = self.env.ref(
             "product_asset.product_product_highway_credit"
         )
@@ -580,8 +584,12 @@ class ProductAssetLogImport(models.TransientModel):
             tuple: (list of product.asset.log values, list of error messages)
         """
         asset_log = self.env["product.asset.log"]
-        highway_pass_category = self.env.ref("product_asset.product_category_highway_toll")
-        highway_pass_debit_product = self.env.ref("product_asset.product_product_highway_debit")
+        highway_pass_category = self.env.ref(
+            "product_asset.product_category_highway_toll"
+        )
+        highway_pass_debit_product = self.env.ref(
+            "product_asset.product_product_highway_debit"
+        )
         highway_pass_credit_product = self.env.ref(
             "product_asset.product_product_highway_credit"
         )
