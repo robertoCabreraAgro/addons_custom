@@ -17,7 +17,20 @@ GEO_OPERATORS = [
 
 @operator_optimization(GEO_OPERATORS)
 def _optimize_geo_operators(condition, model):
-    """Handle geospatial operators using modern Odoo operator optimization"""
+    """Handle geospatial operators using modern Odoo operator optimization.
+
+    This function processes domain conditions with geospatial operators
+    and converts them to appropriate SQL queries using PostGIS functions.
+    It replaces the deprecated monkey patching approach with native Odoo 18.2
+    operator optimization.
+
+    Args:
+        condition: Domain condition containing the geo operator.
+        model: The model class being queried.
+
+    Returns:
+        Domain: SQL domain condition or original condition if not applicable.
+    """
     field = condition._field()
 
     # Only handle geo fields

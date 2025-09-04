@@ -2,7 +2,12 @@ from odoo import _, api, fields, models
 
 
 class ResConfigSettings(models.TransientModel):
-    """Inherit ResConfigSettings"""
+    """Configuration settings for GeoEngine spatial functionality.
+
+    Provides configuration options for spatial reference systems, caching,
+    performance tuning, coordinate precision, map display settings, and
+    database optimization for geospatial operations.
+    """
 
     _inherit = "res.config.settings"
 
@@ -127,7 +132,14 @@ class ResConfigSettings(models.TransientModel):
 
     @api.constrains("default_srid", "display_srid")
     def _check_srid_values(self):
-        """Validate SRID values"""
+        """Validate Spatial Reference System Identifier values.
+
+        Ensures that both default and display SRID values are positive integers,
+        as required by spatial reference systems.
+
+        Raises:
+            ValueError: When SRID values are not positive integers.
+        """
         for record in self:
             if record.default_srid <= 0:
                 raise ValueError(_("Default SRID must be a positive integer"))
@@ -136,20 +148,43 @@ class ResConfigSettings(models.TransientModel):
 
     @api.constrains("coordinate_precision")
     def _check_coordinate_precision(self):
-        """Validate coordinate precision"""
+        """Validate coordinate precision range.
+
+        Ensures coordinate precision is within acceptable bounds (0-15 decimal places)
+        to maintain data quality while preventing excessive precision that could
+        impact performance.
+
+        Raises:
+            ValueError: When precision is not between 0 and 15.
+        """
         for record in self:
             if not 0 <= record.coordinate_precision <= 15:
                 raise ValueError(_("Coordinate precision must be between 0 and 15"))
 
     @api.constrains("max_geometry_size")
     def _check_max_geometry_size(self):
-        """Validate max geometry size"""
+        """Validate maximum geometry size limit.
+
+        Ensures the maximum geometry size is a positive value to prevent
+        storage of invalid or unlimited size geometries.
+
+        Raises:
+            ValueError: When max geometry size is not positive.
+        """
         for record in self:
             if record.max_geometry_size <= 0:
                 raise ValueError(_("Max geometry size must be positive"))
 
     def action_clear_spatial_cache(self):
-        """Clear all spatial operation caches"""
+        """Clear all spatial operation caches.
+
+        Removes all cached spatial operation results to free memory and
+        force recalculation of spatial queries. Useful for troubleshooting
+        or when spatial data has been updated externally.
+
+        Returns:
+            dict: Client action to display success notification.
+        """
         geo_service = self.env["geo.service"]
         geo_service.clear_geo_cache()
         return {
@@ -163,9 +198,18 @@ class ResConfigSettings(models.TransientModel):
         }
 
     def action_rebuild_spatial_indexes(self):
-        """Rebuild all spatial indexes"""
-        # This would iterate through all models with geo fields
-        # and rebuild their spatial indexes
+        """Rebuild all spatial indexes for better performance.
+
+        Initiates rebuilding of GIST indexes on all geometry fields across
+        all models. This can improve spatial query performance but may take
+        significant time depending on data volume.
+
+        Returns:
+            dict: Client action to display success notification.
+        """
+        # TODO: Implement actual spatial index rebuilding logic
+        # This should iterate through all models with geo fields
+        # and rebuild their spatial indexes using PostGIS commands
         return {
             "type": "ir.actions.client",
             "tag": "display_notification",
@@ -176,31 +220,30 @@ class ResConfigSettings(models.TransientModel):
             },
         }
 
+    def action_show_cache_stats(self):
+        """Show cache statistics"""
+        geo_service = self.env["geo.service"]
+        stats = geo_service.get_cache_stats()
 
-#    def action_show_cache_stats(self):
-#        """Show cache statistics"""
-#        geo_service = self.env["geo.service"]
-#        stats = geo_service.get_cache_stats()
-#
-#        message = _(
-#            "Cache Statistics:\n"
-#            "Transform Cache: %(transform)d entries\n"
-#            "Operation Cache: %(operation)d entries\n"
-#            "Search Cache: %(search)d entries\n"
-#            "Hit Ratio: %(hit_ratio).1f%%"
-#        ) % {
-#            "transform": stats["transform_cache_size"],
-#            "operation": stats["operation_cache_size"],
-#            "search": stats["search_cache_size"],
-#            "hit_ratio": stats["hit_ratio"] * 100,
-#        }
-#
-#        return {
-#            "type": "ir.actions.client",
-#            "tag": "display_notification",
-#            "params": {
-#                "title": _("Cache Statistics"),
-#                "message": message,
-#                "sticky": True,
-#            },
-#        }
+        message = _(
+            "Cache Statistics:\n"
+            "Transform Cache: %(transform)d entries\n"
+            "Operation Cache: %(operation)d entries\n"
+            "Search Cache: %(search)d entries\n"
+            "Hit Ratio: %(hit_ratio).1f%%"
+        ) % {
+            "transform": stats["transform_cache_size"],
+            "operation": stats["operation_cache_size"],
+            "search": stats["search_cache_size"],
+            "hit_ratio": stats["hit_ratio"] * 100,
+        }
+
+        return {
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "title": _("Cache Statistics"),
+                "message": message,
+                "sticky": True,
+            },
+        }

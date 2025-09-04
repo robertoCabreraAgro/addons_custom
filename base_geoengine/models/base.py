@@ -9,7 +9,12 @@ DEFAULT_EXTENT = (
 
 
 class Base(models.AbstractModel):
-    """Extend Base class for to allow definition of geo fields."""
+    """Extend Base class to allow definition of geo fields.
+
+    This abstract model extends the base Odoo model to provide geographic
+    functionality including geo field support, map view integration, and
+    spatial data handling capabilities.
+    """
 
     _inherit = "base"
 
@@ -18,7 +23,19 @@ class Base(models.AbstractModel):
 
     @api.model
     def fields_get(self, allfields=None, attributes=None):
-        """Add geo_type definition for geo fields"""
+        """Add geo_type definition for geo fields.
+
+        Extends the base fields_get method to include geometric field information
+        for fields that start with 'geo_' type. This metadata is used by the
+        frontend to properly render and handle geometric fields.
+
+        Args:
+            allfields (list, optional): List of field names to retrieve.
+            attributes (list, optional): List of attributes to include.
+
+        Returns:
+            dict: Field definitions with added geo_type information for geometric fields.
+        """
         res = super().fields_get(allfields=allfields, attributes=attributes)
         for f_name in res:
             field = self._fields.get(f_name)
@@ -40,6 +57,17 @@ class Base(models.AbstractModel):
 
     @api.model
     def _get_geo_view(self):
+        """Retrieve the GeoEngine view for the current model.
+
+        Searches for a geoengine type view associated with the current model.
+        This view is required for geographic data visualization and interaction.
+
+        Returns:
+            ir.ui.view: The GeoEngine view record.
+
+        Raises:
+            UserError: When no GeoEngine view is found for the model.
+        """
         IrView = self.env["ir.ui.view"]
         geo_view = IrView.sudo().search(
             [("model", "=", self._name), ("type", "=", "geoengine")],
@@ -57,6 +85,25 @@ class Base(models.AbstractModel):
 
     @api.model
     def get_geoengine_layers(self, view_id=None, view_type="geoengine", **options):
+        """Get GeoEngine layer configuration for map visualization.
+
+        Retrieves background raster layers and active vector layers configuration
+        for the GeoEngine map view, including projection settings and map extents.
+
+        Args:
+            view_id (int, optional): Specific view ID to use. If None, uses default geo view.
+            view_type (str): Type of view, defaults to 'geoengine'.
+            **options: Additional options for layer configuration.
+
+        Returns:
+            dict: Dictionary containing:
+                - backgrounds: List of raster layer configurations
+                - actives: List of vector layer configurations
+                - projection: Map projection settings
+                - restricted_extent: Map extent restrictions
+                - default_extent: Default map extent
+                - default_zoom: Default zoom level
+        """
         view_obj = self.env["ir.ui.view"]
 
         if not view_id:
@@ -91,6 +138,27 @@ class Base(models.AbstractModel):
 
     @api.model
     def get_edit_info_for_geo_column(self, column):
+        """Get editing configuration for a geometric field.
+
+        Provides the necessary configuration for editing geometric data,
+        including raster layer for drawing context and spatial reference information.
+
+        Args:
+            column (str): Name of the geometric field to get edit info for.
+
+        Returns:
+            dict: Dictionary containing:
+                - edit_raster: Raster layer configuration for editing
+                - srid: Spatial Reference System Identifier
+                - projection: Map projection
+                - restricted_extent: Map extent restrictions
+                - default_extent: Default map extent
+                - default_zoom: Default zoom level
+
+        Raises:
+            ValueError: When column doesn't exist or is not a geo field.
+            MissingError: When no raster layer is found for the view.
+        """
         raster_obj = self.env["geoengine.raster.layer"]
 
         field = self._fields.get(column)
@@ -117,6 +185,18 @@ class Base(models.AbstractModel):
 
     @api.model
     def set_field_real_name(self, in_tuple):
+        """Convert field tuple to include real field name.
+
+        Transforms a field reference tuple by replacing the field ID with
+        the actual field name for easier processing.
+
+        Args:
+            in_tuple (tuple): Tuple containing (field_id, display_name, value).
+
+        Returns:
+            tuple: Modified tuple with (field_id, real_name, display_name) or
+                   original tuple if input is falsy.
+        """
         field_obj = self.env["ir.model.fields"]
         if not in_tuple:
             return in_tuple

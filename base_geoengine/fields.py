@@ -46,40 +46,110 @@ class GeoField(fields.Field):
         return ("geometry", f"geometry({postgis_geom_type}, {self.srid})")
 
     def convert_to_column(self, value, record, values=None, validate=True):
-        """Convert value to database format
+        """Convert value to database format.
 
-        value can be geojson, wkt, shapely geometry object.
-        If geo_direct_write in context you can pass diretly WKT"""
+        Args:
+            value: Can be geojson, wkt, shapely geometry object.
+            record: The record being processed.
+            values: Additional values dict.
+            validate: Whether to perform validation.
+
+        Returns:
+            str: WKT string with SRID prefix, or None for empty values.
+
+        Raises:
+            ValueError: When geometry validation fails.
+            TypeError: When geometry type doesn't match field type.
+        """
         if not value:
             return None
-        shape_to_write = self.entry_to_shape(value, same_type=True)
+
+        try:
+            shape_to_write = self.entry_to_shape(value, same_type=True)
+        except (ValueError, TypeError) as e:
+            raise ValueError(_("Invalid geometry data: %s") % str(e)) from e
+
         if shape_to_write.is_empty:
             return None
-        else:
-            return f"SRID={self.srid};{shape_to_write.wkt}"
+
+        # Validate geometry if validation is enabled
+        if validate and hasattr(record, "env"):
+            config = record.env["ir.config_parameter"].sudo()
+            if config.get_param("base_geoengine.validate_geometry", "True") == "True":
+                if not shape_to_write.is_valid:
+                    raise ValueError(
+                        _("Invalid geometry: %s") % shape_to_write.is_valid_reason
+                        or "Unknown error"
+                    )
+
+                # Check geometry size limit
+                max_size = int(
+                    config.get_param("base_geoengine.max_geometry_size", "1000000")
+                )
+                wkt_size = len(shape_to_write.wkt.encode("utf-8"))
+                if wkt_size > max_size:
+                    raise ValueError(
+                        _("Geometry size (%d bytes) exceeds maximum allowed (%d bytes)")
+                        % (wkt_size, max_size)
+                    )
+
+        return f"SRID={self.srid};{shape_to_write.wkt}"
 
     def convert_to_cache(self, value, record, validate=True):
+        """Convert geometry value for caching.
+
+        Args:
+            value: Geometry value to cache.
+            record: The record being processed.
+            validate: Whether to perform validation.
+
+        Returns:
+            str: Hexadecimal WKB representation or original value.
+
+        Raises:
+            ValueError: When geometry conversion fails.
+        """
         val = value
         if isinstance(val, bytes | str):
             try:
                 int(val, 16)
             except Exception:
-                # not an hex value -> try to load from a sting
+                # not an hex value -> try to load from a string
                 # representation of a geometry
-                value = convert.value_to_shape(value, use_wkb=False)
+                try:
+                    value = convert.value_to_shape(value, use_wkb=False)
+                except Exception as e:
+                    raise ValueError(
+                        _("Failed to convert geometry to cache format: %s") % str(e)
+                    ) from e
         if isinstance(value, BaseGeometry):
             val = value.wkb_hex
         return val
 
     def convert_to_record(self, value, record):
-        """Value may be:
-        - a GeoJSON string when field onchange is triggered
-        - a geometry object hexcode from cache
-        - a unicode containing dict
+        """Convert value for record display.
+
+        Args:
+            value: Value which may be:
+                - a GeoJSON string when field onchange is triggered
+                - a geometry object hexcode from cache
+                - a unicode containing dict
+            record: The record being processed.
+
+        Returns:
+            BaseGeometry or False: Shapely geometry object or False for empty values.
+
+        Raises:
+            ValueError: When geometry conversion fails.
         """
         if not value:
             return False
-        return convert.value_to_shape(value, use_wkb=True)
+        try:
+            return convert.value_to_shape(value, use_wkb=True)
+        except Exception as e:
+            raise ValueError(
+                _("Failed to convert value to geometry: %s") % str(e)
+            ) from e
 
     def convert_to_read(self, value, record, use_display_name=True):
         if not isinstance(value, BaseGeometry):
@@ -108,25 +178,42 @@ class GeoField(fields.Field):
         return wkbloads(wkb, hex=True) if wkb else False
 
     def entry_to_shape(self, value, same_type=False):
-        """Transform input into an object"""
+        """Transform input into a geometry object.
+
+        Args:
+            value: Input geometry value in various formats.
+            same_type: Whether to enforce geometry type matching.
+
+        Returns:
+            BaseGeometry: Shapely geometry object.
+
+        Raises:
+            TypeError: When geometry type doesn't match field type.
+            ValueError: When geometry data is invalid.
+        """
         use_wkb = True
         if isinstance(value, (bytes, str)):
             try:
                 int(value, 16)
             except Exception:
-                # not an hex value -> try to load from a sting
+                # not an hex value -> try to load from a string
                 # representation of a geometry
                 use_wkb = False
-        shape = convert.value_to_shape(value, use_wkb=use_wkb)
+
+        try:
+            shape = convert.value_to_shape(value, use_wkb=use_wkb)
+        except Exception as e:
+            raise ValueError(_("Invalid geometry data: %s") % str(e)) from e
+
         if same_type and not shape.is_empty:
             if shape.geom_type.lower() != self.geo_type.lower():
-                msg = _(
-                    "Geo Value %(geom_type)s must be of the same type %(geo_type)s \
-                        as fields",
-                    geom_type=shape.geom_type.lower(),
-                    geo_type=self.geo_type.lower(),
+                raise TypeError(
+                    _(
+                        "Geometry type mismatch: expected %(expected)s, got %(actual)s",
+                        expected=self.geo_type.lower(),
+                        actual=shape.geom_type.lower(),
+                    )
                 )
-                raise TypeError(msg)
         return shape
 
     def update_geo_db_column(self, model):
@@ -240,11 +327,11 @@ class GeoLine(GeoField):
         :return: LINESTRING Object
         """
         sql = """
-        SELECT
-            ST_MakeLine(
-                ST_GeomFromText(%(wkt1)s, %(srid)s),
-                ST_GeomFromText(%(wkt2)s, %(srid)s)
-            )
+            SELECT
+                ST_MakeLine(
+                    ST_GeomFromText(%(wkt1)s, %(srid)s),
+                    ST_GeomFromText(%(wkt2)s, %(srid)s)
+                )
         """
         cr.execute(
             sql,
@@ -273,8 +360,9 @@ class GeoPoint(GeoField):
             SELECT
                 ST_Transform(
                     ST_GeomFromText(%(wkt)s, 4326),
-                    %(srid)s)
-        """,
+                    %(srid)s
+                )
+            """,
             {"wkt": pt.wkt, "srid": cls.srid},
         )
         res = cr.fetchone()
@@ -295,14 +383,17 @@ class GeoPoint(GeoField):
             geo_point_instance = shape(json.loads(geopoint))
         cr.execute(
             """
-                    SELECT
-                        ST_TRANSFORM(
-                            ST_SetSRID(
-                                ST_MakePoint(
-                                        %(coord_x)s, %(coord_y)s
-                                            ),
-                                        %(srid)s
-                                      ), 4326)""",
+            SELECT
+                ST_TRANSFORM(
+                    ST_SetSRID(
+                        ST_MakePoint(
+                                %(coord_x)s, %(coord_y)s
+                        ),
+                        %(srid)s
+                    ),
+                    4326
+                )
+            """,
             {
                 "coord_x": geo_point_instance.x,
                 "coord_y": geo_point_instance.y,

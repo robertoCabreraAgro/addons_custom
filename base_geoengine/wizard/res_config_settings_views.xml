@@ -109,13 +109,13 @@
                                         type="object"
                                         class="btn btn-secondary" />
                                 </div>
-<!--                                 <div class="col-md-4">
+                                <div class="col-md-4">
                                     <button name="action_show_cache_stats"
                                         string="Cache Stats"
                                         type="object"
                                         class="btn btn-info" />
                                 </div>
- -->                                <div class="col-md-4">
+                                <div class="col-md-4">
                                     <button name="action_rebuild_spatial_indexes"
                                         string="Rebuild Indexes"
                                         type="object"

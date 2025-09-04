@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- GeoEngine Performance Analysis Wizard Form View -->
+    <record id="view_geo_performance_wizard_form" model="ir.ui.view">
+        <field name="name">geo.performance.wizard.form</field>
+        <field name="model">geo.performance.wizard</field>
+        <field name="arch" type="xml">
+            <form string="GeoEngine Performance Analysis">
+                <header>
+                    <button name="action_analyze_performance" type="object" string="Run Analysis"
+                        class="btn-primary" invisible="analysis_result" />
+                    <button name="action_apply_recommendations" type="object"
+                        string="Apply Optimizations"
+                        class="btn-success" invisible="not analysis_result" />
+                </header>
+
+                <sheet>
+                    <!-- Configuration Section -->
+                    <div invisible="analysis_result">
+                        <div class="oe_title">
+                            <h1>Performance Analysis Configuration</h1>
+                            <p>Configure the analysis parameters and options.</p>
+                        </div>
+
+                        <group>
+                            <group string="Analysis Period">
+                                <field name="analysis_period" />
+                                <field name="date_from" invisible="analysis_period != 'custom'" />
+                                <field name="date_to" invisible="analysis_period != 'custom'" />
+                            </group>
+                            <group string="Analysis Options">
+                                <field name="include_cache_stats" />
+                                <field name="include_query_analysis" />
+                                <field name="include_index_recommendations" />
+                            </group>
+                        </group>
+
+                        <div class="alert alert-info" role="alert">
+                            <strong>Cache Statistics:</strong> Analyze spatial cache performance and
+                            hit ratios<br />
+                            <strong>Query Analysis:</strong> Review spatial query
+                            performance (requires logging enabled)<br />
+                            <strong>Index
+                            Recommendations:</strong> Check spatial indexes and provide optimization
+                            suggestions </div>
+                    </div>
+
+                    <!-- Results Section -->
+                    <div invisible="not analysis_result">
+                        <div class="oe_title">
+                            <h1>Performance Analysis Results</h1>
+                        </div>
+
+                        <notebook>
+                            <page string="Analysis Report">
+                                <field name="analysis_result" readonly="1" />
+                            </page>
+                            <page string="Recommendations">
+                                <field name="recommendations" readonly="1" />
+                                <div class="alert alert-warning mt16" role="alert">
+                                    <strong>Note:</strong> Review recommendations carefully before
+                                    applying automated optimizations. Some changes may affect system
+                                    performance and should be tested in a development environment
+                                    first. </div>
+                            </page>
+                        </notebook>
+                    </div>
+
+                    <!-- Hidden fields -->
+                    <field name="analysis_result" invisible="1" />
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- GeoEngine Performance Analysis Action -->
+    <record id="action_geo_performance_wizard" model="ir.actions.act_window">
+        <field name="name">GeoEngine Performance Analysis</field>
+        <field name="res_model">geo.performance.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="view_geo_performance_wizard_form" />
+    </record>
+
+    <!-- Menu item -->
+    <menuitem id="menu_geo_performance_wizard"
+        name="Performance Analysis"
+        parent="base.menu_administration"
+        action="action_geo_performance_wizard"
+        sequence="101" />
+
+</odoo>

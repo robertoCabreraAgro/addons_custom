@@ -16,7 +16,9 @@
         "views/ir_view_view.xml",
         "views/geo_raster_layer_view.xml",
         "views/geo_vector_layer_view.xml",
-        "views/res_config_settings_views.xml",
+        "wizard/res_config_settings_views.xml",
+        "wizard/geo_setup_wizard_views.xml",
+        "wizard/geo_performance_wizard_views.xml",
     ],
     "assets": {
         "web.assets_backend": [

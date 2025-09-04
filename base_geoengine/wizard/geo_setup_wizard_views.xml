@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- GeoEngine Setup Wizard Form View -->
+    <record id="view_geo_setup_wizard_form" model="ir.ui.view">
+        <field name="name">geo.setup.wizard.form</field>
+        <field name="model">geo.setup.wizard</field>
+        <field name="arch" type="xml">
+            <form string="GeoEngine Setup Wizard">
+                <header>
+                    <button name="action_previous_step" type="object" string="Previous"
+                        invisible="current_step == 'welcome'" class="btn-secondary" />
+                    <button name="action_next_step" type="object" string="Next"
+                        invisible="current_step == 'completion'" class="btn-primary" />
+                    <button name="action_finish_setup" type="object" string="Finish Setup"
+                        invisible="current_step != 'completion'" class="btn-success" />
+                    <button name="action_skip_setup" type="object" string="Skip Setup"
+                        invisible="current_step == 'completion'" class="btn-link" />
+                </header>
+
+                <sheet>
+                    <!-- Welcome Step -->
+                    <div invisible="current_step != 'welcome'">
+                        <div class="oe_title">
+                            <h1>Welcome to GeoEngine Setup</h1>
+                            <p>This wizard will guide you through the initial configuration of
+                                GeoEngine for optimal performance.</p>
+                        </div>
+                        <group>
+                            <field name="setup_type" widget="radio" />
+                        </group>
+                        <div class="alert alert-info" role="alert">
+                            <strong>Quick Setup:</strong> Recommended settings for most users<br />
+                            <strong>Advanced
+                            Setup:</strong> Performance-optimized settings<br />
+                            <strong>Custom
+                            Configuration:</strong> Manual configuration of all options </div>
+                    </div>
+
+                    <!-- Spatial Configuration Step -->
+                    <div invisible="current_step != 'spatial_config'">
+                        <div class="oe_title">
+                            <h1>Spatial Reference Systems</h1>
+                            <p>Configure coordinate systems and precision settings.</p>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="region" />
+                                <field name="default_srid" />
+                                <field name="display_srid" />
+                            </group>
+                            <group>
+                                <field name="coordinate_precision" />
+                            </group>
+                        </group>
+                        <div class="alert alert-info" role="alert">
+                            <strong>Default SRID:</strong> Used for storing geometry data (Web
+                            Mercator: 3857)<br />
+                            <strong>Display SRID:</strong> Used for displaying
+                            coordinates (WGS84: 4326)<br />
+                            <strong>Precision:</strong> Number of
+                            decimal places for coordinates </div>
+                    </div>
+
+                    <!-- Performance Configuration Step -->
+                    <div invisible="current_step != 'performance_config'">
+                        <div class="oe_title">
+                            <h1>Performance Settings</h1>
+                            <p>Configure caching and performance optimization.</p>
+                        </div>
+                        <group>
+                            <group string="Caching">
+                                <field name="enable_cache" />
+                                <field name="cache_timeout" invisible="not enable_cache" />
+                                <field name="max_cache_entries" invisible="not enable_cache" />
+                            </group>
+                            <group string="Geometry Limits">
+                                <field name="max_geometry_size" />
+                            </group>
+                        </group>
+                    </div>
+
+                    <!-- Database Setup Step -->
+                    <div invisible="current_step != 'database_setup'">
+                        <div class="oe_title">
+                            <h1>Database Optimization</h1>
+                            <p>Configure database indexes and validation settings.</p>
+                        </div>
+                        <group>
+                            <group string="Indexes">
+                                <field name="create_spatial_indexes" />
+                            </group>
+                            <group string="Validation &amp; Monitoring">
+                                <field name="validate_geometries" />
+                                <field name="enable_monitoring" />
+                            </group>
+                        </group>
+                    </div>
+
+                    <!-- Completion Step -->
+                    <div invisible="current_step != 'completion'">
+                        <div class="oe_title">
+                            <h1>Setup Complete!</h1>
+                            <p>GeoEngine has been configured successfully.</p>
+                        </div>
+                        <field name="setup_summary" readonly="1" />
+                    </div>
+
+                    <!-- Hidden fields -->
+                    <field name="current_step" invisible="1" />
+                    <field name="setup_complete" invisible="1" />
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- GeoEngine Setup Wizard Action -->
+    <record id="action_geo_setup_wizard" model="ir.actions.act_window">
+        <field name="name">GeoEngine Setup Wizard</field>
+        <field name="res_model">geo.setup.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="view_geo_setup_wizard_form" />
+    </record>
+
+    <!-- Menu item -->
+    <menuitem id="menu_geo_setup_wizard"
+        name="Setup Wizard"
+        parent="base.menu_administration"
+        action="action_geo_setup_wizard"
+        sequence="100" />
+
+</odoo>
