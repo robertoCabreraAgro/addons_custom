@@ -156,48 +156,44 @@ class GPSWebhook(http.Controller):
                 datetime.now() - processing_stats["validation_start"]
             ).total_seconds()
 
-            # === CREATE TRACKING POINT WITH TRANSACTION MANAGEMENT ===
-
             db_start_time = datetime.now()
 
-            # Use savepoint for atomic database operations
             try:
                 with request.env.cr.savepoint():
                     # Create tracking point within transaction
                     new_point = self._create_tracking_point(vals)
                     if not new_point:
                         raise Exception("Failed to create tracking point record")
-
                     # Update device's last point reference within same transaction
                     self._update_device_last_point(device, new_point.id)
-
                     processing_stats["db_operation_time"] = (
                         datetime.now() - db_start_time
                     ).total_seconds()
+                msg = "Point processed successfully"
+                self._log_webhook_success(
+                    start_time,
+                    remote_addr,
+                    imei,
+                    msg,
+                    processing_stats,
+                    vals,
+                )
+                return self.RESPONSE_SUCCESS
 
             except Exception as db_error:
                 # Transaction automatically rolled back due to savepoint context
                 processing_stats["db_operation_time"] = (
                     datetime.now() - db_start_time
                 ).total_seconds()
-
-                error_msg = f"Database transaction failed: {str(db_error)}"
+                msg = f"Database transaction failed: {str(db_error)}"
                 self._log_webhook_failure(
-                    start_time, remote_addr, imei, error_msg, processing_stats
+                    start_time,
+                    remote_addr,
+                    imei,
+                    msg,
+                    processing_stats,
                 )
                 return self.RESPONSE_FAILURE
-
-            # Log successful processing with comprehensive metrics
-            self._log_webhook_success(
-                start_time,
-                remote_addr,
-                imei,
-                "Point processed successfully",
-                processing_stats,
-                vals,
-            )
-
-            return self.RESPONSE_SUCCESS
 
         except Exception as e:
             self._log_webhook_failure(
