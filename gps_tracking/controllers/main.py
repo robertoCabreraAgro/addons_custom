@@ -649,13 +649,10 @@ class GPSWebhook(http.Controller):
         device.sudo().write({"last_point_id": point_id})
         return True
 
-    @classmethod
-    def _get_recent_points_cache(cls, device_id: int, window_seconds: int = None):
+    def _get_recent_points(self, device_id: int, window_seconds: int = None):
         """
-        Cache recent GPS points to eliminate duplicate database queries with class-level persistence.
-
-        Used by speed validation, temporal validation, and duplicate detection.
-
+        Get recent GPS points for validation purposes.
+        
         Args:
             device_id: GPS device ID
             window_seconds: Time window for recent points (uses config if None)
@@ -663,52 +660,33 @@ class GPSWebhook(http.Controller):
         Returns:
             Recordset of recent GPS points
         """
-        if not hasattr(cls, "_points_cache"):
-            cls._points_cache = {}
-
         # Use configuration for window if not specified
         if window_seconds is None:
-            config = cls._get_validation_config()
+            config = self._get_validation_config()
             window_seconds = config.get("extended_window", 300)
 
-        cache_key = f"recent_points_{device_id}_{window_seconds}"
-
-        # Simple cache without TTL for now (points are relatively stable within request)
-        if cache_key not in cls._points_cache:
-            try:
-                cutoff_time = datetime.now() - timedelta(seconds=window_seconds)
-                recent_points = (
-                    request.env["gps.tracking.point"]
-                    .sudo()
-                    .search(
-                        [
-                            ("device_id", "=", device_id),
-                            ("timestamp", ">=", cutoff_time),
-                        ],
-                        order="timestamp desc",
-                        limit=10,
-                    )
+        try:
+            cutoff_time = datetime.now() - timedelta(seconds=window_seconds)
+            recent_points = (
+                request.env["gps.tracking.point"]
+                .sudo()
+                .search(
+                    [
+                        ("device_id", "=", device_id),
+                        ("timestamp", ">=", cutoff_time),
+                    ],
+                    order="timestamp desc",
+                    limit=10,
                 )
-                cls._points_cache[cache_key] = recent_points
-                _logger.debug(
-                    "Cached %d recent points for device %d",
-                    len(recent_points),
-                    device_id,
-                )
-            except Exception as e:
-                _logger.error(
-                    "Error caching recent points for device %d: %s", device_id, e
-                )
-                return request.env["gps.tracking.point"].sudo().browse([])
+            )
+            return recent_points
 
-        return cls._points_cache[cache_key]
+        except Exception as e:
+            _logger.error(
+                "Error fetching recent points for device %d: %s", device_id, e
+            )
+            return request.env["gps.tracking.point"].sudo().browse([])
 
-    @classmethod
-    def _clear_points_cache(cls):
-        """Clear points cache (useful for tests or when points change significantly)."""
-        if hasattr(cls, "_points_cache"):
-            cls._points_cache.clear()
-            _logger.debug("Points cache cleared")
 
     # ------------------------------------------------------------
     # DATA PROCESING METHODS
@@ -883,9 +861,7 @@ class GPSWebhook(http.Controller):
                     if rule_name == "prerequisite_validation":
                         # Prepare tracking point values (using device.id if device exists)
                         vals = self._prepare_tracking_point_vals(device.id, payload)
-                        recent_points = self.__class__._get_recent_points_cache(
-                            device.id
-                        )
+                        recent_points = self._get_recent_points(device.id)
                 elif not is_valid:
                     processing_stats["quality_checks_failed"] += 1
                     if severity == "critical":
@@ -1236,25 +1212,6 @@ class GPSWebhook(http.Controller):
         # Basic validation (negative speed check - positive range already done in comprehensive)
         if speed < 0:
             return False, f"Invalid negative speed: {speed} km/h"
-
-        # Speed change validation using cached recent points
-        if recent_points and speed and vals.get("timestamp"):
-            last_point = recent_points[0] if recent_points else None
-            if last_point and last_point.speed:
-                time_diff = (
-                    vals.get("timestamp") - last_point.timestamp
-                ).total_seconds()
-
-                # Only validate if within the validation window
-                if 0 < abs(time_diff) <= config["speed_window_seconds"]:
-                    speed_change = abs(speed - last_point.speed)
-                    speed_change_per_second = speed_change / abs(time_diff)
-
-                    if speed_change_per_second > config["max_speed_change"]:
-                        return (
-                            False,
-                            f"Unrealistic speed change: {speed_change:.1f} km/h in {abs(time_diff):.1f} seconds",
-                        )
 
         return True, "Speed parameters valid"
 
