@@ -151,8 +151,6 @@ class GPSWebhook(http.Controller):
                     processing_stats,
                 )
                 return self.RESPONSE_FAILURE
-            else:
-                processing_stats["quality_checks_passed"] += 1
 
             processing_stats["validation_time"] = (
                 datetime.now() - processing_stats["validation_start"]
@@ -402,161 +400,205 @@ class GPSWebhook(http.Controller):
 
         return tracking_point_vals
 
-    def _get_validation_config(self):
+    @classmethod
+    def _get_validation_config(cls, force_reload=False):
         """
-        Centralized configuration loading with caching to eliminate 23+ duplicate parameter queries.
+        Centralized configuration loading with class-level caching to persist across requests.
+
+        Args:
+            force_reload: Force reload configuration from database
 
         Returns:
-            dict: All validation parameters loaded once and cached
+            dict: All validation parameters loaded once and cached at class level
         """
-        if not hasattr(self, "_validation_config_cache"):
-            param_obj = request.env["ir.config_parameter"].sudo()
-            self._validation_config_cache = {
-                # GPS accuracy parameters
-                "min_satellites": int(
-                    param_obj.get_param(
-                        "gps_tracking.validation.min_satellites",
-                        default=self.MIN_SATELLITES_FOR_ACCURACY,
-                    )
-                ),
-                "max_hdop": float(
-                    param_obj.get_param(
-                        "gps_tracking.validation.max_hdop",
-                        default=5.0,
-                    )
-                ),
-                # Coordinate parameters
-                "min_latitude": float(
-                    param_obj.get_param(
-                        "gps_tracking.validation.min_latitude",
-                        default=self.MIN_LATITUDE,
-                    )
-                ),
-                "max_latitude": float(
-                    param_obj.get_param(
-                        "gps_tracking.validation.max_latitude",
-                        default=self.MAX_LATITUDE,
-                    )
-                ),
-                "min_longitude": float(
-                    param_obj.get_param(
-                        "gps_tracking.validation.min_longitude",
-                        default=self.MIN_LONGITUDE,
-                    )
-                ),
-                "max_longitude": float(
-                    param_obj.get_param(
-                        "gps_tracking.validation.max_longitude",
-                        default=self.MAX_LONGITUDE,
-                    )
-                ),
-                "zero_tolerance": float(
-                    param_obj.get_param(
-                        "gps_tracking.validation.zero_coordinate_tolerance",
-                        default=0.001,
-                    )
-                ),
-                # Vehicle parameters
-                "max_realistic_speed": float(
-                    param_obj.get_param(
-                        "gps_tracking.validation.max_realistic_speed",
-                        default=self.MAX_REASONABLE_SPEED,
-                    )
-                ),
-                "max_fuel_level": float(
-                    param_obj.get_param(
-                        "gps_tracking.validation.max_fuel_level",
-                        default=100.0,
-                    )
-                ),
-                "max_engine_hours": int(
-                    param_obj.get_param(
-                        "gps_tracking.validation.max_engine_hours",
-                        default=50000,
-                    )
-                ),
-                # Electrical parameters
-                "min_external_voltage": float(
-                    param_obj.get_param(
-                        "gps_tracking.validation.min_external_voltage",
-                        default=8.0,
-                    )
-                ),
-                "max_external_voltage": float(
-                    param_obj.get_param(
-                        "gps_tracking.validation.max_external_voltage",
-                        default=30.0,
-                    )
-                ),
-                "min_internal_voltage": float(
-                    param_obj.get_param(
-                        "gps_tracking.validation.min_internal_voltage",
-                        default=2.5,
-                    )
-                ),
-                "max_internal_voltage": float(
-                    param_obj.get_param(
-                        "gps_tracking.validation.max_internal_voltage",
-                        default=5.5,
-                    )
-                ),
-                "min_gsm_signal": int(
-                    param_obj.get_param(
-                        "gps_tracking.validation.min_gsm_signal", default=0
-                    )
-                ),
-                "max_gsm_signal": int(
-                    param_obj.get_param(
-                        "gps_tracking.validation.max_gsm_signal", default=31
-                    )
-                ),
-                # Speed change parameters
-                "max_speed_change": float(
-                    param_obj.get_param(
-                        "gps_tracking.validation.max_speed_change_kmh_per_sec",
-                        default=10.0,
-                    )
-                ),
-                "speed_window_seconds": int(
-                    param_obj.get_param(
-                        "gps_tracking.validation.speed_validation_window_seconds",
-                        default=30,
-                    )
-                ),
-                # Temporal parameters
-                "max_time_gap_hours": float(
-                    param_obj.get_param(
-                        "gps_tracking.validation.max_time_gap_hours",
-                        default=24.0,
-                    )
-                ),
-                "min_time_interval_seconds": int(
-                    param_obj.get_param(
-                        "gps_tracking.validation.min_time_interval_seconds",
-                        default=1,
-                    )
-                ),
-                # Duplicate detection parameters
-                "duplicate_time_window": int(
-                    param_obj.get_param(
-                        "gps_tracking.validation.duplicate_time_window_seconds",
-                        default=10,
-                    )
-                ),
-                "coordinate_tolerance": float(
-                    param_obj.get_param(
-                        "gps_tracking.validation.duplicate_coordinate_tolerance",
-                        default=0.00001,
-                    )
-                ),
-                "extended_window": int(
-                    param_obj.get_param(
-                        "gps_tracking.validation.duplicate_extended_window_seconds",
-                        default=300,
-                    )
-                ),
-            }
-        return self._validation_config_cache
+        if force_reload or not hasattr(cls, "_validation_config_cache"):
+            try:
+                param_obj = request.env["ir.config_parameter"].sudo()
+                cls._validation_config_cache = {
+                    # GPS accuracy parameters
+                    "min_satellites": int(
+                        param_obj.get_param(
+                            "gps_tracking.validation.min_satellites",
+                            default=cls.MIN_SATELLITES_FOR_ACCURACY,
+                        )
+                    ),
+                    "max_hdop": float(
+                        param_obj.get_param(
+                            "gps_tracking.validation.max_hdop",
+                            default=5.0,
+                        )
+                    ),
+                    # Coordinate parameters
+                    "min_latitude": float(
+                        param_obj.get_param(
+                            "gps_tracking.validation.min_latitude",
+                            default=cls.MIN_LATITUDE,
+                        )
+                    ),
+                    "max_latitude": float(
+                        param_obj.get_param(
+                            "gps_tracking.validation.max_latitude",
+                            default=cls.MAX_LATITUDE,
+                        )
+                    ),
+                    "min_longitude": float(
+                        param_obj.get_param(
+                            "gps_tracking.validation.min_longitude",
+                            default=cls.MIN_LONGITUDE,
+                        )
+                    ),
+                    "max_longitude": float(
+                        param_obj.get_param(
+                            "gps_tracking.validation.max_longitude",
+                            default=cls.MAX_LONGITUDE,
+                        )
+                    ),
+                    "zero_tolerance": float(
+                        param_obj.get_param(
+                            "gps_tracking.validation.zero_coordinate_tolerance",
+                            default=0.001,
+                        )
+                    ),
+                    # Vehicle parameters
+                    "max_realistic_speed": float(
+                        param_obj.get_param(
+                            "gps_tracking.validation.max_realistic_speed",
+                            default=cls.MAX_REASONABLE_SPEED,
+                        )
+                    ),
+                    "max_fuel_level": float(
+                        param_obj.get_param(
+                            "gps_tracking.validation.max_fuel_level",
+                            default=100.0,
+                        )
+                    ),
+                    "max_engine_hours": int(
+                        param_obj.get_param(
+                            "gps_tracking.validation.max_engine_hours",
+                            default=50000,
+                        )
+                    ),
+                    # Electrical parameters
+                    "min_external_voltage": float(
+                        param_obj.get_param(
+                            "gps_tracking.validation.min_external_voltage",
+                            default=8.0,
+                        )
+                    ),
+                    "max_external_voltage": float(
+                        param_obj.get_param(
+                            "gps_tracking.validation.max_external_voltage",
+                            default=30.0,
+                        )
+                    ),
+                    "min_internal_voltage": float(
+                        param_obj.get_param(
+                            "gps_tracking.validation.min_internal_voltage",
+                            default=2.5,
+                        )
+                    ),
+                    "max_internal_voltage": float(
+                        param_obj.get_param(
+                            "gps_tracking.validation.max_internal_voltage",
+                            default=5.5,
+                        )
+                    ),
+                    "min_gsm_signal": int(
+                        param_obj.get_param(
+                            "gps_tracking.validation.min_gsm_signal", default=0
+                        )
+                    ),
+                    "max_gsm_signal": int(
+                        param_obj.get_param(
+                            "gps_tracking.validation.max_gsm_signal", default=31
+                        )
+                    ),
+                    # Speed change parameters
+                    "max_speed_change": float(
+                        param_obj.get_param(
+                            "gps_tracking.validation.max_speed_change_kmh_per_sec",
+                            default=10.0,
+                        )
+                    ),
+                    "speed_window_seconds": int(
+                        param_obj.get_param(
+                            "gps_tracking.validation.speed_validation_window_seconds",
+                            default=30,
+                        )
+                    ),
+                    # Temporal parameters
+                    "max_time_gap_hours": float(
+                        param_obj.get_param(
+                            "gps_tracking.validation.max_time_gap_hours",
+                            default=24.0,
+                        )
+                    ),
+                    "min_time_interval_seconds": int(
+                        param_obj.get_param(
+                            "gps_tracking.validation.min_time_interval_seconds",
+                            default=1,
+                        )
+                    ),
+                    # Duplicate detection parameters
+                    "duplicate_time_window": int(
+                        param_obj.get_param(
+                            "gps_tracking.validation.duplicate_time_window_seconds",
+                            default=10,
+                        )
+                    ),
+                    "coordinate_tolerance": float(
+                        param_obj.get_param(
+                            "gps_tracking.validation.duplicate_coordinate_tolerance",
+                            default=0.00001,
+                        )
+                    ),
+                    "extended_window": int(
+                        param_obj.get_param(
+                            "gps_tracking.validation.duplicate_extended_window_seconds",
+                            default=300,
+                        )
+                    ),
+                }
+                _logger.info(
+                    "Validation configuration loaded successfully with %d parameters",
+                    len(cls._validation_config_cache),
+                )
+            except Exception as e:
+                _logger.error("Failed to load validation config: %s", e)
+                # Return minimal safe defaults if loading fails
+                cls._validation_config_cache = {
+                    "min_satellites": cls.MIN_SATELLITES_FOR_ACCURACY,
+                    "max_hdop": 5.0,
+                    "min_latitude": cls.MIN_LATITUDE,
+                    "max_latitude": cls.MAX_LATITUDE,
+                    "min_longitude": cls.MIN_LONGITUDE,
+                    "max_longitude": cls.MAX_LONGITUDE,
+                    "zero_tolerance": 0.001,
+                    "max_realistic_speed": cls.MAX_REASONABLE_SPEED,
+                    "max_fuel_level": 100.0,
+                    "max_engine_hours": 50000,
+                    "min_external_voltage": 8.0,
+                    "max_external_voltage": 30.0,
+                    "min_internal_voltage": 2.5,
+                    "max_internal_voltage": 5.5,
+                    "min_gsm_signal": 0,
+                    "max_gsm_signal": 31,
+                    "max_speed_change": 10.0,
+                    "speed_window_seconds": 30,
+                    "max_time_gap_hours": 24.0,
+                    "min_time_interval_seconds": 1,
+                    "duplicate_time_window": 10,
+                    "coordinate_tolerance": 0.00001,
+                    "extended_window": 300,
+                }
+        return cls._validation_config_cache
+
+    @classmethod
+    def _clear_validation_cache(cls):
+        """Clear validation configuration cache (useful when settings change)."""
+        if hasattr(cls, "_validation_config_cache"):
+            delattr(cls, "_validation_config_cache")
+            _logger.info("Validation configuration cache cleared")
 
     # ------------------------------------------------------------
     # DATABASE OPERATIONS
@@ -611,43 +653,66 @@ class GPSWebhook(http.Controller):
         device.sudo().write({"last_point_id": point_id})
         return True
 
-    def _get_recent_points_cache(self, device_id: int, window_seconds: int = 300):
+    @classmethod
+    def _get_recent_points_cache(cls, device_id: int, window_seconds: int = None):
         """
-        Cache recent GPS points to eliminate duplicate database queries.
+        Cache recent GPS points to eliminate duplicate database queries with class-level persistence.
 
         Used by speed validation, temporal validation, and duplicate detection.
 
         Args:
             device_id: GPS device ID
-            window_seconds: Time window for recent points
+            window_seconds: Time window for recent points (uses config if None)
 
         Returns:
             Recordset of recent GPS points
         """
-        cache_key = f"recent_points_{device_id}"
-        param_obj = request.env["ir.config_parameter"].sudo()
-        window_seconds = param_obj.get_param(
-            "gps_tracking.validation.duplicate_time_window_seconds",
-            default=window_seconds,
-        )
-        if not hasattr(self, "_points_cache"):
-            self._points_cache = {}
+        if not hasattr(cls, "_points_cache"):
+            cls._points_cache = {}
 
-        if cache_key not in self._points_cache:
-            cutoff_time = datetime.now() - timedelta(seconds=window_seconds)
-            recent_points = (
-                request.env["gps.tracking.point"]
-                .sudo()
-                .search(
-                    [("device_id", "=", device_id), ("timestamp", ">=", cutoff_time)],
-                    order="timestamp desc",
-                    limit=10,
+        # Use configuration for window if not specified
+        if window_seconds is None:
+            config = cls._get_validation_config()
+            window_seconds = config.get("extended_window", 300)
+
+        cache_key = f"recent_points_{device_id}_{window_seconds}"
+
+        # Simple cache without TTL for now (points are relatively stable within request)
+        if cache_key not in cls._points_cache:
+            try:
+                cutoff_time = datetime.now() - timedelta(seconds=window_seconds)
+                recent_points = (
+                    request.env["gps.tracking.point"]
+                    .sudo()
+                    .search(
+                        [
+                            ("device_id", "=", device_id),
+                            ("timestamp", ">=", cutoff_time),
+                        ],
+                        order="timestamp desc",
+                        limit=10,
+                    )
                 )
-            )
+                cls._points_cache[cache_key] = recent_points
+                _logger.debug(
+                    "Cached %d recent points for device %d",
+                    len(recent_points),
+                    device_id,
+                )
+            except Exception as e:
+                _logger.error(
+                    "Error caching recent points for device %d: %s", device_id, e
+                )
+                return request.env["gps.tracking.point"].sudo().browse([])
 
-            self._points_cache[cache_key] = recent_points
+        return cls._points_cache[cache_key]
 
-        return self._points_cache[cache_key]
+    @classmethod
+    def _clear_points_cache(cls):
+        """Clear points cache (useful for tests or when points change significantly)."""
+        if hasattr(cls, "_points_cache"):
+            cls._points_cache.clear()
+            _logger.debug("Points cache cleared")
 
     # ------------------------------------------------------------
     # DATA PROCESING METHODS
@@ -759,7 +824,7 @@ class GPSWebhook(http.Controller):
             Tuple of (is_valid, error_message, device, vals)
         """
         # Load all validation configuration once (replaces 23+ individual parameter loads)
-        config = self._get_validation_config()
+        config = self.__class__._get_validation_config()
 
         # Collect errors and warnings with configurable severity
         # Cache recent points for multiple validations (replaces 3+ duplicate queries)
@@ -822,7 +887,9 @@ class GPSWebhook(http.Controller):
                     if rule_name == "prerequisite_validation":
                         # Prepare tracking point values (using device.id if device exists)
                         vals = self._prepare_tracking_point_vals(device.id, payload)
-                        recent_points = self._get_recent_points_cache(device.id)
+                        recent_points = self.__class__._get_recent_points_cache(
+                            device.id
+                        )
                 elif not is_valid:
                     processing_stats["quality_checks_failed"] += 1
                     if severity == "critical":
@@ -834,17 +901,45 @@ class GPSWebhook(http.Controller):
             except Exception as e:
                 # Count exceptions as failed checks
                 processing_stats["quality_checks_failed"] += 1
-                _logger.warning(f"Validation error in {rule_name}: {e}")
+                imei_info = vals.get("imei", payload.get("14", "unknown"))
+                _logger.error(
+                    "Validation exception in rule '%s' for device %s: %s",
+                    rule_name,
+                    imei_info,
+                    str(e),
+                    exc_info=True,
+                )
+                # Treat validation exceptions as critical errors to ensure data integrity
+                errors.append(f"{rule_name}: Validation failed due to system error")
 
         # Return failure only for critical errors
         if errors:
-            return False, "; ".join(errors), device, vals
+            imei_info = (
+                vals.get("imei", payload.get("14", "unknown"))
+                if vals
+                else payload.get("14", "unknown")
+            )
+            error_summary = (
+                f"Validation failed for device {imei_info}: {'; '.join(errors)}"
+            )
+            _logger.warning("GPS validation failed: %s", error_summary)
+            return False, error_summary, device, vals
 
         # Log warnings but don't fail validation
         if warnings:
-            _logger.info(f"GPS validation warnings: {'; '.join(warnings)}")
+            imei_info = device.imei if device else payload.get("14", "unknown")
+            warning_summary = (
+                f"GPS validation warnings for device {imei_info}: {'; '.join(warnings)}"
+            )
+            _logger.info(warning_summary)
 
-        return True, "Valid", device, vals
+        passed_checks = processing_stats.get("quality_checks_passed", 0)
+        total_checks = passed_checks + processing_stats.get("quality_checks_failed", 0)
+        success_message = (
+            f"Validation successful: {passed_checks}/{total_checks} checks passed"
+        )
+
+        return True, success_message, device, vals
 
     def _validate_prerequisites(self, payload: Dict[str, Any]) -> tuple[bool, str, Any]:
         """
@@ -986,13 +1081,19 @@ class GPSWebhook(http.Controller):
 
         # Check for suspicious zero coordinates
         if abs(lat) < config["zero_tolerance"] and abs(lng) < config["zero_tolerance"]:
-            return False, f"Suspicious zero coordinates: lat={lat}, lng={lng}"
+            return (
+                False,
+                f"Suspicious zero coordinates detected: lat={lat:.6f}, lng={lng:.6f} (tolerance: {config['zero_tolerance']})",
+            )
 
         # Check for obviously invalid coordinates (0,0)
         if lat == 0.0 and lng == 0.0:
-            return False, "Invalid coordinates: (0,0) - GPS not acquired"
+            return (
+                False,
+                "Invalid null coordinates (0.0, 0.0) - GPS signal not acquired",
+            )
 
-        return True, "Coordinate quality valid"
+        return True, f"Coordinates valid: ({lat:.6f}, {lng:.6f})"
 
     def _validate_gps_accuracy(
         self, vals: Dict[str, Any], config: dict, recent_points=None
