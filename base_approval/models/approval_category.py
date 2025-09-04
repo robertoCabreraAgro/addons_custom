@@ -36,7 +36,10 @@ class ApprovalCategory(models.Model):
         translate=True,
         required=True,
     )
-    active = fields.Boolean(default=True, tracking=True,)
+    active = fields.Boolean(
+        default=True,
+        tracking=True,
+    )
     sequence = fields.Integer(string="Sequence")
     automated_sequence = fields.Boolean(
         string="Automated Sequence?",

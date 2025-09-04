@@ -3,6 +3,7 @@
     "version": "1.0",
     "depends": ["base", "account", "sale", "documents"],
     "author": "Agro Marin",
+    "license": "LGPL-3",
     "category": "Finance",
     "summary": "Customer Credit Evaluation and Management",
     "description": """

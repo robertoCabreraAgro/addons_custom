@@ -168,8 +168,6 @@
     "assets": {
         "web.assets_backend": [
             "marin/static/src/widgets/**/*",
-            "marin/static/src/js/**/*",
-            "marin/static/src/xml/**/*",
         ],
     },
     "installable": True,
