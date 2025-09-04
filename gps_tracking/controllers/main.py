@@ -689,11 +689,11 @@ class GPSWebhook(http.Controller):
             # Basic range check for timestamp (avoid circular dependency)
             if not isinstance(timestamp_ms, (int, float)) or timestamp_ms <= 0:
                 return None
-            
+
             # Check reasonable bounds (year 2000 to 2040)
             if timestamp_ms < self.MIN_TIMESTAMP or timestamp_ms > self.MAX_TIMESTAMP:
                 return None
-                
+
             # Convert from milliseconds to seconds and create datetime
             return datetime.fromtimestamp(timestamp_ms / 1000, tz=timezone.utc).replace(
                 tzinfo=None

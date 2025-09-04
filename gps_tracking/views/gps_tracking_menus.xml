@@ -69,6 +69,11 @@
                 name="Area Types"
                 action="action_gps_geofence_type"
                 sequence="20" />
+
+            <menuitem id="menu_settings"
+                name="Settings"
+                action="action_gps_tracking_configuration"
+                sequence="30" />
         </menuitem>
     </menuitem>
 

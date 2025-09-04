@@ -26,6 +26,7 @@
         "views/geoengine_raster_layer_views.xml",
         "views/gps_tracking_point_views.xml",
         "views/gps_tracking_templates.xml",
+        "wizard/res_config_settings_views.xml",
         "views/gps_tracking_menus.xml",
     ],
     "assets": {

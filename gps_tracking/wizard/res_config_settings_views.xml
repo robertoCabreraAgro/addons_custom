@@ -6,24 +6,172 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="base_setup.res_config_settings_view_form" />
         <field name="arch" type="xml">
-            <xpath expr="//block[@id='product_general_settings']" position="inside">
-                <setting id="product_lenght_in_yd" string="Lenght"
-                    help="Define your lenght unit of measure">
-                    <field name="product_lenght_in_yd" class="o_light_label" widget="radio"
-                        options="{'horizontal': true}" />
-                </setting>
-                <setting id="product_odometer_in_mi" string="Odometer"
-                    help="Define your odometer unit of measure">
-                    <field name="product_odometer_in_mi" class="o_light_label" widget="radio"
-                        options="{'horizontal': true}" />
-                </setting>
-                <setting id="product_area_in_square_ft" string="Area"
-                    help="Define your area unit of measure">
-                    <field name="product_area_in_square_ft" class="o_light_label" widget="radio"
-                        options="{'horizontal': true}" />
-                </setting>
+            <xpath expr="//form" position="inside">
+                <app data-string="GPS Tracking" string="GPS Tracking" name="gps_tracking"
+                    groups="gps_tracking.group_gps_tracking_manager">
+                    <block name="general_settings" title="General Validation"
+                        help="Configure overall GPS validation behavior">
+                        <setting name="enable_validation_warnings"
+                            string="Enable Validation Warnings"
+                            help="Enable non-critical validation warnings in logs">
+                            <field name="enable_validation_warnings" />
+                        </setting>
+                        <setting name="strict_validation_mode"
+                            string="Strict Validation Mode"
+                            help="Treat validation warnings as errors">
+                            <field name="strict_validation_mode" />
+                        </setting>
+                    </block>
+                    <block name="gps_accuracy_settings" title="GPS Positioning Accuracy"
+                        help="Configure GPS positioning accuracy requirements">
+                        <setting name="min_satellites"
+                            help="Minimum number of satellites required for accurate GPS positioning">
+                            <field name="min_satellites" />
+                        </setting>
+                        <setting name="max_hdop"
+                            help="Maximum Horizontal Dilution of Precision allowed (lower is better)">
+                            <field name="max_hdop" />
+                        </setting>
+                    </block>
+                    <block name="coordinate_settings" title="Coordinate Validation"
+                        help="Configure acceptable coordinate ranges">
+                        <setting name="coordinate_ranges"
+                            help="Define valid latitude and longitude bounds">
+                            <div class="row">
+                                <div class="col-6">
+                                    <label for="min_latitude" string="Min Latitude" />
+                                    <field name="min_latitude" />
+                                </div>
+                                <div class="col-6">
+                                    <label for="max_latitude" string="Max Latitude" />
+                                    <field name="max_latitude" />
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-6">
+                                    <label for="min_longitude" string="Min Longitude" />
+                                    <field name="min_longitude" />
+                                </div>
+                                <div class="col-6">
+                                    <label for="max_longitude" string="Max Longitude" />
+                                    <field name="max_longitude" />
+                                </div>
+                            </div>
+                        </setting>
+                        <setting name="zero_coordinate_tolerance"
+                            help="Tolerance for detecting suspicious zero coordinates">
+                            <field name="zero_coordinate_tolerance" />
+                        </setting>
+                    </block>
+                    <block name="vehicle_settings" title="Vehicle Parameters"
+                        help="Configure vehicle-related validation limits">
+                        <setting name="max_realistic_speed"
+                            help="Maximum reasonable speed for ground vehicles (km/h)">
+                            <field name="max_realistic_speed" />
+                        </setting>
+                        <setting name="fuel_settings"
+                            help="Fuel level validation parameters">
+                            <div class="row">
+                                <div class="col-6">
+                                    <label for="max_fuel_level" string="Max Fuel Level (%)" />
+                                    <field name="max_fuel_level" />
+                                </div>
+                                <div class="col-6">
+                                    <label for="max_engine_hours" string="Max Engine Hours" />
+                                    <field name="max_engine_hours" />
+                                </div>
+                            </div>
+                        </setting>
+                    </block>
+                    <block name="electrical_settings" title="Electrical Parameters"
+                        help="Configure electrical system validation ranges">
+                        <setting name="voltage_settings" help="Voltage validation ranges">
+                            <div class="row">
+                                <div class="col-6">
+                                    <label for="min_external_voltage"
+                                        string="Min External Voltage (V)" />
+                                    <field name="min_external_voltage" />
+                                </div>
+                                <div class="col-6">
+                                    <label for="max_external_voltage"
+                                        string="Max External Voltage (V)" />
+                                    <field name="max_external_voltage" />
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-6">
+                                    <label for="min_internal_voltage"
+                                        string="Min Internal Voltage (V)" />
+                                    <field name="min_internal_voltage" />
+                                </div>
+                                <div class="col-6">
+                                    <label for="max_internal_voltage"
+                                        string="Max Internal Voltage (V)" />
+                                    <field name="max_internal_voltage" />
+                                </div>
+                            </div>
+                        </setting>
+                        <setting name="gsm_signal_settings"
+                            help="GSM signal strength validation">
+                            <div class="row">
+                                <div class="col-6">
+                                    <label for="min_gsm_signal" string="Min GSM Signal" />
+                                    <field name="min_gsm_signal" />
+                                </div>
+                                <div class="col-6">
+                                    <label for="max_gsm_signal" string="Max GSM Signal" />
+                                    <field name="max_gsm_signal" />
+                                </div>
+                            </div>
+                        </setting>
+                    </block>
+                    <block name="temporal_settings" title="Temporal Validation"
+                        help="Configure time-based validation parameters">
+                        <setting name="max_time_gap_hours"
+                            help="Maximum allowed time gap between current time and GPS timestamp">
+                            <field name="max_time_gap_hours" />
+                        </setting>
+                        <setting name="min_time_interval_seconds"
+                            help="Minimum time interval between consecutive GPS points">
+                            <field name="min_time_interval_seconds" />
+                        </setting>
+                    </block>
+                    <block name="duplicate_settings" title="Duplicate Detection"
+                        help="Configure duplicate point detection">
+                        <setting name="duplicate_time_window_seconds"
+                            help="Time window for duplicate point detection">
+                            <field name="duplicate_time_window_seconds" />
+                        </setting>
+                        <setting name="duplicate_coordinate_tolerance"
+                            help="Coordinate tolerance for duplicate detection">
+                            <field name="duplicate_coordinate_tolerance" />
+                        </setting>
+                        <setting name="duplicate_extended_window_seconds"
+                            help="Extended time window for comprehensive duplicate checking">
+                            <field name="duplicate_extended_window_seconds" />
+                        </setting>
+                    </block>
+                    <block name="speed_settings" title="Speed Change Detection"
+                        help="Configure speed change validation">
+                        <setting name="max_speed_change_kmh_per_sec"
+                            help="Maximum allowed speed change per second">
+                            <field name="max_speed_change_kmh_per_sec" />
+                        </setting>
+                        <setting name="speed_validation_window_seconds"
+                            help="Time window for speed change validation">
+                            <field name="speed_validation_window_seconds" />
+                        </setting>
+                    </block>
+                </app>
             </xpath>
         </field>
+    </record>
+
+    <record id="action_gps_tracking_configuration" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="context">{'module' : 'gps_tracking', 'bin_size': False}</field>
     </record>
 
 </odoo>
