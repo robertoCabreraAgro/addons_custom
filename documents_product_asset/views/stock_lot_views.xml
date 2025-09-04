@@ -7,10 +7,10 @@
         <field name="inherit_id" ref="product_asset.view_list_stock_lot" />
         <field name="arch" type="xml">            
             <xpath expr="//field[@name='fuel_card_budget']" position="before">
-                <field name="fuel_card_id" options="{'no_create': True}" />
+                <field name="fuel_card_id" options="{'no_create': True}" optional="hide" />
             </xpath>
             <xpath expr="//field[@name='highway_pass_budget']" position="before">
-                <field name="highway_pass_id" options="{'no_create': True}" />
+                <field name="highway_pass_id" options="{'no_create': True}" optional="hide" />
             </xpath>
         </field>
     </record>
