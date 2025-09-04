@@ -1,7 +1,3 @@
-# Copyright 2011-2012 Nicolas Bessi (Camptocamp SA)
-# Copyright 2016 Yannick Payot (Camptocamp SA)
-# Copyright 2023 ACSONE SA/NV
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 from odoo import api, fields, models
 
 
@@ -20,15 +16,15 @@ class GeoRasterLayer(models.Model):
     _order = "sequence ASC, name"
 
     raster_type = fields.Selection(
-        [
+        selection=[
             ("osm", "OpenStreetMap"),
             ("wmts", "WMTS"),
             ("d_wms", "Distant WMS"),
             ("odoo", "Odoo field"),
         ],
         string="Raster layer type",
-        default="osm",
         required=True,
+        default="osm",
     )
     name = fields.Char("Layer Name", translate=True, required=True)
     url = fields.Char("Service URL")
@@ -58,7 +54,9 @@ class GeoRasterLayer(models.Model):
     # technical field to display or not layer type -- Not used
     has_type = fields.Boolean(compute="_compute_has_type")
     type_id = fields.Many2one(
-        "geoengine.raster.layer.type", "Layer", domain="[('service', '=', raster_type)]"
+        "geoengine.raster.layer.type",
+        "Layer",
+        domain="[('service', '=', raster_type)]",
     )
     type = fields.Char(related="type_id.code")
     sequence = fields.Integer("Layer priority", default=6)
@@ -69,7 +67,10 @@ class GeoRasterLayer(models.Model):
         domain=[("ttype", "ilike", "geo_"), ("model", "=", "view_id.model")],
     )
     view_id = fields.Many2one(
-        "ir.ui.view", "Related View", domain=[("type", "=", "geoengine")], required=True
+        "ir.ui.view",
+        "Related View",
+        domain=[("type", "=", "geoengine")],
+        required=True,
     )
     use_to_edit = fields.Boolean("Use to edit")
     opacity = fields.Float(default=1.0)

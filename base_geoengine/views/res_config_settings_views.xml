@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="geo_config_settings_view_form" model="ir.ui.view">
+        <field name="name">geo.config.settings.view.form</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="Geospatial" string="Geospatial" name="base_geoengine"
+                    groups="base.group_system">
+                    <block name="srid_settings" title="Spatial Reference Systems"
+                        help="Configure spatial reference system identifiers">
+                        <setting name="default_srid"
+                            string="Default SRID"
+                            help="Default Spatial Reference System (3857: Web Mercator, 4326: WGS84)">
+                            <field name="default_srid" />
+                        </setting>
+                        <setting name="display_srid"
+                            string="Display SRID"
+                            help="SRID for displaying coordinates to users">
+                            <field name="display_srid" />
+                        </setting>
+                    </block>
+                    <block name="cache_settings" title="Performance &amp; Caching"
+                        help="Configure spatial operation caching for better performance">
+                        <setting name="enable_spatial_cache"
+                            string="Enable Spatial Caching"
+                            help="Cache spatial operations results">
+                            <field name="enable_spatial_cache" />
+                        </setting>
+                        <setting name="cache_timeout"
+                            string="Cache Timeout"
+                            help="Cache expiry time in seconds">
+                            <field name="cache_timeout" />
+                        </setting>
+                        <setting name="max_cache_entries"
+                            string="Max Cache Entries"
+                            help="Maximum number of cached results">
+                            <field name="max_cache_entries" />
+                        </setting>
+                    </block>
+                    <block name="geometry_settings" title="Geometry Configuration"
+                        help="Configure geometry validation and limits">
+                        <setting name="enable_geometry_validation"
+                            string="Enable Geometry Validation"
+                            help="Validate geometry objects before saving">
+                            <field name="enable_geometry_validation" />
+                        </setting>
+                        <setting name="max_geometry_size"
+                            string="Max Geometry Size (bytes)"
+                            help="Maximum allowed geometry size">
+                            <field name="max_geometry_size" />
+                        </setting>
+                        <setting name="coordinate_precision"
+                            string="Coordinate Precision"
+                            help="Decimal places for coordinates">
+                            <field name="coordinate_precision" />
+                        </setting>
+                    </block>
+                    <block name="map_settings" title="Map Display Settings"
+                        help="Configure default map view parameters">
+                        <setting name="default_map_extent"
+                            string="Default Map Extent"
+                            help="Default bounding box: min_x, min_y, max_x, max_y">
+                            <field name="default_map_extent" />
+                        </setting>
+                        <setting name="default_zoom_level"
+                            string="Default Zoom Level"
+                            help="Initial zoom level for maps">
+                            <field name="default_zoom_level" />
+                        </setting>
+                    </block>
+                    <block name="index_settings" title="Database Optimization"
+                        help="Configure spatial index management">
+                        <setting name="enable_spatial_indexes"
+                            string="Auto-create Spatial Indexes"
+                            help="Automatically create GIST indexes">
+                            <field name="enable_spatial_indexes" />
+                        </setting>
+                        <setting name="vacuum_spatial_indexes"
+                            string="Vacuum Spatial Indexes"
+                            help="Regularly optimize spatial indexes">
+                            <field name="vacuum_spatial_indexes" />
+                        </setting>
+                    </block>
+                    <block name="monitoring_settings" title="Monitoring &amp; Debugging"
+                        help="Configure logging and performance monitoring">
+                        <setting name="log_spatial_operations"
+                            string="Log Spatial Operations"
+                            help="Enable operation logging for debugging">
+                            <field name="log_spatial_operations" />
+                        </setting>
+                        <setting name="monitor_cache_performance"
+                            string="Monitor Cache Performance"
+                            help="Track cache hit/miss statistics">
+                            <field name="monitor_cache_performance" />
+                        </setting>
+                    </block>
+                    <block name="maintenance_actions" title="Maintenance Actions"
+                        help="Administrative tools for spatial data management">
+                        <setting name="cache_actions"
+                            string="Cache Management"
+                            help="Clear caches and view statistics">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <button name="action_clear_spatial_cache"
+                                        string="Clear Cache"
+                                        type="object"
+                                        class="btn btn-secondary" />
+                                </div>
+<!--                                 <div class="col-md-4">
+                                    <button name="action_show_cache_stats"
+                                        string="Cache Stats"
+                                        type="object"
+                                        class="btn btn-info" />
+                                </div>
+ -->                                <div class="col-md-4">
+                                    <button name="action_rebuild_spatial_indexes"
+                                        string="Rebuild Indexes"
+                                        type="object"
+                                        class="btn btn-warning" />
+                                </div>
+                            </div>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_geo_config_settings" model="ir.actions.act_window">
+        <field name="name">Geospatial Settings</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="context">{'module': 'base_geoengine'}</field>
+    </record>
+
+    <menuitem id="menu_geo_config_settings"
+        name="Geospatial"
+        parent="base_setup.menu_config"
+        action="action_geo_config_settings"
+        sequence="100"
+        groups="base.group_system" />
+
+</odoo>

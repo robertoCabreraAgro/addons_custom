@@ -680,19 +680,17 @@ class TestModel(TransactionCase):
         self.assertAlmostEqual(latitude, 49.72842315886126, 4)
         self.assertAlmostEqual(longitude, 5.400488376617026, 4)
 
-    def test_deprecated_geo_search__intersect_for_zip_1169(self):
+    def test_geo_search__intersect_for_zip_1169(self):
         retails = self.env["retail.machine"]
         zip_item = self.env["dummy.zip"].search([("name", "ilike", "1169")])
-        result = retails.geo_search(
-            geo_domain=[("the_point", "geo_intersect", zip_item.the_geom)]
-        )
+        result = retails.search([("the_point", "geo_intersect", zip_item.the_geom)])
         self.assertEqual(len(result), 2)
 
-    def test_deprecated_geo_search__intersect_for_zip_1169_with_dict(self):
+    def test_geo_search__intersect_for_zip_1169_with_dict(self):
         retails = self.env["retail.machine"]
         zip_item = self.env["dummy.zip"].search([("name", "ilike", "1169")])
-        result = retails.geo_search(
-            geo_domain=[
+        result = retails.search(
+            [
                 (
                     "the_point",
                     "geo_intersect",

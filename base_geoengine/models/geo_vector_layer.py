@@ -1,8 +1,3 @@
-# Copyright 2011-2012 Nicolas Bessi (Camptocamp SA)
-# Copyright 2016 Yannick Payot (Camptocamp SA)
-# Copyright 2023 ACSONE SA/NV
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
-
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
@@ -28,7 +23,7 @@ class GeoVectorLayer(models.Model):
     _order = "sequence ASC, name"
 
     geo_repr = fields.Selection(
-        [
+        selection=[
             ("basic", "Basic"),
             # Actually we have to think if we should separate it for colored
             ("proportion", "Proportional Symbol"),
@@ -37,9 +32,8 @@ class GeoVectorLayer(models.Model):
         string="Representation mode",
         required=True,
     )
-
     classification = fields.Selection(
-        [
+        selection=[
             ("unique", "Unique value"),
             ("interval", "Interval"),
             ("quantile", "Quantile"),
@@ -49,9 +43,16 @@ class GeoVectorLayer(models.Model):
         required=False,
     )
     name = fields.Char("Layer Name", translate=True, required=True)
-    begin_color = fields.Char("Begin color class", required=False, help="hex value")
+    begin_color = fields.Char(
+        "Begin color class",
+        required=False,
+        help="hex value",
+    )
     end_color = fields.Char(
-        "End color class", required=False, help="hex value", default="#FF680A"
+        "End color class",
+        required=False,
+        help="hex value",
+        default="#FF680A",
     )
     nb_class = fields.Integer("Number of class", default=1)
     geo_field_id = fields.Many2one(
@@ -62,7 +63,9 @@ class GeoVectorLayer(models.Model):
         domain=[("ttype", "ilike", "geo_")],
     )
     attribute_field_id = fields.Many2one(
-        "ir.model.fields", "Attribute field", domain=[("ttype", "in", SUPPORTED_ATT)]
+        "ir.model.fields",
+        "Attribute field",
+        domain=[("ttype", "in", SUPPORTED_ATT)],
     )
     model_id = fields.Many2one(
         "ir.model",
@@ -72,9 +75,11 @@ class GeoVectorLayer(models.Model):
         compute="_compute_model_id",
     )
     model_name = fields.Char(related="model_id.model", readonly=True)
-
     view_id = fields.Many2one(
-        "ir.ui.view", "Related View", domain=[("type", "=", "geoengine")], required=True
+        "ir.ui.view",
+        "Related View",
+        domain=[("type", "=", "geoengine")],
+        required=True,
     )
     sequence = fields.Integer("Layer Priority", default=6)
     readonly = fields.Boolean("Layer is read only")

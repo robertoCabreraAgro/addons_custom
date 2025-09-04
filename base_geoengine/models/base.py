@@ -1,20 +1,11 @@
-# Copyright 2011-2012 Nicolas Bessi (Camptocamp SA)
-# Copyright 2016 Yannick Payot (Camptocamp SA)
-# Copyright 2023 ACSONE SA/NV
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
-import logging
-
 from odoo import _, api, models
 from odoo.exceptions import MissingError, UserError
-from odoo.osv.expression import AND
 
 from .. import fields as geo_fields
 
 DEFAULT_EXTENT = (
     "-123164.85222423, 5574694.9538936, " "1578017.6490538, 6186191.1800898"
 )
-
-_logger = logging.getLogger(__name__)
 
 
 class Base(models.AbstractModel):
@@ -63,15 +54,6 @@ class Base(models.AbstractModel):
                 % self._name,
             )
         return geo_view
-
-    @api.model
-    def set_field_real_name(self, in_tuple):
-        field_obj = self.env["ir.model.fields"]
-        if not in_tuple:
-            return in_tuple
-        name = field_obj.browse(in_tuple[0]).name
-        out = (in_tuple[0], name, in_tuple[1])
-        return out
 
     @api.model
     def get_geoengine_layers(self, view_id=None, view_type="geoengine", **options):
@@ -134,42 +116,10 @@ class Base(models.AbstractModel):
         }
 
     @api.model
-    def geo_search(
-        self, domain=None, geo_domain=None, offset=0, limit=None, order=None
-    ):
-        """Perform a geo search it allows direct domain:
-        geo_search(
-            domain=[('name', 'ilike', 'toto']),
-            geo_domain=[('the_point', 'geo_intersect',
-                          myshaply_obj or mywkt or mygeojson)])
-
-        We can also support indirect geo_domain (
-           ‘geom’, ‘geo_operator’, {‘res.zip.poly’: [‘id’, ‘in’, [1,2,3]] })
-
-        The supported operators are :
-         * geo_greater
-         * geo_lesser
-         * geo_equal
-         * geo_touch
-         * geo_within
-         * geo_contains
-         * geo_intersect"""
-        # First we do a standard search in order to apply security rules
-        # and do a search on standard attributes
-        # Limit and offset are managed after, we may loose a lot of performance
-        # here
-        _logger.debug(
-            _("geo_search is deprecated: uses search method defined on base model")
-        )
-        domain = domain or []
-        geo_domain = geo_domain or []
-        search_domain = domain or []
-        if domain and geo_domain:
-            search_domain = AND([domain, geo_domain])
-        elif geo_domain:
-            search_domain = geo_domain
-
-        if not search_domain:
-            raise ValueError(_("You must at least provide one of domain or geo_domain"))
-
-        return self.search(search_domain, limit=limit, offset=offset, order=order)
+    def set_field_real_name(self, in_tuple):
+        field_obj = self.env["ir.model.fields"]
+        if not in_tuple:
+            return in_tuple
+        name = field_obj.browse(in_tuple[0]).name
+        out = (in_tuple[0], name, in_tuple[1])
+        return out

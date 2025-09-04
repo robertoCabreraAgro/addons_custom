@@ -934,9 +934,6 @@ msgstr "geo_polygon (geo_polígono)"
 #. odoo-python
 #: code:addons/base_geoengine/models/base.py:0
 #, python-format
-msgid "geo_search is deprecated: uses search method defined on base model"
-msgstr ""
-"geo_search está obsoleto: utiliza el método de búsqueda definido en el "
 "modelo base"
 
 #. module: base_geoengine

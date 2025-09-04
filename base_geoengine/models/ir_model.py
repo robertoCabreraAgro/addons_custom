@@ -1,7 +1,3 @@
-# Copyright 2011-2012 Nicolas Bessi (Camptocamp SA)
-# Copyright 2023 Yannick Payot (Camptocamp SA)
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
-
 from odoo import fields, models
 from odoo.addons import base
 
@@ -42,7 +38,7 @@ class IrModelField(models.Model):
     srid = fields.Integer("srid", required=False)
     geo_type = fields.Selection(POSTGIS_GEO_TYPES, string="PostGIs type")
     dim = fields.Selection(
-        [("2", "2"), ("3", "3"), ("4", "4")],
+        selection=[("2", "2"), ("3", "3"), ("4", "4")],
         string="PostGIs Dimension",
         default="2",
     )
