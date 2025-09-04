@@ -150,6 +150,7 @@
         "report/stock_need_report_views.xml",
         "report/purchase_bill_line_match_views.xml",
         "report/sales_master_report_views.xml",
+        "report/sale_report_views.xml",
         "wizards/authorize_debt.xml",
         "wizards/invoice_cash_discount.xml",
         "wizards/invoice_line_price_history.xml",

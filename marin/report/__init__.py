@@ -8,4 +8,5 @@ from . import (
     stock_need_report,
     purchase_bill_line_match,
     sales_master_report,
+    sale_report,
 )
