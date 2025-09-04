@@ -132,25 +132,16 @@ class GPSWebhook(http.Controller):
             if not payload:
                 return self.RESPONSE_FAILURE
 
-            # Get device IMEI
-            # TODO - Support alternative identifiers for example not Teltonika devices
-            imei = payload.get("14")
-            if not imei:
-                _logger.warning("No IMEI found in payload from %s", remote_addr)
-                return self.RESPONSE_FAILURE
-
-            # Find device by IMEI
-            device = self._get_device(imei)
-            if not device:
-                _logger.warning("No device found in database from %s", remote_addr)
-                return self.RESPONSE_FAILURE
-
-            # Prepare tracking point values
-            vals = self._prepare_tracking_point_vals(device.id, payload)
-
-            is_quality_valid, quality_error = self._validate_data_quality(
-                device.id, vals, processing_stats
+            is_quality_valid, quality_error, device, vals = (
+                self._validate_payload_quality(
+                    payload,
+                    processing_stats,
+                )
             )
+
+            # Extract IMEI from device for logging (if device was found)
+            imei = device.imei if device else "unknown"
+
             if not is_quality_valid:
                 self._log_webhook_failure(
                     start_time,
@@ -160,52 +151,6 @@ class GPSWebhook(http.Controller):
                     processing_stats,
                 )
                 return self.RESPONSE_FAILURE
-
-            # 2. Check for duplicate points
-            timestamp = vals.get("timestamp")
-            latitude = vals.get("latitude")
-            longitude = vals.get("longitude")
-
-            if self._is_duplicate_point(device.id, timestamp, latitude, longitude):
-                _logger.info(
-                    "Duplicate GPS point ignored for device %s from %s",
-                    imei,
-                    remote_addr,
-                )
-                self._log_webhook_success(
-                    start_time,
-                    remote_addr,
-                    imei,
-                    "Duplicate point ignored",
-                    processing_stats,
-                    vals,
-                )
-                return self.RESPONSE_SUCCESS  # Return success to avoid device retries
-
-            # 3. Validate temporal sequence
-            is_sequence_valid, sequence_warning = self._validate_temporal_sequence(
-                device.id, timestamp
-            )
-
-            if not is_sequence_valid:
-                processing_stats["quality_checks_failed"] += 1
-                _logger.warning(
-                    "Temporal validation failed for device %s from %s: %s",
-                    imei,
-                    remote_addr,
-                    sequence_warning,
-                )
-                # For temporal issues, we might want to be more lenient
-                if "future" in sequence_warning.lower():
-                    self._log_webhook_failure(
-                        start_time,
-                        remote_addr,
-                        imei,
-                        f"Temporal validation failed: {sequence_warning}",
-                        processing_stats,
-                    )
-                    return self.RESPONSE_FAILURE  # Reject future timestamps
-                # For speed change issues, log but accept (might be valid rapid acceleration/deceleration)
             else:
                 processing_stats["quality_checks_passed"] += 1
 
@@ -680,7 +625,11 @@ class GPSWebhook(http.Controller):
             Recordset of recent GPS points
         """
         cache_key = f"recent_points_{device_id}"
-
+        param_obj = request.env["ir.config_parameter"].sudo()
+        window_seconds = param_obj.get_param(
+            "gps_tracking.validation.duplicate_time_window_seconds",
+            default=window_seconds,
+        )
         if not hasattr(self, "_points_cache"):
             self._points_cache = {}
 
@@ -737,8 +686,14 @@ class GPSWebhook(http.Controller):
             Datetime object or None if invalid
         """
         try:
-            if not self._validate_timestamp(timestamp_ms):
+            # Basic range check for timestamp (avoid circular dependency)
+            if not isinstance(timestamp_ms, (int, float)) or timestamp_ms <= 0:
                 return None
+            
+            # Check reasonable bounds (year 2000 to 2040)
+            if timestamp_ms < self.MIN_TIMESTAMP or timestamp_ms > self.MAX_TIMESTAMP:
+                return None
+                
             # Convert from milliseconds to seconds and create datetime
             return datetime.fromtimestamp(timestamp_ms / 1000, tz=timezone.utc).replace(
                 tzinfo=None
@@ -786,34 +741,41 @@ class GPSWebhook(http.Controller):
     # VALIDATIONS
     # ------------------------------------------------------------
 
-    def _validate_data_quality(
-        self, device_id: int, vals: Dict[str, Any], processing_stats: Dict[str, Any]
-    ) -> tuple[bool, str]:
+    def _validate_payload_quality(
+        self,
+        payload: Dict[str, Any],
+        processing_stats: Dict[str, Any],
+    ) -> tuple[bool, str, Any, Dict[str, Any]]:
         """
         Optimized comprehensive GPS data quality validation with configurable severity levels.
 
         Eliminates redundant parameter loading and database queries through caching.
 
         Args:
-            vals: Dictionary of processed GPS values
-            device_id: GPS device ID for advanced validations (optional)
-            processing_stats: Processing statistics dictionary to track validation results (optional)
+            payload: Dictionary of processed GPS values
+            processing_stats: Processing statistics dictionary to track validation results
 
         Returns:
-            Tuple of (is_valid, error_message)
+            Tuple of (is_valid, error_message, device, vals)
         """
         # Load all validation configuration once (replaces 23+ individual parameter loads)
         config = self._get_validation_config()
 
-        # Cache recent points for multiple validations (replaces 3+ duplicate queries)
-        recent_points = self._get_recent_points_cache(device_id)
-
         # Collect errors and warnings with configurable severity
+        # Cache recent points for multiple validations (replaces 3+ duplicate queries)
         errors = []
         warnings = []
+        vals = {}
+        device = None
+        recent_points = None
 
         # Define validation rules with severity levels
         validation_rules = [
+            (
+                "prerequisite_validation",
+                self._validate_prerequisites,
+                "critical",
+            ),
             (
                 "timestamp_quality",
                 self._validate_timestamp,
@@ -839,15 +801,28 @@ class GPSWebhook(http.Controller):
                 self._validate_speed_parameters,
                 "warning",
             ),
+            (
+                "record_duplication",
+                self.validate_record_duplication,
+                "critical",
+            ),
         ]
 
         for rule_name, validator_func, severity in validation_rules:
             try:
-                is_valid, message = validator_func(vals, config, recent_points)
+                # Pass validation context for prerequisite validation
+                if rule_name == "prerequisite_validation":
+                    is_valid, message, device = validator_func(payload)
+                    # Prepare tracking point values (using device.id if device exists)
+                else:
+                    is_valid, message = validator_func(vals, config, recent_points)
 
-                # Track validation statistics
                 if is_valid:
                     processing_stats["quality_checks_passed"] += 1
+                    if rule_name == "prerequisite_validation":
+                        # Prepare tracking point values (using device.id if device exists)
+                        vals = self._prepare_tracking_point_vals(device.id, payload)
+                        recent_points = self._get_recent_points_cache(device.id)
                 elif not is_valid:
                     processing_stats["quality_checks_failed"] += 1
                     if severity == "critical":
@@ -863,13 +838,37 @@ class GPSWebhook(http.Controller):
 
         # Return failure only for critical errors
         if errors:
-            return False, "; ".join(errors)
+            return False, "; ".join(errors), device, vals
 
         # Log warnings but don't fail validation
         if warnings:
             _logger.info(f"GPS validation warnings: {'; '.join(warnings)}")
 
-        return True, "Valid"
+        return True, "Valid", device, vals
+
+    def _validate_prerequisites(self, payload: Dict[str, Any]) -> tuple[bool, str, Any]:
+        """
+        Critical prerequisite validation for IMEI and device existence.
+
+        Args:
+            payload: GPS data payload containing IMEI and other fields
+
+        Returns:
+            Tuple of (is_valid, error_message, device)
+        """
+        imei = payload.get("14")
+        # Validate IMEI exists in payload
+        if not imei:
+            _logger.warning("No IMEI found in payload")
+            return False, "Missing IMEI in GPS data", None
+
+        device = self._get_device(imei)
+        # Validate device exists in database
+        if not device:
+            _logger.warning("No device found in database for IMEI %s", imei)
+            return False, f"Device not found for IMEI: {imei}", None
+
+        return True, "Prerequisites valid", device
 
     def _validate_range(self, value, min_val, max_val, param_name: str, unit: str = ""):
         """
@@ -897,7 +896,7 @@ class GPSWebhook(http.Controller):
         return True, f"{param_name} valid"
 
     def _validate_timestamp(
-        self, vals: Dict[str, Any], config: dict
+        self, vals: Dict[str, Any], config: dict, recent_points=None
     ) -> tuple[bool, str]:
         """
         Critical timestamp validation using cached config.
@@ -954,7 +953,7 @@ class GPSWebhook(http.Controller):
         return True, "Timestamp quality valid"
 
     def _validate_coordinates(
-        self, vals: Dict[str, Any], config: dict
+        self, vals: Dict[str, Any], config: dict, recent_points=None
     ) -> tuple[bool, str]:
         """
         Optimized coordinate validation using pre-loaded config and generic range validator.
@@ -996,7 +995,7 @@ class GPSWebhook(http.Controller):
         return True, "Coordinate quality valid"
 
     def _validate_gps_accuracy(
-        self, vals: Dict[str, Any], config: dict
+        self, vals: Dict[str, Any], config: dict, recent_points=None
     ) -> tuple[bool, str]:
         """
         Optimized GPS accuracy validation using pre-loaded config.
@@ -1027,7 +1026,7 @@ class GPSWebhook(http.Controller):
         return True, "GPS accuracy valid"
 
     def _validate_comprehensive_parameters(
-        self, vals: Dict[str, Any], config: dict
+        self, vals: Dict[str, Any], config: dict, recent_points=None
     ) -> tuple[bool, str]:
         """
         Consolidated validation for vehicle, electrical, and network parameters.
@@ -1162,153 +1161,35 @@ class GPSWebhook(http.Controller):
 
         return True, "Speed parameters valid"
 
-    def _validate_temporal_sequence(
-        self, device_id: int, new_timestamp: datetime
+    def validate_record_duplication(
+        self, vals: Dict[str, Any], config: dict, recent_points
     ) -> tuple[bool, str]:
-        """
-        Optimized temporal sequence validation using cached config and recent points.
-
-        Args:
-            device_id: GPS device ID
-            new_timestamp: Timestamp of new GPS point
-
-        Returns:
-            Tuple of (is_valid, warning_message)
-        """
-        # Use cached configuration instead of loading parameters
-        config = self._get_validation_config()
-
-        try:
-            # Use cached recent points instead of separate database query
-            recent_points = self._get_recent_points_cache(device_id, 86400)  # 24 hours
-
-            if not recent_points:
-                return True, "No previous point for comparison"
-
-            last_point = recent_points[0]  # Most recent point
-
-            # Check for duplicate timestamps
-            time_diff = (new_timestamp - last_point.timestamp).total_seconds()
-            if abs(time_diff) < config["min_time_interval_seconds"]:
-                return (
-                    False,
-                    f"Duplicate or too-frequent timestamp: {abs(time_diff):.1f}s interval (minimum: {config['min_time_interval_seconds']}s)",
-                )
-
-            # Check for points too far in the future
-            now = datetime.now()
-            future_diff = (new_timestamp - now).total_seconds()
-            if future_diff > 300:  # More than 5 minutes in the future
-                return (
-                    False,
-                    f"Timestamp too far in future: {future_diff/60:.1f} minutes",
-                )
-
-            # Check for points too far in the past
-            max_gap_seconds = config["max_time_gap_hours"] * 3600
-            if time_diff < -max_gap_seconds:
-                return (
-                    False,
-                    f"Timestamp too far in past: {abs(time_diff/3600):.1f} hours ago (maximum: {config['max_time_gap_hours']} hours)",
-                )
-
-            return True, "Valid temporal sequence"
-
-        except Exception as e:
-            return True, "Temporal validation error - allowing point"
-
-    def _is_duplicate_point(
-        self,
-        device_id: int,
-        timestamp: datetime,
-        latitude: float = None,
-        longitude: float = None,
-    ) -> bool:
         """
         Optimized duplicate detection using cached config and recent points.
 
         Args:
-            device_id: GPS device ID
-            timestamp: Point timestamp
-            latitude: GPS latitude (optional)
-            longitude: GPS longitude (optional)
+            vals: Dictionary of processed GPS values
+            config: Pre-loaded validation configuration
+            recent_points: Cached recent points for speed change validation
 
         Returns:
-            True if duplicate detected
+            Tuple of (is_valid, error_message)
         """
-        # Use cached configuration instead of loading parameters
-        config = self._get_validation_config()
-
         try:
-            # Use cached recent points for in-memory duplicate check first
-            recent_points = self._get_recent_points_cache(
-                device_id, config["duplicate_time_window"]
-            )
-
             # Quick in-memory check against cached points first (fastest)
             for point in recent_points:
-                time_diff = abs((timestamp - point.timestamp).total_seconds())
+                time_diff = abs((vals["timestamp"] - point.timestamp).total_seconds())
                 if time_diff <= config["duplicate_time_window"]:
-                    if latitude is None or longitude is None:
-                        return True  # Timestamp-only duplicate
-
                     if (
-                        abs(point.latitude - latitude) <= config["coordinate_tolerance"]
-                        and abs(point.longitude - longitude)
+                        abs(point.latitude - vals["latitude"])
+                        <= config["coordinate_tolerance"]
+                        and abs(point.longitude - vals["longitude"])
                         <= config["coordinate_tolerance"]
                     ):
-                        return True
+                        return False, "Duplicate point detected within time window"
 
-            # Only fall back to SQL query if not found in cache and extended window needed
-            if config["duplicate_time_window"] < config["extended_window"]:
-                time_window_start = timestamp - timedelta(
-                    seconds=config["extended_window"]
-                )
-                time_window_end = timestamp + timedelta(
-                    seconds=config["duplicate_time_window"]
-                )
-
-                if latitude is None or longitude is None:
-                    # Simple timestamp-based duplicate check
-                    domain = [
-                        ("device_id", "=", device_id),
-                        ("timestamp", ">=", time_window_start),
-                        ("timestamp", "<=", time_window_end),
-                    ]
-                    duplicate_count = (
-                        request.env["gps.tracking.point"].sudo().search_count(domain)
-                    )
-                    return duplicate_count > 0
-
-                # SQL query for extended spatial check
-                query = """
-                    SELECT id FROM gps_tracking_point 
-                    WHERE device_id = %s 
-                    AND timestamp >= %s 
-                    AND timestamp < %s
-                    AND ABS(latitude - %s) <= %s
-                    AND ABS(longitude - %s) <= %s
-                    LIMIT 1
-                """
-
-                request.env.cr.execute(
-                    query,
-                    (
-                        device_id,
-                        time_window_start,
-                        time_window_end,
-                        latitude,
-                        config["coordinate_tolerance"],
-                        longitude,
-                        config["coordinate_tolerance"],
-                    ),
-                )
-
-                result = request.env.cr.fetchone()
-                return bool(result)
-
-            return False
+            return True, "No duplicate found"
 
         except Exception as e:
             _logger.warning("Error in duplicate detection: %s", e)
-            return False  # Don't block on validation errors
+            return (False, "Some error occurred during duplicate detection")
