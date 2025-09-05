@@ -67,12 +67,6 @@ class ResConfigSettings(models.TransientModel):
         help="Maximum allowed longitude value (degrees)",
         config_parameter="gps_tracking.validation.max_longitude",
     )
-    zero_coordinate_tolerance = fields.Float(
-        string="Zero Coordinate Tolerance",
-        default=0.001,
-        help="Tolerance for detecting suspicious zero coordinates",
-        config_parameter="gps_tracking.validation.zero_coordinate_tolerance",
-    )
 
     # ========================================
     # VEHICLE PARAMETERS

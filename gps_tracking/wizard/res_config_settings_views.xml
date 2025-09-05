@@ -58,10 +58,6 @@
                                 </div>
                             </div>
                         </setting>
-                        <setting name="zero_coordinate_tolerance"
-                            help="Tolerance for detecting suspicious zero coordinates">
-                            <field name="zero_coordinate_tolerance" />
-                        </setting>
                     </block>
                     <block name="vehicle_settings" title="Vehicle Parameters"
                         help="Configure vehicle-related validation limits">

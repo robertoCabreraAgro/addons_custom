@@ -35,11 +35,6 @@
         <field name="value">180.0</field>
     </record>
 
-    <record id="param_coord_zero_tolerance" model="ir.config_parameter">
-        <field name="key">gps_tracking.validation.zero_coordinate_tolerance</field>
-        <field name="value">0.001</field>
-    </record>
-
     <!-- Vehicle Parameters -->
     <record id="param_max_realistic_speed" model="ir.config_parameter">
         <field name="key">gps_tracking.validation.max_realistic_speed</field>

@@ -71,7 +71,7 @@ class GPSWebhook(http.Controller):
     MIN_SATELLITES_FOR_ACCURACY = 4  # Minimum satellites for good GPS accuracy
     MAX_REASONABLE_SPEED = 300  # Maximum reasonable speed in km/h for ground vehicles
     MIN_COORDINATE_PRECISION = 5  # Minimum decimal places for coordinates
-    MAX_DUPLICATE_TIME_WINDOW = 30  # Seconds to check for duplicate points
+    MAX_DUPLICATE_TIME_WINDOW = 10  # Seconds to check for duplicate points
     MAX_SPEED_CHANGE_PER_MINUTE = 100  # km/h - detect unrealistic speed changes
     MIN_ENGINE_TEMP = -40  # °C
     MAX_ENGINE_TEMP = 150  # °C
@@ -143,12 +143,14 @@ class GPSWebhook(http.Controller):
             imei = device.imei if device else "unknown"
 
             if not is_quality_valid:
-                self._log_webhook_failure(
+                self._log_webhook_result(
                     start_time,
                     remote_addr,
                     imei,
                     f"Quality validation failed: {quality_error}",
                     processing_stats,
+                    vals,
+                    is_success=False,
                 )
                 return self.RESPONSE_FAILURE
 
@@ -170,13 +172,14 @@ class GPSWebhook(http.Controller):
                         datetime.now() - db_start_time
                     ).total_seconds()
                 msg = "Point processed successfully"
-                self._log_webhook_success(
+                self._log_webhook_result(
                     start_time,
                     remote_addr,
                     imei,
                     msg,
                     processing_stats,
                     vals,
+                    is_success=True,
                 )
                 return self.RESPONSE_SUCCESS
 
@@ -186,22 +189,26 @@ class GPSWebhook(http.Controller):
                     datetime.now() - db_start_time
                 ).total_seconds()
                 msg = f"Database transaction failed: {str(db_error)}"
-                self._log_webhook_failure(
+                self._log_webhook_result(
                     start_time,
                     remote_addr,
                     imei,
                     msg,
                     processing_stats,
+                    vals,
+                    is_success=False,
                 )
                 return self.RESPONSE_FAILURE
 
         except Exception as e:
-            self._log_webhook_failure(
+            self._log_webhook_result(
                 start_time,
                 remote_addr,
                 imei,
                 f"Unexpected error: {str(e)}",
                 processing_stats,
+                vals=None,
+                is_success=False,
             )
             return self.RESPONSE_FAILURE
 
@@ -209,7 +216,7 @@ class GPSWebhook(http.Controller):
     # LOGGING HELPERS
     # ------------------------------------------------------------
 
-    def _log_webhook_success(
+    def _log_webhook_result(
         self,
         start_time: datetime,
         remote_addr: str,
@@ -217,21 +224,23 @@ class GPSWebhook(http.Controller):
         message: str,
         processing_stats: dict,
         vals: dict = None,
+        is_success: bool = True,
     ):
         """
-        Log successful webhook processing with comprehensive metrics.
+        Unified webhook logging with comprehensive metrics for both success and failure.
 
         Args:
             start_time: Request start time
             remote_addr: Remote IP address
             imei: Device IMEI
-            message: Success message
+            message: Success message or error description
             processing_stats: Processing performance statistics
-            vals: GPS values dictionary (optional)
+            vals: GPS values dictionary (optional, provides debugging info even for failures)
+            is_success: True for success, False for failure
         """
         total_duration = (datetime.now() - start_time).total_seconds()
 
-        # Prepare quality metrics
+        # Prepare quality metrics for debugging (available for both success and failure)
         quality_metrics = {}
         if vals:
             quality_metrics = {
@@ -240,12 +249,18 @@ class GPSWebhook(http.Controller):
                 "fuel_level": vals.get("fuel_level", "N/A"),
                 "engine_temp": vals.get("engine_temperature", "N/A"),
                 "coordinates": f"({vals.get('latitude', 'N/A')}, {vals.get('longitude', 'N/A')})",
+                "timestamp": vals.get("timestamp", "N/A"),
+                "device_id": vals.get("device_id", "N/A"),
             }
 
-        # Log with structured format for monitoring systems
-        _logger.info(
-            "GPS_WEBHOOK_SUCCESS device=%s ip=%s duration=%.3fs validation=%.3fs db=%.3fs "
+        # Common log format for both success and failure
+        status = "SUCCESS" if is_success else "FAILURE"
+        log_method = _logger.info if is_success else _logger.error
+
+        log_method(
+            "GPS_WEBHOOK_%s device=%s ip=%s duration=%.3fs validation=%.3fs db=%.3fs "
             "quality_passed=%d quality_failed=%d message='%s' metrics=%s",
+            status,
             imei,
             remote_addr,
             total_duration,
@@ -255,40 +270,6 @@ class GPSWebhook(http.Controller):
             processing_stats.get("quality_checks_failed", 0),
             message,
             quality_metrics,
-        )
-
-    def _log_webhook_failure(
-        self,
-        start_time: datetime,
-        remote_addr: str,
-        imei: str,
-        error_message: str,
-        processing_stats: dict,
-    ):
-        """
-        Log failed webhook processing with error details and performance metrics.
-
-        Args:
-            start_time: Request start time
-            remote_addr: Remote IP address
-            imei: Device IMEI
-            error_message: Failure reason
-            processing_stats: Processing performance statistics
-        """
-        total_duration = (datetime.now() - start_time).total_seconds()
-
-        # Log with structured format for monitoring and alerting
-        _logger.error(
-            "GPS_WEBHOOK_FAILURE device=%s ip=%s duration=%.3fs validation=%.3fs db=%.3fs "
-            "quality_passed=%d quality_failed=%d error='%s'",
-            imei,
-            remote_addr,
-            total_duration,
-            processing_stats.get("validation_time", 0),
-            processing_stats.get("db_operation_time", 0),
-            processing_stats.get("quality_checks_passed", 0),
-            processing_stats.get("quality_checks_failed", 0),
-            error_message,
         )
 
     # ------------------------------------------------------------
@@ -411,19 +392,6 @@ class GPSWebhook(http.Controller):
             try:
                 param_obj = request.env["ir.config_parameter"].sudo()
                 cls._validation_config_cache = {
-                    # GPS accuracy parameters
-                    "min_satellites": int(
-                        param_obj.get_param(
-                            "gps_tracking.validation.min_satellites",
-                            default=cls.MIN_SATELLITES_FOR_ACCURACY,
-                        )
-                    ),
-                    "max_hdop": float(
-                        param_obj.get_param(
-                            "gps_tracking.validation.max_hdop",
-                            default=5.0,
-                        )
-                    ),
                     # Coordinate parameters
                     "min_latitude": float(
                         param_obj.get_param(
@@ -449,10 +417,17 @@ class GPSWebhook(http.Controller):
                             default=cls.MAX_LONGITUDE,
                         )
                     ),
-                    "zero_tolerance": float(
+                    # GPS accuracy parameters
+                    "min_satellites": int(
                         param_obj.get_param(
-                            "gps_tracking.validation.zero_coordinate_tolerance",
-                            default=0.001,
+                            "gps_tracking.validation.min_satellites",
+                            default=cls.MIN_SATELLITES_FOR_ACCURACY,
+                        )
+                    ),
+                    "max_hdop": float(
+                        param_obj.get_param(
+                            "gps_tracking.validation.max_hdop",
+                            default=5.0,
                         )
                     ),
                     # Vehicle parameters
@@ -569,7 +544,6 @@ class GPSWebhook(http.Controller):
                     "max_latitude": cls.MAX_LATITUDE,
                     "min_longitude": cls.MIN_LONGITUDE,
                     "max_longitude": cls.MAX_LONGITUDE,
-                    "zero_tolerance": 0.001,
                     "max_realistic_speed": cls.MAX_REASONABLE_SPEED,
                     "max_fuel_level": 100.0,
                     "max_engine_hours": 50000,
@@ -652,7 +626,7 @@ class GPSWebhook(http.Controller):
     def _get_recent_points(self, device_id: int, window_seconds: int = None):
         """
         Get recent GPS points for validation purposes.
-        
+
         Args:
             device_id: GPS device ID
             window_seconds: Time window for recent points (uses config if None)
@@ -686,7 +660,6 @@ class GPSWebhook(http.Controller):
                 "Error fetching recent points for device %d: %s", device_id, e
             )
             return request.env["gps.tracking.point"].sudo().browse([])
-
 
     # ------------------------------------------------------------
     # DATA PROCESING METHODS
@@ -729,10 +702,6 @@ class GPSWebhook(http.Controller):
             if not isinstance(timestamp_ms, (int, float)) or timestamp_ms <= 0:
                 return None
 
-            # Check reasonable bounds (year 2000 to 2040)
-            if timestamp_ms < self.MIN_TIMESTAMP or timestamp_ms > self.MAX_TIMESTAMP:
-                return None
-
             # Convert from milliseconds to seconds and create datetime
             return datetime.fromtimestamp(timestamp_ms / 1000, tz=timezone.utc).replace(
                 tzinfo=None
@@ -760,18 +729,16 @@ class GPSWebhook(http.Controller):
 
     def _process_engine_temperature(self, value: float) -> Optional[float]:
         """
-        Process odometer value (convert from meters to kilometers)
+        Process engine temperature value (convert from decigrade to degree)
 
         Args:
-            value: Odometer value in meters
+            value: engine temperature value in decigrades
 
         Returns:
-            Odometer value in kilometers or None if invalid
+            Engine temperature value in degree or None if invalid
         """
         try:
             temperature_value = float(value) / 10.0
-            if temperature_value < 0:
-                return None
             return temperature_value
         except (ValueError, TypeError) as e:
             return None
@@ -1051,14 +1018,6 @@ class GPSWebhook(http.Controller):
         if not is_valid:
             return False, msg
 
-        # Check for suspicious zero coordinates
-        if abs(lat) < config["zero_tolerance"] and abs(lng) < config["zero_tolerance"]:
-            return (
-                False,
-                f"Suspicious zero coordinates detected: lat={lat:.6f}, lng={lng:.6f} (tolerance: {config['zero_tolerance']})",
-            )
-
-        # Check for obviously invalid coordinates (0,0)
         if lat == 0.0 and lng == 0.0:
             return (
                 False,
