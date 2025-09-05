@@ -286,18 +286,39 @@ export class GpsTrackingDashboard extends Component {
         if (assetIds.length === 0) return;
         
         try {
+            // First, get asset data with operator_id
             const assets = await this.orm.searchRead(
                 "stock.lot",
                 [['id', 'in', assetIds]],
-                ['id', 'license_plate', 'operator_id', 'department_id']
+                ['id', 'license_plate', 'operator_id']
             );
+            
+            // Get unique operator IDs to fetch their departments
+            const operatorIds = assets
+                .filter(asset => asset.operator_id && asset.operator_id[0])
+                .map(asset => asset.operator_id[0]);
+            
+            let employeeDepartments = {};
+            if (operatorIds.length > 0) {
+                // Fetch employee department information
+                const employees = await this.orm.searchRead(
+                    "hr.employee",
+                    [['id', 'in', operatorIds]],
+                    ['id', 'department_id']
+                );
+                
+                employees.forEach(employee => {
+                    employeeDepartments[employee.id] = employee.department_id;
+                });
+            }
             
             const assetMap = {};
             assets.forEach(asset => {
+                const operatorId = asset.operator_id ? asset.operator_id[0] : null;
                 assetMap[asset.id] = {
                     license_plate: asset.license_plate,
                     operator_id: asset.operator_id,
-                    department_id: asset.department_id
+                    department_id: operatorId ? employeeDepartments[operatorId] || false : false
                 };
             });
             
