@@ -130,11 +130,9 @@ class GPSWebhook(http.Controller):
             if not payload:
                 return self.RESPONSE_FAILURE
 
-            is_valid, error, device, vals = (
-                self._validate_payload(
-                    payload,
-                    processing_stats,
-                )
+            is_valid, error, device, vals = self._validate_payload(
+                payload,
+                processing_stats,
             )
 
             if not is_valid:
@@ -354,12 +352,19 @@ class GPSWebhook(http.Controller):
         tracking_point_model = request.env["gps.tracking.point"].sudo()
         available_fields = set(tracking_point_model._fields.keys())
 
+        # Define composite fields that map to multiple model fields
+        composite_field = {"latitude_longitude"}
+
         # Process each mapped field
         for iot_field, model_field in self.FIELD_MAPPING.items():
             if iot_field not in payload:
                 continue
 
-            if model_field not in available_fields:
+            # Skip field validation for composite fields (they map to multiple fields)
+            if (
+                model_field not in composite_field
+                and model_field not in available_fields
+            ):
                 continue
 
             value = payload[iot_field]
@@ -839,9 +844,7 @@ class GPSWebhook(http.Controller):
         # Return failure only for critical errors
         if errors:
             imei_info = (
-                vals.get("imei", "unknown")
-                if vals
-                else payload.get("14", "unknown")
+                vals.get("imei", "unknown") if vals else payload.get("14", "unknown")
             )
             error_summary = (
                 f"Validation failed for device {imei_info}: {'; '.join(errors)}"
@@ -993,7 +996,7 @@ class GPSWebhook(http.Controller):
 
         # Use cached config and generic range validator
         is_valid, msg = self._validate_range(
-             "latitude", config["min_latitude"], config["max_latitude"], lat
+            "latitude", config["min_latitude"], config["max_latitude"], lat
         )
         if not is_valid:
             return False, msg
@@ -1063,7 +1066,10 @@ class GPSWebhook(http.Controller):
             return False, msg
 
         is_valid, msg = self._validate_range(
-            "engine hours", 0, config["max_engine_hours"], vals.get("engine_total_hours", 0)
+            "engine hours",
+            0,
+            config["max_engine_hours"],
+            vals.get("engine_total_hours", 0),
         )
         if not is_valid and vals.get("engine_total_hours", 0) > 0:
             return False, msg
