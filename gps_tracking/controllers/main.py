@@ -674,10 +674,8 @@ class GPSWebhook(http.Controller):
             Tuple of (latitude, longitude) or (None, None) if invalid
         """
         try:
+            _logger.warning("Error latlong: %s", latlng_str)
             if "," not in latlng_str:
-                _logger.warning(
-                    "Error latlong: %s", latlng_str
-                )
                 return None, None
             lat_str, lng_str = latlng_str.split(",", 1)
             lat = float(lat_str.strip())
