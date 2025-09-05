@@ -154,10 +154,6 @@
                             help="Minimum time interval between consecutive GPS points">
                             <field name="min_time_interval_seconds" />
                         </setting>
-                        <setting name="max_age_seconds"
-                            help="Maximum age for GPS readings to be considered current">
-                            <field name="max_age_seconds" />
-                        </setting>
                     </block>
                     <block name="duplicate_settings" title="Duplicate Detection"
                         help="Configure duplicate point detection">

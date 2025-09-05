@@ -1,22 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
 
-    <!-- GPS Data Quality Validation Parameters -->
-
     <!-- Signal Quality Configuration -->
-    <record id="param_gps_min_satellites" model="ir.config_parameter">
-        <field name="key">gps_tracking.signal_quality.min_required_satellites_count</field>
+    <record id="param_min_required_satellites_count" model="ir.config_parameter">
+        <field name="key">gps_tracking.min_required_satellites_count</field>
         <field name="value">4</field>
     </record>
 
-    <record id="param_gps_max_hdop" model="ir.config_parameter">
-        <field name="key">gps_tracking.signal_quality.max_hdop_threshold</field>
+    <record id="param_max_hdop_threshold" model="ir.config_parameter">
+        <field name="key">gps_tracking.max_hdop_threshold</field>
         <field name="value">3.0</field>
     </record>
 
     <!-- Geographic Bounds Configuration -->
-    <record id="param_coord_min_latitude" model="ir.config_parameter">
-        <field name="key">gps_tracking.geographic_bounds.min_allowed_latitude_degrees</field>
+    <record id="param_min_allowed_latitude_degrees" model="ir.config_parameter">
+        <field name="key">gps_tracking.min_allowed_latitude_degrees</field>
         <field name="value">-90.0</field>
     </record>
 
@@ -47,11 +45,6 @@
     </record>
 
     <!-- Time Validation Configuration -->
-    <record id="param_max_reading_age" model="ir.config_parameter">
-        <field name="key">gps_tracking.time_validation.max_reading_age_seconds</field>
-        <field name="value">300</field>
-    </record>
-
     <record id="param_max_fuel_level" model="ir.config_parameter">
         <field name="key">gps_tracking.validation.max_fuel_level</field>
         <field name="value">100.0</field>

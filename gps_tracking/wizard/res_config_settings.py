@@ -31,13 +31,13 @@ class ResConfigSettings(models.TransientModel):
         string="Minimum Satellites",
         default=4,
         help="Minimum number of satellites required for accurate GPS positioning",
-        config_parameter="gps_tracking.signal_quality.min_required_satellites_count",
+        config_parameter="gps_tracking.min_required_satellites_count",
     )
     max_hdop = fields.Float(
         string="Maximum HDOP",
         default=3.0,
         help="Maximum Horizontal Dilution of Precision allowed (lower is better)",
-        config_parameter="gps_tracking.signal_quality.max_hdop_threshold",
+        config_parameter="gps_tracking.max_hdop_threshold",
     )
 
     # ========================================
@@ -48,7 +48,7 @@ class ResConfigSettings(models.TransientModel):
         string="Minimum Latitude",
         default=-90.0,
         help="Minimum allowed latitude value (degrees)",
-        config_parameter="gps_tracking.geographic_bounds.min_allowed_latitude_degrees",
+        config_parameter="gps_tracking.min_allowed_latitude_degrees",
     )
     max_latitude = fields.Float(
         string="Maximum Latitude",
@@ -177,12 +177,6 @@ class ResConfigSettings(models.TransientModel):
         default=1,
         help="Minimum time interval between consecutive GPS points",
         config_parameter="gps_tracking.validation.min_time_interval_seconds",
-    )
-    max_age_seconds = fields.Integer(
-        string="Maximum Reading Age (seconds)",
-        default=300,
-        help="Maximum age for GPS readings to be considered current (5 minutes default)",
-        config_parameter="gps_tracking.time_validation.max_reading_age_seconds",
     )
 
     # ========================================

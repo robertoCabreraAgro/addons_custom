@@ -450,7 +450,7 @@ class GPSWebhook(http.Controller):
                     # Geographic Boundary Parameters
                     "min_latitude": float(
                         param_obj.get_param(
-                            "gps_tracking.geographic_bounds.min_allowed_latitude_degrees",
+                            "gps_tracking.min_allowed_latitude_degrees",
                             default=cls.MIN_LATITUDE,
                         )
                     ),
@@ -475,7 +475,7 @@ class GPSWebhook(http.Controller):
                     # GPS Signal Quality Parameters
                     "min_satellites": int(
                         param_obj.get_param(
-                            "gps_tracking.signal_quality.min_required_satellites_count",
+                            "gps_tracking.min_required_satellites_count",
                             default=cls.MIN_SATELLITES_FOR_ACCURACY,
                         )
                     ),
