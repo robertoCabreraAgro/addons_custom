@@ -94,9 +94,14 @@
     </record>
 
     <!-- Temporal Sequence Parameters -->
-    <record id="param_max_time_gap" model="ir.config_parameter">
-        <field name="key">gps_tracking.validation.max_time_gap_hours</field>
+    <record id="param_max_time_past_hours" model="ir.config_parameter">
+        <field name="key">gps_tracking.validation.max_time_past_hours</field>
         <field name="value">24</field>
+    </record>
+
+    <record id="param_max_time_future_minutes" model="ir.config_parameter">
+        <field name="key">gps_tracking.validation.max_time_future_minutes</field>
+        <field name="value">5</field>
     </record>
 
     <record id="param_min_time_interval" model="ir.config_parameter">
@@ -107,17 +112,12 @@
     <!-- Duplicate Detection Parameters -->
     <record id="param_duplicate_time_window" model="ir.config_parameter">
         <field name="key">gps_tracking.validation.duplicate_time_window_seconds</field>
-        <field name="value">10</field>
+        <field name="value">15</field>
     </record>
 
     <record id="param_duplicate_coordinate_tolerance" model="ir.config_parameter">
         <field name="key">gps_tracking.validation.duplicate_coordinate_tolerance</field>
         <field name="value">0.00001</field>
-    </record>
-
-    <record id="param_duplicate_extended_window" model="ir.config_parameter">
-        <field name="key">gps_tracking.validation.duplicate_extended_window_seconds</field>
-        <field name="value">300</field>
     </record>
 
 </odoo>

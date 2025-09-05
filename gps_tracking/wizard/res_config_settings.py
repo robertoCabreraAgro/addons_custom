@@ -153,11 +153,17 @@ class ResConfigSettings(models.TransientModel):
     # TEMPORAL PARAMETERS
     # ========================================
 
-    max_time_gap_hours = fields.Float(
+    max_time_past_hours = fields.Float(
         string="Maximum Time Gap (hours)",
         default=24.0,
         help="Maximum allowed time gap between current time and GPS timestamp",
-        config_parameter="gps_tracking.validation.max_time_gap_hours",
+        config_parameter="gps_tracking.validation.max_time_past_hours",
+    )
+    max_time_future_minutes = fields.Float(
+        string="Maximum Time Gap (hours)",
+        default=5.0,
+        help="Maximum allowed time gap between current time and GPS timestamp",
+        config_parameter="gps_tracking.validation.max_time_future_minutes",
     )
     min_time_interval_seconds = fields.Integer(
         string="Minimum Time Interval (seconds)",
@@ -181,12 +187,6 @@ class ResConfigSettings(models.TransientModel):
         default=0.00001,
         help="Coordinate tolerance for duplicate detection (degrees)",
         config_parameter="gps_tracking.validation.duplicate_coordinate_tolerance",
-    )
-    duplicate_extended_window_seconds = fields.Integer(
-        string="Extended Duplicate Window (seconds)",
-        default=300,
-        help="Extended time window for comprehensive duplicate checking",
-        config_parameter="gps_tracking.validation.duplicate_extended_window_seconds",
     )
 
     # ========================================

@@ -123,9 +123,13 @@
                     </block>
                     <block name="temporal_settings" title="Temporal Validation"
                         help="Configure time-based validation parameters">
-                        <setting name="max_time_gap_hours"
+                        <setting name="max_time_past_hours"
                             help="Maximum allowed time gap between current time and GPS timestamp">
-                            <field name="max_time_gap_hours" />
+                            <field name="max_time_past_hours" />
+                        </setting>
+                        <setting name="max_time_future_minutes"
+                            help="Maximum allowed time gap between current time and GPS timestamp">
+                            <field name="max_time_future_minutes" />
                         </setting>
                         <setting name="min_time_interval_seconds"
                             help="Minimum time interval between consecutive GPS points">
@@ -141,10 +145,6 @@
                         <setting name="duplicate_coordinate_tolerance"
                             help="Coordinate tolerance for duplicate detection">
                             <field name="duplicate_coordinate_tolerance" />
-                        </setting>
-                        <setting name="duplicate_extended_window_seconds"
-                            help="Extended time window for comprehensive duplicate checking">
-                            <field name="duplicate_extended_window_seconds" />
                         </setting>
                     </block>
                     <block name="speed_settings" title="Speed Change Detection"

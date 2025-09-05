@@ -71,7 +71,7 @@ class GPSWebhook(http.Controller):
     MIN_SATELLITES_FOR_ACCURACY = 4  # Minimum satellites for good GPS accuracy
     MAX_REASONABLE_SPEED = 300  # Maximum reasonable speed in km/h for ground vehicles
     MIN_COORDINATE_PRECISION = 5  # Minimum decimal places for coordinates
-    MAX_DUPLICATE_TIME_WINDOW = 10  # Seconds to check for duplicate points
+    MAX_DUPLICATE_TIME_WINDOW = 15  # Seconds to check for duplicate points
     MAX_SPEED_CHANGE_PER_MINUTE = 100  # km/h - detect unrealistic speed changes
     MIN_ENGINE_TEMP = -40  # °C
     MAX_ENGINE_TEMP = 150  # °C
@@ -121,33 +121,28 @@ class GPSWebhook(http.Controller):
         }
 
         try:
-            # Extract JSON data from request
             json_data = request.get_json_data()
             if not json_data:
                 _logger.warning("Empty JSON data received")
                 return self.RESPONSE_FAILURE
 
-            # Extract payload from JSON structure
             payload = self._extract_payload(json_data)
             if not payload:
                 return self.RESPONSE_FAILURE
 
-            is_quality_valid, quality_error, device, vals = (
-                self._validate_payload_quality(
+            is_valid, error, device, vals = (
+                self._validate_payload(
                     payload,
                     processing_stats,
                 )
             )
 
-            # Extract IMEI from device for logging (if device was found)
-            imei = device.imei if device else "unknown"
-
-            if not is_quality_valid:
+            if not is_valid:
                 self._log_webhook_result(
                     start_time,
                     remote_addr,
-                    imei,
-                    f"Quality validation failed: {quality_error}",
+                    device.imei if device else "unknown",
+                    f"Quality validation failed: {error}",
                     processing_stats,
                     vals,
                     is_success=False,
@@ -494,10 +489,16 @@ class GPSWebhook(http.Controller):
                         )
                     ),
                     # Temporal parameters
-                    "max_time_gap_hours": float(
+                    "max_time_past_hours": float(
                         param_obj.get_param(
-                            "gps_tracking.validation.max_time_gap_hours",
+                            "gps_tracking.validation.max_time_past_hours",
                             default=24.0,
+                        )
+                    ),
+                    "max_time_future_minutes": float(
+                        param_obj.get_param(
+                            "gps_tracking.validation.max_time_future_minutes",
+                            default=5.0,
                         )
                     ),
                     "min_time_interval_seconds": int(
@@ -510,19 +511,13 @@ class GPSWebhook(http.Controller):
                     "duplicate_time_window": int(
                         param_obj.get_param(
                             "gps_tracking.validation.duplicate_time_window_seconds",
-                            default=10,
+                            default=15,
                         )
                     ),
                     "coordinate_tolerance": float(
                         param_obj.get_param(
                             "gps_tracking.validation.duplicate_coordinate_tolerance",
                             default=0.00001,
-                        )
-                    ),
-                    "extended_window": int(
-                        param_obj.get_param(
-                            "gps_tracking.validation.duplicate_extended_window_seconds",
-                            default=300,
                         )
                     ),
                 }
@@ -551,11 +546,11 @@ class GPSWebhook(http.Controller):
                     "max_gsm_signal": 31,
                     "max_speed_change": 10.0,
                     "speed_window_seconds": 30,
-                    "max_time_gap_hours": 24.0,
+                    "max_time_past_hours": 24.0,
+                    "max_time_future_minutes": 5.0,
                     "min_time_interval_seconds": 1,
-                    "duplicate_time_window": 10,
+                    "duplicate_time_window": 15,
                     "coordinate_tolerance": 0.00001,
-                    "extended_window": 300,
                 }
         return cls._validation_config_cache
 
@@ -569,6 +564,20 @@ class GPSWebhook(http.Controller):
     # ------------------------------------------------------------
     # DATABASE OPERATIONS
     # ------------------------------------------------------------
+
+    def _create_tracking_point(self, vals: Dict[str, Any]) -> Optional[Any]:
+        """
+        Create new GPS tracking point record
+
+        Args:
+            vals: Field values for the new record
+
+        Returns:
+            Created record or None if creation fails
+        """
+        tracking_point = request.env["gps.tracking.point"].sudo()
+        new_point = tracking_point.create(vals)
+        return new_point
 
     def _get_device(self, imei: str) -> Optional[Any]:
         """
@@ -591,19 +600,40 @@ class GPSWebhook(http.Controller):
 
         return device
 
-    def _create_tracking_point(self, vals: Dict[str, Any]) -> Optional[Any]:
+    def _get_recent_points(self, device_id: int, config: dict):
         """
-        Create new GPS tracking point record
+        Get recent GPS points for validation purposes.
 
         Args:
-            vals: Field values for the new record
+            device_id: GPS device ID
+            window_seconds: Time window for recent points (uses config if None)
 
         Returns:
-            Created record or None if creation fails
+            Recordset of recent GPS points
         """
-        tracking_point = request.env["gps.tracking.point"].sudo()
-        new_point = tracking_point.create(vals)
-        return new_point
+        window_seconds = config.get("duplicate_time_window", 15)
+
+        try:
+            cutoff_time = datetime.now() - timedelta(seconds=window_seconds)
+            recent_points = (
+                request.env["gps.tracking.point"]
+                .sudo()
+                .search(
+                    [
+                        ("device_id", "=", device_id),
+                        ("timestamp", ">=", cutoff_time),
+                    ],
+                    order="timestamp desc",
+                    limit=15,
+                )
+            )
+            return recent_points
+
+        except Exception as e:
+            _logger.error(
+                "Error fetching recent points for device %d: %s", device_id, e
+            )
+            return request.env["gps.tracking.point"].sudo().browse([])
 
     def _update_device_last_point(self, device: Any, point_id: int) -> bool:
         """
@@ -618,44 +648,6 @@ class GPSWebhook(http.Controller):
         """
         device.sudo().write({"last_point_id": point_id})
         return True
-
-    def _get_recent_points(self, device_id: int, window_seconds: int = None):
-        """
-        Get recent GPS points for validation purposes.
-
-        Args:
-            device_id: GPS device ID
-            window_seconds: Time window for recent points (uses config if None)
-
-        Returns:
-            Recordset of recent GPS points
-        """
-        # Use configuration for window if not specified
-        if window_seconds is None:
-            config = self._get_validation_config()
-            window_seconds = config.get("extended_window", 300)
-
-        try:
-            cutoff_time = datetime.now() - timedelta(seconds=window_seconds)
-            recent_points = (
-                request.env["gps.tracking.point"]
-                .sudo()
-                .search(
-                    [
-                        ("device_id", "=", device_id),
-                        ("timestamp", ">=", cutoff_time),
-                    ],
-                    order="timestamp desc",
-                    limit=10,
-                )
-            )
-            return recent_points
-
-        except Exception as e:
-            _logger.error(
-                "Error fetching recent points for device %d: %s", device_id, e
-            )
-            return request.env["gps.tracking.point"].sudo().browse([])
 
     # ------------------------------------------------------------
     # DATA PROCESING METHODS
@@ -744,7 +736,7 @@ class GPSWebhook(http.Controller):
     # VALIDATIONS
     # ------------------------------------------------------------
 
-    def _validate_payload_quality(
+    def _validate_payload(
         self,
         payload: Dict[str, Any],
         processing_stats: Dict[str, Any],
@@ -768,9 +760,9 @@ class GPSWebhook(http.Controller):
         # Cache recent points for multiple validations (replaces 3+ duplicate queries)
         errors = []
         warnings = []
+        device = ()
+        recent_points = ()
         vals = {}
-        device = None
-        recent_points = None
 
         # Define validation rules with severity levels
         validation_rules = [
@@ -790,6 +782,11 @@ class GPSWebhook(http.Controller):
                 "critical",
             ),
             (
+                "record_duplication",
+                self.validate_record_duplication,
+                "critical",
+            ),
+            (
                 "gps_accuracy",
                 self._validate_gps_accuracy,
                 "warning",
@@ -804,33 +801,24 @@ class GPSWebhook(http.Controller):
                 self._validate_speed_parameters,
                 "warning",
             ),
-            (
-                "record_duplication",
-                self.validate_record_duplication,
-                "critical",
-            ),
         ]
 
         for rule_name, validator_func, severity in validation_rules:
             try:
-                # Pass validation context for prerequisite validation
                 if rule_name == "prerequisite_validation":
                     is_valid, message, device = validator_func(payload)
-                    # Prepare tracking point values (using device.id if device exists)
                 else:
                     is_valid, message = validator_func(vals, config, recent_points)
 
                 if is_valid:
                     processing_stats["quality_checks_passed"] += 1
                     if rule_name == "prerequisite_validation":
-                        # Prepare tracking point values (using device.id if device exists)
                         vals = self._prepare_tracking_point_vals(device.id, payload)
-                        recent_points = self._get_recent_points(device.id)
+                        recent_points = self._get_recent_points(device.id, config)
                 elif not is_valid:
                     processing_stats["quality_checks_failed"] += 1
                     if severity == "critical":
                         errors.append(f"{rule_name}: {message}")
-                        continue
                     elif severity == "warning":
                         warnings.append(f"{rule_name}: {message}")
 
@@ -851,7 +839,7 @@ class GPSWebhook(http.Controller):
         # Return failure only for critical errors
         if errors:
             imei_info = (
-                vals.get("imei", payload.get("14", "unknown"))
+                vals.get("imei", "unknown")
                 if vals
                 else payload.get("14", "unknown")
             )
@@ -901,22 +889,22 @@ class GPSWebhook(http.Controller):
 
         return True, "Prerequisites valid", device
 
-    def _validate_range(self, value, min_val, max_val, param_name: str, unit: str = ""):
+    def _validate_range(self, param_name: str, min_val, max_val, value, unit: str = ""):
         """
         Generic range validation helper to eliminate duplicate validation patterns.
 
         Args:
-            value: Value to validate
+            param_name: Parameter name for error messages
             min_val: Minimum allowed value
             max_val: Maximum allowed value
-            param_name: Parameter name for error messages
+            value: Value to validate
             unit: Unit suffix for error messages
 
         Returns:
             Tuple of (is_valid, error_message)
         """
         if value is None or value == 0:
-            return True, f"No {param_name} to validate"
+            return False, f"No {param_name} to validate"
 
         if not (min_val <= value <= max_val):
             return (
@@ -957,28 +945,21 @@ class GPSWebhook(http.Controller):
         time_diff = (timestamp - now).total_seconds()
 
         # Check for future timestamps (more than 5 minutes ahead)
-        if time_diff > 300:  # 5 minutes
+        max_future_minutes = config.get("max_time_future_minutes", 5)
+        max_future_seconds = max_future_minutes * 60
+        if time_diff > max_future_seconds:
             return (
                 False,
                 f"Timestamp too far in future: {time_diff/60:.1f} minutes ahead",
             )
 
         # Check for very old timestamps (more than configured max time gap)
-        max_past_hours = config.get("max_time_gap_hours", 24)
+        max_past_hours = config.get("max_time_past_hours", 24)
         max_past_seconds = max_past_hours * 3600
-
         if time_diff < -max_past_seconds:
             return (
                 False,
                 f"Timestamp too old: {abs(time_diff/3600):.1f} hours ago (maximum: {max_past_hours} hours)",
-            )
-
-        # Check for minimum realistic timestamp (year 2000+)
-        min_year_2000 = datetime(2000, 1, 1)
-        if timestamp < min_year_2000:
-            return (
-                False,
-                f"Timestamp before year 2000: {timestamp.strftime('%Y-%m-%d %H:%M:%S')}",
             )
 
         return True, "Timestamp quality valid"
@@ -999,27 +980,27 @@ class GPSWebhook(http.Controller):
         lat = vals.get("latitude")
         lng = vals.get("longitude")
 
-        if lat is None or lng is None:
+        if any(lat, lng) is None:
             return False, "No coordinates to validate"
-
-        # Use cached config and generic range validator
-        is_valid, msg = self._validate_range(
-            lat, config["min_latitude"], config["max_latitude"], "latitude"
-        )
-        if not is_valid:
-            return False, msg
-
-        is_valid, msg = self._validate_range(
-            lng, config["min_longitude"], config["max_longitude"], "longitude"
-        )
-        if not is_valid:
-            return False, msg
 
         if lat == 0.0 and lng == 0.0:
             return (
                 False,
                 "Invalid null coordinates (0.0, 0.0) - GPS signal not acquired",
             )
+
+        # Use cached config and generic range validator
+        is_valid, msg = self._validate_range(
+             "latitude", config["min_latitude"], config["max_latitude"], lat
+        )
+        if not is_valid:
+            return False, msg
+
+        is_valid, msg = self._validate_range(
+            "longitude", config["min_longitude"], config["max_longitude"], lng
+        )
+        if not is_valid:
+            return False, msg
 
         return True, f"Coordinates valid: ({lat:.6f}, {lng:.6f})"
 
@@ -1072,11 +1053,7 @@ class GPSWebhook(http.Controller):
         """
         # Vehicle parameter validations
         is_valid, msg = self._validate_range(
-            vals.get("fuel_level", 0),
-            0,
-            config["max_fuel_level"],
-            "fuel level",
-            "%",
+            "fuel level", 0, config["max_fuel_level"], vals.get("fuel_level", 0), "%"
         )
         if (
             not is_valid and vals.get("fuel_level", 0) > 0
@@ -1084,21 +1061,14 @@ class GPSWebhook(http.Controller):
             return False, msg
 
         is_valid, msg = self._validate_range(
-            vals.get("engine_total_hours", 0),
-            0,
-            config["max_engine_hours"],
-            "engine hours",
+            "engine hours", 0, config["max_engine_hours"], vals.get("engine_total_hours", 0)
         )
         if not is_valid and vals.get("engine_total_hours", 0) > 0:
             return False, msg
 
         # Speed validation (basic range, not change rate)
         is_valid, msg = self._validate_range(
-            vals.get("speed", 0),
-            0,
-            config["max_realistic_speed"],
-            "speed",
-            " km/h",
+            "speed", 0, config["max_realistic_speed"], vals.get("speed", 0), " km/h"
         )
         if not is_valid and vals.get("speed", 0) > 0:
             return False, msg
@@ -1110,20 +1080,20 @@ class GPSWebhook(http.Controller):
 
         # Electrical parameter validations
         is_valid, msg = self._validate_range(
-            vals.get("external_voltage", 0),
+            "external voltage",
             config["min_external_voltage"],
             config["max_external_voltage"],
-            "external voltage",
+            vals.get("external_voltage", 0),
             "V",
         )
         if not is_valid and vals.get("external_voltage", 0) > 0:
             return False, msg
 
         is_valid, msg = self._validate_range(
-            vals.get("battery_voltage", 0),
+            "battery voltage",
             config["min_internal_voltage"],
             config["max_internal_voltage"],
-            "battery voltage",
+            vals.get("battery_voltage", 0),
             "V",
         )
         if not is_valid and vals.get("battery_voltage", 0) > 0:
@@ -1139,10 +1109,10 @@ class GPSWebhook(http.Controller):
 
         # Network parameter validations
         is_valid, msg = self._validate_range(
-            vals.get("gsm_signal", 0),
+            "GSM signal",
             config["min_gsm_signal"],
             config["max_gsm_signal"],
-            "GSM signal",
+            vals.get("gsm_signal", 0),
         )
         if not is_valid and vals.get("gsm_signal", 0) > 0:
             return False, msg
