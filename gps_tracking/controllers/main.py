@@ -675,7 +675,7 @@ class GPSWebhook(http.Controller):
         """
         try:
             if "," not in latlng_str:
-                _logger.error(
+                _logger.warning(
                     "Error latlong: %s", latlng_str
                 )
                 return None, None
