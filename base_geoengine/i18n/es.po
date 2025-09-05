@@ -931,12 +931,6 @@ msgid "geo_polygon"
 msgstr "geo_polygon (geo_polígono)"
 
 #. module: base_geoengine
-#. odoo-python
-#: code:addons/base_geoengine/models/base.py:0
-#, python-format
-"modelo base"
-
-#. module: base_geoengine
 #. odoo-javascript
 #: code:addons/base_geoengine/static/src/js/widgets/domain_selector_geo_field/domain_selector_geo_field/domain_selector_geo_field.esm.js:0
 #, python-format
