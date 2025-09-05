@@ -15,6 +15,8 @@ class GeoRasterLayer(models.Model):
     _description = "Raster Layer"
     _order = "sequence ASC, name"
 
+    name = fields.Char("Layer Name", translate=True, required=True)
+    sequence = fields.Integer("Layer priority", default=6)
     raster_type = fields.Selection(
         selection=[
             ("osm", "OpenStreetMap"),
@@ -26,7 +28,6 @@ class GeoRasterLayer(models.Model):
         required=True,
         default="osm",
     )
-    name = fields.Char("Layer Name", translate=True, required=True)
     url = fields.Char("Service URL")
 
     # technical field to display or not wmts options
@@ -59,18 +60,17 @@ class GeoRasterLayer(models.Model):
         domain="[('service', '=', raster_type)]",
     )
     type = fields.Char(related="type_id.code")
-    sequence = fields.Integer("Layer priority", default=6)
     overlay = fields.Boolean("Is overlay layer?")
+    view_id = fields.Many2one(
+        "ir.ui.view",
+        "Related View",
+        required=True,
+        domain=[("type", "=", "geoengine")],
+    )
     field_id = fields.Many2one(
         "ir.model.fields",
         "Odoo layer field to use",
         domain=[("ttype", "ilike", "geo_"), ("model", "=", "view_id.model")],
-    )
-    view_id = fields.Many2one(
-        "ir.ui.view",
-        "Related View",
-        domain=[("type", "=", "geoengine")],
-        required=True,
     )
     use_to_edit = fields.Boolean("Use to edit")
     opacity = fields.Float(default=1.0)

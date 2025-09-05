@@ -22,6 +22,8 @@ class GeoVectorLayer(models.Model):
     _description = "Vector Layer"
     _order = "sequence ASC, name"
 
+    name = fields.Char("Layer Name", translate=True, required=True)
+    sequence = fields.Integer("Layer Priority", default=6)
     geo_repr = fields.Selection(
         selection=[
             ("basic", "Basic"),
@@ -42,7 +44,6 @@ class GeoVectorLayer(models.Model):
         string="Classification mode",
         required=False,
     )
-    name = fields.Char("Layer Name", translate=True, required=True)
     begin_color = fields.Char(
         "Begin color class",
         required=False,
@@ -51,51 +52,50 @@ class GeoVectorLayer(models.Model):
     end_color = fields.Char(
         "End color class",
         required=False,
-        help="hex value",
         default="#FF680A",
+        help="hex value",
     )
     nb_class = fields.Integer("Number of class", default=1)
+    model_id = fields.Many2one(
+        "ir.model",
+        "Model to use",
+        compute="_compute_model_id",
+        store=True,
+        readonly=False,
+    )
+    model_name = fields.Char(related="model_id.model", readonly=True)
+    model_domain = fields.Char(default="[]")
+    model_view_id = fields.Many2one(
+        "ir.ui.view",
+        "Model view",
+        compute="_compute_model_view_id",
+        readonly=False,
+        domain=[("type", "=", "geoengine")],
+    )
+    view_id = fields.Many2one(
+        "ir.ui.view",
+        "Related View",
+        required=True,
+        domain=[("type", "=", "geoengine")],
+    )
     geo_field_id = fields.Many2one(
         "ir.model.fields",
         "Geo field",
         required=True,
-        ondelete="cascade",
         domain=[("ttype", "ilike", "geo_")],
+        ondelete="cascade",
     )
     attribute_field_id = fields.Many2one(
         "ir.model.fields",
         "Attribute field",
         domain=[("ttype", "in", SUPPORTED_ATT)],
     )
-    model_id = fields.Many2one(
-        "ir.model",
-        "Model to use",
-        store=True,
-        readonly=False,
-        compute="_compute_model_id",
-    )
-    model_name = fields.Char(related="model_id.model", readonly=True)
-    view_id = fields.Many2one(
-        "ir.ui.view",
-        "Related View",
-        domain=[("type", "=", "geoengine")],
-        required=True,
-    )
-    sequence = fields.Integer("Layer Priority", default=6)
     readonly = fields.Boolean("Layer is read only")
     display_polygon_labels = fields.Boolean("Display Labels on Polygon")
     active_on_startup = fields.Boolean(
-        help="Layer will be shown on startup if checked."
+        help="Layer will be shown on startup if checked.",
     )
     layer_opacity = fields.Float(default=1.0)
-    model_domain = fields.Char(default="[]")
-    model_view_id = fields.Many2one(
-        "ir.ui.view",
-        "Model view",
-        domain=[("type", "=", "geoengine")],
-        compute="_compute_model_view_id",
-        readonly=False,
-    )
     layer_transparent = fields.Boolean()
 
     @api.constrains("geo_field_id", "model_id")

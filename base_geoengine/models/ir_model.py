@@ -35,15 +35,18 @@ POSTGIS_GEO_TYPES = [
 class IrModelField(models.Model):
     _inherit = "ir.model.fields"
 
-    srid = fields.Integer("srid", required=False)
-    geo_type = fields.Selection(POSTGIS_GEO_TYPES, string="PostGIs type")
+    ttype = fields.Selection(
+        selection_add=GEO_TYPES,
+        ondelete=GEO_TYPES_ONDELETE,
+    )
+    geo_type = fields.Selection(
+        POSTGIS_GEO_TYPES,
+        string="PostGIs type",
+    )
     dim = fields.Selection(
         selection=[("2", "2"), ("3", "3"), ("4", "4")],
         string="PostGIs Dimension",
         default="2",
     )
+    srid = fields.Integer("srid", required=False)
     gist_index = fields.Boolean("Create gist index")
-    ttype = fields.Selection(
-        selection_add=GEO_TYPES,
-        ondelete=GEO_TYPES_ONDELETE,
-    )
