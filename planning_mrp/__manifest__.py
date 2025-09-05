@@ -1,0 +1,28 @@
+{
+    "name": "Planning Manufacturing",
+    "summary": """""",
+    "author": "Agro Marin",
+    "website": "https://www.agromarin.mx",
+    "license": "LGPL-3",
+    "category": "Manufacturing/Manufacturing",
+    "version": "saas~18.2.1.0.0",
+    "depends": [
+        "planning",
+        "mrp",
+        "hr",
+        "marin",
+    ],
+    "data": [
+        "security/planning_mrp_security.xml",
+        "security/ir.model.access.csv",
+        "data/planning_mrp_data.xml",
+        "views/mrp_workcenter_views.xml",
+        "views/planning_cancel_reason_views.xml",
+        "wizard/planning_slot_cancel_views.xml",
+        "views/planning_slot_views.xml",
+        "views/res_config_settings_views.xml",
+        "views/mrp_planning_menus.xml"
+    ],
+    'installable': True,
+    'application': True,
+}

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_res_config_settings_inherit_planning_manufacturing" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.planning.manufacturing</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="marin.view_res_config_settings_inherit_planning_mrp"/>
+        <field name="arch" type="xml">
+            <xpath expr="//setting[@id='module_planning_mrp']" position="after">
+                <setting id="security_lead_time" string="Planning Integration" help="Select the default project for manufacturing planning.">
+                    <div class="content-group" invisible="not module_planning_mrp">
+                        <div class="mt16">
+                            <field name="default_planning_manufacturing_project_id"/>
+                        </div>
+                    </div>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>
