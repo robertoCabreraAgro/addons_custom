@@ -1,6 +1,3 @@
-# Copyright 2011-2012 Nicolas Bessi (Camptocamp SA)
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
-
 import logging
 
 from odoo import _
@@ -26,7 +23,7 @@ def init_postgis(env):
             pg_tables
         WHERE
             tablename='spatial_ref_sys';
-    """
+        """
     )
     check = cr.fetchone()
     if check:
@@ -34,9 +31,9 @@ def init_postgis(env):
     try:
         cr.execute(
             """
-        CREATE EXTENSION postgis;
-        CREATE EXTENSION postgis_topology;
-    """
+            CREATE EXTENSION postgis;
+            CREATE EXTENSION postgis_topology;
+            """
         )
     except Exception as exc:
         raise MissingError(
@@ -65,7 +62,6 @@ def create_geo_column(cr, tablename, columnname, geotype, srid, dim, comment=Non
         (tablename, columnname, srid, geotype, dim),
     )
     if comment:
-        # pylint: disable=E8103
         cr.execute(
             f'COMMENT ON COLUMN "{tablename}"."{columnname}" IS %s',
             (comment,),
@@ -84,6 +80,5 @@ def create_geo_index(cr, columnname, tablename):
     indexname = _postgis_index_name(tablename, columnname)
     if sql.index_exists(cr, indexname):
         return
-    # pylint: disable=E8103
     cr.execute(f"CREATE INDEX {indexname} ON {tablename} USING GIST ( {columnname} )")
     _schema.debug("Table %r: created index %r", tablename, indexname)

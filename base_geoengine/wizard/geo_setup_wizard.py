@@ -32,7 +32,7 @@ class GeoSetupWizard(models.TransientModel):
 
     # Welcome step
     setup_type = fields.Selection(
-        [
+        selection=[
             ("quick", "Quick Setup (Recommended)"),
             ("advanced", "Advanced Setup"),
             ("custom", "Custom Configuration"),
@@ -43,7 +43,7 @@ class GeoSetupWizard(models.TransientModel):
 
     # Spatial configuration
     region = fields.Selection(
-        [
+        selection=[
             ("north_america", "North America"),
             ("europe", "Europe"),
             ("asia_pacific", "Asia Pacific"),
@@ -67,7 +67,9 @@ class GeoSetupWizard(models.TransientModel):
         help="Spatial Reference System for display (usually WGS84: 4326)",
     )
     coordinate_precision = fields.Integer(
-        string="Coordinate Precision", default=6, help="Decimal places for coordinates"
+        string="Coordinate Precision",
+        default=6,
+        help="Decimal places for coordinates",
     )
 
     # Performance settings
@@ -82,7 +84,9 @@ class GeoSetupWizard(models.TransientModel):
         help="How long to keep cached results",
     )
     max_cache_entries = fields.Integer(
-        string="Max Cache Entries", default=1000, help="Maximum cached items"
+        string="Max Cache Entries",
+        default=1000,
+        help="Maximum cached items",
     )
     max_geometry_size = fields.Integer(
         string="Max Geometry Size (MB)",
@@ -158,7 +162,6 @@ class GeoSetupWizard(models.TransientModel):
             dict: Action to reload wizard with next step.
         """
         self.ensure_one()
-
         step_sequence = [
             "welcome",
             "spatial_config",
@@ -167,18 +170,13 @@ class GeoSetupWizard(models.TransientModel):
             "completion",
         ]
         current_index = step_sequence.index(self.current_step)
-
         if current_index < len(step_sequence) - 1:
             next_step = step_sequence[current_index + 1]
-
             # Validate current step before proceeding
             self._validate_current_step()
-
             self.current_step = next_step
-
             if next_step == "completion":
                 self._apply_configuration()
-
         return self._return_wizard_action()
 
     def action_previous_step(self):
@@ -188,7 +186,6 @@ class GeoSetupWizard(models.TransientModel):
             dict: Action to reload wizard with previous step.
         """
         self.ensure_one()
-
         step_sequence = [
             "welcome",
             "spatial_config",
@@ -197,10 +194,8 @@ class GeoSetupWizard(models.TransientModel):
             "completion",
         ]
         current_index = step_sequence.index(self.current_step)
-
         if current_index > 0:
             self.current_step = step_sequence[current_index - 1]
-
         return self._return_wizard_action()
 
     def action_skip_setup(self):
@@ -210,10 +205,7 @@ class GeoSetupWizard(models.TransientModel):
             dict: Action to close wizard.
         """
         self.ensure_one()
-
-        # Apply minimal default configuration
         self._apply_minimal_config()
-
         return {"type": "ir.actions.act_window_close"}
 
     def action_finish_setup(self):
@@ -351,9 +343,11 @@ class GeoSetupWizard(models.TransientModel):
             cr = self.env.cr
             cr.execute(
                 """
-                SELECT f_table_name, f_geometry_column
-                FROM geometry_columns
-            """
+                SELECT
+                    f_table_name, f_geometry_column
+                FROM
+                    geometry_columns
+                """
             )
 
             geometry_columns = cr.fetchall()

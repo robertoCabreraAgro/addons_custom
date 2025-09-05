@@ -1,6 +1,5 @@
-# Copyright 2023 ACSONE SA/NV
-
 import geojson
+
 from odoo_test_helper import FakeModelLoader
 from shapely import wkt
 from shapely.geometry import shape

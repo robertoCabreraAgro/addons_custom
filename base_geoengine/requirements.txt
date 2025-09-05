@@ -1,5 +1,4 @@
-# generated from manifests external_dependencies
-geojson
 requests
 shapely
+geojson
 simplejson

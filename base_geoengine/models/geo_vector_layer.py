@@ -45,20 +45,20 @@ class GeoVectorLayer(models.Model):
         required=False,
     )
     begin_color = fields.Char(
-        "Begin color class",
+        string="Begin color class",
         required=False,
         help="hex value",
     )
     end_color = fields.Char(
-        "End color class",
+        string="End color class",
         required=False,
         default="#FF680A",
         help="hex value",
     )
     nb_class = fields.Integer("Number of class", default=1)
     model_id = fields.Many2one(
-        "ir.model",
-        "Model to use",
+        comodel_name="ir.model",
+        string="Model to use",
         compute="_compute_model_id",
         store=True,
         readonly=False,
@@ -66,28 +66,28 @@ class GeoVectorLayer(models.Model):
     model_name = fields.Char(related="model_id.model", readonly=True)
     model_domain = fields.Char(default="[]")
     model_view_id = fields.Many2one(
-        "ir.ui.view",
-        "Model view",
+        comodel_name="ir.ui.view",
+        string="Model view",
         compute="_compute_model_view_id",
         readonly=False,
         domain=[("type", "=", "geoengine")],
     )
     view_id = fields.Many2one(
-        "ir.ui.view",
-        "Related View",
+        comodel_name="ir.ui.view",
+        string="Related View",
         required=True,
         domain=[("type", "=", "geoengine")],
     )
     geo_field_id = fields.Many2one(
-        "ir.model.fields",
-        "Geo field",
+        comodel_name="ir.model.fields",
+        string="Geo field",
         required=True,
         domain=[("ttype", "ilike", "geo_")],
         ondelete="cascade",
     )
     attribute_field_id = fields.Many2one(
-        "ir.model.fields",
-        "Attribute field",
+        comodel_name="ir.model.fields",
+        string="Attribute field",
         domain=[("ttype", "in", SUPPORTED_ATT)],
     )
     readonly = fields.Boolean("Layer is read only")
@@ -101,10 +101,10 @@ class GeoVectorLayer(models.Model):
     @api.constrains("geo_field_id", "model_id")
     def _check_geo_field_id(self):
         """Validate that geo_field_id belongs to the specified model.
-        
+
         Ensures the selected geometric field is actually a field of the
         model specified in model_id to prevent configuration errors.
-        
+
         Raises:
             ValidationError: When geo_field_id model doesn't match model_id.
         """
@@ -121,10 +121,10 @@ class GeoVectorLayer(models.Model):
     @api.constrains("geo_repr", "attribute_field_id")
     def _check_geo_repr(self):
         """Validate geo representation configuration against attribute field type.
-        
+
         Ensures that colored and proportional representations use numeric fields
         when required, preventing invalid visualization configurations.
-        
+
         Raises:
             ValidationError: When non-numeric field is used with representations
                            requiring numeric data (colored/proportional).
@@ -148,10 +148,10 @@ class GeoVectorLayer(models.Model):
     @api.constrains("attribute_field_id", "geo_field_id")
     def _check_if_attribute_in_geo_field(self):
         """Validate that attribute_field_id belongs to the same model as geo_field_id.
-        
+
         Ensures both fields are from the same model to prevent cross-model
         field references that would cause runtime errors.
-        
+
         Raises:
             ValidationError: When fields belong to different models.
         """
@@ -168,7 +168,7 @@ class GeoVectorLayer(models.Model):
     @api.depends("model_id")
     def _compute_model_view_id(self):
         """Compute the geoengine view associated with the selected model.
-        
+
         Automatically finds and sets the geoengine view for the model_id,
         enabling proper layer configuration and visualization.
         """
@@ -183,7 +183,7 @@ class GeoVectorLayer(models.Model):
     @api.depends("geo_field_id", "view_id")
     def _compute_model_id(self):
         """Compute model_id based on geo_field_id and view_id relationship.
-        
+
         Sets the model_id when geo_field belongs to a different model than
         the view, enabling cross-model layer configurations.
         """

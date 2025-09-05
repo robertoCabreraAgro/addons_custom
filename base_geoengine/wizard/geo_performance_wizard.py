@@ -174,9 +174,7 @@ class GeoPerformanceWizard(models.TransientModel):
         log_operations = (
             config.get_param("base_geoengine.log_operations", "False") == "True"
         )
-
         query_html = ["<h4>Query Performance Analysis</h4>"]
-
         if log_operations:
             query_html.extend(
                 [
@@ -203,7 +201,6 @@ class GeoPerformanceWizard(models.TransientModel):
         """
         cr = self.env.cr
 
-        # Query for geometry columns and their indexes
         cr.execute(
             """
             SELECT 
@@ -212,16 +209,17 @@ class GeoPerformanceWizard(models.TransientModel):
                 gc.type,
                 gc.srid,
                 CASE WHEN pi.indexname IS NOT NULL THEN 'Yes' ELSE 'No' END as has_index
-            FROM geometry_columns gc
+            FROM
+                geometry_columns gc
             LEFT JOIN pg_indexes pi ON (
                 pi.tablename = gc.f_table_name 
                 AND pi.indexname LIKE '%' || gc.f_geometry_column || '%'
                 AND pi.indexdef LIKE '%gist%'
             )
-            ORDER BY gc.f_table_name, gc.f_geometry_column
+            ORDER BY
+                gc.f_table_name, gc.f_geometry_column
             """
         )
-
         results = cr.fetchall()
 
         index_html = [
@@ -331,7 +329,6 @@ class GeoPerformanceWizard(models.TransientModel):
             dict: Success notification action.
         """
         self.ensure_one()
-
         applied_changes = []
 
         # Enable caching if disabled
@@ -373,13 +370,15 @@ class GeoPerformanceWizard(models.TransientModel):
             SELECT 
                 gc.f_table_name,
                 gc.f_geometry_column
-            FROM geometry_columns gc
+            FROM
+                geometry_columns gc
             LEFT JOIN pg_indexes pi ON (
                 pi.tablename = gc.f_table_name 
                 AND pi.indexname LIKE '%' || gc.f_geometry_column || '%'
                 AND pi.indexdef LIKE '%gist%'
             )
-            WHERE pi.indexname IS NULL
+            WHERE
+                pi.indexname IS NULL
             """
         )
 
