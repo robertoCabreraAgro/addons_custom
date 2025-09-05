@@ -82,7 +82,8 @@
         <field name="key">gps_tracking.validation.max_internal_voltage</field>
         <field name="value">5.5</field>
     </record>
-
+    
+    <!-- Network Parameters -->
     <record id="param_min_gsm_signal" model="ir.config_parameter">
         <field name="key">gps_tracking.validation.min_gsm_signal</field>
         <field name="value">0</field>
@@ -121,14 +122,25 @@
     </record>
 
     <!-- Duplicate Detection Parameters -->
-    <record id="param_duplicate_time_window" model="ir.config_parameter">
+    <record id="param_duplicate_time_window_seconds" model="ir.config_parameter">
         <field name="key">gps_tracking.validation.duplicate_time_window_seconds</field>
         <field name="value">15</field>
     </record>
-
+    
     <record id="param_duplicate_coordinate_tolerance" model="ir.config_parameter">
         <field name="key">gps_tracking.validation.duplicate_coordinate_tolerance</field>
         <field name="value">0.00001</field>
+    </record>
+        
+    <!-- Inactivity State Parameters -->
+    <record id="param_inactivity_inactive_hours" model="ir.config_parameter">
+        <field name="key">gps_tracking.inactivity_inactive_hours</field>
+        <field name="value">1.5</field>
+    </record>
+
+    <record id="param_inactivity_warning_hours" model="ir.config_parameter">
+        <field name="key">gps_tracking.inactivity_warning_hours</field>
+        <field name="value">1.0</field>
     </record>
 
 </odoo>

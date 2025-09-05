@@ -9,7 +9,7 @@
             <xpath expr="//form" position="inside">
                 <app data-string="GPS Tracking" string="GPS Tracking" name="gps_tracking"
                     groups="gps_tracking.group_gps_tracking_manager">
-                    <block name="general_settings" title="General Validation"
+                    <block name="general_settings" title="General Settings"
                         help="Configure overall GPS validation behavior">
                         <setting name="enable_validation_warnings"
                             string="Enable Validation Warnings"
@@ -20,6 +20,21 @@
                             string="Strict Validation Mode"
                             help="Treat validation warnings as errors">
                             <field name="strict_validation_mode" />
+                        </setting>
+                        <setting name="inactivity_warning"
+                            string="Warn on Inactivity"
+                            help="Enable warnings for inactive devices">
+                            <field name="inactivity_warning" />
+                        </setting>
+                        <setting name="inactivity_warning_hours"
+                            string="Inactivity Warning Threshold"
+                            help="Hours of inactivity before issuing a warning">
+                            <field name="inactivity_warning_hours" />
+                        </setting>
+                        <setting name="inactivity_inactive_hours"
+                            string="Inactivity Inactive Threshold"
+                            help="Hours of inactivity before marking device as inactive">
+                            <field name="inactivity_inactive_hours" />
                         </setting>
                     </block>
                     <block name="gps_accuracy_settings" title="GPS Positioning Accuracy"

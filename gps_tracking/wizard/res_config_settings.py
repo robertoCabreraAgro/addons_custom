@@ -10,18 +10,19 @@ class ResConfigSettings(models.TransientModel):
     # FIELDS
     # ------------------------------------------------------------
 
-    inactivity_threshold_hours = fields.Float(
-        default=2,
-        config_parameter="gps_tracking.inactivity_threshold_hours",
-    )
     inactivity_warning = fields.Boolean(
         default=True,
         config_parameter="gps_tracking.inactivity_warning_enabled",
     )
     inactivity_warning_hours = fields.Float(
-        default=1.5,
+        default=1.0,
         config_parameter="gps_tracking.inactivity_warning_hours",
     )
+    inactivity_inactive_hours = fields.Float(
+        default=1.5,
+        config_parameter="gps_tracking.inactivity_inactive_hours",
+    )
+
     # ========================================
     # GPS ACCURACY PARAMETERS
     # ========================================

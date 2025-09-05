@@ -9,8 +9,8 @@ class GpsTrackingDevice(models.Model):
     _description = "GPS Tracking Device"
     _rec_name = "imei"
 
-    INACTIVITY_THRESHOLD_HOURS = 2
-    INACTIVITY_WARNING_HOURS = 1.5
+    INACTIVITY_INACTIVE_HOURS = 1.5
+    INACTIVITY_WARNING_HOURS = 1.0
 
     # ------------------------------------------------------------
     # FIELDS
@@ -243,8 +243,8 @@ class GpsTrackingDevice(models.Model):
         param_obj = self.env["ir.config_parameter"].sudo()
         hours = float(
             param_obj.get_param(
-                "gps_tracking.inactivity_threshold_hours",
-                default=self.INACTIVITY_THRESHOLD_HOURS,
+                "gps_tracking.INACTIVITY_INACTIVE_HOURS",
+                default=self.INACTIVITY_INACTIVE_HOURS,
             )
         )
         return timedelta(hours=hours)
