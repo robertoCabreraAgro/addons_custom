@@ -980,9 +980,11 @@ class GPSWebhook(http.Controller):
         lat = vals.get("latitude")
         lng = vals.get("longitude")
 
-        if any(lat, lng) is None:
-            return False, "No coordinates to validate"
-
+        if lat is None or lng is None:
+            return (
+                False,
+                "No coordinates to validate",
+            )
         if lat == 0.0 and lng == 0.0:
             return (
                 False,
