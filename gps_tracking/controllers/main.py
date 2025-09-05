@@ -1000,7 +1000,7 @@ class GPSWebhook(http.Controller):
         lng = vals.get("longitude")
 
         if lat is None or lng is None:
-            return True, "No coordinates to validate"
+            return False, "No coordinates to validate"
 
         # Use cached config and generic range validator
         is_valid, msg = self._validate_range(
