@@ -1,7 +1,9 @@
 from odoo import _, api, models
 from odoo.exceptions import MissingError, UserError
+from odoo.tools import SQL
 
 from .. import fields as geo_fields
+from ..geo_operators import GeoOperator
 
 DEFAULT_EXTENT = (
     "-123164.85222423, 5574694.9538936, " "1578017.6490538, 6186191.1800898"
@@ -20,6 +22,17 @@ class Base(models.AbstractModel):
 
     # Array of ash that define layer and data to use
     _georepr = []
+
+    # List of supported geo operators
+    _GEO_OPERATORS = [
+        "geo_greater",
+        "geo_lesser",
+        "geo_equal",
+        "geo_touch",
+        "geo_within",
+        "geo_contains",
+        "geo_intersect",
+    ]
 
     @api.model
     def fields_get(self, allfields=None, attributes=None):
@@ -203,3 +216,125 @@ class Base(models.AbstractModel):
         name = field_obj.browse(in_tuple[0]).name
         out = (in_tuple[0], name, in_tuple[1])
         return out
+
+    @api.model
+    def search(self, domain, offset=0, limit=None, order=None):
+        """Override search to handle geo operators."""
+        # Check if domain contains geo operators
+        has_geo_ops = any(
+            isinstance(cond, (list, tuple))
+            and len(cond) == 3
+            and cond[1] in self._GEO_OPERATORS
+            for cond in domain
+        )
+
+        if not has_geo_ops:
+            return super().search(domain, offset=offset, limit=limit, order=order)
+
+        # Process geo operators separately
+        geo_results = []
+        converted_domain = []
+
+        for condition in domain:
+            if (
+                isinstance(condition, (list, tuple))
+                and len(condition) == 3
+                and condition[1] in self._GEO_OPERATORS
+            ):
+
+                field_name, operator, value = condition
+
+                # Check if field exists and is a geo field
+                field = self._fields.get(field_name)
+                if field and isinstance(field, geo_fields.GeoField):
+                    try:
+                        geo_operator = GeoOperator(field)
+                        table = self._table
+                        params = []
+
+                        # Get the appropriate SQL query based on operator
+                        if operator == "geo_greater":
+                            sql_condition = geo_operator.get_geo_greater_sql(
+                                table, field_name, value, params
+                            )
+                        elif operator == "geo_lesser":
+                            sql_condition = geo_operator.get_geo_lesser_sql(
+                                table, field_name, value, params
+                            )
+                        elif operator == "geo_equal":
+                            sql_condition = geo_operator.get_geo_equal_sql(
+                                table, field_name, value, params
+                            )
+                        elif operator == "geo_touch":
+                            sql_condition = geo_operator.get_geo_touch_sql(
+                                table, field_name, value, params
+                            )
+                        elif operator == "geo_within":
+                            sql_condition = geo_operator.get_geo_within_sql(
+                                table, field_name, value, params
+                            )
+                        elif operator == "geo_contains":
+                            sql_condition = geo_operator.get_geo_contains_sql(
+                                table, field_name, value, params
+                            )
+                        elif operator == "geo_intersect":
+                            sql_condition = geo_operator.get_geo_intersect_sql(
+                                table, field_name, value, params
+                            )
+                        else:
+                            converted_domain.append(condition)
+                            continue
+
+                        # Execute the spatial query to get matching IDs
+                        query = f"SELECT id FROM {table} WHERE {sql_condition}"
+                        self.env.cr.execute(query, params)
+                        result_ids = [row[0] for row in self.env.cr.fetchall()]
+                        geo_results.append(set(result_ids))
+
+                    except Exception as e:
+                        import logging
+
+                        logger = logging.getLogger(__name__)
+                        logger.warning(
+                            "Failed to process geo operator %s: %s", operator, e
+                        )
+                        # Return empty set for failed geo operations
+                        geo_results.append(set())
+                else:
+                    # Not a geo field - add as regular condition
+                    converted_domain.append(condition)
+            else:
+                # Not a geo operator - add as regular condition
+                converted_domain.append(condition)
+
+        # Get base results from standard domain processing
+        if converted_domain:
+            base_records = super().search(converted_domain)
+        else:
+            base_records = super().search([])
+
+        # Intersect geo results with base results
+        if geo_results:
+            # Start with base query results
+            final_ids = set(base_records.ids)
+
+            # Intersect with each geo condition result
+            for geo_result_set in geo_results:
+                final_ids = final_ids.intersection(geo_result_set)
+
+            # Convert to recordset
+            result_records = self.browse(list(final_ids))
+
+            # Apply ordering if specified
+            if order:
+                result_records = result_records.sorted(lambda r: r[order.split()[0]])
+
+            # Apply offset and limit
+            if offset:
+                result_records = result_records[offset:]
+            if limit:
+                result_records = result_records[:limit]
+
+            return result_records
+
+        return base_records
