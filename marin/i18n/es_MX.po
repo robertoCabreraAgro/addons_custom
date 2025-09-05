@@ -7455,9 +7455,9 @@ msgid ""
 msgstr ""
 "Resultados del modo de prueba:\n"
 "\n"
-"Se encontraron errores {ERROR_COUNT}.\n"
+"Se encontraron {error_count} errores.\n"
 "\n"
-"{Error_details}"
+"{error_details}"
 
 #. module: marin
 #. odoo-python
