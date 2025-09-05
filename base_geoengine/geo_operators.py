@@ -1,22 +1,17 @@
-# Copyright 2011-2012 Nicolas Bessi (Camptocamp SA)
-# Copyright 2023 ACSONE SA/NV
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
-
-
 class GeoOperator:
     """PostGIS spatial operator SQL generator for geographic field operations.
-    
+
     This class provides methods to generate raw SQL queries for spatial operations
     using PostGIS functions. It handles various geometric comparisons and spatial
     relationships commonly used in GIS applications.
-    
+
     Attributes:
         geo_field (GeoField): The geographic field instance to operate on.
     """
-    
+
     def __init__(self, geo_field):
         """Initialize GeoOperator with a geographic field.
-        
+
         Args:
             geo_field (GeoField): Geographic field instance that provides geometry
                                  type information and conversion methods.
@@ -25,17 +20,17 @@ class GeoOperator:
 
     def _get_direct_como_op_sql(self, table, col, value, params, op=""):
         """Generate SQL for direct area comparison operations.
-        
+
         Creates raw SQL for comparing geometric area values using PostGIS ST_Area function.
         Supports both numeric values and geometric objects as comparison targets.
-        
+
         Args:
             table (str): Database table name containing the geometry column.
             col (str): Name of the geometry column to compare.
             value (int|float|geometry): Comparison value - either numeric area or geometry.
             params (list): SQL parameter list to append values to.
             op (str): SQL comparison operator (>, <, =, etc.).
-            
+
         Returns:
             str: Raw SQL fragment for area comparison operation.
         """
@@ -48,17 +43,17 @@ class GeoOperator:
 
     def _get_postgis_comp_sql(self, table, col, value, params, op=""):
         """Generate SQL for PostGIS spatial comparison operations.
-        
+
         Creates raw SQL for spatial relationship tests using PostGIS ST_* functions.
         Handles geometry conversion and SRID coordination for proper spatial operations.
-        
+
         Args:
             table (str): Database table name containing the geometry column.
             col (str): Name of the geometry column to compare.
             value (geometry): Geometry object to compare against.
             params (list): SQL parameter list to append WKT and SRID values.
             op (str): PostGIS function name (ST_Intersects, ST_Contains, etc.).
-            
+
         Returns:
             str: Raw SQL fragment for spatial comparison operation.
         """
@@ -70,15 +65,15 @@ class GeoOperator:
 
     def get_geo_greater_sql(self, table, col, value, params):
         """Generate SQL for greater-than area comparison.
-        
+
         Creates SQL to find geometries with area greater than the specified value.
-        
+
         Args:
             table (str): Database table name.
             col (str): Geometry column name.
             value (int|float|geometry): Comparison threshold.
             params (list): SQL parameter list.
-            
+
         Returns:
             str: SQL fragment for area > value comparison.
         """
@@ -86,15 +81,15 @@ class GeoOperator:
 
     def get_geo_lesser_sql(self, table, col, value, params):
         """Generate SQL for less-than area comparison.
-        
+
         Creates SQL to find geometries with area less than the specified value.
-        
+
         Args:
             table (str): Database table name.
             col (str): Geometry column name.
             value (int|float|geometry): Comparison threshold.
             params (list): SQL parameter list.
-            
+
         Returns:
             str: SQL fragment for area < value comparison.
         """
@@ -102,16 +97,16 @@ class GeoOperator:
 
     def get_geo_equal_sql(self, table, col, value, params):
         """Generate SQL for geometric equality comparison.
-        
+
         Creates SQL to find geometries that are exactly equal to the specified geometry.
         Uses direct geometry comparison without spatial functions.
-        
+
         Args:
             table (str): Database table name.
             col (str): Geometry column name.
             value (geometry): Geometry to compare against.
             params (list): SQL parameter list.
-            
+
         Returns:
             str: SQL fragment for geometry equality comparison.
         """
@@ -122,16 +117,16 @@ class GeoOperator:
 
     def get_geo_intersect_sql(self, table, col, value, params):
         """Generate SQL for spatial intersection test.
-        
+
         Creates SQL using ST_Intersects to find geometries that spatially
         intersect with the specified geometry.
-        
+
         Args:
             table (str): Database table name.
             col (str): Geometry column name.
             value (geometry): Geometry to test intersection against.
             params (list): SQL parameter list.
-            
+
         Returns:
             str: SQL fragment for ST_Intersects spatial comparison.
         """
@@ -139,16 +134,16 @@ class GeoOperator:
 
     def get_geo_touch_sql(self, table, col, value, params):
         """Generate SQL for spatial touch test.
-        
+
         Creates SQL using ST_Touches to find geometries that touch the
         specified geometry (share boundary but no interior points).
-        
+
         Args:
             table (str): Database table name.
             col (str): Geometry column name.
             value (geometry): Geometry to test touching against.
             params (list): SQL parameter list.
-            
+
         Returns:
             str: SQL fragment for ST_Touches spatial comparison.
         """
@@ -156,16 +151,16 @@ class GeoOperator:
 
     def get_geo_within_sql(self, table, col, value, params):
         """Generate SQL for spatial containment test (within).
-        
+
         Creates SQL using ST_Within to find geometries that are completely
         contained within the specified geometry.
-        
+
         Args:
             table (str): Database table name.
             col (str): Geometry column name.
             value (geometry): Container geometry to test against.
             params (list): SQL parameter list.
-            
+
         Returns:
             str: SQL fragment for ST_Within spatial comparison.
         """
@@ -173,16 +168,16 @@ class GeoOperator:
 
     def get_geo_contains_sql(self, table, col, value, params):
         """Generate SQL for spatial containment test (contains).
-        
+
         Creates SQL using ST_Contains to find geometries that completely
         contain the specified geometry.
-        
+
         Args:
             table (str): Database table name.
             col (str): Geometry column name.
             value (geometry): Contained geometry to test against.
             params (list): SQL parameter list.
-            
+
         Returns:
             str: SQL fragment for ST_Contains spatial comparison.
         """

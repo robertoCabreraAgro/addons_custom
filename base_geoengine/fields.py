@@ -1,10 +1,6 @@
-# Copyright 2011-2012 Nicolas Bessi (Camptocamp SA)
-# Copyright 2016 Yannick Payot (Camptocamp SA)
-# Copyright 2023 ACSONE SA/NV
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
-
 import json
 import logging
+
 from operator import attrgetter
 
 from odoo import _, fields
@@ -82,7 +78,6 @@ class GeoField(fields.Field):
                         or "Unknown error"
                     )
 
-                # Check geometry size limit
                 max_size = int(
                     config.get_param("base_geoengine.max_geometry_size", "1000000")
                 )
@@ -161,9 +156,7 @@ class GeoField(fields.Field):
             return False
         return geojson.dumps(shape)
 
-    #
     # Field description
-    #
 
     # properties used by get_description()
     _description_dim = property(attrgetter("dim"))
@@ -173,13 +166,13 @@ class GeoField(fields.Field):
     @classmethod
     def load_geo(cls, wkb):
         """Load geometry from WKB binary data into Shapely object.
-        
+
         Converts Well-Known Binary (WKB) data from the database into
         a Shapely geometry object for use in Python operations.
-        
+
         Args:
             wkb: WKB data as hex string, bytes, or existing BaseGeometry object.
-            
+
         Returns:
             BaseGeometry or False: Shapely geometry object or False if no data.
         """
@@ -229,10 +222,12 @@ class GeoField(fields.Field):
     def update_geo_db_column(self, model):
         """Update the column type in the database."""
         cr = model._cr
-        query = """SELECT srid, type, coord_dimension
-                 FROM geometry_columns
-                 WHERE f_table_name = %s
-                 AND f_geometry_column = %s"""
+        query = """
+            SELECT srid, type, coord_dimension
+            FROM geometry_columns
+            WHERE f_table_name = %s
+            AND f_geometry_column = %s
+        """
         cr.execute(query, (model._table, self.name))
         check_data = cr.fetchone()
         if not check_data:
@@ -283,7 +278,6 @@ class GeoField(fields.Field):
                        if it exists, or ``None``
         """
         # the column does not exist, create it
-
         if not column:
             create_geo_column(
                 model._cr,
@@ -322,7 +316,7 @@ class GeoField(fields.Field):
 
 class GeoLine(GeoField):
     """PostGIS LineString geometry field for linear features.
-    
+
     Represents linear geometries such as roads, rivers, boundaries, or any
     feature that can be described as a connected series of points.
     """
@@ -333,20 +327,20 @@ class GeoLine(GeoField):
     @classmethod
     def from_points(cls, cr, point1, point2, srid=None):
         """Create a LineString geometry from two Point geometries.
-        
+
         Uses PostGIS ST_MakeLine function to generate a line connecting
         two points with proper spatial reference system handling.
-        
+
         Args:
             cr: Database cursor for executing PostGIS operations.
             point1 (BaseGeometry): First point of the line.
             point2 (BaseGeometry): Second point of the line.
             srid (int, optional): Spatial Reference System ID. Uses field default if None.
-            
+
         Returns:
             BaseGeometry: LineString geometry object connecting the two points.
         """
-        sql = """
+        query = """
             SELECT
                 ST_MakeLine(
                     ST_GeomFromText(%(wkt1)s, %(srid)s),
@@ -354,7 +348,7 @@ class GeoLine(GeoField):
                 )
         """
         cr.execute(
-            sql,
+            query,
             {
                 "wkt1": point1.wkt,
                 "wkt2": point2.wkt,
@@ -367,7 +361,7 @@ class GeoLine(GeoField):
 
 class GeoPoint(GeoField):
     """PostGIS Point geometry field for point features.
-    
+
     Represents point geometries such as locations, facilities, landmarks,
     or any feature that can be described by a single coordinate pair.
     """
@@ -378,28 +372,32 @@ class GeoPoint(GeoField):
     @classmethod
     def from_latlon(cls, cr, latitude, longitude):
         """Convert WGS84 latitude/longitude coordinates to projected Point geometry.
-        
+
         Transforms geographic coordinates (WGS84, EPSG:4326) into the field's
         coordinate system using PostGIS transformation functions.
-        
+
         Args:
             cr: Database cursor for executing PostGIS operations.
             latitude (float): Latitude in decimal degrees (WGS84).
             longitude (float): Longitude in decimal degrees (WGS84).
-            
+
         Returns:
             BaseGeometry: Point geometry in the field's coordinate system.
         """
         pt = Point(longitude, latitude)
-        cr.execute(
-            """
+        query = """
             SELECT
                 ST_Transform(
                     ST_GeomFromText(%(wkt)s, 4326),
                     %(srid)s
                 )
-            """,
-            {"wkt": pt.wkt, "srid": cls.srid},
+        """
+        cr.execute(
+            query,
+            {
+                "wkt": pt.wkt,
+                "srid": cls.srid,
+            },
         )
         res = cr.fetchone()
         return cls.load_geo(res[0])
@@ -407,22 +405,17 @@ class GeoPoint(GeoField):
     @classmethod
     def to_latlon(cls, cr, geopoint):
         """Convert projected Point geometry to WGS84 latitude/longitude coordinates.
-        
+
         Transforms a point from the field's coordinate system back to geographic
         coordinates (WGS84, EPSG:4326) for display or export purposes.
-        
+
         Args:
             cr: Database cursor for executing PostGIS operations.
             geopoint: Point geometry object or GeoJSON string to convert.
-            
+
         Returns:
             tuple: (longitude, latitude) in decimal degrees (WGS84).
         """
-        # Line to execute to retrieve
-        # longitude, latitude from UTM in postgres command line:
-        #  SELECT ST_X(geom), ST_Y(geom) FROM (SELECT ST_TRANSFORM(ST_SetSRID(
-        #               ST_MakePoint(601179.61612, 6399375,681364),
-        # ..............900913), 4326) as geom) g;
         if isinstance(geopoint, BaseGeometry):
             geo_point_instance = geopoint
         else:
@@ -446,7 +439,6 @@ class GeoPoint(GeoField):
                 "srid": cls.srid,
             },
         )
-
         res = cr.fetchone()
         point_latlon = cls.load_geo(res[0])
         return point_latlon.x, point_latlon.y
@@ -454,7 +446,7 @@ class GeoPoint(GeoField):
 
 class GeoPolygon(GeoField):
     """PostGIS Polygon geometry field for area features.
-    
+
     Represents polygonal geometries such as parcels, buildings, administrative
     boundaries, or any feature that encloses an area.
     """
@@ -465,7 +457,7 @@ class GeoPolygon(GeoField):
 
 class GeoMultiLine(GeoField):
     """PostGIS MultiLineString geometry field for multiple linear features.
-    
+
     Represents collections of disconnected linear geometries, such as
     multiple road segments or river systems within a single feature.
     """
@@ -476,7 +468,7 @@ class GeoMultiLine(GeoField):
 
 class GeoMultiPoint(GeoField):
     """PostGIS MultiPoint geometry field for multiple point features.
-    
+
     Represents collections of point geometries, such as multiple locations
     or facilities that belong to a single logical entity.
     """
@@ -487,7 +479,7 @@ class GeoMultiPoint(GeoField):
 
 class GeoMultiPolygon(GeoField):
     """PostGIS MultiPolygon geometry field for multiple area features.
-    
+
     Represents collections of polygonal geometries, such as archipelagos,
     multi-parcel properties, or administrative regions with multiple areas.
     """

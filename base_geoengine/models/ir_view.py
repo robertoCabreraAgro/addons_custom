@@ -17,15 +17,15 @@ class IrUIView(models.Model):
     restricted_extent = fields.Char("Restricted map extent")
     default_zoom = fields.Integer("Default map zoom")
     raster_layer_ids = fields.One2many(
-        "geoengine.raster.layer",
-        "view_id",
-        "Raster layers",
+        comodel_name="geoengine.raster.layer",
+        inverse_name="view_id",
+        string="Raster layers",
         required=False,
     )
     vector_layer_ids = fields.One2many(
-        "geoengine.vector.layer",
-        "view_id",
-        "Vector layers",
+        comodel_name="geoengine.vector.layer",
+        inverse_name="view_id",
+        string="Vector layers",
         required=True,
     )
 
