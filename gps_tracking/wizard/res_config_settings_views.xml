@@ -65,6 +65,10 @@
                             help="Maximum reasonable speed for ground vehicles (km/h)">
                             <field name="max_realistic_speed" />
                         </setting>
+                        <setting name="max_acceleration"
+                            help="Maximum acceleration for vehicles (m/s²)">
+                            <field name="max_acceleration" />
+                        </setting>
                         <setting name="fuel_settings"
                             help="Fuel level validation parameters">
                             <div class="row">
@@ -134,6 +138,10 @@
                         <setting name="min_time_interval_seconds"
                             help="Minimum time interval between consecutive GPS points">
                             <field name="min_time_interval_seconds" />
+                        </setting>
+                        <setting name="max_age_seconds"
+                            help="Maximum age for GPS readings to be considered current">
+                            <field name="max_age_seconds" />
                         </setting>
                     </block>
                     <block name="duplicate_settings" title="Duplicate Detection"

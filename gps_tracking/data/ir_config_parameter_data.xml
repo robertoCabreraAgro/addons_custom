@@ -3,42 +3,71 @@
 
     <!-- GPS Data Quality Validation Parameters -->
 
-    <!-- GPS Accuracy Parameters -->
+    <!-- Signal Quality Configuration -->
     <record id="param_gps_min_satellites" model="ir.config_parameter">
-        <field name="key">gps_tracking.validation.min_satellites</field>
+        <field name="key">gps_tracking.signal_quality.min_required_satellites_count</field>
         <field name="value">4</field>
+        <field name="description">Minimum number of satellites required for reliable GPS
+            positioning. 4 satellites needed for 3D positioning</field>
     </record>
 
     <record id="param_gps_max_hdop" model="ir.config_parameter">
-        <field name="key">gps_tracking.validation.max_hdop</field>
-        <field name="value">5.0</field>
+        <field name="key">gps_tracking.signal_quality.max_hdop_threshold</field>
+        <field name="value">3.0</field>
+        <field name="description">Maximum HDOP (Horizontal Dilution of Precision) for acceptable
+            accuracy. Lower values = better precision</field>
     </record>
 
-    <!-- Coordinate Quality Parameters -->
+    <!-- Geographic Bounds Configuration -->
     <record id="param_coord_min_latitude" model="ir.config_parameter">
-        <field name="key">gps_tracking.validation.min_latitude</field>
+        <field name="key">gps_tracking.geographic_bounds.min_allowed_latitude_degrees</field>
         <field name="value">-90.0</field>
+        <field name="description">Minimum valid latitude in degrees. Standard GPS range: -90 (South
+            Pole) to +90 (North Pole)</field>
     </record>
 
     <record id="param_coord_max_latitude" model="ir.config_parameter">
-        <field name="key">gps_tracking.validation.max_latitude</field>
+        <field name="key">gps_tracking.geographic_bounds.max_allowed_latitude_degrees</field>
         <field name="value">90.0</field>
+        <field name="description">Maximum valid latitude in degrees. Standard GPS range: -90 (South
+            Pole) to +90 (North Pole)</field>
     </record>
 
     <record id="param_coord_min_longitude" model="ir.config_parameter">
-        <field name="key">gps_tracking.validation.min_longitude</field>
+        <field name="key">gps_tracking.geographic_bounds.min_allowed_longitude_degrees</field>
         <field name="value">-180.0</field>
+        <field name="description">Minimum valid longitude in degrees. Standard GPS range: -180
+            (West) to +180 (East)</field>
     </record>
 
     <record id="param_coord_max_longitude" model="ir.config_parameter">
-        <field name="key">gps_tracking.validation.max_longitude</field>
+        <field name="key">gps_tracking.geographic_bounds.max_allowed_longitude_degrees</field>
         <field name="value">180.0</field>
+        <field name="description">Maximum valid longitude in degrees. Standard GPS range: -180
+            (West) to +180 (East)</field>
     </record>
 
-    <!-- Vehicle Parameters -->
+    <!-- Vehicle Limits Configuration -->
     <record id="param_max_realistic_speed" model="ir.config_parameter">
-        <field name="key">gps_tracking.validation.max_realistic_speed</field>
+        <field name="key">gps_tracking.vehicle_limits.max_realistic_speed_kmh</field>
         <field name="value">200.0</field>
+        <field name="description">Maximum realistic speed in km/h for land vehicles. Used to filter
+            unrealistic GPS readings</field>
+    </record>
+
+    <record id="param_max_acceleration" model="ir.config_parameter">
+        <field name="key">gps_tracking.vehicle_limits.max_acceleration_ms2</field>
+        <field name="value">15.0</field>
+        <field name="description">Maximum acceleration in m/s² for vehicles. Used to detect
+            unrealistic speed changes</field>
+    </record>
+
+    <!-- Time Validation Configuration -->
+    <record id="param_max_reading_age" model="ir.config_parameter">
+        <field name="key">gps_tracking.time_validation.max_reading_age_seconds</field>
+        <field name="value">300</field>
+        <field name="description">Maximum age in seconds for GPS readings to be considered current
+            (5 minutes default)</field>
     </record>
 
     <record id="param_max_fuel_level" model="ir.config_parameter">

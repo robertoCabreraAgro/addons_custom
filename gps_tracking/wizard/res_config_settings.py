@@ -30,13 +30,13 @@ class ResConfigSettings(models.TransientModel):
         string="Minimum Satellites",
         default=4,
         help="Minimum number of satellites required for accurate GPS positioning",
-        config_parameter="gps_tracking.validation.min_satellites",
+        config_parameter="gps_tracking.signal_quality.min_required_satellites_count",
     )
     max_hdop = fields.Float(
         string="Maximum HDOP",
-        default=5.0,
+        default=3.0,
         help="Maximum Horizontal Dilution of Precision allowed (lower is better)",
-        config_parameter="gps_tracking.validation.max_hdop",
+        config_parameter="gps_tracking.signal_quality.max_hdop_threshold",
     )
 
     # ========================================
@@ -47,25 +47,25 @@ class ResConfigSettings(models.TransientModel):
         string="Minimum Latitude",
         default=-90.0,
         help="Minimum allowed latitude value (degrees)",
-        config_parameter="gps_tracking.validation.min_latitude",
+        config_parameter="gps_tracking.geographic_bounds.min_allowed_latitude_degrees",
     )
     max_latitude = fields.Float(
         string="Maximum Latitude",
         default=90.0,
         help="Maximum allowed latitude value (degrees)",
-        config_parameter="gps_tracking.validation.max_latitude",
+        config_parameter="gps_tracking.geographic_bounds.max_allowed_latitude_degrees",
     )
     min_longitude = fields.Float(
         string="Minimum Longitude",
         default=-180.0,
         help="Minimum allowed longitude value (degrees)",
-        config_parameter="gps_tracking.validation.min_longitude",
+        config_parameter="gps_tracking.geographic_bounds.min_allowed_longitude_degrees",
     )
     max_longitude = fields.Float(
         string="Maximum Longitude",
         default=180.0,
         help="Maximum allowed longitude value (degrees)",
-        config_parameter="gps_tracking.validation.max_longitude",
+        config_parameter="gps_tracking.geographic_bounds.max_allowed_longitude_degrees",
     )
 
     # ========================================
@@ -74,9 +74,15 @@ class ResConfigSettings(models.TransientModel):
 
     max_realistic_speed = fields.Float(
         string="Maximum Realistic Speed (km/h)",
-        default=300.0,
+        default=200.0,
         help="Maximum reasonable speed for ground vehicles",
-        config_parameter="gps_tracking.validation.max_realistic_speed",
+        config_parameter="gps_tracking.vehicle_limits.max_realistic_speed_kmh",
+    )
+    max_acceleration = fields.Float(
+        string="Maximum Acceleration (m/s²)",
+        default=15.0,
+        help="Maximum acceleration for vehicles. Used to detect unrealistic speed changes",
+        config_parameter="gps_tracking.vehicle_limits.max_acceleration_ms2",
     )
     max_fuel_level = fields.Float(
         string="Maximum Fuel Level (%)",
@@ -170,6 +176,12 @@ class ResConfigSettings(models.TransientModel):
         default=1,
         help="Minimum time interval between consecutive GPS points",
         config_parameter="gps_tracking.validation.min_time_interval_seconds",
+    )
+    max_age_seconds = fields.Integer(
+        string="Maximum Reading Age (seconds)",
+        default=300,
+        help="Maximum age for GPS readings to be considered current (5 minutes default)",
+        config_parameter="gps_tracking.time_validation.max_reading_age_seconds",
     )
 
     # ========================================
