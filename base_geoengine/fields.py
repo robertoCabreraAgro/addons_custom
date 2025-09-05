@@ -172,7 +172,17 @@ class GeoField(fields.Field):
 
     @classmethod
     def load_geo(cls, wkb):
-        """Load geometry into browse record after read was done"""
+        """Load geometry from WKB binary data into Shapely object.
+        
+        Converts Well-Known Binary (WKB) data from the database into
+        a Shapely geometry object for use in Python operations.
+        
+        Args:
+            wkb: WKB data as hex string, bytes, or existing BaseGeometry object.
+            
+        Returns:
+            BaseGeometry or False: Shapely geometry object or False if no data.
+        """
         if isinstance(wkb, BaseGeometry):
             return wkb
         return wkbloads(wkb, hex=True) if wkb else False
@@ -311,20 +321,30 @@ class GeoField(fields.Field):
 
 
 class GeoLine(GeoField):
-    """Field for POSTGIS geometry Line type"""
+    """PostGIS LineString geometry field for linear features.
+    
+    Represents linear geometries such as roads, rivers, boundaries, or any
+    feature that can be described as a connected series of points.
+    """
 
     type = "geo_line"
     geo_type = "LineString"
 
     @classmethod
     def from_points(cls, cr, point1, point2, srid=None):
-        """
-        Converts given points in parameter to a line.
-        :param cr: DB cursor
-        :param point1: Point (BaseGeometry)
-        :param point2: Point (BaseGeometry)
-        :param srid: SRID
-        :return: LINESTRING Object
+        """Create a LineString geometry from two Point geometries.
+        
+        Uses PostGIS ST_MakeLine function to generate a line connecting
+        two points with proper spatial reference system handling.
+        
+        Args:
+            cr: Database cursor for executing PostGIS operations.
+            point1 (BaseGeometry): First point of the line.
+            point2 (BaseGeometry): Second point of the line.
+            srid (int, optional): Spatial Reference System ID. Uses field default if None.
+            
+        Returns:
+            BaseGeometry: LineString geometry object connecting the two points.
         """
         sql = """
             SELECT
@@ -346,14 +366,30 @@ class GeoLine(GeoField):
 
 
 class GeoPoint(GeoField):
-    """Field for POSTGIS geometry Point type"""
+    """PostGIS Point geometry field for point features.
+    
+    Represents point geometries such as locations, facilities, landmarks,
+    or any feature that can be described by a single coordinate pair.
+    """
 
     type = "geo_point"
     geo_type = "Point"
 
     @classmethod
     def from_latlon(cls, cr, latitude, longitude):
-        """Convert a (latitude, longitude) into an UTM coordinate Point:"""
+        """Convert WGS84 latitude/longitude coordinates to projected Point geometry.
+        
+        Transforms geographic coordinates (WGS84, EPSG:4326) into the field's
+        coordinate system using PostGIS transformation functions.
+        
+        Args:
+            cr: Database cursor for executing PostGIS operations.
+            latitude (float): Latitude in decimal degrees (WGS84).
+            longitude (float): Longitude in decimal degrees (WGS84).
+            
+        Returns:
+            BaseGeometry: Point geometry in the field's coordinate system.
+        """
         pt = Point(longitude, latitude)
         cr.execute(
             """
@@ -370,8 +406,18 @@ class GeoPoint(GeoField):
 
     @classmethod
     def to_latlon(cls, cr, geopoint):
-        """Convert a UTM coordinate point to \
-            (latitude, longitude):"""
+        """Convert projected Point geometry to WGS84 latitude/longitude coordinates.
+        
+        Transforms a point from the field's coordinate system back to geographic
+        coordinates (WGS84, EPSG:4326) for display or export purposes.
+        
+        Args:
+            cr: Database cursor for executing PostGIS operations.
+            geopoint: Point geometry object or GeoJSON string to convert.
+            
+        Returns:
+            tuple: (longitude, latitude) in decimal degrees (WGS84).
+        """
         # Line to execute to retrieve
         # longitude, latitude from UTM in postgres command line:
         #  SELECT ST_X(geom), ST_Y(geom) FROM (SELECT ST_TRANSFORM(ST_SetSRID(
@@ -387,7 +433,7 @@ class GeoPoint(GeoField):
                 ST_TRANSFORM(
                     ST_SetSRID(
                         ST_MakePoint(
-                                %(coord_x)s, %(coord_y)s
+                            %(coord_x)s, %(coord_y)s
                         ),
                         %(srid)s
                     ),
@@ -407,28 +453,44 @@ class GeoPoint(GeoField):
 
 
 class GeoPolygon(GeoField):
-    """Field for POSTGIS geometry Polygon type"""
+    """PostGIS Polygon geometry field for area features.
+    
+    Represents polygonal geometries such as parcels, buildings, administrative
+    boundaries, or any feature that encloses an area.
+    """
 
     type = "geo_polygon"
     geo_type = "Polygon"
 
 
 class GeoMultiLine(GeoField):
-    """Field for POSTGIS geometry MultiLine type"""
+    """PostGIS MultiLineString geometry field for multiple linear features.
+    
+    Represents collections of disconnected linear geometries, such as
+    multiple road segments or river systems within a single feature.
+    """
 
     type = "geo_multi_line"
     geo_type = "MultiLineString"
 
 
 class GeoMultiPoint(GeoField):
-    """Field for POSTGIS geometry MultiPoint type"""
+    """PostGIS MultiPoint geometry field for multiple point features.
+    
+    Represents collections of point geometries, such as multiple locations
+    or facilities that belong to a single logical entity.
+    """
 
     type = "geo_multi_point"
     geo_type = "MultiPoint"
 
 
 class GeoMultiPolygon(GeoField):
-    """Field for POSTGIS geometry MultiPolygon type"""
+    """PostGIS MultiPolygon geometry field for multiple area features.
+    
+    Represents collections of polygonal geometries, such as archipelagos,
+    multi-parcel properties, or administrative regions with multiple areas.
+    """
 
     type = "geo_multi_polygon"
     geo_type = "MultiPolygon"

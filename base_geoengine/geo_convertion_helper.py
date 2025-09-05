@@ -16,7 +16,32 @@ except ImportError:
 
 
 def value_to_shape(value, use_wkb=False):
-    """Transforms input into a Shapely object"""
+    """Transform various geometry input formats into a Shapely geometry object.
+    
+    Converts different geometry representations (GeoJSON, WKT, WKB, Shapely objects)
+    into standardized Shapely geometry objects for consistent processing.
+    
+    Args:
+        value: Geometry data in various formats:
+            - str: GeoJSON string, WKT string, or WKB hex string
+            - object with .wkt attribute: Existing geometry object
+            - BaseGeometry: Shapely geometry object
+        use_wkb (bool): Whether to interpret string values as WKB hex format.
+                       If False, attempts WKT parsing first.
+    
+    Returns:
+        BaseGeometry: Shapely geometry object, or empty GEOMETRYCOLLECTION if input is falsy.
+    
+    Raises:
+        TypeError: When input format is not supported or recognized.
+        
+    Examples:
+        >>> value_to_shape('{"type": "Point", "coordinates": [0, 0]}')
+        <shapely.geometry.point.Point object>
+        
+        >>> value_to_shape('POINT(0 0)')
+        <shapely.geometry.point.Point object>
+    """
     if not value:
         return wkt.loads("GEOMETRYCOLLECTION EMPTY")
     if isinstance(value, str):
