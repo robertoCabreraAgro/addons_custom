@@ -32,7 +32,7 @@ class GpsTrackingDevice(models.Model):
     )
     asset_id = fields.Many2one(
         comodel_name="stock.lot",
-        string="Assigned Asset",
+        string="Vehiculo",
         compute="_compute_asset_id",
         store=True,
         readonly=True,

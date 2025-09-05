@@ -5,19 +5,11 @@
         <field name="model">gps.tracking.device</field>
         <field name="arch" type="xml">
             <search string="Buscar Dispositivo">
-                <field name="imei" />
+                <field name="asset_id" string="Operador" filter_domain="[('asset_id.operator_id.name', 'ilike', self)]" />
+                <field name="asset_id" string="Placa" filter_domain="[('asset_id.license_plate', 'ilike', self)]" />
+                <field name="asset_id" string="Departamento" filter_domain="[('asset_id.operator_id.department_id.name', 'ilike', self)]" />
                 <field name="asset_id" />
-                <field name="config_id" />
-                <filter name="with_config" string="Con Configuración"
-                    domain="[('config_id', '!=', False)]" />
-                <filter name="without_config" string="Sin Configuración"
-                    domain="[('config_id', '=', False)]" />
-                <group>
-                    <filter name="group_by_config" string="Configuración GPS"
-                        context="{'group_by': 'config_id'}" />
-                    <filter name="group_by_asset" string="Configuración GPS"
-                        context="{'group_by': 'asset_id'}" />
-                </group>
+                <field name="imei" />
             </search>
         </field>
     </record>
