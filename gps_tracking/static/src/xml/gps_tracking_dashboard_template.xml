@@ -63,8 +63,8 @@
                             <div t-if="device.department_id">
                                 <span>Departamento: <t t-esc="device.department_id[1]"/></span>
                             </div>
-                            <div t-if="device.driver_name">
-                                <span>Conductor: <t t-esc="device.driver_name"/></span>
+                            <div t-if="device.operator_name">
+                                <span>Operador: <t t-esc="device.operator_name"/></span>
                             </div>
                             <!-- Velocidad -->
                             <div class="kanban_info">

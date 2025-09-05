@@ -34,8 +34,8 @@ const REPORTING_DEPARTMENT_ID = 4;
 const BASE_DEVICE_FIELDS = [
     "id", "imei", "the_point", "speed", "timestamp", "altitude", 
     "satellites", "ignition", "movement", 
-    "color", "asset_id", "driver_name", 
-    "odometer", "real_odometer", "department_id"
+    "color", "asset_id", 
+    "odometer", "real_odometer"
 ];
 
 export class GpsTrackingDashboard extends Component {
@@ -276,7 +276,7 @@ export class GpsTrackingDashboard extends Component {
     }
 
     /**
-     * Add license_plate to devices from their related assets
+     * Add license_plate, operator info and department to devices from their related assets
      */
     async addLicensePlateToDevices(devices) {
         const assetIds = devices
@@ -289,21 +289,31 @@ export class GpsTrackingDashboard extends Component {
             const assets = await this.orm.searchRead(
                 "stock.lot",
                 [['id', 'in', assetIds]],
-                ['id', 'license_plate']
+                ['id', 'license_plate', 'operator_id', 'department_id']
             );
             
             const assetMap = {};
             assets.forEach(asset => {
-                assetMap[asset.id] = asset.license_plate;
+                assetMap[asset.id] = {
+                    license_plate: asset.license_plate,
+                    operator_id: asset.operator_id,
+                    department_id: asset.department_id
+                };
             });
             
             devices.forEach(device => {
                 if (device.asset_id && device.asset_id[0]) {
-                    device.license_plate = assetMap[device.asset_id[0]] || '';
+                    const assetData = assetMap[device.asset_id[0]];
+                    if (assetData) {
+                        device.license_plate = assetData.license_plate || '';
+                        device.operator_id = assetData.operator_id || false;
+                        device.operator_name = assetData.operator_id ? assetData.operator_id[1] : '';
+                        device.department_id = assetData.department_id || false;
+                    }
                 }
             });
         } catch (error) {
-            console.error("Error loading asset license plates:", error);
+            console.error("Error loading asset data:", error);
         }
     }
 
