@@ -318,24 +318,20 @@ class GPSWebhook(http.Controller):
         try:
             if field_name == "latitude_longitude":
                 lat, lng = self._process_latlong_coordinates(value)
-                if lat is not None and lng is not None:
-                    tracking_point_vals["latitude"] = lat
-                    tracking_point_vals["longitude"] = lng
+                tracking_point_vals["latitude"] = lat
+                tracking_point_vals["longitude"] = lng
 
             elif field_name == "timestamp":
                 processed_ts = self._process_timestamp(value)
-                if processed_ts:
-                    tracking_point_vals[field_name] = processed_ts
+                tracking_point_vals[field_name] = processed_ts
 
             elif field_name == "odometer":
                 processed_odo = self._process_odometer(value)
-                if processed_odo is not None:
-                    tracking_point_vals[field_name] = processed_odo
+                tracking_point_vals[field_name] = processed_odo
 
             elif field_name == "engine_temperature":
                 processed_et = self._process_engine_temperature(value)
-                if processed_et is not None:
-                    tracking_point_vals[field_name] = processed_et
+                tracking_point_vals[field_name] = processed_et
 
             else:
                 # Store value directly for other fields
@@ -678,7 +674,10 @@ class GPSWebhook(http.Controller):
             Tuple of (latitude, longitude) or (None, None) if invalid
         """
         try:
-            if not latlng_str or "," not in latlng_str:
+            if "," not in latlng_str:
+                _logger.error(
+                    "Error latlong: %s", latlng_str
+                )
                 return None, None
             lat_str, lng_str = latlng_str.split(",", 1)
             lat = float(lat_str.strip())
