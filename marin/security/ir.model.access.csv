@@ -114,3 +114,4 @@ access_res_partner_hectares_range_user,res.partner.hectares.range.user,marin.mod
 access_res_partner_hectares_range_manager,res.partner.hectares.range.manager,marin.model_res_partner_hectares_range,sales_team.group_sale_manager,1,1,1,1
 access_res_partner_profile_history_user,res.partner.profile.history.user,marin.model_res_partner_profile_history,sales_team.group_sale_salesman,1,0,0,0
 access_res_partner_profile_history_manager,res.partner.profile.history.manager,marin.model_res_partner_profile_history,sales_team.group_sale_manager,1,1,1,1
+access_res_partner_category_manager,res.partner.category.manager,base.model_res_partner_category,sales_team.group_sale_manager,1,1,1,1

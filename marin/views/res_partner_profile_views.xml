@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
 
     <!-- Form View -->
@@ -10,20 +10,20 @@
                 <sheet>
                     <div class="oe_title">
                         <h1>
-                            <field name="name" placeholder="Profile Name"/>
+                            <field name="name" placeholder="Profile Name" />
                         </h1>
                     </div>
                     <group>
                         <group>
-                            <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                            <field name="factor" widget="percentage"/>
-                            <field name="sequence"/>
+                            <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color'}" />
+                            <field name="factor" widget="percentage" />
+                            <field name="sequence" />
                         </group>
                         <group>
-                            <field name="score_min"/>
-                            <field name="score_max"/>
-                            <field name="active"/>
-                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="score_min" />
+                            <field name="score_max" />
+                            <field name="active" />
+                            <field name="company_id" groups="base.group_multi_company" />
                         </group>
                     </group>
                 </sheet>
@@ -37,14 +37,14 @@
         <field name="model">res.partner.profile</field>
         <field name="arch" type="xml">
             <list string="Partner Profiles" multi_edit="1">
-                <field name="sequence" widget="handle"/>
-                <field name="name"/>
-                <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                <field name="score_min"/>
-                <field name="score_max"/>
-                <field name="factor" widget="percentage"/>
-                <field name="active"/>
-                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="sequence" widget="handle" />
+                <field name="name" />
+                <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color'}" />
+                <field name="score_min" />
+                <field name="score_max" />
+                <field name="factor" widget="percentage" />
+                <field name="active" />
+                <field name="company_id" groups="base.group_multi_company" />
             </list>
         </field>
     </record>
@@ -55,13 +55,13 @@
         <field name="model">res.partner.profile</field>
         <field name="arch" type="xml">
             <search string="Search Partner Profile">
-                <field name="name"/>
-                <field name="category_ids"/>
-                <separator/>
-                <filter string="Active" name="active" domain="[('active', '=', True)]"/>
-                <filter string="Inactive" name="inactive" domain="[('active', '=', False)]"/>
+                <field name="name" />
+                <field name="category_ids" />
+                <separator />
+                <filter string="Active" name="active" domain="[('active', '=', True)]" />
+                <filter string="Inactive" name="inactive" domain="[('active', '=', False)]" />
                 <group expand="0" string="Group By">
-                    <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}"/>
+                    <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}" />
                 </group>
             </search>
         </field>
@@ -72,26 +72,17 @@
         <field name="name">Partner Profiles</field>
         <field name="res_model">res.partner.profile</field>
         <field name="view_mode">list,form</field>
-        <field name="search_view_id" ref="view_res_partner_profile_search"/>
+        <field name="search_view_id" ref="view_res_partner_profile_search" />
         <field name="context">{'search_default_active': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a new partner profile
             </p>
             <p>
-                Partner profiles allow you to classify customers through tags and 
+                Partner profiles allow you to classify customers through tags and
                 apply percentage factors for calculating expected revenues and commercial targets.
             </p>
         </field>
     </record>
-
-    <!-- Menu Item -->
-    <menuitem
-        id="menu_res_partner_profile"
-        name="Partner Profiles"
-        parent="sale.menu_sale_config"
-        action="action_res_partner_profile"
-        sequence="20"
-        groups="sales_team.group_sale_manager"/>
 
 </odoo>

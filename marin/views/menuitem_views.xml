@@ -48,6 +48,7 @@
                 sequence="20"
             />
         </menuitem>
+
         <menuitem id="menu_configuration" name="Configuration" sequence="80">
             <menuitem
                 id="menu_configuration_settings"
@@ -604,20 +605,36 @@
               groups="sales_team.group_sale_manager"/>
 
     <menuitem
+        id="menu_customer_management"
+        name="Customer Management"
+        parent="sale.menu_sale_config"
+        sequence="70"
+        groups="sales_team.group_sale_manager"
+    />
+
+    <menuitem
+        id="menu_res_partner_profile"
+        name="Partner Profiles"
+        parent="menu_customer_management"
+        action="action_res_partner_profile"
+        sequence="20"
+        groups="sales_team.group_sale_manager"/>
+
+    <menuitem
         id="menu_hectares_ranges"
         name="Hectares Ranges"
-        parent="sale.menu_sale_config"
+        parent="menu_customer_management"
         action="action_res_partner_hectares_range"
-        sequence="40"
+        sequence="30"
         groups="sales_team.group_sale_manager"
     />
     
     <menuitem
         id="menu_profile_history"
         name="Profile History"
-        parent="sale.menu_sale_config"
+        parent="menu_customer_management"
         action="action_res_partner_profile_history"
-        sequence="41"
+        sequence="40"
         groups="sales_team.group_sale_manager"
     />
 
