@@ -35,7 +35,8 @@ class GeoOperator:
             str: Raw SQL fragment for area comparison operation.
         """
         if isinstance(value, int | float):
-            return f" ST_Area({table}.{col}) {op} {value}"
+            params.append(value)
+            return f" ST_Area({table}.{col}) {op} %s"
         else:
             base = self.geo_field.entry_to_shape(value, same_type=False)
             params.append(base.wkt)
@@ -111,9 +112,8 @@ class GeoOperator:
             str: SQL fragment for geometry equality comparison.
         """
         base = self.geo_field.entry_to_shape(value, same_type=False)
-        compare_to = "ST_GeomFromText(%s)"
         params.append(base.wkt)
-        return f" {table}.{col} = {compare_to}"
+        return f" {table}.{col} = ST_GeomFromText(%s)"
 
     def get_geo_intersect_sql(self, table, col, value, params):
         """Generate SQL for spatial intersection test.

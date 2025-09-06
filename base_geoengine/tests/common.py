@@ -3,6 +3,7 @@ from odoo.tests import common
 try:
     from shapely.geometry import Point, LineString, Polygon
     import geojson
+
     HAS_GEOSPATIAL = True
 except ImportError:
     HAS_GEOSPATIAL = False

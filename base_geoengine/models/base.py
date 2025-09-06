@@ -1,9 +1,13 @@
+import logging
+
 from odoo import _, api, models
 from odoo.exceptions import MissingError, UserError
 from odoo.tools import SQL
 
 from .. import fields as geo_fields
 from ..geo_operators import GeoOperator
+
+logger = logging.getLogger(__name__)
 
 DEFAULT_EXTENT = (
     "-123164.85222423, 5574694.9538936, " "1578017.6490538, 6186191.1800898"
@@ -217,10 +221,88 @@ class Base(models.AbstractModel):
         out = (in_tuple[0], name, in_tuple[1])
         return out
 
+    def _process_geo_operator(self, field_name, operator, value):
+        """Process a single geo operator and return matching record IDs.
+
+        Args:
+            field_name (str): Name of the geo field.
+            operator (str): Geo operator name.
+            value: Value to compare against.
+
+        Returns:
+            set: Set of matching record IDs, or None if not a geo operation.
+        """
+        field = self._fields.get(field_name)
+        if not field or not isinstance(field, geo_fields.GeoField):
+            return None
+
+        try:
+            geo_operator = GeoOperator(field)
+            table = self._table
+            params = []
+
+            # Map operator to SQL generation method
+            operator_methods = {
+                "geo_greater": geo_operator.get_geo_greater_sql,
+                "geo_lesser": geo_operator.get_geo_lesser_sql,
+                "geo_equal": geo_operator.get_geo_equal_sql,
+                "geo_touch": geo_operator.get_geo_touch_sql,
+                "geo_within": geo_operator.get_geo_within_sql,
+                "geo_contains": geo_operator.get_geo_contains_sql,
+                "geo_intersect": geo_operator.get_geo_intersect_sql,
+            }
+
+            method = operator_methods.get(operator)
+            if not method:
+                return None
+
+            sql_condition = method(table, field_name, value, params)
+
+            # Execute spatial query with safe parameterization
+            query = SQL(
+                "SELECT id FROM %s WHERE %s", SQL.identifier(table), SQL(sql_condition)
+            )
+            self.env.cr.execute(query, params)
+            result_ids = [row[0] for row in self.env.cr.fetchall()]
+            return set(result_ids)
+
+        except Exception as e:
+            logger.warning(
+                "Failed to process geo operator %s on field %s: %s",
+                operator,
+                field_name,
+                e,
+            )
+            return set()  # Return empty set for failed operations
+
+    def _split_geo_domain(self, domain):
+        """Split domain into geo and non-geo conditions.
+
+        Args:
+            domain (list): Search domain to split.
+
+        Returns:
+            tuple: (geo_conditions, regular_domain)
+        """
+        geo_conditions = []
+        regular_domain = []
+
+        for condition in domain:
+            if (
+                isinstance(condition, (list, tuple))
+                and len(condition) == 3
+                and condition[1] in self._GEO_OPERATORS
+            ):
+                geo_conditions.append(condition)
+            else:
+                regular_domain.append(condition)
+
+        return geo_conditions, regular_domain
+
     @api.model
     def search(self, domain, offset=0, limit=None, order=None):
         """Override search to handle geo operators."""
-        # Check if domain contains geo operators
+        # Quick check for geo operators
         has_geo_ops = any(
             isinstance(cond, (list, tuple))
             and len(cond) == 3
@@ -231,89 +313,29 @@ class Base(models.AbstractModel):
         if not has_geo_ops:
             return super().search(domain, offset=offset, limit=limit, order=order)
 
-        # Process geo operators separately
+        # Split domain into geo and regular conditions
+        geo_conditions, regular_domain = self._split_geo_domain(domain)
+
+        # Process geo conditions
         geo_results = []
-        converted_domain = []
-
-        for condition in domain:
-            if (
-                isinstance(condition, (list, tuple))
-                and len(condition) == 3
-                and condition[1] in self._GEO_OPERATORS
-            ):
-
-                field_name, operator, value = condition
-
-                # Check if field exists and is a geo field
-                field = self._fields.get(field_name)
-                if field and isinstance(field, geo_fields.GeoField):
-                    try:
-                        geo_operator = GeoOperator(field)
-                        table = self._table
-                        params = []
-
-                        # Get the appropriate SQL query based on operator
-                        if operator == "geo_greater":
-                            sql_condition = geo_operator.get_geo_greater_sql(
-                                table, field_name, value, params
-                            )
-                        elif operator == "geo_lesser":
-                            sql_condition = geo_operator.get_geo_lesser_sql(
-                                table, field_name, value, params
-                            )
-                        elif operator == "geo_equal":
-                            sql_condition = geo_operator.get_geo_equal_sql(
-                                table, field_name, value, params
-                            )
-                        elif operator == "geo_touch":
-                            sql_condition = geo_operator.get_geo_touch_sql(
-                                table, field_name, value, params
-                            )
-                        elif operator == "geo_within":
-                            sql_condition = geo_operator.get_geo_within_sql(
-                                table, field_name, value, params
-                            )
-                        elif operator == "geo_contains":
-                            sql_condition = geo_operator.get_geo_contains_sql(
-                                table, field_name, value, params
-                            )
-                        elif operator == "geo_intersect":
-                            sql_condition = geo_operator.get_geo_intersect_sql(
-                                table, field_name, value, params
-                            )
-                        else:
-                            converted_domain.append(condition)
-                            continue
-
-                        # Execute the spatial query to get matching IDs
-                        query = f"SELECT id FROM {table} WHERE {sql_condition}"
-                        self.env.cr.execute(query, params)
-                        result_ids = [row[0] for row in self.env.cr.fetchall()]
-                        geo_results.append(set(result_ids))
-
-                    except Exception as e:
-                        import logging
-
-                        logger = logging.getLogger(__name__)
-                        logger.warning(
-                            "Failed to process geo operator %s: %s", operator, e
-                        )
-                        # Return empty set for failed geo operations
-                        geo_results.append(set())
-                else:
-                    # Not a geo field - add as regular condition
-                    converted_domain.append(condition)
+        for field_name, operator, value in geo_conditions:
+            result = self._process_geo_operator(field_name, operator, value)
+            if result is not None:
+                geo_results.append(result)
             else:
-                # Not a geo operator - add as regular condition
-                converted_domain.append(condition)
+                # Not a valid geo field, treat as regular condition
+                regular_domain.append([field_name, operator, value])
 
-        # Get base results from standard domain processing
-        if converted_domain:
-            base_records = super().search(converted_domain)
+        # Get base results from standard domain
+        # IMPORTANT: Cannot apply offset/limit here as geo filtering happens after
+        # TODO: Optimize by integrating geo queries into SQL WHERE clause
+        if regular_domain:
+            # Fetch all matching records for intersection with geo results
+            base_records = super().search(regular_domain, order=order)
         else:
-            base_records = super().search([])
+            base_records = super().search([], order=order)
 
-        # Intersect geo results with base results
+        # Combine results
         if geo_results:
             # Start with base query results
             final_ids = set(base_records.ids)
@@ -322,19 +344,24 @@ class Base(models.AbstractModel):
             for geo_result_set in geo_results:
                 final_ids = final_ids.intersection(geo_result_set)
 
-            # Convert to recordset
-            result_records = self.browse(list(final_ids))
-
-            # Apply ordering if specified
-            if order:
-                result_records = result_records.sorted(lambda r: r[order.split()[0]])
-
-            # Apply offset and limit
-            if offset:
-                result_records = result_records[offset:]
-            if limit:
-                result_records = result_records[:limit]
+            # Convert to recordset and reapply ordering
+            if final_ids:
+                # Use search to get properly ordered recordset with offset/limit
+                final_domain = [("id", "in", list(final_ids))]
+                if regular_domain:
+                    final_domain = ["&"] + final_domain + regular_domain
+                result_records = super().search(
+                    final_domain, offset=offset, limit=limit, order=order
+                )
+            else:
+                result_records = self.browse()
 
             return result_records
 
-        return base_records
+        # Apply offset/limit/order when no geo filtering needed
+        if regular_domain:
+            return super().search(
+                regular_domain, offset=offset, limit=limit, order=order
+            )
+        else:
+            return super().search([], offset=offset, limit=limit, order=order)
