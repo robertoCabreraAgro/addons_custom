@@ -5,17 +5,20 @@ from odoo.exceptions import ValidationError
 class RetailMachine(models.Model):
     """GEO OSV SAMPLE"""
 
-    _name = "geoengine.demo.automatic.retailing.machine"
+    _name = "retailing.machine"
     _description = "Geoengine demo retailing machine"
 
-    the_point = fields.GeoPoint("Coordinate")
+    the_point = fields.GeoPoint("Coordinate", index=True)
     the_line = fields.GeoLine("Power supply line", index=True)
     total_sales = fields.Float("Total sale", index=True)
     money_level = fields.Char(index=True)
     state = fields.Selection([("hs", "HS"), ("ok", "OK")], index=True)
     name = fields.Char("Serial number", required=True)
     zip_id = fields.Many2one(
-        "dummy.zip", compute="_compute_zip_id", store=True, readonly=False
+        comodel_name="dummy.zip",
+        compute="_compute_zip_id",
+        store=True,
+        readonly=False,
     )
 
     @api.constrains("the_point", "zip_id")

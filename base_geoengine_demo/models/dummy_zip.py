@@ -25,14 +25,14 @@ class NPA(models.Model):
         string="Spatial! Total Sales",
     )
     retail_machine_ids = fields.One2many(
-        "geoengine.demo.automatic.retailing.machine",
-        string="Retail machines",
+        comodel_name="retailing.machine",
         inverse_name="zip_id",
+        string="Retail machines",
     )
 
     def _compute_ZIP_total_sales(self):
         """Return the total of the invoiced sales for this npa"""
-        mach_obj = self.env["geoengine.demo.automatic.retailing.machine"]
+        mach_obj = self.env["retailing.machine"]
         for rec in self:
             res = mach_obj.search(
                 [
@@ -47,7 +47,7 @@ class NPA(models.Model):
             if res.ids:
                 cursor.execute(
                     "SELECT sum(total_sales) from"
-                    " geoengine_demo_automatic_retailing_machine "
+                    " retailing_machine "
                     "where id in %s;",
                     (tuple(res.ids),),
                 )
@@ -74,7 +74,7 @@ class NPA(models.Model):
             raise UserError("No geometry available for the current ZIP.")
 
         # Buscar máquinas que intersectan con la geometría de ZIP actual
-        mach_obj = self.env["geoengine.demo.automatic.retailing.machine"]
+        mach_obj = self.env["retailing.machine"]
         res = mach_obj.search([("the_point", "geo_intersect", geom_test)])
 
         _logger.info("Geometría de ZIP: %s", geom_test)
@@ -86,7 +86,7 @@ class NPA(models.Model):
             cursor.execute(
                 """
                 SELECT sum(total_sales) 
-                FROM geoengine_demo_automatic_retailing_machine 
+                FROM retailing_machine 
                 WHERE id IN %s;
                 """,
                 (tuple(res.ids),),

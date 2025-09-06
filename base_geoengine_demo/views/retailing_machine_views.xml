@@ -3,7 +3,7 @@
 
     <record model="ir.ui.view" id="geo_retail_machine_view_form">
         <field name="name">geoengine.demo.retail.machine.form</field>
-        <field name="model">geoengine.demo.automatic.retailing.machine</field>
+        <field name="model">retailing.machine</field>
         <field name="arch" type="xml">
             <form string="Retail Machine">
                 <sheet>
@@ -33,7 +33,7 @@
 
     <record model="ir.ui.view" id="geo_retail_machine_view_search">
         <field name="name">geoengine.demo.retail.machine.search</field>
-        <field name="model">geoengine.demo.automatic.retailing.machine</field>
+        <field name="model">retailing.machine</field>
         <field name="arch" type="xml">
             <search>
                 <field name="name" />
@@ -46,7 +46,7 @@
 
     <record model="ir.ui.view" id="geo_retail_machine_view_list">
         <field name="name">geoengine.demo.retail.machine.list</field>
-        <field name="model">geoengine.demo.automatic.retailing.machine</field>
+        <field name="model">retailing.machine</field>
         <field name="arch" type="xml">
             <list>
                 <field name="name" />
@@ -59,18 +59,10 @@
     <record id="geoengine_view_retail_machine_action" model="ir.actions.act_window">
         <field name="name">Retail Machines</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="res_model">geoengine.demo.automatic.retailing.machine</field>
+        <field name="res_model">retailing.machine</field>
         <field name="view_mode">list,form,geoengine</field>
         <field name="view_id" ref="geo_retail_machine_view_list" />
     </record>
-
-    <menuitem
-        name="Retail Machine"
-        id="geoengine_retail_machine_menu"
-        action="geoengine_view_retail_machine_action"
-        parent="geoengine_demo_retail_menu"
-        groups="base_geoengine.group_geoengine_user,base_geoengine.group_geoengine_admin"
-    />
 
     <!-- GeoEngine views -->
     <record id="ir_ui_view_retailmachineview0" model="ir.ui.view">
@@ -103,13 +95,13 @@
             </geoengine>
         </field>
         <field eval="16" name="priority" />
-        <field name="model">geoengine.demo.automatic.retailing.machine</field>
+        <field name="model">retailing.machine</field>
     </record>
 
     <record id="geoengine_vector_layer_retailmachinebasicpoint0" model="geoengine.vector.layer">
         <field
             name="geo_field_id"
-            ref="base_geoengine_demo.field_geoengine_demo_automatic_retailing_machine__the_point"
+            ref="base_geoengine_demo.field_retailing_machine__the_point"
         />
         <field name="name">Retail Machine Basic point</field>
         <field eval="2" name="sequence" />
@@ -127,7 +119,7 @@
     >
         <field
             name="geo_field_id"
-            ref="base_geoengine_demo.field_geoengine_demo_automatic_retailing_machine__the_line"
+            ref="base_geoengine_demo.field_retailing_machine__the_line"
         />
         <field name="name">Retail Machine Basic Line</field>
         <field eval="3" name="sequence" />
@@ -144,7 +136,7 @@
     >
         <field
             name="geo_field_id"
-            ref="base_geoengine_demo.field_geoengine_demo_automatic_retailing_machine__the_point"
+            ref="base_geoengine_demo.field_retailing_machine__the_point"
         />
         <field name="name">Retail Machine State colored</field>
         <field name="classification">unique</field>
@@ -155,7 +147,7 @@
         <field name="layer_opacity">0.8</field>
         <field
             name="attribute_field_id"
-            ref="base_geoengine_demo.field_geoengine_demo_automatic_retailing_machine__state"
+            ref="base_geoengine_demo.field_retailing_machine__state"
         />
         <field name="begin_color">#FF680A</field>
     </record>
@@ -166,7 +158,7 @@
     >
         <field
             name="geo_field_id"
-            ref="base_geoengine_demo.field_geoengine_demo_automatic_retailing_machine__the_point"
+            ref="base_geoengine_demo.field_retailing_machine__the_point"
         />
         <field name="name">Retail Machine Colored on total sales quantile</field>
         <field name="classification">quantile</field>
@@ -177,7 +169,7 @@
         <field eval="5" name="nb_class" />
         <field
             name="attribute_field_id"
-            ref="base_geoengine_demo.field_geoengine_demo_automatic_retailing_machine__total_sales"
+            ref="base_geoengine_demo.field_retailing_machine__total_sales"
         />
         <field name="begin_color">#4B69FD</field>
         <field name="end_color">#FF680A</field>
@@ -189,7 +181,7 @@
     >
         <field
             name="geo_field_id"
-            ref="base_geoengine_demo.field_geoengine_demo_automatic_retailing_machine__the_point"
+            ref="base_geoengine_demo.field_retailing_machine__the_point"
         />
         <field name="name">Retail Machine Colored on total sales proportion</field>
         <field name="classification">quantile</field>
@@ -200,7 +192,7 @@
         <field name="layer_opacity">0.8</field>
         <field
             name="attribute_field_id"
-            ref="base_geoengine_demo.field_geoengine_demo_automatic_retailing_machine__total_sales"
+            ref="base_geoengine_demo.field_retailing_machine__total_sales"
         />
         <field name="begin_color">#4B69FD</field>
     </record>
@@ -222,7 +214,7 @@
         <field
             name="model_domain"
         >[('the_geom', 'geo_contains',
-            {"geoengine.demo.automatic.retailing.machine.the_point":[("id", "in active_ids",
+            {"retailing.machine.the_point":[("id", "in active_ids",
             "{ACTIVE_IDS}")]})]</field>
     </record>
 

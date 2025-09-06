@@ -1,7 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 
-    <record model="ir.ui.view" id="dummy_zip_form">
+    <record id="dummy_zip_search" model="ir.ui.view">
+        <field name="name">dummy.zip.search</field>
+        <field name="model">dummy.zip</field>
+        <field name="arch" type="xml">
+            <search string="Search ZIP">
+                <field name="name" />
+                <field name="city" />
+            </search>
+        </field>
+    </record>
+
+    <record id="dummy_zip_list" model="ir.ui.view">
+        <field name="name">dummy.zip.form</field>
+        <field name="model">dummy.zip</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" />
+                <field name="city" />
+                <field name="priority" />
+                <field name="total_sales" />
+            </list>
+        </field>
+    </record>
+
+    <record id="dummy_zip_form" model="ir.ui.view">
         <field name="name">dummy.zip.form</field>
         <field name="model">dummy.zip</field>
         <field name="arch" type="xml">
@@ -23,17 +47,16 @@
                         <page string="Geometry">
                             <field name="the_geom" options='{"opacity": 0.8, "color": "#0000FF"}' />
                         </page>
-                        <!--<page
-                        string="Geometry - Polygon">
-            <field name="the_geom_poly" />
-          </page>
-          <page string="Geometry - MultiLine">
-            <field name="the_geom_multiLine" />
-          </page>
-          <page string="Geometry - MultiPoint">
-            <field name="the_geom_multipoint" />
-          </page>-->
-                        <page string="Retail machines">
+<!--                         <page string="Geometry - Polygon">
+                            <field name="the_geom_poly" />
+                        </page>
+                        <page string="Geometry - MultiLine">
+                            <field name="the_geom_multiLine" />
+                        </page>
+                        <page string="Geometry - MultiPoint">
+                            <field name="the_geom_multipoint" />
+                        </page>
+ -->                        <page string="Retail machines">
                             <field name="retail_machine_ids" context="{'default_zip_id': id}" />
                         </page>
                     </notebook>
@@ -41,45 +64,6 @@
             </form>
         </field>
     </record>
-
-    <record model="ir.ui.view" id="dummy_zip_list">
-        <field name="name">dummy.zip.form</field>
-        <field name="model">dummy.zip</field>
-        <field name="arch" type="xml">
-            <list>
-                <field name="name" />
-                <field name="city" />
-                <field name="priority" />
-                <field name="total_sales" />
-            </list>
-        </field>
-    </record>
-
-    <record model="ir.ui.view" id="dummy_zip_search">
-        <field name="name">dummy.zip.search</field>
-        <field name="model">dummy.zip</field>
-        <field name="arch" type="xml">
-            <search string="Search ZIP">
-                <field name="name" />
-                <field name="city" />
-            </search>
-        </field>
-    </record>
-
-    <record id="action_zip_list" model="ir.actions.act_window">
-        <field name="name">ZIP Management</field>
-        <field name="res_model">dummy.zip</field>
-        <field name="view_mode">list,form,geoengine</field>
-        <field ref="dummy_zip_list" name="view_id" />
-    </record>
-
-    <menuitem
-        name="ZIP"
-        id="zip_retail_machine"
-        parent="geoengine_demo_retail_menu"
-        action="action_zip_list"
-        groups="base_geoengine.group_geoengine_user,base_geoengine.group_geoengine_admin"
-    />
 
     <!-- GeoEngine views -->
     <record id="ir_ui_view_resbetterzipgeoview0" model="ir.ui.view">
@@ -156,12 +140,12 @@
     <record id="geoengine_vector_layer_hs_retail_machines" model="geoengine.vector.layer">
         <field
             name="model_id"
-            ref="base_geoengine_demo.model_geoengine_demo_automatic_retailing_machine"
+            ref="base_geoengine_demo.model_retailing_machine"
         />
         <field name="model_domain">[('state', '=', 'hs')]</field>
         <field
             name="geo_field_id"
-            ref="base_geoengine_demo.field_geoengine_demo_automatic_retailing_machine__the_point"
+            ref="base_geoengine_demo.field_retailing_machine__the_point"
         />
         <field name="name">HS retail machines</field>
         <field eval="4" name="sequence" />
@@ -169,20 +153,17 @@
         <field name="geo_repr">basic</field>
         <field
             name="attribute_field_id"
-            ref="base_geoengine_demo.field_geoengine_demo_automatic_retailing_machine__name"
+            ref="base_geoengine_demo.field_retailing_machine__name"
         />
         <field name="begin_color">#FF0000</field>
         <field name="display_polygon_labels" eval="0" />
         <field name="layer_opacity">0.8</field>
     </record>
 
-    <record
-        id="geoengine_vector_layer_intersect_active_ids"
-        model="geoengine.vector.layer"
-    >
+    <record id="geoengine_vector_layer_intersect_active_ids" model="geoengine.vector.layer">
         <field
             name="model_id"
-            ref="base_geoengine_demo.model_geoengine_demo_automatic_retailing_machine"
+            ref="base_geoengine_demo.model_retailing_machine"
         />
         <field
             name="model_domain"
@@ -190,7 +171,7 @@
             active_ids", "{ACTIVE_IDS}")]})]</field>
         <field
             name="geo_field_id"
-            ref="base_geoengine_demo.field_geoengine_demo_automatic_retailing_machine__the_point"
+            ref="base_geoengine_demo.field_retailing_machine__the_point"
         />
         <field name="name">Intersect point and geom</field>
         <field eval="5" name="sequence" />
@@ -198,20 +179,17 @@
         <field name="geo_repr">basic</field>
         <field
             name="attribute_field_id"
-            ref="base_geoengine_demo.field_geoengine_demo_automatic_retailing_machine__name"
+            ref="base_geoengine_demo.field_retailing_machine__name"
         />
         <field name="begin_color">#0000FF</field>
         <field name="display_polygon_labels" eval="0" />
         <field name="layer_opacity">0.8</field>
     </record>
 
-    <record
-        id="geoengine_vector_layer_not_intersect_active_ids"
-        model="geoengine.vector.layer"
-    >
+    <record id="geoengine_vector_layer_not_intersect_active_ids" model="geoengine.vector.layer">
         <field
             name="model_id"
-            ref="base_geoengine_demo.model_geoengine_demo_automatic_retailing_machine"
+            ref="base_geoengine_demo.model_retailing_machine"
         />
         <field
             name="model_domain"
@@ -219,7 +197,7 @@
             active_ids", "{ACTIVE_IDS}")]})]</field>
         <field
             name="geo_field_id"
-            ref="base_geoengine_demo.field_geoengine_demo_automatic_retailing_machine__the_point"
+            ref="base_geoengine_demo.field_retailing_machine__the_point"
         />
         <field name="name">Not intersect point and geom</field>
         <field eval="6" name="sequence" />
@@ -227,7 +205,7 @@
         <field name="geo_repr">basic</field>
         <field
             name="attribute_field_id"
-            ref="base_geoengine_demo.field_geoengine_demo_automatic_retailing_machine__name"
+            ref="base_geoengine_demo.field_retailing_machine__name"
         />
         <field name="begin_color">#0000FF</field>
         <field name="display_polygon_labels" eval="0" />
@@ -262,6 +240,13 @@
             1222.99245256282,611.49622628141,305.748113140705,152.8740565703525,
             76.43702828517625,38.21851414258813,19.109257071294063,9.554628535647032,
             4.777314267823516,2.388657133911758,1.194328566955879,0.5971642834779395</field>
+    </record>
+
+    <record id="action_zip_list" model="ir.actions.act_window">
+        <field name="name">ZIP Management</field>
+        <field name="res_model">dummy.zip</field>
+        <field name="view_mode">list,form,geoengine</field>
+        <field ref="dummy_zip_list" name="view_id" />
     </record>
 
 </odoo>

@@ -1,5 +1,3 @@
-# Copyright 2011-2012 Nicolas Bessi (Camptocamp SA)
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 {
     "name": "Geo spatial support Demo",
     "category": "GeoBI",
@@ -8,18 +6,13 @@
     "website": "https://github.com/OCA/geospatial",
     "depends": ["base_geoengine"],
     "data": [
-        "views/menus.xml",
-        "views/zip.xml",
-        "views/retail_machine.xml",
+        "security/ir.model.access.csv",
         "data/npa_geom.xml",
         "data/retail_machine_geom.xml",
-        "security/ir.model.access.csv",
+        "views/dummy_zip_views.xml",
+        "views/retailing_machine_views.xml",
+        "views/menus.xml",
     ],
-    "external_dependencies": {
-        "python": [
-            "geojson",
-        ],
-    },
     "installable": True,
     "application": True,
 }

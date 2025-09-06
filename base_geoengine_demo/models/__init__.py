@@ -1,2 +1,2 @@
-from . import geo_npa
-from . import retail_machine
+from . import dummy_zip
+from . import retailing_machine
