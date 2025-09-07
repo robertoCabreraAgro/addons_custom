@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Simple list view for devices in IoT Box form -->
+    <record id="view_iot_device_tree_gps_simple" model="ir.ui.view">
+        <field name="name">iot.device.tree.gps.simple</field>
+        <field name="model">iot.device</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" />
+                <field name="type" />
+                <field name="connected_status" widget="badge"
+                    decoration-success="connected_status == 'connected'"
+                    decoration-danger="connected_status == 'disconnected'" />
+                <field name="gps_imei" optional="show" />
+                <field name="gps_last_position" optional="show" />
+                <field name="gps_tracking_enabled" optional="show" />
+            </list>
+        </field>
+    </record>
+
+    <!-- IoT Box Form View - GPS Extensions -->
+    <record id="view_iot_box_form_gps" model="ir.ui.view">
+        <field name="name">iot.box.form.gps</field>
+        <field name="model">iot.box</field>
+        <field name="inherit_id" ref="iot.iot_box_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='device_ids']" position="attributes">
+                <attribute name="context">{'tree_view_ref':
+                    'iot_gps_tracking.view_iot_device_tree_gps_simple'}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

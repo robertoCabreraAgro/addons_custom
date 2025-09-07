@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- Demo GPS Configurations -->
+    <record id="demo_gps_config_standard" model="iot.gps.config">
+        <field name="name">Standard Vehicle Tracking</field>
+        <field name="update_interval">30</field>
+        <field name="store_raw_data">True</field>
+        <field name="enable_geofencing">True</field>
+        <field name="alert_on_speed">True</field>
+        <field name="speed_limit">120</field>
+        <field name="alert_on_disconnect">True</field>
+        <field name="disconnect_timeout">600</field>
+        <field name="data_retention_days">90</field>
+    </record>
+
+    <record id="demo_gps_config_delivery" model="iot.gps.config">
+        <field name="name">Delivery Fleet Tracking</field>
+        <field name="update_interval">15</field>
+        <field name="store_raw_data">True</field>
+        <field name="enable_geofencing">True</field>
+        <field name="alert_on_speed">True</field>
+        <field name="speed_limit">80</field>
+        <field name="alert_on_disconnect">True</field>
+        <field name="disconnect_timeout">300</field>
+        <field name="data_retention_days">30</field>
+    </record>
+
+    <record id="demo_gps_config_asset" model="iot.gps.config">
+        <field name="name">Asset Tracking</field>
+        <field name="update_interval">300</field>
+        <field name="store_raw_data">False</field>
+        <field name="enable_geofencing">True</field>
+        <field name="alert_on_speed">False</field>
+        <field name="alert_on_disconnect">True</field>
+        <field name="disconnect_timeout">3600</field>
+        <field name="data_retention_days">365</field>
+    </record>
+
+    <!-- Demo IoT Box for GPS -->
+    <record id="demo_iot_box_gps" model="iot.box">
+        <field name="name">GPS Demo Box</field>
+        <field name="identifier">gps_demo_box</field>
+        <field name="ip">demo.gps.local</field>
+        <field name="version">18.0</field>
+    </record>
+
+    <!-- Demo GPS Devices -->
+    <record id="demo_gps_device_truck01" model="iot.device">
+        <field name="name">Delivery Truck 01</field>
+        <field name="identifier">gps_truck_01</field>
+        <field name="type">gps_tracker</field>
+        <field name="iot_id" ref="demo_iot_box_gps" />
+        <field name="connection">network</field>
+        <field name="gps_imei">352625100123001</field>
+        <field name="gps_config_id" ref="demo_gps_config_delivery" />
+        <field name="gps_tracking_enabled">True</field>
+        <field name="gps_last_latitude">40.7128</field>
+        <field name="gps_last_longitude">-74.0060</field>
+        <field name="gps_last_speed">45.5</field>
+        <field name="gps_last_altitude">35</field>
+        <field name="gps_last_satellites">9</field>
+        <field name="gps_battery_level">85</field>
+        <field name="gps_ignition_state">True</field>
+        <field name="gps_movement_state">True</field>
+        <field name="gps_update_interval">15</field>
+    </record>
+
+    <record id="demo_gps_device_truck02" model="iot.device">
+        <field name="name">Delivery Truck 02</field>
+        <field name="identifier">gps_truck_02</field>
+        <field name="type">gps_tracker</field>
+        <field name="iot_id" ref="demo_iot_box_gps" />
+        <field name="connection">network</field>
+        <field name="gps_imei">352625100123002</field>
+        <field name="gps_config_id" ref="demo_gps_config_delivery" />
+        <field name="gps_tracking_enabled">True</field>
+        <field name="gps_last_latitude">40.7580</field>
+        <field name="gps_last_longitude">-73.9855</field>
+        <field name="gps_last_speed">0</field>
+        <field name="gps_last_altitude">42</field>
+        <field name="gps_last_satellites">8</field>
+        <field name="gps_battery_level">92</field>
+        <field name="gps_ignition_state">False</field>
+        <field name="gps_movement_state">False</field>
+        <field name="gps_update_interval">15</field>
+    </record>
+
+    <record id="demo_gps_device_van01" model="iot.device">
+        <field name="name">Service Van 01</field>
+        <field name="identifier">gps_van_01</field>
+        <field name="type">gps_tracker</field>
+        <field name="iot_id" ref="demo_iot_box_gps" />
+        <field name="connection">network</field>
+        <field name="gps_imei">352625100123003</field>
+        <field name="gps_config_id" ref="demo_gps_config_standard" />
+        <field name="gps_tracking_enabled">True</field>
+        <field name="gps_last_latitude">40.6892</field>
+        <field name="gps_last_longitude">-74.0445</field>
+        <field name="gps_last_speed">60.2</field>
+        <field name="gps_last_altitude">28</field>
+        <field name="gps_last_satellites">10</field>
+        <field name="gps_battery_level">78</field>
+        <field name="gps_ignition_state">True</field>
+        <field name="gps_movement_state">True</field>
+        <field name="gps_update_interval">30</field>
+    </record>
+
+    <record id="demo_gps_device_asset01" model="iot.device">
+        <field name="name">Container Asset 01</field>
+        <field name="identifier">gps_asset_01</field>
+        <field name="type">gps_tracker</field>
+        <field name="iot_id" ref="demo_iot_box_gps" />
+        <field name="connection">network</field>
+        <field name="gps_imei">352625100123004</field>
+        <field name="gps_config_id" ref="demo_gps_config_asset" />
+        <field name="gps_tracking_enabled">True</field>
+        <field name="gps_last_latitude">40.7489</field>
+        <field name="gps_last_longitude">-73.9680</field>
+        <field name="gps_last_speed">0</field>
+        <field name="gps_last_altitude">50</field>
+        <field name="gps_last_satellites">7</field>
+        <field name="gps_battery_level">95</field>
+        <field name="gps_ignition_state">False</field>
+        <field name="gps_movement_state">False</field>
+        <field name="gps_update_interval">300</field>
+    </record>
+
+    <!-- Demo Geofences -->
+    <record id="demo_geofence_warehouse" model="iot.gps.geofence">
+        <field name="name">Main Warehouse</field>
+        <field name="type">circle</field>
+        <field name="center_latitude">40.7128</field>
+        <field name="center_longitude">-74.0060</field>
+        <field name="radius">500</field>
+        <field name="active">True</field>
+        <field name="alert_on_enter">True</field>
+        <field name="alert_on_exit">True</field>
+        <field name="alert_on_dwell">False</field>
+        <field name="color">#2E7D32</field>
+    </record>
+
+    <record id="demo_geofence_customer_zone" model="iot.gps.geofence">
+        <field name="name">Customer Delivery Zone A</field>
+        <field name="type">circle</field>
+        <field name="center_latitude">40.7580</field>
+        <field name="center_longitude">-73.9855</field>
+        <field name="radius">1000</field>
+        <field name="active">True</field>
+        <field name="alert_on_enter">True</field>
+        <field name="alert_on_exit">False</field>
+        <field name="alert_on_dwell">True</field>
+        <field name="dwell_time">1800</field>
+        <field name="color">#1976D2</field>
+    </record>
+
+    <record id="demo_geofence_restricted" model="iot.gps.geofence">
+        <field name="name">Restricted Area</field>
+        <field name="type">polygon</field>
+        <field name="polygon_points">[
+            [40.7000, -74.0100],
+            [40.7000, -73.9900],
+            [40.6800, -73.9900],
+            [40.6800, -74.0100]
+            ]</field>
+        <field name="active">True</field>
+        <field name="alert_on_enter">True</field>
+        <field name="alert_on_exit">False</field>
+        <field name="alert_on_dwell">False</field>
+        <field name="color">#D32F2F</field>
+    </record>
+
+    <record id="demo_geofence_service_area" model="iot.gps.geofence">
+        <field name="name">Service Area Manhattan</field>
+        <field name="type">rectangle</field>
+        <field name="rectangle_north">40.8000</field>
+        <field name="rectangle_south">40.7000</field>
+        <field name="rectangle_east">-73.9300</field>
+        <field name="rectangle_west">-74.0200</field>
+        <field name="active">True</field>
+        <field name="alert_on_enter">False</field>
+        <field name="alert_on_exit">True</field>
+        <field name="alert_on_dwell">False</field>
+        <field name="color">#FFA000</field>
+    </record>
+
+    <!-- Link devices to geofences -->
+    <record id="demo_device_geofence_rel_01" model="iot.device">
+        <field name="id" ref="demo_gps_device_truck01" />
+        <field name="gps_geofence_ids"
+            eval="[(4, ref('demo_geofence_warehouse')), (4, ref('demo_geofence_customer_zone'))]" />
+    </record>
+
+    <record id="demo_device_geofence_rel_02" model="iot.device">
+        <field name="id" ref="demo_gps_device_truck02" />
+        <field name="gps_geofence_ids"
+            eval="[(4, ref('demo_geofence_warehouse')), (4, ref('demo_geofence_customer_zone')), (4, ref('demo_geofence_restricted'))]" />
+    </record>
+
+    <record id="demo_device_geofence_rel_03" model="iot.device">
+        <field name="id" ref="demo_gps_device_van01" />
+        <field name="gps_geofence_ids" eval="[(4, ref('demo_geofence_service_area'))]" />
+    </record>
+
+    <!-- Demo Tracking Points (last 24 hours for each device) -->
+    <!-- Note: In production, these would be generated dynamically -->
+
+</odoo>

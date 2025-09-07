@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- IoT Device Search View - GPS Extensions -->
+    <record id="view_iot_device_search_gps" model="ir.ui.view">
+        <field name="name">iot.device.search.gps</field>
+        <field name="model">iot.device</field>
+        <field name="inherit_id" ref="iot.iot_device_search" />
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <field name="gps_imei" />
+                <filter name="gps_trackers" string="GPS Trackers"
+                    domain="[('type', '=', 'gps_tracker')]" />
+                <filter name="tracking_enabled" string="Tracking Enabled"
+                    domain="[('gps_tracking_enabled', '=', True)]" />
+                <filter name="moving" string="Currently Moving"
+                    domain="[('gps_movement_state', '=', True)]" />
+                <filter name="ignition_on" string="Ignition On"
+                    domain="[('gps_ignition_state', '=', True)]" />
+                <separator />
+                <filter name="low_battery" string="Low Battery"
+                    domain="[('gps_battery_level', '&lt;', 20)]" />
+                <group expand="0" string="Group By">
+                    <filter name="group_tracking" string="Tracking Status"
+                        context="{'group_by': 'gps_tracking_enabled'}" />
+                    <filter name="group_movement" string="Movement Status"
+                        context="{'group_by': 'gps_movement_state'}" />
+                    <filter name="group_config" string="GPS Config"
+                        context="{'group_by': 'gps_config_id'}" />
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- IoT Device List View - GPS Extensions -->
+    <record id="view_iot_device_tree_gps" model="ir.ui.view">
+        <field name="name">iot.device.tree.gps</field>
+        <field name="model">iot.device</field>
+        <field name="inherit_id" ref="iot.iot_device_tree" />
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="inside">
+                <field name="gps_imei" optional="show" column_invisible="type != 'gps_tracker'" />
+                <field name="gps_last_position" optional="show"
+                    column_invisible="type != 'gps_tracker'" />
+                <field name="gps_last_update" optional="show"
+                    column_invisible="type != 'gps_tracker'" />
+                <field name="gps_tracking_enabled" optional="show"
+                    column_invisible="type != 'gps_tracker'" />
+                <field name="gps_battery_level" widget="progressbar" optional="hide"
+                    column_invisible="type != 'gps_tracker'" />
+            </xpath>
+        </field>
+    </record>
+
+    <!-- GPS Device Map View -->
+    <record id="view_iot_device_map_gps" model="ir.ui.view">
+        <field name="name">iot.device.map.gps</field>
+        <field name="model">iot.device</field>
+        <field name="arch" type="xml">
+            <geoengine version="7.0">
+                <field name="name" />
+                <field name="gps_last_latitude"
+                    invisible="type != 'gps_tracker'" />
+                <field name="gps_last_longitude"
+                    invisible="type != 'gps_tracker'" />
+            </geoengine>
+        </field>
+    </record>
+
+    <!-- IoT Device Form View - GPS Extensions -->
+    <record id="view_iot_device_form_gps" model="ir.ui.view">
+        <field name="name">iot.device.form.gps</field>
+        <field name="model">iot.device</field>
+        <field name="inherit_id" ref="iot.iot_device_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <notebook>
+                    <page string="GPS Tracking" invisible="not is_gps_device">
+                        <group>
+                            <group string="Device Information">
+                                <field name="is_gps_device" invisible="1" />
+                                <field name="gps_imei" />
+                                <field name="gps_config_id" />
+                                <field name="gps_tracking_enabled" />
+                                <field name="gps_update_interval" />
+                            </group>
+                            <group string="Current Status">
+                                <field name="gps_last_position" />
+                                <field name="gps_last_update" />
+                                <field name="gps_last_speed" />
+                                <field name="gps_last_altitude" />
+                                <field name="gps_last_satellites" />
+                                <field name="gps_battery_level" widget="progressbar" />
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Vehicle Status">
+                                <field name="gps_ignition_state" />
+                                <field name="gps_movement_state" />
+                            </group>
+                            <group string="Position Details">
+                                <field name="gps_last_latitude" />
+                                <field name="gps_last_longitude" />
+                            </group>
+                        </group>
+                        <group string="Geofences">
+                            <field name="gps_geofence_ids" widget="many2many_tags" />
+                            <field name="gps_inside_geofence_ids" widget="many2many_tags"
+                                readonly="1" />
+                        </group>
+                    </page>
+                    <page string="Tracking History" invisible="not is_gps_device">
+                        <field name="gps_tracking_point_ids" readonly="1">
+                            <list>
+                                <field name="timestamp" />
+                                <field name="latitude" />
+                                <field name="longitude" />
+                                <field name="speed" />
+                                <field name="satellites" />
+                                <field name="ignition" />
+                                <field name="movement" />
+                            </list>
+                        </field>
+                    </page>
+                </notebook>
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <button name="action_start_tracking"
+                    string="Start Tracking"
+                    type="object"
+                    invisible="not is_gps_device or gps_tracking_enabled"
+                    class="btn-primary" />
+                <button name="action_stop_tracking"
+                    string="Stop Tracking"
+                    type="object"
+                    invisible="not is_gps_device or not gps_tracking_enabled"
+                    class="btn-warning" />
+                <button name="action_get_current_position"
+                    string="Get Position"
+                    type="object"
+                    invisible="not is_gps_device" />
+                <button name="action_view_tracking_points"
+                    string="View History"
+                    type="object"
+                    invisible="not is_gps_device" />
+                <button name="action_view_on_map"
+                    string="View on Map"
+                    type="object"
+                    invisible="not is_gps_device or not gps_last_position" />
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Action for GPS Devices -->
+    <record id="action_iot_gps_devices" model="ir.actions.act_window">
+        <field name="name">GPS Devices</field>
+        <field name="res_model">iot.device</field>
+        <field name="view_mode">list,form,map</field>
+        <field name="domain">[('type', '=', 'gps_tracker')]</field>
+        <field name="context">{'default_type': 'gps_tracker'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a GPS tracking device
+            </p>
+            <p>
+                Register and manage GPS tracking devices to monitor vehicle locations,
+                track movements, and set up geofence alerts.
+            </p>
+        </field>
+    </record>
+
+</odoo>

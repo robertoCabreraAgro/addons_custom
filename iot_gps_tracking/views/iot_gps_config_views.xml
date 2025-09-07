@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- GPS Configuration Search View -->
+    <record id="view_iot_gps_config_search" model="ir.ui.view">
+        <field name="name">iot.gps.config.search</field>
+        <field name="model">iot.gps.config</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+                <field name="protocol" />
+                <filter name="active" string="Active"
+                    domain="[('active', '=', True)]" />
+                <filter name="inactive" string="Inactive"
+                    domain="[('active', '=', False)]" />
+                <separator />
+                <filter name="teltonika" string="Teltonika"
+                    domain="[('protocol', '=', 'teltonika')]" />
+                <filter name="queclink" string="Queclink"
+                    domain="[('protocol', '=', 'queclink')]" />
+                <filter name="concox" string="Concox"
+                    domain="[('protocol', '=', 'concox')]" />
+                <separator />
+                <filter name="alert_disconnect" string="Alert on Disconnect"
+                    domain="[('alert_on_disconnect', '=', True)]" />
+                <filter name="alert_speed" string="Alert on Speed"
+                    domain="[('alert_on_speed', '=', True)]" />
+                <group>
+                    <filter name="group_protocol" string="Protocol"
+                        context="{'group_by': 'protocol'}" />
+                    <filter name="group_active" string="Active"
+                        context="{'group_by': 'active'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- GPS Configuration List View -->
+    <record id="view_iot_gps_config_tree" model="ir.ui.view">
+        <field name="name">iot.gps.config.tree</field>
+        <field name="model">iot.gps.config</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" />
+                <field name="protocol" />
+                <field name="update_interval" />
+                <field name="active" widget="boolean_toggle" />
+                <field name="device_count" />
+            </list>
+        </field>
+    </record>
+
+    <!-- GPS Configuration Form View -->
+    <record id="view_iot_gps_config_form" model="ir.ui.view">
+        <field name="name">iot.gps.config.form</field>
+        <field name="model">iot.gps.config</field>
+        <field name="arch" type="xml">
+            <form string="GPS Configuration">
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger"
+                        invisible="active" />
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Configuration Name" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Protocol Settings">
+                            <field name="protocol" />
+                            <field name="port" />
+                            <field name="active" />
+                        </group>
+                        <group string="Tracking Settings">
+                            <field name="update_interval" />
+                            <field name="min_distance" />
+                            <field name="min_speed" />
+                            <field name="stop_duration" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Data Storage">
+                            <group>
+                                <group>
+                                    <field name="store_raw_data" />
+                                    <field name="data_retention_days" />
+                                    <field name="compression_enabled" />
+                                </group>
+                                <group>
+                                    <field name="batch_size" />
+                                    <field name="batch_interval" />
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Alert Settings">
+                            <group>
+                                <group>
+                                    <field name="alert_on_disconnect" />
+                                    <field name="disconnect_timeout" />
+                                    <field name="alert_on_low_battery" />
+                                    <field name="low_battery_threshold" />
+                                </group>
+                                <group>
+                                    <field name="alert_on_speed" />
+                                    <field name="speed_limit" />
+                                    <field name="alert_on_idle" />
+                                    <field name="idle_threshold" />
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Advanced">
+                            <group>
+                                <group>
+                                    <field name="validate_checksum" />
+                                    <field name="enable_commands" />
+                                </group>
+                                <group>
+                                    <field name="timezone" />
+                                    <field name="distance_unit" />
+                                    <field name="speed_unit" />
+                                    <field name="temperature_unit" />
+                                </group>
+                            </group>
+                            <group string="Debug Settings">
+                                <field name="debug_mode" />
+                                <field name="log_level" />
+                            </group>
+                        </page>
+                        <page string="Devices">
+                            <field name="device_ids" readonly="1">
+                                <list>
+                                    <field name="name" />
+                                    <field name="gps_imei" />
+                                    <field name="connected_status" widget="badge" />
+                                    <field name="gps_tracking_enabled" />
+                                    <field name="gps_last_update" />
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action for GPS Configurations -->
+    <record id="action_iot_gps_config" model="ir.actions.act_window">
+        <field name="name">GPS Configurations</field>
+        <field name="res_model">iot.gps.config</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a GPS configuration profile
+            </p>
+            <p>
+                Configuration profiles define how GPS devices communicate,
+                when to send updates, and what alerts to generate.
+            </p>
+        </field>
+    </record>
+</odoo>

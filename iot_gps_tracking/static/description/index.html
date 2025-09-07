@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>IoT GPS Tracking</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .header { background: linear-gradient(135deg, #2E7D32 0%, #1976D2 100%); color: white; padding: 40px; border-radius: 10px; margin-bottom: 30px; }
+        .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 30px 0; }
+        .feature-card { background: #f8f9fa; padding: 20px; border-radius: 8px; border-left: 4px solid #2E7D32; }
+        .feature-card h3 { color: #2E7D32; margin-top: 0; }
+        .screenshot { width: 100%; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin: 20px 0; }
+        .tech-stack { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0; }
+        .tech-badge { background: #e3f2fd; color: #1976D2; padding: 5px 15px; border-radius: 20px; font-size: 14px; }
+        .cta-section { background: #f5f5f5; padding: 30px; border-radius: 10px; text-align: center; margin: 30px 0; }
+        .btn { display: inline-block; padding: 12px 30px; background: #2E7D32; color: white; text-decoration: none; border-radius: 5px; margin: 10px; }
+        .btn:hover { background: #1B5E20; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛰️ IoT GPS Tracking Module</h1>
+            <p style="font-size: 18px;">Complete GPS tracking solution integrated with Odoo's IoT framework</p>
+            <p>Track vehicles, assets, and personnel in real-time with advanced geofencing and telemetry monitoring</p>
+        </div>
+
+        <h2>🎯 Key Features</h2>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h3>📍 Real-time Tracking</h3>
+                <p>Monitor GPS devices in real-time with WebSocket updates. View current positions, speed, and direction on interactive maps.</p>
+            </div>
+            <div class="feature-card">
+                <h3>🗺️ Geofencing</h3>
+                <p>Create circular, polygon, or rectangular zones. Get alerts when devices enter, exit, or dwell in designated areas.</p>
+            </div>
+            <div class="feature-card">
+                <h3>📊 Historical Data</h3>
+                <p>Store and analyze complete tracking history with telemetry data. Generate reports and analyze routes.</p>
+            </div>
+            <div class="feature-card">
+                <h3>🔌 Multi-Protocol Support</h3>
+                <p>Compatible with Teltonika, Queclink, Concox, and generic GPS protocols. Easy webhook integration.</p>
+            </div>
+            <div class="feature-card">
+                <h3>⚡ IoT Integration</h3>
+                <p>Fully integrated with Odoo's IoT framework. Manage GPS devices alongside other IoT equipment.</p>
+            </div>
+            <div class="feature-card">
+                <h3>🏢 Multi-Company</h3>
+                <p>Flexible multi-company support with optional record sharing. Perfect for fleet management companies.</p>
+            </div>
+        </div>
+
+        <h2>💡 How It Works</h2>
+        <ol style="font-size: 16px; line-height: 1.8;">
+            <li><strong>Device Registration:</strong> Register GPS devices with unique IMEI numbers</li>
+            <li><strong>Data Collection:</strong> Devices send position data via webhooks or IoT channels</li>
+            <li><strong>Real-time Processing:</strong> Data is processed and stored with full telemetry</li>
+            <li><strong>Monitoring:</strong> Track devices on maps, set geofences, and receive alerts</li>
+            <li><strong>Analysis:</strong> Generate reports and analyze historical tracking data</li>
+        </ol>
+
+        <h2>🚀 Technical Features</h2>
+        <div class="tech-stack">
+            <span class="tech-badge">Odoo 18.0+</span>
+            <span class="tech-badge">PostGIS</span>
+            <span class="tech-badge">WebSocket</span>
+            <span class="tech-badge">RESTful API</span>
+            <span class="tech-badge">OWL Framework</span>
+            <span class="tech-badge">Python 3.10+</span>
+            <span class="tech-badge">PostgreSQL 13+</span>
+            <span class="tech-badge">Real-time Updates</span>
+            <span class="tech-badge">Performance Indexed</span>
+            <span class="tech-badge">Multi-threading</span>
+        </div>
+
+        <h2>📋 What's Included</h2>
+        <ul style="font-size: 16px; line-height: 1.8;">
+            <li>✅ Complete GPS device management system</li>
+            <li>✅ Real-time position tracking with WebSocket support</li>
+            <li>✅ Advanced geofencing with multiple zone types</li>
+            <li>✅ Historical tracking point storage with telemetry</li>
+            <li>✅ RESTful API for device integration</li>
+            <li>✅ Batch update support for multiple devices</li>
+            <li>✅ Automated data retention and cleanup</li>
+            <li>✅ Device connectivity monitoring</li>
+            <li>✅ PDF reports for tracking data</li>
+            <li>✅ JavaScript components for real-time UI</li>
+            <li>✅ Comprehensive test coverage</li>
+            <li>✅ Complete documentation and API guide</li>
+        </ul>
+
+        <h2>🔧 Supported GPS Data</h2>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h3>Position Data</h3>
+                <ul>
+                    <li>Latitude & Longitude</li>
+                    <li>Altitude</li>
+                    <li>Speed & Heading</li>
+                    <li>Satellites & Accuracy</li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <h3>Vehicle Telemetry</h3>
+                <ul>
+                    <li>Ignition State</li>
+                    <li>Fuel Level</li>
+                    <li>Odometer</li>
+                    <li>Engine Temperature</li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <h3>Device Status</h3>
+                <ul>
+                    <li>Battery Level</li>
+                    <li>GSM Signal Strength</li>
+                    <li>External Voltage</li>
+                    <li>Connection Status</li>
+                </ul>
+            </div>
+        </div>
+
+        <h2>🔒 Security Features</h2>
+        <ul style="font-size: 16px; line-height: 1.8;">
+            <li>🔐 Role-based access control (User/Manager groups)</li>
+            <li>🏢 Multi-company record rules</li>
+            <li>🔑 API key authentication ready</li>
+            <li>✅ Data validation and constraints</li>
+            <li>📝 Audit trail for all changes</li>
+        </ul>
+
+        <h2>⚡ Performance Optimizations</h2>
+        <ul style="font-size: 16px; line-height: 1.8;">
+            <li>Database indexes on all critical fields</li>
+            <li>Queue-based data processing</li>
+            <li>Automated data cleanup with retention policies</li>
+            <li>Efficient spatial queries with PostGIS</li>
+            <li>Optimized for high-volume tracking data</li>
+        </ul>
+
+        <div class="cta-section">
+            <h2>Ready to Track Your Fleet?</h2>
+            <p style="font-size: 18px;">Start monitoring your vehicles and assets in real-time with IoT GPS Tracking</p>
+            <a href="#" class="btn">📖 View Documentation</a>
+            <a href="#" class="btn">🚀 Get Started</a>
+        </div>
+
+        <div style="margin-top: 50px; padding-top: 30px; border-top: 1px solid #ddd; text-align: center; color: #666;">
+            <p><strong>IoT GPS Tracking Module v18.0.1.0.0</strong></p>
+            <p>Compatible with Odoo 18.0+ | Requires IoT Framework | PostGIS Recommended</p>
+            <p>© 2024 - Licensed under LGPL-3</p>
+        </div>
+    </div>
+</body>
+</html>

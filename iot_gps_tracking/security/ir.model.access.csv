@@ -1,0 +1,10 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_iot_gps_tracking_point_user,iot.gps.tracking.point.user,model_iot_gps_tracking_point,group_iot_gps_user,1,0,0,0
+access_iot_gps_tracking_point_manager,iot.gps.tracking.point.manager,model_iot_gps_tracking_point,group_iot_gps_manager,1,1,1,1
+access_iot_gps_config_user,iot.gps.config.user,model_iot_gps_config,group_iot_gps_user,1,0,0,0
+access_iot_gps_config_manager,iot.gps.config.manager,model_iot_gps_config,group_iot_gps_manager,1,1,1,1
+access_iot_gps_geofence_user,iot.gps.geofence.user,model_iot_gps_geofence,group_iot_gps_user,1,0,0,0
+access_iot_gps_geofence_manager,iot.gps.geofence.manager,model_iot_gps_geofence,group_iot_gps_manager,1,1,1,1
+access_iot_gps_tracking_point_public,iot.gps.tracking.point.public,model_iot_gps_tracking_point,,1,1,1,0
+access_iot_gps_config_public,iot.gps.config.public,model_iot_gps_config,,1,0,0,0
+access_iot_gps_geofence_public,iot.gps.geofence.public,model_iot_gps_geofence,,1,0,0,0

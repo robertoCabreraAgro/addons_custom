@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="iot_gps_tracking.GPSDeviceController">
+        <div class="o_gps_device_controller">
+            <div class="btn-group" role="group">
+                <button t-if="props.device.gps_tracking_enabled"
+                        class="btn btn-warning"
+                        t-on-click="stopTracking">
+                    <i class="fa fa-stop"/> Stop Tracking
+                </button>
+                <button t-else=""
+                        class="btn btn-primary"
+                        t-on-click="startTracking">
+                    <i class="fa fa-play"/> Start Tracking
+                </button>
+                
+                <button class="btn btn-info"
+                        t-on-click="getCurrentPosition">
+                    <i class="fa fa-crosshairs"/> Get Position
+                </button>
+                
+                <button class="btn btn-secondary"
+                        t-on-click="viewOnMap"
+                        t-att-disabled="!props.device.gps_last_latitude">
+                    <i class="fa fa-map-marker"/> View on Map
+                </button>
+                
+                <button class="btn btn-secondary"
+                        t-on-click="viewTrackingHistory">
+                    <i class="fa fa-history"/> History
+                </button>
+            </div>
+        </div>
+    </t>
+
+</templates>

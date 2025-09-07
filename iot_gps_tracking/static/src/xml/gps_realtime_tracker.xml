@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="iot_gps_tracking.GPSRealtimeTracker">
+        <div class="o_gps_realtime_tracker">
+            <div class="tracker-header d-flex justify-content-between align-items-center mb-3">
+                <h4>
+                    <i class="fa fa-satellite"/> GPS Realtime Tracking
+                </h4>
+                <div class="tracker-status">
+                    <span t-if="state.connected" class="badge text-bg-success">
+                        <i class="fa fa-circle"/> Connected
+                    </span>
+                    <span t-else="" class="badge text-bg-danger">
+                        <i class="fa fa-circle-o"/> Disconnected
+                    </span>
+                    <span t-if="state.lastUpdate" class="ms-2 text-muted">
+                        Last update: <t t-esc="state.lastUpdate.toLocaleTimeString()"/>
+                    </span>
+                </div>
+            </div>
+            
+            <div class="tracker-devices">
+                <div t-if="Object.keys(state.devices).length === 0" class="alert alert-info">
+                    <i class="fa fa-info-circle"/> No devices to track
+                </div>
+                
+                <div t-foreach="Object.values(state.devices)" t-as="device" t-key="device.id"
+                     class="device-tracker-card card mb-2">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-md-3">
+                                <h6 class="mb-0">
+                                    <i t-att-class="'fa ' + (device.connected_status === 'connected' ? 'fa-car text-success' : 'fa-car text-muted')"/>
+                                    <t t-esc="device.name"/>
+                                </h6>
+                                <small class="text-muted">
+                                    IMEI: <t t-esc="device.gps_imei"/>
+                                </small>
+                            </div>
+                            <div class="col-md-3">
+                                <div t-if="device.gps_last_latitude">
+                                    <i class="fa fa-map-marker"/>
+                                    <t t-esc="device.gps_last_latitude.toFixed(6)"/>,
+                                    <t t-esc="device.gps_last_longitude.toFixed(6)"/>
+                                </div>
+                                <div t-else="" class="text-muted">
+                                    <i class="fa fa-map-marker-alt"/> No position
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div t-if="device.gps_last_speed !== null">
+                                    <i class="fa fa-tachometer-alt"/>
+                                    <t t-esc="device.gps_last_speed.toFixed(1)"/> km/h
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <span t-att-class="'badge ' + (device.gps_tracking_enabled ? 'text-bg-primary' : 'text-bg-secondary')">
+                                    <t t-if="device.gps_tracking_enabled">Tracking</t>
+                                    <t t-else="">Not Tracking</t>
+                                </span>
+                            </div>
+                            <div class="col-md-2 text-end">
+                                <small class="text-muted">
+                                    <t t-esc="formatLastUpdate(device)"/>
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

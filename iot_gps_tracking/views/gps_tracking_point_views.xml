@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- GPS Tracking Point Search View -->
+    <record id="view_iot_gps_tracking_point_search" model="ir.ui.view">
+        <field name="name">iot.gps.tracking.point.search</field>
+        <field name="model">iot.gps.tracking.point</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="iot_device_id" />
+                <field name="timestamp" />
+                <filter string="Today" name="today"
+                    domain="[('timestamp', '&gt;=', datetime.datetime.now().replace(hour=0, minute=0, second=0))]" />
+                <filter string="Yesterday" name="yesterday"
+                    domain="[('timestamp', '&gt;=', (datetime.datetime.now() - datetime.timedelta(days=1)).replace(hour=0, minute=0, second=0)), ('timestamp', '&lt;', datetime.datetime.now().replace(hour=0, minute=0, second=0))]" />
+                <filter string="Last 7 Days" name="last_week"
+                    domain="[('timestamp', '&gt;=', datetime.datetime.now() - datetime.timedelta(days=7))]" />
+                <filter string="Last 30 Days" name="last_month"
+                    domain="[('timestamp', '&gt;=', datetime.datetime.now() - datetime.timedelta(days=30))]" />
+                <separator />
+                <filter string="Moving" name="moving" domain="[('movement', '=', True)]" />
+                <filter string="Stopped" name="stopped" domain="[('movement', '=', False)]" />
+                <filter string="Ignition On" name="ignition_on" domain="[('ignition', '=', True)]" />
+                <filter string="Ignition Off" name="ignition_off"
+                    domain="[('ignition', '=', False)]" />
+                <separator />
+                <filter string="High Speed (&gt; 80 km/h)" name="high_speed"
+                    domain="[('speed', '&gt;', 80)]" />
+                <filter string="Low Accuracy" name="low_accuracy"
+                    domain="[('accuracy', '&gt;', 50)]" />
+                <group expand="0" string="Group By">
+                    <filter string="Device" name="group_device"
+                        context="{'group_by': 'iot_device_id'}" />
+                    <filter string="Date" name="group_date" context="{'group_by': 'timestamp:day'}" />
+                    <filter string="Hour" name="group_hour" context="{'group_by': 'timestamp:hour'}" />
+                    <filter string="Source" name="group_source" context="{'group_by': 'source'}" />
+                    <filter string="Movement" name="group_movement"
+                        context="{'group_by': 'movement'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- GPS Tracking Point List View -->
+    <record id="view_iot_gps_tracking_point_tree" model="ir.ui.view">
+        <field name="name">iot.gps.tracking.point.tree</field>
+        <field name="model">iot.gps.tracking.point</field>
+        <field name="arch" type="xml">
+            <list default_order="timestamp desc">
+                <field name="timestamp" />
+                <field name="iot_device_id" />
+                <field name="latitude" />
+                <field name="longitude" />
+                <field name="speed" />
+                <field name="altitude" />
+                <field name="satellites" />
+                <field name="accuracy" />
+                <field name="ignition" widget="boolean_toggle" />
+                <field name="movement" widget="boolean_toggle" />
+                <field name="source" widget="badge" />
+            </list>
+        </field>
+    </record>
+
+    <!-- GPS Tracking Point Map View -->
+    <record id="view_iot_gps_tracking_point_map" model="ir.ui.view">
+        <field name="name">iot.gps.tracking.point.map</field>
+        <field name="model">iot.gps.tracking.point</field>
+        <field name="arch" type="xml">
+            <geoengine version="7.0">
+                <field name="iot_device_id" />
+                <field name="timestamp" />
+                <field name="the_point" />
+                <field name="speed" />
+                <field name="ignition" />
+                <field name="movement" />
+            </geoengine>
+        </field>
+    </record>
+
+    <!-- GPS Tracking Point Graph View -->
+    <record id="view_iot_gps_tracking_point_graph" model="ir.ui.view">
+        <field name="name">iot.gps.tracking.point.graph</field>
+        <field name="model">iot.gps.tracking.point</field>
+        <field name="arch" type="xml">
+            <graph string="GPS Tracking Analysis" type="line">
+                <field name="timestamp" interval="hour" />
+                <field name="speed" type="measure" />
+            </graph>
+        </field>
+    </record>
+
+    <!-- GPS Tracking Point Pivot View -->
+    <record id="view_iot_gps_tracking_point_pivot" model="ir.ui.view">
+        <field name="name">iot.gps.tracking.point.pivot</field>
+        <field name="model">iot.gps.tracking.point</field>
+        <field name="arch" type="xml">
+            <pivot string="GPS Tracking Statistics">
+                <field name="iot_device_id" type="row" />
+                <field name="timestamp" interval="day" type="col" />
+                <field name="speed" type="measure" widget="float_avg" />
+                <field name="distance_from_previous" type="measure" widget="float_sum" />
+            </pivot>
+        </field>
+    </record>
+
+    <!-- GPS Tracking Point Form View -->
+    <record id="view_iot_gps_tracking_point_form" model="ir.ui.view">
+        <field name="name">iot.gps.tracking.point.form</field>
+        <field name="model">iot.gps.tracking.point</field>
+        <field name="arch" type="xml">
+            <form string="GPS Tracking Point">
+                <sheet>
+                    <group>
+                        <group string="Device &amp; Time">
+                            <field name="iot_device_id" />
+                            <field name="timestamp" />
+                            <field name="source" />
+                            <field name="iot_session_id" />
+                        </group>
+                        <group string="Position">
+                            <field name="latitude" />
+                            <field name="longitude" />
+                            <field name="the_point" invisible="1" />
+                            <field name="altitude" />
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Motion">
+                            <field name="speed" />
+                            <field name="heading" />
+                            <field name="ignition" />
+                            <field name="movement" />
+                        </group>
+                        <group string="GPS Quality">
+                            <field name="satellites" />
+                            <field name="accuracy" />
+                            <field name="hdop" />
+                            <field name="pdop" />
+                        </group>
+                    </group>
+                    <group string="Vehicle Telemetry">
+                        <group>
+                            <field name="odometer" />
+                            <field name="total_odometer" />
+                            <field name="fuel_level" widget="progressbar" />
+                            <field name="fuel_consumed" />
+                            <field name="engine_hours" />
+                        </group>
+                        <group>
+                            <field name="engine_temp" />
+                            <field name="engine_rpm" />
+                            <field name="battery_voltage" />
+                            <field name="external_voltage" />
+                            <field name="gsm_signal" />
+                        </group>
+                    </group>
+                    <group string="Event Information" invisible="not event_type">
+                        <field name="event_type" />
+                        <field name="priority" />
+                    </group>
+                    <group string="Computed Metrics">
+                        <field name="distance_from_previous" />
+                        <field name="time_from_previous" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action for GPS Tracking Points -->
+    <record id="action_iot_gps_tracking_points" model="ir.actions.act_window">
+        <field name="name">GPS Tracking Points</field>
+        <field name="res_model">iot.gps.tracking.point</field>
+        <field name="view_mode">list,form,map,graph,pivot</field>
+        <field name="context">{'search_default_last_week': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No tracking points recorded yet
+            </p>
+            <p>
+                GPS tracking points are automatically recorded when GPS devices
+                send position updates. You can view historical tracking data,
+                analyze routes, and monitor vehicle movements.
+            </p>
+        </field>
+    </record>
+
+</odoo>

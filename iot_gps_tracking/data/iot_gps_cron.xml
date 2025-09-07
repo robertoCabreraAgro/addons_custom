@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- Cron job to clean old tracking points -->
+    <record id="ir_cron_gps_cleanup_old_points" model="ir.cron">
+        <field name="name">GPS: Clean Old Tracking Points</field>
+        <field name="model_id" ref="model_iot_gps_tracking_point" />
+        <field name="state">code</field>
+        <field name="code">model._cron_cleanup_old_points()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="active">True</field>
+        <field name="priority">5</field>
+    </record>
+
+    <!-- Cron job to check device connectivity -->
+    <record id="ir_cron_gps_check_device_status" model="ir.cron">
+        <field name="name">GPS: Check Device Status</field>
+        <field name="model_id" ref="model_iot_device" />
+        <field name="state">code</field>
+        <field name="code">model._cron_check_gps_device_status()</field>
+        <field name="interval_number">10</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="active">True</field>
+        <field name="priority">3</field>
+    </record>
+
+    <!-- Cron job to process geofence alerts -->
+    <record id="ir_cron_gps_process_geofence_alerts" model="ir.cron">
+        <field name="name">GPS: Process Geofence Alerts</field>
+        <field name="model_id" ref="model_iot_gps_geofence" />
+        <field name="state">code</field>
+        <field name="code">model._cron_process_geofence_alerts()</field>
+        <field name="interval_number">5</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="active">True</field>
+        <field name="priority">4</field>
+    </record>
+
+</odoo>

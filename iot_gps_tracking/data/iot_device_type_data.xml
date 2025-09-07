@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- Default GPS Configuration -->
+    <record id="iot_gps_config_default" model="iot.gps.config">
+        <field name="name">Default GPS Configuration</field>
+        <field name="protocol">generic</field>
+        <field name="port">8080</field>
+        <field name="update_interval">30</field>
+        <field name="min_distance">10</field>
+        <field name="min_speed">5</field>
+        <field name="stop_duration">300</field>
+        <field name="store_raw_data">True</field>
+        <field name="data_retention_days">90</field>
+        <field name="compression_enabled">False</field>
+        <field name="batch_size">100</field>
+        <field name="batch_interval">60</field>
+        <field name="alert_on_disconnect">True</field>
+        <field name="disconnect_timeout">600</field>
+        <field name="alert_on_low_battery">True</field>
+        <field name="low_battery_threshold">20</field>
+        <field name="alert_on_speed">False</field>
+        <field name="speed_limit">120</field>
+        <field name="alert_on_idle">False</field>
+        <field name="idle_threshold">1800</field>
+        <field name="validate_checksum">True</field>
+        <field name="enable_commands">True</field>
+        <field name="timezone">UTC</field>
+        <field name="distance_unit">km</field>
+        <field name="speed_unit">kmh</field>
+        <field name="temperature_unit">celsius</field>
+        <field name="debug_mode">False</field>
+        <field name="log_level">info</field>
+        <field name="active">True</field>
+    </record>
+
+</odoo>

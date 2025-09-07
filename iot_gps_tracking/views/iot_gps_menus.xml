@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Main GPS Tracking Menu -->
+    <menuitem id="menu_iot_gps_root"
+        name="GPS Tracking"
+        parent="iot.iot_menu_root"
+        sequence="10" />
+
+    <!-- Tracking Menu -->
+    <menuitem id="menu_iot_gps_tracking"
+        name="Tracking"
+        parent="menu_iot_gps_root"
+        sequence="10" />
+
+    <menuitem id="menu_iot_gps_devices"
+        name="GPS Devices"
+        parent="menu_iot_gps_tracking"
+        action="action_iot_gps_devices"
+        sequence="10" />
+
+    <menuitem id="menu_iot_gps_tracking_points"
+        name="Tracking History"
+        parent="menu_iot_gps_tracking"
+        action="action_iot_gps_tracking_points"
+        sequence="20" />
+
+    <!-- Geofencing Menu -->
+    <menuitem id="menu_iot_gps_geofencing"
+        name="Geofencing"
+        parent="menu_iot_gps_root"
+        sequence="20" />
+
+    <menuitem id="menu_iot_gps_geofences"
+        name="Geofences"
+        parent="menu_iot_gps_geofencing"
+        action="action_iot_gps_geofence"
+        sequence="10" />
+
+    <!-- Configuration Menu -->
+    <menuitem id="menu_iot_gps_configuration"
+        name="Configuration"
+        parent="menu_iot_gps_root"
+        sequence="99" />
+
+    <menuitem id="menu_iot_gps_config"
+        name="GPS Configurations"
+        parent="menu_iot_gps_configuration"
+        action="action_iot_gps_config"
+        sequence="10" />
+
+</odoo>

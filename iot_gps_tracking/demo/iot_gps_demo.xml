@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="0">
+    <!-- Demo IoT Box for GPS Devices -->
+    <record id="demo_gps_iot_box" model="iot.box">
+        <field name="name">Demo GPS Gateway</field>
+        <field name="identifier">demo_gps_gateway_001</field>
+        <field name="ip">192.168.1.100</field>
+        <field name="version">1.0</field>
+    </record>
+
+    <!-- Demo GPS Devices -->
+    <record id="demo_gps_device_1" model="iot.device">
+        <field name="name">Demo Vehicle Tracker 1</field>
+        <field name="identifier">gps_demo_001</field>
+        <field name="type">gps_tracker</field>
+        <field name="iot_id" ref="demo_gps_iot_box" />
+        <field name="connection">network</field>
+        <field name="gps_imei">123456789012345</field>
+        <field name="gps_config_id" ref="iot_gps_config_default" />
+        <field name="connected_status">connected</field>
+        <field name="gps_tracking_enabled">True</field>
+        <field name="gps_last_latitude">40.7128</field>
+        <field name="gps_last_longitude">-74.0060</field>
+        <field name="gps_last_speed">45.5</field>
+        <field name="gps_last_altitude">100</field>
+        <field name="gps_last_satellites">8</field>
+        <field name="gps_battery_level">85</field>
+        <field name="gps_ignition_state">True</field>
+        <field name="gps_movement_state">True</field>
+    </record>
+
+    <record id="demo_gps_device_2" model="iot.device">
+        <field name="name">Demo Vehicle Tracker 2</field>
+        <field name="identifier">gps_demo_002</field>
+        <field name="type">gps_tracker</field>
+        <field name="iot_id" ref="demo_gps_iot_box" />
+        <field name="connection">network</field>
+        <field name="gps_imei">543210987654321</field>
+        <field name="gps_config_id" ref="iot_gps_config_default" />
+        <field name="connected_status">connected</field>
+        <field name="gps_tracking_enabled">True</field>
+        <field name="gps_last_latitude">40.7580</field>
+        <field name="gps_last_longitude">-73.9855</field>
+        <field name="gps_last_speed">0</field>
+        <field name="gps_last_altitude">85</field>
+        <field name="gps_last_satellites">6</field>
+        <field name="gps_battery_level">92</field>
+        <field name="gps_ignition_state">False</field>
+        <field name="gps_movement_state">False</field>
+    </record>
+
+    <!-- Demo Geofences -->
+    <record id="demo_geofence_warehouse" model="iot.gps.geofence">
+        <field name="name">Main Warehouse Zone</field>
+        <field name="geofence_type">circle</field>
+        <field name="center_latitude">40.7128</field>
+        <field name="center_longitude">-74.0060</field>
+        <field name="radius">500</field>
+        <field name="alert_on_enter">True</field>
+        <field name="alert_on_exit">True</field>
+        <field name="alert_on_dwell">False</field>
+        <field name="active">True</field>
+        <field name="schedule_type">always</field>
+        <field name="color">#2E7D32</field>
+        <field name="device_ids"
+            eval="[(4, ref('demo_gps_device_1')), (4, ref('demo_gps_device_2'))]" />
+    </record>
+
+    <record id="demo_geofence_delivery" model="iot.gps.geofence">
+        <field name="name">Delivery Zone A</field>
+        <field name="geofence_type">polygon</field>
+        <field name="polygon_points">[[40.7580, -73.9855], [40.7489, -73.9680], [40.7549, -73.9764],
+            [40.7614, -73.9774]]</field>
+        <field name="alert_on_enter">True</field>
+        <field name="alert_on_exit">False</field>
+        <field name="alert_on_dwell">True</field>
+        <field name="dwell_time">30</field>
+        <field name="active">True</field>
+        <field name="schedule_type">business_hours</field>
+        <field name="schedule_time_from">8.0</field>
+        <field name="schedule_time_to">18.0</field>
+        <field name="color">#1976D2</field>
+        <field name="device_ids" eval="[(4, ref('demo_gps_device_1'))]" />
+    </record>
+
+    <!-- Demo Tracking Points -->
+    <record id="demo_tracking_point_1" model="iot.gps.tracking.point">
+        <field name="iot_device_id" ref="demo_gps_device_1" />
+        <field name="timestamp" eval="datetime.now() - timedelta(hours=2)" />
+        <field name="latitude">40.7000</field>
+        <field name="longitude">-74.0000</field>
+        <field name="altitude">95</field>
+        <field name="speed">55.3</field>
+        <field name="heading">45</field>
+        <field name="satellites">7</field>
+        <field name="accuracy">5.2</field>
+        <field name="ignition">True</field>
+        <field name="movement">True</field>
+        <field name="fuel_level">75</field>
+        <field name="odometer">12543.6</field>
+        <field name="source">iot</field>
+    </record>
+
+    <record id="demo_tracking_point_2" model="iot.gps.tracking.point">
+        <field name="iot_device_id" ref="demo_gps_device_1" />
+        <field name="timestamp" eval="datetime.now() - timedelta(hours=1, minutes=30)" />
+        <field name="latitude">40.7064</field>
+        <field name="longitude">-74.0030</field>
+        <field name="altitude">98</field>
+        <field name="speed">48.7</field>
+        <field name="heading">50</field>
+        <field name="satellites">8</field>
+        <field name="accuracy">4.8</field>
+        <field name="ignition">True</field>
+        <field name="movement">True</field>
+        <field name="fuel_level">74</field>
+        <field name="odometer">12548.2</field>
+        <field name="source">iot</field>
+    </record>
+
+    <record id="demo_tracking_point_3" model="iot.gps.tracking.point">
+        <field name="iot_device_id" ref="demo_gps_device_1" />
+        <field name="timestamp" eval="datetime.now() - timedelta(hours=1)" />
+        <field name="latitude">40.7096</field>
+        <field name="longitude">-74.0045</field>
+        <field name="altitude">100</field>
+        <field name="speed">42.1</field>
+        <field name="heading">48</field>
+        <field name="satellites">9</field>
+        <field name="accuracy">3.5</field>
+        <field name="ignition">True</field>
+        <field name="movement">True</field>
+        <field name="fuel_level">73</field>
+        <field name="odometer">12551.8</field>
+        <field name="source">iot</field>
+    </record>
+
+    <record id="demo_tracking_point_4" model="iot.gps.tracking.point">
+        <field name="iot_device_id" ref="demo_gps_device_1" />
+        <field name="timestamp" eval="datetime.now() - timedelta(minutes=30)" />
+        <field name="latitude">40.7128</field>
+        <field name="longitude">-74.0060</field>
+        <field name="altitude">100</field>
+        <field name="speed">45.5</field>
+        <field name="heading">52</field>
+        <field name="satellites">8</field>
+        <field name="accuracy">4.2</field>
+        <field name="ignition">True</field>
+        <field name="movement">True</field>
+        <field name="fuel_level">72</field>
+        <field name="odometer">12555.3</field>
+        <field name="source">iot</field>
+    </record>
+
+    <!-- Demo tracking points for device 2 -->
+    <record id="demo_tracking_point_5" model="iot.gps.tracking.point">
+        <field name="iot_device_id" ref="demo_gps_device_2" />
+        <field name="timestamp" eval="datetime.now() - timedelta(hours=3)" />
+        <field name="latitude">40.7489</field>
+        <field name="longitude">-73.9680</field>
+        <field name="altitude">80</field>
+        <field name="speed">35.2</field>
+        <field name="heading">180</field>
+        <field name="satellites">6</field>
+        <field name="accuracy">6.1</field>
+        <field name="ignition">True</field>
+        <field name="movement">True</field>
+        <field name="fuel_level">88</field>
+        <field name="odometer">8765.4</field>
+        <field name="source">iot</field>
+    </record>
+
+    <record id="demo_tracking_point_6" model="iot.gps.tracking.point">
+        <field name="iot_device_id" ref="demo_gps_device_2" />
+        <field name="timestamp" eval="datetime.now() - timedelta(hours=1)" />
+        <field name="latitude">40.7580</field>
+        <field name="longitude">-73.9855</field>
+        <field name="altitude">85</field>
+        <field name="speed">0</field>
+        <field name="heading">180</field>
+        <field name="satellites">6</field>
+        <field name="accuracy">5.5</field>
+        <field name="ignition">False</field>
+        <field name="movement">False</field>
+        <field name="fuel_level">88</field>
+        <field name="odometer">8775.8</field>
+        <field name="source">iot</field>
+    </record>
+
+</odoo>

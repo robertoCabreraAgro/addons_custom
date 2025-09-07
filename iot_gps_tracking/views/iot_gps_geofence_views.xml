@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- GPS Geofence Search View -->
+    <record id="view_iot_gps_geofence_search" model="ir.ui.view">
+        <field name="name">iot.gps.geofence.search</field>
+        <field name="model">iot.gps.geofence</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+                <field name="geofence_type" />
+                <filter string="Active" name="active"
+                    domain="[('active', '=', True)]" />
+                <filter string="Inactive" name="inactive"
+                    domain="[('active', '=', False)]" />
+                <separator />
+                <filter string="Circle" name="circle"
+                    domain="[('geofence_type', '=', 'circle')]" />
+                <filter string="Polygon" name="polygon"
+                    domain="[('geofence_type', '=', 'polygon')]" />
+                <filter string="Rectangle" name="rectangle"
+                    domain="[('geofence_type', '=', 'rectangle')]" />
+                <separator />
+                <filter string="Alert on Enter" name="alert_enter"
+                    domain="[('alert_on_enter', '=', True)]" />
+                <filter string="Alert on Exit" name="alert_exit"
+                    domain="[('alert_on_exit', '=', True)]" />
+                <filter string="Alert on Dwell" name="alert_dwell"
+                    domain="[('alert_on_dwell', '=', True)]" />
+                <separator />
+                <filter string="Has Devices Inside" name="has_devices"
+                    domain="[('devices_inside_count', '&gt;', 0)]" />
+                <group expand="0" string="Group By">
+                    <filter string="Type" name="group_type"
+                        context="{'group_by': 'geofence_type'}" />
+                    <filter string="Schedule" name="group_schedule"
+                        context="{'group_by': 'schedule_type'}" />
+                    <filter string="Active" name="group_active"
+                        context="{'group_by': 'active'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- GPS Geofence List View -->
+    <record id="view_iot_gps_geofence_tree" model="ir.ui.view">
+        <field name="name">iot.gps.geofence.tree</field>
+        <field name="model">iot.gps.geofence</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" />
+                <field name="geofence_type" />
+                <field name="active" widget="boolean_toggle" />
+                <field name="device_count" />
+                <field name="devices_inside_count" />
+                <field name="alert_on_enter" />
+                <field name="alert_on_exit" />
+                <field name="schedule_type" />
+            </list>
+        </field>
+    </record>
+
+    <!-- GPS Geofence Map View -->
+    <record id="view_iot_gps_geofence_map" model="ir.ui.view">
+        <field name="name">iot.gps.geofence.map</field>
+        <field name="model">iot.gps.geofence</field>
+        <field name="arch" type="xml">
+            <geoengine version="7.0">
+                <field name="name" />
+                <field name="the_geom" />
+                <field name="geofence_type" />
+                <field name="device_count" />
+                <field name="devices_inside_count" />
+            </geoengine>
+        </field>
+    </record>
+
+    <!-- GPS Geofence Kanban View -->
+    <record id="view_iot_gps_geofence_kanban" model="ir.ui.view">
+        <field name="name">iot.gps.geofence.kanban</field>
+        <field name="model">iot.gps.geofence</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="name" />
+                <field name="geofence_type" />
+                <field name="active" />
+                <field name="device_count" />
+                <field name="devices_inside_count" />
+                <field name="color" />
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="oe_kanban_content">
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title">
+                                            <field name="name" />
+                                        </strong>
+                                    </div>
+                                    <span class="o_dropdown_kanban dropdown">
+                                        <a class="dropdown-toggle o-no-caret btn"
+                                            data-bs-toggle="dropdown" href="#">
+                                            <span class="fa fa-ellipsis-v" />
+                                        </a>
+                                        <div class="dropdown-menu" role="menu">
+                                            <a type="edit" class="dropdown-item">Edit</a>
+                                            <a type="delete" class="dropdown-item">Delete</a>
+                                        </div>
+                                    </span>
+                                </div>
+                                <div class="o_kanban_record_body">
+                                    <div class="text-muted">
+                                        <span class="fa fa-shapes me-1" />
+                                        <field name="geofence_type" />
+                                    </div>
+                                    <div>
+                                        <span class="fa fa-car me-1" />
+                                        <field name="device_count" />
+                                        devices </div>
+                                    <div t-if="record.devices_inside_count.raw_value > 0"
+                                        class="text-success">
+                                        <span class="fa fa-map-marker me-1" />
+                                        <field
+                                            name="devices_inside_count" /> inside </div>
+                                </div>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <field name="active" widget="boolean_toggle" />
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <div
+                                            t-attf-style="width: 20px; height: 20px; background-color: #{record.color.raw_value}; border-radius: 3px;" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- GPS Geofence Form View -->
+    <record id="view_iot_gps_geofence_form" model="ir.ui.view">
+        <field name="name">iot.gps.geofence.form</field>
+        <field name="model">iot.gps.geofence</field>
+        <field name="arch" type="xml">
+            <form string="GPS Geofence">
+                <header>
+                    <button name="action_view_devices" type="object" string="View Devices"
+                        class="btn-primary" />
+                    <button name="action_view_devices_inside" type="object"
+                        string="View Devices Inside" invisible="devices_inside_count == 0" />
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Inactive" bg_color="text-bg-danger"
+                        invisible="active" />
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Geofence Name" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Geofence Definition">
+                            <field name="geofence_type" />
+                            <field name="active" />
+                            <field name="color" widget="color" />
+                        </group>
+                        <group string="Statistics">
+                            <field name="device_count" />
+                            <field name="devices_inside_count" />
+                        </group>
+                    </group>
+                    <group string="Shape Parameters">
+                        <group invisible="geofence_type != 'circle'">
+                            <field name="center_latitude" required="geofence_type == 'circle'" />
+                            <field name="center_longitude" required="geofence_type == 'circle'" />
+                            <field name="radius" required="geofence_type == 'circle'" />
+                        </group>
+                        <group invisible="geofence_type == 'circle'">
+                            <field name="polygon_points" widget="text"
+                                required="geofence_type != 'circle'"
+                                placeholder='[[lat1, lon1], [lat2, lon2], [lat3, lon3]]' />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Alert Settings">
+                            <group>
+                                <group string="Alert Triggers">
+                                    <field name="alert_on_enter" />
+                                    <field name="alert_on_exit" />
+                                    <field name="alert_on_dwell" />
+                                    <field name="dwell_time" invisible="not alert_on_dwell" />
+                                </group>
+                                <group string="Schedule">
+                                    <field name="schedule_type" />
+                                    <field name="schedule_weekdays"
+                                        invisible="schedule_type != 'custom'" />
+                                    <field name="schedule_time_from" widget="float_time"
+                                        invisible="schedule_type not in ['business_hours', 'custom']" />
+                                    <field name="schedule_time_to" widget="float_time"
+                                        invisible="schedule_type not in ['business_hours', 'custom']" />
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Monitored Devices">
+                            <field name="device_ids">
+                                <list>
+                                    <field name="name" />
+                                    <field name="gps_imei" />
+                                    <field name="gps_last_position" />
+                                    <field name="gps_last_update" />
+                                    <field name="gps_tracking_enabled" />
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Devices Inside">
+                            <field name="devices_inside_ids" readonly="1">
+                                <list>
+                                    <field name="name" />
+                                    <field name="gps_imei" />
+                                    <field name="gps_last_position" />
+                                    <field name="gps_last_update" />
+                                    <field name="gps_last_speed" />
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Description">
+                            <field name="description" placeholder="Enter geofence description..." />
+                        </page>
+                    </notebook>
+                    <field name="the_geom" invisible="1" />
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action for GPS Geofences -->
+    <record id="action_iot_gps_geofence" model="ir.actions.act_window">
+        <field name="name">GPS Geofences</field>
+        <field name="res_model">iot.gps.geofence</field>
+        <field name="view_mode">kanban,list,form,map</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a geofence zone
+            </p>
+            <p>
+                Define geographical boundaries to monitor when vehicles
+                enter or exit specific areas. Set up alerts for
+                unauthorized movements or dwell time violations.
+            </p>
+        </field>
+    </record>
+</odoo>

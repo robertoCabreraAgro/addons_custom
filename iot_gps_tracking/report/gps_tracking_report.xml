@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Report Action -->
+    <record id="action_report_gps_tracking" model="ir.actions.report">
+        <field name="name">GPS Tracking Report</field>
+        <field name="model">iot.device</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">iot_gps_tracking.report_gps_tracking</field>
+        <field name="report_file">iot_gps_tracking.report_gps_tracking</field>
+        <field name="binding_model_id" ref="model_iot_device"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- Report Template -->
+    <template id="report_gps_tracking">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="device">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>GPS Tracking Report</h2>
+                        
+                        <div class="row mt-4">
+                            <div class="col-6">
+                                <h3>Device Information</h3>
+                                <table class="table table-sm">
+                                    <tr>
+                                        <td><strong>Device Name:</strong></td>
+                                        <td><span t-field="device.name"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>IMEI:</strong></td>
+                                        <td><span t-field="device.gps_imei"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Type:</strong></td>
+                                        <td><span t-field="device.type"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Status:</strong></td>
+                                        <td><span t-field="device.connected_status"/></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            
+                            <div class="col-6">
+                                <h3>Current Position</h3>
+                                <table class="table table-sm">
+                                    <tr>
+                                        <td><strong>Latitude:</strong></td>
+                                        <td><span t-field="device.gps_last_latitude"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Longitude:</strong></td>
+                                        <td><span t-field="device.gps_last_longitude"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Last Update:</strong></td>
+                                        <td><span t-field="device.gps_last_update"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Speed:</strong></td>
+                                        <td><span t-field="device.gps_last_speed"/> km/h</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <h3>Recent Tracking Points</h3>
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Timestamp</th>
+                                            <th>Latitude</th>
+                                            <th>Longitude</th>
+                                            <th>Speed (km/h)</th>
+                                            <th>Altitude (m)</th>
+                                            <th>Satellites</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-set="points" t-value="device.gps_tracking_point_ids[:20]"/>
+                                        <tr t-foreach="points" t-as="point">
+                                            <td><span t-field="point.timestamp"/></td>
+                                            <td><span t-field="point.latitude"/></td>
+                                            <td><span t-field="point.longitude"/></td>
+                                            <td><span t-field="point.speed"/></td>
+                                            <td><span t-field="point.altitude"/></td>
+                                            <td><span t-field="point.satellites"/></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-6">
+                                <h3>Vehicle Status</h3>
+                                <table class="table table-sm">
+                                    <tr>
+                                        <td><strong>Battery Level:</strong></td>
+                                        <td><span t-field="device.gps_battery_level"/>%</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Ignition:</strong></td>
+                                        <td>
+                                            <span t-if="device.gps_ignition_state">On</span>
+                                            <span t-else="">Off</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Movement:</strong></td>
+                                        <td>
+                                            <span t-if="device.gps_movement_state">Moving</span>
+                                            <span t-else="">Stopped</span>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            
+                            <div class="col-6">
+                                <h3>Configuration</h3>
+                                <table class="table table-sm">
+                                    <tr>
+                                        <td><strong>Config Profile:</strong></td>
+                                        <td><span t-field="device.gps_config_id.name"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Update Interval:</strong></td>
+                                        <td><span t-field="device.gps_update_interval"/> seconds</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Tracking Enabled:</strong></td>
+                                        <td>
+                                            <span t-if="device.gps_tracking_enabled">Yes</span>
+                                            <span t-else="">No</span>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="footer">
+                            <div class="text-center">
+                                <div class="text-muted">
+                                    Generated on <span t-esc="datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <!-- Daily Summary Report -->
+    <record id="action_report_gps_daily_summary" model="ir.actions.report">
+        <field name="name">GPS Daily Summary</field>
+        <field name="model">iot.gps.tracking.point</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">iot_gps_tracking.report_gps_daily_summary</field>
+        <field name="report_file">iot_gps_tracking.report_gps_daily_summary</field>
+        <field name="binding_model_id" ref="model_iot_gps_tracking_point"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_gps_daily_summary">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <h2>GPS Daily Summary Report</h2>
+                    
+                    <t t-set="grouped_points" t-value="{}"/>
+                    <t t-foreach="docs" t-as="point">
+                        <t t-set="device_id" t-value="point.iot_device_id.id"/>
+                        <t t-if="device_id not in grouped_points">
+                            <t t-set="grouped_points" t-value="dict(grouped_points, **{device_id: []})"/>
+                        </t>
+                        <t t-set="grouped_points[device_id]" t-value="grouped_points[device_id] + [point]"/>
+                    </t>
+                    
+                    <t t-foreach="grouped_points.items()" t-as="item">
+                        <t t-set="device_points" t-value="item[1]"/>
+                        <t t-set="device" t-value="device_points[0].iot_device_id"/>
+                        
+                        <div class="mt-4">
+                            <h3><span t-field="device.name"/> (<span t-field="device.gps_imei"/>)</h3>
+                            
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Metric</th>
+                                        <th>Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Total Points Recorded</td>
+                                        <td><span t-esc="len(device_points)"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Average Speed</td>
+                                        <td><span t-esc="'%.1f' % (sum(p.speed for p in device_points) / len(device_points))"/> km/h</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Maximum Speed</td>
+                                        <td><span t-esc="'%.1f' % max(p.speed for p in device_points)"/> km/h</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Total Distance</td>
+                                        <td><span t-esc="'%.1f' % sum(p.distance_from_previous for p in device_points)"/> km</td>
+                                    </tr>
+                                    <tr>
+                                        <td>First Position</td>
+                                        <td><span t-field="device_points[-1].timestamp"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Last Position</td>
+                                        <td><span t-field="device_points[0].timestamp"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </t>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>
