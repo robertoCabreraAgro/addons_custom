@@ -311,10 +311,38 @@ class Base(models.AbstractModel):
         Odoo's ORM can handle natively.
 
         Args:
-            domain (list): Search domain with potential geo operators.
+            domain (list|Domain): Search domain with potential geo operators.
+                Can be a list or Odoo 18's Domain object.
 
         Returns:
-            list: Processed domain with geo operators converted to ID filters.
+            list|Domain: Processed domain with geo operators converted to ID filters.
+        """
+        if not domain:
+            return domain
+
+        # Handle Odoo 18's Domain objects (DomainAnd, DomainOr, etc.)
+        # Convert to list format for processing
+        if hasattr(domain, "to_list"):
+            # It's a Domain object, convert to list
+            domain_list = domain.to_list()
+            processed_list = self._process_domain_list(domain_list)
+            # Return as list since geo operators need list format
+            return processed_list
+        elif isinstance(domain, list):
+            # It's already a list, process normally
+            return self._process_domain_list(domain)
+        else:
+            # Unknown format, return as-is
+            return domain
+
+    def _process_domain_list(self, domain):
+        """Process a domain list by converting geo operators to ID conditions.
+
+        Args:
+            domain (list): Domain in list format.
+
+        Returns:
+            list: Processed domain with geo operators converted.
         """
         if not domain:
             return domain
@@ -406,15 +434,19 @@ class Base(models.AbstractModel):
         return super().search(processed_domain, offset=offset, limit=limit, order=order)
 
     @api.model
-    def search_count(self, domain):
+    def search_count(self, domain, limit=None):
         """Override search_count to handle geo operators.
+
+        Args:
+            domain: Search domain with potential geo operators.
+            limit: Optional limit for counting (Odoo 18+ compatibility).
 
         Examples:
             # Count locations in area
             count = self.search_count([('location', 'geo_within', polygon)])
         """
         processed_domain = self._process_domain_with_geo(domain)
-        return super().search_count(processed_domain)
+        return super().search_count(processed_domain, limit=limit)
 
     @api.model
     def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
@@ -431,6 +463,37 @@ class Base(models.AbstractModel):
             domain = self._process_domain_with_geo(domain)
         return super().search_read(
             domain=domain, fields=fields, offset=offset, limit=limit, order=order
+        )
+
+    @api.model
+    def web_search_read(
+        self, domain, specification, offset=0, limit=None, order=None, count_limit=None
+    ):
+        """Override web_search_read to handle geo operators.
+
+        This method is called by the web client in Odoo 18+ and needs to process
+        geo operators before delegating to the parent implementation.
+
+        Args:
+            domain: Search domain with potential geo operators.
+            specification: Field specification for the web client.
+            offset: Record offset.
+            limit: Maximum number of records.
+            order: Sort order.
+            count_limit: Limit for counting records.
+
+        Returns:
+            dict: Web search read results with processed geo operators.
+        """
+        if domain:
+            domain = self._process_domain_with_geo(domain)
+        return super().web_search_read(
+            domain=domain,
+            specification=specification,
+            offset=offset,
+            limit=limit,
+            order=order,
+            count_limit=count_limit,
         )
 
     def _is_geo_term(self, term):

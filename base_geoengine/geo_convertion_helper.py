@@ -16,6 +16,7 @@ except ImportError:
     def _(text):
         return text
 
+
 logger = logging.getLogger(__name__)
 
 try:
