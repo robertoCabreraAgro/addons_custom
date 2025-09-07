@@ -9,7 +9,7 @@
         <field name="arch" type="xml">
             <xpath expr="//form" position="inside">
                 <app data-string="Fleet" id="fleet" string="Fleet" name="fleet"
-                    groups="fleet.fleet_group_manager">
+                    groups="product_asset.fleet_group_manager">
                     <block title="Fleet Management" id="end_contract_setting">
                         <setting string="End Date Contract Alert">
                             <div class="text-muted content-group mt16">

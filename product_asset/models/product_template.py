@@ -88,13 +88,11 @@ class ProductTemplate(models.Model):
     # ------------------------------------------------------------
 
     def _compute_power_uom_name(self):
-        self.weight_capacity_uom_name = (
-            self._get_power_uom_name_from_ir_config_parameter()
-        )
+        self.power_uom_name = self._get_power_uom_name_from_ir_config_parameter()
 
     def _compute_fuel_efficiency_uom_name(self):
-        self.weight_capacity_uom_name = (
-            self._get_fuel_efficiency_name_from_ir_config_parameter()
+        self.fuel_efficiency_uom_name = (
+            self._get_fuel_efficiency_uom_name_from_ir_config_parameter()
         )
 
     def _compute_weight_capacity_uom_name(self):
