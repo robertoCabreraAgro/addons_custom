@@ -1,10 +1,11 @@
 import logging
 
 from odoo import _, api, models
-from odoo.exceptions import MissingError, UserError
+from odoo.exceptions import MissingError, UserError, ValidationError
 from odoo.tools import SQL
 
 from .. import fields as geo_fields
+from .. import geo_convertion_helper as convert
 from ..geo_operators import GeoOperator
 
 logger = logging.getLogger(__name__)
@@ -225,7 +226,7 @@ class Base(models.AbstractModel):
         Args:
             field_name (str): Name of the geo field.
             operator (str): Geo operator name.
-            value: Value to compare against.
+            value: Value to compare against (can be WKT, GeoJSON, coords, etc).
 
         Returns:
             set: Set of matching record IDs, or None if not a geo operation.
@@ -234,6 +235,27 @@ class Base(models.AbstractModel):
         if not field or not isinstance(field, geo_fields.GeoField):
             return None
         try:
+            # Convert value to SQL-safe format using Shapely helper
+            sql_value = convert.to_sql_param(value, field.srid)
+            if not sql_value:
+                logger.warning(
+                    "Empty geometry value for field %s with operator %s",
+                    field_name,
+                    operator,
+                )
+                return set()
+
+            # Validate geometry type if field has specific type
+            if hasattr(field, "geo_type") and field.geo_type:
+                expected_type = field.geo_type.upper()
+                if not convert.validate_geometry(value, expected_type):
+                    logger.warning(
+                        "Invalid geometry type for field %s: expected %s",
+                        field_name,
+                        expected_type,
+                    )
+                    return set()
+
             geo_operator = GeoOperator(field)
             table = self._table
             params = []
@@ -253,7 +275,8 @@ class Base(models.AbstractModel):
             if not method:
                 return None
 
-            sql_condition = method(table, field_name, value, params)
+            # Pass the converted SQL-safe value
+            sql_condition = method(table, field_name, sql_value, params)
 
             # Execute spatial query with safe parameterization
             query = SQL(
@@ -263,6 +286,14 @@ class Base(models.AbstractModel):
             result_ids = [row[0] for row in self.env.cr.fetchall()]
             return set(result_ids)
 
+        except ValidationError as e:
+            logger.warning(
+                "Invalid geometry for operator %s on field %s: %s",
+                operator,
+                field_name,
+                e,
+            )
+            return set()
         except Exception as e:
             logger.warning(
                 "Failed to process geo operator %s on field %s: %s",

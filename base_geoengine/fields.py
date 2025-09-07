@@ -112,7 +112,7 @@ class GeoField(fields.Field):
                 # not an hex value -> try to load from a string
                 # representation of a geometry
                 try:
-                    value = convert.value_to_shape(value, use_wkb=False)
+                    value = convert.to_shapely(value)
                 except Exception as e:
                     raise ValueError(
                         _("Failed to convert geometry to cache format: %s") % str(e)
@@ -140,7 +140,7 @@ class GeoField(fields.Field):
         if not value:
             return False
         try:
-            return convert.value_to_shape(value, use_wkb=True)
+            return convert.to_shapely(value)
         except Exception as e:
             raise ValueError(
                 _("Failed to convert value to geometry: %s") % str(e)
@@ -204,7 +204,7 @@ class GeoField(fields.Field):
                 use_wkb = False
 
         try:
-            shape = convert.value_to_shape(value, use_wkb=use_wkb)
+            shape = convert.to_shapely(value)
         except Exception as e:
             raise ValueError(_("Invalid geometry data: %s") % str(e)) from e
 
@@ -277,7 +277,6 @@ class GeoField(fields.Field):
         :param column: the column's configuration (dict)
                        if it exists, or ``None``
         """
-        # the column does not exist, create it
         if not column:
             create_geo_column(
                 model._cr,

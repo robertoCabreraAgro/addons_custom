@@ -1,3 +1,6 @@
+from . import geo_convertion_helper as convert
+
+
 class GeoOperator:
     """PostGIS spatial operator SQL generator for geographic field operations.
 
@@ -34,12 +37,13 @@ class GeoOperator:
         Returns:
             str: Raw SQL fragment for area comparison operation.
         """
-        if isinstance(value, int | float):
+        if isinstance(value, (int, float)):
             params.append(value)
             return f" ST_Area({table}.{col}) {op} %s"
         else:
-            base = self.geo_field.entry_to_shape(value, same_type=False)
-            params.append(base.wkt)
+            # Use Shapely helper to get WKT
+            wkt = convert.to_wkt(value)
+            params.append(wkt)
             return f" ST_Area({table}.{col}) {op} ST_Area(ST_GeomFromText(%s))"
 
     def _get_postgis_comp_sql(self, table, col, value, params, op=""):
@@ -58,9 +62,19 @@ class GeoOperator:
         Returns:
             str: Raw SQL fragment for spatial comparison operation.
         """
-        base = self.geo_field.entry_to_shape(value, same_type=False)
-        srid = self.geo_field.srid
-        params.append(base.wkt)
+        # Value is already converted to SQL format by _process_geo_operator
+        # It includes SRID prefix, so we just need to extract the WKT and SRID
+        if isinstance(value, str) and value.startswith("SRID="):
+            # Extract SRID and WKT from "SRID=3857;POINT(0 0)" format
+            parts = value.split(";", 1)
+            srid = int(parts[0].replace("SRID=", ""))
+            wkt = parts[1]
+        else:
+            # Fallback: convert to WKT with field's SRID
+            wkt = convert.to_wkt(value)
+            srid = self.geo_field.srid
+
+        params.append(wkt)
         params.append(srid)
         return f"{op}({table}.{col}, ST_GeomFromText(%s, %s))"
 
@@ -111,9 +125,20 @@ class GeoOperator:
         Returns:
             str: SQL fragment for geometry equality comparison.
         """
-        base = self.geo_field.entry_to_shape(value, same_type=False)
-        params.append(base.wkt)
-        return f" {table}.{col} = ST_GeomFromText(%s)"
+        # Value is already converted to SQL format by _process_geo_operator
+        if isinstance(value, str) and value.startswith("SRID="):
+            # Extract SRID and WKT from "SRID=3857;POINT(0 0)" format
+            parts = value.split(";", 1)
+            srid = int(parts[0].replace("SRID=", ""))
+            wkt = parts[1]
+        else:
+            # Fallback: convert to WKT with field's SRID
+            wkt = convert.to_wkt(value)
+            srid = self.geo_field.srid
+
+        params.append(wkt)
+        params.append(srid)
+        return f" {table}.{col} = ST_GeomFromText(%s, %s)"
 
     def get_geo_intersect_sql(self, table, col, value, params):
         """Generate SQL for spatial intersection test.
