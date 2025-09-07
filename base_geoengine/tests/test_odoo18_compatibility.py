@@ -148,7 +148,7 @@ class TestOdoo18ORMCompatibility(unittest.TestCase):
         """Test that Base properly extends BaseModel."""
         from ..models.base import Base
 
-        # Check that GeoBase has required ORM methods
+        # Check that Base has required ORM methods
         required_methods = [
             "search",
             "create",
@@ -195,9 +195,8 @@ class TestOdoo18ORMCompatibility(unittest.TestCase):
         ]
 
         # Should handle logical operators correctly
-        geo_conditions, regular_domain = model._split_geo_domain(domain)
-
-        # Verify logical operators are preserved
+        # The new implementation processes domains in place
+        # No longer splitting into geo and regular domains
         self.assertIn("&", regular_domain)
         self.assertIn("|", regular_domain)
 

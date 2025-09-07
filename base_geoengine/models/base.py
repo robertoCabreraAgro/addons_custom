@@ -94,7 +94,7 @@ class Base(models.AbstractModel):
             raise UserError(
                 _(
                     "No GeoEngine view defined for the model %s. \
-                        Please create a view or modify view mode"
+                        Please create a view or modify view type"
                 )
                 % self._name,
             )
@@ -121,12 +121,11 @@ class Base(models.AbstractModel):
                 - default_extent: Default map extent
                 - default_zoom: Default zoom level
         """
-        view_obj = self.env["ir.ui.view"]
-
         if not view_id:
             view = self._get_geo_view()
         else:
-            view = view_obj.browse(view_id)
+            view = self.env["ir.ui.view"].browse(view_id)
+
         geoengine_layers = {
             "backgrounds": [],
             "actives": [],
@@ -177,7 +176,6 @@ class Base(models.AbstractModel):
             MissingError: When no raster layer is found for the view.
         """
         raster_obj = self.env["geoengine.raster.layer"]
-
         field = self._fields.get(column)
         if not field or not isinstance(field, geo_fields.GeoField):
             raise ValueError(
@@ -235,7 +233,6 @@ class Base(models.AbstractModel):
         field = self._fields.get(field_name)
         if not field or not isinstance(field, geo_fields.GeoField):
             return None
-
         try:
             geo_operator = GeoOperator(field)
             table = self._table
@@ -275,93 +272,148 @@ class Base(models.AbstractModel):
             )
             return set()  # Return empty set for failed operations
 
-    def _split_geo_domain(self, domain):
-        """Split domain into geo and non-geo conditions.
+    def _process_domain_with_geo(self, domain):
+        """Process domain by converting geo operators to ID conditions.
+
+        This method handles complex domains with logical operators (&, |, !)
+        and converts geo operators into ('id', 'in', [...]) conditions that
+        Odoo's ORM can handle natively.
 
         Args:
-            domain (list): Search domain to split.
+            domain (list): Search domain with potential geo operators.
 
         Returns:
-            tuple: (geo_conditions, regular_domain)
+            list: Processed domain with geo operators converted to ID filters.
         """
-        geo_conditions = []
-        regular_domain = []
+        if not domain:
+            return domain
 
-        for condition in domain:
-            if (
-                isinstance(condition, (list, tuple))
-                and len(condition) == 3
-                and condition[1] in self._GEO_OPERATORS
-            ):
-                geo_conditions.append(condition)
+        result = []
+        i = 0
+
+        while i < len(domain):
+            term = domain[i]
+
+            # Handle logical operators
+            if term == "&":
+                result.append(term)
+                i += 1
+            elif term == "|":
+                result.append(term)
+                i += 1
+            elif term == "!":
+                result.append(term)
+                i += 1
+                # Process next term (which is being negated)
+                if i < len(domain):
+                    next_term = domain[i]
+                    if self._is_geo_term(next_term):
+                        # Convert negated geo operator
+                        ids = self._process_geo_operator(
+                            next_term[0], next_term[1], next_term[2]
+                        )
+                        if ids is not None:
+                            result.append(("id", "not in", list(ids)))
+                        else:
+                            result.append(next_term)
+                    else:
+                        result.append(next_term)
+                    i += 1
+            # Handle leaf conditions
+            elif self._is_geo_term(term):
+                # Convert geo operator to ID filter
+                field_name, operator, value = term
+                ids = self._process_geo_operator(field_name, operator, value)
+                if ids is not None:
+                    result.append(("id", "in", list(ids)))
+                else:
+                    # Not a valid geo field, keep original term
+                    result.append(term)
+                i += 1
             else:
-                regular_domain.append(condition)
+                # Regular condition, keep as-is
+                result.append(term)
+                i += 1
 
-        return geo_conditions, regular_domain
+        return result
 
     @api.model
     def search(self, domain, offset=0, limit=None, order=None):
-        """Override search to handle geo operators."""
-        # Quick check for geo operators
-        has_geo_ops = any(
-            isinstance(cond, (list, tuple))
-            and len(cond) == 3
-            and cond[1] in self._GEO_OPERATORS
-            for cond in domain
+        """Override search to seamlessly handle geo operators.
+
+        This implementation makes geo operators work exactly like regular operators.
+        Developers can use them naturally in any domain expression:
+
+        Examples:
+            # Simple geo search
+            self.search([('location', 'geo_within', polygon)])
+
+            # Combined with regular operators
+            self.search([
+                ('active', '=', True),
+                ('location', 'geo_intersect', area)
+            ])
+
+            # Complex domain with OR/AND
+            self.search([
+                '|',
+                    ('location', 'geo_within', area1),
+                    '&',
+                        ('location', 'geo_intersect', area2),
+                        ('type', '=', 'warehouse')
+            ])
+
+            # Negation works too
+            self.search([
+                '!', ('location', 'geo_within', restricted_area)
+            ])
+        """
+        # Process domain to convert geo operators to ID filters
+        processed_domain = self._process_domain_with_geo(domain)
+
+        # Use standard search with processed domain
+        return super().search(processed_domain, offset=offset, limit=limit, order=order)
+
+    @api.model
+    def search_count(self, domain):
+        """Override search_count to handle geo operators.
+
+        Examples:
+            # Count locations in area
+            count = self.search_count([('location', 'geo_within', polygon)])
+        """
+        processed_domain = self._process_domain_with_geo(domain)
+        return super().search_count(processed_domain)
+
+    @api.model
+    def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
+        """Override search_read to handle geo operators.
+
+        Examples:
+            # Get data for locations in area
+            data = self.search_read(
+                [('location', 'geo_intersect', area)],
+                fields=['name', 'location']
+            )
+        """
+        if domain:
+            domain = self._process_domain_with_geo(domain)
+        return super().search_read(
+            domain=domain, fields=fields, offset=offset, limit=limit, order=order
         )
 
-        if not has_geo_ops:
-            return super().search(domain, offset=offset, limit=limit, order=order)
+    def _is_geo_term(self, term):
+        """Check if a domain term is a geo operator.
 
-        # Split domain into geo and regular conditions
-        geo_conditions, regular_domain = self._split_geo_domain(domain)
+        Args:
+            term: Domain term to check.
 
-        # Process geo conditions
-        geo_results = []
-        for field_name, operator, value in geo_conditions:
-            result = self._process_geo_operator(field_name, operator, value)
-            if result is not None:
-                geo_results.append(result)
-            else:
-                # Not a valid geo field, treat as regular condition
-                regular_domain.append([field_name, operator, value])
-
-        # Get base results from standard domain
-        # IMPORTANT: Cannot apply offset/limit here as geo filtering happens after
-        # TODO: Optimize by integrating geo queries into SQL WHERE clause
-        if regular_domain:
-            # Fetch all matching records for intersection with geo results
-            base_records = super().search(regular_domain, order=order)
-        else:
-            base_records = super().search([], order=order)
-
-        # Combine results
-        if geo_results:
-            # Start with base query results
-            final_ids = set(base_records.ids)
-
-            # Intersect with each geo condition result
-            for geo_result_set in geo_results:
-                final_ids = final_ids.intersection(geo_result_set)
-
-            # Convert to recordset and reapply ordering
-            if final_ids:
-                # Use search to get properly ordered recordset with offset/limit
-                final_domain = [("id", "in", list(final_ids))]
-                if regular_domain:
-                    final_domain = ["&"] + final_domain + regular_domain
-                result_records = super().search(
-                    final_domain, offset=offset, limit=limit, order=order
-                )
-            else:
-                result_records = self.browse()
-
-            return result_records
-
-        # Apply offset/limit/order when no geo filtering needed
-        if regular_domain:
-            return super().search(
-                regular_domain, offset=offset, limit=limit, order=order
-            )
-        else:
-            return super().search([], offset=offset, limit=limit, order=order)
+        Returns:
+            bool: True if term is a geo operator.
+        """
+        return (
+            isinstance(term, (list, tuple))
+            and len(term) == 3
+            and isinstance(term[1], str)
+            and term[1] in self._GEO_OPERATORS
+        )
