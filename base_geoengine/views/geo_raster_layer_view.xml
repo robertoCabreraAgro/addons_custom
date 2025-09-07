@@ -1,7 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record model="ir.ui.view" id="geo_raster_view_form">
+    <record id="geo_raster_view_list" model="ir.ui.view">
+        <field name="name">geoengine.raster.layer.list</field>
+        <field name="model">geoengine.raster.layer</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" select="1" />
+                <field name="raster_type" select="1" />
+                <field name="sequence" />
+                <field name="overlay" select="1" />
+            </list>
+        </field>
+    </record>
+
+    <record id="geo_raster_view_form" model="ir.ui.view">
         <field name="name">geoengine.raster.layer.form</field>
         <field name="model">geoengine.raster.layer</field>
         <field name="arch" type="xml">
@@ -15,8 +28,7 @@
                         <field name="sequence" />
                         <field name="overlay" />
                         <field name="use_to_edit" />
-                        <field
-                            name="url"
+                        <field name="url"
                             colspan="4"
                             widget="url"
                             required="is_wmts or is_wms"
@@ -53,19 +65,6 @@
                     </group>
                 </sheet>
             </form>
-        </field>
-    </record>
-
-    <record model="ir.ui.view" id="geo_raster_view_list">
-        <field name="name">geoengine.raster.layer.list</field>
-        <field name="model">geoengine.raster.layer</field>
-        <field name="arch" type="xml">
-            <list>
-                <field name="name" select="1" />
-                <field name="raster_type" select="1" />
-                <field name="sequence" />
-                <field name="overlay" select="1" />
-            </list>
         </field>
     </record>
 

@@ -54,13 +54,13 @@ obj.search([("the_point","geo_intersect",{"dummy.zip.the_geom": [("id", "=", rec
 
 ``` xml
 <record id="geoengine_vector_layer_hs_retail_machines" model="geoengine.vector.layer">
-    <field name="model_id" ref="base_geoengine_demo.model_geoengine_demo_automatic_retailing_machine"/>
+    <field name="model_id" ref="base_geoengine_demo.model_retailing_machine"/>
     <field name="model_domain">[('state', '=', 'hs')]</field>
-    <field name="geo_field_id" ref="base_geoengine_demo.field_geoengine_demo_automatic_retailing_machine__the_point"/>
+    <field name="geo_field_id" ref="base_geoengine_demo.field_retailing_machine__the_point"/>
     <field name="name">HS retail machines</field>
     <field name="view_id" ref="ir_ui_view_resbetterzipgeoview0" />
     <field name="geo_repr">basic</field>
-    <field name="attribute_field_id" ref="base_geoengine_demo.field_geoengine_demo_automatic_retailing_machine__name"/>
+    <field name="attribute_field_id" ref="base_geoengine_demo.field_retailing_machine__name"/>
     <field name="begin_color">#FF0000</field>
     <field name="display_polygon_labels" eval="0" />
     <field name="layer_opacity">0.8</field>
