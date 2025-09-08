@@ -17,6 +17,10 @@
         <field name="name">Maintenance and repairs</field>
     </record>
 
+    <record id="product_category_operator_assignment" model="product.category">
+        <field name="name">Operator assignment</field>
+    </record>
+
     <record id="product_category_vehicles" model="product.category">
         <field name="name">Vehicles</field>
     </record>
