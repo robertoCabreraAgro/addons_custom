@@ -449,7 +449,7 @@ class Base(models.AbstractModel):
         return super().search_count(processed_domain, limit=limit)
 
     @api.model
-    def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
+    def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None, **read_kwargs):
         """Override search_read to handle geo operators.
 
         Examples:
@@ -462,7 +462,7 @@ class Base(models.AbstractModel):
         if domain:
             domain = self._process_domain_with_geo(domain)
         return super().search_read(
-            domain=domain, fields=fields, offset=offset, limit=limit, order=order
+            domain=domain, fields=fields, offset=offset, limit=limit, order=order, **read_kwargs
         )
 
     @api.model
