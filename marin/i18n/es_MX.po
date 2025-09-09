@@ -8857,3 +8857,29 @@ msgstr "• %s: %.2f (fecha:%s)<br/>"
 #: model_terms:ir.ui.view,arch_db:marin.view_stock_picking_tracker_form
 msgid "⟳ Update"
 msgstr "⟳ Actualización"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_mrp_bom__production_type
+#: model:ir.model.fields,field_description:marin.field_mrp_production__production_type
+#: model:ir.model.fields,field_description:marin.field_mrp_workorder__production_type
+#: model_terms:ir.ui.view,arch_db:marin.view_mrp_production_search_production_type
+msgid "Production Type"
+msgstr "Tipo de Producción"
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__mrp_bom__production_type__formulated
+#: model_terms:ir.ui.view,arch_db:marin.view_mrp_production_search_production_type
+msgid "Formulated"
+msgstr "Formulado"
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__mrp_bom__production_type__packaged
+#: model_terms:ir.ui.view,arch_db:marin.view_mrp_production_search_production_type
+msgid "Packaged"
+msgstr "Envasado"
+
+#. module: marin
+#: model:ir.model.fields.selection,name:marin.selection__mrp_bom__production_type__reformulated
+#: model_terms:ir.ui.view,arch_db:marin.view_mrp_production_search_production_type
+msgid "Reformulated"
+msgstr "Reformulado"

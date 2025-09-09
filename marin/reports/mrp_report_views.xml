@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_mrp_report_pivot_production_type" model="ir.ui.view">
+        <field name="name">mrp.report.pivot.production.type</field>
+        <field name="model">mrp.report</field>
+        <field name="inherit_id" ref="mrp_account_enterprise.mrp_report_pivot_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field name="production_type" type="col" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_mrp_report_graph_production_type" model="ir.ui.view">
+        <field name="name">mrp.report.graph.production.type</field>
+        <field name="model">mrp.report</field>
+        <field name="inherit_id" ref="mrp_account_enterprise.mrp_report_graph_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field name="production_type" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_mrp_report_search_production_type" model="ir.ui.view">
+        <field name="name">mrp.report.search.production.type</field>
+        <field name="model">mrp.report</field>
+        <field name="inherit_id" ref="mrp_account_enterprise.mrp_report_search_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <field name="production_type" string="Production Type" />
+            </xpath>
+
+            <xpath expr="//filter[@name='filter_date_finished']" position="after">
+                <separator />
+                <filter name="packaged" string="Packaged" domain="[('production_type', '=', 'packaged')]" />
+                <filter name="formulated" string="Formulated" domain="[('production_type', '=', 'formulated')]" />
+                <filter
+                    name="reformulated"
+                    string="Reformulated"
+                    domain="[('production_type', '=', 'reformulated')]"
+                />
+            </xpath>
+
+            <xpath expr="//group" position="inside">
+                <filter
+                    name="group_production_type"
+                    string="Production Type"
+                    context="{'group_by': 'production_type'}"
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>
