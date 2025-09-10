@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="view_sales_master_report_search" model="ir.ui.view">
+        <field name="name">sales.master.report.search</field>
+        <field name="model">sales.master.report</field>
+        <field name="arch" type="xml">
+            <search string="Sales Master Report">
+                <field name="product_id" string="Product" />
+                <field name="user_id" string="Salesperson" />
+                <field name="move_id" string="Invoice" />
+
+                <separator />
+                <filter name="filter_invoice_date" string="Invoice Date" date="invoice_date" default_period="month" />
+
+                <group expand="1" string="Group By">
+                    <filter string="Sales Team" name="team_id" context="{'group_by': 'team_id'}" />
+                    <filter string="Partner" name="partner_id" context="{'group_by': 'partner_id'}" />
+                    <filter string="Product" name="product_id" context="{'group_by': 'product_id'}" />
+                    <separator />
+                    <filter string="Salesperson" name="user_id" context="{'group_by': 'user_id'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_sales_master_report_list" model="ir.ui.view">
+        <field name="name">sales.master.report.list</field>
+        <field name="model">sales.master.report</field>
+        <field name="arch" type="xml">
+            <list
+                string="Sales Master Report"
+                create="false"
+                edit="false"
+                delete="false"
+                default_group_by="team_id"
+                sample="1"
+            >
+
+                <field name="team_id" string="Sales Team" optional="show" />
+                <field name="partner_id" string="Customer" optional="show" />
+                <field name="product_id" string="Product" optional="show" />
+                <field name="invoice_date" string="Invoice Date" optional="show" />
+
+                <field name="quantity" string="Sales Quantity" sum="Total Quantity" optional="show" />
+                <field name="quantity_variation_oyb" string="Quantity Variation % OYB" optional="show" />
+
+                <field name="purchase_price" string="Average Purchase Cost" optional="show" />
+                <field name="cost_variation_oyb" string="Cost Variation % OYB" optional="show" />
+
+                <field name="absolute_price_avg" string="Weighted Average List Price" optional="show" />
+                <field name="price_variation_oyb" string="Price Variation % OYB" optional="show" />
+
+                <field name="sale_price_total" string="Total Sales Value" sum="Total Sales" optional="show" />
+                <field name="sales_value_variation_oyb" string="Sales Value Variation % OYB" optional="show" />
+
+                <field name="margin" string="Total Margin Value" sum="Total Margin" optional="show" />
+                <field name="margin_variation_oyb" string="Margin Variation % OYB" optional="show" />
+
+                <field name="move_id" string="Invoice Reference" optional="hide" />
+                <field name="user_id" string="Salesperson" optional="hide" />
+                <field name="cost_purchase_total" string="Total Purchase Cost" optional="hide" />
+                <field name="company_id" string="Company" optional="hide" />
+            </list>
+        </field>
+    </record>
+
+    <record id="view_sales_master_report_pivot" model="ir.ui.view">
+        <field name="name">sales.master.report.pivot</field>
+        <field name="model">sales.master.report</field>
+        <field name="arch" type="xml">
+            <pivot string="Sales Performance Analysis - Pivot View" sample="1">
+                <field name="partner_id" string="Customer" type="row" />
+                <field name="product_id" string="Product" type="row" />
+                <field name="invoice_date" string="Period" type="col" interval="month" />
+
+                <field name="sale_price_total" string="Total Sales Value" type="measure" />
+                <field name="margin" string="Total Margin" type="measure" />
+                <field name="quantity" string="Sales Quantity" type="measure" />
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_sales_master_report_graph" model="ir.ui.view">
+        <field name="name">sales.master.report.graph</field>
+        <field name="model">sales.master.report</field>
+        <field name="arch" type="xml">
+            <graph string="Sales Performance Trends" type="line" sample="1">
+                <field name="invoice_date" string="Period" type="row" interval="month" />
+                <field name="sale_price_total" string="Sales Value" type="measure" />
+                <field name="margin" string="Margin Value" type="measure" />
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_sales_master_report_form" model="ir.ui.view">
+        <field name="name">sales.master.report.form</field>
+        <field name="model">sales.master.report</field>
+        <field name="arch" type="xml">
+            <form string="Sales Master Report" create="false" edit="false" delete="false">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="display_name" readonly="1" />
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group string="Business Context">
+                            <field name="invoice_date" string="Invoice Date" />
+                            <field name="move_id" string="Invoice Reference" />
+                            <field name="company_id" string="Company" />
+                        </group>
+
+                        <group string="Commercial Relationship">
+                            <field name="partner_id" string="Customer" />
+                            <field name="team_id" string="Sales Team" />
+                            <field name="user_id" string="Salesperson" />
+                        </group>
+
+                        <group string="Product Analysis">
+                            <field name="product_id" string="Product" />
+                            <field name="quantity" string="Sales Quantity" />
+                            <field name="quantity_variation_oyb" string="Quantity YoY Variation %" />
+                        </group>
+
+                        <group string="Cost Analysis">
+                            <field name="purchase_price" string="Average Purchase Cost" />
+                            <field name="cost_variation_oyb" string="Cost YoY Variation %" />
+                            <field name="cost_purchase_total" string="Total Purchase Cost" />
+                        </group>
+
+                        <group string="Pricing Analysis">
+                            <field name="absolute_price_avg" string="Weighted Average List Price" />
+                            <field name="price_variation_oyb" string="Price YoY Variation %" />
+                        </group>
+
+                        <group string="Sales Performance">
+                            <field name="sale_price_total" string="Total Sales Value" />
+                            <field name="sales_value_variation_oyb" string="Sales YoY Variation %" />
+                            <field name="margin" string="Total Margin Value" />
+                            <field name="margin_variation_oyb" string="Margin YoY Variation %" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_sales_master_report" model="ir.actions.act_window">
+        <field name="name">Sales Master Report</field>
+        <field name="res_model">sales.master.report</field>
+        <field name="view_mode">list,pivot,graph,form</field>
+        <field name="context">{
+            'search_default_team_id': 1,
+            'search_default_partner_id': 1
+        }</field>
+        <field name="domain">[]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                📊 Sales Master Report
+            </p>
+            <p>
+                <strong>Comprehensive Year-over-Year Sales Analysis</strong><br />
+                • Track sales performance with OYB (One Year Before) comparisons<br />
+                • Analyze quantity, cost, price, and margin variations<br />
+                • Monitor team and product performance trends<br />
+                • Weighted average calculations for accurate insights
+            </p>
+            <p>
+                <em>Professional sales intelligence for data-driven decisions</em>
+            </p>
+        </field>
+    </record>
+
+</odoo>

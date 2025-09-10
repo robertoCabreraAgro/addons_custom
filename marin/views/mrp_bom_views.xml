@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <record id="view_mrp_bom_filter" model="ir.ui.view">
         <field name="name">mrp.bom.select</field>
@@ -6,13 +6,19 @@
         <field name="inherit_id" ref="mrp.view_mrp_bom_filter" />
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='phantom']" position="after">
-                <separator/>
-                <filter name="refill" string="Refill"
-                    domain="[('x_type', '=', 'refill')]" />
-                <filter name="formulate" string="Formulate"
-                    domain="[('x_type', '=', 'formulate')]" />
-                <filter name="groupby_x_type" string="Marin type"
-                    context="{'group_by': 'x_type'}" />
+                <separator />
+                <filter name="packaged" string="Packaged" domain="[('production_type', '=', 'packaged')]" />
+                <filter name="formulated" string="Formulated" domain="[('production_type', '=', 'formulated')]" />
+                <filter
+                    name="reformulated"
+                    string="Reformulated"
+                    domain="[('production_type', '=', 'reformulated')]"
+                />
+                <filter
+                    name="groupby_production_type"
+                    string="Production Type"
+                    context="{'group_by': 'production_type'}"
+                />
             </xpath>
         </field>
     </record>
@@ -23,8 +29,14 @@
         <field name="inherit_id" ref="mrp.mrp_bom_form_view" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='type']" position="after">
-                <field name="x_type" widget="radio" />
+                <field
+                    name="production_type"
+                    widget="radio"
+                    invisible="type == 'phantom'"
+                    required="type == 'normal'"
+                />
             </xpath>
         </field>
     </record>
+
 </odoo>

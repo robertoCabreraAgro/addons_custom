@@ -9,4 +9,5 @@ from . import (
     purchase_bill_line_match,
     sales_master_report,
     sale_report,
+    mrp_report,
 )
