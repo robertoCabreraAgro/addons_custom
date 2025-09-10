@@ -8883,3 +8883,13 @@ msgstr "Envasado"
 #: model_terms:ir.ui.view,arch_db:marin.view_mrp_production_search_production_type
 msgid "Reformulated"
 msgstr "Reformulado"
+
+#. module: marin
+#: model:ir.model.fields,field_description:marin.field_res_config_settings__module_planning_mrp
+msgid "Production itinerary"
+msgstr "Itinerario de producción"
+
+#. module: marin
+#: model_terms:ir.ui.view,arch_db:marin.view_res_config_settings_inherit_planning_mrp
+msgid "Enable the integration of Planning and Manufacturing modules"
+msgstr "Habilitar la integración de los módulos de Planificación y Fabricación"

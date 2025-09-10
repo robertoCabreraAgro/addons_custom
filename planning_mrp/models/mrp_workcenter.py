@@ -1,5 +1,4 @@
-from odoo import fields, models, api
-from datetime import datetime
+from odoo import fields, models
 
 
 class MrpWorkcenter(models.Model):
@@ -10,9 +9,7 @@ class MrpWorkcenter(models.Model):
         compute="_compute_planning_slot_count",
         help="Number of active and future planning slots for this workcenter",
     )
-    planning_slot_ids = fields.One2many(
-        "planning.slot", "workcenter_id", string="Planning Slots"
-    )
+    planning_slot_ids = fields.One2many("planning.slot", "workcenter_id", string="Planning Slots")
 
     def _compute_planning_slot_count(self):
         """
@@ -22,8 +19,7 @@ class MrpWorkcenter(models.Model):
         for workcenter in self:
             current_datetime = fields.Datetime.now()
             active_slots = workcenter.planning_slot_ids.filtered(
-                lambda slot: slot.end_datetime >= current_datetime
-                and slot.state != "cancelled"
+                lambda slot: slot.end_datetime >= current_datetime and slot.state != "cancelled"
             )
             workcenter.planning_slot_count = len(active_slots)
 
@@ -35,9 +31,7 @@ class MrpWorkcenter(models.Model):
         only the planning slots related to the work center from which the action was called.
         """
         self.ensure_one()
-        action = self.env.ref(
-            "planning_mrp.action_server_planning_slot_by_workcenter"
-        ).read()[0]
+        action = self.env.ref("planning_mrp.action_server_planning_slot_by_workcenter").read()[0]
 
         action["domain"] = [("workcenter_id", "=", self.id)]
 
