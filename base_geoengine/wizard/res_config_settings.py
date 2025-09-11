@@ -1,4 +1,8 @@
+import logging
+
 from odoo import _, api, fields, models
+
+_logger = logging.getLogger(__name__)
 
 
 class ResConfigSettings(models.TransientModel):
@@ -207,15 +211,41 @@ class ResConfigSettings(models.TransientModel):
         Returns:
             dict: Client action to display success notification.
         """
-        # TODO: Implement actual spatial index rebuilding logic
-        # This should iterate through all models with geo fields
-        # and rebuild their spatial indexes using PostGIS commands
+        # Rebuild spatial indexes for all geo fields
+        cr = self.env.cr
+        models_with_geo_fields = []
+
+        # Find all models with geo fields
+        for model_name, model_obj in self.env.items():
+            if hasattr(model_obj, "_table"):
+                for field_name, field in model_obj._fields.items():
+                    if hasattr(field, "type") and field.type.startswith("geo_"):
+                        models_with_geo_fields.append((model_obj._table, field_name))
+
+        # Rebuild indexes for each geo field
+        rebuilt_count = 0
+        for table_name, field_name in models_with_geo_fields:
+            index_name = f"{table_name}_{field_name}_gist_idx"
+            try:
+                # Drop existing index if it exists
+                cr.execute(f"DROP INDEX IF EXISTS {index_name}")
+                # Create new GIST index
+                cr.execute(
+                    f"CREATE INDEX {index_name} ON {table_name} USING GIST ({field_name})"
+                )
+                rebuilt_count += 1
+            except Exception as e:
+                _logger.warning(
+                    f"Failed to rebuild index for {table_name}.{field_name}: {e}"
+                )
+
         return {
             "type": "ir.actions.client",
             "tag": "display_notification",
             "params": {
                 "title": _("Success"),
-                "message": _("Spatial indexes rebuild initiated."),
+                "message": _("Rebuilt %d spatial indexes successfully.")
+                % rebuilt_count,
                 "sticky": False,
             },
         }
