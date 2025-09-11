@@ -141,12 +141,15 @@ class StockPicking(models.Model):
                 )
         self.suitable_product_ids = suitable_product_ids
 
-    @api.depends("group_id")
+    @api.depends("origin")
     def _compute_show_purchase_lines(self):
         for rec in self:
-            order = rec.env["purchase.order"].search(
-                [("procurement_group_id", "=", rec.group_id.id)]
-            )
+            # Search purchase orders by origin/reference since group_id no longer exists
+            order = False
+            if rec.origin:
+                order = rec.env["purchase.order"].search(
+                    [("name", "=", rec.origin)], limit=1
+                )
             to_from_supplier = (
                 rec.location_id.usage == "supplier"
                 or rec.location_dest_id.usage == "supplier"

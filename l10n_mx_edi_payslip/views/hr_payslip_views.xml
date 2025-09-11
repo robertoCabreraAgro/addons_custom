@@ -238,13 +238,8 @@
                     name="decoration-info"
                 >category_id in [%(hr_salary_rule_category_aux_mx)d, %(hr_payroll.BASIC)d]</attribute>
             </xpath>
-            <xpath expr="//page[@name='worked_days_input']//list//field[@name='amount']" position="attributes">
+            <xpath expr="//page[@name='worked_days']//list//field[@name='amount']" position="attributes">
                 <attribute name="optional">hide</attribute>
-            </xpath>
-            <xpath expr="//field[@name='warning_message']/.." position="attributes">
-                <attribute name="invisible">
-                    not warning_message
-                </attribute>
             </xpath>
             <div name="button_box" position="inside">
                 <button
@@ -265,7 +260,7 @@
         <field name="model">hr.payslip</field>
         <field name="inherit_id" ref="hr_payroll.view_hr_payslip_tree" />
         <field name="arch" type="xml">
-            <xpath expr="/list/field[@name='state']" position="after">
+            <xpath expr="//field[@name='state_display']" position="after">
                 <field name="l10n_mx_edi_pac_status" />
                 <field name="l10n_mx_edi_cfdi_uuid" column_invisible="1" />
             </xpath>

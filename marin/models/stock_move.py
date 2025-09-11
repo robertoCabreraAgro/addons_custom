@@ -19,16 +19,20 @@ class StockMove(models.Model):
         compute="_compute_allowed_sale_line_ids",
     )
 
-    @api.depends("picking_id.group_id", "product_id")
+    @api.depends("picking_id.origin", "product_id")
     def _compute_allowed_purchase_line_ids(self):
         purchase_obj = self.env["purchase.order"]
         for rec in self:
-            group = rec.picking_id.group_id
-            orders = purchase_obj.search([("procurement_group_id", "=", group.id)])
-            lines = orders.line_ids.filtered(
-                lambda line: line.product_id == rec.product_id
-            )
-            rec.allowed_purchase_line_ids = lines
+            # Search purchase orders by origin/reference since group_id no longer exists
+            origin = rec.picking_id.origin
+            if origin:
+                orders = purchase_obj.search([("name", "=", origin)])
+                lines = orders.line_ids.filtered(
+                    lambda line: line.product_id == rec.product_id
+                )
+                rec.allowed_purchase_line_ids = lines
+            else:
+                rec.allowed_purchase_line_ids = False
 
     @api.depends("picking_id.sale_id", "product_id")
     def _compute_allowed_sale_line_ids(self):

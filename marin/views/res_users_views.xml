@@ -6,7 +6,7 @@
         <field name="model">res.users</field>
         <field name="inherit_id" ref="base.view_users_form_simple_modif" />
         <field name="arch" type="xml">
-            <group name="signature" position="after">
+            <group name="other_preferences" position="after">
                 <group name="Journals">
                     <field
                         name="property_purchase_journal_id"
@@ -46,7 +46,7 @@
         <field name="model">res.users</field>
         <field name="inherit_id" ref="base.view_users_form" />
         <field name="arch" type="xml">
-            <group name="messaging" position="after">
+            <group name="other_preferences" position="after">
                 <group name="Journals" string="Journal" groups="account.group_account_invoice">
                     <field
                         name="property_purchase_journal_id"

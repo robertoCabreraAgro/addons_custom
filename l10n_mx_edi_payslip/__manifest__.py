@@ -13,7 +13,7 @@
         "hr_payroll_dual_period",
         "l10n_mx",
         "l10n_mx_edi_extended",
-        "l10n_mx_hr",
+        "l10n_mx_hr_payroll",
         "hr_holidays",
         "hr_attendance",
         "hr_payroll_loan",

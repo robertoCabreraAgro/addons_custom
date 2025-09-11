@@ -76,7 +76,6 @@ access_product_supplierinfo_readonly,product.supplierinfo.readonly,product.model
 access_uom_uom_readonly,uom.uom.readonly,uom.model_uom_uom,group_stock_readonly,1,0,0,0
 access_barcode_nomenclature_readonly,barcode.nomenclature.readonly,barcodes.model_barcode_nomenclature,group_stock_readonly,1,0,0,0
 access_barcode_rule_readonly,barcode.rule.readonly,barcodes.model_barcode_rule,group_stock_readonly,1,0,0,0
-access_procurement_group_readonly,procurement.group.readonly,stock.model_procurement_group,group_stock_readonly,1,0,0,0
 access_product_attribute_readonly,product.attribute.readonly,product.model_product_attribute,group_stock_readonly,1,0,0,0
 access_product_attribute_value_readonly,product.attribute.value.readonly,product.model_product_attribute_value,group_stock_readonly,1,0,0,0
 access_product_template_attribute_value_readonly,product.template.attribute.value.readonly,product.model_product_template_attribute_value,group_stock_readonly,1,0,0,0
