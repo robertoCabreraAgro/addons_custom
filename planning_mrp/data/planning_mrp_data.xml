@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- Planning Cancel Reason -->
+    <record id="cancel_reason_equipment_failure" model="planning.cancel.reason">
+        <field name="name">Equipment Failure</field>
+    </record>
+
+    <record id="cancel_reason_material_shortage" model="planning.cancel.reason">
+        <field name="name">Material Shortage</field>
+    </record>
+
+    <record id="cancel_reason_employee_absence" model="planning.cancel.reason">
+        <field name="name">Employee Absence</field>
+    </record>
+
+    <record id="cancel_reason_customer_request" model="planning.cancel.reason">
+        <field name="name">Customer Request</field>
+    </record>
+
+    <record id="cancel_reason_maintenance_required" model="planning.cancel.reason">
+        <field name="name">Maintenance Required</field>
+    </record>
+
+</odoo>

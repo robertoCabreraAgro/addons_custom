@@ -14,8 +14,11 @@
     "data": [
         "security/res_groups_security.xml",
         "security/ir.model.access.csv",
+        "data/planning_mrp_data.xml",
         "views/res_config_settings_views.xml",
         "views/mrp_workcenter_views.xml",
+        "views/planning_cancel_reason_views.xml",
+        "wizard/planning_slot_cancel_views.xml",
         "views/planning_slot_views.xml",
         "views/planning_mrp_menus.xml",
     ],

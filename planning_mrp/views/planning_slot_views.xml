@@ -1,37 +1,121 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <!-- Vista Search para planning.slot con los nuevos campos -->
     <record id="planning_view_search_inherit" model="ir.ui.view">
         <field name="name">planning.slot.view.search.inherit</field>
         <field name="model">planning.slot</field>
-        <field name="inherit_id" ref="planning.planning_view_search_base"/>
+        <field name="inherit_id" ref="planning.planning_view_search_base" />
         <field name="arch" type="xml">
             <field name="role_id" position="after">
-                <field name="workcenter_id" invisible="not context.get('show_planning_mrp')" groups="planning.group_planning_user" />
-                <field name="product_id" invisible="not context.get('show_planning_mrp')" groups="planning.group_planning_user" />
+                <field
+                    name="workorder_id"
+                    invisible="not context.get('show_planning_mrp')"
+                    groups="planning.group_planning_user"
+                />
+                <field
+                    name="workcenter_id"
+                    invisible="not context.get('show_planning_mrp')"
+                    groups="planning.group_planning_user"
+                />
+                <field
+                    name="production_id"
+                    invisible="not context.get('show_planning_mrp')"
+                    groups="planning.group_planning_user"
+                />
+                <field
+                    name="product_id"
+                    invisible="not context.get('show_planning_mrp')"
+                    groups="planning.group_planning_user"
+                />
             </field>
             <xpath expr="//filter[@name='group_by_role']" position="after">
-                <filter name="group_by_product" string="Product" context="{'group_by': 'product_id'}"/>
-                <filter name="group_by_workcenter" string="Workcenter" context="{'group_by': 'workcenter_id'}"/>
+                <filter name="group_by_workorder" string="Work Order" context="{'group_by': 'workorder_id'}" />
+                <filter name="group_by_workcenter" string="Workcenter" context="{'group_by': 'workcenter_id'}" />
+                <filter name="group_by_production" string="Manufacturing Order" context="{'group_by': 'production_id'}" />
+                <filter name="group_by_product" string="Product" context="{'group_by': 'product_id'}" />
+            </xpath>
+            <xpath expr="//filter[@name='published_shifts']" position="after">
+                <filter name="cancelled" string="Cancelled" domain="[('state', '=', 'cancelled')]" />
+            </xpath>
+            <xpath expr="//filter[@name='group_by_end_datetime']" position="after">
+                <filter name="group_cancel_reason" string="Cancel Reason" context="{'group_by': 'cancel_reason_id'}" />
             </xpath>
         </field>
     </record>
 
-    <!-- Vista Form para planning.slot con los nuevos campos -->
+    <!-- Form view for planning.slot with the new fields -->
     <record id="planning_slot_view_form_inherit" model="ir.ui.view">
         <field name="name">planning.slot.view.form.inherit</field>
         <field name="model">planning.slot</field>
-        <field name="inherit_id" ref="planning.planning_view_form"/>
+        <field name="inherit_id" ref="planning.planning_view_form" />
         <field name="arch" type="xml">
             <field name="role_id" position="after">
-                <field name="workcenter_id" invisible="not context.get('show_planning_mrp')" />
-                <field name="product_id" invisible="not context.get('show_planning_mrp')" />
+                <field name="can_be_cancelled" invisible="1" />
+                <field name="workorder_id" invisible="not context.get('show_planning_mrp')" />
+                <field name="workcenter_id" invisible="not context.get('show_planning_mrp')" readonly="workorder_id" />
+                <field name="production_id" invisible="not context.get('show_planning_mrp')" readonly="workorder_id" />
+                <field name="product_id" invisible="not context.get('show_planning_mrp')" readonly="workorder_id" />
             </field>
             <xpath expr="//field[@name='state']" position="attributes">
                 <attribute name="statusbar_visible">draft,published,cancelled</attribute>
             </xpath>
             <xpath expr="//sheet" position="after">
-                <chatter/>
+                <chatter />
+            </xpath>
+            <xpath expr="//button[@name='action_send'][1]" position="attributes">
+                <attribute
+                    name="invisible"
+                >context.get('my_planning_action') or (state in ['published','cancelled'] or resource_type == 'material')</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_send'][2]" position="attributes">
+                <attribute
+                    name="invisible"
+                >context.get('my_planning_action') or (state in ['published','cancelled'] or resource_type == 'material')</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_unpublish']" position="attributes">
+                <attribute
+                    name="invisible"
+                >context.get('my_planning_action') or (state in ['published','cancelled'] or resource_type == 'material')</attribute>
+            </xpath>
+            <xpath expr="//button[@name='auto_plan_id']" position="attributes">
+                <attribute
+                    name="invisible"
+                >context.get('my_planning_action') or resource_id or (state == 'cancelled')</attribute>
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <button
+                    name="%(planning_mrp.action_planning_slot_cancel)d"
+                    string="Cancel Shift"
+                    type="action"
+                    class="oe_stat_button"
+                    invisible="not can_be_cancelled"
+                />
+            </xpath>
+            <xpath expr="//group[@name='slot_info_right']" position="after">
+                <group string="Cancellation information" invisible="state != 'cancelled'">
+                    <field name="cancel_reason_id" readonly="1" />
+                    <field name="cancel_details" readonly="1" />
+                    <field name="cancel_date" readonly="1" />
+                    <field name="cancelled_by" readonly="1" />
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- List view for planning.slot with the new fields -->
+    <record id="planning_slot_view_list_inherit" model="ir.ui.view">
+        <field name="name">planning.slot.view.list.inherit</field>
+        <field name="model">planning.slot</field>
+        <field name="inherit_id" ref="planning.planning_view_tree" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state']" position="after">
+                <field name="workorder_id" invisible="not context.get('show_planning_mrp')" />
+                <field name="workcenter_id" invisible="not context.get('show_planning_mrp')" />
+                <field name="production_id" invisible="not context.get('show_planning_mrp')" />
+                <field name="product_id" invisible="not context.get('show_planning_mrp')" />
+                <field name="cancel_details" optional="hide" />
+                <field name="cancel_date" optional="hide" />
+                <field name="cancelled_by" optional="hide" />
             </xpath>
         </field>
     </record>
@@ -45,16 +129,17 @@
     <!-- Actions by Workcenter -->
     <record id="action_server_planning_slot_by_workcenter" model="ir.actions.server">
         <field name="name">Planning by Workcenter</field>
-        <field name="model_id" ref="planning.model_planning_slot"/>
+        <field name="model_id" ref="planning.model_planning_slot" />
         <field name="state">code</field>
         <field name="code">
             action = model.get_action_planning_slot_by_workcenter()
         </field>
     </record>
 
+    <!-- Actions by Product -->
     <record id="action_server_planning_slot_by_product" model="ir.actions.server">
         <field name="name">Planning by Product</field>
-        <field name="model_id" ref="planning.model_planning_slot"/>
+        <field name="model_id" ref="planning.model_planning_slot" />
         <field name="state">code</field>
         <field name="code">
             action = model.get_action_planning_slot_by_product()
@@ -64,7 +149,7 @@
     <!-- Actions by Resource -->
     <record id="action_server_planning_slot_by_resource" model="ir.actions.server">
         <field name="name">planning by Resource</field>
-        <field name="model_id" ref="planning.model_planning_slot"/>
+        <field name="model_id" ref="planning.model_planning_slot" />
         <field name="state">code</field>
         <field name="code">
             action = model.get_action_planning_slot_by_resource()
@@ -74,7 +159,7 @@
     <!-- Actions by Role -->
     <record id="action_server_planning_slot_by_role" model="ir.actions.server">
         <field name="name">Planning by Role</field>
-        <field name="model_id" ref="planning.model_planning_slot"/>
+        <field name="model_id" ref="planning.model_planning_slot" />
         <field name="state">code</field>
         <field name="code">
             action = model.get_action_planning_slot_by_role()
