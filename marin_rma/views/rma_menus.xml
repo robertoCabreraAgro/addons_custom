@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <menuitem
+        id="rma_reason_config"
+        name="Claim Reason"
+        action="action_rma_reason"
+        sequence="25"
+        parent="sale.menu_sale_config"
+        groups="sales_team.group_sale_manager"
+    />
+
+</odoo>
