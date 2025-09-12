@@ -12,7 +12,10 @@ class PlanningSlotCancel(models.TransientModel):
         default=lambda self: self._get_active_slots(),
     )
     cancel_reason_id = fields.Many2one(
-        comodel_name="planning.cancel.reason", string="Cancel reason", required=True, domain=[("active", "=", True)]
+        comodel_name="planning.cancel.reason",
+        string="Cancel reason",
+        required=True,
+        domain=[("active", "=", True)],
     )
     cancel_details = fields.Text(string="Additional Details")
     notify_employee = fields.Boolean(string="Notify Assigned Employee", default=True)
@@ -26,13 +29,19 @@ class PlanningSlotCancel(models.TransientModel):
             slots = self.env["planning.slot"].browse(active_ids)
             # Check for already cancelled slots
             if slots.filtered(lambda s: s.state == "cancelled"):
-                raise ValidationError(_("You cannot cancel assignments that are already cancelled."))
+                raise ValidationError(
+                    _("You cannot cancel assignments that are already cancelled.")
+                )
 
             # Check for past slots
             now = fields.Datetime.now()
-            past_slots = slots.filtered(lambda s: s.end_datetime and s.end_datetime < now)
+            past_slots = slots.filtered(
+                lambda s: s.end_datetime and s.end_datetime < now
+            )
             if past_slots:
-                raise ValidationError(_("You cannot cancel shifts that have already ended."))
+                raise ValidationError(
+                    _("You cannot cancel shifts that have already ended.")
+                )
 
             return [(6, 0, active_ids)]
 
@@ -76,16 +85,22 @@ class PlanningSlotCancel(models.TransientModel):
         active_ids = self.env.context.get("active_ids")
         if active_ids:
             planning_slot_ids = (
-                self.env["planning.slot"].browse(active_ids).filtered(lambda pl: pl.state != "cancelled")
+                self.env["planning.slot"]
+                .browse(active_ids)
+                .filtered(lambda pl: pl.state != "cancelled")
             )
             if not planning_slot_ids:
                 return
 
             # Additional validation for past slots
             now = fields.Datetime.now()
-            past_slots = planning_slot_ids.filtered(lambda s: s.end_datetime and s.end_datetime < now)
+            past_slots = planning_slot_ids.filtered(
+                lambda s: s.end_datetime and s.end_datetime < now
+            )
             if past_slots:
-                raise ValidationError(_("You cannot cancel shifts that have already ended."))
+                raise ValidationError(
+                    _("You cannot cancel shifts that have already ended.")
+                )
             write_vals = {
                 "cancel_reason_id": self.cancel_reason_id.id,
                 "cancel_details": self.cancel_details,

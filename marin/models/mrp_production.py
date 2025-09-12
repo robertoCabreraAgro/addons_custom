@@ -10,7 +10,9 @@ class MrpProduction(models.Model):
         readonly=True,
     )
 
-    @api.onchange("product_id", "move_raw_ids", "never_product_template_attribute_value_ids")
+    @api.onchange(
+        "product_id", "move_raw_ids", "never_product_template_attribute_value_ids"
+    )
     def _onchange_product_id(self):
         if self.bom_id and self.bom_id.production_type == "reformulated":
             return

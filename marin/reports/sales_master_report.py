@@ -17,18 +17,26 @@ class SalesMasterReport(models.Model):
     move_id = fields.Many2one("account.move", string="Invoice Reference", readonly=True)
 
     quantity = fields.Float(string="Sales Quantity", readonly=True)
-    quantity_variation_oyb = fields.Float(string="Quantity Variation % OYB", readonly=True)
+    quantity_variation_oyb = fields.Float(
+        string="Quantity Variation % OYB", readonly=True
+    )
     cost_variation_oyb = fields.Float(string="Cost Variation % OYB", readonly=True)
     price_variation_oyb = fields.Float(string="Price Variation % OYB", readonly=True)
-    sales_value_variation_oyb = fields.Float(string="Sales Value Variation % OYB", readonly=True)
+    sales_value_variation_oyb = fields.Float(
+        string="Sales Value Variation % OYB", readonly=True
+    )
     margin_variation_oyb = fields.Float(string="Margin Variation % OYB", readonly=True)
-    absolute_price_avg = fields.Float(string="Weighted Average List Price", readonly=True)
+    absolute_price_avg = fields.Float(
+        string="Weighted Average List Price", readonly=True
+    )
     sale_price_total = fields.Float(string="Total Sales Value", readonly=True)
     purchase_price = fields.Float(string="Average Purchase Cost", readonly=True)
     cost_purchase_total = fields.Float(string="Total Purchase Cost", readonly=True)
     margin = fields.Float(string="Total Margin Value", readonly=True)
 
-    display_name = fields.Char(string="Description", compute="_compute_display_name", store=False)
+    display_name = fields.Char(
+        string="Description", compute="_compute_display_name", store=False
+    )
 
     @api.depends("product_id", "partner_id", "invoice_date")
     def _compute_display_name(self):
@@ -40,7 +48,9 @@ class SalesMasterReport(models.Model):
                 components.append(f"- {record.partner_id.name}")
             if record.invoice_date:
                 components.append(f"({record.invoice_date})")
-            record.display_name = " ".join(components) if components else f"Record #{record.id}"
+            record.display_name = (
+                " ".join(components) if components else f"Record #{record.id}"
+            )
 
     @property
     def _table_query(self):

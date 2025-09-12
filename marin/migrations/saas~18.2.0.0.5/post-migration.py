@@ -60,9 +60,17 @@ def migrate_bom_production_type(cr, version):
         migrated_count = cr.rowcount
         total_migrated += migrated_count
         if migrated_count > 0:
-            _logger.info("Migrated %d records from '%s' to '%s'", migrated_count, old_value, new_value)
+            _logger.info(
+                "Migrated %d records from '%s' to '%s'",
+                migrated_count,
+                old_value,
+                new_value,
+            )
 
-    _logger.info("Migration x_type -> production_type completed: %d records migrated", total_migrated)
+    _logger.info(
+        "Migration x_type -> production_type completed: %d records migrated",
+        total_migrated,
+    )
 
 
 def migrate_mrp_production_type(cr, version):
@@ -90,4 +98,6 @@ def migrate_mrp_production_type(cr, version):
     )
 
     updated_count = cr.rowcount
-    _logger.info("Updated production_type in mrp_production: %d records updated", updated_count)
+    _logger.info(
+        "Updated production_type in mrp_production: %d records updated", updated_count
+    )

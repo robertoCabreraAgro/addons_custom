@@ -92,29 +92,40 @@ class StockPicking(models.Model):
 
     @api.depends("picking_type_id", "state")
     def _compute_suitable_location_dest_ids(self):
-        self.suitable_location_dest_ids = self.env["stock.location"].search([("usage", "=", "internal")])
+        self.suitable_location_dest_ids = self.env["stock.location"].search(
+            [("usage", "=", "internal")]
+        )
         for picking in self.filtered(
-            lambda p: p.state not in ("cancel", "done") and p.picking_type_id.code in ("internal", "incoming")
+            lambda p: p.state not in ("cancel", "done")
+            and p.picking_type_id.code in ("internal", "incoming")
         ):
             self.suitable_location_dest_ids = self.suitable_location_dest_ids.filtered(
-                lambda location: location.warehouse_id == picking.picking_type_id.warehouse_id
+                lambda location: location.warehouse_id
+                == picking.picking_type_id.warehouse_id
             )
 
     @api.depends("picking_type_id", "state")
     def _compute_suitable_location_ids(self):
-        self.suitable_location_ids = self.env["stock.location"].search([("usage", "=", "internal")])
+        self.suitable_location_ids = self.env["stock.location"].search(
+            [("usage", "=", "internal")]
+        )
         for picking in self.filtered(
-            lambda p: p.state not in ("cancel", "done") and p.picking_type_id.code in ("internal", "outgoing")
+            lambda p: p.state not in ("cancel", "done")
+            and p.picking_type_id.code in ("internal", "outgoing")
         ):
             self.suitable_location_ids = self.suitable_location_ids.filtered(
-                lambda location: location.warehouse_id == picking.picking_type_id.warehouse_id
+                lambda location: location.warehouse_id
+                == picking.picking_type_id.warehouse_id
             )
 
     @api.depends("picking_type_id", "location_id")
     def _compute_suitable_product_ids(self):
-        suitable_product_ids = self.env["product.product"].search([("type", "=", "consu")])
+        suitable_product_ids = self.env["product.product"].search(
+            [("type", "=", "consu")]
+        )
         for picking in self.filtered(
-            lambda p: p.state not in ("cancel", "done") and p.picking_type_id.code in ("internal", "outgoing")
+            lambda p: p.state not in ("cancel", "done")
+            and p.picking_type_id.code in ("internal", "outgoing")
         ):
             code = picking.picking_type_id.code
             if code == "internal":
@@ -137,14 +148,22 @@ class StockPicking(models.Model):
     @api.depends("group_id")
     def _compute_show_purchase_lines(self):
         for rec in self:
-            order = rec.env["purchase.order"].search([("procurement_group_id", "=", rec.group_id.id)])
-            to_from_supplier = rec.location_id.usage == "supplier" or rec.location_dest_id.usage == "supplier"
+            order = rec.env["purchase.order"].search(
+                [("procurement_group_id", "=", rec.group_id.id)]
+            )
+            to_from_supplier = (
+                rec.location_id.usage == "supplier"
+                or rec.location_dest_id.usage == "supplier"
+            )
             rec.show_purchase_lines = bool(order and to_from_supplier)
 
     @api.depends("sale_id")
     def _compute_show_sale_lines(self):
         for rec in self:
-            to_from_customer = rec.location_dest_id.usage == "customer" or rec.location_id.usage == "customer"
+            to_from_customer = (
+                rec.location_dest_id.usage == "customer"
+                or rec.location_id.usage == "customer"
+            )
             rec.show_sale_lines = bool(rec.sale_id and to_from_customer)
 
     # -------------------------------------------------------------------------
@@ -168,7 +187,9 @@ class StockPicking(models.Model):
         return self.with_context(ctx).sale_id.get_formview_action()
 
     def action_view_moves(self):
-        action = self.env["ir.actions.act_window"]._for_xml_id("stock.stock_move_action")
+        action = self.env["ir.actions.act_window"]._for_xml_id(
+            "stock.stock_move_action"
+        )
         action["domain"] = [("id", "in", self.move_ids.ids)]
         action["context"] = {
             "search_default_future": 1,
@@ -180,7 +201,9 @@ class StockPicking(models.Model):
 
     def _action_done(self):
         res = super()._action_done()
-        for picking in self.filtered(lambda p: p.picking_type_id.code == "outgoing" and p.vehicle_id):
+        for picking in self.filtered(
+            lambda p: p.picking_type_id.code == "outgoing" and p.vehicle_id
+        ):
             picking._update_gps_tracking_information()
         return res
 
@@ -195,7 +218,11 @@ class StockPicking(models.Model):
                     )
                     % (
                         picking.picking_type_id.name,
-                        ("reception" if picking.picking_type_id.code == "incoming" else "delivery"),
+                        (
+                            "reception"
+                            if picking.picking_type_id.code == "incoming"
+                            else "delivery"
+                        ),
                     )
                 )
         return super().button_validate()
@@ -224,11 +251,19 @@ class StockPicking(models.Model):
             vehicle = picking.vehicle_id
             gps_device = picking.vehicle_id.gps_device_id
             if not gps_device and vehicle:
-                gps_device = gps_tracking_device.search([("asset_id", "=", vehicle.id)], limit=1)
+                gps_device = gps_tracking_device.search(
+                    [("asset_id", "=", vehicle.id)], limit=1
+                )
             picking.write(
                 {
-                    "odometer_done": gps_device.get_odometer(date) if gps_device else 0.0,
-                    "fuel_done": gps_device.get_fuel_level_percentage(date) if gps_device else 0.0,
+                    "odometer_done": (
+                        gps_device.get_odometer(date) if gps_device else 0.0
+                    ),
+                    "fuel_done": (
+                        gps_device.get_fuel_level_percentage(date)
+                        if gps_device
+                        else 0.0
+                    ),
                 }
             )
 
@@ -238,9 +273,13 @@ class StockPicking(models.Model):
 
     def _prepare_compute_custom_permissions(self):
         self.ensure_one()
-        show_mark_as_todo = self.state == "draft" and self.env.user in self.picking_type_id.can_todo_user_ids
+        show_mark_as_todo = (
+            self.state == "draft"
+            and self.env.user in self.picking_type_id.can_todo_user_ids
+        )
         show_validate = (
-            self.state in ("confirmed", "assigned") and self.env.user in self.picking_type_id.can_validate_user_ids
+            self.state in ("confirmed", "assigned")
+            and self.env.user in self.picking_type_id.can_validate_user_ids
         )
         return {
             "show_mark_as_todo": show_mark_as_todo,
@@ -268,7 +307,9 @@ class StockPicking(models.Model):
             lambda pick: pick.state != "assigned"
             and not (
                 pick.state == "confirmed"
-                and pick.move_ids.filtered(lambda sm: sm.state in ["partially_available", "assigned"])
+                and pick.move_ids.filtered(
+                    lambda sm: sm.state in ["partially_available", "assigned"]
+                )
             )
         )
         if invalid_pickings:
