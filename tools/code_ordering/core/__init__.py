@@ -1,28 +1,26 @@
 """
-Core foundation modules for code ordering tools.
-
-This package provides shared functionality for AST processing,
-element extraction, and file operations.
+Core modules for code ordering
 """
 
-from .ast_processor import BaseASTProcessor
-from .element_extractor import UnifiedElement, ElementExtractor, ElementType
-from .file_operations import FileOperations
-from .shared_cache import SharedCache
-from .unified_cache import UnifiedCache, CacheCategory
-from .base_patterns import Singleton, SingletonMeta, ConfigBase, setup_logging
+from .dependency_analyzer import DependencyAnalyzer
+from .formatting import (
+    format_class_body,
+    format_field,
+    format_imports,
+    format_method,
+    format_section_header,
+)
+from .ordering import Ordering
+
 
 __all__ = [
-    "BaseASTProcessor",
-    "UnifiedElement",
-    "ElementExtractor",
-    "ElementType",
-    "FileOperations",
-    "SharedCache",
-    "UnifiedCache",
-    "CacheCategory",
-    "Singleton",
-    "SingletonMeta",
-    "ConfigBase",
-    "setup_logging",
+    # Classes
+    "Ordering",
+    "DependencyAnalyzer",
+    # Formatting functions
+    "format_section_header",
+    "format_field",
+    "format_method",
+    "format_imports",
+    "format_class_body",
 ]

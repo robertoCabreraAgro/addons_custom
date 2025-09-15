@@ -13,14 +13,15 @@ Usage:
 import argparse
 import json
 import logging
-import sys
 from pathlib import Path
-from typing import Dict, Optional, Tuple
+import sys
+
+from config import OdooConfig, ReorderConfig
 
 # Import components from the main tool
 from core import FileOperations
-from config import OdooConfig, ReorderConfig
 from odoo_reorder import CodeReorganizer
+
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
@@ -38,8 +39,8 @@ class ModuleOrderApplier:
 
     def __init__(
         self,
-        odoo_config: Optional[OdooConfig] = None,
-        reorder_config: Optional[ReorderConfig] = None,
+        odoo_config: OdooConfig | None = None,
+        reorder_config: ReorderConfig | None = None,
     ):
         """
         Initialize the module order applier.
@@ -61,7 +62,7 @@ class ModuleOrderApplier:
             "errors": 0,
         }
 
-    def load_order_template(self, order_file: Path) -> Dict:
+    def load_order_template(self, order_file: Path) -> dict:
         """
         Load order template from JSON file.
 
@@ -84,8 +85,8 @@ class ModuleOrderApplier:
         return data
 
     def find_matching_template(
-        self, target_file: Path, template_files: Dict
-    ) -> Optional[Dict]:
+        self, target_file: Path, template_files: dict
+    ) -> dict | None:
         """
         Find a matching template for a target file.
 
@@ -118,10 +119,10 @@ class ModuleOrderApplier:
     def apply_to_file(
         self,
         target_file: Path,
-        template_data: Optional[Dict] = None,
+        template_data: dict | None = None,
         dry_run: bool = False,
         backup: bool = True,
-    ) -> Tuple[bool, bool]:
+    ) -> tuple[bool, bool]:
         """
         Apply ordering to a single file.
 
@@ -165,7 +166,7 @@ class ModuleOrderApplier:
     def apply_to_module(
         self,
         module_path: Path,
-        template_files: Dict,
+        template_files: dict,
         dry_run: bool = False,
         backup: bool = True,
     ) -> None:
@@ -211,7 +212,7 @@ class ModuleOrderApplier:
     def apply_to_directory(
         self,
         directory: Path,
-        template_files: Dict,
+        template_files: dict,
         dry_run: bool = False,
         backup: bool = True,
     ) -> None:

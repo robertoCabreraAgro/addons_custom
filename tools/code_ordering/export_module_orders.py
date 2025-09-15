@@ -14,19 +14,15 @@ Usage:
 import argparse
 import json
 import logging
+from pathlib import Path
 import sys
 
-from pathlib import Path
-from typing import List, Optional
+from config import OdooConfig
 
 # Import components from the main tool
 from core import FileOperations
-from config import OdooConfig
-from odoo_reorder import (
-    OrderExporter,
-    OrderExport,
-    OrderExportType,
-)
+from odoo_reorder import OrderExport, OrderExporter, OrderExportType
+
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
@@ -42,7 +38,7 @@ class ModuleOrderExporter:
     patterns from all Python files, creating a comprehensive template.
     """
 
-    def __init__(self, odoo_config: Optional[OdooConfig] = None):
+    def __init__(self, odoo_config: OdooConfig | None = None):
         """
         Initialize the module order exporter.
 
@@ -62,7 +58,7 @@ class ModuleOrderExporter:
             "errors": 0,
         }
 
-    def find_odoo_modules(self, base_path: Path) -> List[Path]:
+    def find_odoo_modules(self, base_path: Path) -> list[Path]:
         """
         Find all Odoo modules in a directory.
 
@@ -84,7 +80,7 @@ class ModuleOrderExporter:
 
         return sorted(modules)
 
-    def get_module_python_files(self, module_path: Path) -> List[Path]:
+    def get_module_python_files(self, module_path: Path) -> list[Path]:
         """
         Get all Python files in a module, organized by directory.
 
@@ -141,7 +137,7 @@ class ModuleOrderExporter:
         return unique_files
 
     def export_module_orders(
-        self, module_paths: List[Path], odoo_version: str = "19.0"
+        self, module_paths: list[Path], odoo_version: str = "19.0"
     ) -> OrderExport:
         """
         Export ordering from multiple modules.
@@ -202,8 +198,8 @@ class ModuleOrderExporter:
 
     def export_from_module_list(
         self,
-        module_names: List[str],
-        search_paths: List[Path],
+        module_names: list[str],
+        search_paths: list[Path],
         odoo_version: str = "19.0",
     ) -> OrderExport:
         """
