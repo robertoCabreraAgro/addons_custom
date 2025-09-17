@@ -16,13 +16,20 @@ The module provides:
 """
 
 import ast
+import isort
 import logging
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-import isort
-
-from core.classification_rule import ClassificationRuleMethod, get_default_method_rules
+from core.classification_rule_method import (
+    ClassificationRuleMethod,
+    get_default_method_rules,
+)
+from core.classification_rule_field import (
+    ClassificationRuleField,
+    get_default_field_rules,
+)
 from core.formatting import format_section_header
 
 
@@ -50,10 +57,10 @@ class Ordering:
         self.filepath = filepath
         self._tree = None
         self._method_rules = get_default_method_rules()
+        self._field_rules = get_default_field_rules()
 
     def _get_default_config(self):
         """Get default configuration when none is provided."""
-        from dataclasses import dataclass, field
 
         @dataclass
         class DefaultConfig:
@@ -114,26 +121,6 @@ class Ordering:
         "_order",
         "_check_company_domain",
     ]
-
-    FIELD_TYPES: dict[str, list[str]] = {
-        "Many2one": ["fields.Many2one"],
-        "One2many": ["fields.One2many"],
-        "Many2many": ["fields.Many2many"],
-        "Char": ["fields.Char"],
-        "Text": ["fields.Text"],
-        "Integer": ["fields.Integer"],
-        "Float": ["fields.Float"],
-        "Boolean": ["fields.Boolean"],
-        "Date": ["fields.Date"],
-        "Datetime": ["fields.Datetime"],
-        "Selection": ["fields.Selection"],
-        "Binary": ["fields.Binary"],
-        "Html": ["fields.Html"],
-        "Monetary": ["fields.Monetary"],
-        "Reference": ["fields.Reference"],
-        "Json": ["fields.Json"],
-        "Image": ["fields.Image"],
-    }
 
     # Field-type specific attribute ordering
     # Each field type has its own optimal attribute order
@@ -481,116 +468,6 @@ class Ordering:
         "help",
     ]
 
-    FIELD_TYPE_PRIORITY: dict[str, int] = {
-        "Char": 0,
-        "Integer": 1,
-        "Float": 2,
-        "Boolean": 3,
-        "Date": 4,
-        "Datetime": 5,
-        "Binary": 6,
-        "Image": 7,
-        "Selection": 8,
-        "Html": 9,
-        "Text": 10,
-        "Many2one": 11,
-        "One2many": 12,
-        "Many2many": 13,
-        "Monetary": 14,
-        "Reference": 15,
-        "Json": 16,
-    }
-
-    METHOD_PATTERNS: dict[str, list[str]] = {
-        "CRUD": [
-            "create",
-            "write",
-            "unlink",
-            "read",
-            "copy",
-            "copy_data",
-            "default_get",
-            "name_create",
-        ],
-        "COMPUTE": ["_compute_"],
-        "INVERSE": ["_inverse_", "_set_"],
-        "SEARCH": ["_search_", "name_search", "_name_search"],
-        "ONCHANGE": ["_onchange_"],
-        "CONSTRAINT": ["_check_", "_validate_", "_constrains_"],
-        "WORKFLOW": [
-            "action_draft",
-            "action_confirm",
-            "action_validate",
-            "action_approve",
-            "action_done",
-            "action_cancel",
-            "action_reject",
-            "action_send",
-            "action_post",
-            "action_reset",
-        ],
-        "ACTIONS": ["action_", "button_"],
-        "PREPARE": ["_prepare_", "_get_default_"],
-        "GETTER": ["_get_", "get_"],
-        "REPORT": ["_get_report_", "get_report_values", "_render_"],
-        "IMPORT_EXPORT": ["_import_", "_export_", "action_import", "action_export"],
-        "SECURITY": ["_check_access_", "check_access", "can_", "has_group"],
-        "PORTAL": ["_prepare_portal_", "portal_"],
-        "COMMUNICATION": ["_send_", "_mail_", "_sms_", "message_", "_notify_"],
-        "WIZARD": ["action_apply", "_process_", "do_"],
-        "INTEGRATION": ["_sync_", "_api_", "_call_"],
-        "CRON": ["_cron_", "_scheduled_"],
-        "ACCOUNTING": ["_reconcile_", "_post_", "_move_", "_compute_balance_"],
-        "MANUFACTURING": ["_explode_", "_produce_", "_consume_"],
-        "PRODUCT_CATALOG": [
-            "action_add_from_catalog",
-            "_get_product_catalog_",
-            "_get_action_add_from_catalog_",
-            "_create_section",
-            "_get_sections",
-            "_get_new_line_sequence",
-            "_resequence_sections",
-            "_is_line_valid_for_section",
-            "_get_default_create_section_",
-            "_is_display_stock_in_catalog",
-        ],
-        "MAIL_THREAD": [
-            "message_post",
-            "message_subscribe",
-            "message_unsubscribe",
-            "message_route",
-            "message_update",
-            "message_new",
-            "_message_",
-            "_track_",
-            "_routing_",
-            "_notify_",
-            "_mail_",
-            "_follow_",
-            "_unfollow_",
-            "_subscribe_",
-            "_unsubscribe_",
-            "_activity_",
-        ],
-        "OVERRIDE": [
-            "name_get",
-            "_compute_display_name",
-            "fields_view_get",
-            "_search_display_name",
-            "fields_get",
-            "load_views",
-        ],
-    }
-
-    METHOD_DECORATOR_PATTERNS: dict[str, list[str]] = {
-        "AUTOVACUUM": ["autovacuum"],
-        "CONSTRAINT": ["constrains"],
-        "CRUD": ["model_create_multi", "ondelete"],
-        "COMPUTE": ["depends"],
-        "ONCHANGE": ["onchange"],
-        "API_MODEL": ["model"],
-    }
-
     SECTION_HEADERS: dict[str, str] = {
         "MODEL_ATTRIBUTES": "CLASS ATTRIBUTES",
         "FIELDS": "FIELDS",
@@ -797,8 +674,10 @@ class Ordering:
                                 reordered_node if reordered_node else node
                             )
 
+        if elements["fields"]:
+            elements["fields"] = self.group_fields_by_category(elements["methods"])
+
         if elements["methods"]:
-            # Group by category
             elements["methods"] = self.group_methods_by_category(elements["methods"])
 
         return elements
@@ -835,7 +714,7 @@ class Ordering:
 
         return elements
 
-    def _extract_decorators(self, node: ast.FunctionDef) -> list[str]:
+    def extract_decorators(self, node: ast.FunctionDef) -> list[str]:
         """Extract decorator names from a method node.
 
         Args:
@@ -846,94 +725,10 @@ class Ordering:
         """
         decorators = []
         for decorator in node.decorator_list:
-            decorator_name = self.extract_decorator_name(decorator)
+            decorator_name = self.get_decorator_name(decorator)
             if decorator_name:
                 decorators.append(f"@{decorator_name}")
         return decorators
-
-    @staticmethod
-    def extract_decorator_name(decorator: ast.expr) -> str | None:
-        """Extract the name from a decorator node.
-
-        Handles various decorator forms: @name, @module.name, @name(...)
-
-        Args:
-            decorator: AST decorator expression
-
-        Returns:
-            Optional[str]: Decorator name or None if not extractable
-        """
-        if isinstance(decorator, ast.Name):
-            return decorator.id
-        elif isinstance(decorator, ast.Attribute):
-            return decorator.attr
-        elif isinstance(decorator, ast.Call):
-            if isinstance(decorator.func, ast.Name):
-                return decorator.func.id
-            elif isinstance(decorator.func, ast.Attribute):
-                return decorator.func.attr
-        return None
-
-    @staticmethod
-    def get_node_name(node: ast.AST) -> str | None:
-        """Extract the identifying name from various AST node types.
-
-        Handles different node types:
-        - Nodes with 'name' attribute (ClassDef, FunctionDef)
-        - Assignment nodes (extracts target names)
-        - Annotated assignments
-
-        Args:
-            node: AST node to get name from
-
-        Returns:
-            Optional[str]: The node's name or None if not applicable
-        """
-        if hasattr(node, "name"):
-            return node.name
-        elif isinstance(node, ast.Assign):
-            targets = []
-            for target in node.targets:
-                if isinstance(target, ast.Name):
-                    targets.append(target.id)
-                elif isinstance(target, ast.Tuple):
-                    for elt in target.elts:
-                        if isinstance(elt, ast.Name):
-                            targets.append(elt.id)
-            return ", ".join(targets) if targets else None
-        elif isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name):
-            return node.target.id
-        return None
-
-    def get_line_range(self, node: ast.AST) -> tuple[int, int]:
-        """Get the line range for an AST node.
-
-        Args:
-            node: AST node to get line range for
-
-        Returns:
-            Tuple[int, int]: (start_line, end_line) or (0, 0) if not available
-        """
-        if hasattr(node, "lineno") and hasattr(node, "end_lineno"):
-            return (node.lineno, node.end_lineno or node.lineno)
-        elif hasattr(node, "lineno"):
-            return (node.lineno, node.lineno)
-        return (0, 0)
-
-    def _is_property(self, node: ast.FunctionDef | ast.AsyncFunctionDef) -> bool:
-        """Check if a function is decorated as a property.
-
-        Args:
-            node: Function definition to check
-
-        Returns:
-            bool: True if the function has a property decorator
-        """
-        for decorator in node.decorator_list:
-            decorator_name = self.extract_decorator_name(decorator)
-            if decorator_name and "property" in decorator_name:
-                return True
-        return False
 
     # ============================================================
     # CLASSIFICATION FUNCTIONS
@@ -975,162 +770,31 @@ class Ordering:
 
     def classify_field(
         self,
-        node: ast.AST,
-        field_info: dict[str, Any],
-        strategy: str = "semantic",
+        node: ast.Assign | ast.AnnAssign,
     ) -> str:
         """
-        Classify a field based on the selected strategy.
+        Classify a field using the rule-based system.
 
         Args:
             node: AST node of the field
-            field_info: Dictionary with field information (name, type, is_computed, etc.)
-            strategy: Classification strategy (semantic, type, strict)
 
         Returns:
-            Classification category as string
+            Field category as string
         """
-        field_name = field_info.get("name", "")
-        field_type = field_info.get("type", "")
-        is_computed = field_info.get("is_computed", False)
-        is_related = field_info.get("is_related", False)
-        if strategy == "semantic":
-            return self.classify_field_semantic(
-                field_name,
-                field_type,
-                is_computed,
-                is_related,
-            )
-        return self.classify_field_by_type(field_type, is_computed)
+        field_info = self.get_field_info(node)
 
-    def classify_field_semantic(
-        self,
-        name: str,
-        field_type: str,
-        is_computed: bool,
-        is_related: bool,
-    ) -> str:
-        """
-        Classify field by semantic meaning.
+        # Check rules in priority order (they're already sorted)
+        for rule in self._field_rules:
+            if rule.matches(field_info["field_name"], field_info):
+                return rule.category
 
-        Args:
-            name: Field name
-            field_type: Field type
-            is_computed: Whether field is computed
-            is_related: Whether field is related
-
-        Returns:
-            Semantic category
-        """
-        name_lower = name.lower()
-
-        # TODO use Ordering.SEMANTIC_PATTERNS
-
-        # Special computed/related handling
-        if is_computed:
-            return "COMPUTED"
-        if is_related:
-            return "RELATED"
-
-        # Identifiers
-        if any(
-            x in name_lower
-            for x in ["code", "key", "name", "origin", "reference", "ref", "uuid"]
-        ):
-            return "IDENTIFIERS"
-
-        # Attributes
-        if any(
-            x in name_lower
-            for x in ["active", "priority", "sequence", "state", "status", "type"]
-        ):
-            return "ATTRIBUTES"
-
-        # Genealogy
-        if "parent" in name_lower or "child" in name_lower:
-            return "GENEALOGY"
-
-        # Relationships (by type)
-        if field_type in ["Many2one", "One2many", "Many2many"]:
-            return "RELATIONSHIPS"
-
-        # Measures
-        if any(
-            x in name_lower
-            for x in ["quantity", "qty", "amount", "price", "cost", "rate", "percent"]
-        ):
-            return "MEASURES"
-
-        # Dates
-        if any(
-            x in name_lower for x in ["date", "time", "deadline", "scheduled"]
-        ) or field_type in ["Date", "Datetime"]:
-            return "DATES"
-
-        # Content
-        if any(
-            x in name_lower
-            for x in [
-                "description",
-                "note",
-                "notes",
-                "comment",
-                "text",
-                "body",
-                "content",
-            ]
-        ):
-            return "CONTENT"
-
-        # Technical
-        if name_lower.startswith("_") or any(
-            x in name_lower for x in ["technical", "internal"]
-        ):
-            return "TECHNICAL"
-
+        # This should never happen if rules are complete
         return "UNCATEGORIZED"
 
-    def classify_field_by_type(
+    def classify_method(
         self,
-        field_type: str,
-        is_computed: bool,
+        node: ast.FunctionDef,
     ) -> str:
-        """
-        Classify field by its type.
-
-        Args:
-            field_type: Field type
-            is_computed: Whether field is computed
-
-        Returns:
-            Type category
-        """
-        if is_computed:
-            return "COMPUTED"
-
-        type_categories = {
-            "Char": "TEXT",
-            "Text": "TEXT",
-            "Html": "TEXT",
-            "Integer": "NUMERIC",
-            "Float": "NUMERIC",
-            "Monetary": "NUMERIC",
-            "Boolean": "BOOLEAN",
-            "Date": "TEMPORAL",
-            "Datetime": "TEMPORAL",
-            "Binary": "BINARY",
-            "Image": "BINARY",
-            "Selection": "SELECTION",
-            "Many2one": "RELATIONAL",
-            "One2many": "RELATIONAL",
-            "Many2many": "RELATIONAL",
-            "Reference": "REFERENCE",
-            "Json": "STRUCTURED",
-        }
-
-        return type_categories.get(field_type, "OTHER")
-
-    def classify_method(self, node: ast.FunctionDef) -> str:
         """
         Classify a method using the rule-based system.
 
@@ -1138,10 +802,10 @@ class Ordering:
             node: AST node of the method
 
         Returns:
-            Method category
+            Method category as string
         """
-        method_name = node.name
-        decorators = self._extract_decorators(node)
+        method_name = self.get_node_name(node)
+        decorators = self.extract_decorators(node)
 
         # Check rules in priority order (they're already sorted)
         for rule in self._method_rules:
@@ -1151,22 +815,31 @@ class Ordering:
         # This should never happen if rules are complete
         return "UNCATEGORIZED"
 
-    def group_fields_by_strategy(
+    def group_fields_by_category(
         self,
-        fields: list[ast.FunctionDef],
+        fields: list[ast.Assign | ast.AnnAssign],
     ) -> dict[str, list]:
-        """Group methods by their category based on name and decorators.
+        """Group fields by their category based on name and attributes.
 
-        Uses classify_method() to determine each method's category, then
+        Uses classify_field() to determine each fields's category, then
         groups them into a dictionary.
 
         Args:
-            methods: List of AST FunctionDef nodes
+            fields: List of AST ast.Assign or ast.AnnAssign nodes
 
         Returns:
-            dict[str, List]: Dictionary mapping category names to lists of methods
+            dict[str, List]: Dictionary mapping category names to lists of fields
         """
-        pass
+        groups = {}
+
+        for field in fields:
+            category = self.classify_field(field)
+            # Add to appropriate group
+            if category not in groups:
+                groups[category] = []
+            groups[category].append(field)
+
+        return groups
 
     def group_methods_by_category(
         self,
@@ -1198,7 +871,10 @@ class Ordering:
     # SORTING FUNCTIONS
     # ============================================================
 
-    def sort_imports(self, imports: list[str]) -> list[str]:
+    def sort_imports(
+        self,
+        imports: list[str],
+    ) -> list[str]:
         """Sort import statements using isort with Odoo conventions.
 
         Uses isort to organize imports into proper groups with Odoo-specific
@@ -1245,7 +921,9 @@ class Ordering:
         return sorted_import_str.split("\n") if sorted_import_str else []
 
     def sort_model_attributes(
-        self, attributes: list[str], order: list[str]
+        self,
+        attributes: list[str],
+        order: list[str],
     ) -> list[str]:
         """Sort Odoo model attributes according to conventions.
 
@@ -1275,7 +953,10 @@ class Ordering:
 
         return sorted(attributes, key=get_attr_priority)
 
-    def sort_topological(self, graph: dict[str, list[str]]) -> list[str]:
+    def sort_topological(
+        self,
+        graph: dict[str, list[str]],
+    ) -> list[str]:
         """Perform topological sort on a dependency graph.
 
         Implements Kahn's algorithm for topological sorting, which ensures
@@ -1322,63 +1003,6 @@ class Ordering:
 
         return result
 
-    def sort_fields(self, fields: list[ast.Assign]) -> list[ast.Assign]:
-        """Sort field assignments based on configured strategy.
-
-        Converts AST nodes to dictionaries with metadata, applies the appropriate
-        sorting function based on config.field_strategy, then extracts the sorted
-        AST nodes back.
-
-        Args:
-            fields: List of AST Assign nodes representing field definitions
-
-        Returns:
-            list[ast.Assign]: Sorted list of field assignment nodes
-        """
-        # Convert AST nodes to dicts for sorting functions
-        field_dicts = []
-        for field in fields:
-            field_dict = {"ast_node": field}
-            if field.targets and isinstance(field.targets[0], ast.Name):
-                field_dict["name"] = field.targets[0].id
-
-                # Determine field type
-                if isinstance(field.value, ast.Call):
-                    if hasattr(field.value.func, "attr"):
-                        field_dict["type"] = field.value.func.attr
-                    elif hasattr(field.value.func, "id"):
-                        field_dict["type"] = field.value.func.id
-                    else:
-                        field_dict["type"] = "Unknown"
-
-                # Use classify_field_semantic from ordering module
-                field_dict["semantic_group"] = self.classify_field_semantic(
-                    field_dict["name"],
-                    field_dict.get("type", ""),
-                    False,  # is_computed - could be enhanced
-                    False,  # is_related - could be enhanced
-                )
-
-            field_dicts.append(field_dict)
-
-        # Use the appropriate sorting function
-        if self.config.field_strategy == "semantic":
-            group_order = [
-                "IDENTIFIERS",
-                "ATTRIBUTES",
-                "GENEALOGY",
-                "DATES",
-                "CONTENT",
-                "UNCATEGORIZED",
-            ]
-            sorted_dicts = self.sort_fields_semantic(field_dicts, group_order)
-        else:
-            type_order = list(Ordering.FIELD_TYPE_PRIORITY.keys())
-            sorted_dicts = self.sort_fields_by_type(field_dicts, type_order)
-
-        # Extract AST nodes back
-        return [d["ast_node"] for d in sorted_dicts]
-
     def sort_field_attributes(self, node: ast.Assign) -> ast.Assign | None:
         """Reorder attributes in Odoo field declarations using field-type specific ordering.
 
@@ -1394,7 +1018,7 @@ class Ordering:
             ast.Assign: Node with reordered field attributes based on field type
         """
         # Detect the field type
-        field_type = self.detect_field_type(node)
+        field_type = self.get_field_type(node)
         if not field_type:
             return None
 
@@ -1441,117 +1065,6 @@ class Ordering:
         ast.copy_location(new_call, node.value)
 
         return new_node
-
-    def sort_fields_by_type(
-        self,
-        fields: list[dict[str, Any]],
-        type_order: list[str],
-    ) -> list[dict[str, Any]]:
-        """Sort fields by their type according to a predefined order.
-
-        Sorts Odoo field definitions based on their type (Char, Integer, Many2one, etc.).
-        Computed fields are automatically placed after regular fields.
-        Fields of the same type are sorted alphabetically by name.
-
-        Args:
-            fields: List of field dictionaries, each containing at minimum:
-                - 'type': Field type string (e.g., 'Char', 'Many2one')
-                - 'name': Field name
-                - 'is_computed' (optional): Boolean indicating if computed
-            type_order: Ordered list of field type names defining sort priority
-
-        Returns:
-            list[dict[str, Any]]: Fields sorted by type priority, then by name.
-                                Unknown types get lowest priority (99).
-        """
-
-        def get_type_priority(field: dict[str, Any]) -> tuple[int, str]:
-            field_type = field.get("type", "")
-            field_name = field.get("name", "")
-
-            # Get priority from type order
-            try:
-                priority = type_order.index(field_type)
-            except ValueError:
-                priority = 99
-
-            # Computed fields go last
-            if field.get("is_computed", False):
-                priority += 100
-
-            return (priority, field_name)
-
-        return sorted(fields, key=get_type_priority)
-
-    def sort_fields_semantic(
-        self,
-        fields: list[dict[str, Any]],
-        group_order: list[str],
-    ) -> list[dict[str, Any]]:
-        """Sort fields by semantic meaning groups.
-
-        Groups fields based on their semantic purpose (identifiers, attributes,
-        relationships, etc.) rather than technical type. This creates more
-        logical groupings for business domain models.
-
-        Args:
-            fields: List of field dictionaries, each containing:
-                - 'semantic_group': Group name (e.g., 'IDENTIFIERS', 'ATTRIBUTES')
-                - 'name': Field name for secondary sorting
-            group_order: Ordered list of semantic group names defining priority
-
-        Returns:
-            list[dict[str, Any]]: Fields sorted by semantic group, then by name.
-                                Uncategorized fields get lowest priority.
-        """
-
-        def get_semantic_priority(field: dict[str, Any]) -> tuple[int, str]:
-            group = field.get("semantic_group", "UNCATEGORIZED")
-            field_name = field.get("name", "")
-
-            try:
-                priority = group_order.index(group)
-            except ValueError:
-                priority = 99
-
-            return (priority, field_name)
-
-        return sorted(fields, key=get_semantic_priority)
-
-    def sort_methods_by_category(
-        self,
-        methods: list[dict[str, Any]],
-        category_order: list[str],
-    ) -> list[dict[str, Any]]:
-        """Sort methods by their functional category.
-
-        Organizes methods based on their purpose (CRUD, compute, constraints, etc.)
-        following Odoo conventions. Methods within the same category are sorted
-        alphabetically by name.
-
-        Args:
-            methods: List of method dictionaries, each containing:
-                    - 'category': Category name (e.g., 'CRUD', 'COMPUTE')
-                    - 'name': Method name for secondary sorting
-            category_order: Ordered list of category names defining sort priority
-
-        Returns:
-            list[dict[str, Any]]: Methods sorted by category, then by name.
-                                Uncategorized methods get lowest priority.
-        """
-
-        def get_category_priority(method: dict[str, Any]) -> tuple[int, str]:
-            category = method.get("category", "UNCATEGORIZED")
-            method_name = method.get("name", "")
-
-            try:
-                priority = category_order.index(category)
-            except ValueError:
-                priority = 99
-
-            return (priority, method_name)
-
-        return sorted(methods, key=get_category_priority)
 
     def sort_methods_with_dependencies(
         self,
@@ -1621,7 +1134,7 @@ class Ordering:
 
     def add_method_classification_rule(self, rule: ClassificationRuleMethod):
         """
-        Add a custom classification rule.
+        Add a custom method classification rule.
         Allows users to extend classification without modifying code.
 
         Args:
@@ -1630,7 +1143,102 @@ class Ordering:
         self._method_rules.append(rule)
         self._method_rules.sort(key=lambda r: r.priority)
 
-    def detect_field_type(self, node: ast.Assign) -> str | None:
+    def add_field_classification_rule(self, rule: ClassificationRuleField):
+        """
+        Add a custom field classification rule.
+        Allows users to extend field classification without modifying code.
+
+        Args:
+            rule: ClassificationRuleField to add
+        """
+        self._field_rules.append(rule)
+        self._field_rules.sort(key=lambda r: r.priority)
+
+    @staticmethod
+    def get_decorator_name(decorator: ast.expr) -> str | None:
+        """Extract the name from a decorator node.
+
+        Handles various decorator forms: @name, @module.name, @name(...)
+
+        Args:
+            decorator: AST decorator expression
+
+        Returns:
+            Optional[str]: Decorator name or None if not extractable
+        """
+        if isinstance(decorator, ast.Name):
+            return decorator.id
+        elif isinstance(decorator, ast.Attribute):
+            return decorator.attr
+        elif isinstance(decorator, ast.Call):
+            if isinstance(decorator.func, ast.Name):
+                return decorator.func.id
+            elif isinstance(decorator.func, ast.Attribute):
+                return decorator.func.attr
+        return None
+
+    def get_field_attribute_order(self, field_type: str) -> list[str]:
+        """Get the optimal attribute order for a specific field type.
+
+        Args:
+            field_type: The Odoo field type (e.g., 'Char', 'Many2one')
+
+        Returns:
+            list[str]: Ordered list of attribute names for this field type
+        """
+        # Check if we have specific ordering for this field type
+        if field_type in self.FIELD_TYPE_ATTRIBUTES:
+            return self.FIELD_TYPE_ATTRIBUTES[field_type]
+
+        # Fall back to generic ordering
+        return self.FIELD_ATTRIBUTE_GENERIC
+
+    def get_field_info(
+        self,
+        node: ast.Assign | ast.AnnAssign,
+    ) -> dict[str, Any]:
+        """
+        Extract field information from an AST node.
+
+        Args:
+            node: AST node representing a field assignment
+
+        Returns:
+            Dictionary with field_name, field_type, is_computed, is_related
+        """
+        info = {
+            "field_name": None,
+            "field_type": None,
+            "is_computed": False,
+            "is_related": False,
+            "related_field_base": None,
+        }
+
+        info["field_name"] = self.get_node_name(node)
+
+        if isinstance(node, ast.Assign):
+            info["field_type"] = self.get_field_type(node)
+            # Get field attributes
+            if node.value and isinstance(node.value, ast.Call):
+                # Check for special attributes
+                for keyword in node.value.keywords:
+                    if keyword.arg == "compute":
+                        info["is_computed"] = True
+                    if keyword.arg == "related":
+                        info["is_related"] = True
+
+                        related_path = None
+                        if isinstance(keyword.value, ast.Constant):
+                            related_path = keyword.value.value
+                        # Extract the base field (first part before '.')
+                        if related_path and "." in related_path:
+                            info["related_field_base"] = related_path.split(".")[0]
+                        elif related_path:
+                            info["related_field_base"] = related_path
+
+        return info
+
+    def get_field_type(self, node: ast.Assign) -> str | None:
         """Detect the Odoo field type from an AST node.
 
         Args:
@@ -1650,24 +1258,68 @@ class Ordering:
             return None
 
         # Extract field type from fields.FieldType
-        field_type = node.value.func.attr
-        return field_type if field_type in self.FIELD_TYPE_ATTRIBUTES else field_type
+        return node.value.func.attr
 
-    def get_field_attribute_order(self, field_type: str) -> list[str]:
-        """Get the optimal attribute order for a specific field type.
+    def get_line_range(self, node: ast.AST) -> tuple[int, int]:
+        """Get the line range for an AST node.
 
         Args:
-            field_type: The Odoo field type (e.g., 'Char', 'Many2one')
+            node: AST node to get line range for
 
         Returns:
-            list[str]: Ordered list of attribute names for this field type
+            Tuple[int, int]: (start_line, end_line) or (0, 0) if not available
         """
-        # Check if we have specific ordering for this field type
-        if field_type in self.FIELD_TYPE_ATTRIBUTES:
-            return self.FIELD_TYPE_ATTRIBUTES[field_type]
+        if hasattr(node, "lineno") and hasattr(node, "end_lineno"):
+            return (node.lineno, node.end_lineno or node.lineno)
+        elif hasattr(node, "lineno"):
+            return (node.lineno, node.lineno)
+        return (0, 0)
 
-        # Fall back to generic ordering
-        return self.FIELD_ATTRIBUTE_GENERIC
+    @staticmethod
+    def get_node_name(node: ast.AST) -> str | None:
+        """Extract the identifying name from various AST node types.
+
+        Handles different node types:
+        - Nodes with 'name' attribute (ClassDef, FunctionDef)
+        - Assignment nodes (extracts target names)
+        - Annotated assignments
+
+        Args:
+            node: AST node to get name from
+
+        Returns:
+            Optional[str]: The node's name or None if not applicable
+        """
+        if hasattr(node, "name"):
+            return node.name
+        if isinstance(node, ast.Assign):
+            targets = []
+            for target in node.targets:
+                if isinstance(target, ast.Name):
+                    targets.append(target.id)
+                elif isinstance(target, ast.Tuple):
+                    for elt in target.elts:
+                        if isinstance(elt, ast.Name):
+                            targets.append(elt.id)
+            return ", ".join(targets) if targets else None
+        if isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name):
+            return node.target.id
+        return None
+
+    def _is_property(self, node: ast.FunctionDef | ast.AsyncFunctionDef) -> bool:
+        """Check if a function is decorated as a property.
+
+        Args:
+            node: Function definition to check
+
+        Returns:
+            bool: True if the function has a property decorator
+        """
+        for decorator in node.decorator_list:
+            decorator_name = self.get_decorator_name(decorator)
+            if decorator_name and "property" in decorator_name:
+                return True
+        return False
 
     # ============================================================
     # REORGANIZER
@@ -1758,10 +1410,7 @@ class Ordering:
             if self.config.add_section_headers:
                 lines.extend(format_section_header("FIELDS"))
 
-            # Sort fields
-            fields = self.sort_fields(elements["fields"])
-
-            for field in fields:
+            for field in elements["fields"]:
                 lines.append(self.unparse_node(field, indent="    "))
             lines.append("")
 
