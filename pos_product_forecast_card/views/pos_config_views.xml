@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_config_form_forecast" model="ir.ui.view">
+        <field name="name">pos.config.form.forecast</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@class='row mt16 o_settings_container']" position="inside">
+                    <field name="show_product_forecast"/>
+                    <div class="content-group mt16" invisible="not show_product_forecast">
+                        <div class="row mt8">
+                            <div class="col-lg-4 o_light_label">
+                                <label for="forecast_warehouse_ids" string="Select warehouses for forecast"/>
+                            </div>
+                            <div class="col-lg-8">
+                                <field name="forecast_warehouse_ids" widget="many2many" options="{'no_create': True}" placeholder="All Warehouses"/>
+                            </div>
+                        </div>
+                    </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -6,6 +6,5 @@ class ResPartner(models.Model):
 
     property_offers_ids = fields.One2many(
         'estate.property.offer', 
-        'partner_id', 
-        string='Property Offers'
+        'partner_id'
     )

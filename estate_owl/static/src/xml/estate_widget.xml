@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="estate_owl.EstateWidget" owl="1">
+        <div class="estate-owl-container">
+            <!-- Navigation Bar -->
+            <nav class="estate-navbar">
+                <div class="estate-navbar-content">
+                    <div class="estate-navbar-brand">
+                        <i class="fa fa-home"/>
+                        <div>
+                            <div class="estate-navbar-title">Estate Dashboard</div>
+                            <div class="estate-navbar-subtitle">Gestión de Propiedades Inmobiliarias</div>
+                        </div>
+                    </div>
+                    
+                    <div class="estate-navbar-info" t-if="!state.loading">
+                        <div class="estate-navbar-stats">
+                            <div class="estate-stat-item">
+                                <span class="estate-stat-number" t-esc="state.properties.length"/>
+                                <small class="estate-stat-label">Propiedades</small>
+                            </div>
+                            <div class="estate-stat-item">
+                                <span class="estate-stat-number" t-esc="state.offers.length"/>
+                                <small class="estate-stat-label">Ofertas</small>
+                            </div>
+                            <div class="estate-stat-item">
+                                <span class="estate-stat-number" t-esc="state.propertyTypes.length"/>
+                                <small class="estate-stat-label">Tipos</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Loading Spinner -->
+            <div t-if="state.loading" class="estate-loading">
+                <div class="spinner-border text-light" role="status" style="width: 3rem; height: 3rem;">
+                    <span class="visually-hidden">Cargando...</span>
+                </div>
+                <p class="mt-3 mb-0">Cargando datos de propiedades...</p>
+            </div>
+
+            <!-- Main Content -->
+            <div t-else="" class="estate-content">
+                
+                <!-- Navigation Tabs -->
+                <ul class="nav nav-tabs estate-nav-tabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button 
+                            t-attf-class="nav-link #{state.activeTab === 'properties' ? 'active' : ''}"
+                            type="button" 
+                            role="tab"
+                            t-on-click="() => this.switchTab('properties')">
+                            <i class="fa fa-building me-1"/>
+                            Propiedades (<t t-esc="state.properties.length"/>)
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button 
+                            t-attf-class="nav-link #{state.activeTab === 'offers' ? 'active' : ''}"
+                            type="button" 
+                            role="tab"
+                            t-on-click="() => this.switchTab('offers')">
+                            <i class="fa fa-money me-1"/>
+                            Ofertas (<t t-esc="state.offers.length"/>)
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button 
+                            t-attf-class="nav-link #{state.activeTab === 'types' ? 'active' : ''}"
+                            type="button" 
+                            role="tab"
+                            t-on-click="() => this.switchTab('types')">
+                            <i class="fa fa-tags me-1"/>
+                            Tipos de Propiedad
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button 
+                            t-attf-class="nav-link #{state.activeTab === 'charts' ? 'active' : ''}"
+                            type="button" 
+                            role="tab"
+                            t-on-click="() => this.switchTab('charts')">
+                            <i class="fa fa-chart-bar me-1"/>
+                            Análisis de Datos
+                        </button>
+                    </li>
+                </ul>
+
+                <!-- Tab Content -->
+                <div class="tab-content estate-tab-content">
+                    
+                    <!-- Properties Tab -->
+                    <div t-if="state.activeTab === 'properties'" class="estate-tab-pane">
+                        <div class="estate-section-header">
+                            <h3><i class="fa fa-building me-2"/>Propiedades</h3>
+                            <p class="text-muted">Lista de todas las propiedades registradas</p>
+                        </div>
+                        
+                        <div class="estate-table-container">
+                            <table class="table table-striped table-hover">
+                                <thead class="table-dark sticky-top">
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Código Postal</th>
+                                        <th>Precio Esperado</th>
+                                        <th>Precio Venta</th>
+                                        <th>Habitaciones</th>
+                                        <th>Área</th>
+                                        <th>Estado</th>
+                                        <th>Disponibilidad</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="state.properties" t-as="property" t-key="property.id">
+                                        <td>
+                                            <strong t-esc="property.name"/>
+                                            <br/>
+                                            <small class="text-muted" t-esc="property.description"/>
+                                        </td>
+                                        <td t-esc="property.postcode"/>
+                                        <td>
+                                            <span class="badge bg-info">
+                                                <t t-esc="formatCurrency(property.expected_price)"/>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span t-if="property.selling_price" class="badge bg-success">
+                                                <t t-esc="formatCurrency(property.selling_price)"/>
+                                            </span>
+                                            <span t-else="" class="text-muted">No vendida</span>
+                                        </td>
+                                        <td>
+                                            <i class="fa fa-bed me-1"/>
+                                            <t t-esc="property.bedrooms"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="property.living_area"/> m²
+                                        </td>
+                                        <td>
+                                            <span t-attf-class="badge #{property.state === 'sold' ? 'bg-success' : property.state === 'new' ? 'bg-primary' : property.state === 'canceled' ? 'bg-danger' : 'bg-warning'}">
+                                                <t t-esc="property.state"/>
+                                            </span>
+                                        </td>
+                                        <td t-esc="formatDate(property.date_availability)"/>
+                                    </tr>
+                                    <tr t-if="!state.properties.length">
+                                        <td colspan="8" class="text-center text-muted">
+                                            <i class="fa fa-exclamation-circle me-2"/>
+                                            No hay propiedades registradas
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Offers Tab -->
+                    <div t-if="state.activeTab === 'offers'" class="estate-tab-pane">
+                        <div class="estate-section-header">
+                            <h3><i class="fa fa-money me-2"/>Ofertas</h3>
+                            <p class="text-muted">Lista de todas las ofertas realizadas</p>
+                        </div>
+                        
+                        <div class="estate-table-container">
+                            <table class="table table-striped table-hover">
+                                <thead class="table-dark sticky-top">
+                                    <tr>
+                                        <th>Precio Oferta</th>
+                                        <th>Estado</th>
+                                        <th>Cliente</th>
+                                        <th>Propiedad</th>
+                                        <th>Validez (días)</th>
+                                        <th>Fecha Límite</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="state.offers" t-as="offer" t-key="offer.id">
+                                        <td>
+                                            <strong class="text-success">
+                                                <t t-esc="formatCurrency(offer.price)"/>
+                                            </strong>
+                                        </td>
+                                        <td>
+                                            <span t-attf-class="badge #{offer.status === 'accepted' ? 'bg-success' : offer.status === 'refused' ? 'bg-danger' : 'bg-warning'}">
+                                                <t t-esc="offer.status"/>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <i class="fa fa-user me-1"/>
+                                            <t t-esc="offer.partner_id[1]"/>
+                                        </td>
+                                        <td>
+                                            <i class="fa fa-home me-1"/>
+                                            <t t-esc="offer.property_id[1]"/>
+                                        </td>
+                                        <td>
+                                            <i class="fa fa-calendar me-1"/>
+                                            <t t-esc="offer.validity"/>
+                                        </td>
+                                        <td t-esc="formatDate(offer.date_deadline)"/>
+                                    </tr>
+                                    <tr t-if="!state.offers.length">
+                                        <td colspan="6" class="text-center text-muted">
+                                            <i class="fa fa-exclamation-circle me-2"/>
+                                            No hay ofertas registradas
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Property Types Tab -->
+                    <div t-if="state.activeTab === 'types'" class="estate-tab-pane">
+                        <div class="estate-section-header">
+                            <h3><i class="fa fa-tags me-2"/>Tipos de Propiedad</h3>
+                            <p class="text-muted">Categorías de propiedades disponibles</p>
+                        </div>
+                        
+                        <div class="estate-types-grid">
+                            <div t-foreach="state.propertyTypes" t-as="type" t-key="type.id" class="estate-type-card">
+                                <div class="card h-100">
+                                    <div class="card-body text-center">
+                                        <i class="fa fa-tag fa-2x text-primary mb-3"/>
+                                        <h5 class="card-title" t-esc="type.name"/>
+                                        <p class="card-text">
+                                            <small class="text-muted">Secuencia: <t t-esc="type.sequence"/></small>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div t-if="!state.propertyTypes.length" class="col-12 text-center text-muted">
+                                <i class="fa fa-exclamation-circle me-2"/>
+                                No hay tipos de propiedad registrados
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts Tab -->
+                    <div t-if="state.activeTab === 'charts'" class="estate-tab-pane">
+                        <div class="estate-section-header">
+                            <h3><i class="fa fa-chart-bar me-2"/>Análisis de Datos</h3>
+                            <p class="text-muted">Visualización estadística de propiedades y ofertas</p>
+                        </div>
+                        
+                        <!-- Chart Type Buttons -->
+                        <div class="estate-chart-controls mb-4">
+                            <div class="btn-group" role="group">
+                                <button 
+                                    type="button" 
+                                    t-attf-class="btn #{state.activeChart === 'states' ? 'btn-primary' : 'btn-outline-primary'}"
+                                    t-on-click="() => this.switchChart('states')">
+                                    <i class="fa fa-pie-chart me-1"/>
+                                    Por Estado
+                                </button>
+                                <button 
+                                    type="button" 
+                                    t-attf-class="btn #{state.activeChart === 'types' ? 'btn-primary' : 'btn-outline-primary'}"
+                                    t-on-click="() => this.switchChart('types')">
+                                    <i class="fa fa-bar-chart me-1"/>
+                                    Por Tipo
+                                </button>
+                                <button 
+                                    type="button" 
+                                    t-attf-class="btn #{state.activeChart === 'prices' ? 'btn-primary' : 'btn-outline-primary'}"
+                                    t-on-click="() => this.switchChart('prices')">
+                                    <i class="fa fa-dollar me-1"/>
+                                    Por Precio
+                                </button>
+                                <button 
+                                    type="button" 
+                                    t-attf-class="btn #{state.activeChart === 'offers' ? 'btn-primary' : 'btn-outline-primary'}"
+                                    t-on-click="() => this.switchChart('offers')">
+                                    <i class="fa fa-handshake-o me-1"/>
+                                    Ofertas
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Chart Container -->
+                        <div class="estate-chart-container">
+                            <canvas id="estateChart" width="400" height="200"></canvas>
+                        </div>
+                        
+                        <!-- Chart Info -->
+                        <div class="estate-chart-info mt-3">
+                            <div class="alert alert-info">
+                                <i class="fa fa-info-circle me-2"/>
+                                <strong>Información:</strong> Distribución de propiedades y ofertas por diferentes categorías.
+                                Los datos se actualizan en tiempo real desde la base de datos.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

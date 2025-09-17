@@ -13,21 +13,16 @@
         'views/estate_property_type_views.xml',
         'views/estate_property_tag_views.xml',
         'views/estate_property_offer_views.xml',
-        'wizards/estate_property_offer_wizard_views.xml',
-        'views/estate_property_offer_actions.xml',
-        'views/estate_property_type_actions.xml',
-        'views/estate_property_tag_actions.xml',
-        'views/estate_menus.xml',
         'views/inherited_views.xml',
         'report/estate_property_report.xml',
         'report/estate_property_report_views.xml',
+        'wizard/estate_property_offer_wizard_views.xml',
+        'views/estate_menus.xml', # always at last
     ],
 
-        'installable': True,
-        'application': True,
-        'auto_install': False,
-
-        'assets': {
-
-    },
+    'installable': True,
+    'application': True,
+    'auto_install': False,
 }
+
+

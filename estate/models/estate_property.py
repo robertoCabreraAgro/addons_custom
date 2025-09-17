@@ -16,7 +16,7 @@ class EstateProperty(models.Model):
         default=lambda self: fields.Date.today() + timedelta(days=90)
     )
     expected_price = fields.Float(required=True)
-    selling_price = fields.Float(readonly=True, copy=False)
+    selling_price = fields.Float(copy=False)
     bedrooms = fields.Integer(default=2)
     living_area = fields.Integer()
     facades = fields.Integer()
@@ -24,8 +24,11 @@ class EstateProperty(models.Model):
     garden = fields.Boolean()
     garden_area = fields.Integer()
     garden_orientation = fields.Selection(
-        selection=[('north', 'North'), ('south', 'South'), ('east', 'East'), ('west', 'West')]
-    )
+        selection=[('north', 'North'),
+                   ('south', 'South'),
+                   ('east', 'East'),
+                   ('west', 'West')]
+    )    
     active = fields.Boolean(default=True)
     state = fields.Selection(
         selection=[
@@ -39,25 +42,26 @@ class EstateProperty(models.Model):
         required=True,
         copy=False
     )
-    property_type_id = fields.Many2one('estate.property.type', string='Property Type')
-    buyer_id = fields.Many2one('res.partner', string='Buyer', copy=False)
+    property_type_id = fields.Many2one('estate.property.type')
+    buyer_id = fields.Many2one('res.partner', copy=False)
     salesperson_id = fields.Many2one(
-        'res.users', string='Salesperson', default=lambda self: self.env.user
+        'res.users', default=lambda self: self.env.user
     )
-    tag_ids = fields.Many2many('estate.property.tag', string='Tags')
-    offer_ids = fields.One2many('estate.property.offer', 'property_id', string='Offers')
+    tag_ids = fields.Many2many('estate.property.tag')
+    offer_ids = fields.One2many('estate.property.offer', 'property_id')
 
     # Campos computados
-    total_area = fields.Float(compute='_compute_total_area', string='Total Area (sqm)')
+    total_area = fields.Float(compute='_compute_total_area', string='(sqm)')
     best_price = fields.Float(compute='_compute_offer_metrics', string='Best Offer')
-    offer_count = fields.Integer(compute='_compute_offer_metrics', string='Offers Count')
-    has_accepted_offer = fields.Boolean(compute='_compute_offer_metrics', string='Has Accepted Offer')
+    offer_count = fields.Integer(compute='_compute_offer_metrics')
+    has_accepted_offer = fields.Boolean(compute='_compute_offer_metrics')
+    show_garden_fields = fields.Boolean(compute="_compute_show_garden_fields")
 
     # Restricciones SQL
     _sql_constraints = [
-        ('check_expected_price_positive', 'CHECK(expected_price >= 0)', 'Expected price must be strictly positive.'),
+        ('check_expected_price_positive','CHECK(expected_price >= 0)', 'Expected price must be strictly positive.'),
         ('check_selling_price_positive', 'CHECK(selling_price >= 0)', 'Selling price must be strictly positive.'),
-        ('check_bedrooms_positive', 'CHECK(bedrooms >= 0)', 'Bedrooms must be positive.'),
+        ('check_bedrooms_positive', 'CHECK(bedrooms >= 1)', 'Bedrooms must be positive.'),
     ]
 
     # Computación de áreas
@@ -66,7 +70,7 @@ class EstateProperty(models.Model):
         for record in self:
             record.total_area = record.living_area + record.garden_area
 
-    # Computación de métricas de ofertas (mejor precio, cantidad y estado aceptado)
+    # Computación de métricas de ofertas
     @api.depends('offer_ids.price', 'offer_ids.status')
     def _compute_offer_metrics(self):
         for record in self:
@@ -75,17 +79,24 @@ class EstateProperty(models.Model):
             record.offer_count = len(prices)
             record.has_accepted_offer = any(o.status == 'accepted' for o in record.offer_ids)
 
-    # Onchange methods
+    # Campo booleano computado para mostrar/ocultar garden_area y garden_orientation
+    @api.depends('garden')
+    def _compute_show_garden_fields(self):
+        for record in self:
+            record.show_garden_fields = record.garden
+
+    # Onchange method para vaciar garden_area y garden_orientation
     @api.onchange('garden')
     def _onchange_garden(self):
-        if self.garden:
-            self.garden_area = 10
-            self.garden_orientation = 'north'
-        else:
-            self.garden_area = 0
-            self.garden_orientation = False
+        for record in self:
+            if record.garden:
+                record.garden_area = 1
+                record.garden_orientation = 'north'
+            else:
+                record.garden_area = 0
+                record.garden_orientation = False
 
-    # Restricciones Python
+    # Restricciones Python (es para evitar que las ofertas sean menores al 90% sobre el precio de la propiedad)
     @api.constrains('selling_price', 'expected_price')
     def _check_selling_price(self):
         for record in self:
@@ -95,7 +106,7 @@ class EstateProperty(models.Model):
                     raise UserError(f"Selling price cannot be lower than 90% of expected price ({min_price:.2f})")
 
     # Métodos de acción
-    def action_set_sold(self):
+    def action_sold(self):
         for record in self:
             if record.state == 'canceled':
                 raise UserError("Canceled properties cannot be sold.")
@@ -104,7 +115,7 @@ class EstateProperty(models.Model):
             record.state = 'sold'
         return True
 
-    def action_set_canceled(self):
+    def action_canceled(self):
         for record in self:
             if record.state == 'sold':
                 raise UserError("Sold properties cannot be canceled.")
@@ -114,7 +125,7 @@ class EstateProperty(models.Model):
     def action_view_offers(self):
         return {
             'type': 'ir.actions.act_window',
-            'name': 'Property Offers',
+            'name': self.env._("Property Offers"),
             'res_model': 'estate.property.offer',
             'view_mode': 'list,form',
             'domain': [('property_id', '=', self.id)],

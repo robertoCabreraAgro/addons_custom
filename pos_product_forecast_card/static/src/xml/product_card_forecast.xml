@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    
+    <!-- We extend the original ProductCard template -->
+    <t t-name="point_of_sale.ProductCard" t-inherit="point_of_sale.ProductCard" t-inherit-mode="extension">
+        
+    <!-- Add the forecast card in the top left corner -->
+        <xpath expr="//article" position="inside">
+                    <div t-if="shouldShowForecastCard" 
+                            class="forecast-card position-absolute top-0 start-0 z-3 m-1"
+                            t-att-class="forecastCardClass"
+                            title="Forecasted Quantity">
+                                <div class="forecast-content">
+                                        <i class="fa fa-chart-line forecast-icon" />
+                                        <span class="forecast-qty" t-esc="forecastQtyDisplay"/>
+                                </div>
+                        </div>
+                    <!-- Overlay para interceptar el click y pedir confirmación -->
+                    <div class="jem-confirm-overlay" style="position:absolute;inset:0;z-index:1000;cursor:pointer;"
+                             t-on-click.prevent.stop="ConfirmAndPropagate">
+                    </div>
+        </xpath>
+    </t>
+    
+</templates>

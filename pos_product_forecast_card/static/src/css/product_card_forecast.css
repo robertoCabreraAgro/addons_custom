@@ -1,0 +1,103 @@
+/* Styles for the forecast card in ProductCard */
+
+.forecast-card {
+    min-width: 45px;
+    max-width: 80px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: white;
+    padding: 2px 6px;
+    pointer-events: none;
+    transition: all 0.2s ease;
+}
+
+.forecast-content {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    justify-content: center;
+    white-space: nowrap;
+}
+
+.forecast-icon {
+    font-size: 0.7rem;
+    opacity: 0.9;
+}
+
+.forecast-qty {
+    font-size: 0.7rem;
+    font-weight: bold;
+    line-height: 1;
+}
+
+/* Colors according to the quantity */
+.forecast-success {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    border-color: rgba(40, 167, 69, 0.3);
+}
+
+.forecast-warning {
+    background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+    border-color: rgba(255, 193, 7, 0.3);
+    color: #212529;
+}
+
+.forecast-danger {
+    background: linear-gradient(135deg, #dc3545 0%, #e83e8c 100%);
+    border-color: rgba(220, 53, 69, 0.3);
+}
+
+/* Hover effects on the product */
+.product:hover .forecast-card {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .forecast-card {
+        min-width: 35px;
+        max-width: 60px;
+        font-size: 0.65rem;
+        padding: 1px 4px;
+    }
+    
+    .forecast-icon {
+        font-size: 0.6rem;
+    }
+    
+    .forecast-qty {
+        font-size: 0.6rem;
+    }
+}
+
+/* For products without image, adjust position */
+.product .product-content.no-image ~ .forecast-card {
+    top: 5px;
+    left: 5px;
+}
+
+/* Appearance animation */
+.forecast-card {
+    animation: fadeInScale 0.3s ease-out;
+}
+
+@keyframes fadeInScale {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Ensure it does not interfere with other elements */
+.forecast-card {
+    z-index: 10;
+}

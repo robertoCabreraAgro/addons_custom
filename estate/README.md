@@ -1,71 +1,31 @@
-# Real Estate Module for Odoo 18
+# Estate Module for Odoo 18
 
-A comprehensive real estate management module built for Odoo 18. This module allows you to manage properties, offers, customers, and generate detailed reports.
+A real estate management module built for Odoo 18.  
+This module allows real estate companies or agents to manage properties, offers, customers, and reports with an intuitive workflow.
 
 ## Features
 
-- **Property Management**: Create and manage real estate properties with detailed information
-- **Offer System**: Handle property offers with validation rules and status tracking
-- **Customer Management**: Track customer offers and interactions
-- **Dashboard**: Visual dashboard with statistics and charts
-- **Reporting**: Generate PDF reports for properties
-- **Security**: Role-based access control (Manager/User)
-- **Wizards**: Bulk operations for creating multiple offers
+- **Property Management**  
+  Create and manage properties with detailed attributes (price, area, rooms, garden, garage, availability date, etc.).
 
-## Installation
+- **Offer System**  
+  - Create offers linked to properties and partners  
+  - Automatic validity and deadline calculation  
+  - Price validation (minimum 90% of expected price)  
+  - Accept/refuse flow with status tracking  
 
-1. Place the `estate` folder in your Odoo addons directory
-2. Update the apps list in Odoo
-3. Install the "Real Estate" module
+- **Property Types & Tags**  
+  Classify properties by type and use colored tags for quick identification.
 
-## Models
+- **Customer Integration**  
+  Track customers (partners) and their offers directly in the property record.
 
-### Estate Property
-Main model for property listings with fields for:
-- Basic information (name, description, postcode)
-- Pricing (expected price, selling price)
-- Features (bedrooms, living area, garden, garage)
-- Status management (new, offer received, offer accepted, sold, canceled)
+- **Reports**  
+  Generate detailed property reports with QWeb templates.
 
-### Estate Property Type
-Categorize properties by type with sequencing support
+- **Security**  
+  Role-based access control (Estate User / Estate Manager).  
+  Configurable rules via `ir.model.access.csv` and XML security groups.
 
-### Estate Property Tag
-Tagging system for properties with color coding
-
-### Estate Property Offer
-Offer management system with:
-- Price validation (min. 90% of expected price)
-- Validity periods and deadlines
-- Status tracking (accepted/refused)
-
-## Security
-
-Two user groups:
-- **Estate User**: Can manage their own properties and offers
-- **Estate Manager**: Full access to all properties and configuration
-
-## Usage
-
-1. **Create Property Types** and **Tags** in Configuration menu
-2. **Add Properties** with detailed information
-3. **Manage Offers** from property form or dedicated menu
-4. **Use Dashboard** for overview and statistics
-5. **Generate Reports** for individual properties
-
-## Technical Details
-
-- Built with Odoo 18 framework
-- Uses Python constraints and SQL constraints
-- Implements computed fields and onchange methods
-- Includes QWeb reports and dashboard views
-- Follows Odoo development best practices
-
-## Dependencies
-
-- base
-- web
-
-## License
-
-LGPL-3
+- **Wizards**  
+  Includes wizards for offer operations and streamlined workflows.

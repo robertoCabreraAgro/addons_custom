@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Menú para Estate OWL - Integrado en el menú de Estate -->
+    <menuitem
+        id="estate_owl_menu_dashboard"
+        name="OWL Dashboard"
+        parent="estate.menu_estate_options"
+        action="estate_owl_client_action"
+        sequence="10"/>
+</odoo>

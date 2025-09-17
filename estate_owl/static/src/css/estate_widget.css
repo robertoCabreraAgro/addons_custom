@@ -1,0 +1,637 @@
+/* Estate OWL Widget Styles - 2025 Minimalist Design */
+:root {
+    --primary-color: #1a1a1a;
+    --secondary-color: #f8f9fa;
+    --accent-color: #6366f1;
+    --text-primary: #111827;
+    --text-secondary: #6b7280;
+    --text-light: #9ca3af;
+    --border-color: #e5e7eb;
+    --surface: #ffffff;
+    --surface-hover: #f9fafb;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --radius-sm: 0.5rem;
+    --radius-md: 0.75rem;
+    --radius-lg: 1rem;
+    --radius-xl: 1.5rem;
+}
+
+.estate-owl-container {
+    padding: 0;
+    background: linear-gradient(180deg, #fafafa 0%, #f5f5f5 100%);
+    height: 100vh;
+    color: var(--text-primary);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+}
+
+/* Navigation Bar */
+.estate-navbar {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px) saturate(180%);
+    color: var(--text-primary);
+    padding: 20px 40px;
+    box-shadow: var(--shadow-sm);
+    border-bottom: 1px solid var(--border-color);
+    position: relative;
+    z-index: 1000;
+    margin-bottom: 0;
+    flex-shrink: 0;
+}
+
+.estate-navbar-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.estate-navbar-brand {
+    display: flex;
+    align-items: center;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    text-decoration: none;
+    letter-spacing: -0.025em;
+}
+
+.estate-navbar-brand:hover {
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.estate-navbar-brand i {
+    font-size: 2.25rem;
+    margin-right: 12px;
+    color: var(--accent-color);
+}
+
+.estate-navbar-title {
+    margin: 0;
+    font-weight: 700;
+}
+
+.estate-navbar-subtitle {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    font-weight: 400;
+    margin-top: 2px;
+}
+
+.estate-navbar-info {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+}
+
+.estate-navbar-stats {
+    display: flex;
+    gap: 24px;
+}
+
+.estate-stat-item {
+    text-align: center;
+    padding: 12px 20px;
+    background: var(--surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    transition: all 0.2s ease;
+}
+
+.estate-stat-item:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--accent-color);
+}
+
+.estate-stat-number {
+    font-size: 1.5rem;
+    font-weight: 700;
+    display: block;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+}
+
+.estate-stat-label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 500;
+}
+
+/* Main content area */
+.estate-content {
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    margin: 0;
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0;
+}
+
+.estate-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.estate-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.estate-content::-webkit-scrollbar-thumb {
+    background: var(--text-light);
+    border-radius: 3px;
+    transition: background 0.2s ease;
+}
+
+.estate-content::-webkit-scrollbar-thumb:hover {
+    background: var(--text-secondary);
+}
+
+.estate-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--text-secondary);
+    background: var(--surface);
+    margin: 0;
+    border-radius: 0;
+}
+
+/* Navigation tabs */
+.estate-nav-tabs {
+    background: transparent;
+    border-bottom: 1px solid var(--border-color);
+    padding: 0 40px;
+    margin-bottom: 40px;
+}
+
+.estate-nav-tabs .nav-link {
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 0.875rem;
+    border: none;
+    border-radius: var(--radius-md);
+    margin-right: 8px;
+    padding: 12px 24px;
+    position: relative;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+}
+
+.estate-nav-tabs .nav-link:hover {
+    background: var(--surface-hover);
+    color: var(--text-primary);
+    transform: translateY(-1px);
+}
+
+.estate-nav-tabs .nav-link.active {
+    background: var(--accent-color);
+    color: white;
+    box-shadow: var(--shadow-md);
+}
+
+.estate-nav-tabs .nav-link.active::after {
+    display: none;
+}
+
+.estate-tab-content {
+    padding: 0 40px 60px 40px;
+}
+
+.estate-section-header {
+    margin-bottom: 40px;
+    text-align: left;
+}
+
+.estate-section-header h3 {
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    font-size: 1.875rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+}
+
+.estate-section-header p {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    margin: 0;
+}
+
+/* Table Styles */
+.estate-table-container {
+    max-height: 600px;
+    overflow-y: auto;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+    background: var(--surface);
+    border: 1px solid var(--border-color);
+}
+
+.estate-table-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.estate-table-container::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 3px;
+}
+
+.estate-table-container::-webkit-scrollbar-thumb {
+    background: var(--text-light);
+    border-radius: 3px;
+}
+
+.estate-table-container::-webkit-scrollbar-thumb:hover {
+    background: var(--text-secondary);
+}
+
+.estate-table-container table {
+    margin-bottom: 0;
+}
+
+.estate-table-container .table thead th {
+    border-top: none;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--secondary-color);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
+    padding: 16px 20px;
+}
+
+.estate-table-container .table tbody tr {
+    border-bottom: 1px solid var(--border-color);
+    transition: all 0.2s ease;
+}
+
+.estate-table-container .table tbody tr:hover {
+    background: var(--surface-hover);
+    transform: none;
+}
+
+.estate-table-container .table tbody td {
+    padding: 16px 20px;
+    border-top: none;
+    vertical-align: middle;
+}
+
+/* Property Types Grid */
+.estate-types-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 32px;
+    margin-top: 32px;
+}
+
+.estate-type-card .card {
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: var(--radius-xl);
+    background: var(--surface);
+    overflow: hidden;
+}
+
+.estate-type-card .card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--accent-color);
+}
+
+.estate-type-card .card-body {
+    padding: 32px 24px;
+}
+
+.estate-type-card .fa-tag {
+    color: var(--accent-color);
+    font-size: 1.5rem;
+    margin-bottom: 16px;
+}
+
+.estate-type-card .card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.estate-type-card .card-text {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+/* Chart Styles */
+.estate-chart-controls {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.estate-chart-controls .btn-group .btn {
+    border-radius: var(--radius-md);
+    margin: 0 4px;
+    padding: 12px 24px;
+    font-weight: 500;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+    border: 1px solid var(--border-color);
+    background: var(--surface);
+    color: var(--text-secondary);
+}
+
+.estate-chart-controls .btn-primary {
+    background: var(--accent-color);
+    border-color: var(--accent-color);
+    color: white;
+    box-shadow: var(--shadow-md);
+}
+
+.estate-chart-controls .btn-outline-primary {
+    color: var(--text-secondary);
+    border-color: var(--border-color);
+    background: var(--surface);
+}
+
+.estate-chart-controls .btn-outline-primary:hover {
+    background: var(--accent-color);
+    border-color: var(--accent-color);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.estate-chart-container {
+    background: var(--surface);
+    border-radius: var(--radius-xl);
+    padding: 40px;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-color);
+    margin: 32px auto;
+    max-width: 1000px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 500px;
+}
+
+.estate-chart-container canvas {
+    max-width: 100%;
+    height: auto;
+    animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.estate-chart-info {
+    text-align: center;
+}
+
+.estate-chart-info .alert {
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    background: var(--surface);
+    color: var(--text-secondary);
+}
+
+/* Badges */
+.badge {
+    font-size: 0.75rem;
+    padding: 0.5em 1em;
+    border-radius: var(--radius-md);
+    font-weight: 500;
+    letter-spacing: 0.025em;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { 
+        opacity: 0; 
+        transform: translateY(24px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-24px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.estate-tab-pane {
+    animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.estate-type-card {
+    animation: slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .estate-navbar {
+        padding: 16px 20px;
+    }
+    
+    .estate-navbar-content {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+    }
+    
+    .estate-navbar-brand {
+        justify-content: center;
+        font-size: 1.5rem;
+    }
+    
+    .estate-navbar-brand i {
+        font-size: 2rem;
+    }
+    
+    .estate-navbar-stats {
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+    
+    .estate-stat-item {
+        padding: 10px 16px;
+    }
+    
+    .estate-tab-content {
+        padding: 0 20px 40px 20px;
+    }
+    
+    .estate-nav-tabs {
+        padding: 0 20px;
+        margin-bottom: 32px;
+    }
+    
+    .estate-nav-tabs .nav-link {
+        font-size: 0.8rem;
+        margin-right: 4px;
+        padding: 10px 16px;
+    }
+    
+    .estate-types-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .estate-chart-controls .btn {
+        margin: 4px 2px;
+        padding: 10px 16px;
+        font-size: 0.8rem;
+    }
+    
+    .estate-chart-container {
+        padding: 24px 16px;
+        margin: 20px 16px;
+        min-height: 400px;
+    }
+    
+    .estate-section-header h3 {
+        font-size: 1.5rem;
+    }
+}
+
+/* Loading States */
+.estate-loading .spinner-border {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-width: 0.25em;
+    color: var(--accent-color);
+}
+
+.estate-loading h4 {
+    margin-top: 24px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+/* Status Badges */
+.badge.bg-success { 
+    background-color: #10b981 !important; 
+    color: white !important;
+}
+.badge.bg-danger { 
+    background-color: #ef4444 !important; 
+    color: white !important;
+}
+.badge.bg-warning { 
+    background-color: #f59e0b !important; 
+    color: white !important;
+}
+.badge.bg-info { 
+    background-color: #06b6d4 !important; 
+    color: white !important;
+}
+.badge.bg-primary { 
+    background-color: var(--accent-color) !important; 
+    color: white !important;
+}
+
+/* Additional modern components */
+.estate-card {
+    background: var(--surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    padding: 32px;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.2s ease;
+    margin-bottom: 32px;
+}
+
+.estate-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+}
+
+.estate-btn {
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    padding: 12px 24px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.estate-btn:hover {
+    background: color-mix(in srgb, var(--accent-color) 90%, black);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.estate-btn-secondary {
+    background: var(--surface);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.estate-btn-secondary:hover {
+    background: var(--surface-hover);
+    border-color: var(--accent-color);
+}
+
+/* Form elements */
+.estate-form-control {
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 12px 16px;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+    background: var(--surface);
+}
+
+.estate-form-control:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    outline: none;
+}
+
+/* Typography improvements */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text-primary);
+    font-weight: 600;
+    line-height: 1.2;
+    margin-bottom: 16px;
+}
+
+p {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 16px;
+}
+
+/* Glass morphism effects */
+.estate-glass {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
