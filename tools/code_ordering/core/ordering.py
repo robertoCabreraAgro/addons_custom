@@ -22,6 +22,7 @@ from typing import Any
 
 import isort
 
+from core.classification_rule import ClassificationRuleMethod, get_default_method_rules
 from core.formatting import format_section_header
 
 
@@ -48,6 +49,7 @@ class Ordering:
         self.content = content
         self.filepath = filepath
         self._tree = None
+        self._method_rules = get_default_method_rules()
 
     def _get_default_config(self):
         """Get default configuration when none is provided."""
@@ -139,125 +141,314 @@ class Ordering:
         # Relational fields
         "Many2one": [
             "related",
-            "comodel_name", "string", "required", 
+            "comodel_name",
+            "string",
+            "required",
             "default",
-            "compute", "store", "precompute", "readonly",
-            "inverse", "search",
-            "company_dependent", "domain", "context",
-            "ondelete", "auto_join",
-            "copy", "groups", "index", "tracking", "help",
+            "compute",
+            "store",
+            "precompute",
+            "readonly",
+            "inverse",
+            "search",
+            "company_dependent",
+            "domain",
+            "context",
+            "ondelete",
+            "auto_join",
+            "copy",
+            "groups",
+            "index",
+            "tracking",
+            "help",
         ],
         "One2many": [
-            "comodel_name", "inverse_name", "string",
-            "compute", "store", "readonly", "domain", "context",
-            "auto_join", "copy", "groups", "help",
+            "comodel_name",
+            "inverse_name",
+            "string",
+            "compute",
+            "store",
+            "readonly",
+            "domain",
+            "context",
+            "auto_join",
+            "copy",
+            "groups",
+            "help",
         ],
         "Many2many": [
             "related",
-            "comodel_name", "relation", "column1", "column2",
-            "string", "required",
-            "compute", "store", "readonly",
-            "inverse", "search",
-            "domain", "context",
-            "copy", "groups", "tracking", "help",
+            "comodel_name",
+            "relation",
+            "column1",
+            "column2",
+            "string",
+            "required",
+            "compute",
+            "store",
+            "readonly",
+            "inverse",
+            "search",
+            "domain",
+            "context",
+            "copy",
+            "groups",
+            "tracking",
+            "help",
         ],
         # Basic fields
         "Char": [
             "related",
-            "string", "required", "size", "trim", "translate",
-            "default", "compute", "store", "readonly", "inverse", "search",
-            "copy", "groups", "index", "tracking", "help",
+            "string",
+            "required",
+            "size",
+            "trim",
+            "translate",
+            "default",
+            "compute",
+            "store",
+            "readonly",
+            "inverse",
+            "search",
+            "copy",
+            "groups",
+            "index",
+            "tracking",
+            "help",
         ],
         "Text": [
             "related",
-            "string", "required", "translate",
-            "default", "compute", "store", "readonly", "inverse", "search",
-            "copy", "groups", "tracking", "help",
+            "string",
+            "required",
+            "translate",
+            "default",
+            "compute",
+            "store",
+            "readonly",
+            "inverse",
+            "search",
+            "copy",
+            "groups",
+            "tracking",
+            "help",
         ],
         "Html": [
             "related",
-            "string", "required", "translate", "sanitize",
-            "sanitize_tags", "sanitize_attributes", "sanitize_style", "strip_style",
+            "string",
+            "required",
+            "translate",
+            "sanitize",
+            "sanitize_tags",
+            "sanitize_attributes",
+            "sanitize_style",
+            "strip_style",
             "strip_classes",
-            "compute", "store", "readonly", "inverse", "search",
-            "default", "copy", "groups", "tracking", "help",
+            "compute",
+            "store",
+            "readonly",
+            "inverse",
+            "search",
+            "default",
+            "copy",
+            "groups",
+            "tracking",
+            "help",
         ],
         # Numeric fields
         "Integer": [
             "related",
-            "string", "required",
-            "compute", "store", "readonly", "inverse", "search",
-            "default", "copy", "groups", "index", "tracking", "help",
+            "string",
+            "required",
+            "compute",
+            "store",
+            "readonly",
+            "inverse",
+            "search",
+            "default",
+            "copy",
+            "groups",
+            "index",
+            "tracking",
+            "help",
         ],
         "Float": [
             "related",
-            "string", "digits", "required",
-            "compute", "store", "readonly", "inverse", "search",
-            "default", "copy", "groups", "index", "group_operator", "tracking", "help",
+            "string",
+            "digits",
+            "required",
+            "compute",
+            "store",
+            "readonly",
+            "inverse",
+            "search",
+            "default",
+            "copy",
+            "groups",
+            "index",
+            "group_operator",
+            "tracking",
+            "help",
         ],
         "Monetary": [
             "related",
-            "string", "currency_field", "required", 
-            "compute", "store", "readonly", "inverse", "search",
-            "default", "copy", "groups", "tracking", "help",
+            "string",
+            "currency_field",
+            "required",
+            "compute",
+            "store",
+            "readonly",
+            "inverse",
+            "search",
+            "default",
+            "copy",
+            "groups",
+            "tracking",
+            "help",
         ],
         # Date/time fields
         "Date": [
             "related",
-            "string", "required",
-            "compute", "store", "readonly", "inverse", "search",
-            "default", "copy", "groups", "index", "tracking", "help",
+            "string",
+            "required",
+            "compute",
+            "store",
+            "readonly",
+            "inverse",
+            "search",
+            "default",
+            "copy",
+            "groups",
+            "index",
+            "tracking",
+            "help",
         ],
         "Datetime": [
             "related",
-            "string", "required",
-            "compute", "store", "readonly", "inverse", "search",
-            "default", "copy", "groups", "index", "tracking", "help",
+            "string",
+            "required",
+            "compute",
+            "store",
+            "readonly",
+            "inverse",
+            "search",
+            "default",
+            "copy",
+            "groups",
+            "index",
+            "tracking",
+            "help",
         ],
         # Selection field
         "Selection": [
             "related",
-            "selection", "string", "required",
-            "compute", "store", "readonly", "inverse", "search",
-            "default", "copy", "groups", "index", "tracking", "help",
+            "selection",
+            "string",
+            "required",
+            "compute",
+            "store",
+            "readonly",
+            "inverse",
+            "search",
+            "default",
+            "copy",
+            "groups",
+            "index",
+            "tracking",
+            "help",
         ],
         # Boolean field
         "Boolean": [
             "related",
-            "string", "required",
-            "compute", "store", "readonly", "inverse", "search",
-            "default", "copy", "groups", "index", "tracking", "help",
+            "string",
+            "required",
+            "compute",
+            "store",
+            "readonly",
+            "inverse",
+            "search",
+            "default",
+            "copy",
+            "groups",
+            "index",
+            "tracking",
+            "help",
         ],
         # Binary fields
         "Binary": [
             "related",
-            "string", "required", "readonly", "attachment",
-            "compute", "store", "inverse", "search",
-            "default", "copy", "groups", "help",
+            "string",
+            "required",
+            "readonly",
+            "attachment",
+            "compute",
+            "store",
+            "inverse",
+            "search",
+            "default",
+            "copy",
+            "groups",
+            "help",
         ],
         "Image": [
             "related",
-            "string", "max_width", "max_height", "verify_resolution",
-            "required", "readonly", "attachment",
-            "compute", "store", "inverse", "search",
-            "default", "copy", "groups", "help",
+            "string",
+            "max_width",
+            "max_height",
+            "verify_resolution",
+            "required",
+            "readonly",
+            "attachment",
+            "compute",
+            "store",
+            "inverse",
+            "search",
+            "default",
+            "copy",
+            "groups",
+            "help",
         ],
         # Special fields
         "Reference": [
             "related",
-            "selection", "string", "required", "readonly",
-            "compute", "store", "inverse", "search",
-            "default", "copy", "groups", "help",
+            "selection",
+            "string",
+            "required",
+            "readonly",
+            "compute",
+            "store",
+            "inverse",
+            "search",
+            "default",
+            "copy",
+            "groups",
+            "help",
         ],
         "Json": [
             "related",
-            "string", "required", "readonly",
-            "compute", "store", "inverse", "search",
-            "default", "copy", "groups", "help",
+            "string",
+            "required",
+            "readonly",
+            "compute",
+            "store",
+            "inverse",
+            "search",
+            "default",
+            "copy",
+            "groups",
+            "help",
         ],
         "Properties": [
-            "string", "definition", "required", "readonly",
-            "compute", "store", "inverse", "search", "copy", "groups", "help",
+            "string",
+            "definition",
+            "required",
+            "readonly",
+            "compute",
+            "store",
+            "inverse",
+            "search",
+            "copy",
+            "groups",
+            "help",
         ],
     }
 
@@ -265,15 +456,29 @@ class Ordering:
     FIELD_ATTRIBUTE_GENERIC: list[str] = [
         "related",
         # Primary attributes
-        "string", "required", "default", "translate",
+        "string",
+        "required",
+        "default",
+        "translate",
         # Compute attributes
-        "compute", "store", "readonly", "inverse", "search", "depends",
+        "compute",
+        "store",
+        "readonly",
+        "inverse",
+        "search",
+        "depends",
         # Default and copy
         "copy",
         # Constraints and UI
-        "tracking", "groups", "index", "states", "company_dependent",
+        "tracking",
+        "groups",
+        "index",
+        "states",
+        "company_dependent",
         # Help and documentation
-        "deprecated", "oldname", "help",
+        "deprecated",
+        "oldname",
+        "help",
     ]
 
     FIELD_TYPE_PRIORITY: dict[str, int] = {
@@ -630,6 +835,22 @@ class Ordering:
 
         return elements
 
+    def _extract_decorators(self, node: ast.FunctionDef) -> list[str]:
+        """Extract decorator names from a method node.
+
+        Args:
+            node: AST FunctionDef node
+
+        Returns:
+            List of decorator names with @ prefix
+        """
+        decorators = []
+        for decorator in node.decorator_list:
+            decorator_name = self.extract_decorator_name(decorator)
+            if decorator_name:
+                decorators.append(f"@{decorator_name}")
+        return decorators
+
     @staticmethod
     def extract_decorator_name(decorator: ast.expr) -> str | None:
         """Extract the name from a decorator node.
@@ -911,89 +1132,24 @@ class Ordering:
 
     def classify_method(self, node: ast.FunctionDef) -> str:
         """
-        Classify a method based on its decorators and name.
+        Classify a method using the rule-based system.
 
         Args:
             node: AST node of the method
+
         Returns:
             Method category
         """
         method_name = node.name
+        decorators = self._extract_decorators(node)
 
-        decorators = []
-        for decorator in node.decorator_list:
-            if isinstance(decorator, ast.Name):
-                decorators.append(f"@{decorator.id}")
-            elif isinstance(decorator, ast.Attribute):
-                decorators.append(f"@{decorator.attr}")
-            elif isinstance(decorator, ast.Call):
-                if isinstance(decorator.func, ast.Attribute):
-                    decorators.append(f"@{decorator.func.attr}")
-                elif isinstance(decorator.func, ast.Name):
-                    decorators.append(f"@{decorator.func.id}")
+        # Check rules in priority order (they're already sorted)
+        for rule in self._method_rules:
+            if rule.matches(method_name, decorators):
+                return rule.category
 
-        # Check decorators first using METHOD_DECORATOR_PATTERNS
-        for decorator in decorators:
-            decorator_name = decorator.strip("@")
-            for category, patterns in self.METHOD_DECORATOR_PATTERNS.items():
-                if any(pattern in decorator_name for pattern in patterns):
-                    if category == "CRUD":
-                        return "CRUD"
-                    elif category == "COMPUTE":
-                        return "COMPUTE"
-                    elif category == "ONCHANGE":
-                        return "ONCHANGE"
-                    elif category == "CONSTRAINT":
-                        return "CONSTRAINT"
-                    elif category == "API_MODEL":
-                        return "API_MODEL"
-
-        # Check method name patterns using METHOD_PATTERNS
-        # First check for more specific patterns (check longer/more specific patterns first)
-        # Order matters - check specific categories before generic ones
-        priority_order = [
-            "WORKFLOW",  # Check specific workflow actions first
-            "PRODUCT_CATALOG",  # Check product catalog patterns
-            "MAIL_THREAD",  # Check mail thread patterns
-            "CONSTRAINT",
-            "CRUD",
-            "COMPUTE",
-            "INVERSE",
-            "SEARCH",
-            "ONCHANGE",
-            "PREPARE",
-            "GETTER",
-            "REPORT",
-            "IMPORT_EXPORT",
-            "SECURITY",
-            "PORTAL",
-            "COMMUNICATION",
-            "WIZARD",
-            "INTEGRATION",
-            "CRON",
-            "ACCOUNTING",
-            "MANUFACTURING",
-            "OVERRIDE",
-            "ACTIONS",  # Check generic actions last
-        ]
-
-        for category in priority_order:
-            if category not in self.METHOD_PATTERNS:
-                continue
-            patterns = self.METHOD_PATTERNS[category]
-            for pattern in patterns:
-                # Check exact matches
-                if method_name == pattern:
-                    return category
-                # Check prefix patterns
-                if pattern.endswith("_") and method_name.startswith(pattern):
-                    return category
-
-        # Additional specific checks
-        if method_name.startswith("_"):
-            return "PRIVATE"
-
-        return "PUBLIC"
+        # This should never happen if rules are complete
+        return "UNCATEGORIZED"
 
     def group_fields_by_strategy(
         self,
@@ -1056,7 +1212,6 @@ class Ordering:
         """
         if not imports:
             return []
-
 
         # Join imports into a single string
         import_str = "\n".join(imports)
@@ -1463,6 +1618,17 @@ class Ordering:
     # ============================================================
     # HELPERS
     # ============================================================
+
+    def add_method_classification_rule(self, rule: ClassificationRuleMethod):
+        """
+        Add a custom classification rule.
+        Allows users to extend classification without modifying code.
+
+        Args:
+            rule: ClassificationRuleMethod to add
+        """
+        self._method_rules.append(rule)
+        self._method_rules.sort(key=lambda r: r.priority)
 
     def detect_field_type(self, node: ast.Assign) -> str | None:
         """Detect the Odoo field type from an AST node.
