@@ -128,8 +128,10 @@ class OdooReorderer:
             "errors": 0,
         }
 
-    def format_with_black(self, content: str) -> str:
-        """Format Python code using Black formatter.
+    def format_with_isort_black(self, content: str) -> str:
+        """Format Python code using isort and Black formatters.
+
+        Applies isort first to organize imports, then Black for code formatting.
 
         Args:
             content: Python source code to format
@@ -137,6 +139,21 @@ class OdooReorderer:
         Returns:
             str: Formatted code, or original content if formatting fails
         """
+        # First apply isort to organize imports
+        try:
+            content = isort.code(
+                content,
+                profile="black",  # Use Black-compatible profile
+                line_length=self.config.line_length,
+                known_first_party=["odoo", "addons"],
+                known_third_party=[],
+                sections=["FUTURE", "STDLIB", "THIRDPARTY", "ODOO", "FIRSTPARTY", "LOCALFOLDER"],
+                no_lines_before=["LOCALFOLDER"],
+            )
+        except Exception as e:
+            logger.warning(f"isort formatting failed: {e}")
+
+        # Then apply Black formatting
         try:
             mode = black.Mode(
                 line_length=self.config.line_length,
@@ -194,7 +211,7 @@ class OdooReorderer:
                 return True
 
             # Step 4: Format with Black
-            reorganized = self.format_with_black(reorganized)
+            reorganized = self.format_with_isort_black(reorganized)
 
             # Step 5: Handle dry run or write
             if self.config.dry_run:
