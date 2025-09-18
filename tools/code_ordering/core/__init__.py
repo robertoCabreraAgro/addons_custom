@@ -3,9 +3,7 @@ Core modules for code ordering
 """
 
 from .dependency_analyzer import DependencyAnalyzer
-from .formatting import (
-    format_section_header,
-)
+from .formatting import format_section_header
 from .ordering import Ordering
 
 

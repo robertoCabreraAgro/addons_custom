@@ -16,19 +16,20 @@ The module provides:
 """
 
 import ast
-import isort
-import logging
 from dataclasses import dataclass
+import logging
 from pathlib import Path
 from typing import Any
 
-from core.classification_rule_method import (
-    ClassificationRuleMethod,
-    get_default_method_rules,
-)
+import isort
+
 from core.classification_rule_field import (
     ClassificationRuleField,
     get_default_field_rules,
+)
+from core.classification_rule_method import (
+    ClassificationRuleMethod,
+    get_default_method_rules,
 )
 from core.formatting import format_section_header
 
