@@ -36,7 +36,11 @@ class ClassificationRuleMethod:
     # Optional custom check function
     custom_check: Callable[[str, list[str]], bool] | None = None
 
-    def matches(self, method_name: str, decorator_list: list[str]) -> bool:
+    def matches(
+        self,
+        method_name: str,
+        decorator_list: list[str],
+    ) -> bool:
         """Check if this rule matches the given method."""
         # Check decorators first (usually most specific)
         if self.decorators:

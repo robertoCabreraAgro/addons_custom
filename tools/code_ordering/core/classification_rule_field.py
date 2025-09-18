@@ -38,8 +38,6 @@ class ClassificationRuleField:
     # Special conditions
     check_computed: bool = False
     check_related: bool = False
-    check_readonly: bool = False
-    check_stored: bool = False
 
     # Optional custom check function
     # Receives: (field_name, field_type, field_info_dict) -> bool
@@ -67,12 +65,6 @@ class ClassificationRuleField:
             return True
 
         if self.check_related and field_info.get("is_related"):
-            return True
-
-        if self.check_readonly and field_info.get("is_readonly"):
-            return True
-
-        if self.check_stored and field_info.get("is_stored"):
             return True
 
         # Check field type
@@ -113,8 +105,6 @@ class ClassificationRuleField:
                 self.contains,
                 self.check_computed,
                 self.check_related,
-                self.check_readonly,
-                self.check_stored,
             ],
         ):
             return self.custom_check(field_name, field_info)
