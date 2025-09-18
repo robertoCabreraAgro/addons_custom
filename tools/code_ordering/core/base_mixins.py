@@ -9,13 +9,11 @@ code duplication and ensure consistency.
 import ast
 import json
 import logging
-import os
 import re
 import shutil
-from dataclasses import dataclass, field as dc_field
+from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Set, Tuple
 
 logger = logging.getLogger(__name__)
 
@@ -24,15 +22,31 @@ logger = logging.getLogger(__name__)
 # ODOO CONSTANTS
 # ============================================================
 
+
 class OdooConstants:
     """Centralized Odoo-specific constants and patterns."""
 
     # Field types recognized in Odoo
     FIELD_TYPES = {
-        "Char", "Text", "Html", "Integer", "Float", "Monetary",
-        "Boolean", "Date", "Datetime", "Binary", "Selection",
-        "Many2one", "One2many", "Many2many", "Reference", "Image",
-        "Json", "Properties", "Many2oneReference"
+        "Char",
+        "Text",
+        "Html",
+        "Integer",
+        "Float",
+        "Monetary",
+        "Boolean",
+        "Date",
+        "Datetime",
+        "Binary",
+        "Selection",
+        "Many2one",
+        "One2many",
+        "Many2many",
+        "Reference",
+        "Image",
+        "Json",
+        "Properties",
+        "Many2oneReference",
     }
 
     # Model base classes
@@ -40,11 +54,26 @@ class OdooConstants:
 
     # Model attributes in preferred order
     MODEL_ATTRIBUTES = [
-        "_name", "_inherits", "_inherit", "_description",
-        "_table", "_table_query", "_sequence", "_active_name",
-        "_date_name", "_fold_name", "_parent_name", "_parent_store",
-        "_parent_order", "_rec_name", "_rec_names_search", "_order",
-        "_auto", "_abstract", "_check_company_auto", "_custom"
+        "_name",
+        "_inherits",
+        "_inherit",
+        "_description",
+        "_table",
+        "_table_query",
+        "_sequence",
+        "_active_name",
+        "_date_name",
+        "_fold_name",
+        "_parent_name",
+        "_parent_store",
+        "_parent_order",
+        "_rec_name",
+        "_rec_names_search",
+        "_order",
+        "_auto",
+        "_abstract",
+        "_check_company_auto",
+        "_custom",
     ]
 
     # SQL constraints pattern
@@ -52,15 +81,21 @@ class OdooConstants:
 
     # Common method decorators
     DECORATORS = {
-        "api.depends", "api.depends_context", "api.onchange",
-        "api.constrains", "api.model", "api.model_create_multi",
-        "api.autovacuum", "api.ondelete"
+        "api.depends",
+        "api.depends_context",
+        "api.onchange",
+        "api.constrains",
+        "api.model",
+        "api.model_create_multi",
+        "api.autovacuum",
+        "api.ondelete",
     }
 
 
 # ============================================================
 # AST ANALYSIS MIXINS
 # ============================================================
+
 
 class OdooASTMixin:
     """Mixin for common AST analysis operations on Odoo code."""
@@ -79,13 +114,15 @@ class OdooASTMixin:
                 if base.attr in OdooConstants.MODEL_BASES:
                     return True
                 # Check for models.Model pattern
-                if (isinstance(base.value, ast.Name) and
-                    base.value.id == "models" and
-                    base.attr in OdooConstants.MODEL_BASES):
+                if (
+                    isinstance(base.value, ast.Name)
+                    and base.value.id == "models"
+                    and base.attr in OdooConstants.MODEL_BASES
+                ):
                     return True
         return False
 
-    def get_model_name(self, node: ast.ClassDef) -> Optional[str]:
+    def get_model_name(self, node: ast.ClassDef) -> str | None:
         """Extract model name from _name or _inherit attributes.
 
         Args:
@@ -119,7 +156,7 @@ class OdooASTMixin:
                 return node.value.func.attr in OdooConstants.FIELD_TYPES
         return False
 
-    def get_field_type(self, node: ast.Assign) -> Optional[str]:
+    def get_field_type(self, node: ast.Assign) -> str | None:
         """Extract field type from a field assignment.
 
         Args:
@@ -134,7 +171,7 @@ class OdooASTMixin:
                     return node.value.func.attr
         return None
 
-    def get_field_name(self, node: ast.Assign) -> Optional[str]:
+    def get_field_name(self, node: ast.Assign) -> str | None:
         """Extract field name from a field assignment.
 
         Args:
@@ -165,10 +202,11 @@ class OdooASTMixin:
 # FILE OPERATION MIXINS
 # ============================================================
 
+
 class BackupMixin:
     """Mixin for file backup operations."""
 
-    def create_backup(self, filepath: Path, backup_dir: Optional[Path] = None) -> Path:
+    def create_backup(self, filepath: Path, backup_dir: Path | None = None) -> Path:
         """Create a backup of a file.
 
         Args:
@@ -190,7 +228,9 @@ class BackupMixin:
         # Preserve directory structure in backup
         relative_path = filepath.name
         if filepath.parent != Path("."):
-            relative_path = filepath.relative_to(Path.cwd()) if filepath.is_absolute() else filepath
+            relative_path = (
+                filepath.relative_to(Path.cwd()) if filepath.is_absolute() else filepath
+            )
 
         backup_path = backup_dir / relative_path
         backup_path.parent.mkdir(parents=True, exist_ok=True)
@@ -200,7 +240,9 @@ class BackupMixin:
 
         return backup_path
 
-    def restore_from_backup(self, backup_path: Path, original_path: Optional[Path] = None) -> bool:
+    def restore_from_backup(
+        self, backup_path: Path, original_path: Path | None = None
+    ) -> bool:
         """Restore a file from backup.
 
         Args:
@@ -230,6 +272,7 @@ class BackupMixin:
 # ============================================================
 # CONFIGURATION MIXINS
 # ============================================================
+
 
 @dataclass
 class BaseConfig:
@@ -294,6 +337,7 @@ class BaseConfig:
 # NAMING UTILITIES
 # ============================================================
 
+
 class NamingUtilsMixin:
     """Mixin for common naming convention utilities."""
 
@@ -308,9 +352,9 @@ class NamingUtilsMixin:
             str: String in snake_case
         """
         # Insert underscore before uppercase letters preceded by lowercase
-        s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
+        s1 = re.sub("(.)([A-Z][a-z]+)", r"\1_\2", name)
         # Insert underscore before uppercase letters preceded by lowercase or numbers
-        s2 = re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1)
+        s2 = re.sub("([a-z0-9])([A-Z])", r"\1_\2", s1)
         return s2.lower()
 
     @staticmethod
@@ -354,10 +398,11 @@ class NamingUtilsMixin:
 # REPORT GENERATION MIXINS
 # ============================================================
 
+
 class ReportMixin:
     """Mixin for generating analysis reports."""
 
-    def generate_json_report(self, data: Dict, filepath: Path) -> None:
+    def generate_json_report(self, data: dict, filepath: Path) -> None:
         """Generate a JSON report file.
 
         Args:
@@ -367,7 +412,7 @@ class ReportMixin:
         report_data = {
             "timestamp": datetime.now().isoformat(),
             "version": "1.0.0",
-            **data
+            **data,
         }
 
         with open(filepath, "w") as f:
@@ -375,8 +420,12 @@ class ReportMixin:
 
         logger.info(f"Report saved to {filepath}")
 
-    def generate_text_report(self, title: str, sections: Dict[str, List[str]],
-                           filepath: Optional[Path] = None) -> str:
+    def generate_text_report(
+        self,
+        title: str,
+        sections: dict[str, list[str]],
+        filepath: Path | None = None,
+    ) -> str:
         """Generate a formatted text report.
 
         Args:
@@ -413,11 +462,12 @@ class ReportMixin:
 # MODULE PATH UTILITIES
 # ============================================================
 
+
 class ModulePathMixin:
     """Mixin for handling Odoo module paths."""
 
     @staticmethod
-    def find_module_root(filepath: Path) -> Optional[Path]:
+    def find_module_root(filepath: Path) -> Path | None:
         """Find the root directory of an Odoo module.
 
         Args:
@@ -429,14 +479,16 @@ class ModulePathMixin:
         current = filepath.parent if filepath.is_file() else filepath
 
         while current != current.parent:
-            if (current / "__manifest__.py").exists() or (current / "__openerp__.py").exists():
+            if (current / "__manifest__.py").exists() or (
+                current / "__openerp__.py"
+            ).exists():
                 return current
             current = current.parent
 
         return None
 
     @staticmethod
-    def get_module_name(filepath: Path) -> Optional[str]:
+    def get_module_name(filepath: Path) -> str | None:
         """Extract module name from a file path.
 
         Args:
@@ -449,14 +501,14 @@ class ModulePathMixin:
         return module_root.name if module_root else None
 
     @staticmethod
-    def find_addon_paths(base_path: Path) -> List[Path]:
+    def find_addon_paths(base_path: Path) -> list[Path]:
         """Find all addon directories from a base path.
 
         Args:
             base_path: Base Odoo installation path
 
         Returns:
-            List[Path]: List of existing addon directories
+            list[Path]: List of existing addon directories
         """
         potential_paths = [
             base_path / "addons",
@@ -468,10 +520,12 @@ class ModulePathMixin:
 
         # Also check parent directory for enterprise
         if base_path.parent:
-            potential_paths.extend([
-                base_path.parent / "enterprise",
-                base_path.parent / "addons_enterprise"
-            ])
+            potential_paths.extend(
+                [
+                    base_path.parent / "enterprise",
+                    base_path.parent / "addons_enterprise",
+                ]
+            )
 
         return [p for p in potential_paths if p.exists() and p.is_dir()]
 
@@ -480,18 +534,19 @@ class ModulePathMixin:
 # DECORATOR UTILITIES
 # ============================================================
 
+
 class DecoratorMixin:
     """Mixin for handling Python decorators in AST."""
 
     @staticmethod
-    def get_decorator_names(node: ast.FunctionDef) -> List[str]:
+    def get_decorator_names(node: ast.FunctionDef) -> list[str]:
         """Extract decorator names from a function node.
 
         Args:
             node: AST FunctionDef node
 
         Returns:
-            List[str]: List of decorator names
+            list[str]: List of decorator names
         """
         decorator_names = []
 
@@ -529,5 +584,6 @@ class DecoratorMixin:
             bool: True if decorator is present
         """
         decorator_names = DecoratorMixin.get_decorator_names(node)
-        return decorator_name in decorator_names or \
-               any(d.endswith(f".{decorator_name}") for d in decorator_names)
+        return decorator_name in decorator_names or any(
+            d.endswith(f".{decorator_name}") for d in decorator_names
+        )
