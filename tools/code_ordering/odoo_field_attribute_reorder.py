@@ -9,11 +9,12 @@ Only the attributes within field definitions are reordered.
 
 import argparse
 import ast
-import re
-import shutil
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
+import re
+import shutil
+
 
 # Import the ordering patterns from core
 try:
