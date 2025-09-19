@@ -1,0 +1,104 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* marin_rma
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~18.2+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-09-19 17:23+0000\n"
+"PO-Revision-Date: 2025-09-19 17:23+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: marin_rma
+#: model:ir.model.fields,field_description:marin_rma.field_rma_reason__active
+msgid "Active"
+msgstr "Activo"
+
+#. module: marin_rma
+#: model_terms:ir.ui.view,arch_db:marin_rma.view_rma_reason_form
+#: model_terms:ir.ui.view,arch_db:marin_rma.view_rma_reason_search
+msgid "Archived"
+msgstr "Archivado"
+
+#. module: marin_rma
+#: model:ir.actions.act_window,name:marin_rma.action_rma_reason
+#: model:ir.ui.menu,name:marin_rma.rma_reason_config
+msgid "Claim Reason"
+msgstr "Motivos de reclamo"
+
+#. module: marin_rma
+#: model:ir.model.fields,field_description:marin_rma.field_rma_reason__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: marin_rma
+#: model:ir.model.fields,field_description:marin_rma.field_rma_reason__create_date
+msgid "Created on"
+msgstr "Creado el"
+
+#. module: marin_rma
+#: model:ir.model.fields,field_description:marin_rma.field_rma_reason__description
+msgid "Description"
+msgstr "Descripción"
+
+#. module: marin_rma
+#: model:ir.model.fields,field_description:marin_rma.field_rma_reason__display_name
+msgid "Display Name"
+msgstr "Nombre"
+
+#. module: marin_rma
+#: model_terms:ir.ui.view,arch_db:marin_rma.view_rma_reason_search
+msgid "Group By"
+msgstr "Agrupar por"
+
+#. module: marin_rma
+#: model:ir.model.fields,field_description:marin_rma.field_rma_reason__id
+msgid "ID"
+msgstr ""
+
+#. module: marin_rma
+#: model:ir.model.fields,field_description:marin_rma.field_rma_reason__write_uid
+msgid "Last Updated by"
+msgstr "Última actualización por"
+
+#. module: marin_rma
+#: model:ir.model.fields,field_description:marin_rma.field_rma_reason__write_date
+msgid "Last Updated on"
+msgstr "Última actualización el"
+
+#. module: marin_rma
+#: model:ir.model.fields,field_description:marin_rma.field_rma_reason__name
+#: model_terms:ir.ui.view,arch_db:marin_rma.view_rma_reason_search
+msgid "Name"
+msgstr "Nombre"
+
+#. module: marin_rma
+#: model_terms:ir.ui.view,arch_db:marin_rma.view_rma_reason_form
+msgid "Name..."
+msgstr "Nombre..."
+
+#. module: marin_rma
+#: model:ir.model,name:marin_rma.model_rma_reason
+msgid "RMA Reason"
+msgstr "Motivo de reclamo"
+
+#. module: marin_rma
+#: model:ir.model.fields,field_description:marin_rma.field_rma_reason__sequence
+msgid "Sequence"
+msgstr "Secuencia"
+
+#. module: marin_rma
+#: model:ir.model.constraint,message:marin_rma.constraint_rma_reason_unique_name
+msgid "The claim reason must be unique!"
+msgstr "El motivo de reclamo debe ser único"
+
+#. module: marin_rma
+#: model_terms:ir.actions.act_window,help:marin_rma.action_rma_reason
+msgid "There is no examples click here to add new Claim Reason."
+msgstr "No hay ejemplos haga clic aquí para agregar nuevo motivo de reclamo"
