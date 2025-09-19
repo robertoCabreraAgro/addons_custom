@@ -1,613 +1,633 @@
-id,company_id/id,location_id/id,storage_category_id/id,active,posx,posy,posz,usage,barcode,removal_priority,name
-stock_location_5001,,stock.stock_location_inter_company,,True,0,0,0,Transit Location,,10,Intercompany transit: LMMG-LMMR
-stock_location_5002,,stock.stock_location_inter_company,,True,0,0,0,Transit Location,,10,Intercompany transit: LMMG-XM
-stock_location_5003,,stock.stock_location_inter_company,,True,0,0,0,Transit Location,,10,Intercompany transit: LMMR-LMMG
-stock_location_5004,,stock.stock_location_inter_company,,True,0,0,0,Transit Location,,10,Intercompany transit: LMMR-XM
-stock_location_5005,,stock.stock_location_inter_company,,True,0,0,0,Transit Location,,10,Intercompany transit: XM-LMMG
-stock_location_5006,,stock.stock_location_inter_company,,True,0,0,0,Transit Location,,10,Intercompany transit: XM-LMMR
-stock_location_5007,marin_data.company_lmmr,stock.stock_location_locations_virtual,,True,0,0,0,Transit Location,,10,Interwarehouse transit: BAL-CDG
-stock_location_5008,marin_data.company_lmmr,stock.stock_location_locations_virtual,,True,0,0,0,Transit Location,,10,Interwarehouse transit: BAL-LOM
-stock_location_5009,marin_data.company_lmmr,stock.stock_location_locations_virtual,,True,0,0,0,Transit Location,,10,Interwarehouse transit: BAL-SJN
-stock_location_5010,marin_data.company_lmmr,stock.stock_location_locations_virtual,,True,0,0,0,Transit Location,,10,Interwarehouse transit: CDG-BAL
-stock_location_5011,marin_data.company_lmmr,stock.stock_location_locations_virtual,,True,0,0,0,Transit Location,,10,Interwarehouse transit: CDG-HMT
-stock_location_5012,marin_data.company_lmmr,stock.stock_location_locations_virtual,,True,0,0,0,Transit Location,,10,Interwarehouse transit: CDG-LOM
-stock_location_5013,marin_data.company_lmmr,stock.stock_location_locations_virtual,,True,0,0,0,Transit Location,,10,Interwarehouse transit: CDG-MICH
-stock_location_5014,marin_data.company_lmmr,stock.stock_location_locations_virtual,,True,0,0,0,Transit Location,,10,Interwarehouse transit: CDG-MOCH
-stock_location_5015,marin_data.company_lmmr,stock.stock_location_locations_virtual,,True,0,0,0,Transit Location,,10,Interwarehouse transit: CDG-OBR
-stock_location_5016,marin_data.company_lmmr,stock.stock_location_locations_virtual,,True,0,0,0,Transit Location,,10,Interwarehouse transit: CDG-SALT
-stock_location_5017,marin_data.company_lmmr,stock.stock_location_locations_virtual,,True,0,0,0,Transit Location,,10,Interwarehouse transit: CDG-SJN
-stock_location_5018,marin_data.company_lmmr,stock.stock_location_locations_virtual,,True,0,0,0,Transit Location,,10,Interwarehouse transit: CDG-SNT
-stock_location_5019,marin_data.company_lmmr,stock.stock_location_locations_virtual,,True,0,0,0,Transit Location,,10,Interwarehouse transit: HMT-CDG
-stock_location_5020,marin_data.company_lmmr,stock.stock_location_locations_virtual,,True,0,0,0,Transit Location,,10,Interwarehouse transit: LOM-BAL
-stock_location_5021,marin_data.company_lmmr,stock.stock_location_locations_virtual,,True,0,0,0,Transit Location,,10,Interwarehouse transit: LOM-CDG
-stock_location_5022,marin_data.company_lmmr,stock.stock_location_locations_virtual,,True,0,0,0,Transit Location,,10,Interwarehouse transit: LOM-SJN
-stock_location_5023,marin_data.company_lmmr,stock.stock_location_locations_virtual,,True,0,0,0,Transit Location,,10,Interwarehouse transit: MICH-CDG
-stock_location_5024,marin_data.company_lmmr,stock.stock_location_locations_virtual,,True,0,0,0,Transit Location,,10,Interwarehouse transit: MOCH-CDG
-stock_location_5025,marin_data.company_lmmr,stock.stock_location_locations_virtual,,True,0,0,0,Transit Location,,10,Interwarehouse transit: MOCH-OBR
-stock_location_5026,marin_data.company_lmmr,stock.stock_location_locations_virtual,,True,0,0,0,Transit Location,,10,Interwarehouse transit: OBR-CDG
-stock_location_5027,marin_data.company_lmmr,stock.stock_location_locations_virtual,,True,0,0,0,Transit Location,,10,Interwarehouse transit: OBR-MOCH
-stock_location_5028,marin_data.company_lmmr,stock.stock_location_locations_virtual,,True,0,0,0,Transit Location,,10,Interwarehouse transit: OBR-SALT
-stock_location_5029,marin_data.company_lmmr,stock.stock_location_locations_virtual,,True,0,0,0,Transit Location,,10,Interwarehouse transit: SALT-CDG
-stock_location_5030,marin_data.company_lmmr,stock.stock_location_locations_virtual,,True,0,0,0,Transit Location,,10,Interwarehouse transit: SJN-BAL
-stock_location_5031,marin_data.company_lmmr,stock.stock_location_locations_virtual,,True,0,0,0,Transit Location,,10,Interwarehouse transit: SJN-CDG
-stock_location_5032,marin_data.company_lmmr,stock.stock_location_locations_virtual,,True,0,0,0,Transit Location,,10,Interwarehouse transit: SJN-LOM
-stock_location_5033,marin_data.company_lmmr,stock.stock_location_locations_virtual,,True,0,0,0,Transit Location,,10,Interwarehouse transit: SNT-CDG
-stock_location_5034,marin_data.company_lmmr,stock.stock_location_locations_virtual,,True,0,0,0,Transit Location,,10,Shipping transit 3P: CDG
-stock_location_5035,marin_data.company_lmmr,stock.stock_location_locations_virtual,,True,0,0,0,Transit Location,,10,Shipping transit 3P: MICH
-stock_location_5036,marin_data.company_lmmr,stock.stock_location_locations_virtual,,True,0,0,0,Transit Location,,10,Shipping transit 3P: MOCH
-stock_location_5037,marin_data.company_lmmr,stock.stock_location_locations_virtual,,True,0,0,0,Transit Location,,10,Shipping transit 3P: OBR
-stock_location_5038,marin_data.company_lmmr,stock.stock_location_locations_virtual,,True,0,0,0,Transit Location,,10,Shipping transit 3P: SALT
-stock_location_5039,marin_data.company_lmmr,stock.stock_location_locations_virtual,,True,0,0,0,Transit Location,,10,Shipping transit we ship: BAL
-stock_location_5040,marin_data.company_lmmr,stock.stock_location_locations_virtual,,True,0,0,0,Transit Location,,10,Shipping transit we ship: CDG
-stock_location_5041,marin_data.company_lmmr,stock.stock_location_locations_virtual,,True,0,0,0,Transit Location,,10,Shipping transit we ship: HMT
-stock_location_5042,marin_data.company_lmmr,stock.stock_location_locations_virtual,,True,0,0,0,Transit Location,,10,Shipping transit we ship: LOM
-stock_location_5043,marin_data.company_lmmr,stock.stock_location_locations_virtual,,True,0,0,0,Transit Location,,10,Shipping transit we ship: MICH
-stock_location_5044,marin_data.company_lmmr,stock.stock_location_locations_virtual,,True,0,0,0,Transit Location,,10,Shipping transit we ship: MOCH
-stock_location_5045,marin_data.company_lmmr,stock.stock_location_locations_virtual,,True,0,0,0,Transit Location,,10,Shipping transit we ship: OBR
-stock_location_5046,marin_data.company_lmmr,stock.stock_location_locations_virtual,,True,0,0,0,Transit Location,,10,Shipping transit we ship: SALT
-stock_location_5047,marin_data.company_lmmr,stock.stock_location_locations_virtual,,True,0,0,0,Transit Location,,10,Shipping transit we ship: SJN
-stock_location_5048,marin_data.company_lmmg,stock.stock_location_locations_virtual,,True,0,0,0,Transit Location,,10,Shipping transit 3P: LMMG
-stock_location_5049,marin_data.company_lmmg,stock.stock_location_locations_virtual,,True,0,0,0,Transit Location,,10,Shipping transit we ship: LMMG
-stock_location_5050,marin_data.company_society,stock.stock_location_locations_virtual,,True,0,0,0,Transit Location,,10,Shipping transit 3P: XM
-stock_location_5051,marin_data.company_society,stock.stock_location_locations_virtual,,True,0,0,0,Transit Location,,10,Shipping transit we ship: XM
-stock_location_5052,marin_data.company_lmmr,marin_data.stock_location_1010,,True,0,0,0,Internal Location,,11,Mostrador y anaquel
-stock_location_5053,marin_data.company_lmmr,marin_data.stock_location_1018,,True,0,0,0,Internal Location,,11,Bodega tienda
-stock_location_5054,marin_data.company_lmmr,marin_data.stock_location_1018,,True,0,0,0,Internal Location,,10,Mostrador y anaquel
-stock_location_5055,marin_data.company_lmmr,marin_data.stock_location_1018,,True,0,0,0,Internal Location,,13,Sotano
-stock_location_5056,marin_data.company_lmmr,marin_data.stock_location_1026,,True,0,0,0,Internal Location,CDG-OFFICE,10000,Oficina
-stock_location_5057,marin_data.company_lmmr,marin_data.stock_location_1026,,True,1,-1,1,Internal Location,CDG-PATIO1,3000,Patio1
-stock_location_5058,marin_data.company_lmmr,marin_data.stock_location_1026,,True,12,-1,1,Internal Location,CDG-PATIO2,3000,Patio2
-stock_location_5059,marin_data.company_lmmr,marin_data.stock_location_1026,marin_data.stock_storage_category_2,True,0,0,0,Internal Location,,9999,Damaged
-stock_location_5060,marin_data.company_lmmr,marin_data.stock_location_1026,marin_data.stock_storage_category_2,True,0,0,0,Internal Location,,9999,Shelf
-stock_location_5061,marin_data.company_lmmr,marin_data.stock_location_1026,,True,0,0,0,View,,10,R1
-stock_location_5062,marin_data.company_lmmr,marin_data.stock_location_1026,,True,0,0,0,View,,10,R2
-stock_location_5063,marin_data.company_lmmr,marin_data.stock_location_1026,,True,0,0,0,View,,10,R3
-stock_location_5064,marin_data.company_lmmr,marin_data.stock_location_1026,,True,0,0,0,View,,10,R4
-stock_location_5065,marin_data.company_lmmr,marin_data.stock_location_1026,,True,0,0,0,View,,10,R5
-stock_location_5066,marin_data.company_lmmr,marin_data.stock_location_1026,,True,0,0,0,View,,10,R6
-stock_location_5067,marin_data.company_lmmr,marin_data.stock_location_1026,,True,0,0,0,View,,10,R7
-stock_location_5068,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,1,1,1,Internal Location,CDG-R1F01N1,1101,R1F01N1
-stock_location_5069,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,1,1,2,Internal Location,CDG-R1F01N2,1102,R1F01N2
-stock_location_5070,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,1,1,3,Internal Location,CDG-R1F01N3,1103,R1F01N3
-stock_location_5071,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,1,2,1,Internal Location,CDG-R1F02N1,1111,R1F02N1
-stock_location_5072,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,1,2,2,Internal Location,CDG-R1F02N2,1112,R1F02N2
-stock_location_5073,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,1,2,3,Internal Location,CDG-R1F02N3,1113,R1F02N3
-stock_location_5074,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,1,3,1,Internal Location,CDG-R1F03N1,1122,R1F03N1
-stock_location_5075,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,1,3,2,Internal Location,CDG-R1F03N2,1123,R1F03N2
-stock_location_5076,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,1,3,3,Internal Location,CDG-R1F03N3,1124,R1F03N3
-stock_location_5077,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,1,4,1,Internal Location,CDG-R1F04N1,1133,R1F04N1
-stock_location_5078,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,1,4,2,Internal Location,CDG-R1F04N2,1134,R1F04N2
-stock_location_5079,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,1,4,3,Internal Location,CDG-R1F04N3,1135,R1F04N3
-stock_location_5080,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,1,5,1,Internal Location,CDG-R1F05N1,1144,R1F05N1
-stock_location_5081,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,1,5,2,Internal Location,CDG-R1F05N2,1145,R1F05N2
-stock_location_5082,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,1,5,3,Internal Location,CDG-R1F05N3,1146,R1F05N3
-stock_location_5083,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,1,6,1,Internal Location,CDG-R1F06N1,1155,R1F06N1
-stock_location_5084,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,1,6,2,Internal Location,CDG-R1F06N2,1156,R1F06N2
-stock_location_5085,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,1,6,3,Internal Location,CDG-R1F06N3,1157,R1F06N3
-stock_location_5086,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,1,7,1,Internal Location,CDG-R1F07N1,1166,R1F07N1
-stock_location_5087,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,1,7,2,Internal Location,CDG-R1F07N2,1167,R1F07N2
-stock_location_5088,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,1,7,3,Internal Location,CDG-R1F07N3,1168,R1F07N3
-stock_location_5089,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,1,8,1,Internal Location,CDG-R1F08N1,1177,R1F08N1
-stock_location_5090,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,1,8,2,Internal Location,CDG-R1F08N2,1178,R1F08N2
-stock_location_5091,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,1,8,3,Internal Location,CDG-R1F08N3,1179,R1F08N3
-stock_location_5092,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,1,9,1,Internal Location,CDG-R1F09N1,1188,R1F09N1
-stock_location_5093,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,1,9,2,Internal Location,CDG-R1F09N2,1189,R1F09N2
-stock_location_5094,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,1,9,3,Internal Location,CDG-R1F09N3,1190,R1F09N3
-stock_location_5095,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,1,10,1,Internal Location,CDG-R1F10N1,1199,R1F10N1
-stock_location_5096,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,1,10,2,Internal Location,CDG-R1F10N2,1200,R1F10N2
-stock_location_5097,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,1,10,3,Internal Location,CDG-R1F10N3,1201,R1F10N3
-stock_location_5098,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,1,11,1,Internal Location,CDG-R1F11N1,1210,R1F11N1
-stock_location_5099,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,1,11,2,Internal Location,CDG-R1F11N2,1211,R1F11N2
-stock_location_5100,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,1,11,3,Internal Location,CDG-R1F11N3,1212,R1F11N3
-stock_location_5101,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,1,12,1,Internal Location,CDG-R1F12N1,1221,R1F12N1
-stock_location_5102,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,1,12,2,Internal Location,CDG-R1F12N2,1222,R1F12N2
-stock_location_5103,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,1,12,3,Internal Location,CDG-R1F12N3,1223,R1F12N3
-stock_location_5104,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,1,13,1,Internal Location,CDG-R1F13N1,1232,R1F13N1
-stock_location_5105,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,1,13,2,Internal Location,CDG-R1F13N2,1233,R1F13N2
-stock_location_5106,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,1,13,3,Internal Location,CDG-R1F13N3,1234,R1F13N3
-stock_location_5107,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,1,14,1,Internal Location,CDG-R1F14N1,1243,R1F14N1
-stock_location_5108,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,1,14,2,Internal Location,CDG-R1F14N2,1244,R1F14N2
-stock_location_5109,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,1,14,3,Internal Location,CDG-R1F14N3,1245,R1F14N3
-stock_location_5110,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,1,15,1,Internal Location,CDG-R1F15N1,1254,R1F15N1
-stock_location_5111,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,1,15,2,Internal Location,CDG-R1F15N2,1255,R1F15N2
-stock_location_5112,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,1,15,3,Internal Location,CDG-R1F15N3,1256,R1F15N3
-stock_location_5113,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,1,16,1,Internal Location,CDG-R1F16N1,1265,R1F16N1
-stock_location_5114,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,1,16,2,Internal Location,CDG-R1F16N2,1266,R1F16N2
-stock_location_5115,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,1,16,3,Internal Location,CDG-R1F16N3,1267,R1F16N3
-stock_location_5116,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,1,17,1,Internal Location,CDG-R1F17N1,1276,R1F17N1
-stock_location_5117,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,1,17,2,Internal Location,CDG-R1F17N2,1277,R1F17N2
-stock_location_5118,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,1,17,3,Internal Location,CDG-R1F17N3,1278,R1F17N3
-stock_location_5119,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,1,18,1,Internal Location,CDG-R1F18N1,1287,R1F18N1
-stock_location_5120,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,1,18,2,Internal Location,CDG-R1F18N2,1288,R1F18N2
-stock_location_5121,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,1,18,3,Internal Location,CDG-R1F18N3,1289,R1F18N3
-stock_location_5122,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,1,19,1,Internal Location,CDG-R1F19N1,1298,R1F19N1
-stock_location_5123,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,1,19,2,Internal Location,CDG-R1F19N2,1299,R1F19N2
-stock_location_5124,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,1,19,3,Internal Location,CDG-R1F19N3,1300,R1F19N3
-stock_location_5125,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,1,20,1,Internal Location,CDG-R1F20N1,1309,R1F20N1
-stock_location_5126,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,1,20,2,Internal Location,CDG-R1F20N2,1310,R1F20N2
-stock_location_5127,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,1,20,3,Internal Location,CDG-R1F20N3,1311,R1F20N3
-stock_location_5128,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,1,21,1,Internal Location,CDG-R1F21N1,1320,R1F21N1
-stock_location_5129,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,1,21,2,Internal Location,CDG-R1F21N2,1321,R1F21N2
-stock_location_5130,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,1,21,3,Internal Location,CDG-R1F21N3,1322,R1F21N3
-stock_location_5131,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,1,22,1,Internal Location,CDG-R1F22N1,1331,R1F22N1
-stock_location_5132,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,1,22,2,Internal Location,CDG-R1F22N2,1332,R1F22N2
-stock_location_5133,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,1,22,3,Internal Location,CDG-R1F22N3,1333,R1F22N3
-stock_location_5134,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,1,23,1,Internal Location,CDG-R1F23N1,1342,R1F23N1
-stock_location_5135,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,1,23,2,Internal Location,CDG-R1F23N2,1343,R1F23N2
-stock_location_5136,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,1,23,3,Internal Location,CDG-R1F23N3,1344,R1F23N3
-stock_location_5137,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,1,24,1,Internal Location,CDG-R1F24N1,1353,R1F24N1
-stock_location_5138,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,1,24,2,Internal Location,CDG-R1F24N2,1354,R1F24N2
-stock_location_5139,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,1,24,3,Internal Location,CDG-R1F24N3,1355,R1F24N3
-stock_location_5140,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,1,25,1,Internal Location,CDG-R1F25N1,1364,R1F25N1
-stock_location_5141,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,1,25,2,Internal Location,CDG-R1F25N2,1365,R1F25N2
-stock_location_5142,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,1,25,3,Internal Location,CDG-R1F25N3,1366,R1F25N3
-stock_location_5143,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,1,26,1,Internal Location,CDG-R1F26N1,1375,R1F26N1
-stock_location_5144,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,1,26,2,Internal Location,CDG-R1F26N2,1376,R1F26N2
-stock_location_5145,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,1,26,3,Internal Location,CDG-R1F26N3,1377,R1F26N3
-stock_location_5146,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,1,27,1,Internal Location,CDG-R1F27N1,1386,R1F27N1
-stock_location_5147,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,1,27,2,Internal Location,CDG-R1F27N2,1387,R1F27N2
-stock_location_5148,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,1,27,3,Internal Location,CDG-R1F27N3,1388,R1F27N3
-stock_location_5149,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,1,28,1,Internal Location,CDG-R1F28N1,1397,R1F28N1
-stock_location_5150,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,1,28,2,Internal Location,CDG-R1F28N2,1398,R1F28N2
-stock_location_5151,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,1,28,3,Internal Location,CDG-R1F28N3,1399,R1F28N3
-stock_location_5152,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,1,29,1,Internal Location,CDG-R1F29N1,1408,R1F29N1
-stock_location_5153,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,1,29,2,Internal Location,CDG-R1F29N2,1409,R1F29N2
-stock_location_5154,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,1,29,3,Internal Location,CDG-R1F29N3,1410,R1F29N3
-stock_location_5155,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,1,30,1,Internal Location,CDG-R1F30N1,1419,R1F30N1
-stock_location_5156,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,1,30,2,Internal Location,CDG-R1F30N2,1420,R1F30N2
-stock_location_5157,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,1,30,3,Internal Location,CDG-R1F30N3,1421,R1F30N3
-stock_location_5158,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,1,31,1,Internal Location,CDG-R1F31N1,1430,R1F31N1
-stock_location_5159,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,1,31,2,Internal Location,CDG-R1F31N2,1431,R1F31N2
-stock_location_5160,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,1,31,3,Internal Location,CDG-R1F31N3,1432,R1F31N3
-stock_location_5161,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,1,32,1,Internal Location,CDG-R1F32N1,1441,R1F32N1
-stock_location_5162,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,1,32,2,Internal Location,CDG-R1F32N2,1442,R1F32N2
-stock_location_5163,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,1,32,3,Internal Location,CDG-R1F32N3,1443,R1F32N3
-stock_location_5164,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,1,33,1,Internal Location,CDG-R1F33N1,1452,R1F33N1
-stock_location_5165,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,1,33,2,Internal Location,CDG-R1F33N2,1453,R1F33N2
-stock_location_5166,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,1,33,3,Internal Location,CDG-R1F33N3,1454,R1F33N3
-stock_location_5167,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,1,34,1,Internal Location,CDG-R1F34N1,1463,R1F34N1
-stock_location_5168,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,1,34,2,Internal Location,CDG-R1F34N2,1464,R1F34N2
-stock_location_5169,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,1,34,3,Internal Location,CDG-R1F34N3,1465,R1F34N3
-stock_location_5170,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_1,True,1,35,1,Internal Location,CDG-R1F35N1CISTERNA,9999,R1F35N1 - Cisterna
-stock_location_5171,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_2,True,4,13,1,Internal Location,CDG-R2F08N1,1191,R2F08N1
-stock_location_5172,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_3,True,4,13,2,Internal Location,CDG-R2F08N2,1192,R2F08N2
-stock_location_5173,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_4,True,4,13,3,Internal Location,CDG-R2F08N3,1193,R2F08N3
-stock_location_5174,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_2,True,4,13,1,Internal Location,CDG-R2F09N1,1194,R2F09N1
-stock_location_5175,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_3,True,4,13,2,Internal Location,CDG-R2F09N2,1195,R2F09N2
-stock_location_5176,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_4,True,4,13,3,Internal Location,CDG-R2F09N3,1196,R2F09N3
-stock_location_5177,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_2,True,4,13,1,Internal Location,CDG-R2F10N1,1224,R2F10N1
-stock_location_5178,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_3,True,4,13,2,Internal Location,CDG-R2F10N2,1225,R2F10N2
-stock_location_5179,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_4,True,4,13,3,Internal Location,CDG-R2F10N3,1226,R2F10N3
-stock_location_5180,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_2,True,4,13,1,Internal Location,CDG-R2F11N1,1235,R2F11N1
-stock_location_5181,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_3,True,4,13,2,Internal Location,CDG-R2F11N2,1236,R2F11N2
-stock_location_5182,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_4,True,4,13,3,Internal Location,CDG-R2F11N3,1237,R2F11N3
-stock_location_5183,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_2,True,4,13,1,Internal Location,CDG-R2F12N1,1246,R2F12N1
-stock_location_5184,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_3,True,4,13,2,Internal Location,CDG-R2F12N2,1247,R2F12N2
-stock_location_5185,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_4,True,4,13,3,Internal Location,CDG-R2F12N3,1248,R2F12N3
-stock_location_5186,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_2,True,4,13,1,Internal Location,CDG-R2F13N1,1257,R2F13N1
-stock_location_5187,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_3,True,4,13,2,Internal Location,CDG-R2F13N2,1258,R2F13N2
-stock_location_5188,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_4,True,4,13,3,Internal Location,CDG-R2F13N3,1259,R2F13N3
-stock_location_5189,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_2,True,4,14,1,Internal Location,CDG-R2F14N1,1268,R2F14N1
-stock_location_5190,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_3,True,4,14,2,Internal Location,CDG-R2F14N2,1269,R2F14N2
-stock_location_5191,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_4,True,4,14,3,Internal Location,CDG-R2F14N3,1270,R2F14N3
-stock_location_5192,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_2,True,4,15,1,Internal Location,CDG-R2F15N1,1279,R2F15N1
-stock_location_5193,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_3,True,4,15,2,Internal Location,CDG-R2F15N2,1280,R2F15N2
-stock_location_5194,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_4,True,4,15,3,Internal Location,CDG-R2F15N3,1281,R2F15N3
-stock_location_5195,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_2,True,4,16,1,Internal Location,CDG-R2F16N1,1290,R2F16N1
-stock_location_5196,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_3,True,4,16,2,Internal Location,CDG-R2F16N2,1291,R2F16N2
-stock_location_5197,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_4,True,4,16,3,Internal Location,CDG-R2F16N3,1292,R2F16N3
-stock_location_5198,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_2,True,4,17,1,Internal Location,CDG-R2F17N1,1301,R2F17N1
-stock_location_5199,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_3,True,4,17,2,Internal Location,CDG-R2F17N2,1302,R2F17N2
-stock_location_5200,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_4,True,4,17,3,Internal Location,CDG-R2F17N3,1303,R2F17N3
-stock_location_5201,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_2,True,4,18,1,Internal Location,CDG-R2F18N1,1312,R2F18N1
-stock_location_5202,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_3,True,4,18,2,Internal Location,CDG-R2F18N2,1313,R2F18N2
-stock_location_5203,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_4,True,4,18,3,Internal Location,CDG-R2F18N3,1314,R2F18N3
-stock_location_5204,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_2,True,4,19,1,Internal Location,CDG-R2F19N1,1323,R2F19N1
-stock_location_5205,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_3,True,4,19,2,Internal Location,CDG-R2F19N2,1324,R2F19N2
-stock_location_5206,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_4,True,4,19,3,Internal Location,CDG-R2F19N3,1325,R2F19N3
-stock_location_5207,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_2,True,4,20,1,Internal Location,CDG-R2F20N1,1334,R2F20N1
-stock_location_5208,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_3,True,4,20,2,Internal Location,CDG-R2F20N2,1335,R2F20N2
-stock_location_5209,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_4,True,4,20,3,Internal Location,CDG-R2F20N3,1336,R2F20N3
-stock_location_5210,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_2,True,4,21,1,Internal Location,CDG-R2F21N1,1345,R2F21N1
-stock_location_5211,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_3,True,4,21,2,Internal Location,CDG-R2F21N2,1346,R2F21N2
-stock_location_5212,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_4,True,4,21,3,Internal Location,CDG-R2F21N3,1347,R2F21N3
-stock_location_5213,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_2,True,4,22,1,Internal Location,CDG-R2F22N1,1355,R2F22N1
-stock_location_5214,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_3,True,4,22,2,Internal Location,CDG-R2F22N2,1356,R2F22N2
-stock_location_5215,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_4,True,4,22,3,Internal Location,CDG-R2F22N3,1357,R2F22N3
-stock_location_5216,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_2,True,4,23,1,Internal Location,CDG-R2F23N1,1367,R2F23N1
-stock_location_5217,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_3,True,4,23,2,Internal Location,CDG-R2F23N2,1368,R2F23N2
-stock_location_5218,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_4,True,4,23,3,Internal Location,CDG-R2F23N3,1369,R2F23N3
-stock_location_5219,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_2,True,4,24,1,Internal Location,CDG-R2F24N1,1378,R2F24N1
-stock_location_5220,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_3,True,4,24,2,Internal Location,CDG-R2F24N2,1379,R2F24N2
-stock_location_5221,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_4,True,4,24,3,Internal Location,CDG-R2F24N3,1380,R2F24N3
-stock_location_5222,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_2,True,4,25,1,Internal Location,CDG-R2F25N1,1389,R2F25N1
-stock_location_5223,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_3,True,4,25,2,Internal Location,CDG-R2F25N2,1390,R2F25N2
-stock_location_5224,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_4,True,4,25,3,Internal Location,CDG-R2F25N3,1391,R2F25N3
-stock_location_5225,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_2,True,4,26,1,Internal Location,CDG-R2F26N1,1400,R2F26N1
-stock_location_5226,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_3,True,4,26,2,Internal Location,CDG-R2F26N2,1401,R2F26N2
-stock_location_5227,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_4,True,4,26,3,Internal Location,CDG-R2F26N3,1402,R2F26N3
-stock_location_5228,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_2,True,4,27,1,Internal Location,CDG-R2F27N1,1411,R2F27N1
-stock_location_5229,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_3,True,4,27,2,Internal Location,CDG-R2F27N2,1412,R2F27N2
-stock_location_5230,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_4,True,4,27,3,Internal Location,CDG-R2F27N3,1413,R2F27N3
-stock_location_5231,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_2,True,4,28,1,Internal Location,CDG-R2F28N1,1422,R2F28N1
-stock_location_5232,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_3,True,4,28,2,Internal Location,CDG-R2F28N2,1423,R2F28N2
-stock_location_5233,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_4,True,4,28,3,Internal Location,CDG-R2F28N3,1424,R2F28N3
-stock_location_5234,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_2,True,4,29,1,Internal Location,CDG-R2F29N1,1433,R2F29N1
-stock_location_5235,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_3,True,4,29,2,Internal Location,CDG-R2F29N2,1434,R2F29N2
-stock_location_5236,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_4,True,4,29,3,Internal Location,CDG-R2F29N3,1435,R2F29N3
-stock_location_5237,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_2,True,4,30,1,Internal Location,CDG-R2F30N1,1444,R2F30N1
-stock_location_5238,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_3,True,4,30,2,Internal Location,CDG-R2F30N2,1445,R2F30N2
-stock_location_5239,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_4,True,4,30,3,Internal Location,CDG-R2F30N3,1446,R2F30N3
-stock_location_5240,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_2,True,5,8,1,Internal Location,CDG-R3F08N1,1723,R3F08N1
-stock_location_5241,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_3,True,5,8,2,Internal Location,CDG-R3F08N2,1724,R3F08N2
-stock_location_5242,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_4,True,5,8,3,Internal Location,CDG-R3F08N3,1725,R3F08N3
-stock_location_5243,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_2,True,5,9,1,Internal Location,CDG-R3F09N1,1712,R3F09N1
-stock_location_5244,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_3,True,5,9,2,Internal Location,CDG-R3F09N2,1713,R3F09N2
-stock_location_5245,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_4,True,5,9,3,Internal Location,CDG-R3F09N3,1714,R3F09N3
-stock_location_5246,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_2,True,5,10,1,Internal Location,CDG-R3F10N1,1701,R3F10N1
-stock_location_5247,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_3,True,5,10,2,Internal Location,CDG-R3F10N2,1702,R3F10N2
-stock_location_5248,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_4,True,5,10,3,Internal Location,CDG-R3F10N3,1703,R3F10N3
-stock_location_5249,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_2,True,5,11,1,Internal Location,CDG-R3F11N1,1690,R3F11N1
-stock_location_5250,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_3,True,5,11,2,Internal Location,CDG-R3F11N2,1691,R3F11N2
-stock_location_5251,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_4,True,5,11,3,Internal Location,CDG-R3F11N3,1692,R3F11N3
-stock_location_5252,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_2,True,5,12,1,Internal Location,CDG-R3F12N1,1679,R3F12N1
-stock_location_5253,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_3,True,5,12,2,Internal Location,CDG-R3F12N2,1680,R3F12N2
-stock_location_5254,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_4,True,5,12,3,Internal Location,CDG-R3F12N3,1681,R3F12N3
-stock_location_5255,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_2,True,5,13,1,Internal Location,CDG-R3F13N1,1668,R3F13N1
-stock_location_5256,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_3,True,5,13,2,Internal Location,CDG-R3F13N2,1669,R3F13N2
-stock_location_5257,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_4,True,5,13,3,Internal Location,CDG-R3F13N3,1670,R3F13N3
-stock_location_5258,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_2,True,5,14,1,Internal Location,CDG-R3F14N1,1657,R3F14N1
-stock_location_5259,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_3,True,5,14,2,Internal Location,CDG-R3F14N2,1658,R3F14N2
-stock_location_5260,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_4,True,5,14,3,Internal Location,CDG-R3F14N3,1659,R3F14N3
-stock_location_5261,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_2,True,5,15,1,Internal Location,CDG-R3F15N1,1646,R3F15N1
-stock_location_5262,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_3,True,5,15,2,Internal Location,CDG-R3F15N2,1647,R3F15N2
-stock_location_5263,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_4,True,5,15,3,Internal Location,CDG-R3F15N3,1648,R3F15N3
-stock_location_5264,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_2,True,5,16,1,Internal Location,CDG-R3F16N1,1635,R3F16N1
-stock_location_5265,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_3,True,5,16,2,Internal Location,CDG-R3F16N2,1636,R3F16N2
-stock_location_5266,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_4,True,5,16,3,Internal Location,CDG-R3F16N3,1637,R3F16N3
-stock_location_5267,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_2,True,5,17,1,Internal Location,CDG-R3F17N1,1624,R3F17N1
-stock_location_5268,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_3,True,5,17,2,Internal Location,CDG-R3F17N2,1625,R3F17N2
-stock_location_5269,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_4,True,5,17,3,Internal Location,CDG-R3F17N3,1626,R3F17N3
-stock_location_5270,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_2,True,5,18,1,Internal Location,CDG-R3F18N1,1613,R3F18N1
-stock_location_5271,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_3,True,5,18,2,Internal Location,CDG-R3F18N2,1614,R3F18N2
-stock_location_5272,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_4,True,5,18,3,Internal Location,CDG-R3F18N3,1615,R3F18N3
-stock_location_5273,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_2,True,5,19,1,Internal Location,CDG-R3F19N1,1602,R3F19N1
-stock_location_5274,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_3,True,5,19,2,Internal Location,CDG-R3F19N2,1603,R3F19N2
-stock_location_5275,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_4,True,5,19,3,Internal Location,CDG-R3F19N3,1604,R3F19N3
-stock_location_5276,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_2,True,5,20,1,Internal Location,CDG-R3F20N1,1591,R3F20N1
-stock_location_5277,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_3,True,5,20,2,Internal Location,CDG-R3F20N2,1592,R3F20N2
-stock_location_5278,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_4,True,5,20,3,Internal Location,CDG-R3F20N3,1593,R3F20N3
-stock_location_5279,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_2,True,5,21,1,Internal Location,CDG-R3F21N1,1580,R3F21N1
-stock_location_5280,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_3,True,5,21,2,Internal Location,CDG-R3F21N2,1581,R3F21N2
-stock_location_5281,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_4,True,5,21,3,Internal Location,CDG-R3F21N3,1582,R3F21N3
-stock_location_5282,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_2,True,5,22,1,Internal Location,CDG-R3F22N1,1569,R3F22N1
-stock_location_5283,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_3,True,5,22,2,Internal Location,CDG-R3F22N2,1570,R3F22N2
-stock_location_5284,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_4,True,5,22,3,Internal Location,CDG-R3F22N3,1571,R3F22N3
-stock_location_5285,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_2,True,5,23,1,Internal Location,CDG-R3F23N1,1558,R3F23N1
-stock_location_5286,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_3,True,5,23,2,Internal Location,CDG-R3F23N2,1559,R3F23N2
-stock_location_5287,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_4,True,5,23,3,Internal Location,CDG-R3F23N3,1560,R3F23N3
-stock_location_5288,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_2,True,5,24,1,Internal Location,CDG-R3F24N1,1547,R3F24N1
-stock_location_5289,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_3,True,5,24,2,Internal Location,CDG-R3F24N2,1548,R3F24N2
-stock_location_5290,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_4,True,5,24,3,Internal Location,CDG-R3F24N3,1549,R3F24N3
-stock_location_5291,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_2,True,5,25,1,Internal Location,CDG-R3F25N1,1536,R3F25N1
-stock_location_5292,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_3,True,5,25,2,Internal Location,CDG-R3F25N2,1537,R3F25N2
-stock_location_5293,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_4,True,5,25,3,Internal Location,CDG-R3F25N3,1538,R3F25N3
-stock_location_5294,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_2,True,5,26,1,Internal Location,CDG-R3F26N1,1525,R3F26N1
-stock_location_5295,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_3,True,5,26,2,Internal Location,CDG-R3F26N2,1526,R3F26N2
-stock_location_5296,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_4,True,5,26,3,Internal Location,CDG-R3F26N3,1527,R3F26N3
-stock_location_5297,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_2,True,5,27,1,Internal Location,CDG-R3F27N1,1514,R3F27N1
-stock_location_5298,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_3,True,5,27,2,Internal Location,CDG-R3F27N2,1515,R3F27N2
-stock_location_5299,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_4,True,5,27,3,Internal Location,CDG-R3F27N3,1516,R3F27N3
-stock_location_5300,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_2,True,5,28,1,Internal Location,CDG-R3F28N1,1507,R3F28N1
-stock_location_5301,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_3,True,5,28,2,Internal Location,CDG-R3F28N2,1506,R3F28N2
-stock_location_5302,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_4,True,5,28,3,Internal Location,CDG-R3F28N3,1505,R3F28N3
-stock_location_5303,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_2,True,5,29,1,Internal Location,CDG-R3F29N1,1496,R3F29N1
-stock_location_5304,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_3,True,5,29,2,Internal Location,CDG-R3F29N2,1497,R3F29N2
-stock_location_5305,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_4,True,5,29,3,Internal Location,CDG-R3F29N3,1498,R3F29N3
-stock_location_5306,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_2,True,5,30,1,Internal Location,CDG-R3F30N1,1485,R3F30N1
-stock_location_5307,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_3,True,5,30,2,Internal Location,CDG-R3F30N2,1486,R3F30N2
-stock_location_5308,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_4,True,5,30,3,Internal Location,CDG-R3F30N3,1487,R3F30N3
-stock_location_5309,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,8,5,1,Internal Location,CDG-R4F05N1,1763,R4F05N1
-stock_location_5310,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_5,True,8,5,2,Internal Location,CDG-R4F05N2,1764,R4F05N2
-stock_location_5311,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_6,True,8,5,3,Internal Location,CDG-R4F05N3,1765,R4F05N3
-stock_location_5312,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,8,6,1,Internal Location,CDG-R4F06N1,1752,R4F06N1
-stock_location_5313,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_5,True,8,6,2,Internal Location,CDG-R4F06N2,1753,R4F06N2
-stock_location_5314,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_6,True,8,6,3,Internal Location,CDG-R4F06N3,1754,R4F06N3
-stock_location_5315,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,8,7,1,Internal Location,CDG-R4F07N1,1741,R4F07N1
-stock_location_5316,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_5,True,8,7,2,Internal Location,CDG-R4F07N2,1742,R4F07N2
-stock_location_5317,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_6,True,8,7,3,Internal Location,CDG-R4F07N3,1743,R4F07N3
-stock_location_5318,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,8,8,1,Internal Location,CDG-R4F08N1,1730,R4F08N1
-stock_location_5319,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_3,True,8,8,2,Internal Location,CDG-R4F08N2,1731,R4F08N2
-stock_location_5320,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_4,True,8,8,3,Internal Location,CDG-R4F08N3,1732,R4F08N3
-stock_location_5321,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,8,9,1,Internal Location,CDG-R4F09N1,1719,R4F09N1
-stock_location_5322,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_3,True,8,9,2,Internal Location,CDG-R4F09N2,1720,R4F09N2
-stock_location_5323,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_4,True,8,9,3,Internal Location,CDG-R4F09N3,1721,R4F09N3
-stock_location_5324,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,8,10,1,Internal Location,CDG-R4F10N1,1708,R4F10N1
-stock_location_5325,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_3,True,8,10,2,Internal Location,CDG-R4F10N2,1709,R4F10N2
-stock_location_5326,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_4,True,8,10,3,Internal Location,CDG-R4F10N3,1710,R4F10N3
-stock_location_5327,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,8,11,1,Internal Location,CDG-R4F11N1,1697,R4F11N1
-stock_location_5328,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_3,True,8,11,2,Internal Location,CDG-R4F11N2,1698,R4F11N2
-stock_location_5329,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_4,True,8,11,3,Internal Location,CDG-R4F11N3,1699,R4F11N3
-stock_location_5330,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,8,12,1,Internal Location,CDG-R4F12N1,1686,R4F12N1
-stock_location_5331,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_3,True,8,12,2,Internal Location,CDG-R4F12N2,1687,R4F12N2
-stock_location_5332,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_4,True,8,12,3,Internal Location,CDG-R4F12N3,1688,R4F12N3
-stock_location_5333,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,8,13,1,Internal Location,CDG-R4F13N1,1675,R4F13N1
-stock_location_5334,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_3,True,8,13,2,Internal Location,CDG-R4F13N2,1676,R4F13N2
-stock_location_5335,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_4,True,8,13,3,Internal Location,CDG-R4F13N3,1677,R4F13N3
-stock_location_5336,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,8,14,0,Internal Location,CDG-R4F14N0,1664,R4F14N1
-stock_location_5337,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_3,True,8,14,2,Internal Location,CDG-R4F14N2,1665,R4F14N2
-stock_location_5338,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_4,True,8,14,3,Internal Location,CDG-R4F14N3,1666,R4F14N3
-stock_location_5339,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,8,15,1,Internal Location,CDG-R4F15N1,1653,R4F15N1
-stock_location_5340,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_3,True,8,15,2,Internal Location,CDG-R4F15N2,1654,R4F15N2
-stock_location_5341,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_4,True,8,15,3,Internal Location,CDG-R4F15N3,1655,R4F15N3
-stock_location_5342,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,8,16,1,Internal Location,CDG-R4F16N1,1642,R4F16N1
-stock_location_5343,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_3,True,8,16,2,Internal Location,CDG-R4F16N2,1643,R4F16N2
-stock_location_5344,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_4,True,8,16,3,Internal Location,CDG-R4F16N3,1644,R4F16N3
-stock_location_5345,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,8,17,1,Internal Location,CDG-R4F17N1,1631,R4F17N1
-stock_location_5346,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_3,True,8,17,2,Internal Location,CDG-R4F17N2,1632,R4F17N2
-stock_location_5347,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_4,True,8,17,3,Internal Location,CDG-R4F17N3,1633,R4F17N3
-stock_location_5348,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,8,18,1,Internal Location,CDG-R4F18N1,1620,R4F18N1
-stock_location_5349,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_3,True,8,18,2,Internal Location,CDG-R4F18N2,1621,R4F18N2
-stock_location_5350,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_4,True,8,18,3,Internal Location,CDG-R4F18N3,1622,R4F18N3
-stock_location_5351,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,8,19,1,Internal Location,CDG-R4F19N1,1609,R4F19N1
-stock_location_5352,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_3,True,8,19,2,Internal Location,CDG-R4F19N2,1610,R4F19N2
-stock_location_5353,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_4,True,8,19,3,Internal Location,CDG-R4F19N3,1611,R4F19N3
-stock_location_5354,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,8,20,1,Internal Location,CDG-R4F20N1,1598,R4F20N1
-stock_location_5355,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_3,True,8,20,2,Internal Location,CDG-R4F20N2,1599,R4F20N2
-stock_location_5356,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_4,True,8,20,3,Internal Location,CDG-R4F20N3,1600,R4F20N3
-stock_location_5357,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,8,21,1,Internal Location,CDG-R4F21N1,1587,R4F21N1
-stock_location_5358,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_3,True,8,21,2,Internal Location,CDG-R4F21N2,1588,R4F21N2
-stock_location_5359,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_4,True,8,21,3,Internal Location,CDG-R4F21N3,1589,R4F21N3
-stock_location_5360,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,8,22,1,Internal Location,CDG-R4F22N1,1576,R4F22N1
-stock_location_5361,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_3,True,8,22,2,Internal Location,CDG-R4F22N2,1577,R4F22N2
-stock_location_5362,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_4,True,8,22,3,Internal Location,CDG-R4F22N3,1578,R4F22N3
-stock_location_5363,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,8,23,1,Internal Location,CDG-R4F23N1,1565,R4F23N1
-stock_location_5364,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_3,True,8,23,2,Internal Location,CDG-R4F23N2,1566,R4F23N2
-stock_location_5365,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_4,True,8,23,3,Internal Location,CDG-R4F23N3,1567,R4F23N3
-stock_location_5366,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,8,24,1,Internal Location,CDG-R4F24N1,1554,R4F24N1
-stock_location_5367,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_3,True,8,24,2,Internal Location,CDG-R4F24N2,1555,R4F24N2
-stock_location_5368,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_4,True,8,24,3,Internal Location,CDG-R4F24N3,1556,R4F24N3
-stock_location_5369,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,8,25,1,Internal Location,CDG-R4F25N1,1543,R4F25N1
-stock_location_5370,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_3,True,8,25,2,Internal Location,CDG-R4F25N2,1544,R4F25N2
-stock_location_5371,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_4,True,8,25,3,Internal Location,CDG-R4F25N3,1545,R4F25N3
-stock_location_5372,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,8,26,1,Internal Location,CDG-R4F26N1,1532,R4F26N1
-stock_location_5373,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_3,True,8,26,2,Internal Location,CDG-R4F26N2,1533,R4F26N2
-stock_location_5374,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_4,True,8,26,3,Internal Location,CDG-R4F26N3,1534,R4F26N3
-stock_location_5375,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,8,27,1,Internal Location,CDG-R4F27N1,1521,R4F27N1
-stock_location_5376,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_3,True,8,27,2,Internal Location,CDG-R4F27N2,1522,R4F27N2
-stock_location_5377,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_4,True,8,27,3,Internal Location,CDG-R4F27N3,1523,R4F27N3
-stock_location_5378,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,8,28,1,Internal Location,CDG-R4F28N1,1510,R4F28N1
-stock_location_5379,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_3,True,8,28,2,Internal Location,CDG-R4F28N2,1511,R4F28N2
-stock_location_5380,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_4,True,8,28,3,Internal Location,CDG-R4F28N3,1512,R4F28N3
-stock_location_5381,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,8,29,1,Internal Location,CDG-R4F29N1,1499,R4F29N1
-stock_location_5382,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_3,True,8,29,2,Internal Location,CDG-R4F29N2,1500,R4F29N2
-stock_location_5383,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_4,True,8,29,3,Internal Location,CDG-R4F29N3,1501,R4F29N3
-stock_location_5384,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,8,30,1,Internal Location,CDG-R4F30N1,1488,R4F30N1
-stock_location_5385,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_3,True,8,30,2,Internal Location,CDG-R4F30N2,1489,R4F30N2
-stock_location_5386,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_4,True,8,30,3,Internal Location,CDG-R4F30N3,1490,R4F30N3
-stock_location_5387,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,0,5,1,Internal Location,CDG-R5F05N1,2112,R5F05N1
-stock_location_5388,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_5,True,0,5,2,Internal Location,CDG-R5F05N2,2113,R5F05N2
-stock_location_5389,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_6,True,0,5,3,Internal Location,CDG-R5F05N3,2114,R5F05N3
-stock_location_5390,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,0,6,1,Internal Location,CDG-R5F06N1,2101,R5F06N1
-stock_location_5391,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_5,True,0,6,2,Internal Location,CDG-R5F06N2,2102,R5F06N2
-stock_location_5392,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_6,True,0,6,3,Internal Location,CDG-R5F06N3,2103,R5F06N3
-stock_location_5393,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,0,7,1,Internal Location,CDG-R5F07N1,2090,R5F07N1
-stock_location_5394,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_5,True,0,7,2,Internal Location,CDG-R5F07N2,2091,R5F07N2
-stock_location_5395,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_6,True,0,7,3,Internal Location,CDG-R5F07N3,2092,R5F07N3
-stock_location_5396,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,9,8,1,Internal Location,CDG-R5F08N1,2079,R5F08N1
-stock_location_5397,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_3,True,9,8,2,Internal Location,CDG-R5F08N2,2080,R5F08N2
-stock_location_5398,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_4,True,9,8,3,Internal Location,CDG-R5F08N3,2081,R5F08N3
-stock_location_5399,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,9,9,1,Internal Location,CDG-R5F09N1,2068,R5F09N1
-stock_location_5400,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_3,True,9,9,2,Internal Location,CDG-R5F09N2,2069,R5F09N2
-stock_location_5401,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_4,True,9,9,3,Internal Location,CDG-R5F09N3,2070,R5F09N3
-stock_location_5402,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,9,10,1,Internal Location,CDG-R5F10N1,2057,R5F10N1
-stock_location_5403,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_3,True,9,10,2,Internal Location,CDG-R5F10N2,2058,R5F10N2
-stock_location_5404,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_4,True,9,10,3,Internal Location,CDG-R5F10N3,2059,R5F10N3
-stock_location_5405,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,9,11,1,Internal Location,CDG-R5F11N1,2046,R5F11N1
-stock_location_5406,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_3,True,9,11,2,Internal Location,CDG-R5F11N2,2047,R5F11N2
-stock_location_5407,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_4,True,9,11,3,Internal Location,CDG-R5F11N3,2048,R5F11N3
-stock_location_5408,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,9,12,1,Internal Location,CDG-R5F12N1,2035,R5F12N1
-stock_location_5409,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_3,True,9,12,2,Internal Location,CDG-R5F12N2,2036,R5F12N2
-stock_location_5410,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_4,True,9,12,3,Internal Location,CDG-R5F12N3,2037,R5F12N3
-stock_location_5411,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,9,13,1,Internal Location,CDG-R5F13N1,2024,R5F13N1
-stock_location_5412,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_3,True,9,13,2,Internal Location,CDG-R5F13N2,2025,R5F13N2
-stock_location_5413,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_4,True,9,13,3,Internal Location,CDG-R5F13N3,2026,R5F13N3
-stock_location_5414,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,9,14,1,Internal Location,CDG-R5F14N1,2013,R5F14N1
-stock_location_5415,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_3,True,9,14,2,Internal Location,CDG-R5F14N2,2014,R5F14N2
-stock_location_5416,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_4,True,9,14,3,Internal Location,CDG-R5F14N3,2015,R5F14N3
-stock_location_5417,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,9,15,1,Internal Location,CDG-R5F15N1,2002,R5F15N1
-stock_location_5418,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_3,True,9,15,2,Internal Location,CDG-R5F15N2,2003,R5F15N2
-stock_location_5419,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_4,True,9,15,3,Internal Location,CDG-R5F15N3,2004,R5F15N3
-stock_location_5420,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,9,16,1,Internal Location,CDG-R5F16N1,1991,R5F16N1
-stock_location_5421,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_3,True,9,16,2,Internal Location,CDG-R5F16N2,1992,R5F16N2
-stock_location_5422,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_4,True,9,16,3,Internal Location,CDG-R5F16N3,1993,R5F16N3
-stock_location_5423,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,9,17,1,Internal Location,CDG-R5F17N1,1980,R5F17N1
-stock_location_5424,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_3,True,9,17,2,Internal Location,CDG-R5F17N2,1981,R5F17N2
-stock_location_5425,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_4,True,9,17,3,Internal Location,CDG-R5F17N3,1982,R5F17N3
-stock_location_5426,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,9,18,1,Internal Location,CDG-R5F18N1,1969,R5F18N1
-stock_location_5427,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_3,True,9,18,2,Internal Location,CDG-R5F18N2,1970,R5F18N2
-stock_location_5428,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_4,True,9,18,3,Internal Location,CDG-R5F18N3,1971,R5F18N3
-stock_location_5429,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,9,19,1,Internal Location,CDG-R5F19N1,1958,R5F19N1
-stock_location_5430,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_3,True,9,19,2,Internal Location,CDG-R5F19N2,1959,R5F19N2
-stock_location_5431,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_4,True,9,19,3,Internal Location,CDG-R5F19N3,1960,R5F19N3
-stock_location_5432,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,9,20,1,Internal Location,CDG-R5F20N1,1947,R5F20N1
-stock_location_5433,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_3,True,9,20,2,Internal Location,CDG-R5F20N2,1948,R5F20N2
-stock_location_5434,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_4,True,9,20,3,Internal Location,CDG-R5F20N3,1949,R5F20N3
-stock_location_5435,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,9,21,1,Internal Location,CDG-R5F21N1,1936,R5F21N1
-stock_location_5436,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_3,True,9,21,2,Internal Location,CDG-R5F21N2,1937,R5F21N2
-stock_location_5437,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_4,True,9,21,3,Internal Location,CDG-R5F21N3,1938,R5F21N3
-stock_location_5438,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,9,22,1,Internal Location,CDG-R5F22N1,1925,R5F22N1
-stock_location_5439,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_3,True,9,22,2,Internal Location,CDG-R5F22N2,1926,R5F22N2
-stock_location_5440,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_4,True,9,22,3,Internal Location,CDG-R5F22N3,1927,R5F22N3
-stock_location_5441,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,9,23,1,Internal Location,CDG-R5F23N1,1914,R5F23N1
-stock_location_5442,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_3,True,9,23,2,Internal Location,CDG-R5F23N2,1915,R5F23N2
-stock_location_5443,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_4,True,9,23,3,Internal Location,CDG-R5F23N3,1916,R5F23N3
-stock_location_5444,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,9,24,1,Internal Location,CDG-R5F24N1,1903,R5F24N1
-stock_location_5445,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_3,True,9,24,2,Internal Location,CDG-R5F24N2,1904,R5F24N2
-stock_location_5446,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_4,True,9,24,3,Internal Location,CDG-R5F24N3,1905,R5F24N3
-stock_location_5447,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,9,25,1,Internal Location,CDG-R5F25N1,1892,R5F25N1
-stock_location_5448,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_3,True,9,25,2,Internal Location,CDG-R5F25N2,1893,R5F25N2
-stock_location_5449,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_4,True,9,25,3,Internal Location,CDG-R5F25N3,1894,R5F25N3
-stock_location_5450,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,9,26,1,Internal Location,CDG-R5F26N1,1881,R5F26N1
-stock_location_5451,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_3,True,9,26,2,Internal Location,CDG-R5F26N2,1882,R5F26N2
-stock_location_5452,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_4,True,9,26,3,Internal Location,CDG-R5F26N3,1883,R5F26N3
-stock_location_5453,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,9,27,1,Internal Location,CDG-R5F27N1,1870,R5F27N1
-stock_location_5454,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_3,True,9,27,2,Internal Location,CDG-R5F27N2,1871,R5F27N2
-stock_location_5455,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_4,True,9,27,3,Internal Location,CDG-R5F27N3,1872,R5F27N3
-stock_location_5456,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,9,28,1,Internal Location,CDG-R5F28N1,1859,R5F28N1
-stock_location_5457,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_3,True,9,28,2,Internal Location,CDG-R5F28N2,1860,R5F28N2
-stock_location_5458,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_4,True,9,28,3,Internal Location,CDG-R5F28N3,1861,R5F28N3
-stock_location_5459,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,9,29,1,Internal Location,CDG-R5F29N1,1848,R5F29N1
-stock_location_5460,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_3,True,9,29,2,Internal Location,CDG-R5F29N2,1849,R5F29N2
-stock_location_5461,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_4,True,9,29,3,Internal Location,CDG-R5F29N3,1850,R5F29N3
-stock_location_5462,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,9,30,1,Internal Location,CDG-R5F30N1,1837,R5F30N1
-stock_location_5463,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_3,True,9,30,2,Internal Location,CDG-R5F30N2,1838,R5F30N2
-stock_location_5464,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_4,True,9,30,3,Internal Location,CDG-R5F30N3,1839,R5F30N3
-stock_location_5465,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,12,1,1,Internal Location,CDG-R6F01N1,2174,R6F01N1
-stock_location_5466,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,12,1,2,Internal Location,CDG-R6F01N2,2175,R6F01N2
-stock_location_5467,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,12,1,3,Internal Location,CDG-R6F01N3,2176,R6F01N3
-stock_location_5468,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,12,2,1,Internal Location,CDG-R6F02N1,2163,R6F02N1
-stock_location_5469,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,12,2,2,Internal Location,CDG-R6F02N2,2164,R6F02N2
-stock_location_5470,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,12,2,3,Internal Location,CDG-R6F02N3,2165,R6F02N3
-stock_location_5471,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,12,3,1,Internal Location,CDG-R6F03N1,2152,R6F03N1
-stock_location_5472,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,12,3,2,Internal Location,CDG-R6F03N2,2153,R6F03N2
-stock_location_5473,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,12,3,3,Internal Location,CDG-R6F03N3,2154,R6F03N3
-stock_location_5474,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,12,4,1,Internal Location,CDG-R6F04N1,2141,R6F04N1
-stock_location_5475,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,12,4,2,Internal Location,CDG-R6F04N2,2142,R6F04N2
-stock_location_5476,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,12,4,3,Internal Location,CDG-R6F04N3,2143,R6F04N3
-stock_location_5477,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,12,5,1,Internal Location,CDG-R6F05N1,2130,R6F05N1
-stock_location_5478,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,12,5,2,Internal Location,CDG-R6F05N2,2131,R6F05N2
-stock_location_5479,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,12,5,3,Internal Location,CDG-R6F05N3,2132,R6F05N3
-stock_location_5480,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,12,6,1,Internal Location,CDG-R6F06N1,2119,R6F06N1
-stock_location_5481,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,12,6,2,Internal Location,CDG-R6F06N2,2120,R6F06N2
-stock_location_5482,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,12,6,3,Internal Location,CDG-R6F06N3,2121,R6F06N3
-stock_location_5483,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,12,7,1,Internal Location,CDG-R6F07N1,2108,R6F07N1
-stock_location_5484,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,12,7,2,Internal Location,CDG-R6F07N2,2109,R6F07N2
-stock_location_5485,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,12,7,3,Internal Location,CDG-R6F07N3,2110,R6F07N3
-stock_location_5486,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,12,8,1,Internal Location,CDG-R6F08N1,2097,R6F08N1
-stock_location_5487,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,12,8,2,Internal Location,CDG-R6F08N2,2098,R6F08N2
-stock_location_5488,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,12,8,3,Internal Location,CDG-R6F08N3,2099,R6F08N3
-stock_location_5489,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,12,9,1,Internal Location,CDG-R6F09N1,2086,R6F09N1
-stock_location_5490,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,12,9,2,Internal Location,CDG-R6F09N2,2087,R6F09N2
-stock_location_5491,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,12,9,3,Internal Location,CDG-R6F09N3,2088,R6F09N3
-stock_location_5492,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,12,10,1,Internal Location,CDG-R6F10N1,2075,R6F10N1
-stock_location_5493,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,12,10,2,Internal Location,CDG-R6F10N2,2076,R6F10N2
-stock_location_5494,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,12,10,3,Internal Location,CDG-R6F10N3,2077,R6F10N3
-stock_location_5495,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,12,11,1,Internal Location,CDG-R6F11N1,2064,R6F11N1
-stock_location_5496,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,12,11,2,Internal Location,CDG-R6F11N2,2065,R6F11N2
-stock_location_5497,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,12,11,3,Internal Location,CDG-R6F11N3,2066,R6F11N3
-stock_location_5498,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,12,12,1,Internal Location,CDG-R6F12N1,2053,R6F12N1
-stock_location_5499,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,12,12,2,Internal Location,CDG-R6F12N2,2054,R6F12N2
-stock_location_5500,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,12,12,3,Internal Location,CDG-R6F12N3,2055,R6F12N3
-stock_location_5501,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,12,13,1,Internal Location,CDG-R6F13N1,2042,R6F13N1
-stock_location_5502,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,12,13,2,Internal Location,CDG-R6F13N2,2043,R6F13N2
-stock_location_5503,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,12,13,3,Internal Location,CDG-R6F13N3,2044,R6F13N3
-stock_location_5504,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,12,14,1,Internal Location,CDG-R6F14N1,2031,R6F14N1
-stock_location_5505,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,12,14,2,Internal Location,CDG-R6F14N2,2032,R6F14N2
-stock_location_5506,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,12,14,3,Internal Location,CDG-R6F14N3,2033,R6F14N3
-stock_location_5507,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,12,15,1,Internal Location,CDG-R6F15N1,2021,R6F15N1
-stock_location_5508,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,12,15,2,Internal Location,CDG-R6F15N2,2022,R6F15N2
-stock_location_5509,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,12,15,3,Internal Location,CDG-R6F15N3,2023,R6F15N3
-stock_location_5510,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,12,16,1,Internal Location,CDG-R6F16N1,2010,R6F16N1
-stock_location_5511,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,12,16,2,Internal Location,CDG-R6F16N2,2011,R6F16N2
-stock_location_5512,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,12,16,3,Internal Location,CDG-R6F16N3,2012,R6F16N3
-stock_location_5513,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,12,17,1,Internal Location,CDG-R6F17N1,1999,R6F17N1
-stock_location_5514,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,12,17,2,Internal Location,CDG-R6F17N2,2000,R6F17N2
-stock_location_5515,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,12,17,3,Internal Location,CDG-R6F17N3,2001,R6F17N3
-stock_location_5516,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,12,18,1,Internal Location,CDG-R6F18N1,1988,R6F18N1
-stock_location_5517,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,12,18,2,Internal Location,CDG-R6F18N2,1989,R6F18N2
-stock_location_5518,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,12,18,3,Internal Location,CDG-R6F18N3,1990,R6F18N3
-stock_location_5519,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,12,19,1,Internal Location,CDG-R6F19N1,1977,R6F19N1
-stock_location_5520,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,12,19,2,Internal Location,CDG-R6F19N2,1978,R6F19N2
-stock_location_5521,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,12,19,3,Internal Location,CDG-R6F19N3,1979,R6F19N3
-stock_location_5522,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,12,20,1,Internal Location,CDG-R6F20N1,1966,R6F20N1
-stock_location_5523,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,12,20,2,Internal Location,CDG-R6F20N2,1967,R6F20N2
-stock_location_5524,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,12,20,3,Internal Location,CDG-R6F20N3,1968,R6F20N3
-stock_location_5525,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,12,21,1,Internal Location,CDG-R6F21N1,1955,R6F21N1
-stock_location_5526,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,12,21,2,Internal Location,CDG-R6F21N2,1956,R6F21N2
-stock_location_5527,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,12,21,3,Internal Location,CDG-R6F21N3,1957,R6F21N3
-stock_location_5528,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,12,22,1,Internal Location,CDG-R6F22N1,1944,R6F22N1
-stock_location_5529,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,12,22,2,Internal Location,CDG-R6F22N2,1945,R6F22N2
-stock_location_5530,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,12,22,3,Internal Location,CDG-R6F22N3,1946,R6F22N3
-stock_location_5531,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,12,23,1,Internal Location,CDG-R6F23N1,1933,R6F23N1
-stock_location_5532,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,12,23,2,Internal Location,CDG-R6F23N2,1934,R6F23N2
-stock_location_5533,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,12,23,3,Internal Location,CDG-R6F23N3,1935,R6F23N3
-stock_location_5534,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,12,24,1,Internal Location,CDG-R6F24N1,1922,R6F24N1
-stock_location_5535,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,12,24,2,Internal Location,CDG-R6F24N2,1923,R6F24N2
-stock_location_5536,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,12,24,3,Internal Location,CDG-R6F24N3,1924,R6F24N3
-stock_location_5537,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,12,25,1,Internal Location,CDG-R6F25N1,1911,R6F25N1
-stock_location_5538,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,12,25,2,Internal Location,CDG-R6F25N2,1912,R6F25N2
-stock_location_5539,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,12,25,3,Internal Location,CDG-R6F25N3,1913,R6F25N3
-stock_location_5540,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,12,26,1,Internal Location,CDG-R6F26N1,1900,R6F26N1
-stock_location_5541,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,12,26,2,Internal Location,CDG-R6F26N2,1901,R6F26N2
-stock_location_5542,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,12,26,3,Internal Location,CDG-R6F26N3,1902,R6F26N3
-stock_location_5543,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,12,27,1,Internal Location,CDG-R6F27N1,1889,R6F27N1
-stock_location_5544,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,12,27,2,Internal Location,CDG-R6F27N2,1890,R6F27N2
-stock_location_5545,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,12,27,3,Internal Location,CDG-R6F27N3,1891,R6F27N3
-stock_location_5546,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,12,28,1,Internal Location,CDG-R6F28N1,1878,R6F28N1
-stock_location_5547,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,12,28,2,Internal Location,CDG-R6F28N2,1879,R6F28N2
-stock_location_5548,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,12,28,3,Internal Location,CDG-R6F28N3,1880,R6F28N3
-stock_location_5549,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,12,29,1,Internal Location,CDG-R6F29N1,1867,R6F29N1
-stock_location_5550,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,12,29,2,Internal Location,CDG-R6F29N2,1868,R6F29N2
-stock_location_5551,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,12,29,3,Internal Location,CDG-R6F29N3,1869,R6F29N3
-stock_location_5552,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,12,30,1,Internal Location,CDG-R6F30N1,1856,R6F30N1
-stock_location_5553,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,12,30,2,Internal Location,CDG-R6F30N2,1857,R6F30N2
-stock_location_5554,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,12,30,3,Internal Location,CDG-R6F30N3,1858,R6F30N3
-stock_location_5555,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,12,31,1,Internal Location,CDG-R6F31N1,1845,R6F31N1
-stock_location_5556,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,12,31,2,Internal Location,CDG-R6F31N2,1846,R6F31N2
-stock_location_5557,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,12,31,3,Internal Location,CDG-R6F31N3,1847,R6F31N3
-stock_location_5558,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,12,32,1,Internal Location,CDG-R6F32N1,1834,R6F32N1
-stock_location_5559,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,12,32,2,Internal Location,CDG-R6F32N2,1835,R6F32N2
-stock_location_5560,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,12,32,3,Internal Location,CDG-R6F32N3,1836,R6F32N3
-stock_location_5561,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,12,33,1,Internal Location,CDG-R6F33N1,1823,R6F33N1
-stock_location_5562,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,12,33,2,Internal Location,CDG-R6F33N2,1824,R6F33N2
-stock_location_5563,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,12,33,3,Internal Location,CDG-R6F33N3,1825,R6F33N3
-stock_location_5564,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,12,34,1,Internal Location,CDG-R6F34N1,1812,R6F34N1
-stock_location_5565,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,12,34,2,Internal Location,CDG-R6F34N2,1813,R6F34N2
-stock_location_5566,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,12,34,3,Internal Location,CDG-R6F34N3,1814,R6F34N3
-stock_location_5567,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,12,35,1,Internal Location,CDG-R6F35N1,1801,R6F35N1
-stock_location_5568,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,12,35,2,Internal Location,CDG-R6F35N2,1802,R6F35N2
-stock_location_5569,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,12,35,3,Internal Location,CDG-R6F35N3,1803,R6F35N3
-stock_location_5570,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,12,36,1,Internal Location,CDG-R6F36N1,1790,R6F36N1
-stock_location_5571,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,12,36,2,Internal Location,CDG-R6F36N2,1791,R6F36N2
-stock_location_5572,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,12,36,3,Internal Location,CDG-R6F36N3,1792,R6F36N3
-stock_location_5573,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_2,True,2,37,1,Internal Location,CDG-R7F01N1,1466,R7F01N1
-stock_location_5574,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_3,True,2,37,2,Internal Location,CDG-R7F01N2,1467,R7F01N2
-stock_location_5575,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_4,True,2,37,3,Internal Location,CDG-R7F01N3,1468,R7F01N3
-stock_location_5576,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_7,True,2,37,4,Internal Location,CDG-R7F01N4,1469,R7F01N4
-stock_location_5577,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_2,True,3,37,1,Internal Location,CDG-R7F02N1,1470,R7F02N1
-stock_location_5578,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_3,True,3,37,2,Internal Location,CDG-R7F02N2,1471,R7F02N2
-stock_location_5579,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_4,True,3,37,3,Internal Location,CDG-R7F02N3,1472,R7F02N3
-stock_location_5580,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_7,True,3,37,4,Internal Location,CDG-R7F02N4,1473,R7F02N4
-stock_location_5581,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_2,True,4,37,1,Internal Location,CDG-R7F03N1,1474,R7F03N1
-stock_location_5582,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_3,True,4,37,2,Internal Location,CDG-R7F03N2,1475,R7F03N2
-stock_location_5583,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_4,True,4,37,3,Internal Location,CDG-R7F03N3,1476,R7F03N3
-stock_location_5584,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_7,True,4,37,4,Internal Location,CDG-R7F03N4,1477,R7F03N4
-stock_location_5585,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_2,True,5,37,1,Internal Location,CDG-R7F04N1,1478,R7F04N1
-stock_location_5586,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_3,True,5,37,2,Internal Location,CDG-R7F04N2,1479,R7F04N2
-stock_location_5587,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_4,True,5,37,3,Internal Location,CDG-R7F04N3,1480,R7F04N3
-stock_location_5588,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_7,True,5,37,4,Internal Location,CDG-R7F04N4,1481,R7F04N4
-stock_location_5589,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_2,True,6,37,1,Internal Location,CDG-R7F05N1,1766,R7F05N1
-stock_location_5590,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_3,True,6,37,2,Internal Location,CDG-R7F05N2,1767,R7F05N2
-stock_location_5591,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_4,True,6,37,3,Internal Location,CDG-R7F05N3,1768,R7F05N3
-stock_location_5592,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_7,True,6,37,4,Internal Location,CDG-R7F05N4,1769,R7F05N4
-stock_location_5593,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_2,True,7,37,1,Internal Location,CDG-R7F06N1,1770,R7F06N1
-stock_location_5594,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_3,True,7,37,2,Internal Location,CDG-R7F06N2,1771,R7F06N2
-stock_location_5595,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_4,True,7,37,3,Internal Location,CDG-R7F06N3,1772,R7F06N3
-stock_location_5596,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_7,True,7,37,4,Internal Location,CDG-R7F06N4,1773,R7F06N4
-stock_location_5597,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_2,True,8,37,1,Internal Location,CDG-R7F07N1,1774,R7F07N1
-stock_location_5598,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_3,True,8,37,2,Internal Location,CDG-R7F07N2,1775,R7F07N2
-stock_location_5599,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_4,True,8,37,3,Internal Location,CDG-R7F07N3,1776,R7F07N3
-stock_location_5600,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_7,True,8,37,4,Internal Location,CDG-R7F07N4,1777,R7F07N4
-stock_location_5601,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_2,True,9,37,1,Internal Location,CDG-R7F08N1,1778,R7F08N1
-stock_location_5602,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_3,True,9,37,2,Internal Location,CDG-R7F08N2,1779,R7F08N2
-stock_location_5603,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_4,True,9,37,3,Internal Location,CDG-R7F08N3,1780,R7F08N3
-stock_location_5604,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_7,True,9,37,4,Internal Location,CDG-R7F08N4,1781,R7F08N4
-stock_location_5605,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_2,True,10,37,1,Internal Location,CDG-R7F09N1,1782,R7F09N1
-stock_location_5606,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_3,True,10,37,2,Internal Location,CDG-R7F09N2,1783,R7F09N2
-stock_location_5607,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_4,True,10,37,3,Internal Location,CDG-R7F09N3,1784,R7F09N3
-stock_location_5608,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_7,True,10,37,4,Internal Location,CDG-R7F09N4,1785,R7F09N4
-stock_location_5609,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_2,True,11,37,1,Internal Location,CDG-R7F10N1,1786,R7F10N1
-stock_location_5610,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_3,True,11,37,2,Internal Location,CDG-R7F10N2,1787,R7F10N2
-stock_location_5611,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_4,True,11,37,3,Internal Location,CDG-R7F10N3,1788,R7F10N3
-stock_location_5612,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_7,True,11,37,4,Internal Location,CDG-R7F10N4,1789,R7F10N4
+id,company_id/id,location_id/id,storage_category_id/id,active,usage,barcode,removal_priority,name
+stock_location_5001,,stock.stock_location_inter_company,,True,Transit,,10,Intercompany transit: LMMG-LMMR
+stock_location_5002,,stock.stock_location_inter_company,,True,Transit,,10,Intercompany transit: LMMG-XM
+stock_location_5003,,stock.stock_location_inter_company,,True,Transit,,10,Intercompany transit: LMMR-LMMG
+stock_location_5004,,stock.stock_location_inter_company,,True,Transit,,10,Intercompany transit: LMMR-XM
+stock_location_5005,,stock.stock_location_inter_company,,True,Transit,,10,Intercompany transit: XM-LMMG
+stock_location_5006,,stock.stock_location_inter_company,,True,Transit,,10,Intercompany transit: XM-LMMR
+stock_location_5007,marin_data.company_lmmr,,,True,Transit,,10,Interwarehouse transit: BAL-CDG
+stock_location_5008,marin_data.company_lmmr,,,True,Transit,,10,Interwarehouse transit: BAL-LOM
+stock_location_5009,marin_data.company_lmmr,,,True,Transit,,10,Interwarehouse transit: BAL-SJN
+stock_location_5010,marin_data.company_lmmr,,,True,Transit,,10,Interwarehouse transit: CDG-BAL
+stock_location_5011,marin_data.company_lmmr,,,True,Transit,,10,Interwarehouse transit: CDG-HMT
+stock_location_5012,marin_data.company_lmmr,,,True,Transit,,10,Interwarehouse transit: CDG-LOM
+stock_location_5013,marin_data.company_lmmr,,,True,Transit,,10,Interwarehouse transit: CDG-MICH
+stock_location_5014,marin_data.company_lmmr,,,True,Transit,,10,Interwarehouse transit: CDG-MOCH
+stock_location_5015,marin_data.company_lmmr,,,True,Transit,,10,Interwarehouse transit: CDG-OBR
+stock_location_5016,marin_data.company_lmmr,,,True,Transit,,10,Interwarehouse transit: CDG-SALT
+stock_location_5017,marin_data.company_lmmr,,,True,Transit,,10,Interwarehouse transit: CDG-SJN
+stock_location_5018,marin_data.company_lmmr,,,True,Transit,,10,Interwarehouse transit: CDG-SNT
+stock_location_5019,marin_data.company_lmmr,,,True,Transit,,10,Interwarehouse transit: HMT-CDG
+stock_location_5020,marin_data.company_lmmr,,,True,Transit,,10,Interwarehouse transit: LOM-BAL
+stock_location_5021,marin_data.company_lmmr,,,True,Transit,,10,Interwarehouse transit: LOM-CDG
+stock_location_5022,marin_data.company_lmmr,,,True,Transit,,10,Interwarehouse transit: LOM-SJN
+stock_location_5023,marin_data.company_lmmr,,,True,Transit,,10,Interwarehouse transit: MICH-CDG
+stock_location_5024,marin_data.company_lmmr,,,True,Transit,,10,Interwarehouse transit: MOCH-CDG
+stock_location_5025,marin_data.company_lmmr,,,True,Transit,,10,Interwarehouse transit: MOCH-OBR
+stock_location_5026,marin_data.company_lmmr,,,True,Transit,,10,Interwarehouse transit: OBR-CDG
+stock_location_5027,marin_data.company_lmmr,,,True,Transit,,10,Interwarehouse transit: OBR-MOCH
+stock_location_5028,marin_data.company_lmmr,,,True,Transit,,10,Interwarehouse transit: OBR-SALT
+stock_location_5029,marin_data.company_lmmr,,,True,Transit,,10,Interwarehouse transit: SALT-CDG
+stock_location_5030,marin_data.company_lmmr,,,True,Transit,,10,Interwarehouse transit: SJN-BAL
+stock_location_5031,marin_data.company_lmmr,,,True,Transit,,10,Interwarehouse transit: SJN-CDG
+stock_location_5032,marin_data.company_lmmr,,,True,Transit,,10,Interwarehouse transit: SJN-LOM
+stock_location_5033,marin_data.company_lmmr,,,True,Transit,,10,Interwarehouse transit: SNT-CDG
+stock_location_5034,marin_data.company_lmmr,,,True,Transit,,10,Shipping transit 3P: CDG
+stock_location_5035,marin_data.company_lmmr,,,True,Transit,,10,Shipping transit 3P: MICH
+stock_location_5036,marin_data.company_lmmr,,,True,Transit,,10,Shipping transit 3P: MOCH
+stock_location_5037,marin_data.company_lmmr,,,True,Transit,,10,Shipping transit 3P: OBR
+stock_location_5038,marin_data.company_lmmr,,,True,Transit,,10,Shipping transit 3P: SALT
+stock_location_5039,marin_data.company_lmmr,,,True,Transit,,10,Shipping transit we ship: BAL
+stock_location_5040,marin_data.company_lmmr,,,True,Transit,,10,Shipping transit we ship: CDG
+stock_location_5041,marin_data.company_lmmr,,,True,Transit,,10,Shipping transit we ship: HMT
+stock_location_5042,marin_data.company_lmmr,,,True,Transit,,10,Shipping transit we ship: LOM
+stock_location_5043,marin_data.company_lmmr,,,True,Transit,,10,Shipping transit we ship: MICH
+stock_location_5044,marin_data.company_lmmr,,,True,Transit,,10,Shipping transit we ship: MOCH
+stock_location_5045,marin_data.company_lmmr,,,True,Transit,,10,Shipping transit we ship: OBR
+stock_location_5046,marin_data.company_lmmr,,,True,Transit,,10,Shipping transit we ship: SALT
+stock_location_5047,marin_data.company_lmmr,,,True,Transit,,10,Shipping transit we ship: SJN
+stock_location_5048,marin_data.company_lmmg,,,True,Transit,,10,Shipping transit 3P: LMMG
+stock_location_5049,marin_data.company_lmmg,,,True,Transit,,10,Shipping transit we ship: LMMG
+stock_location_5050,marin_data.company_society,,,True,Transit,,10,Shipping transit 3P: XM
+stock_location_5051,marin_data.company_society,,,True,Transit,,10,Shipping transit we ship: XM
+stock_location_5052,marin_data.company_lmmr,marin_data.stock_location_1010,,True,Internal,,11,Mostrador y anaquel
+stock_location_5053,marin_data.company_lmmr,marin_data.stock_location_1018,,True,Internal,,11,Bodega tienda
+stock_location_5054,marin_data.company_lmmr,marin_data.stock_location_1018,,True,Internal,,10,Mostrador y anaquel
+stock_location_5055,marin_data.company_lmmr,marin_data.stock_location_1018,,True,Internal,,12,Sotano
+stock_location_5056,marin_data.company_lmmr,marin_data.stock_location_1026,,True,Internal,CDGOFFICE1,9998,Oficina 1
+stock_location_5057,marin_data.company_lmmr,marin_data.stock_location_1026,,True,Internal,CDGPATIO1,3000,Patio1
+stock_location_5058,marin_data.company_lmmr,marin_data.stock_location_1026,,True,Internal,CDGPATIOINT,3001,PatioInt
+stock_location_5059,marin_data.company_lmmr,marin_data.stock_location_1025,marin_data.stock_storage_category_2,True,Internal,CDGDAMAGED,10000,Damaged
+stock_location_5060,marin_data.company_lmmr,marin_data.stock_location_1026,marin_data.stock_storage_category_2,True,Internal,CDGSHELF,3002,Shelf
+stock_location_5061,marin_data.company_lmmr,marin_data.stock_location_1026,,True,Virtual,,10,R1
+stock_location_5062,marin_data.company_lmmr,marin_data.stock_location_1026,,True,Virtual,,10,R2
+stock_location_5063,marin_data.company_lmmr,marin_data.stock_location_1026,,True,Virtual,,10,R3
+stock_location_5064,marin_data.company_lmmr,marin_data.stock_location_1026,,True,Virtual,,10,R4
+stock_location_5065,marin_data.company_lmmr,marin_data.stock_location_1026,,True,Virtual,,10,R5
+stock_location_5066,marin_data.company_lmmr,marin_data.stock_location_1026,,True,Virtual,,10,R6
+stock_location_5067,marin_data.company_lmmr,marin_data.stock_location_1026,,True,Virtual,,10,R7
+stock_location_5068,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,,Internal,CDGR1F01N1,1101,R1F01N1
+stock_location_5069,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,,Internal,CDGR1F01N2,1102,R1F01N2
+stock_location_5070,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,,Internal,CDGR1F01N3,1103,R1F01N3
+stock_location_5071,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,,Internal,CDGR1F02N1,1111,R1F02N1
+stock_location_5072,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,,Internal,CDGR1F02N2,1112,R1F02N2
+stock_location_5073,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,,Internal,CDGR1F02N3,1113,R1F02N3
+stock_location_5074,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,,Internal,CDGR1F03N1,1122,R1F03N1
+stock_location_5075,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,,Internal,CDGR1F03N2,1123,R1F03N2
+stock_location_5076,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,,Internal,CDGR1F03N3,1124,R1F03N3
+stock_location_5077,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,,Internal,CDGR1F04N1,1133,R1F04N1
+stock_location_5078,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,,Internal,CDGR1F04N2,1134,R1F04N2
+stock_location_5079,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,,Internal,CDGR1F04N3,1135,R1F04N3
+stock_location_5080,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,Internal,CDGR1F05N1,1001,R1F05N1
+stock_location_5081,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,Internal,CDGR1F05N2,1002,R1F05N2
+stock_location_5082,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,Internal,CDGR1F05N3,1003,R1F05N3
+stock_location_5083,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,Internal,CDGR1F06N1,1011,R1F06N1
+stock_location_5084,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,Internal,CDGR1F06N2,1012,R1F06N2
+stock_location_5085,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,Internal,CDGR1F06N3,1013,R1F06N3
+stock_location_5086,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,Internal,CDGR1F07N1,1021,R1F07N1
+stock_location_5087,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,Internal,CDGR1F07N2,1022,R1F07N2
+stock_location_5088,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,Internal,CDGR1F07N3,1023,R1F07N3
+stock_location_5089,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,Internal,CDGR1F08N1,1031,R1F08N1
+stock_location_5090,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,Internal,CDGR1F08N2,1032,R1F08N2
+stock_location_5091,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,Internal,CDGR1F08N3,1033,R1F08N3
+stock_location_5092,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,Internal,CDGR1F09N1,1041,R1F09N1
+stock_location_5093,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,Internal,CDGR1F09N2,1042,R1F09N2
+stock_location_5094,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,Internal,CDGR1F09N3,1043,R1F09N3
+stock_location_5095,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,Internal,CDGR1F10N1,1051,R1F10N1
+stock_location_5096,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,Internal,CDGR1F10N2,1052,R1F10N2
+stock_location_5097,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,Internal,CDGR1F10N3,1053,R1F10N3
+stock_location_5098,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,Internal,CDGR1F11N1,1071,R1F11N1
+stock_location_5099,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,Internal,CDGR1F11N2,1072,R1F11N2
+stock_location_5100,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,Internal,CDGR1F11N3,1073,R1F11N3
+stock_location_5101,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,Internal,CDGR1F12N1,1091,R1F12N1
+stock_location_5102,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,Internal,CDGR1F12N2,1092,R1F12N2
+stock_location_5103,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,Internal,CDGR1F12N3,1093,R1F12N3
+stock_location_5104,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,Internal,CDGR1F13N1,1111,R1F13N1
+stock_location_5105,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,Internal,CDGR1F13N2,1112,R1F13N2
+stock_location_5106,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,Internal,CDGR1F13N3,1113,R1F13N3
+stock_location_5107,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,Internal,CDGR1F14N1,1131,R1F14N1
+stock_location_5108,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,Internal,CDGR1F14N2,1132,R1F14N2
+stock_location_5109,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,Internal,CDGR1F14N3,1133,R1F14N3
+stock_location_5110,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,Internal,CDGR1F15N1,1151,R1F15N1
+stock_location_5111,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,Internal,CDGR1F15N2,1152,R1F15N2
+stock_location_5112,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,Internal,CDGR1F15N3,1153,R1F15N3
+stock_location_5113,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,Internal,CDGR1F16N1,1171,R1F16N1
+stock_location_5114,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,Internal,CDGR1F16N2,1172,R1F16N2
+stock_location_5115,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,Internal,CDGR1F16N3,1173,R1F16N3
+stock_location_5116,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,Internal,CDGR1F17N1,1191,R1F17N1
+stock_location_5117,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,Internal,CDGR1F17N2,1192,R1F17N2
+stock_location_5118,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,Internal,CDGR1F17N3,1193,R1F17N3
+stock_location_5119,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,Internal,CDGR1F18N1,1211,R1F18N1
+stock_location_5120,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,Internal,CDGR1F18N2,1212,R1F18N2
+stock_location_5121,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,Internal,CDGR1F18N3,1213,R1F18N3
+stock_location_5122,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,Internal,CDGR1F19N1,1231,R1F19N1
+stock_location_5123,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,Internal,CDGR1F19N2,1232,R1F19N2
+stock_location_5124,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,Internal,CDGR1F19N3,1233,R1F19N3
+stock_location_5125,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,Internal,CDGR1F20N1,1251,R1F20N1
+stock_location_5126,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,Internal,CDGR1F20N2,1252,R1F20N2
+stock_location_5127,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,Internal,CDGR1F20N3,1253,R1F20N3
+stock_location_5128,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,Internal,CDGR1F21N1,1271,R1F21N1
+stock_location_5129,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,Internal,CDGR1F21N2,1272,R1F21N2
+stock_location_5130,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,Internal,CDGR1F21N3,1273,R1F21N3
+stock_location_5131,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,Internal,CDGR1F22N1,1291,R1F22N1
+stock_location_5132,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,Internal,CDGR1F22N2,1292,R1F22N2
+stock_location_5133,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,Internal,CDGR1F22N3,1293,R1F22N3
+stock_location_5134,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,Internal,CDGR1F23N1,1311,R1F23N1
+stock_location_5135,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,Internal,CDGR1F23N2,1312,R1F23N2
+stock_location_5136,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,Internal,CDGR1F23N3,1313,R1F23N3
+stock_location_5137,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,Internal,CDGR1F24N1,1331,R1F24N1
+stock_location_5138,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,Internal,CDGR1F24N2,1332,R1F24N2
+stock_location_5139,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,Internal,CDGR1F24N3,1333,R1F24N3
+stock_location_5140,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,Internal,CDGR1F25N1,1351,R1F25N1
+stock_location_5141,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,Internal,CDGR1F25N2,1352,R1F25N2
+stock_location_5142,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,Internal,CDGR1F25N3,1353,R1F25N3
+stock_location_5143,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,Internal,CDGR1F26N1,1371,R1F26N1
+stock_location_5144,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,Internal,CDGR1F26N2,1372,R1F26N2
+stock_location_5145,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,Internal,CDGR1F26N3,1373,R1F26N3
+stock_location_5146,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,Internal,CDGR1F27N1,1391,R1F27N1
+stock_location_5147,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,Internal,CDGR1F27N2,1392,R1F27N2
+stock_location_5148,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,Internal,CDGR1F27N3,1393,R1F27N3
+stock_location_5149,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,Internal,CDGR1F28N1,1411,R1F28N1
+stock_location_5150,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,Internal,CDGR1F28N2,1412,R1F28N2
+stock_location_5151,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,Internal,CDGR1F28N3,1413,R1F28N3
+stock_location_5152,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,Internal,CDGR1F29N1,1431,R1F29N1
+stock_location_5153,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,Internal,CDGR1F29N2,1432,R1F29N2
+stock_location_5154,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,Internal,CDGR1F29N3,1433,R1F29N3
+stock_location_5155,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,Internal,CDGR1F30N1,1451,R1F30N1
+stock_location_5156,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,Internal,CDGR1F30N2,1452,R1F30N2
+stock_location_5157,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,Internal,CDGR1F30N3,1453,R1F30N3
+stock_location_5158,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,Internal,CDGR1F31N1,1471,R1F31N1
+stock_location_5159,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,Internal,CDGR1F31N2,1472,R1F31N2
+stock_location_5160,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,Internal,CDGR1F31N3,1473,R1F31N3
+stock_location_5161,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,Internal,CDGR1F32N1,1491,R1F32N1
+stock_location_5162,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,Internal,CDGR1F32N2,1492,R1F32N2
+stock_location_5163,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,Internal,CDGR1F32N3,1493,R1F32N3
+stock_location_5164,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,Internal,CDGR1F33N1,1501,R1F33N1
+stock_location_5165,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,Internal,CDGR1F33N2,1502,R1F33N2
+stock_location_5166,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,Internal,CDGR1F33N3,1503,R1F33N3
+stock_location_5167,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_2,True,Internal,CDGR1F34N1,1511,R1F34N1
+stock_location_5168,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_3,True,Internal,CDGR1F34N2,1512,R1F34N2
+stock_location_5169,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_4,True,Internal,CDGR1F34N3,1513,R1F34N3
+stock_location_5170,marin_data.company_lmmr,marin_data.stock_location_5061,marin_data.stock_storage_category_1,True,Internal,CDGR1F35N1CISTERNA,2999,R1F35N1 - Cisterna
+stock_location_5171,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_2,,Internal,CDGR2F08N1,1191,R2F08N1
+stock_location_5172,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_3,,Internal,CDGR2F08N2,1192,R2F08N2
+stock_location_5173,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_4,,Internal,CDGR2F08N3,1193,R2F08N3
+stock_location_5174,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_2,True,Internal,CDGR2F09N1,1061,R2F09N1
+stock_location_5175,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_3,True,Internal,CDGR2F09N2,1062,R2F09N2
+stock_location_5176,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_4,True,Internal,CDGR2F09N3,1063,R2F09N3
+stock_location_5177,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_2,True,Internal,CDGR2F10N1,1081,R2F10N1
+stock_location_5178,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_3,True,Internal,CDGR2F10N2,1082,R2F10N2
+stock_location_5179,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_4,True,Internal,CDGR2F10N3,1083,R2F10N3
+stock_location_5180,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_2,True,Internal,CDGR2F11N1,1101,R2F11N1
+stock_location_5181,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_3,True,Internal,CDGR2F11N2,1102,R2F11N2
+stock_location_5182,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_4,True,Internal,CDGR2F11N3,1103,R2F11N3
+stock_location_5183,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_2,True,Internal,CDGR2F12N1,1121,R2F12N1
+stock_location_5184,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_3,True,Internal,CDGR2F12N2,1122,R2F12N2
+stock_location_5185,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_4,True,Internal,CDGR2F12N3,1123,R2F12N3
+stock_location_5186,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_2,True,Internal,CDGR2F13N1,1141,R2F13N1
+stock_location_5187,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_3,True,Internal,CDGR2F13N2,1142,R2F13N2
+stock_location_5188,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_4,True,Internal,CDGR2F13N3,1143,R2F13N3
+stock_location_5189,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_2,True,Internal,CDGR2F14N1,1161,R2F14N1
+stock_location_5190,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_3,True,Internal,CDGR2F14N2,1162,R2F14N2
+stock_location_5191,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_4,True,Internal,CDGR2F14N3,1163,R2F14N3
+stock_location_5192,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_2,True,Internal,CDGR2F15N1,1181,R2F15N1
+stock_location_5193,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_3,True,Internal,CDGR2F15N2,1182,R2F15N2
+stock_location_5194,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_4,True,Internal,CDGR2F15N3,1183,R2F15N3
+stock_location_5195,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_2,True,Internal,CDGR2F16N1,1201,R2F16N1
+stock_location_5196,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_3,True,Internal,CDGR2F16N2,1202,R2F16N2
+stock_location_5197,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_4,True,Internal,CDGR2F16N3,1203,R2F16N3
+stock_location_5198,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_2,True,Internal,CDGR2F17N1,1221,R2F17N1
+stock_location_5199,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_3,True,Internal,CDGR2F17N2,1222,R2F17N2
+stock_location_5200,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_4,True,Internal,CDGR2F17N3,1223,R2F17N3
+stock_location_5201,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_2,True,Internal,CDGR2F18N1,1241,R2F18N1
+stock_location_5202,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_3,True,Internal,CDGR2F18N2,1242,R2F18N2
+stock_location_5203,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_4,True,Internal,CDGR2F18N3,1243,R2F18N3
+stock_location_5204,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_2,True,Internal,CDGR2F19N1,1261,R2F19N1
+stock_location_5205,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_3,True,Internal,CDGR2F19N2,1262,R2F19N2
+stock_location_5206,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_4,True,Internal,CDGR2F19N3,1263,R2F19N3
+stock_location_5207,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_2,True,Internal,CDGR2F20N1,1281,R2F20N1
+stock_location_5208,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_3,True,Internal,CDGR2F20N2,1282,R2F20N2
+stock_location_5209,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_4,True,Internal,CDGR2F20N3,1283,R2F20N3
+stock_location_5210,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_2,True,Internal,CDGR2F21N1,1301,R2F21N1
+stock_location_5211,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_3,True,Internal,CDGR2F21N2,1302,R2F21N2
+stock_location_5212,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_4,True,Internal,CDGR2F21N3,1303,R2F21N3
+stock_location_5213,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_2,True,Internal,CDGR2F22N1,1321,R2F22N1
+stock_location_5214,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_3,True,Internal,CDGR2F22N2,1322,R2F22N2
+stock_location_5215,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_4,True,Internal,CDGR2F22N3,1323,R2F22N3
+stock_location_5216,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_2,True,Internal,CDGR2F23N1,1341,R2F23N1
+stock_location_5217,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_3,True,Internal,CDGR2F23N2,1342,R2F23N2
+stock_location_5218,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_4,True,Internal,CDGR2F23N3,1343,R2F23N3
+stock_location_5219,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_2,True,Internal,CDGR2F24N1,1361,R2F24N1
+stock_location_5220,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_3,True,Internal,CDGR2F24N2,1362,R2F24N2
+stock_location_5221,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_4,True,Internal,CDGR2F24N3,1363,R2F24N3
+stock_location_5222,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_2,True,Internal,CDGR2F25N1,1381,R2F25N1
+stock_location_5223,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_3,True,Internal,CDGR2F25N2,1382,R2F25N2
+stock_location_5224,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_4,True,Internal,CDGR2F25N3,1383,R2F25N3
+stock_location_5225,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_2,True,Internal,CDGR2F26N1,1401,R2F26N1
+stock_location_5226,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_3,True,Internal,CDGR2F26N2,1402,R2F26N2
+stock_location_5227,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_4,True,Internal,CDGR2F26N3,1403,R2F26N3
+stock_location_5228,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_2,True,Internal,CDGR2F27N1,1421,R2F27N1
+stock_location_5229,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_3,True,Internal,CDGR2F27N2,1422,R2F27N2
+stock_location_5230,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_4,True,Internal,CDGR2F27N3,1423,R2F27N3
+stock_location_5231,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_2,True,Internal,CDGR2F28N1,1441,R2F28N1
+stock_location_5232,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_3,True,Internal,CDGR2F28N2,1442,R2F28N2
+stock_location_5233,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_4,True,Internal,CDGR2F28N3,1443,R2F28N3
+stock_location_5234,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_2,True,Internal,CDGR2F29N1,1461,R2F29N1
+stock_location_5235,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_3,True,Internal,CDGR2F29N2,1462,R2F29N2
+stock_location_5236,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_4,True,Internal,CDGR2F29N3,1463,R2F29N3
+stock_location_5237,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_2,True,Internal,CDGR2F30N1,1481,R2F30N1
+stock_location_5238,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_3,True,Internal,CDGR2F30N2,1482,R2F30N2
+stock_location_5239,marin_data.company_lmmr,marin_data.stock_location_5062,marin_data.stock_storage_category_4,True,Internal,CDGR2F30N3,1483,R2F30N3
+stock_location_5240,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_2,,Internal,CDGR3F08N1,1723,R3F08N1
+stock_location_5241,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_3,,Internal,CDGR3F08N2,1724,R3F08N2
+stock_location_5242,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_4,,Internal,CDGR3F08N3,1725,R3F08N3
+stock_location_5243,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_2,True,Internal,CDGR3F09N1,1991,R3F09N1
+stock_location_5244,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_3,True,Internal,CDGR3F09N2,1992,R3F09N2
+stock_location_5245,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_4,True,Internal,CDGR3F09N3,1993,R3F09N3
+stock_location_5246,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_2,True,Internal,CDGR3F10N1,1971,R3F10N1
+stock_location_5247,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_3,True,Internal,CDGR3F10N2,1972,R3F10N2
+stock_location_5248,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_4,True,Internal,CDGR3F10N3,1973,R3F10N3
+stock_location_5249,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_2,True,Internal,CDGR3F11N1,1951,R3F11N1
+stock_location_5250,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_3,True,Internal,CDGR3F11N2,1952,R3F11N2
+stock_location_5251,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_4,True,Internal,CDGR3F11N3,1953,R3F11N3
+stock_location_5252,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_2,True,Internal,CDGR3F12N1,1931,R3F12N1
+stock_location_5253,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_3,True,Internal,CDGR3F12N2,1932,R3F12N2
+stock_location_5254,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_4,True,Internal,CDGR3F12N3,1933,R3F12N3
+stock_location_5255,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_2,True,Internal,CDGR3F13N1,1911,R3F13N1
+stock_location_5256,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_3,True,Internal,CDGR3F13N2,1912,R3F13N2
+stock_location_5257,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_4,True,Internal,CDGR3F13N3,1913,R3F13N3
+stock_location_5258,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_2,True,Internal,CDGR3F14N1,1891,R3F14N1
+stock_location_5259,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_3,True,Internal,CDGR3F14N2,1892,R3F14N2
+stock_location_5260,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_4,True,Internal,CDGR3F14N3,1893,R3F14N3
+stock_location_5261,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_2,True,Internal,CDGR3F15N1,1871,R3F15N1
+stock_location_5262,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_3,True,Internal,CDGR3F15N2,1872,R3F15N2
+stock_location_5263,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_4,True,Internal,CDGR3F15N3,1873,R3F15N3
+stock_location_5264,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_2,True,Internal,CDGR3F16N1,1851,R3F16N1
+stock_location_5265,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_3,True,Internal,CDGR3F16N2,1852,R3F16N2
+stock_location_5266,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_4,True,Internal,CDGR3F16N3,1853,R3F16N3
+stock_location_5267,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_2,True,Internal,CDGR3F17N1,1831,R3F17N1
+stock_location_5268,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_3,True,Internal,CDGR3F17N2,1832,R3F17N2
+stock_location_5269,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_4,True,Internal,CDGR3F17N3,1833,R3F17N3
+stock_location_5270,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_2,True,Internal,CDGR3F18N1,1811,R3F18N1
+stock_location_5271,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_3,True,Internal,CDGR3F18N2,1812,R3F18N2
+stock_location_5272,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_4,True,Internal,CDGR3F18N3,1813,R3F18N3
+stock_location_5273,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_2,True,Internal,CDGR3F19N1,1791,R3F19N1
+stock_location_5274,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_3,True,Internal,CDGR3F19N2,1792,R3F19N2
+stock_location_5275,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_4,True,Internal,CDGR3F19N3,1793,R3F19N3
+stock_location_5276,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_2,True,Internal,CDGR3F20N1,1771,R3F20N1
+stock_location_5277,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_3,True,Internal,CDGR3F20N2,1772,R3F20N2
+stock_location_5278,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_4,True,Internal,CDGR3F20N3,1773,R3F20N3
+stock_location_5279,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_2,True,Internal,CDGR3F21N1,1751,R3F21N1
+stock_location_5280,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_3,True,Internal,CDGR3F21N2,1752,R3F21N2
+stock_location_5281,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_4,True,Internal,CDGR3F21N3,1753,R3F21N3
+stock_location_5282,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_2,True,Internal,CDGR3F22N1,1731,R3F22N1
+stock_location_5283,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_3,True,Internal,CDGR3F22N2,1732,R3F22N2
+stock_location_5284,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_4,True,Internal,CDGR3F22N3,1733,R3F22N3
+stock_location_5285,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_2,True,Internal,CDGR3F23N1,1711,R3F23N1
+stock_location_5286,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_3,True,Internal,CDGR3F23N2,1712,R3F23N2
+stock_location_5287,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_4,True,Internal,CDGR3F23N3,1713,R3F23N3
+stock_location_5288,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_2,True,Internal,CDGR3F24N1,1691,R3F24N1
+stock_location_5289,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_3,True,Internal,CDGR3F24N2,1692,R3F24N2
+stock_location_5290,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_4,True,Internal,CDGR3F24N3,1693,R3F24N3
+stock_location_5291,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_2,True,Internal,CDGR3F25N1,1671,R3F25N1
+stock_location_5292,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_3,True,Internal,CDGR3F25N2,1672,R3F25N2
+stock_location_5293,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_4,True,Internal,CDGR3F25N3,1673,R3F25N3
+stock_location_5294,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_2,True,Internal,CDGR3F26N1,1651,R3F26N1
+stock_location_5295,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_3,True,Internal,CDGR3F26N2,1652,R3F26N2
+stock_location_5296,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_4,True,Internal,CDGR3F26N3,1653,R3F26N3
+stock_location_5297,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_2,True,Internal,CDGR3F27N1,1631,R3F27N1
+stock_location_5298,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_3,True,Internal,CDGR3F27N2,1632,R3F27N2
+stock_location_5299,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_4,True,Internal,CDGR3F27N3,1633,R3F27N3
+stock_location_5300,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_2,True,Internal,CDGR3F28N1,1611,R3F28N1
+stock_location_5301,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_3,True,Internal,CDGR3F28N2,1612,R3F28N2
+stock_location_5302,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_4,True,Internal,CDGR3F28N3,1613,R3F28N3
+stock_location_5303,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_2,True,Internal,CDGR3F29N1,1591,R3F29N1
+stock_location_5304,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_3,True,Internal,CDGR3F29N2,1592,R3F29N2
+stock_location_5305,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_4,True,Internal,CDGR3F29N3,1593,R3F29N3
+stock_location_5306,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_2,True,Internal,CDGR3F30N1,1571,R3F30N1
+stock_location_5307,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_3,True,Internal,CDGR3F30N2,1572,R3F30N2
+stock_location_5308,marin_data.company_lmmr,marin_data.stock_location_5063,marin_data.stock_storage_category_4,True,Internal,CDGR3F30N3,1573,R3F30N3
+stock_location_5309,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,Internal,CDGR4F05N1,2041,R4F05N1
+stock_location_5310,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_5,True,Internal,CDGR4F05N2,2042,R4F05N2
+stock_location_5311,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_6,True,Internal,CDGR4F05N3,2043,R4F05N3
+stock_location_5312,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,Internal,CDGR4F06N1,2031,R4F06N1
+stock_location_5313,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_5,True,Internal,CDGR4F06N2,2032,R4F06N2
+stock_location_5314,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_6,True,Internal,CDGR4F06N3,2033,R4F06N3
+stock_location_5315,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,Internal,CDGR4F07N1,2021,R4F07N1
+stock_location_5316,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_5,True,Internal,CDGR4F07N2,2022,R4F07N2
+stock_location_5317,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_6,True,Internal,CDGR4F07N3,2023,R4F07N3
+stock_location_5318,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,Internal,CDGR4F08N1,2011,R4F08N1
+stock_location_5319,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_3,True,Internal,CDGR4F08N2,2012,R4F08N2
+stock_location_5320,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_4,True,Internal,CDGR4F08N3,2013,R4F08N3
+stock_location_5321,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,Internal,CDGR4F09N1,2001,R4F09N1
+stock_location_5322,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_3,True,Internal,CDGR4F09N2,2002,R4F09N2
+stock_location_5323,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_4,True,Internal,CDGR4F09N3,2003,R4F09N3
+stock_location_5324,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,Internal,CDGR4F10N1,1981,R4F10N1
+stock_location_5325,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_3,True,Internal,CDGR4F10N2,1982,R4F10N2
+stock_location_5326,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_4,True,Internal,CDGR4F10N3,1983,R4F10N3
+stock_location_5327,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,Internal,CDGR4F11N1,1961,R4F11N1
+stock_location_5328,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_3,True,Internal,CDGR4F11N2,1962,R4F11N2
+stock_location_5329,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_4,True,Internal,CDGR4F11N3,1963,R4F11N3
+stock_location_5330,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,Internal,CDGR4F12N1,1941,R4F12N1
+stock_location_5331,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_3,True,Internal,CDGR4F12N2,1942,R4F12N2
+stock_location_5332,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_4,True,Internal,CDGR4F12N3,1943,R4F12N3
+stock_location_5333,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,Internal,CDGR4F13N1,1921,R4F13N1
+stock_location_5334,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_3,True,Internal,CDGR4F13N2,1922,R4F13N2
+stock_location_5335,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_4,True,Internal,CDGR4F13N3,1923,R4F13N3
+stock_location_5336,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,Internal,CDGR4F14N0,1901,R4F14N1
+stock_location_5337,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_3,True,Internal,CDGR4F14N2,1902,R4F14N2
+stock_location_5338,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_4,True,Internal,CDGR4F14N3,1903,R4F14N3
+stock_location_5339,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,Internal,CDGR4F15N1,1881,R4F15N1
+stock_location_5340,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_3,True,Internal,CDGR4F15N2,1882,R4F15N2
+stock_location_5341,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_4,True,Internal,CDGR4F15N3,1883,R4F15N3
+stock_location_5342,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,Internal,CDGR4F16N1,1861,R4F16N1
+stock_location_5343,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_3,True,Internal,CDGR4F16N2,1862,R4F16N2
+stock_location_5344,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_4,True,Internal,CDGR4F16N3,1863,R4F16N3
+stock_location_5345,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,Internal,CDGR4F17N1,1841,R4F17N1
+stock_location_5346,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_3,True,Internal,CDGR4F17N2,1842,R4F17N2
+stock_location_5347,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_4,True,Internal,CDGR4F17N3,1843,R4F17N3
+stock_location_5348,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,Internal,CDGR4F18N1,1821,R4F18N1
+stock_location_5349,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_3,True,Internal,CDGR4F18N2,1822,R4F18N2
+stock_location_5350,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_4,True,Internal,CDGR4F18N3,1823,R4F18N3
+stock_location_5351,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,Internal,CDGR4F19N1,1801,R4F19N1
+stock_location_5352,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_3,True,Internal,CDGR4F19N2,1802,R4F19N2
+stock_location_5353,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_4,True,Internal,CDGR4F19N3,1803,R4F19N3
+stock_location_5354,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,Internal,CDGR4F20N1,1781,R4F20N1
+stock_location_5355,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_3,True,Internal,CDGR4F20N2,1782,R4F20N2
+stock_location_5356,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_4,True,Internal,CDGR4F20N3,1783,R4F20N3
+stock_location_5357,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,Internal,CDGR4F21N1,1761,R4F21N1
+stock_location_5358,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_3,True,Internal,CDGR4F21N2,1762,R4F21N2
+stock_location_5359,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_4,True,Internal,CDGR4F21N3,1763,R4F21N3
+stock_location_5360,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,Internal,CDGR4F22N1,1741,R4F22N1
+stock_location_5361,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_3,True,Internal,CDGR4F22N2,1742,R4F22N2
+stock_location_5362,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_4,True,Internal,CDGR4F22N3,1743,R4F22N3
+stock_location_5363,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,Internal,CDGR4F23N1,1721,R4F23N1
+stock_location_5364,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_3,True,Internal,CDGR4F23N2,1722,R4F23N2
+stock_location_5365,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_4,True,Internal,CDGR4F23N3,1723,R4F23N3
+stock_location_5366,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,Internal,CDGR4F24N1,1701,R4F24N1
+stock_location_5367,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_3,True,Internal,CDGR4F24N2,1702,R4F24N2
+stock_location_5368,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_4,True,Internal,CDGR4F24N3,1703,R4F24N3
+stock_location_5369,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,Internal,CDGR4F25N1,1681,R4F25N1
+stock_location_5370,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_3,True,Internal,CDGR4F25N2,1682,R4F25N2
+stock_location_5371,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_4,True,Internal,CDGR4F25N3,1683,R4F25N3
+stock_location_5372,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,Internal,CDGR4F26N1,1661,R4F26N1
+stock_location_5373,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_3,True,Internal,CDGR4F26N2,1662,R4F26N2
+stock_location_5374,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_4,True,Internal,CDGR4F26N3,1663,R4F26N3
+stock_location_5375,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,Internal,CDGR4F27N1,1641,R4F27N1
+stock_location_5376,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_3,True,Internal,CDGR4F27N2,1642,R4F27N2
+stock_location_5377,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_4,True,Internal,CDGR4F27N3,1643,R4F27N3
+stock_location_5378,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,Internal,CDGR4F28N1,1621,R4F28N1
+stock_location_5379,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_3,True,Internal,CDGR4F28N2,1622,R4F28N2
+stock_location_5380,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_4,True,Internal,CDGR4F28N3,1623,R4F28N3
+stock_location_5381,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,Internal,CDGR4F29N1,1601,R4F29N1
+stock_location_5382,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_3,True,Internal,CDGR4F29N2,1602,R4F29N2
+stock_location_5383,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_4,True,Internal,CDGR4F29N3,1603,R4F29N3
+stock_location_5384,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_2,True,Internal,CDGR4F30N1,1581,R4F30N1
+stock_location_5385,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_3,True,Internal,CDGR4F30N2,1582,R4F30N2
+stock_location_5386,marin_data.company_lmmr,marin_data.stock_location_5064,marin_data.stock_storage_category_4,True,Internal,CDGR4F30N3,1583,R4F30N3
+stock_location_5387,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,Internal,CDGR5F05N1,2661,R5F05N1
+stock_location_5388,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_5,True,Internal,CDGR5F05N2,2662,R5F05N2
+stock_location_5389,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_6,True,Internal,CDGR5F05N3,2663,R5F05N3
+stock_location_5390,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,Internal,CDGR5F06N1,2641,R5F06N1
+stock_location_5391,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_5,True,Internal,CDGR5F06N2,2642,R5F06N2
+stock_location_5392,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_6,True,Internal,CDGR5F06N3,2643,R5F06N3
+stock_location_5393,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,Internal,CDGR5F07N1,2621,R5F07N1
+stock_location_5394,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_5,True,Internal,CDGR5F07N2,2622,R5F07N2
+stock_location_5395,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_6,True,Internal,CDGR5F07N3,2623,R5F07N3
+stock_location_5396,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,Internal,CDGR5F08N1,2601,R5F08N1
+stock_location_5397,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_3,True,Internal,CDGR5F08N2,2602,R5F08N2
+stock_location_5398,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_4,True,Internal,CDGR5F08N3,2603,R5F08N3
+stock_location_5399,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,Internal,CDGR5F09N1,2581,R5F09N1
+stock_location_5400,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_3,True,Internal,CDGR5F09N2,2582,R5F09N2
+stock_location_5401,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_4,True,Internal,CDGR5F09N3,2583,R5F09N3
+stock_location_5402,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,Internal,CDGR5F10N1,2561,R5F10N1
+stock_location_5403,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_3,True,Internal,CDGR5F10N2,2562,R5F10N2
+stock_location_5404,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_4,True,Internal,CDGR5F10N3,2563,R5F10N3
+stock_location_5405,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,Internal,CDGR5F11N1,2541,R5F11N1
+stock_location_5406,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_3,True,Internal,CDGR5F11N2,2542,R5F11N2
+stock_location_5407,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_4,True,Internal,CDGR5F11N3,2543,R5F11N3
+stock_location_5408,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,Internal,CDGR5F12N1,2521,R5F12N1
+stock_location_5409,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_3,True,Internal,CDGR5F12N2,2522,R5F12N2
+stock_location_5410,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_4,True,Internal,CDGR5F12N3,2523,R5F12N3
+stock_location_5411,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,Internal,CDGR5F13N1,2501,R5F13N1
+stock_location_5412,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_3,True,Internal,CDGR5F13N2,2502,R5F13N2
+stock_location_5413,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_4,True,Internal,CDGR5F13N3,2503,R5F13N3
+stock_location_5414,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,Internal,CDGR5F14N1,2481,R5F14N1
+stock_location_5415,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_3,True,Internal,CDGR5F14N2,2482,R5F14N2
+stock_location_5416,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_4,True,Internal,CDGR5F14N3,2483,R5F14N3
+stock_location_5417,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,Internal,CDGR5F15N1,2461,R5F15N1
+stock_location_5418,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_3,True,Internal,CDGR5F15N2,2462,R5F15N2
+stock_location_5419,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_4,True,Internal,CDGR5F15N3,2463,R5F15N3
+stock_location_5420,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,Internal,CDGR5F16N1,2441,R5F16N1
+stock_location_5421,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_3,True,Internal,CDGR5F16N2,2442,R5F16N2
+stock_location_5422,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_4,True,Internal,CDGR5F16N3,2443,R5F16N3
+stock_location_5423,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,Internal,CDGR5F17N1,2421,R5F17N1
+stock_location_5424,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_3,True,Internal,CDGR5F17N2,2422,R5F17N2
+stock_location_5425,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_4,True,Internal,CDGR5F17N3,2423,R5F17N3
+stock_location_5426,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,Internal,CDGR5F18N1,2401,R5F18N1
+stock_location_5427,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_3,True,Internal,CDGR5F18N2,2402,R5F18N2
+stock_location_5428,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_4,True,Internal,CDGR5F18N3,2403,R5F18N3
+stock_location_5429,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,Internal,CDGR5F19N1,2381,R5F19N1
+stock_location_5430,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_3,True,Internal,CDGR5F19N2,2382,R5F19N2
+stock_location_5431,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_4,True,Internal,CDGR5F19N3,2383,R5F19N3
+stock_location_5432,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,Internal,CDGR5F20N1,2361,R5F20N1
+stock_location_5433,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_3,True,Internal,CDGR5F20N2,2362,R5F20N2
+stock_location_5434,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_4,True,Internal,CDGR5F20N3,2363,R5F20N3
+stock_location_5435,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,Internal,CDGR5F21N1,2341,R5F21N1
+stock_location_5436,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_3,True,Internal,CDGR5F21N2,2342,R5F21N2
+stock_location_5437,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_4,True,Internal,CDGR5F21N3,2343,R5F21N3
+stock_location_5438,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,Internal,CDGR5F22N1,2321,R5F22N1
+stock_location_5439,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_3,True,Internal,CDGR5F22N2,2322,R5F22N2
+stock_location_5440,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_4,True,Internal,CDGR5F22N3,2323,R5F22N3
+stock_location_5441,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,Internal,CDGR5F23N1,2301,R5F23N1
+stock_location_5442,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_3,True,Internal,CDGR5F23N2,2302,R5F23N2
+stock_location_5443,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_4,True,Internal,CDGR5F23N3,2303,R5F23N3
+stock_location_5444,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,Internal,CDGR5F24N1,2281,R5F24N1
+stock_location_5445,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_3,True,Internal,CDGR5F24N2,2282,R5F24N2
+stock_location_5446,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_4,True,Internal,CDGR5F24N3,2283,R5F24N3
+stock_location_5447,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,Internal,CDGR5F25N1,2261,R5F25N1
+stock_location_5448,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_3,True,Internal,CDGR5F25N2,2262,R5F25N2
+stock_location_5449,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_4,True,Internal,CDGR5F25N3,2263,R5F25N3
+stock_location_5450,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,Internal,CDGR5F26N1,2241,R5F26N1
+stock_location_5451,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_3,True,Internal,CDGR5F26N2,2242,R5F26N2
+stock_location_5452,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_4,True,Internal,CDGR5F26N3,2243,R5F26N3
+stock_location_5453,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,Internal,CDGR5F27N1,2221,R5F27N1
+stock_location_5454,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_3,True,Internal,CDGR5F27N2,2222,R5F27N2
+stock_location_5455,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_4,True,Internal,CDGR5F27N3,2223,R5F27N3
+stock_location_5456,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,Internal,CDGR5F28N1,2201,R5F28N1
+stock_location_5457,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_3,True,Internal,CDGR5F28N2,2202,R5F28N2
+stock_location_5458,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_4,True,Internal,CDGR5F28N3,2203,R5F28N3
+stock_location_5459,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,Internal,CDGR5F29N1,2181,R5F29N1
+stock_location_5460,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_3,True,Internal,CDGR5F29N2,2182,R5F29N2
+stock_location_5461,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_4,True,Internal,CDGR5F29N3,2183,R5F29N3
+stock_location_5462,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_2,True,Internal,CDGR5F30N1,2161,R5F30N1
+stock_location_5463,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_3,True,Internal,CDGR5F30N2,2162,R5F30N2
+stock_location_5464,marin_data.company_lmmr,marin_data.stock_location_5065,marin_data.stock_storage_category_4,True,Internal,CDGR5F30N3,2163,R5F30N3
+stock_location_5465,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,Internal,CDGR6F01N1,2721,R6F01N1
+stock_location_5466,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,Internal,CDGR6F01N2,2722,R6F01N2
+stock_location_5467,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,Internal,CDGR6F01N3,2723,R6F01N3
+stock_location_5468,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,Internal,CDGR6F02N1,2711,R6F02N1
+stock_location_5469,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,Internal,CDGR6F02N2,2712,R6F02N2
+stock_location_5470,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,Internal,CDGR6F02N3,2713,R6F02N3
+stock_location_5471,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,Internal,CDGR6F03N1,2701,R6F03N1
+stock_location_5472,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,Internal,CDGR6F03N2,2702,R6F03N2
+stock_location_5473,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,Internal,CDGR6F03N3,2703,R6F03N3
+stock_location_5474,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,Internal,CDGR6F04N1,2691,R6F04N1
+stock_location_5475,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,Internal,CDGR6F04N2,2692,R6F04N2
+stock_location_5476,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,Internal,CDGR6F04N3,2693,R6F04N3
+stock_location_5477,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,Internal,CDGR6F05N1,2681,R6F05N1
+stock_location_5478,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,Internal,CDGR6F05N2,2682,R6F05N2
+stock_location_5479,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,Internal,CDGR6F05N3,2683,R6F05N3
+stock_location_5480,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,Internal,CDGR6F06N1,2671,R6F06N1
+stock_location_5481,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,Internal,CDGR6F06N2,2672,R6F06N2
+stock_location_5482,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,Internal,CDGR6F06N3,2673,R6F06N3
+stock_location_5483,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,Internal,CDGR6F07N1,2651,R6F07N1
+stock_location_5484,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,Internal,CDGR6F07N2,2652,R6F07N2
+stock_location_5485,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,Internal,CDGR6F07N3,2653,R6F07N3
+stock_location_5486,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,Internal,CDGR6F08N1,2631,R6F08N1
+stock_location_5487,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,Internal,CDGR6F08N2,2632,R6F08N2
+stock_location_5488,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,Internal,CDGR6F08N3,2633,R6F08N3
+stock_location_5489,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,Internal,CDGR6F09N1,2611,R6F09N1
+stock_location_5490,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,Internal,CDGR6F09N2,2612,R6F09N2
+stock_location_5491,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,Internal,CDGR6F09N3,2613,R6F09N3
+stock_location_5492,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,Internal,CDGR6F10N1,2591,R6F10N1
+stock_location_5493,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,Internal,CDGR6F10N2,2592,R6F10N2
+stock_location_5494,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,Internal,CDGR6F10N3,2593,R6F10N3
+stock_location_5495,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,Internal,CDGR6F11N1,2571,R6F11N1
+stock_location_5496,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,Internal,CDGR6F11N2,2572,R6F11N2
+stock_location_5497,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,Internal,CDGR6F11N3,2573,R6F11N3
+stock_location_5498,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,Internal,CDGR6F12N1,2551,R6F12N1
+stock_location_5499,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,Internal,CDGR6F12N2,2552,R6F12N2
+stock_location_5500,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,Internal,CDGR6F12N3,2553,R6F12N3
+stock_location_5501,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,Internal,CDGR6F13N1,2531,R6F13N1
+stock_location_5502,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,Internal,CDGR6F13N2,2532,R6F13N2
+stock_location_5503,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,Internal,CDGR6F13N3,2533,R6F13N3
+stock_location_5504,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,Internal,CDGR6F14N1,2511,R6F14N1
+stock_location_5505,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,Internal,CDGR6F14N2,2512,R6F14N2
+stock_location_5506,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,Internal,CDGR6F14N3,2513,R6F14N3
+stock_location_5507,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,Internal,CDGR6F15N1,2491,R6F15N1
+stock_location_5508,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,Internal,CDGR6F15N2,2492,R6F15N2
+stock_location_5509,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,Internal,CDGR6F15N3,2493,R6F15N3
+stock_location_5510,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,Internal,CDGR6F16N1,2471,R6F16N1
+stock_location_5511,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,Internal,CDGR6F16N2,2472,R6F16N2
+stock_location_5512,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,Internal,CDGR6F16N3,2473,R6F16N3
+stock_location_5513,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,Internal,CDGR6F17N1,2451,R6F17N1
+stock_location_5514,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,Internal,CDGR6F17N2,2452,R6F17N2
+stock_location_5515,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,Internal,CDGR6F17N3,2453,R6F17N3
+stock_location_5516,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,Internal,CDGR6F18N1,2431,R6F18N1
+stock_location_5517,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,Internal,CDGR6F18N2,2432,R6F18N2
+stock_location_5518,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,Internal,CDGR6F18N3,2433,R6F18N3
+stock_location_5519,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,Internal,CDGR6F19N1,2411,R6F19N1
+stock_location_5520,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,Internal,CDGR6F19N2,2412,R6F19N2
+stock_location_5521,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,Internal,CDGR6F19N3,2413,R6F19N3
+stock_location_5522,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,Internal,CDGR6F20N1,2391,R6F20N1
+stock_location_5523,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,Internal,CDGR6F20N2,2392,R6F20N2
+stock_location_5524,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,Internal,CDGR6F20N3,2393,R6F20N3
+stock_location_5525,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,Internal,CDGR6F21N1,2371,R6F21N1
+stock_location_5526,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,Internal,CDGR6F21N2,2372,R6F21N2
+stock_location_5527,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,Internal,CDGR6F21N3,2373,R6F21N3
+stock_location_5528,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,Internal,CDGR6F22N1,2351,R6F22N1
+stock_location_5529,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,Internal,CDGR6F22N2,2352,R6F22N2
+stock_location_5530,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,Internal,CDGR6F22N3,2353,R6F22N3
+stock_location_5531,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,Internal,CDGR6F23N1,2331,R6F23N1
+stock_location_5532,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,Internal,CDGR6F23N2,2332,R6F23N2
+stock_location_5533,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,Internal,CDGR6F23N3,2333,R6F23N3
+stock_location_5534,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,Internal,CDGR6F24N1,2311,R6F24N1
+stock_location_5535,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,Internal,CDGR6F24N2,2312,R6F24N2
+stock_location_5536,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,Internal,CDGR6F24N3,2313,R6F24N3
+stock_location_5537,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,Internal,CDGR6F25N1,2291,R6F25N1
+stock_location_5538,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,Internal,CDGR6F25N2,2292,R6F25N2
+stock_location_5539,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,Internal,CDGR6F25N3,2293,R6F25N3
+stock_location_5540,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,Internal,CDGR6F26N1,2271,R6F26N1
+stock_location_5541,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,Internal,CDGR6F26N2,2272,R6F26N2
+stock_location_5542,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,Internal,CDGR6F26N3,2273,R6F26N3
+stock_location_5543,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,Internal,CDGR6F27N1,2251,R6F27N1
+stock_location_5544,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,Internal,CDGR6F27N2,2252,R6F27N2
+stock_location_5545,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,Internal,CDGR6F27N3,2253,R6F27N3
+stock_location_5546,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,Internal,CDGR6F28N1,2231,R6F28N1
+stock_location_5547,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,Internal,CDGR6F28N2,2232,R6F28N2
+stock_location_5548,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,Internal,CDGR6F28N3,2233,R6F28N3
+stock_location_5549,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,Internal,CDGR6F29N1,2211,R6F29N1
+stock_location_5550,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,Internal,CDGR6F29N2,2212,R6F29N2
+stock_location_5551,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,Internal,CDGR6F29N3,2213,R6F29N3
+stock_location_5552,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,Internal,CDGR6F30N1,2191,R6F30N1
+stock_location_5553,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,Internal,CDGR6F30N2,2192,R6F30N2
+stock_location_5554,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,Internal,CDGR6F30N3,2193,R6F30N3
+stock_location_5555,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,Internal,CDGR6F31N1,2171,R6F31N1
+stock_location_5556,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,Internal,CDGR6F31N2,2172,R6F31N2
+stock_location_5557,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,Internal,CDGR6F31N3,2173,R6F31N3
+stock_location_5558,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,Internal,CDGR6F32N1,2151,R6F32N1
+stock_location_5559,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,Internal,CDGR6F32N2,2152,R6F32N2
+stock_location_5560,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,Internal,CDGR6F32N3,2153,R6F32N3
+stock_location_5561,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,Internal,CDGR6F33N1,2141,R6F33N1
+stock_location_5562,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,Internal,CDGR6F33N2,2142,R6F33N2
+stock_location_5563,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,Internal,CDGR6F33N3,2143,R6F33N3
+stock_location_5564,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,Internal,CDGR6F34N1,2131,R6F34N1
+stock_location_5565,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,Internal,CDGR6F34N2,2132,R6F34N2
+stock_location_5566,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,Internal,CDGR6F34N3,2133,R6F34N3
+stock_location_5567,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,Internal,CDGR6F35N1,2121,R6F35N1
+stock_location_5568,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,Internal,CDGR6F35N2,2122,R6F35N2
+stock_location_5569,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,Internal,CDGR6F35N3,2123,R6F35N3
+stock_location_5570,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_2,True,Internal,CDGR6F36N1,2111,R6F36N1
+stock_location_5571,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_3,True,Internal,CDGR6F36N2,2112,R6F36N2
+stock_location_5572,marin_data.company_lmmr,marin_data.stock_location_5066,marin_data.stock_storage_category_4,True,Internal,CDGR6F36N3,2113,R6F36N3
+stock_location_5573,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_2,True,Internal,CDGR7F01N1,1521,R7F01N1
+stock_location_5574,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_3,True,Internal,CDGR7F01N2,1522,R7F01N2
+stock_location_5575,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_4,True,Internal,CDGR7F01N3,1523,R7F01N3
+stock_location_5576,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_7,True,Internal,CDGR7F01N4,1524,R7F01N4
+stock_location_5577,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_2,True,Internal,CDGR7F02N1,1531,R7F02N1
+stock_location_5578,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_3,True,Internal,CDGR7F02N2,1532,R7F02N2
+stock_location_5579,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_4,True,Internal,CDGR7F02N3,1533,R7F02N3
+stock_location_5580,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_7,True,Internal,CDGR7F02N4,1534,R7F02N4
+stock_location_5581,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_2,True,Internal,CDGR7F03N1,1541,R7F03N1
+stock_location_5582,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_3,True,Internal,CDGR7F03N2,1542,R7F03N2
+stock_location_5583,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_4,True,Internal,CDGR7F03N3,1543,R7F03N3
+stock_location_5584,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_7,True,Internal,CDGR7F03N4,1544,R7F03N4
+stock_location_5585,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_2,True,Internal,CDGR7F04N1,1551,R7F04N1
+stock_location_5586,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_3,True,Internal,CDGR7F04N2,1552,R7F04N2
+stock_location_5587,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_4,True,Internal,CDGR7F04N3,1553,R7F04N3
+stock_location_5588,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_7,True,Internal,CDGR7F04N4,1554,R7F04N4
+stock_location_5589,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_2,True,Internal,CDGR7F05N1,2051,R7F05N1
+stock_location_5590,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_3,True,Internal,CDGR7F05N2,2052,R7F05N2
+stock_location_5591,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_4,True,Internal,CDGR7F05N3,2053,R7F05N3
+stock_location_5592,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_7,True,Internal,CDGR7F05N4,2054,R7F05N4
+stock_location_5593,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_2,True,Internal,CDGR7F06N1,2061,R7F06N1
+stock_location_5594,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_3,True,Internal,CDGR7F06N2,2062,R7F06N2
+stock_location_5595,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_4,True,Internal,CDGR7F06N3,2063,R7F06N3
+stock_location_5596,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_7,True,Internal,CDGR7F06N4,2064,R7F06N4
+stock_location_5597,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_2,True,Internal,CDGR7F07N1,2071,R7F07N1
+stock_location_5598,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_3,True,Internal,CDGR7F07N2,2072,R7F07N2
+stock_location_5599,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_4,True,Internal,CDGR7F07N3,2073,R7F07N3
+stock_location_5600,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_7,True,Internal,CDGR7F07N4,2074,R7F07N4
+stock_location_5601,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_2,True,Internal,CDGR7F08N1,2081,R7F08N1
+stock_location_5602,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_3,True,Internal,CDGR7F08N2,2082,R7F08N2
+stock_location_5603,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_4,True,Internal,CDGR7F08N3,2083,R7F08N3
+stock_location_5604,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_7,True,Internal,CDGR7F08N4,2084,R7F08N4
+stock_location_5605,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_2,True,Internal,CDGR7F09N1,2091,R7F09N1
+stock_location_5606,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_3,True,Internal,CDGR7F09N2,2092,R7F09N2
+stock_location_5607,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_4,True,Internal,CDGR7F09N3,2093,R7F09N3
+stock_location_5608,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_7,True,Internal,CDGR7F09N4,2094,R7F09N4
+stock_location_5609,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_2,True,Internal,CDGR7F10N1,2101,R7F10N1
+stock_location_5610,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_3,True,Internal,CDGR7F10N2,2102,R7F10N2
+stock_location_5611,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_4,True,Internal,CDGR7F10N3,2103,R7F10N3
+stock_location_5612,marin_data.company_lmmr,marin_data.stock_location_5067,marin_data.stock_storage_category_7,True,Internal,CDGR7F10N4,2104,R7F10N4
+stock_location_5613,marin_data.company_society,,,True,Virtual,,10,XM1
+stock_location_5614,marin_data.company_society,marin_data.stock_location_5613,,True,Internal,XM1STOCK,10,Stock
+stock_location_5615,marin_data.company_society,marin_data.stock_location_5613,,,Internal,XM1INPUT,10,Input
+stock_location_5616,marin_data.company_society,marin_data.stock_location_5613,,,Internal,XM1QUALITY,10,Quality Control
+stock_location_5617,marin_data.company_society,marin_data.stock_location_5613,,,Internal,XM1OUTPUT,10,Output
+stock_location_5618,marin_data.company_society,marin_data.stock_location_5613,,,Internal,XM1PACKING,10,Packing Zone
+stock_location_5619,marin_data.company_society,marin_data.stock_location_5613,,,Internal,XM1PREPRODUCTION,10,Pre-Production
+stock_location_5620,marin_data.company_society,marin_data.stock_location_5613,,,Internal,XM1POSTPRODUCTION,10,Post-Production
+stock_location_5621,marin_data.company_society,,,True,Virtual,,10,XM2
+stock_location_5622,marin_data.company_society,marin_data.stock_location_5621,,True,Internal,COPYSTOCK,10,Stock
+stock_location_5623,marin_data.company_society,marin_data.stock_location_5621,,,Internal,COPYINPUT,10,Input
+stock_location_5624,marin_data.company_society,marin_data.stock_location_5621,,,Internal,COPYQUALITY,10,Quality Control
+stock_location_5625,marin_data.company_society,marin_data.stock_location_5621,,,Internal,COPYOUTPUT,10,Output
+stock_location_5626,marin_data.company_society,marin_data.stock_location_5621,,,Internal,COPYPACKING,10,Packing Zone
+stock_location_5627,marin_data.company_society,marin_data.stock_location_5621,,,Internal,COPYPREPRODUCTION,10,Pre-Production
+stock_location_5628,marin_data.company_society,marin_data.stock_location_5621,,,Internal,COPYPOSTPRODUCTION,10,Post-Production
+stock_location_5629,marin_data.company_lmmr,marin_data.stock_location_1010,,True,Internal,,12,Bodega
+stock_location_5630,marin_data.company_lmmr,marin_data.stock_location_1026,,True,Internal,CDGOFFICE2,9999,Oficina 2
+stock_location_5631,marin_data.company_lmmr,marin_data.stock_location_1026,,True,Internal,CDGTAP,9997,Tapanco
+stock_location_5632,marin_data.company_lmmr,marin_data.stock_location_1026,,True,Internal,CDGLAB,10000,Laboratorio

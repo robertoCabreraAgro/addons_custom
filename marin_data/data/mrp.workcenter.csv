@@ -1,4 +1,7 @@
-id,name,company_id/id,resource_calendar_id/id,time_efficiency,default_capacity,oee_target
-workcenter_1,WC1,marin_data.company_lmmg,marin_data.resource_calendar_std_45_lmmg,100.0,1.0,90.0
-workcenter_2,WC1,marin_data.company_lmmr,marin_data.resource_calendar_std_45_lmmr,100.0,1.0,90.0
-workcenter_3,WC1,marin_data.company_society,marin_data.resource_calendar_std_45_xm,100.0,1.0,90.0
+id,sequence,name,code,tag_ids,alternative_workcenter_ids,costs_hour,time_efficiency,oee_target
+workcenter_1,1,WC1,,,,0.0,100.0,90.0
+workcenter_2,1,WC1_ Envasado de Líquidos,,,,0.0,100.0,90.0
+workcenter_3,1,WC1,,,,0.0,100.0,90.0
+workcenter_4,1,WC2_ Envasado de Polvos,,,,0.0,100.0,90.0
+workcenter_5,1,WC3_ Formulación,,,,0.0,100.0,90.0
+workcenter_6,1,WC4_Reacondicionado,,,,0.0,100.0,90.0

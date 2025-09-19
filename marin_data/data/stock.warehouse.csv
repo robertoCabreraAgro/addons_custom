@@ -1,11 +1,13 @@
 id,name,code,company_id/id,partner_id/id,active,reception_steps,delivery_steps,manufacture_steps,sequence
-warehouse_101,SANTIAGUITO,SNT,marin_data.company_lmmr,marin_data.partner_lmmr,True,Receive and Store (1 step),Deliver (1 step),Manufacture (1 step),19
-warehouse_102,BALDERAS,BAL,marin_data.company_lmmr,marin_data.partner_lmmr,True,Receive and Store (1 step),Deliver (1 step),Manufacture (1 step),12
-warehouse_103,SAN JUAN,SJN,marin_data.company_lmmr,marin_data.partner_lmmr,True,Receive and Store (1 step),Deliver (1 step),Manufacture (1 step),11
-warehouse_104,CODAGEM,CDG,marin_data.company_lmmr,marin_data.partner_lmmr,True,Receive and Store (1 step),Deliver (1 step),Manufacture (1 step),10
-warehouse_105,OBREGON,OBR,marin_data.company_lmmr,marin_data.partner_lmmr,True,Receive and Store (1 step),Deliver (1 step),Manufacture (1 step),14
-warehouse_106,LOMITA,LOM,marin_data.company_lmmr,marin_data.partner_lmmr,True,Receive and Store (1 step),Deliver (1 step),Manufacture (1 step),13
-warehouse_107,MICHOACAN,MICH,marin_data.company_lmmr,marin_data.partner_lmmr,True,Receive and Store (1 step),Deliver (1 step),Manufacture (1 step),15
-warehouse_108,SALTILLO,SALT,marin_data.company_lmmr,marin_data.partner_lmmr,True,Receive and Store (1 step),Deliver (1 step),Manufacture (1 step),17
-warehouse_109,MOCHIS,MOCH,marin_data.company_lmmr,marin_data.partner_lmmr,True,Receive and Store (1 step),Deliver (1 step),Manufacture (1 step),16
-warehouse_110,HUAMANTLA,HMT,marin_data.company_lmmr,marin_data.partner_lmmr,True,Receive and Store (1 step),Deliver (1 step),Manufacture (1 step),18
+warehouse_101,SANTIAGUITO,SNT,marin_data.company_lmmr,marin_data.partner_5012,True,Receive and Store (1 step),Deliver (1 step),Manufacture (1 step),19
+warehouse_102,BALDERAS,BAL,marin_data.company_lmmr,marin_data.partner_5002,True,Receive and Store (1 step),Deliver (1 step),Manufacture (1 step),12
+warehouse_103,SAN JUAN,SJN,marin_data.company_lmmr,marin_data.partner_5011,True,Receive and Store (1 step),Deliver (1 step),"Pick components, manufacture, then store products (3 steps)",11
+warehouse_104,CODAGEM,CDG,marin_data.company_lmmr,marin_data.partner_5003,True,Receive and Store (1 step),Pick then Deliver (2 steps),Manufacture (1 step),10
+warehouse_105,OBREGON,OBR,marin_data.company_lmmr,marin_data.partner_5008,True,Receive and Store (1 step),Deliver (1 step),Manufacture (1 step),14
+warehouse_106,LOMITA,LOM,marin_data.company_lmmr,marin_data.partner_5005,,Receive and Store (1 step),Deliver (1 step),Manufacture (1 step),13
+warehouse_107,MICHOACAN,MICH,marin_data.company_lmmr,marin_data.partner_5006,,Receive and Store (1 step),Deliver (1 step),Manufacture (1 step),15
+warehouse_108,SALTILLO,SALT,marin_data.company_lmmr,marin_data.partner_5010,,Receive and Store (1 step),Deliver (1 step),Manufacture (1 step),17
+warehouse_109,MOCHIS,MOCH,marin_data.company_lmmr,marin_data.partner_lmmr,,Receive and Store (1 step),Deliver (1 step),Manufacture (1 step),16
+warehouse_110,HUAMANTLA,HMT,marin_data.company_lmmr,marin_data.partner_5004,,Receive and Store (1 step),Deliver (1 step),Manufacture (1 step),18
+warehouse_111,Vehicle 1,XM1,marin_data.company_society,marin_data.partner_society,True,Receive and Store (1 step),Deliver (1 step),Manufacture (1 step),10
+warehouse_112,Inventario anterior,XM2,marin_data.company_society,marin_data.partner_society,True,Receive and Store (1 step),Deliver (1 step),Manufacture (1 step),10

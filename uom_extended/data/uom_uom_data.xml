@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- Power -->
+    <record id="product_uom_wat" model="uom.uom">
+        <field name="name">w</field>
+        <field name="relative_factor" eval="1.0" />
+    </record>
+
+    <record id="product_uom_kw" model="uom.uom">
+        <field name="name">Kw</field>
+        <field name="relative_uom_id" ref="uom_extended.product_uom_wat" />
+        <field name="relative_factor" eval="1000" />
+    </record>
+
+    <record id="product_uom_mw" model="uom.uom">
+        <field name="name">Mw</field>
+        <field name="relative_uom_id" ref="uom_extended.product_uom_wat" />
+        <field name="relative_factor" eval="1000000" />
+    </record>
+
+    <!-- Efficiency -->
+    <record id="product_uom_km_per_liter" model="uom.uom">
+        <field name="name">Km/l</field>
+        <field name="relative_factor" eval="1" />
+    </record>
+
+    <!--Americanization
+    of units of measure-->
+
+    <record id="product_uom_hp" model="uom.uom">
+        <field name="name">HP</field>
+        <field name="relative_uom_id" ref="uom_extended.product_uom_wat" />
+        <field name="relative_factor" eval="745.69987158227" />
+    </record>
+
+    <record id="product_uom_miles_per_galon" model="uom.uom">
+        <field name="name">MPG</field>
+        <field name="relative_uom_id" ref="uom_extended.product_uom_km_per_liter" />
+        <field name="relative_factor" eval="2.3521458" />
+    </record>
+
+</odoo>

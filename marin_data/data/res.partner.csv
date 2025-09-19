@@ -1,10 +1,8 @@
 id,name,active,manufacturer,is_company,type,company_type,country_id/id
 manufacturer_2vs,2VS,True,True,True,Contact,Company,base.mx
 manufacturer_4q,4Q,True,True,True,Contact,Company,base.mx
-manufacturer_adama,ADAMA,True,True,True,Contact,Company,base.cn
-manufacturer_amvac,AMVAC,True,True,True,Contact,Company,base.us
-manufacturer_anajalsa,ANAJALSA,True,True,True,Contact,Company,base.mx
 manufacturer_acadian_seaplant,Acadian Seaplant,True,True,True,Contact,Company,base.ca
+manufacturer_adama,ADAMA,True,True,True,Contact,Company,base.cn
 manufacturer_advam,Advam,True,True,True,Contact,Company,base.mx
 manufacturer_advan,Advan,True,True,True,Contact,Company,base.it
 manufacturer_agricam,Agricam,True,True,True,Contact,Company,base.mx
@@ -14,6 +12,8 @@ manufacturer_agroscience,Agroscience,True,True,True,Contact,Company,base.mx
 manufacturer_agroterrum,Agroterrum,True,True,True,Contact,Company,base.cn
 manufacturer_albaugh,Albaugh,True,True,True,Contact,Company,base.us
 manufacturer_altiara,Altiara,True,True,True,Contact,Company,base.mx
+manufacturer_amvac,AMVAC,True,True,True,Contact,Company,base.us
+manufacturer_anajalsa,ANAJALSA,True,True,True,Contact,Company,base.mx
 manufacturer_anasac,Anasac,True,True,True,Contact,Company,base.cl
 manufacturer_axeb,Axeb,True,True,True,Contact,Company,base.mx
 manufacturer_basf,BASF,True,True,True,Contact,Company,base.de
@@ -29,20 +29,20 @@ manufacturer_dragon,Dragon,True,True,True,Contact,Company,base.mx
 manufacturer_ducor,Ducor,True,True,True,Contact,Company,base.mx
 manufacturer_eurochem,Eurochem,True,True,True,Contact,Company,base.ru
 manufacturer_evonik,Evonik,True,True,True,Contact,Company,base.de
-manufacturer_fmc,FMC,True,True,True,Contact,Company,base.us
 manufacturer_fagro,Fagro,True,True,True,Contact,Company,base.mx
+manufacturer_fmc,FMC,True,True,True,Contact,Company,base.us
 manufacturer_formulabagro,Formulabagro,True,True,True,Contact,Company,base.mx
 manufacturer_globe,Globe,True,True,True,Contact,Company,base.mx
 manufacturer_gowan,Gowan,True,True,True,Contact,Company,base.us
 manufacturer_gruindag,Gruindag,True,True,True,Contact,Company,base.mx
 manufacturer_haifa,Haifa,True,True,True,Contact,Company,base.il
 manufacturer_helm,Helm,True,True,True,Contact,Company,base.mx
-manufacturer_iqc,IQC,True,True,True,Contact,Company,base.mx
-manufacturer_isk_bioscience,ISK Bioscience,True,True,True,Contact,Company,base.jp
 manufacturer_inagrosa,Inagrosa,True,True,True,Contact,Company,base.es
 manufacturer_innovak_global,Innovak Global,True,True,True,Contact,Company,base.mx
 manufacturer_inoquos,Inoquos,True,True,True,Contact,Company,base.mx
+manufacturer_iqc,IQC,True,True,True,Contact,Company,base.mx
 manufacturer_isaosa,Isaosa,True,True,True,Contact,Company,base.mx
+manufacturer_isk_bioscience,ISK Bioscience,True,True,True,Contact,Company,base.jp
 manufacturer_jco,JCO,True,True,True,Contact,Company,base.us
 manufacturer_koor,Koor,True,True,True,Contact,Company,base.mx
 manufacturer_lamitec,Lamitec,True,True,True,Contact,Company,base.mx
@@ -54,19 +54,19 @@ manufacturer_monsanto,Monsanto,True,True,True,Contact,Company,base.us
 manufacturer_nichino,Nichino,True,True,True,Contact,Company,base.jp
 manufacturer_nova_pack,Nova Pack,True,True,True,Contact,Company,base.mx
 manufacturer_nufarm,Nufarm,True,True,True,Contact,Company,base.au
-manufacturer_pti,PTI,True,True,True,Contact,Company,base.mx
 manufacturer_polaquimia,Polaquimia,True,True,True,Contact,Company,base.mx
+manufacturer_pti,PTI,True,True,True,Contact,Company,base.mx
 manufacturer_quimia,Quimia,True,True,True,Contact,Company,base.mx
 manufacturer_quimix,Quimix,True,True,True,Contact,Company,base.mx
 manufacturer_rainbow,Rainbow,True,True,True,Contact,Company,base.cn
 manufacturer_reinke,Reinke,True,True,True,Contact,Company,base.us
 manufacturer_ruhega,Ruhega,True,True,True,Contact,Company,base.mx
-manufacturer_sqm,SQM,True,True,True,Contact,Company,base.cl
 manufacturer_sagal,Sagal,True,True,True,Contact,Company,base.mx
 manufacturer_shindaiwa,Shindaiwa,True,True,True,Contact,Company,base.jp
 manufacturer_shokubutsu,Shokubutsu,True,True,True,Contact,Company,base.mx
 manufacturer_sicit,Sicit,True,True,True,Contact,Company,base.it
 manufacturer_sifatec,Sifatec,True,True,True,Contact,Company,base.mx
+manufacturer_sqm,SQM,True,True,True,Contact,Company,base.cl
 manufacturer_summitagro,SummitAgro,True,True,True,Contact,Company,base.mx
 manufacturer_syngenta,Syngenta,True,True,True,Contact,Company,base.ch
 manufacturer_tradecorp,Tradecorp,True,True,True,Contact,Company,base.es

@@ -1,0 +1,80 @@
+id,name,parent_id/id,color
+partner_category_agronomic,Agronomic,,0
+partner_category_commercial,Commercial,,0
+partner_category_high_risk,High Risk,marin.partner_category_security,1
+partner_category_management,Accounting,,0
+partner_category_mrp,MRP,,0
+partner_category_operations,Operations,,0
+partner_category_purchase,Purchase,,10
+partner_category_security,Security,,0
+partner_category_1008,temp3,,5
+partner_category_1009,temp4,,5
+partner_category_1010,Debt quality - High,marin.partner_category_management,10
+partner_category_1011,Debt quality - Low,marin.partner_category_management,1
+partner_category_1012,Debt quality - Medium,marin.partner_category_management,3
+partner_category_1013,Debt quality - Uncollectible,marin.partner_category_management,1
+partner_category_1014,Fiscal effect - FF,marin.partner_category_management,4
+partner_category_1015,Fiscal effect - FX,marin.partner_category_management,4
+partner_category_1016,Fiscal effect - NF,marin.partner_category_management,4
+partner_category_1017,Crop - Avocado,marin.partner_category_commercial,4
+partner_category_1018,Crop - Barley,marin.partner_category_commercial,4
+partner_category_1019,Crop - Bean,marin.partner_category_commercial,4
+partner_category_1020,Crop - Berry,marin.partner_category_commercial,4
+partner_category_1021,Crop - Carrot,marin.partner_category_commercial,4
+partner_category_1022,Crop - Citrus,marin.partner_category_commercial,4
+partner_category_1023,Crop - Corn,marin.partner_category_commercial,4
+partner_category_1024,Crop - Cucurbits,marin.partner_category_commercial,4
+partner_category_1025,Crop - Onion,marin.partner_category_commercial,4
+partner_category_1026,Crop - Ornamentals,marin.partner_category_commercial,4
+partner_category_1027,Crop - Pepper,marin.partner_category_commercial,4
+partner_category_1028,Crop - Potato,marin.partner_category_commercial,4
+partner_category_1029,Crop - Tomato,marin.partner_category_commercial,4
+partner_category_1030,Crop - Wheat,marin.partner_category_commercial,4
+partner_category_1031,Debt collection - Alejandro,marin.partner_category_commercial,4
+partner_category_1032,Debt collection - Axel,marin.partner_category_commercial,4
+partner_category_1033,Debt collection - BAL,marin.partner_category_commercial,4
+partner_category_1034,Debt collection - Corporativo,marin.partner_category_commercial,4
+partner_category_1035,Debt collection - Hugo,marin.partner_category_commercial,4
+partner_category_1036,Debt collection - Misael,marin.partner_category_commercial,5
+partner_category_1037,Debt collection - Reynaldo,marin.partner_category_commercial,4
+partner_category_1038,Debt collection - SJN,marin.partner_category_commercial,4
+partner_category_1039,Growth perspective - Contraction,marin.partner_category_commercial,1
+partner_category_1040,Growth perspective - Expansion,marin.partner_category_commercial,10
+partner_category_1041,Growth perspective - Hold,marin.partner_category_commercial,3
+partner_category_1042,Production size - Big holder (up to 30mdp),marin.partner_category_commercial,10
+partner_category_1043,Production size - Medium holder (up to 18mdp),marin.partner_category_commercial,3
+partner_category_1044,Production size - Small holder (up to 10mdp),marin.partner_category_commercial,1
+partner_category_1045,Production size - Super big holder (more than 30mdp),marin.partner_category_commercial,10
+partner_category_1046,Production size - Very small holder (up to 3mdp),marin.partner_category_commercial,1
+partner_category_1047,Debt collection - Nahum,marin.partner_category_commercial,4
+partner_category_1048,Debt collection - Daniel,marin.partner_category_commercial,4
+partner_category_1049,Debt collection - Carlos,marin.partner_category_commercial,4
+partner_category_1050,Debt collection - Angel,marin.partner_category_commercial,4
+partner_category_1051,Debt collection - Brandon,marin.partner_category_commercial,4
+partner_category_1052,Monday,marin.partner_category_commercial,0
+partner_category_1053,Tuesday,marin.partner_category_commercial,0
+partner_category_1054,Wednesday,marin.partner_category_commercial,0
+partner_category_1055,Thursday,marin.partner_category_commercial,0
+partner_category_1056,Friday,marin.partner_category_commercial,0
+partner_category_1057,Saturday,marin.partner_category_commercial,0
+partner_category_1058,Sunday,marin.partner_category_commercial,0
+partner_category_1059,Sin conversión por competencia,marin.partner_category_commercial,0
+partner_category_1060,Perdido por calidad,marin.partner_category_commercial,0
+partner_category_1061,Commercial Profile- Traditional,marin.partner_category_commercial,4
+partner_category_1062,Technology Level- Intermediate technology,marin.partner_category_commercial,9
+partner_category_1063,Commercial Profile - Innovator,marin.partner_category_commercial,4
+partner_category_1064,Commercial Profile - Traditional,marin.partner_category_commercial,4
+partner_category_1065,Commercial Profile - Programatic/Efficient,marin.partner_category_commercial,4
+partner_category_1066,Commercial Profile - Opportunist/Price-sensitive,marin.partner_category_commercial,4
+partner_category_1067,Technology Level - High,marin.partner_category_commercial,9
+partner_category_1068,Technology Level - Basic technology,marin.partner_category_commercial,9
+partner_category_1069,Technology Level - Not technified,marin.partner_category_commercial,9
+partner_category_1070,Crop - Mushroom,marin.partner_category_commercial,3
+partner_category_1071,Crop - Banana,marin.partner_category_commercial,3
+partner_category_supplier_core,Supplier - Core business,marin.partner_category_purchase,5
+partner_category_supplier_general,Supplier - General,marin.partner_category_purchase,5
+partner_category_supplier_it,Supplier - IT,marin.partner_category_purchase,5
+partner_category_supplier_management,Supplier - Management,marin.partner_category_purchase,5
+partner_category_supplier_operations,Supplier - Operations,marin.partner_category_purchase,5
+partner_category_supplier_potatoes,Supplier - Potatoes,marin.partner_category_purchase,5
+partner_category_supplier_xiuman,Supplier - Xiuman,marin.partner_category_purchase,5

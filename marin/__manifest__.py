@@ -187,6 +187,7 @@
         "stock_lot_rule",
         "stock_sms",
         "syngenta_edi",
+        "uom_extended",
         "website_appointment_sale_project",
         "website_documents",
         "website_event_sale",

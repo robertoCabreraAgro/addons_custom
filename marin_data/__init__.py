@@ -17,7 +17,6 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
     tools.convert.convert_file(
         env,
@@ -26,7 +25,6 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
     tools.convert.convert_file(
         env,
@@ -35,15 +33,6 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
-    )
-    tools.convert.convert_file(
-        env,
-        "marin_data",
-        "data/res_partner_age_range.xml",
-        None,
-        mode="init",
-        kind="data",
     )
     tools.convert.convert_file(
         env,
@@ -52,7 +41,6 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
     tools.convert.convert_file(
         env,
@@ -61,21 +49,12 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
 
     model = "resource.calendar"
-    calendars = (
-        env[model]
-        .sudo()
-        .search([("active", "in", [True, False]), ("id", ">", 100)], order="id ASC")
-    )
+    calendars = env[model].sudo().search([("active", "in", [True, False]), ("id", ">", 100)], order="id ASC")
     for cc in calendars:
-        exist = (
-            env["ir.model.data"]
-            .sudo()
-            .search([("model", "=", model), ("res_id", "=", cc.id)])
-        )
+        exist = env["ir.model.data"].sudo().search([("model", "=", model), ("res_id", "=", cc.id)])
         if not exist:
             env["ir.model.data"].create(
                 {
@@ -102,7 +81,6 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
     tools.convert.convert_file(
         env,
@@ -111,10 +89,10 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
 
     env.cr.execute("""SELECT setval('"public"."res_partner_id_seq"', 1000, true);""")
+    env.cr.execute("""SELECT setval('"public"."res_partner_category_id_seq"', 1000, true);""")
     env.cr.execute("""SELECT setval('"public"."res_users_id_seq"', 999, true);""")
     tools.convert.convert_file(
         env,
@@ -123,7 +101,6 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
 
     env.cr.execute(
@@ -148,7 +125,14 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
+    )
+    tools.convert.convert_file(
+        env,
+        "marin_data",
+        "data/res.partner.category.csv",
+        None,
+        mode="init",
+        noupdate=True,
     )
     tools.convert.convert_file(
         env,
@@ -157,7 +141,6 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
     tools.convert.convert_file(
         env,
@@ -166,7 +149,6 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
     tools.convert.convert_file(
         env,
@@ -175,7 +157,6 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
     tools.convert.convert_file(
         env,
@@ -184,7 +165,6 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
     tools.convert.convert_file(
         env,
@@ -193,7 +173,6 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
     tools.convert.convert_file(
         env,
@@ -202,7 +181,6 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
     tools.convert.convert_file(
         env,
@@ -211,7 +189,6 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
     tools.convert.convert_file(
         env,
@@ -220,7 +197,6 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
     tools.convert.convert_file(
         env,
@@ -229,7 +205,6 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
     tools.convert.convert_file(
         env,
@@ -238,29 +213,7 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
-
-    model = "stock.warehouse"
-    warehouses = (
-        env[model].sudo().search([("active", "in", [True, False])], order="id ASC")
-    )
-    for wh in warehouses:
-        exist = (
-            env["ir.model.data"]
-            .sudo()
-            .search([("model", "=", model), ("res_id", "=", wh.id)])
-        )
-        if not exist:
-            env["ir.model.data"].create(
-                {
-                    "module": "marin_data",
-                    "model": model,
-                    "name": "warehouse_%s" % wh.id,
-                    "res_id": wh.id,
-                    "noupdate": True,
-                }
-            )
     tools.convert.convert_file(
         env,
         "marin_data",
@@ -268,19 +221,12 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
 
     model = "stock.location"
-    locations = (
-        env[model].sudo().search([("active", "in", [True, False])], order="id ASC")
-    )
+    locations = env[model].sudo().search([("active", "in", [True, False])], order="id ASC")
     for ln in locations:
-        exist = (
-            env["ir.model.data"]
-            .sudo()
-            .search([("model", "=", model), ("res_id", "=", ln.id)])
-        )
+        exist = env["ir.model.data"].sudo().search([("model", "=", model), ("res_id", "=", ln.id)])
         if not exist:
             env["ir.model.data"].create(
                 {
@@ -291,12 +237,6 @@ def _post_init_marin(env):
                     "noupdate": True,
                 }
             )
-    env["stock.warehouse"].sudo().browse(2).write({"name": "LMMR", "code": "LMMR"})
-    env["stock.warehouse"].sudo().browse(3).write({"name": "TJGL", "code": "TJGL"})
-    env["stock.warehouse"].sudo().browse(4).write({"name": "LMMG", "code": "LMMG"})
-    env["stock.warehouse"].sudo().browse(5).write({"name": "AMMG", "code": "AMMG"})
-    env["stock.warehouse"].sudo().browse(6).write({"name": "CFMG", "code": "CFMG"})
-    env["stock.warehouse"].sudo().browse(7).write({"name": "XM", "code": "XM"})
 
     env.cr.execute("""SELECT setval('"public"."stock_location_id_seq"', 5000, true);""")
     tools.convert.convert_file(
@@ -306,17 +246,12 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
 
     model = "stock.picking.type"
     types = env[model].sudo().search([("active", "in", [True, False])], order="id ASC")
     for spt in types:
-        exist = (
-            env["ir.model.data"]
-            .sudo()
-            .search([("model", "=", model), ("res_id", "=", spt.id)])
-        )
+        exist = env["ir.model.data"].sudo().search([("model", "=", model), ("res_id", "=", spt.id)])
         if not exist:
             env["ir.model.data"].create(
                 {
@@ -353,7 +288,6 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
     tools.convert.convert_file(
         env,
@@ -362,7 +296,6 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
     tools.convert.convert_file(
         env,
@@ -371,9 +304,7 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
-    # tools.convert.convert_file(env, "marin_data", "data/stock.picking.type-2.csv", None, mode="init", noupdate=True, kind="data")
     env.cr.execute(
         """
         UPDATE stock_picking_type SET sequence=100  WHERE name->>'en_US' = 'Delivery Orders';
@@ -408,7 +339,6 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
     lmmr = env["res.company"].sudo().browse(2)
     tjgl = env["res.company"].sudo().browse(3)
@@ -496,11 +426,7 @@ def _post_init_marin(env):
     model = "account.account"
     records = env[model].sudo().search([("id", ">=", 1000)], order="id ASC")
     for r in records:
-        exist = (
-            env["ir.model.data"]
-            .sudo()
-            .search([("model", "=", model), ("res_id", "=", r.id)])
-        )
+        exist = env["ir.model.data"].sudo().search([("model", "=", model), ("res_id", "=", r.id)])
         if not exist:
             code_store = (
                 r.with_company(lmmr).code_store
@@ -542,7 +468,6 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
     tools.convert.convert_file(
         env,
@@ -551,7 +476,6 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
     tools.convert.convert_file(
         env,
@@ -560,7 +484,6 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
     tools.convert.convert_file(
         env,
@@ -569,7 +492,6 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
     tools.convert.convert_file(
         env,
@@ -578,7 +500,6 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
     tools.convert.convert_file(
         env,
@@ -587,7 +508,6 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
     tools.convert.convert_file(
         env,
@@ -596,46 +516,31 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
 
-    env.cr.execute(
-        """UPDATE account_payment_method_line SET id=id+10000 WHERE id>=1000"""
-    )
+    env.cr.execute("""UPDATE account_payment_method_line SET id=id+10000 WHERE id>=1000""")
     env.cr.execute(
         """SELECT id FROM account_payment_method_line WHERE id>=10000 ORDER BY journal_id, payment_method_id"""
     )
     records = env.cr.fetchall()
     start = 1001
     for r in records:
-        env.cr.execute(
-            """UPDATE account_payment_method_line SET id=%s WHERE id=%s"""
-            % (start, r[0])
-        )
+        env.cr.execute("""UPDATE account_payment_method_line SET id=%s WHERE id=%s""" % (start, r[0]))
         start += 1
 
-    env.cr.execute(
-        """UPDATE account_tax_repartition_line SET id=id+10000 WHERE id>=5000"""
-    )
+    env.cr.execute("""UPDATE account_tax_repartition_line SET id=id+10000 WHERE id>=5000""")
     env.cr.execute(
         """SELECT id FROM account_tax_repartition_line WHERE id>=10000 ORDER BY tax_id, document_type, repartition_type"""
     )
     records = env.cr.fetchall()
     start = 5001
     for r in records:
-        env.cr.execute(
-            """UPDATE account_tax_repartition_line SET id=%s WHERE id=%s"""
-            % (start, r[0])
-        )
+        env.cr.execute("""UPDATE account_tax_repartition_line SET id=%s WHERE id=%s""" % (start, r[0]))
         start += 1
     model = "account.tax.repartition.line"
     records = env[model].sudo().search([("id", ">=", "5000")], order="id ASC")
     for r in records:
-        exist = (
-            env["ir.model.data"]
-            .sudo()
-            .search([("model", "=", model), ("res_id", "=", r.id)])
-        )
+        exist = env["ir.model.data"].sudo().search([("model", "=", model), ("res_id", "=", r.id)])
         if not exist:
             name = "tax_repartition_line_%s" % r.id
             env["ir.model.data"].create(
@@ -651,11 +556,7 @@ def _post_init_marin(env):
     model = "account.account.tag"
     aat = env[model].sudo().search([("name", "ilike", "DIOT:")], order="id ASC")
     for at in aat:
-        exist = (
-            env["ir.model.data"]
-            .sudo()
-            .search([("model", "=", model), ("res_id", "=", at.id)])
-        )
+        exist = env["ir.model.data"].sudo().search([("model", "=", model), ("res_id", "=", at.id)])
         if not exist:
             env["ir.model.data"].create(
                 {
@@ -682,7 +583,6 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
     tools.convert.convert_file(
         env,
@@ -691,7 +591,6 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
 
     env.cr.execute(
@@ -726,7 +625,6 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
     tools.convert.convert_file(
         env,
@@ -735,7 +633,6 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
     tools.convert.convert_file(
         env,
@@ -744,7 +641,6 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
     tools.convert.convert_file(
         env,
@@ -753,21 +649,12 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
 
     model = "product.product"
-    products = (
-        env[model]
-        .sudo()
-        .search([("active", "in", [True, False]), ("id", ">", 1000)], order="id ASC")
-    )
+    products = env[model].sudo().search([("active", "in", [True, False]), ("id", ">", 1000)], order="id ASC")
     for pp in products:
-        exist = (
-            env["ir.model.data"]
-            .sudo()
-            .search([("model", "=", model), ("res_id", "=", pp.id)])
-        )
+        exist = env["ir.model.data"].sudo().search([("model", "=", model), ("res_id", "=", pp.id)])
         if not exist:
             env["ir.model.data"].create(
                 {
@@ -786,7 +673,6 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
 
     tools.convert.convert_file(
@@ -796,7 +682,6 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
     tools.convert.convert_file(
         env,
@@ -805,7 +690,6 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
     tools.convert.convert_file(
         env,
@@ -814,7 +698,6 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
     tools.convert.convert_file(
         env,
@@ -823,7 +706,6 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
     tools.convert.convert_file(
         env,
@@ -832,7 +714,6 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
     tools.convert.convert_file(
         env,
@@ -841,7 +722,6 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
     tools.convert.convert_file(
         env,
@@ -850,7 +730,6 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
     tools.convert.convert_file(
         env,
@@ -859,7 +738,6 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
     tools.convert.convert_file(
         env,
@@ -868,7 +746,6 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
     tools.convert.convert_file(
         env,
@@ -877,11 +754,6 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
-    )
-
-    tools.convert.convert_file(
-        env, "marin_data", "data/documents_tag_data.xml", None, mode="init", kind="data"
     )
     tools.convert.convert_file(
         env,
@@ -889,7 +761,6 @@ def _post_init_marin(env):
         "data/documents_document_data.xml",
         None,
         mode="init",
-        kind="data",
     )
 
     tools.convert.convert_file(
@@ -899,7 +770,6 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
     tools.convert.convert_file(
         env,
@@ -908,7 +778,6 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
     tools.convert.convert_file(
         env,
@@ -917,7 +786,6 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
     tools.convert.convert_file(
         env,
@@ -926,7 +794,6 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
 
     tools.convert.convert_file(
@@ -936,7 +803,6 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
     tools.convert.convert_file(
         env,
@@ -945,7 +811,6 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
 
     tools.convert.convert_file(
@@ -955,7 +820,6 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
     tools.convert.convert_file(
         env,
@@ -964,7 +828,6 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
 
     tools.convert.convert_file(
@@ -974,7 +837,6 @@ def _post_init_marin(env):
         None,
         mode="init",
         noupdate=True,
-        kind="data",
     )
 
     env.cr.execute(
