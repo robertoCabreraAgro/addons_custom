@@ -13,7 +13,9 @@ class Documents(models.Model):
     # FIELDS
     # ------------------------------------------------------------
 
-    legal_number = fields.Char("Legal number")
+    legal_number = fields.Char(
+        string="Legal number",
+    )
     vehicle_id = fields.Many2one(
         comodel_name="stock.lot",
         string="Vehicle",

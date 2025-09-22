@@ -20,41 +20,45 @@ class StockPickingType(models.Model):
     )
 
     # Add search
-    count_picking_ready = fields.Integer(search="_search_count_picking_ready")
-    count_picking_waiting = fields.Integer(search="_search_count_picking_waiting")
+    count_picking_ready = fields.Integer(
+        search="_search_count_picking_ready",
+    )
+    count_picking_waiting = fields.Integer(
+        search="_search_count_picking_waiting",
+    )
 
     # pos_avoid_locations = fields.Many2many("stock.location")
     route_ids = fields.Many2many(
-        "stock.route",
-        "stock_route_picking_type",
-        "picking_type_id",
-        "route_id",
-        "Default destination route",
+        comodel_name="stock.route",
+        relation="stock_route_picking_type",
+        column1="picking_type_id",
+        column2="route_id",
+        string="Default destination route",
         help="Default route to be used.",
     )
 
     # Security
     user_can_access_ids = fields.Many2many(
-        "res.users",
-        "stock_picking_type_res_users_can_access_rel",
-        "picking_type_id",
-        "user_id",
+        comodel_name="res.users",
+        relation="stock_picking_type_res_users_can_access_rel",
+        column1="picking_type_id",
+        column2="user_id",
         string="Allowed users",
         help="Users that can visualize pickings of this type of operation.",
     )
     can_todo_user_ids = fields.Many2many(
-        "res.users",
-        "stock_picking_type_res_users_can_todo_rel",
-        "picking_type_id",
-        "user_id",
+        comodel_name="res.users",
+        relation="stock_picking_type_res_users_can_todo_rel",
+        column1="picking_type_id",
+        column2="user_id",
         string="Users can todo",
         help="Users that can mark as todo pickings of this type of operation.",
     )
     can_validate_user_ids = fields.Many2many(
-        "res.users",
-        "stock_picking_type_res_users_can_validate_rel",
-        "picking_type_id",
-        "user_id",
+        comodel_name="res.users",
+        relation="stock_picking_type_res_users_can_validate_rel",
+        column1="picking_type_id",
+        column2="user_id",
         string="Users can validate",
         help="Users that can validate pickings of this type of operation.",
     )

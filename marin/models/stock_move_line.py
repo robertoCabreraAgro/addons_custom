@@ -12,14 +12,18 @@ class StockMoveLine(models.Model):
     # FIELDS
     # ------------------------------------------------------------
 
-    move_id = fields.Many2one(ondelete="cascade")
+    move_id = fields.Many2one(
+        ondelete="cascade",
+    )
     location_availability = fields.Float(
-        "From availability",
+        string="From availability",
         compute="_compute_location_availability",
         readonly=True,
     )
     location_dest_availability = fields.Float(
-        "To availability", compute="_compute_location_availability", readonly=True
+        string="To availability",
+        compute="_compute_location_availability",
+        readonly=True,
     )
 
     @api.onchange("product_id", "location_id", "location_dest_id")

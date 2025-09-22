@@ -4,7 +4,9 @@ from odoo import fields, models
 class MrpReport(models.Model):
     _inherit = "mrp.report"
 
-    production_type = fields.Char(readonly=True)
+    production_type = fields.Char(
+        readonly=True,
+    )
 
     def _select(self):
         return (

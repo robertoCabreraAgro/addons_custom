@@ -13,26 +13,28 @@ class Task(models.Model):
 
     # Used in all project tasks
     lost_reason_id = fields.Many2one(
-        "project.task.lost.reason",
+        comodel_name="project.task.lost.reason",
         string="Lost Reason",
-        index=True,
         ondelete="restrict",
+        index=True,
         tracking=True,
     )
 
     # CRM
     company_currency = fields.Many2one(
-        "res.currency",
-        "Currency",
+        comodel_name="res.currency",
+        string="Currency",
         compute="_compute_company_currency",
         compute_sudo=True,
     )
     expected_revenue = fields.Monetary(
-        "Expected Revenue", currency_field="company_currency", tracking=True
+        string="Expected Revenue",
+        currency_field="company_currency",
+        tracking=True,
     )
     referer_partner_id = fields.Many2one(
-        "res.partner",
-        "Referred By",
+        comodel_name="res.partner",
+        string="Referred By",
         check_company=True,
         index=True,
         tracking=10,
@@ -50,11 +52,17 @@ class Task(models.Model):
     # )
 
     # AG
-    expected_area = fields.Float("Expected area", tracking=True)
-    is_ag_initial = fields.Boolean("Initial AG task", default=False)
+    expected_area = fields.Float(
+        string="Expected area",
+        tracking=True,
+    )
+    is_ag_initial = fields.Boolean(
+        string="Initial AG task",
+        default=False,
+    )
     season_id = fields.Many2one(
-        "date.range",
-        "AG season",
+        comodel_name="date.range",
+        string="AG season",
         help="Since every farmer can have several growing seasons the specific one can be selected.",
     )
     sales_features = fields.Boolean(
@@ -65,15 +73,15 @@ class Task(models.Model):
 
     # Fields KPI
     kpi_optime_predev_min = fields.Float(
-        "Time before development",
+        string="Time before development",
         help="Estimated time the operation took before development",
     )
     kpi_optime_postdev_min = fields.Float(
-        "Time after development",
+        string="Time after development",
         help="Estimated time the operation took after development",
     )
     kpi_optime_frequency_type = fields.Selection(
-        [
+        selection=[
             ("daily", "Daily"),
             ("weekly", "Weekly"),
             ("monthly", "Monthly"),
@@ -87,10 +95,10 @@ class Task(models.Model):
         help="Number that indicates how many times the event occurs in the selected period",
     )
     kpi_employee_ids = fields.Many2many(
-        "hr.employee",
+        comodel_name="hr.employee",
         string="KPI Affected Employees",
-        help="Employees that are affected by this KPI. This is used to filter the employees that will be able to see the KPI in their dashboard.",
         compute_sudo=True,
+        help="Employees that are affected by this KPI. This is used to filter the employees that will be able to see the KPI in their dashboard.",
     )
     use_kpi_optime = fields.Boolean(
         related="project_id.use_kpi_optime",

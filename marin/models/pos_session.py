@@ -12,7 +12,9 @@ class PosSession(models.Model):
     # ------------------------------------------------------------
 
     # Extend field
-    cash_register_balance_end_real = fields.Monetary(tracking=True)
+    cash_register_balance_end_real = fields.Monetary(
+        tracking=True,
+    )
 
     # New fields
     move_cash_transfer_ids = fields.One2many(

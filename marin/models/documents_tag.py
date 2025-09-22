@@ -10,4 +10,6 @@ class TagsCategories(models.Model):
     # FIELDS
     # ------------------------------------------------------------
 
-    active = fields.Boolean(default=True)
+    active = fields.Boolean(
+        default=True,
+    )

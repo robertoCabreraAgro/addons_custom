@@ -12,8 +12,7 @@ class PosOrderLine(models.Model):
 
     # New fields
     price_cost = fields.Float(
-        "Cost",
-        "Product Price",
+        string="Cost",
     )
     margin = fields.Monetary(
         compute="_compute_margin",

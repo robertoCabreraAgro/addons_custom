@@ -20,25 +20,41 @@ class ResPartner(models.Model):
 
     # Extend core fields
     category_id = fields.Many2many(
-        domain=lambda self: self._prepare_partner_category_domain()
+        domain=lambda self: self._prepare_partner_category_domain(),
     )
 
     # New fields
     mobile = fields.Char()
 
     # Security
-    user_account_user = fields.Boolean(compute="_compute_group")
-    user_debt_manager = fields.Boolean(compute="_compute_group")
-    user_hr_user = fields.Boolean(compute="_compute_group")
-    user_hr_manager = fields.Boolean(compute="_compute_group")
-    user_purchase_manager = fields.Boolean(compute="_compute_group")
-    user_sale_manager = fields.Boolean(compute="_compute_group")
-    user_stock_user = fields.Boolean(compute="_compute_group")
-    user_stock_manager = fields.Boolean(compute="_compute_group")
+    user_account_user = fields.Boolean(
+        compute="_compute_group",
+    )
+    user_debt_manager = fields.Boolean(
+        compute="_compute_group",
+    )
+    user_hr_user = fields.Boolean(
+        compute="_compute_group",
+    )
+    user_hr_manager = fields.Boolean(
+        compute="_compute_group",
+    )
+    user_purchase_manager = fields.Boolean(
+        compute="_compute_group",
+    )
+    user_sale_manager = fields.Boolean(
+        compute="_compute_group",
+    )
+    user_stock_user = fields.Boolean(
+        compute="_compute_group",
+    )
+    user_stock_manager = fields.Boolean(
+        compute="_compute_group",
+    )
 
     # Accounting
     credit_limit_available = fields.Monetary(
-        "Available Receivable Limit",
+        string="Available Receivable Limit",
         compute="_compute_credit_limit_available",
         readonly=True,
         help="Available receivable limit",
@@ -49,18 +65,21 @@ class ResPartner(models.Model):
     supplier = fields.Boolean()
     competitor = fields.Boolean()
     gender = fields.Selection(
-        [("male", "Male"), ("female", "Female"), ("other", "Other")]
+        selection=[("male", "Male"), ("female", "Female"), ("other", "Other")],
     )
     birthdate = fields.Date()
-    age = fields.Integer(compute="_compute_age", readonly=True)
+    age = fields.Integer(
+        compute="_compute_age",
+        readonly=True,
+    )
     age_range_id = fields.Many2one(
-        "res.partner.age.range",
-        "Age Range",
+        comodel_name="res.partner.age.range",
+        string="Age Range",
         compute="_compute_age_range_id",
         store=True,
     )
     b2x = fields.Selection(
-        [
+        selection=[
             ("b2b", "Business to business"),
             ("b2c", "Business to consumer"),
             ("both", "Business business and consumer"),
@@ -68,21 +87,22 @@ class ResPartner(models.Model):
         default="b2c",
     )
     social_style_color = fields.Selection(
-        [
+        selection=[
             ("yellow", "yellow"),
             ("green", "green"),
             ("blue", "blue"),
             ("red", "red"),
         ],
-        "Social style color",
+        string="Social style color",
     )
     team_id = fields.Many2one(
-        "crm.team",
-        "Sales Team",
+        comodel_name="crm.team",
+        string="Sales Team",
         compute="_compute_team_id",
         store=True,
-        precompute=True,  # avoid queries post-create
+        precompute=True,
         readonly=False,
+        # avoid queries post-create
         ondelete="set null",
     )
     hectares = fields.Float(
@@ -90,14 +110,14 @@ class ResPartner(models.Model):
         default=0.0,
     )
     profile_id = fields.Many2one(
-        "res.partner.profile",
+        comodel_name="res.partner.profile",
         string="Assigned Profile",
         compute="_compute_partner_profile",
         store=True,
     )
     factor = fields.Float(
-        string="Profile Factor",
         related="profile_id.factor",
+        string="Profile Factor",
         readonly=True,
     )
 
@@ -118,8 +138,8 @@ class ResPartner(models.Model):
     )
 
     profile_history_ids = fields.One2many(
-        "res.partner.profile.history",
-        "partner_id",
+        comodel_name="res.partner.profile.history",
+        inverse_name="partner_id",
         string="Profile History",
     )
     profile_change_count = fields.Integer(
@@ -132,7 +152,7 @@ class ResPartner(models.Model):
     )
 
     season_id = fields.Many2one(
-        "date.range",
+        comodel_name="date.range",
         string="AG Season",
         domain="[('type_id.name', '=', 'AG')]",
         help="Agricultural season assigned to this salesperson",
@@ -934,13 +954,31 @@ class ResPartnerHectaresRange(models.Model):
     _order = "min_hectares"
     _rec_name = "display_name"
 
-    name = fields.Char(string="Classification Name")
-    display_name = fields.Char(compute="_compute_display_name", store=True)
-    min_hectares = fields.Float(string="Minimum Hectares", required=True)
-    max_hectares = fields.Float(string="Maximum Hectares")
-    score_value = fields.Float(string="Score Points", required=True)
-    active = fields.Boolean(default=True)
-    company_id = fields.Many2one("res.company", default=lambda self: self.env.company)
+    name = fields.Char(
+        string="Classification Name",
+    )
+    display_name = fields.Char(
+        compute="_compute_display_name",
+        store=True,
+    )
+    min_hectares = fields.Float(
+        string="Minimum Hectares",
+        required=True,
+    )
+    max_hectares = fields.Float(
+        string="Maximum Hectares",
+    )
+    score_value = fields.Float(
+        string="Score Points",
+        required=True,
+    )
+    active = fields.Boolean(
+        default=True,
+    )
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        default=lambda self: self.env.company,
+    )
 
     @api.depends("name", "min_hectares", "max_hectares", "score_value")
     def _compute_display_name(self):
@@ -1003,17 +1041,32 @@ class ResPartnerProfileHistory(models.Model):
     _order = "change_date desc, id desc"
     _rec_name = "display_name"
 
-    display_name = fields.Char(compute="_compute_display_name", store=True)
-    partner_id = fields.Many2one("res.partner", required=True, ondelete="cascade")
-    change_date = fields.Datetime(default=fields.Datetime.now, required=True)
-    old_profile_id = fields.Many2one("res.partner.profile")
-    new_profile_id = fields.Many2one("res.partner.profile", required=True)
+    display_name = fields.Char(
+        compute="_compute_display_name",
+        store=True,
+    )
+    partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        required=True,
+        ondelete="cascade",
+    )
+    change_date = fields.Datetime(
+        required=True,
+        default=fields.Datetime.now,
+    )
+    old_profile_id = fields.Many2one(
+        comodel_name="res.partner.profile",
+    )
+    new_profile_id = fields.Many2one(
+        comodel_name="res.partner.profile",
+        required=True,
+    )
     old_score_total = fields.Float()
     new_score_total = fields.Float()
     score_hectares = fields.Float()
     score_categories = fields.Float()
     change_trigger = fields.Selection(
-        [
+        selection=[
             ("manual", "Manual Assignment"),
             ("hectares", "Hectares Change"),
             ("category", "Category Change"),
@@ -1022,9 +1075,14 @@ class ResPartnerProfileHistory(models.Model):
         required=True,
     )
     change_reason = fields.Text()
-    user_id = fields.Many2one("res.users", default=lambda self: self.env.user)
+    user_id = fields.Many2one(
+        comodel_name="res.users",
+        default=lambda self: self.env.user,
+    )
     company_id = fields.Many2one(
-        "res.company", related="partner_id.company_id", store=True
+        related="partner_id.company_id",
+        comodel_name="res.company",
+        store=True,
     )
 
     @api.depends("partner_id", "old_profile_id", "new_profile_id", "change_date")

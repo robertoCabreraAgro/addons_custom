@@ -16,6 +16,6 @@ class Task(models.Model):
     )
     sales_features = fields.Boolean(
         string="Allow Quotations",
-        help="Allow creating quotations from tasks in this project",
         default=False,
+        help="Allow creating quotations from tasks in this project",
     )

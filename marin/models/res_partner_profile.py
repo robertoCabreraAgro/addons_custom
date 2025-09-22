@@ -22,7 +22,9 @@ class ResPartnerProfile(models.Model):
     # ------------------------------------------------------------
 
     name = fields.Char(
-        string="Profile Name", required=True, help="Name of the customer profile"
+        string="Profile Name",
+        required=True,
+        help="Name of the customer profile",
     )
     active = fields.Boolean(
         string="Active",
@@ -35,15 +37,15 @@ class ResPartnerProfile(models.Model):
         help="Used to order profiles. Lower values have higher precedence.",
     )
     company_id = fields.Many2one(
-        "res.company",
+        comodel_name="res.company",
         string="Company",
         default=lambda self: self.env.company,
     )
     category_ids = fields.Many2many(
-        "res.partner.category",
-        "res_partner_profile_category_rel",
-        "profile_id",
-        "category_id",
+        comodel_name="res.partner.category",
+        relation="res_partner_profile_category_rel",
+        column1="profile_id",
+        column2="category_id",
         string="Partner Tags",
         help="Partner categories associated with this profile",
     )
@@ -58,7 +60,9 @@ class ResPartnerProfile(models.Model):
         help="Minimum score required for this profile",
     )
     score_max = fields.Float(
-        string="Maximum Score", default=100.0, help="Maximum score for this profile"
+        string="Maximum Score",
+        default=100.0,
+        help="Maximum score for this profile",
     )
 
     @api.constrains("factor")

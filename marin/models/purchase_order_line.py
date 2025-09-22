@@ -13,7 +13,9 @@ class PurchaseOrderLine(models.Model):
 
     # In core this a related field. We need to trigger its value on view, so we can
     # have it even when we're in a NewId
-    partner_id = fields.Many2one(depends=["product_id"])
+    partner_id = fields.Many2one(
+        depends=["product_id"],
+    )
 
     # New fields
     transfer_state = fields.Selection(

@@ -20,33 +20,40 @@ class ProductAssetLogImport(models.TransientModel):
     _description = "Import Asset Logs"
 
     filename = fields.Char()
-    file = fields.Binary(required=True)
+    file = fields.Binary(
+        required=True,
+    )
     parser = fields.Selection(
-        [
+        selection=[
             ("effectivale", "Effectivale"),
             ("i_d_cross", "I+D Cruces"),
             ("i_d_recharges", "I+D Recharges"),
         ],
         string="Type",
-        default="effectivale",
         required=True,
+        default="effectivale",
     )
     vehicle_ids = fields.Many2many(
         comodel_name="stock.lot",
         string="Assets",
         domain="[('asset_type', '=', 'vehicle')]",
     )
-    test_mode = fields.Boolean(default=True)
+    test_mode = fields.Boolean(
+        default=True,
+    )
     test_display = fields.Selection(
-        [
+        selection=[
             ("all", "Show all"),
             ("limit", "Limited"),
         ],
         string="Display Errors",
-        default="limit",
         required=True,
+        default="limit",
     )
-    test_limit = fields.Integer(string="Limit", default=10)
+    test_limit = fields.Integer(
+        string="Limit",
+        default=10,
+    )
 
     def default_get(self, fields_list):
         res = super().default_get(fields_list)

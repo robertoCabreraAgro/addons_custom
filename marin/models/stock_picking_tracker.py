@@ -28,7 +28,6 @@ class StockPickingTracker(models.Model):
         comodel_name="stock.picking",
         inverse_name="tracker_id",
         string="Transfers",
-        check_company=True,
         domain="[('id', 'in', allowed_picking_ids)]",
         help="List of transfers associated to this tracker",
     )
@@ -53,10 +52,12 @@ class StockPickingTracker(models.Model):
     driver_department_id = fields.Many2one(
         comodel_name="hr.department",
         compute="_compute_driver_department_id",
-        store=True,
         compute_sudo=True,
+        store=True,
     )
-    driver_is_commercial = fields.Boolean(compute="_compute_driver_is_commercial")
+    driver_is_commercial = fields.Boolean(
+        compute="_compute_driver_is_commercial",
+    )
     state = fields.Selection(
         selection=[
             ("draft", "Draft"),
@@ -66,8 +67,8 @@ class StockPickingTracker(models.Model):
         ],
         string="Status",
         default="draft",
-        tracking=True,
         copy=False,
+        tracking=True,
     )
     user_id = fields.Many2one(
         comodel_name="res.users",
@@ -81,21 +82,35 @@ class StockPickingTracker(models.Model):
         string="Company",
         default=lambda self: self.env.company,
     )
-    date_planned = fields.Datetime(copy=False)
-    scheduled_date = fields.Datetime(copy=False)
-    note = fields.Text("Internal Note")
+    date_planned = fields.Datetime(
+        copy=False,
+    )
+    scheduled_date = fields.Datetime(
+        copy=False,
+    )
+    note = fields.Text(
+        string="Internal Note",
+    )
 
     # Date and time block
-    date_start = fields.Datetime(string="Route Start")
-    date_end = fields.Datetime(string="Route End")
+    date_start = fields.Datetime(
+        string="Route Start",
+    )
+    date_end = fields.Datetime(
+        string="Route End",
+    )
 
     # Odometer block
-    odometer_start = fields.Float(string="Starting Odometer")
-    odometer_end = fields.Float(string="Ending Odometer")
+    odometer_start = fields.Float(
+        string="Starting Odometer",
+    )
+    odometer_end = fields.Float(
+        string="Ending Odometer",
+    )
     odometer_uom_id = fields.Many2one(
         related="vehicle_id.odometer_uom_id",
-        store=True,
         string="Odometer Unit",
+        store=True,
         readonly=True,
         help="Unit of measurement for the odometer, coming from the vehicle.",
     )

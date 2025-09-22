@@ -17,33 +17,33 @@ class SaleReport(models.Model):
     # ------------------------------------------------------------
 
     profile_id = fields.Many2one(
-        "res.partner.profile",
+        comodel_name="res.partner.profile",
         string="Customer Profile",
         readonly=True,
         help="Customer profile assigned based on scoring system",
     )
     hectares = fields.Float(
         string="Hectares",
-        aggregator="avg",
         readonly=True,
+        aggregator="avg",
         help="Customer's total hectares",
     )
     score_hectares = fields.Float(
         string="Hectares Score",
-        aggregator="avg",
         readonly=True,
+        aggregator="avg",
         help="Score calculated from hectares",
     )
     score_categories = fields.Float(
         string="Categories Score",
-        aggregator="avg",
         readonly=True,
+        aggregator="avg",
         help="Score calculated from partner categories",
     )
     score_total = fields.Float(
         string="Total Score",
-        aggregator="avg",
         readonly=True,
+        aggregator="avg",
         help="Combined customer score",
     )
 

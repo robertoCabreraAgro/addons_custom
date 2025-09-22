@@ -10,12 +10,19 @@ class PosOrder(models.Model):
     # FIELDS
     # ------------------------------------------------------------
 
-    margin = fields.Monetary(compute="_compute_margin", store=True)
+    margin = fields.Monetary(
+        compute="_compute_margin",
+        store=True,
+    )
     margin_percent = fields.Float(
-        string="Margin (%)", compute="_compute_margin", digits=(12, 4), store=True
+        string="Margin (%)",
+        digits=(12, 4),
+        compute="_compute_margin",
+        store=True,
     )
     is_total_cost_computed = fields.Boolean(
-        compute="_compute_is_total_cost_computed", store=True
+        compute="_compute_is_total_cost_computed",
+        store=True,
     )
 
     # This is a fix for this method

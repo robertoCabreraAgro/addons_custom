@@ -17,7 +17,9 @@ class L10nMxEdiDocument(models.Model):
     # ------------------------------------------------------------
 
     last_sat_state_sync_date = fields.Datetime(
-        string="Last SAT Status Sync", readonly=True, default=fields.Datetime.now
+        string="Last SAT Status Sync",
+        default=fields.Datetime.now,
+        readonly=True,
     )
 
     def _fetch_sat_status(self, supplier_rfc, customer_rfc, total, uuid):

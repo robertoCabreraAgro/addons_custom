@@ -17,20 +17,20 @@ class SaleOrderTemplate(models.Model):
     # ------------------------------------------------------------
 
     season_id = fields.Many2one(
-        "date.range",
+        comodel_name="date.range",
         string="AG Season",
         domain="[('type_id.name', '=', 'AG')]",
         help="Select the agricultural season for this quotation template",
     )
     season_date_start = fields.Date(
-        string="Season Start Date",
         related="season_id.date_start",
+        string="Season Start Date",
         readonly=True,
         help="Start date of the selected agricultural season",
     )
     season_date_end = fields.Date(
-        string="Season End Date",
         related="season_id.date_end",
+        string="Season End Date",
         readonly=True,
         help="End date of the selected agricultural season",
     )

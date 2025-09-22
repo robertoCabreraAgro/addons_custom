@@ -22,11 +22,18 @@ class ResPartnerDateRange(models.Model):
     # FIELDS
     # ------------------------------------------------------------
 
-    name = fields.Char(required=True)
-    age_from = fields.Integer(
-        string="From", required=True, default=lambda self: self._default_age_from()
+    name = fields.Char(
+        required=True,
     )
-    age_to = fields.Integer(string="To", required=True)
+    age_from = fields.Integer(
+        string="From",
+        required=True,
+        default=lambda self: self._default_age_from(),
+    )
+    age_to = fields.Integer(
+        string="To",
+        required=True,
+    )
 
     _name_uniq = models.Constraint("UNIQUE(name)", "A name must be unique")
 

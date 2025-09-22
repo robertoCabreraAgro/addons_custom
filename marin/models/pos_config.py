@@ -12,7 +12,9 @@ class PosConfig(models.Model):
     # FIELDS
     # ------------------------------------------------------------
 
-    active = fields.Boolean(default=True)
+    active = fields.Boolean(
+        default=True,
+    )
     load_all_partners_by_company = fields.Boolean(
         string="Load All Partners by Company",
         default=False,

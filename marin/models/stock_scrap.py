@@ -10,8 +10,13 @@ class StockScrap(models.Model):
     # FIELDS
     # ------------------------------------------------------------
 
-    lot_id = fields.Many2one(domain="lot_domain")
-    lot_domain = fields.Binary("Lot domain", compute="_compute_lot_domain")
+    lot_id = fields.Many2one(
+        domain="lot_domain",
+    )
+    lot_domain = fields.Binary(
+        string="Lot domain",
+        compute="_compute_lot_domain",
+    )
 
     @api.depends("company_id", "location_id", "product_id")
     def _compute_lot_domain(self):

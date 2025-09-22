@@ -15,32 +15,34 @@ class SaleTargetWizard(models.TransientModel):
     _description = "Sale Target Generation Wizard"
 
     partner_ids = fields.Many2many(
-        "res.partner",
+        comodel_name="res.partner",
         string="Clients",
         required=True,
         domain=[("is_company", "=", True), ("customer", "=", True)],
     )
 
     template_id = fields.Many2one(
-        "sale.order.template",
+        comodel_name="sale.order.template",
         string="Quotation Template",
         required=True,
     )
 
     date_from = fields.Date(
-        string="Start Date",
         related="template_id.season_id.date_start",
+        string="Start Date",
         readonly=True,
     )
 
     date_to = fields.Date(
-        string="End Date",
         related="template_id.season_id.date_end",
+        string="End Date",
         readonly=True,
     )
 
     validation_errors = fields.Text(
-        string="Validation Issues", compute="_compute_validation_errors", readonly=True
+        string="Validation Issues",
+        compute="_compute_validation_errors",
+        readonly=True,
     )
 
     @api.depends("partner_ids", "template_id", "date_from", "date_to")

@@ -27,9 +27,16 @@ class AccountMove(models.Model):
         readonly=False,
         copy=True,
     )
-    invoice_origin = fields.Char(readonly=False)
-    l10n_mx_edi_payment_policy = fields.Selection(store=True, readonly=False)
-    l10n_mx_edi_usage = fields.Selection(selection_add=[("CP01", "Payments")])
+    invoice_origin = fields.Char(
+        readonly=False,
+    )
+    l10n_mx_edi_payment_policy = fields.Selection(
+        store=True,
+        readonly=False,
+    )
+    l10n_mx_edi_usage = fields.Selection(
+        selection_add=[("CP01", "Payments")],
+    )
 
     # New fields
     journal_type = fields.Selection(

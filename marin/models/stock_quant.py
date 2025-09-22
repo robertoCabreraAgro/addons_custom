@@ -28,7 +28,7 @@ class StockQuant(models.Model):
         store=True,
     )
     value_standard = fields.Monetary(
-        "Value standard",
+        string="Value standard",
         compute="_compute_value_standard",
         store=True,
         groups="stock.group_stock_manager",

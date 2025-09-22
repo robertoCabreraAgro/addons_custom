@@ -22,37 +22,37 @@ class SaleTarget(models.Model):
     date_from = fields.Date()
     date_to = fields.Date()
     partner_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         string="Customer",
         required=True,
     )
     template_id = fields.Many2one(
-        "sale.order.template",
+        comodel_name="sale.order.template",
         string="Quotation Template",
         required=True,
     )
     season_id = fields.Many2one(
-        "date.range",
-        string="Agricultural Season",
         related="template_id.season_id",
+        comodel_name="date.range",
+        string="Agricultural Season",
         store=True,
         readonly=True,
     )
     profile_id = fields.Many2one(
-        "res.partner.profile",
-        string="Customer Profile",
         related="partner_id.profile_id",
+        comodel_name="res.partner.profile",
+        string="Customer Profile",
         store=True,
         readonly=True,
     )
     hectares = fields.Float(
-        string="Hectares",
         related="partner_id.hectares",
+        string="Hectares",
         readonly=True,
     )
     factor = fields.Float(
-        string="Profile Factor",
         related="profile_id.factor",
+        string="Profile Factor",
         readonly=True,
     )
     target_amount = fields.Monetary(
@@ -75,26 +75,26 @@ class SaleTarget(models.Model):
         store=True,
     )
     line_ids = fields.One2many(
-        "sale.target.line",
-        "target_id",
+        comodel_name="sale.target.line",
+        inverse_name="target_id",
         string="Target Lines",
     )
 
     user_id = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
         string="Salesperson",
         store=True,
     )
     company_id = fields.Many2one(
-        "res.company",
+        comodel_name="res.company",
         string="Company",
-        default=lambda self: self.env.company,
         required=True,
+        default=lambda self: self.env.company,
     )
     currency_id = fields.Many2one(
-        "res.currency",
-        string="Currency",
         related="company_id.currency_id",
+        comodel_name="res.currency",
+        string="Currency",
         readonly=True,
     )
 

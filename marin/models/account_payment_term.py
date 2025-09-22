@@ -11,7 +11,7 @@ class AccountPaymentTerm(models.Model):
     # ------------------------------------------------------------
 
     is_immediate = fields.Boolean(
-        "Immediate payment term",
+        string="Immediate payment term",
         compute="_compute_is_immediate_payment_term",
         readonly=True,
     )

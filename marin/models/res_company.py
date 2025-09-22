@@ -11,12 +11,18 @@ class ResCompany(models.Model):
     # FIELDS
     # ------------------------------------------------------------
 
-    code = fields.Char(string="Short Code", size=6)
-    complete_name = fields.Char(compute="_compute_complete_name", store=True)
+    code = fields.Char(
+        string="Short Code",
+        size=6,
+    )
+    complete_name = fields.Char(
+        compute="_compute_complete_name",
+        store=True,
+    )
 
     # Customer merge configuration
     customer_merge_required_fields = fields.Many2many(
-        "ir.model.fields",
+        comodel_name="ir.model.fields",
         string="Required Customer Fields",
         domain=[("model", "=", "res.partner")],
         help="Fields that must be completed to keep a customer active",
@@ -24,10 +30,10 @@ class ResCompany(models.Model):
 
     # Restricted contact creation configuration
     restricted_contact_required_fields = fields.Many2many(
-        "ir.model.fields",
-        "company_restricted_contact_fields_rel",
-        "company_id",
-        "field_id",
+        comodel_name="ir.model.fields",
+        relation="company_restricted_contact_fields_rel",
+        column1="company_id",
+        column2="field_id",
         string="Mandatory Contact Fields",
         domain=[("model", "=", "res.partner")],
         help="Fields that must be completed when restricted contact creation is enabled",

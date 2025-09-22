@@ -17,7 +17,9 @@ class AccountMoveLine(models.Model):
     # ------------------------------------------------------------
 
     # Extended fields
-    move_type = fields.Selection(store=True)
+    move_type = fields.Selection(
+        store=True,
+    )
 
     # New fields
     allowed_sale_line_ids = fields.Many2many(
@@ -28,10 +30,10 @@ class AccountMoveLine(models.Model):
     name = fields.Char(
         string="Label",
         compute="_compute_name",
-        inverse="_inverse_name",
         store=True,
-        readonly=False,
         precompute=True,
+        readonly=False,
+        inverse="_inverse_name",
         tracking=True,
     )
 

@@ -17,7 +17,7 @@ class SaleTargetLine(models.Model):
     # ------------------------------------------------------------
 
     target_id = fields.Many2one(
-        "sale.target",
+        comodel_name="sale.target",
         string="Sales Target",
         required=True,
         ondelete="cascade",
@@ -25,7 +25,7 @@ class SaleTargetLine(models.Model):
     )
 
     product_id = fields.Many2one(
-        "product.product",
+        comodel_name="product.product",
         string="Product",
         required=True,
         help="Product for this target line",
@@ -38,7 +38,8 @@ class SaleTargetLine(models.Model):
     )
 
     quantity = fields.Float(
-        string="Template Quantity", help="Base quantity from quotation template"
+        string="Template Quantity",
+        help="Base quantity from quotation template",
     )
 
     target_quantity = fields.Float(
@@ -50,51 +51,56 @@ class SaleTargetLine(models.Model):
 
     target_amount = fields.Monetary(
         string="Amount",
+        currency_field="currency_id",
         compute="_compute_amounts",
         store=True,
-        currency_field="currency_id",
         help="Calculated as unit price × target quantity",
     )
 
     currency_id = fields.Many2one(
-        "res.currency", related="target_id.currency_id", readonly=True
+        related="target_id.currency_id",
+        comodel_name="res.currency",
+        readonly=True,
     )
 
     # Related fields from target_id
     partner_id = fields.Many2one(
-        "res.partner",
         related="target_id.partner_id",
+        comodel_name="res.partner",
         string="Customer",
         store=True,
         readonly=True,
     )
     user_id = fields.Many2one(
-        "res.users",
         related="target_id.user_id",
+        comodel_name="res.users",
         string="Salesperson",
         store=True,
         readonly=True,
     )
     season_id = fields.Many2one(
-        "date.range",
         related="target_id.season_id",
+        comodel_name="date.range",
         string="Season",
         store=True,
         readonly=True,
     )
     profile_id = fields.Many2one(
-        "res.partner.profile",
         related="target_id.profile_id",
+        comodel_name="res.partner.profile",
         string="Profile",
         store=True,
         readonly=True,
     )
     hectares = fields.Float(
-        related="target_id.hectares", string="Hectares", store=True, readonly=True
+        related="target_id.hectares",
+        string="Hectares",
+        store=True,
+        readonly=True,
     )
     template_id = fields.Many2one(
-        "sale.order.template",
         related="target_id.template_id",
+        comodel_name="sale.order.template",
         string="Template",
         store=True,
         readonly=True,
@@ -102,17 +108,17 @@ class SaleTargetLine(models.Model):
 
     sold_amount = fields.Monetary(
         string="Sold Amount",
+        currency_field="currency_id",
         compute="_compute_sold_amount",
         store=True,
-        currency_field="currency_id",
         help="Amount sold for this product with same customer, salesperson and season",
     )
 
     gap_amount = fields.Monetary(
         string="Gap Amount",
+        currency_field="currency_id",
         compute="_compute_gap_amount",
         store=True,
-        currency_field="currency_id",
         help="Amount remaining to reach target (target_amount - sold_amount)",
     )
 
@@ -125,7 +131,7 @@ class SaleTargetLine(models.Model):
     )
 
     manufacturer_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         string="Manufacturer",
         compute="_compute_manufacturer_id",
         store=True,

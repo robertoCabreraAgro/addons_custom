@@ -5,16 +5,27 @@ class InvoiceLinePriceHistory(models.TransientModel):
     _name = "invoice.line.price.history"
     _description = "Invoice Line price history"
 
-    line_id = fields.Many2one("account.move.line", "Invoice Line")
-    partner_id = fields.Many2one("res.partner", "Partner")
-    product_id = fields.Many2one("product.product", "Product")
+    line_id = fields.Many2one(
+        comodel_name="account.move.line",
+        string="Invoice Line",
+    )
+    partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Partner",
+    )
+    product_id = fields.Many2one(
+        comodel_name="product.product",
+        string="Product",
+    )
     line_ids = fields.One2many(
         comodel_name="invoice.line.price.history.line",
         inverse_name="wizard_id",
         string="Historical lines",
         readonly=True,
     )
-    include_draft = fields.Boolean("Include Draft Moves")
+    include_draft = fields.Boolean(
+        string="Include Draft Moves",
+    )
 
     @api.onchange("partner_id", "product_id", "include_draft", "line_id")
     def _onchange_partner_id(self):
@@ -45,15 +56,35 @@ class InvoiceLinePriceHistoryLine(models.TransientModel):
     _name = "invoice.line.price.history.line"
     _description = "Invoice Line price history line"
 
-    wizard_id = fields.Many2one("invoice.line.price.history", "Wizard")
-    line_id = fields.Many2one("account.move.line", "Invoice Line")
-    move_id = fields.Many2one(related="line_id.move_id")
-    partner_id = fields.Many2one(related="line_id.partner_id")
-    date = fields.Date(related="line_id.date")
-    qty = fields.Float(related="line_id.quantity")
-    price_unit = fields.Float(related="line_id.price_unit")
-    discount = fields.Float(related="line_id.discount")
-    tax_ids = fields.Many2many(related="line_id.tax_ids")
+    wizard_id = fields.Many2one(
+        comodel_name="invoice.line.price.history",
+        string="Wizard",
+    )
+    line_id = fields.Many2one(
+        comodel_name="account.move.line",
+        string="Invoice Line",
+    )
+    move_id = fields.Many2one(
+        related="line_id.move_id",
+    )
+    partner_id = fields.Many2one(
+        related="line_id.partner_id",
+    )
+    date = fields.Date(
+        related="line_id.date",
+    )
+    qty = fields.Float(
+        related="line_id.quantity",
+    )
+    price_unit = fields.Float(
+        related="line_id.price_unit",
+    )
+    discount = fields.Float(
+        related="line_id.discount",
+    )
+    tax_ids = fields.Many2many(
+        related="line_id.tax_ids",
+    )
 
     def _prepare_vals(self):
         return {"price_unit": self.price_unit, "discount": self.discount}

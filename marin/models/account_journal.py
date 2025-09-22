@@ -18,8 +18,8 @@ class AccountJournal(models.Model):
         string="Default Receivable Account",
         check_company=True,
         domain=[("deprecated", "=", False), ("account_type", "=", "asset_receivable")],
-        copy=False,
         ondelete="restrict",
+        copy=False,
         help="It acts as a default account for receivable amount instead of the Company's default",
     )
     default_payable_account_id = fields.Many2one(
@@ -27,8 +27,8 @@ class AccountJournal(models.Model):
         string="Default Payable Account",
         check_company=True,
         domain=[("deprecated", "=", False), ("account_type", "=", "liability_payable")],
-        copy=False,
         ondelete="restrict",
+        copy=False,
         help="It acts as a default account for payable amount instead of the Company's default",
     )
     default_refund_account_id = fields.Many2one(
@@ -43,8 +43,8 @@ class AccountJournal(models.Model):
                 ("expense", "expense_direct_cost", "income", "income_other"),
             ),
         ],
-        copy=False,
         ondelete="restrict",
+        copy=False,
         help="It acts as a default account for refunds",
     )
     x_treatment = fields.Selection(
@@ -59,19 +59,19 @@ class AccountJournal(models.Model):
         help="Technical field used to group journal and journal moves according to fiscal logic.",
     )
     account_control_ids = fields.Many2many(
-        "account.account",
-        "account_journal_account_account_control_rel",
-        "journal_id",
-        "account_id",
+        comodel_name="account.account",
+        relation="account_journal_account_account_control_rel",
+        column1="journal_id",
+        column2="account_id",
         string="Allowed accounts",
         check_company=True,
         domain=[("deprecated", "=", False), ("account_type", "!=", "off_balance")],
     )
     user_can_access_ids = fields.Many2many(
-        "res.users",
-        "account_journal_res_users_can_access_rel",
-        "journal_id",
-        "user_id",
+        comodel_name="res.users",
+        relation="account_journal_res_users_can_access_rel",
+        column1="journal_id",
+        column2="user_id",
         string="Allowed users",
         help="Users that can visualize entries of this journal.",
     )

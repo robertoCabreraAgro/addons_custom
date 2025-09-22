@@ -31,8 +31,8 @@ class StockPicking(models.Model):
     )
     tracker_id = fields.Many2one(
         comodel_name="stock.picking.tracker",
-        tracking=True,
         copy=False,
+        tracking=True,
         help="Route tracker record that manages this transfer as part of a delivery route.",
     )
     vehicle_id = fields.Many2one(
@@ -46,11 +46,11 @@ class StockPicking(models.Model):
         help="Odometer which the transfer has been processed.",
     )
     odometer_done_uom_id = fields.Many2one(
+        related="vehicle_id.odometer_uom_id",
         comodel_name="uom.uom",
         string="Odometer Unit",
-        related="vehicle_id.odometer_uom_id",
-        readonly=True,
         store=True,
+        readonly=True,
         help="Unit of measurement for the odometer, coming from the vehicle.",
     )
     fuel_done = fields.Float(
@@ -58,11 +58,21 @@ class StockPicking(models.Model):
         tracking=True,
         help="Fuel level percentage which the transfer has been processed.",
     )
-    waiting_warning = fields.Text(compute="_compute_waiting_warning")
-    show_purchase_lines = fields.Boolean(compute="_compute_show_purchase_lines")
-    show_sale_lines = fields.Boolean(compute="_compute_show_sale_lines")
-    show_mark_as_todo = fields.Boolean(compute="_compute_custom_permissions")
-    show_validate = fields.Boolean(compute="_compute_custom_permissions")
+    waiting_warning = fields.Text(
+        compute="_compute_waiting_warning",
+    )
+    show_purchase_lines = fields.Boolean(
+        compute="_compute_show_purchase_lines",
+    )
+    show_sale_lines = fields.Boolean(
+        compute="_compute_show_sale_lines",
+    )
+    show_mark_as_todo = fields.Boolean(
+        compute="_compute_custom_permissions",
+    )
+    show_validate = fields.Boolean(
+        compute="_compute_custom_permissions",
+    )
     require_responsible = fields.Boolean(
         related="picking_type_id.require_responsible",
         store=False,

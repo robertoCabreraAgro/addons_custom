@@ -10,9 +10,19 @@ class LostReason(models.Model):
     # FIELDS
     # ------------------------------------------------------------
 
-    name = fields.Char("Description", required=True, translate=True)
-    active = fields.Boolean("Active", default=True)
-    task_count = fields.Integer("Tasks count", compute="_compute_tasks_count")
+    name = fields.Char(
+        string="Description",
+        required=True,
+        translate=True,
+    )
+    active = fields.Boolean(
+        string="Active",
+        default=True,
+    )
+    task_count = fields.Integer(
+        string="Tasks count",
+        compute="_compute_tasks_count",
+    )
 
     def _compute_tasks_count(self):
         task_data = (

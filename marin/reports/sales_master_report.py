@@ -8,34 +8,90 @@ class SalesMasterReport(models.Model):
     _order = "team_id, partner_id, invoice_date DESC"
     _rec_name = "display_name"
 
-    company_id = fields.Many2one("res.company", string="Company", readonly=True)
-    user_id = fields.Many2one("res.users", string="Salesperson", readonly=True)
-    partner_id = fields.Many2one("res.partner", string="Customer", readonly=True)
-    product_id = fields.Many2one("product.product", string="Product", readonly=True)
-    invoice_date = fields.Date(string="Invoice Date", readonly=True)
-    team_id = fields.Many2one("crm.team", string="Sales Team", readonly=True)
-    move_id = fields.Many2one("account.move", string="Invoice Reference", readonly=True)
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        string="Company",
+        readonly=True,
+    )
+    user_id = fields.Many2one(
+        comodel_name="res.users",
+        string="Salesperson",
+        readonly=True,
+    )
+    partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Customer",
+        readonly=True,
+    )
+    product_id = fields.Many2one(
+        comodel_name="product.product",
+        string="Product",
+        readonly=True,
+    )
+    invoice_date = fields.Date(
+        string="Invoice Date",
+        readonly=True,
+    )
+    team_id = fields.Many2one(
+        comodel_name="crm.team",
+        string="Sales Team",
+        readonly=True,
+    )
+    move_id = fields.Many2one(
+        comodel_name="account.move",
+        string="Invoice Reference",
+        readonly=True,
+    )
 
-    quantity = fields.Float(string="Sales Quantity", readonly=True)
+    quantity = fields.Float(
+        string="Sales Quantity",
+        readonly=True,
+    )
     quantity_variation_oyb = fields.Float(
-        string="Quantity Variation % OYB", readonly=True
+        string="Quantity Variation % OYB",
+        readonly=True,
     )
-    cost_variation_oyb = fields.Float(string="Cost Variation % OYB", readonly=True)
-    price_variation_oyb = fields.Float(string="Price Variation % OYB", readonly=True)
+    cost_variation_oyb = fields.Float(
+        string="Cost Variation % OYB",
+        readonly=True,
+    )
+    price_variation_oyb = fields.Float(
+        string="Price Variation % OYB",
+        readonly=True,
+    )
     sales_value_variation_oyb = fields.Float(
-        string="Sales Value Variation % OYB", readonly=True
+        string="Sales Value Variation % OYB",
+        readonly=True,
     )
-    margin_variation_oyb = fields.Float(string="Margin Variation % OYB", readonly=True)
+    margin_variation_oyb = fields.Float(
+        string="Margin Variation % OYB",
+        readonly=True,
+    )
     absolute_price_avg = fields.Float(
-        string="Weighted Average List Price", readonly=True
+        string="Weighted Average List Price",
+        readonly=True,
     )
-    sale_price_total = fields.Float(string="Total Sales Value", readonly=True)
-    purchase_price = fields.Float(string="Average Purchase Cost", readonly=True)
-    cost_purchase_total = fields.Float(string="Total Purchase Cost", readonly=True)
-    margin = fields.Float(string="Total Margin Value", readonly=True)
+    sale_price_total = fields.Float(
+        string="Total Sales Value",
+        readonly=True,
+    )
+    purchase_price = fields.Float(
+        string="Average Purchase Cost",
+        readonly=True,
+    )
+    cost_purchase_total = fields.Float(
+        string="Total Purchase Cost",
+        readonly=True,
+    )
+    margin = fields.Float(
+        string="Total Margin Value",
+        readonly=True,
+    )
 
     display_name = fields.Char(
-        string="Description", compute="_compute_display_name", store=False
+        string="Description",
+        compute="_compute_display_name",
+        store=False,
     )
 
     @api.depends("product_id", "partner_id", "invoice_date")

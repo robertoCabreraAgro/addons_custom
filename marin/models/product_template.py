@@ -16,25 +16,41 @@ class ProductTemplate(models.Model):
         readonly=False,
     )
 
-    user_product_cost_readonly = fields.Boolean(compute="_compute_group")
-    user_product_cost_manager = fields.Boolean(compute="_compute_group")
-    user_purchase_readonly = fields.Boolean(compute="_compute_group")
-    user_purchase_manager = fields.Boolean(compute="_compute_group")
-    user_sale_readonly = fields.Boolean(compute="_compute_group")
-    user_sale_manager = fields.Boolean(compute="_compute_group")
-    user_stock_readonly = fields.Boolean(compute="_compute_group")
-    user_stock_manager = fields.Boolean(compute="_compute_group")
+    user_product_cost_readonly = fields.Boolean(
+        compute="_compute_group",
+    )
+    user_product_cost_manager = fields.Boolean(
+        compute="_compute_group",
+    )
+    user_purchase_readonly = fields.Boolean(
+        compute="_compute_group",
+    )
+    user_purchase_manager = fields.Boolean(
+        compute="_compute_group",
+    )
+    user_sale_readonly = fields.Boolean(
+        compute="_compute_group",
+    )
+    user_sale_manager = fields.Boolean(
+        compute="_compute_group",
+    )
+    user_stock_readonly = fields.Boolean(
+        compute="_compute_group",
+    )
+    user_stock_manager = fields.Boolean(
+        compute="_compute_group",
+    )
     property_account_income_refund_id = fields.Many2one(
-        "account.account",
-        "Income Refund Account",
+        comodel_name="account.account",
+        string="Income Refund Account",
         company_dependent=True,
         domain=[("deprecated", "=", False)],
         help="Used as default value on the customer credit notes lines. "
         "Leave empty to use the account from the product category.",
     )
     property_account_expense_refund_id = fields.Many2one(
-        "account.account",
-        "Expense Refund Account",
+        comodel_name="account.account",
+        string="Expense Refund Account",
         company_dependent=True,
         domain=[("deprecated", "=", False)],
         help="Used as default value on the vendor refunds lines. "
@@ -46,7 +62,7 @@ class ProductTemplate(models.Model):
         readonly=False,
     )
     x_dose = fields.Float(
-        "Dose per Hectare",
+        string="Dose per Hectare",
         digits="Product Price",
     )
     use_expiration_date = fields.Boolean(

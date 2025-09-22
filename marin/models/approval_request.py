@@ -27,12 +27,14 @@ class ApprovalRequest(models.Model):
 
     journal_id = fields.Many2one(
         comodel_name="account.journal",
-        string="Journal",
         # compute="_compute_vehicle_id",
         # store=True,
         # readonly=False,
+        string="Journal",
     )
-    count_account_move = fields.Integer(compute="_compute_count_account_move")
+    count_account_move = fields.Integer(
+        compute="_compute_count_account_move",
+    )
     count_purchase_order = fields.Integer(
         compute="_compute_count_purchase_order",
     )
@@ -40,9 +42,9 @@ class ApprovalRequest(models.Model):
         comodel_name="stock.lot",
         string="Vehicle",
         compute="_compute_vehicle_id",
-        domain="[('asset_type', '=', 'vehicle')]",
         store=True,
         readonly=False,
+        domain="[('asset_type', '=', 'vehicle')]",
     )
     odometer = fields.Integer(
         string="Odometer",
