@@ -326,6 +326,7 @@ class FieldAttributeReorderer:
                 "string",
                 "required",
                 "default",
+                "change_default",
                 "compute",
                 "store",
                 "precompute",
