@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-Odoo Field Refactoring Tool - Enhanced version with single field support
+Odoo Field Refactoring Tool - Enhanced version with comprehensive pattern support
 Detects naming violations and refactors fields across Odoo codebase
-Supports both single field and batch refactoring operations
+Supports Python, XML, JavaScript, and YAML files
 """
 
 import argparse
@@ -128,7 +128,7 @@ class OdooFieldAnalyzer(ast.NodeVisitor):
         self.violations = []
         self.fields_info = []
 
-    def visit_class_def(self, node):
+    def visit_ClassDef(self, node):
         """Visit class definitions to find models"""
         if self._is_odoo_model(node):
             self.current_class = node.name
@@ -141,7 +141,7 @@ class OdooFieldAnalyzer(ast.NodeVisitor):
             self.generic_visit(node)
             self.current_class = None
 
-    def visit_assign(self, node):
+    def visit_Assign(self, node):
         """Visit assignments to find field definitions"""
         if self.current_class and self._is_field_assignment(node):
             field_info = self._get_field_info(node)
@@ -306,6 +306,8 @@ class RefactorEngine:
         self.backup_dir = None
         self.changes = []
         self.modified_files = set()
+        self.js_file_count = 0
+        self.yaml_file_count = 0
 
     def refactor_single_field(
         self, violation: FieldViolation, new_name: str | None = None
@@ -338,13 +340,30 @@ class RefactorEngine:
         model = violation.model
         field_name = violation.field_name
 
-        # Search patterns
+        # Comprehensive search patterns for all contexts
         patterns = [
+            # Python patterns
             (r"\b" + field_name + r"\s*=\s*fields\.\w+\(", "definition"),
-            (r'@api\.depends\(["\']' + field_name, "depends"),
+            (
+                r'@api\.(depends|onchange|constrains)\([^)]*["\']' + field_name,
+                "decorator",
+            ),
             (r"\." + field_name + r"\b", "access"),
-            (r'\[[\'"]\s*' + field_name + r'\s*[\'"]', "dictionary"),
+            (r"\." + field_name + r"\.(filtered|mapped|sorted|ids)\(", "method_call"),
+            (r'\[[\'"\]\s*' + field_name + r'\s*[\'"]', "dictionary"),
+            (r'(["\'])' + field_name + r'(["\'])\s*:', "dict_key"),
+            (r'\(\s*["\']' + field_name + r'["\']\\s*,', "domain"),
+            (r'(["\'])' + field_name + r"\.", "quoted_field_start"),
+            (r"\." + field_name + r"\.", "quoted_field_middle"),
+            (r"lambda\s+\w+:\s*\w+\." + field_name, "lambda"),
+            (r"for\s+\w+\s+in\s+\w+\." + field_name, "iteration"),
+            (r"if\s+\w+\." + field_name + r"\s*:", "condition"),
+            # XML patterns
             (r'<field\s+name=["\']' + field_name + r'["\']', "xml_field"),
+            (r't-field=["\'][^"\']*(\.)?' + field_name, "qweb_field"),
+            (r'domain=["\'][^"\']*([\'"\])' + field_name, "xml_domain"),
+            (r'context=["\'][^"\']*([\'"\])' + field_name, "xml_context"),
+            (r'filter_domain=["\'][^"\']*' + field_name, "xml_filter_domain"),
         ]
 
         # Find the module path in any of the addon directories
@@ -369,7 +388,7 @@ class RefactorEngine:
             for file in files:
                 if file.endswith(".py"):
                     filepath = os.path.join(root, file)
-                    with open(filepath, "r") as f:
+                    with open(filepath, "r", encoding="utf-8") as f:
                         content = f.read()
                         for pattern, ref_type in patterns:
                             for match in re.finditer(pattern, content):
@@ -389,6 +408,20 @@ class RefactorEngine:
                 if file.endswith(".xml"):
                     filepath = os.path.join(root, file)
                     references.extend(self._find_xml_references(filepath, field_name))
+
+        # Search in JavaScript files
+        for root, _dirs, files in os.walk(str(module_path)):
+            for file in files:
+                if file.endswith((".js", ".jsx", ".ts", ".tsx")):
+                    filepath = os.path.join(root, file)
+                    references.extend(self._find_js_references(filepath, field_name))
+
+        # Search in YAML files (for data files)
+        for root, _dirs, files in os.walk(str(module_path)):
+            for file in files:
+                if file.endswith((".yml", ".yaml")):
+                    filepath = os.path.join(root, file)
+                    references.extend(self._find_yaml_references(filepath, field_name))
 
         return references
 
@@ -419,6 +452,64 @@ class RefactorEngine:
 
         return references
 
+    def _find_js_references(self, filepath: str, field_name: str) -> list[dict]:
+        """Find field references in JavaScript files"""
+        references = []
+        try:
+            with open(filepath, "r", encoding="utf-8") as f:
+                content = f.read()
+
+            # JavaScript-specific patterns
+            js_patterns = [
+                (r"\b" + field_name + r"\b", "js_field"),
+                (r"\." + field_name + r"\b", "js_access"),
+                (r"\[" + field_name + r"\]", "js_bracket"),
+                (r'["\']' + field_name + r'["\']', "js_string"),
+            ]
+
+            for pattern, ref_type in js_patterns:
+                for match in re.finditer(pattern, content):
+                    references.append(
+                        {
+                            "file": filepath,
+                            "type": ref_type,
+                            "line": content[: match.start()].count("\n") + 1,
+                            "match": match.group(),
+                        }
+                    )
+        except Exception as e:
+            print(f"Error analyzing {filepath}: {e}")
+
+        return references
+
+    def _find_yaml_references(self, filepath: str, field_name: str) -> list[dict]:
+        """Find field references in YAML files"""
+        references = []
+        try:
+            with open(filepath, "r", encoding="utf-8") as f:
+                content = f.read()
+
+            # YAML patterns
+            yaml_patterns = [
+                (r"^\s*" + field_name + r":", "yaml_key"),
+                (r": .*" + field_name + r"\b", "yaml_value"),
+            ]
+
+            for pattern, ref_type in yaml_patterns:
+                for match in re.finditer(pattern, content, re.MULTILINE):
+                    references.append(
+                        {
+                            "file": filepath,
+                            "type": ref_type,
+                            "line": content[: match.start()].count("\n") + 1,
+                            "match": match.group(),
+                        }
+                    )
+        except Exception as e:
+            print(f"Error analyzing {filepath}: {e}")
+
+        return references
+
     def _apply_refactoring(self, reference: dict, old_name: str, new_name: str):
         """Apply refactoring to a specific reference"""
         filepath = reference["file"]
@@ -428,6 +519,10 @@ class RefactorEngine:
                 self._refactor_python_file(filepath, old_name, new_name)
             elif filepath.endswith(".xml"):
                 self._refactor_xml_file(filepath, old_name, new_name)
+            elif filepath.endswith((".js", ".jsx", ".ts", ".tsx")):
+                self._refactor_js_file(filepath, old_name, new_name)
+            elif filepath.endswith((".yml", ".yaml")):
+                self._refactor_yaml_file(filepath, old_name, new_name)
 
             self.modified_files.add(filepath)
 
@@ -441,41 +536,256 @@ class RefactorEngine:
         )
 
     def _refactor_python_file(self, filepath: str, old_name: str, new_name: str):
-        """Refactor Python file"""
-        with open(filepath, "r") as f:
+        """Refactor Python file with comprehensive pattern matching"""
+        with open(filepath, "r", encoding="utf-8") as f:
             content = f.read()
 
-        # Replacement patterns
+        # Comprehensive replacement patterns - order matters!
         replacements = [
+            # 1. Field definition with fields.Type
             (r"\b" + old_name + r"\s*=\s*fields\.", new_name + " = fields."),
-            (r'@api\.depends\(["\']' + old_name, '@api.depends("' + new_name),
-            (r"\." + old_name + r"\b", "." + new_name),
-            (r'\[[\'"]\s*' + old_name + r'\s*[\'"]', '["' + new_name + '"'),
+            # 2. Decorator parameters (all decorators like @api.depends, @api.onchange, etc.)
+            # Also handle multiple fields in decorators
+            (
+                r'(@api\.\w+\([^)]*["\'])' + old_name + r'(["\'])',
+                r"\1" + new_name + r"\2",
+            ),
+            (r'(@api\.\w+\([^)]*["\'])' + old_name + r"\.", r"\1" + new_name + r"."),
+            # 3. Method calls with parentheses (e.g., order_line.filtered(), order_line.mapped())
+            (
+                r"\." + old_name + r"\.([a-zA-Z_][a-zA-Z0-9_]*)\(",
+                "." + new_name + r".\1(",
+            ),
+            # 4. Dotted field access with common variable names (expanded list)
+            (
+                r"\b(self|record|rec|order|orders|o|so|po|sale|purchase|line|lines|vals|values|obj|item|invoice|move|stock|delivery)\s*\.\s*"
+                + old_name
+                + r"\b",
+                r"\1." + new_name,
+            ),
+            # 5. Generic dotted access (catches any remaining .order_line patterns)
+            (r"\." + old_name + r"\b(?!\s*=\s*fields\.)", "." + new_name),
+            # 6. List/dict indexing with single or double quotes
+            (r"\[\s*['\"]" + old_name + r"['\"]\s*\]", '["' + new_name + '"]'),
+            # 7. Dictionary key definitions (e.g., 'order_line': value or "order_line": value)
+            (r'(["\'])' + old_name + r'(["\'])\s*:', r"\1" + new_name + r"\2:"),
+            # 8. String equality/inequality comparisons
+            (r'([!=]=)\s*(["\'])' + old_name + r"\2", r"\1 \2" + new_name + r"\2"),
+            # 9. in/not in comparisons with strings
+            (
+                r'\b(in|not\s+in)\s+(["\'])' + old_name + r"\2",
+                r"\1 \2" + new_name + r"\2",
+            ),
+            # 10. Function/method arguments with named parameters
+            (r'(\w+\s*=\s*["\'])' + old_name + r'(["\'])', r"\1" + new_name + r"\2"),
+            # 11. Domain expressions - enhanced patterns
+            (r'\(\s*["\']' + old_name + r'["\']\\s*,', '("' + new_name + '",'),
+            (r'Domain\s*\(\s*["\']' + old_name + r'["\']', 'Domain("' + new_name + '"'),
+            # Domain with dotted notation like [('order_line.product_id', '=', value)]
+            (r'\(\s*[\'"]' + old_name + r"\.", r'("' + new_name + "."),
+            # 12. Field names in quoted strings with dots (start, middle, end)
+            (r'(["\'])' + old_name + r"\.", r"\1" + new_name + "."),
+            (r"\." + old_name + r"\.", "." + new_name + "."),
+            (r"\." + old_name + r'(["\'])', "." + new_name + r"\1"),
+            # 13. get()/pop() method calls
+            (
+                r'\.(get|pop|setdefault)\s*\(\s*["\']' + old_name + r'["\']',
+                r'.\1("' + new_name + '"',
+            ),
+            # 14. hasattr/getattr/setattr calls - fixed pattern
+            (
+                r'(hasattr|getattr|setattr|delattr)\s*\([^,]+,\s*["\']'
+                + old_name
+                + r'["\']',
+                r'\1(\g<0>[:-len("' + old_name + '")-1] + "' + new_name + '"',
+            ),
+            # 15. Lambda expressions - enhanced to handle various patterns
+            (
+                r"lambda\s+(\w+)\s*:\s*\1\s*\.\s*" + old_name,
+                r"lambda \1: \1." + new_name,
+            ),
+            (
+                r"lambda\s+(\w+)\s*:\s*(\w+)\s*\.\s*" + old_name,
+                r"lambda \1: \2." + new_name,
+            ),
+            # 16. For loops - handle 'for x in y.order_line'
+            (
+                r"for\s+(\w+)\s+in\s+(\w+)\s*\.\s*" + old_name + r"\b",
+                r"for \1 in \2." + new_name,
+            ),
+            # 17. f-strings and format strings
+            (
+                r'(f["\'][^"\']*)\{([^}]*\.)?' + old_name + r"([^}]*)\}",
+                r"\1{\2" + new_name + r"\3}",
+            ),
+            (r"\.format\([^)]*" + old_name + r"\s*=", ".format(" + new_name + "="),
+            # 18. Mapped/filtered/sorted with string argument
+            (
+                r'\.(mapped|filtered|sorted)\s*\(\s*["\']' + old_name + r'["\']',
+                r'.\1("' + new_name + '"',
+            ),
+            (
+                r'\.(mapped|filtered|sorted)\s*\(\s*["\']' + old_name + r"\.",
+                r'.\1("' + new_name + ".",
+            ),
+            # 19. Comments (matches word boundaries in comments)
+            (r"(#[^\n]*)\b" + old_name + r"\b", r"\1" + new_name),
+            # 20. Docstrings - handle field references in documentation
+            (r'("""[^"]*|\'\'\'[^\']*)' + old_name + r"\b", r"\1" + new_name),
+            # 21. LAST PATTERN: Generic word boundary replacement
+            # Only matches if not followed by = fields. (to avoid re-replacing definitions)
+            (r"\b" + old_name + r"\b(?!\s*=\s*fields\.)", new_name),
         ]
 
         for pattern, replacement in replacements:
             content = re.sub(pattern, replacement, content)
 
-        with open(filepath, "w") as f:
+        with open(filepath, "w", encoding="utf-8") as f:
             f.write(content)
 
     def _refactor_xml_file(self, filepath: str, old_name: str, new_name: str):
-        """Refactor XML file"""
-        with open(filepath, "r") as f:
+        """Refactor XML file with comprehensive pattern matching"""
+        with open(filepath, "r", encoding="utf-8") as f:
             content = f.read()
 
-        # Simple string replacement for XML
-        content = re.sub(
-            r'<field\s+name=["\']' + old_name + r'["\']',
-            f'<field name="{new_name}"',
-            content,
-        )
+        # XML-specific replacement patterns
+        replacements = [
+            # 1. Field elements with name attribute
+            (
+                r'<field\s+name\s*=\s*["\']' + old_name + r'["\']',
+                f'<field name="{new_name}"',
+            ),
+            # 2. Tree/list view field references
+            (
+                r'<field\s+name\s*=\s*["\']' + old_name + r'["\']([^>]*/>)',
+                f'<field name="{new_name}"\\1',
+            ),
+            # 3. Domain expressions in XML attributes - enhanced
+            (
+                r'domain\s*=\s*["\'][^\'"]*(\(\s*[\'"])' + old_name + r'([\'"])',
+                r'domain="\1' + new_name + r"\2",
+            ),
+            # Handle dotted notation in domains like filter_domain="[('order_line.product_id', 'ilike', self)]"
+            (
+                r'filter_domain\s*=\s*["\'][^\'"]*\(\s*[\'"]' + old_name + r"\.",
+                lambda m: m.group(0).replace(old_name + ".", new_name + "."),
+            ),
+            (
+                r'domain\s*=\s*["\'][^\'"]*\(\s*[\'"]' + old_name + r"\.",
+                lambda m: m.group(0).replace(old_name + ".", new_name + "."),
+            ),
+            # 4. Context expressions in XML attributes
+            (
+                r'context\s*=\s*["\'][^\'"]*(\{[^}]*[\'"])' + old_name + r'([\'"])',
+                r'context="\1' + new_name + r"\2",
+            ),
+            # 5. Eval expressions
+            (r'eval\s*=\s*["\'][^"\']*(\.)' + old_name + r"\b", r'eval="\1' + new_name),
+            # 6. t-field and t-esc QWeb expressions
+            (
+                r't-(field|esc|raw)\s*=\s*["\']([^"\']*)\.' + old_name + r"\b",
+                r't-\1="\2.' + new_name,
+            ),
+            # 7. t-foreach expressions
+            (
+                r't-foreach\s*=\s*["\']([^"\']*)\.' + old_name + r"\b",
+                r't-foreach="\1.' + new_name,
+            ),
+            # 8. Ref attribute in field tags
+            (r'ref\s*=\s*["\'][^"\']*(\.)' + old_name + r"\b", r'ref="\1' + new_name),
+            # 9. Options attribute (often contains field references)
+            (
+                r'options\s*=\s*["\'][^"\']*(\{[^}]*[\'"])' + old_name + r'([\'"])',
+                r'options="\1' + new_name + r"\2",
+            ),
+            # 10. String attribute in field tags - common for search view filters
+            (
+                r'string\s*=\s*["\'][^"\']*' + old_name,
+                lambda m: m.group(0).replace(old_name, new_name),
+            ),
+            # 11. XPath expressions
+            (
+                r'expr\s*=\s*["\'][^"\']*' + old_name,
+                lambda m: m.group(0).replace(old_name, new_name),
+            ),
+            # 12. Generic word boundary replacement in XML content
+            (r"\b" + old_name + r"\b", new_name),
+        ]
 
-        # Replace in domains and contexts
-        content = re.sub(r"\b" + old_name + r"\b", new_name, content)
+        for pattern, replacement in replacements:
+            content = re.sub(pattern, replacement, content)
 
-        with open(filepath, "w") as f:
+        with open(filepath, "w", encoding="utf-8") as f:
             f.write(content)
+
+    def _refactor_js_file(self, filepath: str, old_name: str, new_name: str):
+        """Refactor JavaScript/TypeScript file"""
+        with open(filepath, "r", encoding="utf-8") as f:
+            content = f.read()
+
+        # JavaScript replacement patterns - enhanced
+        replacements = [
+            # Object property access with method chaining
+            (r"\." + old_name + r"\.([a-zA-Z_])", "." + new_name + r".\1"),
+            # Simple property access
+            (r"\." + old_name + r"\b", "." + new_name),
+            # Bracket notation with quotes
+            (r"\[\s*['\"]" + old_name + r"['\"]\s*\]", '["' + new_name + '"]'),
+            # Object literal keys
+            (r"(^\s*|,\s*|\{)" + old_name + r"\s*:", r"\1" + new_name + ":"),
+            # Destructuring assignment
+            (r"\{([^}]*)\b" + old_name + r"\b([^}]*)\}", r"{\1" + new_name + r"\2}"),
+            # Template literals with embedded expressions
+            (r"\$\{([^}]*)\b" + old_name + r"\b([^}]*)\}", r"${\1" + new_name + r"\2}"),
+            (r"\$\{([^}]*)\." + old_name + r"\b", r"${\1." + new_name),
+            # Method calls
+            (r"\." + old_name + r"\s*\(", "." + new_name + "("),
+            # Arrow functions and map/filter/reduce
+            (r"=>\s*(\w+)\." + old_name + r"\b", r"=> \1." + new_name),
+            # Property in string literals (for dynamic property access)
+            (r'(["\'])' + old_name + r'(["\'])', r"\1" + new_name + r"\2"),
+            # JSX attributes
+            (r"(\s+)" + old_name + r"(\s*=)", r"\1" + new_name + r"\2"),
+            # Comments - single line
+            (r"(//[^\n]*)\b" + old_name + r"\b", r"\1" + new_name),
+            # Comments - multi-line
+            (r"(/\*[^*]*\*/)\b" + old_name + r"\b", r"\1" + new_name),
+            # Generic word boundary - must be last
+            (r"\b" + old_name + r"\b", new_name),
+        ]
+
+        for pattern, replacement in replacements:
+            content = re.sub(pattern, replacement, content)
+
+        with open(filepath, "w", encoding="utf-8") as f:
+            f.write(content)
+
+        self.js_file_count += 1
+
+    def _refactor_yaml_file(self, filepath: str, old_name: str, new_name: str):
+        """Refactor YAML file"""
+        with open(filepath, "r", encoding="utf-8") as f:
+            content = f.read()
+
+        # YAML replacement patterns
+        replacements = [
+            # Keys at start of line
+            (r"^(\s*)" + old_name + r":", r"\1" + new_name + ":"),
+            # Values
+            (r": (.*)\b" + old_name + r"\b", r": \1" + new_name),
+            # List items
+            (r"^(\s*- )" + old_name + r"\b", r"\1" + new_name),
+            # Comments
+            (r"(#[^\n]*)\b" + old_name + r"\b", r"\1" + new_name),
+        ]
+
+        for pattern, replacement in replacements:
+            content = re.sub(pattern, replacement, content, flags=re.MULTILINE)
+
+        with open(filepath, "w", encoding="utf-8") as f:
+            f.write(content)
+
+        self.yaml_file_count += 1
 
     def _create_backup(self):
         """Create backup of files before modification"""
@@ -509,7 +819,7 @@ class RefactorEngine:
         """
 
         filename = f"migration_{violation.field_name}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.sql"
-        with open(filename, "w") as f:
+        with open(filename, "w", encoding="utf-8") as f:
             f.write(migration)
         print(f"Migration script generated: {filename}")
 
@@ -564,7 +874,7 @@ class OdooRefactorTool:
                 continue
 
             try:
-                with open(py_file, "r") as f:
+                with open(py_file, "r", encoding="utf-8") as f:
                     tree = ast.parse(f.read())
 
                 analyzer = OdooFieldAnalyzer(str(py_file), module_name)
@@ -671,6 +981,10 @@ class OdooRefactorTool:
         print(f"\n✓ Refactoring complete!")
         print(f"  Files modified: {len(engine.modified_files)}")
         print(f"  Total changes: {len(engine.changes)}")
+        if engine.js_file_count > 0:
+            print(f"  JavaScript files: {engine.js_file_count}")
+        if engine.yaml_file_count > 0:
+            print(f"  YAML files: {engine.yaml_file_count}")
 
         # Save report
         self._save_report(violations, engine.changes)
@@ -686,7 +1000,7 @@ class OdooRefactorTool:
         }
 
         filename = f"refactor_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
-        with open(filename, "w") as f:
+        with open(filename, "w", encoding="utf-8") as f:
             json.dump(report, f, indent=2)
         print(f"Report saved to {filename}")
 
