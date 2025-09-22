@@ -7,7 +7,7 @@ class AccountMoveOperationOperation(models.TransientModel):
     _description = "Wizard to create a sub operation on a different company"
 
     line_id = fields.Many2one(
-        "account.move.operation.line",
+        comodel_name="account.move.operation.line",
         required=True,
     )
     operation_id = fields.Many2one(
@@ -15,14 +15,17 @@ class AccountMoveOperationOperation(models.TransientModel):
         readonly=True,
     )
     available_company_ids = fields.Many2many(
-        "res.company", compute="_compute_available_company_ids"
+        comodel_name="res.company",
+        compute="_compute_available_company_ids",
     )
     diff_company_id = fields.Many2one(
-        "res.company",
+        comodel_name="res.company",
         required=True,
         domain="[('id', 'in', available_company_ids)]",
     )
-    amount = fields.Float(readonly=True)
+    amount = fields.Float(
+        readonly=True,
+    )
 
     @api.depends("line_id.action_id.operation_type_ids")
     def _compute_available_company_ids(self):

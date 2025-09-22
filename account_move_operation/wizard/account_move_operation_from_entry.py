@@ -25,8 +25,13 @@ class AccountMoveOperationFromEntry(models.TransientModel):
         string="Partner",
         required=True,
     )
-    reference = fields.Char(string="Reference")
-    amount = fields.Monetary(string="Amount", currency_field="currency_id")
+    reference = fields.Char(
+        string="Reference",
+    )
+    amount = fields.Monetary(
+        string="Amount",
+        currency_field="currency_id",
+    )
     currency_id = fields.Many2one(
         comodel_name="res.currency",
         string="Currency",
@@ -40,15 +45,17 @@ class AccountMoveOperationFromEntry(models.TransientModel):
         default=lambda self: self.env.company,
     )
     action_line_ids = fields.One2many(
-        "account.move.operation.from.entry.line",
-        "wizard_id",
+        comodel_name="account.move.operation.from.entry.line",
+        inverse_name="wizard_id",
         string="Actions",
     )
     diff_partner = fields.Boolean(
         related="operation_type_id.diff_partner",
         help="If the operation type allows a different partner, you can specify it here.",
     )
-    multicompany = fields.Boolean(related="operation_type_id.multicompany")
+    multicompany = fields.Boolean(
+        related="operation_type_id.multicompany",
+    )
     diff_partner_id = fields.Many2one(
         comodel_name="res.partner",
         string="CN Partner",
@@ -214,8 +221,14 @@ class AccountMoveOperationFromEntryLine(models.TransientModel):
         required=True,
         readonly=True,
     )
-    name = fields.Char(string="Description", required=True, readonly=True)
-    executed = fields.Boolean(string="Already Executed")
+    name = fields.Char(
+        string="Description",
+        required=True,
+        readonly=True,
+    )
+    executed = fields.Boolean(
+        string="Already Executed",
+    )
     document_id = fields.Many2one(
         comodel_name="account.bank.statement.line",
         string="Existing Document",
