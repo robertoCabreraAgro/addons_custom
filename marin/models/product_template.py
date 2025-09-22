@@ -56,11 +56,7 @@ class ProductTemplate(models.Model):
         help="Used as default value on the vendor refunds lines. "
         "Leave empty to use the account from the product category.",
     )
-    use_dose = fields.Boolean(
-        compute="_compute_use_expiration_date",
-        store=True,
-        readonly=False,
-    )
+    use_dose = fields.Boolean()
     x_dose = fields.Float(
         string="Dose per Hectare",
         digits="Product Price",
