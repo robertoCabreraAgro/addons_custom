@@ -73,8 +73,8 @@ class AccountMoveOperation(models.Model):
         default=lambda self: _("New"),
         readonly=True,
         copy=False,
-        tracking=True,
         index="trigram",
+        tracking=True,
     )
     state = fields.Selection(
         selection=[
@@ -84,20 +84,26 @@ class AccountMoveOperation(models.Model):
             ("cancel", "Cancel"),
         ],
         default="draft",
-        copy=False,
         readonly=True,
+        copy=False,
         tracking=True,
     )
-    reference = fields.Char(copy=False)
-    amount = fields.Monetary(currency_field="currency_id")
+    reference = fields.Char(
+        copy=False,
+    )
+    amount = fields.Monetary(
+        currency_field="currency_id",
+    )
     from_bank_statement = fields.Boolean(
-        related="operation_type_id.from_bank_statement"
+        related="operation_type_id.from_bank_statement",
     )
     line_ids = fields.One2many(
-        "account.move.operation.line", "operation_id", readonly=True
+        comodel_name="account.move.operation.line",
+        inverse_name="operation_id",
+        readonly=True,
     )
     l10n_mx_edi_payment_method_id = fields.Many2one(
-        "l10n_mx_edi.payment.method",
+        comodel_name="l10n_mx_edi.payment.method",
         string="Método de pago SAT",
     )
     l10n_mx_edi_usage = fields.Selection(
