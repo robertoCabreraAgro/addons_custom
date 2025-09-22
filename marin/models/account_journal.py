@@ -118,15 +118,6 @@ class AccountJournal(models.Model):
     # HELPERS
     # ------------------------------------------------------------
 
-    @api.onchange("x_treatment")
-    def _onchange_x_treatment(self):
-        """Determine if the UUID is required based on the tax treatment of the journal."""
-        for journal in self:
-            journal.l10n_mx_edi_require_uuid = (
-                journal.x_treatment in ["fiscal_simulated", "fiscal_real"]
-                and journal.type == "purchase"
-            )
-
     def _import_bbva_mx_bank_statement(self, attachments):
         if any(not a.raw for a in attachments):
             raise UserError(_("You uploaded an invalid or empty file."))
