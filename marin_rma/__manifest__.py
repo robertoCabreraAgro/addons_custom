@@ -10,7 +10,7 @@
     "data": [
         "security/ir.model.access.csv",
         "views/rma_reason_views.xml",
-        "views/rma_menus.xml"
+        "views/rma_menus.xml",
     ],
     "installable": True,
 }
