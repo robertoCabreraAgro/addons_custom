@@ -108,9 +108,9 @@ class ApprovalRequest(models.Model):
         domain=[("res_model", "=", "approval.request")],
         string="Attachments",
     )
-    count_attachment_ids = fields.Integer(
+    count_attachment = fields.Integer(
         string="Number of Attachments",
-        compute="_compute_count_attachment_ids",
+        compute="_compute_count_attachment",
     )
 
     product_line_ids = fields.One2many(
@@ -255,14 +255,14 @@ class ApprovalRequest(models.Model):
     # COMPUTE METHODS
     # ------------------------------------------------------------
 
-    def _compute_count_attachment_ids(self):
+    def _compute_count_attachment(self):
         domain = [("res_model", "=", "approval.request"), ("res_id", "in", self.ids)]
         attachment_data = self.env["ir.attachment"]._read_group(
             domain, ["res_id"], ["__count"]
         )
         attachment = dict(attachment_data)
         for request in self:
-            request.count_attachment_ids = attachment.get(request.id, 0)
+            request.count_attachment = attachment.get(request.id, 0)
 
     @api.depends_context("uid")
     @api.depends("request_owner_id")
@@ -584,7 +584,7 @@ class ApprovalRequest(models.Model):
             )
 
     def _check_has_document_has_attachment(self):
-        if self.has_document == "required" and not self.count_attachment_ids:
+        if self.has_document == "required" and not self.count_attachment:
             raise UserError(_("You have to attach at least one document."))
 
     def _check_manager_approval_constraints(self):

@@ -151,23 +151,23 @@
                     <widget name="attach_document" string="Attach Document"
                         action="message_post"
                         highlight="1"
-                        invisible="(count_attachment_ids &gt;= 1 and request_owner_id == uid) or request_owner_id != uid" />
+                        invisible="(count_attachment &gt;= 1 and request_owner_id == uid) or request_owner_id != uid" />
                     <button name="action_confirm" string="Submit"
                         type="object" class="btn-primary"
                         data-hotkey="q"
-                        invisible="count_attachment_ids &lt; 1 or not approver_ids or state != 'new'" />
+                        invisible="count_attachment &lt; 1 or not approver_ids or state != 'new'" />
                     <button name="action_confirm" string="Submit"
                         type="object"
                         data-hotkey="q"
-                        invisible="count_attachment_ids &gt;= 1 or not approver_ids or state != 'new'" />
+                        invisible="count_attachment &gt;= 1 or not approver_ids or state != 'new'" />
                     <button name="action_approve" string="Approve"
                         type="object" class="btn-primary"
                         data-hotkey="v"
-                        invisible="(count_attachment_ids &lt; 1 and request_owner_id == uid) or state in ['approved', 'refused', 'cancel'] or user_state != 'pending'" />
+                        invisible="(count_attachment &lt; 1 and request_owner_id == uid) or state in ['approved', 'refused', 'cancel'] or user_state != 'pending'" />
                     <button name="action_approve" string="Approve"
                         type="object" class="btn-primary"
                         data-hotkey="v"
-                        invisible="count_attachment_ids &gt;= 1 or request_owner_id != uid or state in ['approved', 'refused', 'cancel'] or user_state != 'pending'" />
+                        invisible="count_attachment &gt;= 1 or request_owner_id != uid or state in ['approved', 'refused', 'cancel'] or user_state != 'pending'" />
                     <button name="action_refuse" string="Refuse"
                         type="object"
                         data-hotkey="z"
@@ -186,7 +186,7 @@
                         invisible="state in ['new', 'cancel'] or not user_state and not has_access_to_request or request_owner_id != uid" />
                     <widget name="attach_document" string="Attach Document"
                         action="message_post"
-                        invisible="(count_attachment_ids &lt; 1 and request_owner_id == uid)" />
+                        invisible="(count_attachment &lt; 1 and request_owner_id == uid)" />
                     <button name="%(action_report_approval_request)d" string="Print"
                         type="action"
                         invisible="state != 'approved' or approval_type !='purchase'" />
@@ -212,8 +212,8 @@
                         <button name="action_get_attachment_view"
                             type="object" class="oe_stat_button"
                             icon="fa-book"
-                            invisible="count_attachment_ids == 0">
-                            <field name="count_attachment_ids" string="Documents" widget="statinfo"
+                            invisible="count_attachment == 0">
+                            <field name="count_attachment" string="Documents" widget="statinfo"
                                 options="{'reload_on_button': true}" />
                         </button>
                     </div>
