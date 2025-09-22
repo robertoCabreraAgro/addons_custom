@@ -50,8 +50,8 @@
         "hr_contract_salary",
         "documents_hr_payroll",
         "l10n_mx_edi_payslip",
-        "account_3way_match",
         "account_budget",
+        "account_3way_match",
         # "purchase_requisition_stock",
         "mrp_landed_costs",
         "delivery",
@@ -70,7 +70,6 @@
         # "users_working_hours",
         "syngenta_edi",
         "gps_tracking",
-        "stock_lot_rule",
         "product_abc_classification_sale_stock",
     ],
     "data": [
