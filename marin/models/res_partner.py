@@ -1,8 +1,6 @@
-import logging
-from datetime import date, timedelta
-
 from dateutil.relativedelta import relativedelta
-from odoo import Command, _, api, fields, models
+import logging
+from odoo import _, Command, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.misc import formatLang
 
@@ -65,7 +63,11 @@ class ResPartner(models.Model):
     supplier = fields.Boolean()
     competitor = fields.Boolean()
     gender = fields.Selection(
-        selection=[("male", "Male"), ("female", "Female"), ("other", "Other")],
+        selection=[
+            ("male", "Male"),
+            ("female", "Female"),
+            ("other", "Other"),
+        ],
     )
     birthdate = fields.Date()
     age = fields.Integer(
@@ -104,6 +106,13 @@ class ResPartner(models.Model):
         readonly=False,
         # avoid queries post-create
         ondelete="set null",
+    )
+
+    season_id = fields.Many2one(
+        comodel_name="date.range",
+        string="AG Season",
+        domain="[('type_id.name', '=', 'AG')]",
+        help="Agricultural season assigned to this salesperson",
     )
     hectares = fields.Float(
         string="Hectares",
@@ -151,13 +160,6 @@ class ResPartner(models.Model):
         compute="_compute_profile_stats",
     )
 
-    season_id = fields.Many2one(
-        comodel_name="date.range",
-        string="AG Season",
-        domain="[('type_id.name', '=', 'AG')]",
-        help="Agricultural season assigned to this salesperson",
-    )
-
     # Customer merge fields
     auto_merge = fields.Boolean(
         string="Auto-merge when inactive",
@@ -176,6 +178,154 @@ class ResPartner(models.Model):
         compute="_compute_days_since_last_order",
         help="Number of days since the last sale order from this customer",
     )
+
+    # ------------------------------------------------------------
+    # CONSTRAINTS METHODS
+    # ------------------------------------------------------------
+
+    @api.constrains("category_id")
+    def _check_category_groups_unique(self):
+        """Ensure only one category per exclusive group."""
+        exclusive_groups = [
+            "Technology Level",
+            "Commercial Profile",
+            "Production size",
+            "Growth perspective",
+        ]
+
+        for partner in self:
+            if not partner.category_id:
+                continue
+
+            category_names = partner.category_id.mapped("name")
+
+            for group_prefix in exclusive_groups:
+                group_categories = [
+                    name for name in category_names if name.startswith(group_prefix)
+                ]
+
+                if len(group_categories) > 1:
+                    raise ValidationError(
+                        f"Only one category from '{group_prefix}' group is allowed. "
+                        f"Currently assigned: {', '.join(group_categories)}"
+                    )
+
+    @api.constrains("hectares")
+    def _check_hectares_positive(self):
+        """Ensure hectares is not negative."""
+        for partner in self:
+            if partner.hectares < 0:
+                raise ValidationError(_("Hectares cannot be negative."))
+
+    # ------------------------------------------------------------
+    # CRUD METHODS
+    # ------------------------------------------------------------
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        """
+        Override create to validate mandatory fields for restricted users.
+        """
+        for vals in vals_list:
+            # Only validate if it's a company or standalone contact (not a child contact)
+            if not vals.get("parent_id"):
+                self._validate_restricted_contact_fields(vals)
+
+        return super().create(vals_list)
+
+    def write(self, vals):
+        """
+        Override write to validate mandatory fields for restricted users.
+        """
+        # Only validate for company or standalone contacts (not child contacts)
+        for record in self:
+            if not record.parent_id:
+                record._validate_restricted_contact_fields(vals)
+
+        return super().write(vals)
+
+    def write(self, vals):
+        """Override write to track profile changes."""
+        tracked_fields = ["hectares", "category_id", "profile_id"]
+        has_tracked_changes = any(field in vals for field in tracked_fields)
+
+        old_values = {}
+        if has_tracked_changes:
+            for partner in self:
+                if partner.id:
+                    old_values[partner.id] = {
+                        "hectares": partner.hectares,
+                        "category_id": partner.category_id.mapped("name"),
+                        "profile_id": partner.profile_id,
+                        "score_total": partner.score_total,
+                    }
+
+        result = super().write(vals)
+
+        if has_tracked_changes and old_values:
+            for partner in self:
+                if partner.id in old_values:
+                    self._check_and_create_history_record(
+                        partner, old_values[partner.id], vals
+                    )
+
+        return result
+
+    # ------------------------------------------------------------
+    # COMPUTE METHODS
+    # ------------------------------------------------------------
+
+    def _compute_recent_orders_count(self):
+        """Compute number of sale orders in the evaluation period"""
+        config = self.env["ir.config_parameter"].sudo()
+        interval_number = int(config.get_param("customer_merge_interval_number", 3))
+        interval_type = config.get_param("customer_merge_interval_type", "months")
+
+        # Calculate cutoff date
+        if interval_type == "days":
+            cutoff_date = fields.Date.today() - relativedelta(days=interval_number)
+        elif interval_type == "weeks":
+            cutoff_date = fields.Date.today() - relativedelta(weeks=interval_number)
+        else:  # months
+            cutoff_date = fields.Date.today() - relativedelta(months=interval_number)
+
+        for partner in self:
+            if not partner.customer:
+                partner.recent_orders_count = 0
+                continue
+
+            # Count confirmed sale orders in the period
+            order_count = self.env["sale.order"].search_count(
+                [
+                    ("partner_id", "=", partner.id),
+                    ("state", "=", "sale"),
+                    ("date_order", ">=", cutoff_date),
+                ]
+            )
+            partner.recent_orders_count = order_count
+
+    def _compute_days_since_last_order(self):
+        """Compute days since last sale order"""
+        for partner in self:
+            if not partner.customer:
+                partner.days_since_last_order = 0
+                continue
+
+            last_order = self.env["sale.order"].search(
+                [("partner_id", "=", partner.id), ("state", "=", "sale")],
+                order="date_order desc",
+                limit=1,
+            )
+
+            if last_order:
+                delta = fields.Date.today() - last_order.date_order.date()
+                partner.days_since_last_order = delta.days
+            else:
+                partner.days_since_last_order = 9999  # No orders found
+
+    def _compute_credit_limit_available(self):
+        for partner in self:
+            partner.credit_limit_available = partner.credit_limit - partner.credit
 
     def _compute_group(self):
         for partner in self:
@@ -215,79 +365,6 @@ class ResPartner(models.Model):
             if partner.age_range_id != age_range:
                 partner.age_range_id = age_range
 
-    def _prepare_partner_category_domain(self):
-        parents = []
-        if self.env.user.has_group("account.group_account_basic"):
-            parents.append(self.env.ref("marin.partner_category_management").id)
-        if self.env.user.has_group("sales_team.group_sale_salesman_all_leads"):
-            parents.append(self.env.ref("marin.partner_category_commercial").id)
-        if self.env.user.has_group("marin.group_security_compliance"):
-            parents.append(self.env.ref("marin.partner_category_security").id)
-        if self.env.user.has_group("purchase.group_purchase_manager"):
-            parents.append(self.env.ref("marin.partner_category_purchase").id)
-        if not parents:
-            return [("id", "=", False)]
-        return [("parent_id", "!=", False), ("parent_id", "in", parents)]
-
-    def _prepare_compute_group(self):
-        return {
-            "user_account_user": self.env.user.has_group("account.group_account_user"),
-            "user_debt_manager": self.env.user.has_group(
-                "marin.group_account_debt_manager"
-            ),
-            "user_hr_user": self.env.user.has_group("marin.group_hr_user"),
-            "user_hr_manager": self.env.user.has_group("marin.group_hr_manager"),
-            "user_purchase_manager": self.env.user.has_group(
-                "purchase.group_purchase_manager"
-            ),
-            "user_sale_manager": self.env.user.has_group(
-                "sales_team.group_sale_manager"
-            ),
-            "user_stock_user": self.env.user.has_group("marin.group_stock_user"),
-            "user_stock_manager": self.env.user.has_group("marin.group_stock_manager"),
-        }
-
-    @api.model
-    def _cron_update_age_range_id(self):
-        """This method is called from a cron job.
-        It is used to update age range on contact
-        """
-        partners = self.search([("birthdate", "!=", False)])
-        partners._compute_age_range_id()
-
-    def _compute_credit_limit_available(self):
-        for partner in self:
-            partner.credit_limit_available = partner.credit_limit - partner.credit
-
-    # New method inspired by the one in account.move
-    def _build_credit_warning_message(self, future_credit, currency):
-        msg = _(
-            "The partner %s has reached its credit limit of : %s\n",
-            self.name,
-            formatLang(self.env, self.credit_limit, currency_obj=currency),
-        )
-        msg += _(
-            "Total amount due (including this document): %s\n",
-            formatLang(self.env, future_credit, currency_obj=currency),
-        )
-        msg += _(
-            "Credit available: %s",
-            formatLang(self.env, self.credit_limit_available, currency_obj=currency),
-        )
-        return msg
-
-    # Override method to be like it was on v16 showing the partner ledger report
-    # instead of showing the partner account move lines like it's done on v17.
-    def open_partner_ledger(self):
-        action = self.env["ir.actions.actions"]._for_xml_id(
-            "account_reports.action_account_report_partner_ledger"
-        )
-        action["params"] = {
-            "options": {"partner_ids": [self.id]},
-            "ignore_session": "both",
-        }
-        return action
-
     @api.depends("category_id", "hectares", "score_total")
     def _compute_partner_profile(self):
         """Compute partner profile based on dynamic scoring system."""
@@ -320,6 +397,145 @@ class ResPartner(models.Model):
                     partner, old_profile, new_profile, old_score
                 )
 
+    @api.depends(
+        "hectares",
+        "category_id",
+        "category_id.score_value",
+        "category_id.scoring_active",
+    )
+    def _compute_client_score(self):
+        """Compute client scores using dynamic scoring system."""
+        for partner in self:
+            partner.score_hectares = self._get_hectares_score(partner.hectares)
+            partner.score_categories = sum(
+                cat.score_value
+                for cat in partner.category_id.filtered("scoring_active")
+            )
+            partner.score_total = partner.score_hectares + partner.score_categories
+
+    @api.depends("profile_history_ids")
+    def _compute_profile_stats(self):
+        """Compute profile statistics."""
+        for partner in self:
+            history = partner.profile_history_ids
+            partner.profile_change_count = len(history)
+            partner.last_profile_change = (
+                history[0].change_date.date() if history else False
+            )
+
+    @api.depends("customer")
+    def _compute_auto_merge(self):
+        """Compute auto_merge based on customer flag and global configuration"""
+        config_active = (
+            self.env["ir.config_parameter"]
+            .sudo()
+            .get_param("customer_merge_active", False)
+        )
+        for partner in self:
+            if partner.customer and config_active:
+                partner.auto_merge = True
+            else:
+                partner.auto_merge = False
+
+    # ------------------------------------------------------------
+    # ACTION METHODS
+    # ------------------------------------------------------------
+
+    # Override method to be like it was on v16 showing the partner ledger report
+    # instead of showing the partner account move lines like it's done on v17.
+    def open_partner_ledger(self):
+        action = self.env["ir.actions.actions"]._for_xml_id(
+            "account_reports.action_account_report_partner_ledger"
+        )
+        action["params"] = {
+            "options": {"partner_ids": [self.id]},
+            "ignore_session": "both",
+        }
+        return action
+
+    def action_generate_sale_targets(self):
+        """Open wizard to generate sale targets for selected partners."""
+        if not self:
+            raise UserError(_("Please select at least one customer."))
+
+        partners = self.filtered(lambda p: p.is_company and p.customer)
+        if not partners:
+            raise UserError(
+                _("Please select customers (companies with customer flag enabled).")
+            )
+
+        return {
+            "name": _("Generate Sale Targets"),
+            "type": "ir.actions.act_window",
+            "res_model": "sale.target.wizard",
+            "view_mode": "form",
+            "target": "new",
+            "context": {
+                "default_partner_ids": [(6, 0, partners.ids)],
+                "default_date_from": fields.Date.today(),
+            },
+        }
+
+    # ------------------------------------------------------------
+    # CRON
+    # ------------------------------------------------------------
+
+    @api.model
+    def _cron_merge_inactive_customers(self):
+        """Cron job to merge inactive customers with general public partner"""
+        config = self.env["ir.config_parameter"].sudo()
+        if not config.get_param("customer_merge_active"):
+            return
+
+        _logger.info("Starting automatic customer merge process")
+
+        candidates = self._get_merge_candidates()
+        if not candidates:
+            _logger.info("No merge candidates found")
+            return
+
+        _logger.info(
+            f"Found {len(candidates)} merge candidates: {candidates.mapped('name')}"
+        )
+
+        # Merge candidates in batches (max 2 candidates + 1 general partner = 3 total)
+        batch_size = 2  # Maximum 2 candidates per batch due to wizard limit
+        for i in range(0, len(candidates), batch_size):
+            batch = candidates[i : i + batch_size]
+            self._merge_with_general_partner(batch.ids)
+            self.env.cr.commit()  # Commit each batch
+
+        _logger.info("Completed automatic customer merge process")
+
+    @api.model
+    def _cron_update_age_range_id(self):
+        """This method is called from a cron job.
+        It is used to update age range on contact
+        """
+        partners = self.search([("birthdate", "!=", False)])
+        partners._compute_age_range_id()
+
+    # ------------------------------------------------------------
+    # HELPERS
+    # ------------------------------------------------------------
+
+    # New method inspired by the one in account.move
+    def _build_credit_warning_message(self, future_credit, currency):
+        msg = _(
+            "The partner %s has reached its credit limit of : %s\n",
+            self.name,
+            formatLang(self.env, self.credit_limit, currency_obj=currency),
+        )
+        msg += _(
+            "Total amount due (including this document): %s\n",
+            formatLang(self.env, future_credit, currency_obj=currency),
+        )
+        msg += _(
+            "Credit available: %s",
+            formatLang(self.env, self.credit_limit_available, currency_obj=currency),
+        )
+        return msg
+
     def _fallback_profile_matching(self, partner):
         """Fallback profile matching based on category overlap."""
         if not partner.category_id:
@@ -344,6 +560,38 @@ class ResPartner(models.Model):
                 best_profile = profile
 
         return best_profile if max_matches > 0 else False
+
+    def _prepare_partner_category_domain(self):
+        parents = []
+        if self.env.user.has_group("account.group_account_basic"):
+            parents.append(self.env.ref("marin.partner_category_management").id)
+        if self.env.user.has_group("sales_team.group_sale_salesman_all_leads"):
+            parents.append(self.env.ref("marin.partner_category_commercial").id)
+        if self.env.user.has_group("marin.group_security_compliance"):
+            parents.append(self.env.ref("marin.partner_category_security").id)
+        if self.env.user.has_group("purchase.group_purchase_manager"):
+            parents.append(self.env.ref("marin.partner_category_purchase").id)
+        if not parents:
+            return [("id", "=", False)]
+        return [("parent_id", "!=", False), ("parent_id", "in", parents)]
+
+    def _prepare_compute_group(self):
+        return {
+            "user_account_user": self.env.user.has_group("account.group_account_user"),
+            "user_debt_manager": self.env.user.has_group(
+                "marin.group_account_debt_manager"
+            ),
+            "user_hr_user": self.env.user.has_group("marin.group_hr_user"),
+            "user_hr_manager": self.env.user.has_group("marin.group_hr_manager"),
+            "user_purchase_manager": self.env.user.has_group(
+                "purchase.group_purchase_manager"
+            ),
+            "user_sale_manager": self.env.user.has_group(
+                "sales_team.group_sale_manager"
+            ),
+            "user_stock_user": self.env.user.has_group("marin.group_stock_user"),
+            "user_stock_manager": self.env.user.has_group("marin.group_stock_manager"),
+        }
 
     def _create_profile_history_record(
         self, partner, old_profile, new_profile, old_score
@@ -396,60 +644,6 @@ class ResPartner(models.Model):
                 ),
             }
         )
-
-    @api.constrains("category_id")
-    def _check_category_groups_unique(self):
-        """Ensure only one category per exclusive group."""
-        exclusive_groups = [
-            "Technology Level",
-            "Commercial Profile",
-            "Production size",
-            "Growth perspective",
-        ]
-
-        for partner in self:
-            if not partner.category_id:
-                continue
-
-            category_names = partner.category_id.mapped("name")
-
-            for group_prefix in exclusive_groups:
-                group_categories = [
-                    name for name in category_names if name.startswith(group_prefix)
-                ]
-
-                if len(group_categories) > 1:
-                    raise ValidationError(
-                        f"Only one category from '{group_prefix}' group is allowed. "
-                        f"Currently assigned: {', '.join(group_categories)}"
-                    )
-
-    def write(self, vals):
-        """Override write to track profile changes."""
-        tracked_fields = ["hectares", "category_id", "profile_id"]
-        has_tracked_changes = any(field in vals for field in tracked_fields)
-
-        old_values = {}
-        if has_tracked_changes:
-            for partner in self:
-                if partner.id:
-                    old_values[partner.id] = {
-                        "hectares": partner.hectares,
-                        "category_id": partner.category_id.mapped("name"),
-                        "profile_id": partner.profile_id,
-                        "score_total": partner.score_total,
-                    }
-
-        result = super().write(vals)
-
-        if has_tracked_changes and old_values:
-            for partner in self:
-                if partner.id in old_values:
-                    self._check_and_create_history_record(
-                        partner, old_values[partner.id], vals
-                    )
-
-        return result
 
     def _check_and_create_history_record(self, partner, old_vals, new_vals):
         """Check for significant changes and create history record."""
@@ -505,21 +699,19 @@ class ResPartner(models.Model):
                 }
             )
 
-    @api.depends(
-        "hectares",
-        "category_id",
-        "category_id.score_value",
-        "category_id.scoring_active",
-    )
-    def _compute_client_score(self):
-        """Compute client scores using dynamic scoring system."""
-        for partner in self:
-            partner.score_hectares = self._get_hectares_score(partner.hectares)
-            partner.score_categories = sum(
-                cat.score_value
-                for cat in partner.category_id.filtered("scoring_active")
-            )
-            partner.score_total = partner.score_hectares + partner.score_categories
+    def _get_all_descendants(self, parent_partner):
+        """Recursively get all descendants (children, grandchildren, etc.)"""
+        descendants = self.env["res.partner"]
+
+        def collect_children(partner):
+            nonlocal descendants
+            children = partner.child_ids
+            descendants |= children
+            for child in children:
+                collect_children(child)
+
+        collect_children(parent_partner)
+        return descendants
 
     def _get_hectares_score(self, hectares):
         """Get hectares score using dynamic ranges."""
@@ -540,86 +732,7 @@ class ResPartner(models.Model):
 
         return hectares_range.score_value if hectares_range else 0.0
 
-    @api.depends("profile_history_ids")
-    def _compute_profile_stats(self):
-        """Compute profile statistics."""
-        for partner in self:
-            history = partner.profile_history_ids
-            partner.profile_change_count = len(history)
-            partner.last_profile_change = (
-                history[0].change_date.date() if history else False
-            )
-
-    @api.constrains("hectares")
-    def _check_hectares_positive(self):
-        """Ensure hectares is not negative."""
-        for partner in self:
-            if partner.hectares < 0:
-                raise ValidationError(_("Hectares cannot be negative."))
-
-    @api.depends("customer")
-    def _compute_auto_merge(self):
-        """Compute auto_merge based on customer flag and global configuration"""
-        config_active = (
-            self.env["ir.config_parameter"]
-            .sudo()
-            .get_param("customer_merge_active", False)
-        )
-        for partner in self:
-            if partner.customer and config_active:
-                partner.auto_merge = True
-            else:
-                partner.auto_merge = False
-
-    def _compute_recent_orders_count(self):
-        """Compute number of sale orders in the evaluation period"""
-        config = self.env["ir.config_parameter"].sudo()
-        interval_number = int(config.get_param("customer_merge_interval_number", 3))
-        interval_type = config.get_param("customer_merge_interval_type", "months")
-
-        # Calculate cutoff date
-        if interval_type == "days":
-            cutoff_date = fields.Date.today() - relativedelta(days=interval_number)
-        elif interval_type == "weeks":
-            cutoff_date = fields.Date.today() - relativedelta(weeks=interval_number)
-        else:  # months
-            cutoff_date = fields.Date.today() - relativedelta(months=interval_number)
-
-        for partner in self:
-            if not partner.customer:
-                partner.recent_orders_count = 0
-                continue
-
-            # Count confirmed sale orders in the period
-            order_count = self.env["sale.order"].search_count(
-                [
-                    ("partner_id", "=", partner.id),
-                    ("state", "=", "sale"),
-                    ("date_order", ">=", cutoff_date),
-                ]
-            )
-            partner.recent_orders_count = order_count
-
-    def _compute_days_since_last_order(self):
-        """Compute days since last sale order"""
-        for partner in self:
-            if not partner.customer:
-                partner.days_since_last_order = 0
-                continue
-
-            last_order = self.env["sale.order"].search(
-                [("partner_id", "=", partner.id), ("state", "=", "sale")],
-                order="date_order desc",
-                limit=1,
-            )
-
-            if last_order:
-                delta = fields.Date.today() - last_order.date_order.date()
-                partner.days_since_last_order = delta.days
-            else:
-                partner.days_since_last_order = 9999  # No orders found
-
-    def _find_merge_candidates(self):
+    def _get_merge_candidates(self):
         """Find customers that are candidates for merging with general public"""
         config = self.env["ir.config_parameter"].sudo()
 
@@ -733,20 +846,6 @@ class ResPartner(models.Model):
                         f"Error merging descendants {batch.ids} with parent {parent_partner.id}: {str(e)}"
                     )
 
-    def _get_all_descendants(self, parent_partner):
-        """Recursively get all descendants (children, grandchildren, etc.)"""
-        descendants = self.env["res.partner"]
-
-        def collect_children(partner):
-            nonlocal descendants
-            children = partner.child_ids
-            descendants |= children
-            for child in children:
-                collect_children(child)
-
-        collect_children(parent_partner)
-        return descendants
-
     def _merge_with_general_partner(self, partner_ids):
         """Helper method to merge partners with the general public partner"""
         config = self.env["ir.config_parameter"].sudo()
@@ -794,33 +893,6 @@ class ResPartner(models.Model):
                 f"Error merging partners {partner_ids} with general partner: {str(e)}"
             )
             return False
-
-    @api.model
-    def _cron_merge_inactive_customers(self):
-        """Cron job to merge inactive customers with general public partner"""
-        config = self.env["ir.config_parameter"].sudo()
-        if not config.get_param("customer_merge_active"):
-            return
-
-        _logger.info("Starting automatic customer merge process")
-
-        candidates = self._find_merge_candidates()
-        if not candidates:
-            _logger.info("No merge candidates found")
-            return
-
-        _logger.info(
-            f"Found {len(candidates)} merge candidates: {candidates.mapped('name')}"
-        )
-
-        # Merge candidates in batches (max 2 candidates + 1 general partner = 3 total)
-        batch_size = 2  # Maximum 2 candidates per batch due to wizard limit
-        for i in range(0, len(candidates), batch_size):
-            batch = candidates[i : i + batch_size]
-            self._merge_with_general_partner(batch.ids)
-            self.env.cr.commit()  # Commit each batch
-
-        _logger.info("Completed automatic customer merge process")
 
     def _validate_restricted_contact_fields(self, vals=None):
         """
@@ -900,207 +972,3 @@ class ResPartner(models.Model):
             )
 
         return True
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        """
-        Override create to validate mandatory fields for restricted users.
-        """
-        for vals in vals_list:
-            # Only validate if it's a company or standalone contact (not a child contact)
-            if not vals.get("parent_id"):
-                self._validate_restricted_contact_fields(vals)
-
-        return super().create(vals_list)
-
-    def write(self, vals):
-        """
-        Override write to validate mandatory fields for restricted users.
-        """
-        # Only validate for company or standalone contacts (not child contacts)
-        for record in self:
-            if not record.parent_id:
-                record._validate_restricted_contact_fields(vals)
-
-        return super().write(vals)
-
-    def action_generate_sale_targets(self):
-        """Open wizard to generate sale targets for selected partners."""
-        if not self:
-            raise UserError(_("Please select at least one customer."))
-
-        partners = self.filtered(lambda p: p.is_company and p.customer)
-        if not partners:
-            raise UserError(
-                _("Please select customers (companies with customer flag enabled).")
-            )
-
-        return {
-            "name": _("Generate Sale Targets"),
-            "type": "ir.actions.act_window",
-            "res_model": "sale.target.wizard",
-            "view_mode": "form",
-            "target": "new",
-            "context": {
-                "default_partner_ids": [(6, 0, partners.ids)],
-                "default_date_from": fields.Date.today(),
-            },
-        }
-
-
-class ResPartnerHectaresRange(models.Model):
-    _name = "res.partner.hectares.range"
-    _description = "Partner Hectares Range"
-    _order = "min_hectares"
-    _rec_name = "display_name"
-
-    name = fields.Char(
-        string="Classification Name",
-    )
-    display_name = fields.Char(
-        compute="_compute_display_name",
-        store=True,
-    )
-    min_hectares = fields.Float(
-        string="Minimum Hectares",
-        required=True,
-    )
-    max_hectares = fields.Float(
-        string="Maximum Hectares",
-    )
-    score_value = fields.Float(
-        string="Score Points",
-        required=True,
-    )
-    active = fields.Boolean(
-        default=True,
-    )
-    company_id = fields.Many2one(
-        comodel_name="res.company",
-        default=lambda self: self.env.company,
-    )
-
-    @api.depends("name", "min_hectares", "max_hectares", "score_value")
-    def _compute_display_name(self):
-        for record in self:
-            range_text = (
-                f"{record.min_hectares} - {record.max_hectares}"
-                if record.max_hectares
-                else f"{record.min_hectares}+"
-            )
-
-            if record.name:
-                record.display_name = (
-                    f"{record.name} "
-                    f"({range_text} hectares, "
-                    f"{record.score_value} pts)"
-                )
-            else:
-                record.display_name = (
-                    f"{range_text} hectares " f"(Score: {record.score_value})"
-                )
-
-    @api.constrains("min_hectares", "max_hectares")
-    def _check_hectares_range(self):
-        for record in self:
-            if record.min_hectares < 0:
-                raise ValidationError("Minimum hectares cannot be negative.")
-            if record.max_hectares and record.max_hectares < record.min_hectares:
-                raise ValidationError("Maximum hectares must be greater than minimum.")
-
-    @api.constrains("min_hectares", "max_hectares", "active", "company_id")
-    def _check_overlapping_ranges(self):
-        for record in self:
-            if not record.active:
-                continue
-
-            existing = self.search(
-                [
-                    ("id", "!=", record.id),
-                    ("active", "=", True),
-                    ("company_id", "=", record.company_id.id),
-                ]
-            )
-
-            for other in existing:
-                if self._ranges_overlap(record, other):
-                    raise ValidationError(
-                        f"Range {record.min_hectares}-{record.max_hectares or '∞'} "
-                        f"overlaps with {other.min_hectares}-{other.max_hectares or '∞'}"
-                    )
-
-    def _ranges_overlap(self, range1, range2):
-        min1, max1 = range1.min_hectares, range1.max_hectares or float("inf")
-        min2, max2 = range2.min_hectares, range2.max_hectares or float("inf")
-        return min1 <= max2 and max1 >= min2
-
-
-class ResPartnerProfileHistory(models.Model):
-    _name = "res.partner.profile.history"
-    _description = "Partner Profile History"
-    _order = "change_date desc, id desc"
-    _rec_name = "display_name"
-
-    display_name = fields.Char(
-        compute="_compute_display_name",
-        store=True,
-    )
-    partner_id = fields.Many2one(
-        comodel_name="res.partner",
-        required=True,
-        ondelete="cascade",
-    )
-    change_date = fields.Datetime(
-        required=True,
-        default=fields.Datetime.now,
-    )
-    old_profile_id = fields.Many2one(
-        comodel_name="res.partner.profile",
-    )
-    new_profile_id = fields.Many2one(
-        comodel_name="res.partner.profile",
-        required=True,
-    )
-    old_score_total = fields.Float()
-    new_score_total = fields.Float()
-    score_hectares = fields.Float()
-    score_categories = fields.Float()
-    change_trigger = fields.Selection(
-        selection=[
-            ("manual", "Manual Assignment"),
-            ("hectares", "Hectares Change"),
-            ("category", "Category Change"),
-            ("scoring", "Scoring Update"),
-        ],
-        required=True,
-    )
-    change_reason = fields.Text()
-    user_id = fields.Many2one(
-        comodel_name="res.users",
-        default=lambda self: self.env.user,
-    )
-    company_id = fields.Many2one(
-        related="partner_id.company_id",
-        comodel_name="res.company",
-        store=True,
-    )
-
-    @api.depends("partner_id", "old_profile_id", "new_profile_id", "change_date")
-    def _compute_display_name(self):
-        for record in self:
-            if record.partner_id and record.new_profile_id:
-                old_name = (
-                    record.old_profile_id.name if record.old_profile_id else "None"
-                )
-                new_name = record.new_profile_id.name
-                date_str = (
-                    record.change_date.strftime("%Y-%m-%d %H:%M")
-                    if record.change_date
-                    else ""
-                )
-                record.display_name = (
-                    f"{record.partner_id.name}: "
-                    f"{old_name} → {new_name} ({date_str})"
-                )
-            else:
-                record.display_name = "Profile Change"
