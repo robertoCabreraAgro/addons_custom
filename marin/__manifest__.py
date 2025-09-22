@@ -19,6 +19,7 @@
         "knowledge",
         "appointment",
         "documents_expiry",
+        "uom_extended",
         "documents_product_asset",
         "hr_skills_survey",
         "hr_recruitment_survey",
