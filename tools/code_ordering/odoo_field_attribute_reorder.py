@@ -836,7 +836,7 @@ class FieldAttributeReorderer:
         # - More than 3 attributes
         # - Any attribute value is long
         # - Total length would exceed 88 characters
-
+        return True
         # Check for comments
         for name, value, _ in attributes:
             if name == "_comments":
