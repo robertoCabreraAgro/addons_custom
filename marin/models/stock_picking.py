@@ -31,8 +31,8 @@ class StockPicking(models.Model):
     )
     tracker_id = fields.Many2one(
         comodel_name="stock.picking.tracker",
-        tracking=True,
         copy=False,
+        tracking=True,
         help="Route tracker record that manages this transfer as part of a delivery route.",
     )
     vehicle_id = fields.Many2one(
@@ -45,13 +45,12 @@ class StockPicking(models.Model):
         tracking=True,
         help="Odometer which the transfer has been processed.",
     )
-    odometer_done_unit = fields.Selection([
-        ('kilometers', 'km'),
-        ('miles', 'mi')
-    ], string="Odometer Unit",
-        related="vehicle_id.odometer_unit",
-        readonly=True,
+    odometer_done_uom_id = fields.Many2one(
+        related="vehicle_id.odometer_uom_id",
+        comodel_name="uom.uom",
+        string="Odometer Unit",
         store=True,
+        readonly=True,
         help="Unit of measurement for the odometer, coming from the vehicle.",
     )
     fuel_done = fields.Float(
@@ -59,11 +58,26 @@ class StockPicking(models.Model):
         tracking=True,
         help="Fuel level percentage which the transfer has been processed.",
     )
-    waiting_warning = fields.Text(compute="_compute_waiting_warning")
-    show_purchase_lines = fields.Boolean(compute="_compute_show_purchase_lines")
-    show_sale_lines = fields.Boolean(compute="_compute_show_sale_lines")
-    show_mark_as_todo = fields.Boolean(compute="_compute_custom_permissions")
-    show_validate = fields.Boolean(compute="_compute_custom_permissions")
+    waiting_warning = fields.Text(
+        compute="_compute_waiting_warning",
+    )
+    show_purchase_lines = fields.Boolean(
+        compute="_compute_show_purchase_lines",
+    )
+    show_sale_lines = fields.Boolean(
+        compute="_compute_show_sale_lines",
+    )
+    show_mark_as_todo = fields.Boolean(
+        compute="_compute_custom_permissions",
+    )
+    show_validate = fields.Boolean(
+        compute="_compute_custom_permissions",
+    )
+    require_responsible = fields.Boolean(
+        related="picking_type_id.require_responsible",
+        store=False,
+        readonly=True,
+    )
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
@@ -148,7 +162,8 @@ class StockPicking(models.Model):
             order = False
             if rec.origin:
                 order = rec.env["purchase.order"].search(
-                    [("name", "=", rec.origin)], limit=1
+                    [("name", "=", rec.origin)],
+                    limit=1,
                 )
             to_from_supplier = (
                 rec.location_id.usage == "supplier"
@@ -206,6 +221,26 @@ class StockPicking(models.Model):
             picking._update_gps_tracking_information()
         return res
 
+    def button_validate(self):
+        """Override to add responsible validation."""
+        for picking in self:
+            if picking.require_responsible and not picking.user_id:
+                raise UserError(
+                    self.env._(
+                        "The responsible person is required for %s operations. "
+                        "Please specify who is responsible for this %s."
+                    )
+                    % (
+                        picking.picking_type_id.name,
+                        (
+                            "reception"
+                            if picking.picking_type_id.code == "incoming"
+                            else "delivery"
+                        ),
+                    )
+                )
+        return super().button_validate()
+
     # backport V17
     def action_draft(self):
         picking_to_reset = self.filtered(lambda p: p.state == "cancel")
@@ -225,22 +260,26 @@ class StockPicking(models.Model):
         return self.env.ref("stock.action_report_picking").report_action(self)
 
     def _update_gps_tracking_information(self, date=False):
+        gps_tracking_device = self.env["gps.tracking.device"].sudo()
         for picking in self:
-            fuel_data = (
-                picking.vehicle_id.get_fuel_at(date)
-                if date
-                else picking.vehicle_id.get_current_fuel()
-            )
-            fuel_level = fuel_data.get("percentage", 0) if fuel_data else 0
+            vehicle = picking.vehicle_id
+            gps_device = picking.vehicle_id.gps_device_id
+            if not gps_device and vehicle:
+                gps_device = gps_tracking_device.search(
+                    [("asset_id", "=", vehicle.id)],
+                    limit=1,
+                )
             picking.write(
                 {
                     "odometer_done": (
-                        picking.vehicle_id.get_odometer_at(date)
-                        if date
-                        else picking.vehicle_id.get_current_odometer()
+                        gps_device.get_odometer(date) if gps_device else 0.0
                     ),
-                    "fuel_done": fuel_level,
-                }
+                    "fuel_done": (
+                        gps_device.get_fuel_level_percentage(date)
+                        if gps_device
+                        else 0.0
+                    ),
+                },
             )
 
     # -------------------------------------------------------------------------

@@ -1,10 +1,10 @@
 import re
+
 from collections import Counter
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import frozendict
-from odoo.tools.translate import _
 
 
 class AccountMoveLine(models.Model):
@@ -12,8 +12,14 @@ class AccountMoveLine(models.Model):
 
     _inherit = "account.move.line"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     # Extended fields
-    move_type = fields.Selection(store=True)
+    move_type = fields.Selection(
+        store=True,
+    )
 
     # New fields
     allowed_sale_line_ids = fields.Many2many(
@@ -24,23 +30,16 @@ class AccountMoveLine(models.Model):
     name = fields.Char(
         string="Label",
         compute="_compute_name",
-        inverse="_inverse_name",
         store=True,
-        readonly=False,
         precompute=True,
+        readonly=False,
+        inverse="_inverse_name",
         tracking=True,
     )
 
-    @api.onchange("name")
-    def _inverse_name(self):
-        for line in self:
-            if line.name and not line.product_id:
-                line._conditional_add_to_compute(
-                    "account_id",
-                    lambda aml: (
-                        aml.display_type == "product" and aml.move_id.is_invoice(True)
-                    ),
-                )
+    # ------------------------------------------------------------
+    # COMPUTE METHODS
+    # ------------------------------------------------------------
 
     # Override original method
     def _compute_account_id(self):
@@ -207,10 +206,10 @@ class AccountMoveLine(models.Model):
                 line.account_id = line.move_id.journal_id.default_account_id
 
     # Extend original method
-    @api.depends("account_id", "partner_id", "product_id", "vehicle_id")
+    @api.depends("account_id", "partner_id", "product_id", "asset_id")
     def _compute_analytic_distribution(self):
         vehicle_lines = self.filtered(
-            lambda line: line.vehicle_id and line.display_type == "product"
+            lambda line: line.asset_id and line.display_type == "product",
         )
         super(AccountMoveLine, self - vehicle_lines)._compute_analytic_distribution()
         cache = {}
@@ -232,7 +231,7 @@ class AccountMoveLine(models.Model):
                     "|",
                     ("partner_id", "=", move.partner_id.id),
                     ("partner_id", "=", move.partner_id.commercial_partner_id.id),
-                ]
+                ],
             )
             lines = orders.line_ids | move.line_ids.mapped("sale_line_ids")
             line.allowed_sale_line_ids = (
@@ -241,11 +240,30 @@ class AccountMoveLine(models.Model):
                 else lines.filtered(lambda line: line.product_id == line.product_id)
             )
 
+    # ------------------------------------------------------------
+    # ONCHANGE METHODS
+    # ------------------------------------------------------------
+
+    @api.onchange("name")
+    def _inverse_name(self):
+        for line in self:
+            if line.name and not line.product_id:
+                line._conditional_add_to_compute(
+                    "account_id",
+                    lambda aml: (
+                        aml.display_type == "product" and aml.move_id.is_invoice(True)
+                    ),
+                )
+
     @api.onchange("purchase_line_ids")
     def _onchange_purchase_line(self):
         for line in self:
             if line.purchase_line_ids:
                 line.product_id = line.purchase_line_ids.product_id
+
+    # ------------------------------------------------------------
+    # HELPERS
+    # ------------------------------------------------------------
 
     def _prepare_compute_analytic_distribution(self):
         return frozendict(
@@ -256,26 +274,35 @@ class AccountMoveLine(models.Model):
                 "partner_id": self.partner_id.id,
                 "product_categ_id": self.product_id.categ_id.id,
                 "product_id": self.product_id.id,
-                "vehicle_id": self.vehicle_id.id,
-            }
+                "asset_id": self.asset_id.id,
+            },
         )
 
     # Extend original method
     def _prepare_analytic_distribution_line(
-        self, distribution, account_id, distribution_on_each_plan
+        self,
+        distribution,
+        account_id,
+        distribution_on_each_plan,
     ):
         res = super()._prepare_analytic_distribution_line(
-            distribution, account_id, distribution_on_each_plan
+            distribution,
+            account_id,
+            distribution_on_each_plan,
         )
         sign = -1 if res["amount"] < 0 else 1
         res.update(
             {
                 "amount_taxinc": self.price_total * sign,
                 "date_impacted": self.date,
-                "vehicle_id": self.vehicle_id and self.vehicle_id.id or False,
-            }
+                "vehicle_id": self.asset_id and self.asset_id.id or False,
+            },
         )
         return res
+
+    # ------------------------------------------------------------
+    # VALIDATIONS
+    # ------------------------------------------------------------
 
     # Override original method
     def _check_constrains_account_id_journal_id(self):
@@ -295,7 +322,7 @@ class AccountMoveLine(models.Model):
                         "The account %(name)s (%(code)s) is deprecated.",
                         name=account.name,
                         code=account.code,
-                    )
+                    ),
                 )
 
             account_currency = account.currency_id
@@ -308,7 +335,7 @@ class AccountMoveLine(models.Model):
                     _(
                         "The account selected on your journal entry forces to provide a secondary currency. "
                         "You should remove the secondary currency on the account."
-                    )
+                    ),
                 )
 
             # Change made in the line below
@@ -323,7 +350,7 @@ class AccountMoveLine(models.Model):
                         'check the field "Allowed Journals" on the related account.',
                         account.display_name,
                         journal.name,
-                    )
+                    ),
                 )
 
             if account in (journal.default_account_id, journal.suspense_account_id):
@@ -341,5 +368,5 @@ class AccountMoveLine(models.Model):
                         '"Control-Access" under tab "Advanced Settings" on the related journal.',
                         account.display_name,
                         journal.name,
-                    )
+                    ),
                 )

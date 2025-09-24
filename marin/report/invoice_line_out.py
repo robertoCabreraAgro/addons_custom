@@ -28,7 +28,7 @@ class InvoiceLineOut(models.Model):
         readonly=True,
     )
     x_treatment = fields.Selection(
-        [
+        selection=[
             ("not_fiscal_simulated", "Not Fiscal simulated"),
             ("not_fiscal_real", "Not Fiscal real"),
             ("fiscal_simulated", "Fiscal simulated"),
@@ -97,15 +97,33 @@ class InvoiceLineOut(models.Model):
         string="Payment Status",
         readonly=True,
     )
-    invoice_date = fields.Date(readonly=True)
-    year = fields.Integer(readonly=True)
-    quarter = fields.Integer(readonly=True)
-    month = fields.Integer(readonly=True)
-    month_name = fields.Char(readonly=True)
-    week_of_year = fields.Integer(readonly=True)
-    day_of_year = fields.Integer(readonly=True)
-    day_of_month = fields.Integer(readonly=True)
-    day_of_week = fields.Integer(readonly=True)
+    invoice_date = fields.Date(
+        readonly=True,
+    )
+    year = fields.Integer(
+        readonly=True,
+    )
+    quarter = fields.Integer(
+        readonly=True,
+    )
+    month = fields.Integer(
+        readonly=True,
+    )
+    month_name = fields.Char(
+        readonly=True,
+    )
+    week_of_year = fields.Integer(
+        readonly=True,
+    )
+    day_of_year = fields.Integer(
+        readonly=True,
+    )
+    day_of_month = fields.Integer(
+        readonly=True,
+    )
+    day_of_week = fields.Integer(
+        readonly=True,
+    )
 
     # Product fields
     product_id = fields.Many2one(
@@ -133,22 +151,57 @@ class InvoiceLineOut(models.Model):
     )
 
     # ?? fields
-    quantity = fields.Float(readonly=True)
-    price_unit = fields.Float(readonly=True, aggregator="avg")
-    discount = fields.Float(readonly=True, aggregator="avg")
-    price_subtotal = fields.Float("Subtotal", readonly=True)
-    price_total = fields.Float("Total", readonly=True)
-    purchase_price = fields.Float(readonly=True, aggregator="avg")
-    purchase_price_total = fields.Float("Total Purchase", readonly=True)
-    margin = fields.Float(readonly=True)
-    margin_percent = fields.Float(readonly=True, aggregator="avg")
+    quantity = fields.Float(
+        readonly=True,
+    )
+    price_unit = fields.Float(
+        readonly=True,
+        aggregator="avg",
+    )
+    discount = fields.Float(
+        readonly=True,
+        aggregator="avg",
+    )
+    price_subtotal = fields.Float(
+        string="Subtotal",
+        readonly=True,
+    )
+    price_total = fields.Float(
+        string="Total",
+        readonly=True,
+    )
+    purchase_price = fields.Float(
+        readonly=True,
+        aggregator="avg",
+    )
+    purchase_price_total = fields.Float(
+        string="Total Purchase",
+        readonly=True,
+    )
+    margin = fields.Float(
+        readonly=True,
+    )
+    margin_percent = fields.Float(
+        readonly=True,
+        aggregator="avg",
+    )
 
     # Collection fields
-    collected_quantity = fields.Float(readonly=True)
-    collected_price_subtotal = fields.Float(readonly=True)
-    collected_price_total = fields.Float(readonly=True)
-    collected_purchase_price_total = fields.Float(readonly=True)
-    collected_margin = fields.Float(readonly=True)
+    collected_quantity = fields.Float(
+        readonly=True,
+    )
+    collected_price_subtotal = fields.Float(
+        readonly=True,
+    )
+    collected_price_total = fields.Float(
+        readonly=True,
+    )
+    collected_purchase_price_total = fields.Float(
+        readonly=True,
+    )
+    collected_margin = fields.Float(
+        readonly=True,
+    )
 
     # ------------------------------------------------------------
     # INITIALIZATION

@@ -9,37 +9,64 @@ class StockNeed(models.Model):
     _auto = False
     _order = "root_categ_id ASC, product_category_id ASC, product_id ASC"
 
-    product_id = fields.Many2one("product.product", string="Product", readonly=True)
+    product_id = fields.Many2one(
+        comodel_name="product.product",
+        string="Product",
+        readonly=True,
+    )
     product_category_id = fields.Many2one(
-        "product.category", string="Product Category", readonly=True
+        comodel_name="product.category",
+        string="Product Category",
+        readonly=True,
     )
     parent_categ_id = fields.Many2one(
-        "product.category", string="Parent Category", readonly=True
+        comodel_name="product.category",
+        string="Parent Category",
+        readonly=True,
     )
     root_categ_id = fields.Many2one(
-        "product.category", string="Root Category", readonly=True
+        comodel_name="product.category",
+        string="Root Category",
+        readonly=True,
     )
-    name = fields.Char(readonly=True)
-    available_quantity = fields.Float("Stock available Qty", readonly=True)
-    quantity = fields.Float("Stock on hand Qty", readonly=True)
-    standard_price = fields.Float("Product standar price", readonly=True)
+    name = fields.Char(
+        readonly=True,
+    )
+    available_quantity = fields.Float(
+        string="Stock available Qty",
+        readonly=True,
+    )
+    quantity = fields.Float(
+        string="Stock on hand Qty",
+        readonly=True,
+    )
+    standard_price = fields.Float(
+        string="Product standar price",
+        readonly=True,
+    )
     available_stock_cost_value = fields.Float(
-        "Suma de Valor stock disponible a costo", readonly=True
+        string="Suma de Valor stock disponible a costo",
+        readonly=True,
     )
     available_stock_price_value = fields.Float(
-        "Suma de Valor stock disponible a precio de lista", readonly=True
+        string="Suma de Valor stock disponible a precio de lista",
+        readonly=True,
     )
     last_year_qty_sold = fields.Float(
-        "Cantidad venta real año pasado LMMR", readonly=True
+        string="Cantidad venta real año pasado LMMR",
+        readonly=True,
     )
     current_year_qty_sold = fields.Float(
-        "Cantidad venta real año actual LMMR", readonly=True
+        string="Cantidad venta real año actual LMMR",
+        readonly=True,
     )
     stock_supply_need = fields.Float(
-        "Stock supply need qty año actual LMMR", readonly=True
+        string="Stock supply need qty año actual LMMR",
+        readonly=True,
     )
     stock_supply_need_value = fields.Float(
-        "Stock supply need value at standard price año actual LMMR", readonly=True
+        string="Stock supply need value at standard price año actual LMMR",
+        readonly=True,
     )
 
     def _query(self):
@@ -271,7 +298,9 @@ class StockNeed(models.Model):
                     query,
                 ),
             )
-        self.env.cr.execute("CREATE UNIQUE INDEX id_%s ON %s(product_id)", (table, table))
+        self.env.cr.execute(
+            "CREATE UNIQUE INDEX id_%s ON %s(product_id)", (table, table)
+        )
 
     def create_function_convert_uom(self):
         self.env.cr.execute(

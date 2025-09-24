@@ -6,8 +6,11 @@ from odoo.tools.translate import _
 class HrPayslip(models.Model):
     """Inherit HrPayslip"""
 
-    _name = "hr.payslip"
     _inherit = "hr.payslip"
+
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
 
     move_state = fields.Selection(
         related="move_id.state",

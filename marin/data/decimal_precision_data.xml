@@ -24,6 +24,9 @@
         <field name="digits" eval="6"/>
     </record>
 
+    <record id="quality.decimal_quality" model="decimal.precision">
+        <field name="digits" eval="6"/>
+    </record>
 
     <record id="hr_payroll.decimal_payroll" model="decimal.precision">
         <field name="digits" eval="6"/>

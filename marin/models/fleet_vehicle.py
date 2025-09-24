@@ -24,12 +24,12 @@ class FleetVehicle(models.Model):
 
     fuel_card_id = fields.Many2one(
         comodel_name="documents.document",
+        store=True,
+        readonly=False,
+        inverse="_inverse_fuel_card_id",
         domain=lambda self: [
             ("tag_ids", "in", self.env.ref("marin.documents_fleet_fuel_card").ids),
         ],
-        inverse="_inverse_fuel_card_id",
-        store=True,
-        readonly=False,
     )
     fuel_card_name = fields.Char(
         compute="_compute_fuel_card_name",
@@ -60,16 +60,19 @@ class FleetVehicle(models.Model):
         help="Amount required to reach the recommended fuel card balance.",
     )
     fuel_count = fields.Integer(
-        "Fuel",
+        string="Fuel",
         compute="_compute_fuel_count",
     )
     fuel_tank_capacity = fields.Float(
         string="Fuel Tank Capacity",
-        help="Total fuel tank capacity in liters",
         default=0.0,
+        help="Total fuel tank capacity in liters",
     )
     highway_pass_id = fields.Many2one(
         comodel_name="documents.document",
+        store=True,
+        readonly=False,
+        inverse="_inverse_highway_pass_id",
         domain=lambda self: [
             (
                 "tag_ids",
@@ -77,9 +80,6 @@ class FleetVehicle(models.Model):
                 self.env.ref("marin.documents_fleet_highway_pass").ids,
             ),
         ],
-        inverse="_inverse_highway_pass_id",
-        store=True,
-        readonly=False,
     )
     highway_pass_name = fields.Char(
         compute="_compute_highway_pass_name",
@@ -112,7 +112,7 @@ class FleetVehicle(models.Model):
         help="Amount needed to reach the monthly toll budget",
     )
     highway_pass_count = fields.Integer(
-        "Highway Pass",
+        string="Highway Pass",
         compute="_compute_highway_pass_count",
     )
 
@@ -147,27 +147,35 @@ class FleetVehicle(models.Model):
     def _get_fuel_product_category(self):
         """Helper method to safely get fuel product category"""
         try:
-            fuel_product_category = self.env.ref("marin.product_category_fuel", raise_if_not_found=False)
+            fuel_product_category = self.env.ref(
+                "marin.product_category_fuel", raise_if_not_found=False
+            )
         except:
             fuel_product_category = None
-        
+
         if not fuel_product_category:
             # Fallback: search for fuel category by name
-            fuel_product_category = self.env["product.category"].search([("name", "=", "Fuels")], limit=1)
-        
+            fuel_product_category = self.env["product.category"].search(
+                [("name", "=", "Fuels")], limit=1
+            )
+
         return fuel_product_category
 
     def _get_highway_product_category(self):
         """Helper method to safely get highway toll product category"""
         try:
-            highway_product_category = self.env.ref("marin.product_category_highway_toll", raise_if_not_found=False)
+            highway_product_category = self.env.ref(
+                "marin.product_category_highway_toll", raise_if_not_found=False
+            )
         except:
             highway_product_category = None
-        
+
         if not highway_product_category:
             # Fallback: search for highway category by name
-            highway_product_category = self.env["product.category"].search([("name", "=", "Highways")], limit=1)
-        
+            highway_product_category = self.env["product.category"].search(
+                [("name", "=", "Highways")], limit=1
+            )
+
         return highway_product_category
 
     def _compute_fuel_count(self):
@@ -375,10 +383,14 @@ class FleetVehicle(models.Model):
                 ("product_category_id", "=", fuel_product_category.id),
             ]
         else:
-            action["domain"] = [("id", "=", False)]  # Empty domain if category not found
+            action["domain"] = [
+                ("id", "=", False)
+            ]  # Empty domain if category not found
         action["context"] = {
             "default_vehicle_id": self.id,
-            "default_product_category_id": fuel_product_category.id if fuel_product_category else False,
+            "default_product_category_id": (
+                fuel_product_category.id if fuel_product_category else False
+            ),
             "hide_product_category": True,
             "show_vendor": True,
             "search_default_groupby_product_category_id": False,
@@ -397,10 +409,16 @@ class FleetVehicle(models.Model):
                 ("product_category_id", "=", highway_pass_product_category.id),
             ]
         else:
-            action["domain"] = [("id", "=", False)]  # Empty domain if category not found
+            action["domain"] = [
+                ("id", "=", False)
+            ]  # Empty domain if category not found
         action["context"] = {
             "default_vehicle_id": self.id,
-            "default_product_category_id": highway_pass_product_category.id if highway_pass_product_category else False,
+            "default_product_category_id": (
+                highway_pass_product_category.id
+                if highway_pass_product_category
+                else False
+            ),
             "hide_product_category": True,
             "show_vendor": True,
             "search_default_groupby_product_category_id": False,
@@ -411,24 +429,32 @@ class FleetVehicle(models.Model):
         """Override the method to include fleet managers in addition to account readonly users.
         Allow fleet managers to see account move lines related to their vehicles.
         """
-        has_account_readonly = self.env.user.has_group('account.group_account_readonly')
-        has_fleet_manager = self.env.user.has_group('fleet.fleet_group_manager')
+        has_account_readonly = self.env.user.has_group("account.group_account_readonly")
+        has_fleet_manager = self.env.user.has_group("fleet.fleet_group_manager")
 
         if not (has_account_readonly or has_fleet_manager):
             self.account_move_ids = False
             self.bill_count = 0
             return
 
-        moves = self.env['account.move.line']._read_group(
+        moves = self.env["account.move.line"]._read_group(
             domain=[
-                ('vehicle_id', 'in', self.ids),
-                ('parent_state', '!=', 'cancel'),
-                ('move_id.move_type', 'in', self.env['account.move'].get_purchase_types())
+                ("vehicle_id", "in", self.ids),
+                ("parent_state", "!=", "cancel"),
+                (
+                    "move_id.move_type",
+                    "in",
+                    self.env["account.move"].get_purchase_types(),
+                ),
             ],
-            groupby=['vehicle_id'],
-            aggregates=['move_id:array_agg'],
+            groupby=["vehicle_id"],
+            aggregates=["move_id:array_agg"],
         )
-        vehicle_move_mapping = {vehicle.id: set(move_ids) for vehicle, move_ids in moves}
+        vehicle_move_mapping = {
+            vehicle.id: set(move_ids) for vehicle, move_ids in moves
+        }
         for vehicle in self:
-            vehicle.account_move_ids = [Command.set(vehicle_move_mapping.get(vehicle.id, []))]
+            vehicle.account_move_ids = [
+                Command.set(vehicle_move_mapping.get(vehicle.id, []))
+            ]
             vehicle.bill_count = len(vehicle.account_move_ids)

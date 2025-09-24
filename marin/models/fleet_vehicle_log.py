@@ -23,7 +23,7 @@ class FleetVehiclelog(models.Model):
         string="Description",
         help="Description of the log entry",
     )
-    
+
     approval_request_id = fields.Many2one(
         comodel_name="approval.request",
     )
@@ -51,12 +51,17 @@ class FleetVehiclelog(models.Model):
         string="Product Category",
         help="Category of the product/service",
     )
-    state = fields.Selection([
-        ('new', 'New'),
-        ('running', 'Running'),
-        ('done', 'Done'),
-        ('cancelled', 'Cancelled'),
-    ], default='new', string='Stage', help="Current status of the log entry")
+    state = fields.Selection(
+        selection=[
+            ("new", "New"),
+            ("running", "Running"),
+            ("done", "Done"),
+            ("cancelled", "Cancelled"),
+        ],
+        string="Stage",
+        default="new",
+        help="Current status of the log entry",
+    )
     currency_id = fields.Many2one(
         comodel_name="res.currency",
         string="Currency",

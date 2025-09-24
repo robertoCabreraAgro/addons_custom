@@ -1,7 +1,6 @@
-from odoo import fields, models
+from odoo import _, fields, models
 from odoo.exceptions import UserError
 from odoo.tools.sql import SQL
-from odoo.tools.translate import _
 
 
 class PosConfig(models.Model):
@@ -9,7 +8,13 @@ class PosConfig(models.Model):
 
     _inherit = "pos.config"
 
-    active = fields.Boolean(default=True)
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
+    active = fields.Boolean(
+        default=True,
+    )
     load_all_partners_by_company = fields.Boolean(
         string="Load All Partners by Company",
         default=False,

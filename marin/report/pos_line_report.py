@@ -28,18 +28,45 @@ class PosLineReport(models.Model):
         string="Main Partner",
         readonly=True,
     )
-    line_id = fields.Many2one("pos.order.line", readonly=True)
-    order_id = fields.Many2one("pos.order", readonly=True)
-    config_id = fields.Many2one("pos.config", readonly=True)
-    date = fields.Date(readonly=True)
-    year = fields.Integer(readonly=True)
-    quarter = fields.Integer(readonly=True)
-    month = fields.Integer(readonly=True)
-    month_name = fields.Char(readonly=True)
-    week_of_year = fields.Integer(readonly=True)
-    day_of_month = fields.Integer(readonly=True)
-    day_of_week = fields.Integer(readonly=True)
-    day_of_year = fields.Integer(readonly=True)
+    line_id = fields.Many2one(
+        comodel_name="pos.order.line",
+        readonly=True,
+    )
+    order_id = fields.Many2one(
+        comodel_name="pos.order",
+        readonly=True,
+    )
+    config_id = fields.Many2one(
+        comodel_name="pos.config",
+        readonly=True,
+    )
+    date = fields.Date(
+        readonly=True,
+    )
+    year = fields.Integer(
+        readonly=True,
+    )
+    quarter = fields.Integer(
+        readonly=True,
+    )
+    month = fields.Integer(
+        readonly=True,
+    )
+    month_name = fields.Char(
+        readonly=True,
+    )
+    week_of_year = fields.Integer(
+        readonly=True,
+    )
+    day_of_month = fields.Integer(
+        readonly=True,
+    )
+    day_of_week = fields.Integer(
+        readonly=True,
+    )
+    day_of_year = fields.Integer(
+        readonly=True,
+    )
     product_id = fields.Many2one(
         comodel_name="product.product",
         readonly=True,
@@ -65,18 +92,43 @@ class PosLineReport(models.Model):
         readonly=True,
     )
 
-    ref = fields.Char(readonly=True)
-    name = fields.Char(readonly=True)
+    ref = fields.Char(
+        readonly=True,
+    )
+    name = fields.Char(
+        readonly=True,
+    )
 
-    quantity = fields.Float(readonly=True)
-    price_unit = fields.Float(readonly=True)
-    discount = fields.Float(readonly=True)
-    price_subtotal = fields.Float("Subtotal", readonly=True)
-    price_total = fields.Float("Total", readonly=True)
-    purchase_price = fields.Float(readonly=True)
-    purchase_price_total = fields.Float("Total Purchase", readonly=True)
-    margin = fields.Float(readonly=True)
-    margin_percent = fields.Float(readonly=True)
+    quantity = fields.Float(
+        readonly=True,
+    )
+    price_unit = fields.Float(
+        readonly=True,
+    )
+    discount = fields.Float(
+        readonly=True,
+    )
+    price_subtotal = fields.Float(
+        string="Subtotal",
+        readonly=True,
+    )
+    price_total = fields.Float(
+        string="Total",
+        readonly=True,
+    )
+    purchase_price = fields.Float(
+        readonly=True,
+    )
+    purchase_price_total = fields.Float(
+        string="Total Purchase",
+        readonly=True,
+    )
+    margin = fields.Float(
+        readonly=True,
+    )
+    margin_percent = fields.Float(
+        readonly=True,
+    )
 
     # ------------------------------------------------------------
     # INITIALIZATION

@@ -8,8 +8,8 @@ class GpsTrackingDevice(models.Model):
 
     department_id = fields.Many2one(
         related="vehicle_id.department_id",
-        store=True,
         string="Department",
+        store=True,
     )
 
     @api.depends(

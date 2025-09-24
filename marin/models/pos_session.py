@@ -1,6 +1,5 @@
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import AccessError, UserError
-from odoo.tools.translate import _
 
 
 class PosSession(models.Model):
@@ -8,8 +7,14 @@ class PosSession(models.Model):
 
     _inherit = "pos.session"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     # Extend field
-    cash_register_balance_end_real = fields.Monetary(tracking=True)
+    cash_register_balance_end_real = fields.Monetary(
+        tracking=True,
+    )
 
     # New fields
     move_cash_transfer_ids = fields.One2many(

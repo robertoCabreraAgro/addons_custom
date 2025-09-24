@@ -14,9 +14,23 @@ class StockLot(models.Model):
 
     original_expiration_date = fields.Date(
         string="Original Expiration Date",
-        help="Original expiration date before reconditioning",
         compute="_compute_original_expiration_date",
         store=True,
+        help="Original expiration date before reconditioning",
+    )
+    department_id = fields.Many2one(
+        comodel_name="hr.department",
+        string="Department",
+    )
+    l10n_mx_vehicle_code = fields.Char(
+        string="Vehicle Code",
+        tracking=True,
+        help="In Mexico the tax authority assign a 7 character code to identify its characteristics.",
+    )
+    account_prefix = fields.Char(
+        string="Account Prefix",
+        tracking=True,
+        help="This fields is required by Accounting to group according to its needs.",
     )
 
     # ------------------------------------------------------------
@@ -33,7 +47,7 @@ class StockLot(models.Model):
                     product_tmpl.expiration_time
                     or product_tmpl.categ_id.expiration_time
                 )
-                lot.expiration_date = datetime.datetime.now() + datetime.timedelta(
+                lot.expiration_date = fields.Datetime.now() + datetime.timedelta(
                     days=duration
                 )
 

@@ -9,6 +9,10 @@ class ApprovalProductLine(models.Model):
 
     _inherit = "approval.product.line"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     product_id = fields.Many2one(
         domain=lambda self: self._get_product_id_domain(),
     )

@@ -1,11 +1,14 @@
-from odoo import api, fields, models
-from odoo.tools.translate import _
+from odoo import _, api, fields, models
 
 
 class AccountPayment(models.Model):
     """Inherit AccountPayment"""
 
     _inherit = "account.payment"
+
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
 
     journal_type = fields.Selection(
         related="journal_id.type",

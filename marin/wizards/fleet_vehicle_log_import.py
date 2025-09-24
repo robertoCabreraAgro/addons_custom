@@ -20,29 +20,39 @@ class FleetVehicleLogImport(models.TransientModel):
     _description = "Import Vehicle Logs"
 
     filename = fields.Char()
-    file = fields.Binary(required=True)
+    file = fields.Binary(
+        required=True,
+    )
     parser = fields.Selection(
-        [
+        selection=[
             ("effectivale", "Effectivale"),
             ("i_d_cross", "I+D Cruces"),
             ("i_d_recharges", "I+D Recharges"),
         ],
         string="Type",
-        default="effectivale",
         required=True,
+        default="effectivale",
     )
-    vehicle_ids = fields.Many2many(comodel_name="fleet.vehicle", string="Vehicles")
-    test_mode = fields.Boolean(default=True)
+    vehicle_ids = fields.Many2many(
+        comodel_name="fleet.vehicle",
+        string="Vehicles",
+    )
+    test_mode = fields.Boolean(
+        default=True,
+    )
     test_display = fields.Selection(
-        [
+        selection=[
             ("all", "Show all"),
             ("limit", "Limited"),
         ],
         string="Display Errors",
-        default="limit",
         required=True,
+        default="limit",
     )
-    test_limit = fields.Integer(string="Limit", default=10)
+    test_limit = fields.Integer(
+        string="Limit",
+        default=10,
+    )
 
     def default_get(self, fields_list):
         res = super().default_get(fields_list)
@@ -343,17 +353,28 @@ class FleetVehicleLogImport(models.TransientModel):
                     if existing_new_record:
                         # Update the existing 'new' record with Effectivale data
                         # This provides verification and fills missing information
-                        existing_new_record.write({
-                            "amount": log_vals["amount"],  # Update with Effectivale amount
-                            "odometer": log_vals["odometer"],  # Fill missing odometer
-                            "efficiency": log_vals["efficiency"],  # Fill missing efficiency
-                            "vendor_id": log_vals["vendor_id"],  # Fill missing vendor
-                            "state": "done",  # Mark as verified/complete
-                            "notes": f"{existing_new_record.notes} | Efectivale: {log_vals['notes']}",  # Combine notes
-                        })
+                        existing_new_record.write(
+                            {
+                                "amount": log_vals[
+                                    "amount"
+                                ],  # Update with Effectivale amount
+                                "odometer": log_vals[
+                                    "odometer"
+                                ],  # Fill missing odometer
+                                "efficiency": log_vals[
+                                    "efficiency"
+                                ],  # Fill missing efficiency
+                                "vendor_id": log_vals[
+                                    "vendor_id"
+                                ],  # Fill missing vendor
+                                "state": "done",  # Mark as verified/complete
+                                "notes": f"{existing_new_record.notes} | Efectivale: {log_vals['notes']}",  # Combine notes
+                            }
+                        )
                         _logger.info(
                             "Updated CFDI record %s with Effectivale data for vehicle %s",
-                            existing_new_record.id, vehicle.name
+                            existing_new_record.id,
+                            vehicle.name,
                         )
                         continue
 
@@ -385,12 +406,8 @@ class FleetVehicleLogImport(models.TransientModel):
             tuple: (list of fleet.vehicle.log values, list of error messages)
         """
         fleet_vehicle_log = self.env["fleet.vehicle.log"]
-        highway_pass_category = self.env.ref(
-            "marin.product_category_highway_toll"
-        )
-        highway_pass_debit_product = self.env.ref(
-            "marin.product_product_highway_debit"
-        )
+        highway_pass_category = self.env.ref("marin.product_category_highway_toll")
+        highway_pass_debit_product = self.env.ref("marin.product_product_highway_debit")
         highway_pass_credit_product = self.env.ref(
             "marin.product_product_highway_credit"
         )
@@ -569,12 +586,8 @@ class FleetVehicleLogImport(models.TransientModel):
             tuple: (list of fleet.vehicle.log values, list of error messages)
         """
         fleet_vehicle_log = self.env["fleet.vehicle.log"]
-        highway_pass_category = self.env.ref(
-            "marin.product_category_highway_toll"
-        )
-        highway_pass_debit_product = self.env.ref(
-            "marin.product_product_highway_debit"
-        )
+        highway_pass_category = self.env.ref("marin.product_category_highway_toll")
+        highway_pass_debit_product = self.env.ref("marin.product_product_highway_debit")
         highway_pass_credit_product = self.env.ref(
             "marin.product_product_highway_credit"
         )

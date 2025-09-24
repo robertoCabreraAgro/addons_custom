@@ -18,7 +18,7 @@ def populate_materialized_views(env):
     """Set crons that populate the materialized views to be executed 10 minutes after update"""
     crons = (
         env.ref("marin.ir_cron_update_invoice_line_in_report")
-	| env.ref("marin.ir_cron_update_invoice_line_out_report")
+        | env.ref("marin.ir_cron_update_invoice_line_out_report")
         | env.ref("marin.ir_cron_update_pos_line_report")
         | env.ref("marin.ir_cron_update_stock_need_report")
     )

@@ -6,9 +6,23 @@ class LostReason(models.Model):
     _name = "project.task.lost.reason"
     _description = "Project Task Lost Reason"
 
-    name = fields.Char("Description", required=True, translate=True)
-    active = fields.Boolean("Active", default=True)
-    task_count = fields.Integer("Tasks count", compute="_compute_tasks_count")
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
+    name = fields.Char(
+        string="Description",
+        required=True,
+        translate=True,
+    )
+    active = fields.Boolean(
+        string="Active",
+        default=True,
+    )
+    task_count = fields.Integer(
+        string="Tasks count",
+        compute="_compute_tasks_count",
+    )
 
     def _compute_tasks_count(self):
         task_data = (

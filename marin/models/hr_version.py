@@ -1,10 +1,8 @@
 from datetime import time
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.osv import expression
-from odoo.tools.translate import _
 
 
 class HrVersion(models.Model):
@@ -12,14 +10,10 @@ class HrVersion(models.Model):
 
     _inherit = "hr.version"
 
-    #    final_yearly_costs = fields.Monetary(
-    #        string="Employee Budget",
-    #        compute="_compute_final_yearly_costs",
-    #        store=True,
-    #        readonly=False,
-    #        tracking=True,
-    #        help="Total yearly cost of the employee for the employer.",
-    #    )
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     structure_default_id = fields.Many2one(
         comodel_name="hr.payroll.structure",
         string="Structure",
@@ -27,75 +21,9 @@ class HrVersion(models.Model):
     )
 
     # Override original method
-    @api.constrains(
-        "employee_id",
-        "active",
-        "contract_date_start",
-        "contract_date_end",
-        "structure_type_id",
-    )
-    def _check_current_contract(self):
-        """Two contracts in state [incoming | open | close] cannot overlap"""
-        for contract in self.filtered(
-            lambda c: c.active and c.employee_id
-        ):
-            domain = [
-                ("id", "!=", contract.id),
-                ("employee_id", "=", contract.employee_id.id),
-                ("company_id", "=", contract.company_id.id),
-                ("structure_default_id", "=", contract.structure_default_id.id),
-                ("active", "=", True),
-            ]
-            if not contract.contract_date_end:
-                start_domain = []
-                end_domain = [
-                    "|",
-                    ("contract_date_end", ">=", contract.contract_date_start),
-                    ("contract_date_end", "=", False),
-                ]
-            else:
-                start_domain = [("contract_date_start", "<=", contract.contract_date_end)]
-                end_domain = [
-                    "|",
-                    ("contract_date_end", ">", contract.contract_date_start),
-                    ("contract_date_end", "=", False),
-                ]
-            domain = expression.AND([domain, start_domain, end_domain])
-            if self.search_count(domain):
-                raise ValidationError(
-                    _(
-                        "An employee can only have one contract at the same time. "
-                        "(Excluding Draft and Cancelled "
-                        "contracts).\n\nEmployee: %(employee_name)s",
-                        employee_name=contract.employee_id.name,
-                    )
-                )
-
-    #    @api.depends(
-    #        "wage",
-    #        "l10n_mx_edi_food_voucher",
-    #        "l10n_mx_edi_punctuality_bonus",
-    #        "l10n_mx_edi_attendance_bonus",
-    #        "l10n_mx_edi_feeding",
-    #        "l10n_mx_edi_housing",
-    #        "l10n_mx_edi_electric_ho",
-    #        "l10n_mx_edi_internet_ho",
-    #    )
-    #    def _compute_final_yearly_costs(self):
-    #        for contract in self:
-    #            contract.final_yearly_costs = contract._get_advantages_costs() + (contract.wage * 12.5)
-
-    #    def _get_advantages_costs(self):
-    #        self.ensure_one()
-    #        return 12.0 * (
-    #            self.l10n_mx_edi_food_voucher
-    #            + self.l10n_mx_edi_punctuality_bonus
-    #            + self.l10n_mx_edi_attendance_bonus
-    #            + self.l10n_mx_edi_feeding
-    #            + self.l10n_mx_edi_housing
-    #            + self.l10n_mx_edi_electric_ho
-    #            + self.l10n_mx_edi_internet_ho
-    #        )
+    # @api.constrains('employee_id', 'contract_date_start', 'contract_date_end')
+    # def _check_dates(self):
+    # TODO in 19 this is the method that should be overriden
 
     def _l10n_mx_edi_year_days(self, date=False):
         """Given a date return the number of days in the dates year taking into account leap ones

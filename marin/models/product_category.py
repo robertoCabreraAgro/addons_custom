@@ -6,21 +6,34 @@ class ProductCategory(models.Model):
 
     _inherit = "product.category"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     property_account_income_refund_id = fields.Many2one(
-        "account.account",
-        "Income Refund Account",
+        comodel_name="account.account",
+        string="Income Refund Account",
         company_dependent=True,
         domain=[("deprecated", "=", False)],
         help="Used as default value on the customer credit notes lines. "
         "Leave empty to use the income account.",
     )
     property_account_expense_refund_id = fields.Many2one(
-        "account.account",
-        "Expense Refund Account",
+        comodel_name="account.account",
+        string="Expense Refund Account",
         company_dependent=True,
         domain=[("deprecated", "=", False)],
         help="Used as default value on the vendor refunds lines. "
         "Leave empty to use the expense account.",
+    )
+    use_dose = fields.Boolean(
+        string="Use Dose",
+        help="When this box is ticked, doses can be specified for the product for exampple medicines, pesticides, etc.",
+    )
+    use_expiration_date = fields.Boolean(
+        string="Use Expiration Date",
+        help="When this box is ticked, you have the possibility to specify dates to manage"
+        " product expiration, on the product and on the corresponding lot/serial numbers",
     )
     expiration_time = fields.Integer(
         string="Expiration Date",
@@ -44,7 +57,7 @@ class ProductCategory(models.Model):
         "raised on the lot/serial number. It will be computed on the lot/serial number.",
     )
     root_categ_id = fields.Many2one(
-        "product.category",
+        comodel_name="product.category",
         string="Root Category",
         compute="_compute_root_category",
         store=True,

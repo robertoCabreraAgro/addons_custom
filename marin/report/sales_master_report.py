@@ -11,49 +11,81 @@ class SalesMasterReport(models.Model):
     _rec_name = "id"
 
     # Core dimensions
-    company_id = fields.Many2one("res.company", string="Company", readonly=True)
-    move_id = fields.Many2one("account.move", string="Entry", readonly=True)
-    user_id = fields.Many2one("res.users", string="Salesperson", readonly=True)
-    team_id = fields.Many2one("crm.team", string="Sales Team", readonly=True)
-    partner_id = fields.Many2one("res.partner", string="Partner", readonly=True)
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        string="Company",
+        readonly=True,
+    )
+    move_id = fields.Many2one(
+        comodel_name="account.move",
+        string="Entry",
+        readonly=True,
+    )
+    user_id = fields.Many2one(
+        comodel_name="res.users",
+        string="Salesperson",
+        readonly=True,
+    )
+    team_id = fields.Many2one(
+        comodel_name="crm.team",
+        string="Sales Team",
+        readonly=True,
+    )
+    partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Partner",
+        readonly=True,
+    )
     commercial_partner_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         string="Commercial Partner",
         readonly=True,
     )
     product_id = fields.Many2one(
-        "product.product",
+        comodel_name="product.product",
         string="Product",
         readonly=True,
     )
     product_category_id = fields.Many2one(
-        "product.category",
+        comodel_name="product.category",
         string="Product Category",
         readonly=True,
     )
     parent_categ_id = fields.Many2one(
-        "product.category",
+        comodel_name="product.category",
         string="Parent Category",
         readonly=True,
     )
     root_categ_id = fields.Many2one(
-        "product.category",
+        comodel_name="product.category",
         string="Root Category",
         readonly=True,
     )
 
     # Temporal fields
-    invoice_date = fields.Date(string="Invoice Date", readonly=True)
+    invoice_date = fields.Date(
+        string="Invoice Date",
+        readonly=True,
+    )
 
     # Core metrics
-    quantity = fields.Float(string="Quantity", readonly=True)
-    sale_price_total = fields.Float(string="Sale Price Total", readonly=True)
+    quantity = fields.Float(
+        string="Quantity",
+        readonly=True,
+    )
+    sale_price_total = fields.Float(
+        string="Sale Price Total",
+        readonly=True,
+    )
     purchase_price = fields.Float(
         string="Purchase Price",
         readonly=True,
         aggregator="avg",
     )
-    cost_purchase_total = fields.Float(string="Cost Purchase Total", readonly=True)
+    cost_purchase_total = fields.Float(
+        string="Cost Purchase Total",
+        readonly=True,
+    )
 
     # Technical fields
     x_treatment = fields.Selection(
@@ -86,7 +118,10 @@ class SalesMasterReport(models.Model):
         readonly=True,
         aggregator="avg",
     )
-    margin = fields.Float(string="Total Margin Amount", readonly=True)
+    margin = fields.Float(
+        string="Total Margin Amount",
+        readonly=True,
+    )
     margin_percent = fields.Float(
         string="Average Margin %",
         readonly=True,
@@ -94,9 +129,18 @@ class SalesMasterReport(models.Model):
     )
 
     # Collection Management Fields
-    invoice_amount_total = fields.Float(string="Invoice Total", readonly=True)
-    amount_paid = fields.Float(string="Amount Paid", readonly=True)
-    amount_due = fields.Float(string="Amount Due", readonly=True)
+    invoice_amount_total = fields.Float(
+        string="Invoice Total",
+        readonly=True,
+    )
+    amount_paid = fields.Float(
+        string="Amount Paid",
+        readonly=True,
+    )
+    amount_due = fields.Float(
+        string="Amount Due",
+        readonly=True,
+    )
     collection_percentage = fields.Float(
         string="Collection %",
         readonly=True,
@@ -106,7 +150,10 @@ class SalesMasterReport(models.Model):
         string="Amount Actually Collected",
         readonly=True,
     )
-    collected_margin = fields.Float(string="Margin Actually Collected", readonly=True)
+    collected_margin = fields.Float(
+        string="Margin Actually Collected",
+        readonly=True,
+    )
 
     # Operational fields
     payment_state = fields.Selection(
@@ -124,7 +171,7 @@ class SalesMasterReport(models.Model):
 
     # Analysis fields
     manufacturer_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         string="Manufacturer",
         readonly=True,
     )

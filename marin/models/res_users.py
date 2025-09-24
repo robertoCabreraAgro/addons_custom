@@ -6,6 +6,10 @@ class ResUsers(models.Model):
 
     _inherit = "res.users"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     property_purchase_journal_id = fields.Many2one(
         comodel_name="account.journal",
         string="Default Purchase Journal",
@@ -19,6 +23,12 @@ class ResUsers(models.Model):
         company_dependent=True,
         check_company=True,
         domain="([('type', '=', 'sale')])",
+    )
+    property_season_id = fields.Many2one(
+        comodel_name="date.range",
+        string="Default Season",
+        company_dependent=True,
+        help="Default AG season for this user's sales orders",
     )
 
     def _get_default_purchase_journal_id(self):
@@ -41,6 +51,7 @@ class ResUsers(models.Model):
         return super().SELF_READABLE_FIELDS + [
             "property_purchase_journal_id",
             "property_sale_journal_id",
+            "property_season_id",
         ]
 
     # pylint: disable=invalid-name
@@ -49,4 +60,5 @@ class ResUsers(models.Model):
         return super().SELF_WRITEABLE_FIELDS + [
             "property_purchase_journal_id",
             "property_sale_journal_id",
+            "property_season_id",
         ]

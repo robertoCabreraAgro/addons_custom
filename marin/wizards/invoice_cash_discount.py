@@ -6,8 +6,13 @@ class AccountInvoiceCashDiscount(models.TransientModel):
     _name = "account.invoice.cash.discount"
     _description = "Compute cash discount directly on product unit price"
 
-    move_ids = fields.Many2many("account.move", domain=[("state", "=", "posted")])
-    amount = fields.Float(string="Percentage")
+    move_ids = fields.Many2many(
+        comodel_name="account.move",
+        domain=[("state", "=", "posted")],
+    )
+    amount = fields.Float(
+        string="Percentage",
+    )
 
     @api.model
     def default_get(self, fields_list):

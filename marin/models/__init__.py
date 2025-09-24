@@ -1,7 +1,6 @@
 from . import account_account
 from . import account_analytic_account
 from . import account_analytic_line
-from . import account_analytic_distribution_model
 from . import account_asset
 from . import account_bank_statement_line
 from . import account_journal
@@ -11,9 +10,7 @@ from . import account_payment
 from . import account_reconcile_model
 from . import documents_document
 from . import documents_tag
-from . import fleet_vehicle
-from . import fleet_vehicle_log
-from . import gps_tracking_device
+from . import product_asset_log
 from . import hr_contract
 from . import hr_payslip
 from . import hr_payslip_run
@@ -22,6 +19,7 @@ from . import approval_category
 from . import approval_request
 from . import approval_product_line
 from . import mrp_production
+from . import mrp_workorder
 from . import pos_config
 from . import pos_order
 from . import pos_order_line
@@ -36,6 +34,7 @@ from . import project_task
 from . import res_company
 from . import res_partner_age_range
 from . import res_partner
+from . import res_partner_category
 from . import res_partner_profile
 from . import res_users
 from . import sale_order
@@ -53,7 +52,6 @@ from . import stock_quant
 from . import stock_scrap
 from . import stock_picking_tracker
 from . import bbva_parser
-from . import res_config_settings
 from . import l10n_mx_edi_document
 from . import project_project
 from . import base_partner_merge

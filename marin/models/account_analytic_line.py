@@ -6,15 +6,15 @@ class AccountAnalyticLine(models.Model):
 
     _inherit = "account.analytic.line"
 
-    vehicle_id = fields.Many2one(
-        "fleet.vehicle",
-        "Vehicle",
-        compute="_compute_vehicle_id",
+    asset_id = fields.Many2one(
+        comodel_name="stock.lot",
+        string="Asset",
+        compute="_compute_asset_id",
         store=True,
         check_company=True,
     )
 
-    @api.depends("move_line_id.vehicle_id")
-    def _compute_vehicle_id(self):
+    @api.depends("move_line_id.asset_id")
+    def _compute_asset_id(self):
         for line in self:
-            line.vehicle_id = line.move_line_id.vehicle_id
+            line.asset_id = line.move_line_id.asset_id

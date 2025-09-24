@@ -13,19 +13,23 @@ class TestHRContracts(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.employee = cls.env['hr.employee'].create({
-            'name': 'Test Employee',
-        })
-        
+        cls.employee = cls.env["hr.employee"].create(
+            {
+                "name": "Test Employee",
+            }
+        )
+
     def create_contract(self, active=True, date_start=None, date_end=None):
         """Create a contract for testing."""
-        return self.env['hr.version'].create({
-            'employee_id': self.employee.id,
-            'active': active,
-            'contract_date_start': date_start,
-            'contract_date_end': date_end,
-            'wage': 5000.0,
-        })
+        return self.env["hr.version"].create(
+            {
+                "employee_id": self.employee.id,
+                "active": active,
+                "contract_date_start": date_start,
+                "contract_date_end": date_end,
+                "wage": 5000.0,
+            }
+        )
 
     def test_01_hr_contract_incoming_overlapping_contract(self):
         start = datetime.strptime("2015-11-01", "%Y-%m-%d").date()
@@ -68,9 +72,7 @@ class TestHRContracts(TransactionCase):
 
     def test_04_hr_contract_overlapping_contract_no_end(self):
         # No end date
-        self.create_contract(
-            True, datetime.strptime("2015-11-01", "%Y-%m-%d").date()
-        )
+        self.create_contract(True, datetime.strptime("2015-11-01", "%Y-%m-%d").date())
         with self.assertRaises(ValidationError):
             start = datetime.strptime("2015-11-15", "%Y-%m-%d").date()
             end = datetime.strptime("2015-12-30", "%Y-%m-%d").date()

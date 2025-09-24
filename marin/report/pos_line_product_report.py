@@ -8,24 +8,54 @@ class PosLineProductReport(models.Model):
     _description = "PoS Report by Product"
     _auto = False
 
-    config_id = fields.Many2one("pos.config", string="Terminal", readonly=True)
-    product_id = fields.Many2one("product.product", readonly=True)
-    product_category_id = fields.Many2one("product.category", readonly=True)
-    quarter = fields.Integer(readonly=True)
-    quarter_str = fields.Selection(
-        [("1", "1"), ("2", "2"), ("3", "3"), ("4", "4")], readonly=True
+    config_id = fields.Many2one(
+        comodel_name="pos.config",
+        string="Terminal",
+        readonly=True,
     )
-    name = fields.Char(readonly=True)
-    total_qty = fields.Float("Cantidad venta tpv", readonly=True)  # Field 1
-    cost_purchase_total = fields.Float(readonly=True)
+    product_id = fields.Many2one(
+        comodel_name="product.product",
+        readonly=True,
+    )
+    product_category_id = fields.Many2one(
+        comodel_name="product.category",
+        readonly=True,
+    )
+    quarter = fields.Integer(
+        readonly=True,
+    )
+    quarter_str = fields.Selection(
+        selection=[("1", "1"), ("2", "2"), ("3", "3"), ("4", "4")],
+        readonly=True,
+    )
+    name = fields.Char(
+        readonly=True,
+    )
+    total_qty = fields.Float(
+        string="Cantidad venta tpv",
+        readonly=True,
+    )  # Field 1
+    cost_purchase_total = fields.Float(
+        readonly=True,
+    )
     average_real_cost = fields.Float(
-        "Precio compra promedio tpv", readonly=True, aggregator="avg"
+        string="Precio compra promedio tpv",
+        readonly=True,
+        aggregator="avg",
     )  # Field 2
     average_sale_price = fields.Float(
-        "Precio venta promedio tpv", readonly=True, aggregator="avg"
+        string="Precio venta promedio tpv",
+        readonly=True,
+        aggregator="avg",
     )  # Field 3
-    sale_price_total = fields.Float("Valor ventas tpv", readonly=True)  # Field 4
-    real_margin_value = fields.Float("Valor margen real", readonly=True)  # Field 5
+    sale_price_total = fields.Float(
+        string="Valor ventas tpv",
+        readonly=True,
+    )  # Field 4
+    real_margin_value = fields.Float(
+        string="Valor margen real",
+        readonly=True,
+    )  # Field 5
 
     def _query(self):
         return """

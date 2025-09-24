@@ -12,8 +12,12 @@ class SaleTargetLine(models.Model):
     _description = "Sales Target Line"
     _order = "target_id, product_id"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     target_id = fields.Many2one(
-        "sale.target",
+        comodel_name="sale.target",
         string="Sales Target",
         required=True,
         ondelete="cascade",
@@ -21,7 +25,7 @@ class SaleTargetLine(models.Model):
     )
 
     product_id = fields.Many2one(
-        "product.product",
+        comodel_name="product.product",
         string="Product",
         required=True,
         help="Product for this target line",
@@ -33,13 +37,9 @@ class SaleTargetLine(models.Model):
         help="Unit price for target amount calculation",
     )
 
-    quantity = fields.Float(string="Template Quantity", help="Base quantity from quotation template")
-
-    subtotal = fields.Monetary(
-        compute="_compute_amounts",
-        store=True,
-        currency_field="currency_id",
-        help="Calculated as unit price × target quantity",
+    quantity = fields.Float(
+        string="Template Quantity",
+        help="Base quantity from quotation template",
     )
 
     target_quantity = fields.Float(
@@ -51,13 +51,92 @@ class SaleTargetLine(models.Model):
 
     target_amount = fields.Monetary(
         string="Amount",
+        currency_field="currency_id",
         compute="_compute_amounts",
         store=True,
-        currency_field="currency_id",
         help="Calculated as unit price × target quantity",
     )
 
-    currency_id = fields.Many2one("res.currency", related="target_id.currency_id", readonly=True)
+    currency_id = fields.Many2one(
+        related="target_id.currency_id",
+        comodel_name="res.currency",
+        readonly=True,
+    )
+
+    # Related fields from target_id
+    partner_id = fields.Many2one(
+        related="target_id.partner_id",
+        comodel_name="res.partner",
+        string="Customer",
+        store=True,
+        readonly=True,
+    )
+    user_id = fields.Many2one(
+        related="target_id.user_id",
+        comodel_name="res.users",
+        string="Salesperson",
+        store=True,
+        readonly=True,
+    )
+    season_id = fields.Many2one(
+        related="target_id.season_id",
+        comodel_name="date.range",
+        string="Season",
+        store=True,
+        readonly=True,
+    )
+    profile_id = fields.Many2one(
+        related="target_id.profile_id",
+        comodel_name="res.partner.profile",
+        string="Profile",
+        store=True,
+        readonly=True,
+    )
+    hectares = fields.Float(
+        related="target_id.hectares",
+        string="Hectares",
+        store=True,
+        readonly=True,
+    )
+    template_id = fields.Many2one(
+        related="target_id.template_id",
+        comodel_name="sale.order.template",
+        string="Template",
+        store=True,
+        readonly=True,
+    )
+
+    sold_amount = fields.Monetary(
+        string="Sold Amount",
+        currency_field="currency_id",
+        compute="_compute_sold_amount",
+        store=True,
+        help="Amount sold for this product with same customer, salesperson and season",
+    )
+
+    gap_amount = fields.Monetary(
+        string="Gap Amount",
+        currency_field="currency_id",
+        compute="_compute_gap_amount",
+        store=True,
+        help="Amount remaining to reach target (target_amount - sold_amount)",
+    )
+
+    target_percentage = fields.Float(
+        string="Target %",
+        compute="_compute_target_percentage",
+        store=True,
+        aggregator="avg",
+        help="Percentage of target completion (sold_amount / target_amount * 100)",
+    )
+
+    manufacturer_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Manufacturer",
+        compute="_compute_manufacturer_id",
+        store=True,
+        help="Manufacturer of the product in this target line.",
+    )
 
     @api.depends("quantity", "target_id.hectares", "target_id.factor")
     def _compute_target_quantity(self):
@@ -72,5 +151,64 @@ class SaleTargetLine(models.Model):
     def _compute_amounts(self):
         """Calculate subtotal and target amount based on price and quantities."""
         for line in self:
-            line.subtotal = line.price_unit * line.target_quantity
             line.target_amount = line.price_unit * line.target_quantity
+
+    def _get_historical_orders(self):
+        """Get historical orders for current line's parameters."""
+        if not all([self.partner_id, self.user_id, self.season_id]):
+            return self.env["sale.order"]
+
+        return self.env["sale.order"].search(
+            [
+                ("partner_id", "=", self.partner_id.id),
+                ("user_id", "=", self.user_id.id),
+                ("season_id", "=", self.season_id.id),
+                ("state", "in", ["sale", "done"]),
+            ]
+        )
+
+    @api.depends("product_id", "partner_id", "user_id", "season_id")
+    def _compute_sold_amount(self):
+        """Calculate sold amount for this product with same customer, salesperson and season."""
+        for line in self:
+            if not all(
+                [line.product_id, line.partner_id, line.user_id, line.season_id]
+            ):
+                line.sold_amount = 0.0
+                continue
+
+            historical_orders = line._get_historical_orders()
+            sold_total = 0.0
+            for order in historical_orders:
+                for order_line in order.line_ids:
+                    if order_line.product_id.id == line.product_id.id:
+                        sold_total += order_line.price_subtotal
+
+            line.sold_amount = sold_total
+
+    @api.depends("target_amount", "sold_amount")
+    def _compute_gap_amount(self):
+        """Calculate gap amount as target_amount - sold_amount."""
+        for line in self:
+            line.gap_amount = line.target_amount - line.sold_amount
+
+    @api.depends("target_amount", "sold_amount")
+    def _compute_target_percentage(self):
+        """Calculate target completion percentage (capped at 100%)."""
+        for line in self:
+            if line.target_amount > 0:
+                percentage = (line.sold_amount / line.target_amount) * 100
+                line.target_percentage = min(percentage, 100.0)
+            else:
+                line.target_percentage = 0.0
+
+    @api.depends("product_id", "product_id.manufacturer_id")
+    def _compute_manufacturer_id(self):
+        """Compute manufacturer from the related product.
+        This allows filtering and grouping sales targets by manufacturer
+        for production planning purposes.
+        """
+        for line in self:
+            line.manufacturer_id = (
+                line.product_id.manufacturer_id if line.product_id else False
+            )

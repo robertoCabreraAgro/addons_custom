@@ -13,35 +13,41 @@ class AccountAsset(models.Model):
 
     _inherit = "account.asset"
 
-    location = fields.Char(string="Location")
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
+    location = fields.Char(
+        string="Location",
+    )
 
     has_property_identification = fields.Selection(
-        CATEGORY_SELECTION,
+        selection=CATEGORY_SELECTION,
         string="Has property ID",
         default="no",
     )
     has_property_area = fields.Selection(
-        CATEGORY_SELECTION,
+        selection=CATEGORY_SELECTION,
         string="Has property area",
         default="no",
     )
     has_sn = fields.Selection(
-        CATEGORY_SELECTION,
+        selection=CATEGORY_SELECTION,
         string="Has SN",
         default="no",
     )
     has_imei = fields.Selection(
-        CATEGORY_SELECTION,
+        selection=CATEGORY_SELECTION,
         string="Has IMEI",
         default="no",
     )
     has_electric_power_contract = fields.Selection(
-        CATEGORY_SELECTION,
+        selection=CATEGORY_SELECTION,
         string="Has electric power contract",
         default="no",
     )
     has_telephone_contract = fields.Selection(
-        CATEGORY_SELECTION,
+        selection=CATEGORY_SELECTION,
         string="Has telephone contract",
         default="no",
     )
@@ -65,9 +71,22 @@ class AccountAsset(models.Model):
         related="model_id.has_telephone_contract",
     )
 
-    property_identification = fields.Char(string="Property identification")
-    property_area = fields.Integer(string="Property area", help="Area in square meters")
-    sn = fields.Char(string="SN")
-    imei = fields.Char(string="IMEI")
-    electric_power_contract = fields.Char(string="Electric power contract")
-    telephone_contract = fields.Char(string="Telephone contract")
+    property_identification = fields.Char(
+        string="Property identification",
+    )
+    property_area = fields.Integer(
+        string="Property area",
+        help="Area in square meters",
+    )
+    sn = fields.Char(
+        string="SN",
+    )
+    imei = fields.Char(
+        string="IMEI",
+    )
+    electric_power_contract = fields.Char(
+        string="Electric power contract",
+    )
+    telephone_contract = fields.Char(
+        string="Telephone contract",
+    )

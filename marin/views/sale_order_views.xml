@@ -11,8 +11,8 @@
                     filter_domain="['|', '|', ('name', 'ilike', self), ('client_order_ref', 'ilike', self), ('partner_id', 'child_of', self)]"
                 />
                 <field name="partner_id" operator="child_of" />
-                <field name="order_line" string="Product"
-                    filter_domain="[('order_line.product_id', 'ilike', self)]" />
+                <field name="line_ids" string="Product"
+                    filter_domain="[('line_ids.product_id', 'ilike', self)]" />
                 <field name="tag_ids" string="Tag" />
                 <field name="team_id" string="Sales Team" />
                 <field name="user_id" />
@@ -26,11 +26,11 @@
                     domain="[('state', 'in', ('sale', 'done'))]" />
                 <separator />
                 <filter name="to_invoice" string="To invoice"
-                    domain="[('invoice_status', '=', 'to invoice')]" />
+                    domain="[('invoice_state', '=', 'to invoice')]" />
                 <filter name="invoiced" string="Invoiced"
-                    domain="[('invoice_status', '=', 'invoiced')]" />
+                    domain="[('invoice_state', '=', 'invoiced')]" />
                 <filter name="upselling" string="To upsell"
-                    domain="[('invoice_status', '=', 'upselling')]" />
+                    domain="[('invoice_state', '=', 'upselling')]" />
                 <separator />
                 <filter name="pending" string="To deliver"
                     domain="[('delivery_status', '=', 'pending')]" />
@@ -64,9 +64,9 @@
                     <filter name="order_date" string="Order Date"
                         domain="[]"
                         context="{'group_by': 'date_order'}" />
-                    <filter name="invoice_status" string="Invoice status"
+                    <filter name="invoice_state" string="Invoice status"
                         domain="[]"
-                        context="{'group_by': 'invoice_status'}" />
+                        context="{'group_by': 'invoice_state'}" />
                     <filter name="delivery_status" string="Delivery Status"
                         domain="[]"
                         context="{'group_by': 'delivery_status'}" />
@@ -80,7 +80,7 @@
         <field name="model">sale.order</field>
         <field name="priority">4</field>
         <field name="arch" type="xml">
-            <list sample="1" decoration-info="invoice_status == 'to invoice'" decoration-muted="state == 'cancel'">
+            <list sample="1" decoration-info="invoice_state == 'to invoice'" decoration-muted="state == 'cancel'">
                 <field name="company_id" column_invisible="1" />
                 <field name="currency_id" column_invisible="1" />
                 <field name="state" column_invisible="1" />
@@ -88,7 +88,7 @@
                 <field name="name" string="Number" readonly="1" decoration-bf="1" />
                 <field name="create_date" string="Creation Date" widget="date" optional="show" />
                 <field name="date_order" string="Order Date" widget="date" optional="show" />
-                <field name="commitment_date" widget="date" optional="hide" />
+                <field name="date_commitment" widget="date" optional="hide" />
                 <field name="partner_id" readonly="1" />
                 <field name="amount_untaxed" sum="Total tax excluded" widget="monetary" optional="hide" />
                 <field name="amount_tax" sum="Tax Total" widget="monetary" optional="hide" />
@@ -119,13 +119,13 @@
                     decoration-success="delivery_status == 'full'"
                 />
                 <field
-                    name="invoice_status"
+                    name="invoice_state"
                     widget="badge"
                     optional="show"
-                    decoration-danger="invoice_status == 'to invoice'"
-                    decoration-warning="invoice_status == 'upselling'"
-                    decoration-info="invoice_status == 'no'"
-                    decoration-success="invoice_status == 'invoiced'"
+                    decoration-danger="invoice_state == 'to invoice'"
+                    decoration-warning="invoice_state == 'upselling'"
+                    decoration-info="invoice_state == 'no'"
+                    decoration-success="invoice_state == 'invoiced'"
                 />
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide" />
                 <field name="warehouse_id" optional="show" />
@@ -221,23 +221,23 @@
                 <attribute name="options">{'no_open': True, 'no_create': True}</attribute>
             </xpath>
             -->
-            <xpath expr="//page/field[@name='order_line']/list/field[@name='tax_ids']" position="attributes">
+            <xpath expr="//page/field[@name='line_ids']/list/field[@name='tax_ids']" position="attributes">
                 <attribute name="optional">hide</attribute>
             </xpath>
-            <xpath expr="//page/field[@name='order_line']/list/field[@name='discount']" position="attributes">
+            <xpath expr="//page/field[@name='line_ids']/list/field[@name='discount']" position="attributes">
                 <attribute name="optional">hide</attribute>
             </xpath>
-            <xpath expr="//page/field[@name='order_line']/list/field[@name='qty_delivered']" position="attributes">
-                <attribute name="decoration-danger">not display_type and qty_delivered > product_uom_qty</attribute>
-                <attribute name="decoration-warning">not display_type and qty_delivered > 0 and qty_delivered &lt; product_uom_qty</attribute>
-                <attribute name="decoration-info">not display_type and qty_delivered == 0</attribute>
-                <attribute name="decoration-success">not display_type and qty_delivered == product_uom_qty</attribute>
+            <xpath expr="//page/field[@name='line_ids']/list/field[@name='qty_transfered']" position="attributes">
+                <attribute name="decoration-danger">not display_type and qty_transfered > product_uom_qty</attribute>
+                <attribute name="decoration-warning">not display_type and qty_transfered > 0 and qty_transfered &lt; product_uom_qty</attribute>
+                <attribute name="decoration-info">not display_type and qty_transfered == 0</attribute>
+                <attribute name="decoration-success">not display_type and qty_transfered == product_uom_qty</attribute>
             </xpath>
-            <xpath expr="//page/field[@name='order_line']/list/field[@name='qty_invoiced']" position="attributes">
+            <xpath expr="//page/field[@name='line_ids']/list/field[@name='qty_invoiced']" position="attributes">
                 <attribute name="decoration-danger">not display_type and qty_to_invoice > 0</attribute>
                 <attribute name="decoration-success">not display_type and qty_invoiced > 0</attribute>
             </xpath>
-            <xpath expr="//page/field[@name='order_line']/list/field[@name='price_unit']" position="after">
+            <xpath expr="//page/field[@name='line_ids']/list/field[@name='price_unit']" position="after">
                 <field name="partner_id" column_invisible="1" />
                 <widget name="sale_line_price_history_widget" width="20px" />
             </xpath>
@@ -251,39 +251,39 @@
                     <button name="action_clean_3_0" string="Clean 3-0" type="object" colspan="2" />
                 </group>
             </xpath>
-            <xpath expr="//page[@name='other_information']//field[@name='invoice_status']" position="replace">
+            <xpath expr="//page[@name='other_information']//field[@name='invoice_state']" position="replace">
                 <label
                     string="Invoice status"
-                    for="invoice_status"
+                    for="invoice_state"
                     class="fw-bold text-900"
                     invisible="state != 'sale'"
                 />
-                <div name="invoice_status_div" class="d-flex" invisible="state != 'sale'">
+                <div name="invoice_state_div" class="d-flex" invisible="state != 'sale'">
                     <div colspan="1">
-                        <field name="invoice_status" />
+                        <field name="invoice_state" />
                     </div>
                     <!-- Custom invoice status actions removed - methods not available in Odoo 18.4
                     <div colspan="2">
                         <button
-                            name="action_recompute_invoice_status"
+                            name="action_recompute_invoice_state"
                             string="Update"
                             type="object"
                             groups="account.group_account_user"
                             class="oe_inline oe_button"
                         />
                         <button
-                            name="action_force_invoice_status"
+                            name="action_force_invoice_state"
                             string="Force invoice status"
                             type="object"
-                            invisible="invoice_status == 'invoiced' or state != 'sale'"
+                            invisible="invoice_state == 'invoiced' or state != 'sale'"
                             groups="marin.group_sale_force_invoicing_status"
                             class="oe_inline oe_button"
                         />
                         <button
-                            name="action_unforce_invoice_status"
+                            name="action_unforce_invoice_state"
                             string="Restore invoice status"
                             type="object"
-                            invisible="invoice_status != 'invoiced' or state != 'sale'"
+                            invisible="invoice_state != 'invoiced' or state != 'sale'"
                             groups="marin.group_sale_force_invoicing_status"
                             class="oe_inline oe_button"
                         />
@@ -344,16 +344,16 @@
                 <attribute name="groups">marin.group_product_cost_readonly</attribute>
             </xpath>
             <!-- Add groups to order line margin fields -->
-            <xpath expr="//field[@name='order_line']//form//field[@name='purchase_price']" position="attributes">
+            <xpath expr="//field[@name='line_ids']//form//field[@name='purchase_price']" position="attributes">
                 <attribute name="groups">marin.group_product_cost_readonly</attribute>
             </xpath>
-            <xpath expr="//field[@name='order_line']//list//field[@name='purchase_price']" position="attributes">
+            <xpath expr="//field[@name='line_ids']//list//field[@name='purchase_price']" position="attributes">
                 <attribute name="groups">marin.group_product_cost_readonly</attribute>
             </xpath>
-            <xpath expr="//field[@name='order_line']//list//field[@name='margin']" position="attributes">
+            <xpath expr="//field[@name='line_ids']//list//field[@name='margin']" position="attributes">
                 <attribute name="groups">marin.group_product_cost_readonly</attribute>
             </xpath>
-            <xpath expr="//field[@name='order_line']//list//field[@name='margin_percent']" position="attributes">
+            <xpath expr="//field[@name='line_ids']//list//field[@name='margin_percent']" position="attributes">
                 <attribute name="groups">marin.group_product_cost_readonly</attribute>
             </xpath>
         </field>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_mrp_workorder_search_production_type" model="ir.ui.view">
+        <field name="name">mrp.workorder.search.production.type</field>
+        <field name="model">mrp.workorder</field>
+        <field name="inherit_id" ref="mrp.view_mrp_production_work_order_search" />
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <field name="production_type" string="Production Type" />
+            </xpath>
+            <xpath expr="//filter[@name='done']" position="after">
+                <separator />
+                <filter
+                    name="packaged"
+                    string="Packaged"
+                    domain="[('production_type', '=', 'packaged')]" />
+                <filter
+                    name="formulated"
+                    string="Formulated"
+                    domain="[('production_type', '=', 'formulated')]" />
+                <filter
+                    name="reformulated"
+                    string="Reformulated"
+                    domain="[('production_type', '=', 'reformulated')]" />
+            </xpath>
+            <xpath expr="//group" position="inside">
+                <filter
+                    name="group_production_type"
+                    string="Production Type"
+                    context="{'group_by': 'production_type'}" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_mrp_workorder_tree_production_type" model="ir.ui.view">
+        <field name="name">mrp.workorder.list.production.type</field>
+        <field name="model">mrp.workorder</field>
+        <field name="inherit_id" ref="mrp.mrp_production_workorder_tree_editable_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field name="production_type" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_mrp_workorder_tree_production_type_reports" model="ir.ui.view">
+        <field name="name">mrp.workorder.tree.production.type.reports</field>
+        <field name="model">mrp.workorder</field>
+        <field name="inherit_id" ref="mrp.mrp_production_workorder_tree_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field name="production_type" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

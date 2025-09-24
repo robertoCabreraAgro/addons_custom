@@ -1,17 +1,20 @@
 from markupsafe import Markup
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.tools.float_utils import float_compare
 from odoo.tools.misc import clean_context, formatLang
-from odoo.tools.translate import _
 
 
 class AccountMove(models.Model):
     """Inherit AccountMove"""
 
     _inherit = "account.move"
+
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
 
     # Extended fields
     invoice_date = fields.Date(
@@ -21,9 +24,16 @@ class AccountMove(models.Model):
         readonly=False,
         copy=True,
     )
-    invoice_origin = fields.Char(readonly=False)
-    l10n_mx_edi_payment_policy = fields.Selection(store=True, readonly=False)
-    l10n_mx_edi_usage = fields.Selection(selection_add=[("CP01", "Payments")])
+    invoice_origin = fields.Char(
+        readonly=False,
+    )
+    l10n_mx_edi_payment_policy = fields.Selection(
+        store=True,
+        readonly=False,
+    )
+    l10n_mx_edi_usage = fields.Selection(
+        selection_add=[("CP01", "Payments")],
+    )
 
     # New fields
     journal_type = fields.Selection(
@@ -120,7 +130,8 @@ class AccountMove(models.Model):
                 )
                 invoice.partner_credit_warning = (
                     invoice.commercial_partner_id._build_credit_warning_message(
-                        future_credit, invoice.company_id.currency_id
+                        future_credit,
+                        invoice.company_id.currency_id,
                     )
                 )
 
@@ -132,27 +143,41 @@ class AccountMove(models.Model):
                 invoice_date = False
             move.invoice_date = invoice_date
 
-    # Exxtend original method
+    # Extend original method
     @api.depends("needed_terms")
     def _compute_invoice_date_due(self):
-        for move in self:
-            if move.invoice_payment_term_id and move.invoice_date and not move.line_ids:
-                invoice_payment_terms = move.invoice_payment_term_id._compute_terms(
-                    date_ref=move.invoice_date,
-                    currency=move.currency_id,
-                    company=move.company_id,
-                    tax_amount=0.0,
-                    tax_amount_currency=0.0,
-                    sign=1,
-                    untaxed_amount=1.0,
-                    untaxed_amount_currency=1.0,
-                    cash_rounding=move.invoice_cash_rounding_id,
-                )
-                move.invoice_date_due = max(
-                    [d["date"] for d in invoice_payment_terms["line_ids"]]
-                )
-            else:
-                super()._compute_invoice_date_due()
+        """Compute invoice due date based on payment terms and invoice date.
+
+        This method optimizes the computation by filtering moves that have payment terms
+        and invoice dates but no line items yet. For these moves, it calculates the
+        due date using the payment term configuration. All other moves are handled
+        by the parent method.
+
+        The due date is determined by computing payment terms and selecting the
+        maximum date from all payment term lines.
+        """
+        moves_to_compute = self.filtered(
+            lambda move: move.invoice_payment_term_id
+            and move.invoice_date
+            and not move.line_ids
+        )
+        for move in moves_to_compute:
+            invoice_payment_terms = move.invoice_payment_term_id._compute_terms(
+                date_ref=move.invoice_date,
+                currency=move.currency_id,
+                company=move.company_id,
+                tax_amount=0.0,
+                tax_amount_currency=0.0,
+                sign=1,
+                untaxed_amount=1.0,
+                untaxed_amount_currency=1.0,
+                cash_rounding=move.invoice_cash_rounding_id,
+            )
+            move.invoice_date_due = max(
+                d["date"] for d in invoice_payment_terms["line_ids"]
+            )
+
+        return super(AccountMove, self - moves_to_compute)._compute_invoice_date_due()
 
     # Override original method
     @api.depends(
@@ -178,7 +203,7 @@ class AccountMove(models.Model):
             if move.move_type == "out_refund" and "global_sent" in set(
                 move._l10n_mx_edi_get_refund_original_invoices().mapped(
                     "l10n_mx_edi_cfdi_state"
-                )
+                ),
             ):
                 move.l10n_mx_edi_cfdi_to_public = True
             elif (
@@ -269,7 +294,7 @@ class AccountMove(models.Model):
                         formatLang(self.env, invoice.amount_tax),
                         formatLang(self.env, invoice.x_check_tax),
                         formatLang(self.env, invoice.x_tax_difference),
-                    )
+                    ),
                 )
 
     def _authorize_credit_limit(self):
@@ -299,7 +324,6 @@ class AccountMove(models.Model):
             )
         )
         for invoice in invoices_elegible:
-
             # Partner conditions
             partner_eligible = (
                 invoice.partner_id.credit_status != "legal"
@@ -377,7 +401,7 @@ class AccountMove(models.Model):
             .ids
         )
         domain = [("id", "in", approvals_ids)]
-        action = {
+        return {
             "name": _("Approvals"),
             "type": "ir.actions.act_window",
             "res_model": "approval.request",
@@ -388,7 +412,6 @@ class AccountMove(models.Model):
             ),  # avoid 'default_name' context key propagation
             "domain": domain,
         }
-        return action
 
     def _prepare_purchase_order_vals(self):
         self.ensure_one()
@@ -414,7 +437,7 @@ class AccountMove(models.Model):
         purchase_line_vals = {}
         fpos = purchase.fiscal_position_id
         for line in move.invoice_line_ids.filtered(
-            lambda ln: ln.display_type == "product"
+            lambda ln: ln.display_type == "product",
         ):
             taxes = fpos.map_tax(line.product_id.supplier_tax_ids)
             if taxes:
@@ -440,7 +463,7 @@ class AccountMove(models.Model):
         for move in self:
             if any(not line.product_id for line in move.invoice_line_ids):
                 raise UserError(
-                    _("Some move lines does not have a product set. Please review")
+                    _("Some move lines does not have a product set. Please review"),
                 )
 
             purchase_exist = self.env["purchase.order"].search(
@@ -448,14 +471,13 @@ class AccountMove(models.Model):
                     ("partner_id", "=", self.commercial_partner_id.id),
                     ("company_id", "=", self.company_id.id),
                     ("origin", "=", self.name),
-                ]
+                ],
             )
             if purchase_exist and len(purchase_exist) >= 1:
                 raise UserError(
                     _(
-                        "More than one Purchase Orders with the same origin have been found. "
-                        "Please review"
-                    )
+                        "More than one Purchase Orders with the same origin have been found. Please review"
+                    ),
                 )
 
             if not purchase_exist:

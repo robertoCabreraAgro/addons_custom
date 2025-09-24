@@ -7,50 +7,68 @@ class AuthorizeDebt(models.TransientModel):
     _description = "Partner authorize debt wizard"
 
     company_id = fields.Many2one(
-        "res.company", compute="_compute_from_record_ids", store=True
+        comodel_name="res.company",
+        compute="_compute_from_record_ids",
+        store=True,
     )
     company_currency_id = fields.Many2one(
-        "res.currency", related="company_id.currency_id"
+        related="company_id.currency_id",
+        comodel_name="res.currency",
     )
     partner_id = fields.Many2one(
-        "res.partner", "Partner", compute="_compute_from_record_ids", store=True
+        comodel_name="res.partner",
+        string="Partner",
+        compute="_compute_from_record_ids",
+        store=True,
     )
-    flag = fields.Char(compute="_compute_from_record_ids", store=True)
+    flag = fields.Char(
+        compute="_compute_from_record_ids",
+        store=True,
+    )
     credit = fields.Monetary(
-        "Total receivable", "company_currency_id", related="partner_id.credit"
+        "company_currency_id",
+        related="partner_id.credit",
+        string="Total receivable",
     )
-    credit_limit = fields.Float("Credit limit", related="partner_id.credit_limit")
+    credit_limit = fields.Float(
+        related="partner_id.credit_limit",
+        string="Credit limit",
+    )
     credit_limit_available = fields.Monetary(
-        "Credit limit available",
         "company_currency_id",
         related="partner_id.credit_limit_available",
+        string="Credit limit available",
     )
     debt_request = fields.Monetary(
-        "Exceeded debit amount",
         "company_currency_id",
+        string="Exceeded debit amount",
         compute="_compute_from_record_ids",
         store=True,
     )
     amount_authorize = fields.Monetary(
-        "Amount",
         "company_currency_id",
+        string="Amount",
         compute="_compute_from_record_ids",
         store=True,
         readonly=False,
     )
     move_ids = fields.Many2many(
-        "account.move",
+        comodel_name="account.move",
         readonly=True,
         copy=False,
     )
-    count_move = fields.Integer(compute="_compute_count_move")
+    count_move = fields.Integer(
+        compute="_compute_count_move",
+    )
     so_ids = fields.Many2many(
-        "sale.order",
+        comodel_name="sale.order",
         string="Sale Orders",
         readonly=True,
         copy=False,
     )
-    count_so = fields.Integer(compute="_compute_count_so")
+    count_so = fields.Integer(
+        compute="_compute_count_so",
+    )
 
     # pylint: disable=too-complex
     @api.model

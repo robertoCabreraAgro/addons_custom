@@ -6,43 +6,69 @@ class ProductTemplate(models.Model):
 
     _inherit = "product.template"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     sale_ok = fields.Boolean(
         compute="_compute_sale_ok",
         store=True,
         readonly=False,
     )
 
-    user_product_cost_readonly = fields.Boolean(compute="_compute_group")
-    user_product_cost_manager = fields.Boolean(compute="_compute_group")
-    user_purchase_readonly = fields.Boolean(compute="_compute_group")
-    user_purchase_manager = fields.Boolean(compute="_compute_group")
-    user_sale_readonly = fields.Boolean(compute="_compute_group")
-    user_sale_manager = fields.Boolean(compute="_compute_group")
-    user_stock_readonly = fields.Boolean(compute="_compute_group")
-    user_stock_manager = fields.Boolean(compute="_compute_group")
+    user_product_cost_readonly = fields.Boolean(
+        compute="_compute_group",
+    )
+    user_product_cost_manager = fields.Boolean(
+        compute="_compute_group",
+    )
+    user_purchase_readonly = fields.Boolean(
+        compute="_compute_group",
+    )
+    user_purchase_manager = fields.Boolean(
+        compute="_compute_group",
+    )
+    user_sale_readonly = fields.Boolean(
+        compute="_compute_group",
+    )
+    user_sale_manager = fields.Boolean(
+        compute="_compute_group",
+    )
+    user_stock_readonly = fields.Boolean(
+        compute="_compute_group",
+    )
+    user_stock_manager = fields.Boolean(
+        compute="_compute_group",
+    )
     property_account_income_refund_id = fields.Many2one(
-        "account.account",
-        "Income Refund Account",
+        comodel_name="account.account",
+        string="Income Refund Account",
         company_dependent=True,
         domain=[("deprecated", "=", False)],
         help="Used as default value on the customer credit notes lines. "
         "Leave empty to use the account from the product category.",
     )
     property_account_expense_refund_id = fields.Many2one(
-        "account.account",
-        "Expense Refund Account",
+        comodel_name="account.account",
+        string="Expense Refund Account",
         company_dependent=True,
         domain=[("deprecated", "=", False)],
         help="Used as default value on the vendor refunds lines. "
         "Leave empty to use the account from the product category.",
     )
-    x_dose_x_ha = fields.Float(
-        "Dose per Hectare",
+    use_dose = fields.Boolean(
+        compute="_compute_use_dose",
+        store=True,
+        readonly=False,
+    )
+    x_dose = fields.Float(
+        string="Dose per Hectare",
         digits="Product Price",
     )
     use_expiration_date = fields.Boolean(
         compute="_compute_use_expiration_date",
         store=True,
+        readonly=False,
     )
 
     def _compute_group(self):
@@ -56,10 +82,17 @@ class ProductTemplate(models.Model):
             if default_sale_ok:
                 product.sale_ok = default_sale_ok
 
-    @api.depends("tracking")
+    @api.depends("categ_id")
+    def _compute_use_dose(self):
+        for product in self:
+            if product.categ_id and product.categ_id.use_dose:
+                product.use_dose = True
+
+    @api.depends("categ_id")
     def _compute_use_expiration_date(self):
-        for rec in self:
-            rec.use_expiration_date = rec.tracking != "none"
+        for product in self:
+            if product.categ_id and product.categ_id.use_expiration_date:
+                product.use_expiration_date = True
 
     # Extend original method
     def _get_product_accounts(self):

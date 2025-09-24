@@ -1,13 +1,16 @@
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.osv import expression
-from odoo.tools.translate import _
 
 
 class StockQuant(models.Model):
     """Inherit StockQuant"""
 
     _inherit = "stock.quant"
+
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
 
     # Extend core fields
     warehouse_id = fields.Many2one(
@@ -25,7 +28,7 @@ class StockQuant(models.Model):
         store=True,
     )
     value_standard = fields.Monetary(
-        "Value standard",
+        string="Value standard",
         compute="_compute_value_standard",
         store=True,
         groups="stock.group_stock_manager",

@@ -1,8 +1,7 @@
 import base64
 
-from odoo import api, Command, fields, models, tools
+from odoo import _, api, Command, fields, models, tools
 from odoo.exceptions import UserError, RedirectWarning
-from odoo.tools.translate import _
 
 
 class AccountJournal(models.Model):
@@ -10,22 +9,26 @@ class AccountJournal(models.Model):
 
     _inherit = "account.journal"
 
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
     default_receivable_account_id = fields.Many2one(
         comodel_name="account.account",
         string="Default Receivable Account",
         check_company=True,
-        domain=[("active", "=", True), ("account_type", "=", "asset_receivable")],
-        copy=False,
+        domain=[("deprecated", "=", False), ("account_type", "=", "asset_receivable")],
         ondelete="restrict",
+        copy=False,
         help="It acts as a default account for receivable amount instead of the Company's default",
     )
     default_payable_account_id = fields.Many2one(
         comodel_name="account.account",
         string="Default Payable Account",
         check_company=True,
-        domain=[("active", "=", True), ("account_type", "=", "liability_payable")],
-        copy=False,
+        domain=[("deprecated", "=", False), ("account_type", "=", "liability_payable")],
         ondelete="restrict",
+        copy=False,
         help="It acts as a default account for payable amount instead of the Company's default",
     )
     default_refund_account_id = fields.Many2one(
@@ -33,19 +36,19 @@ class AccountJournal(models.Model):
         string="Default Refund Account",
         check_company=True,
         domain=[
-            ("active", "=", True),
+            ("deprecated", "=", False),
             (
                 "account_type",
                 "in",
                 ("expense", "expense_direct_cost", "income", "income_other"),
             ),
         ],
-        copy=False,
         ondelete="restrict",
+        copy=False,
         help="It acts as a default account for refunds",
     )
     x_treatment = fields.Selection(
-        [
+        selection=[
             ("not_fiscal_simulated", "Not Fiscal simulated"),
             ("not_fiscal_real", "Not Fiscal real"),
             ("fiscal_simulated", "Fiscal simulated"),
@@ -56,22 +59,26 @@ class AccountJournal(models.Model):
         help="Technical field used to group journal and journal moves according to fiscal logic.",
     )
     account_control_ids = fields.Many2many(
-        "account.account",
-        "account_journal_account_account_control_rel",
-        "journal_id",
-        "account_id",
+        comodel_name="account.account",
+        relation="account_journal_account_account_control_rel",
+        column1="journal_id",
+        column2="account_id",
         string="Allowed accounts",
         check_company=True,
-        domain=[("active", "=", True), ("account_type", "!=", "off_balance")],
+        domain=[("deprecated", "=", False), ("account_type", "!=", "off_balance")],
     )
     user_can_access_ids = fields.Many2many(
-        "res.users",
-        "account_journal_res_users_can_access_rel",
-        "journal_id",
-        "user_id",
+        comodel_name="res.users",
+        relation="account_journal_res_users_can_access_rel",
+        column1="journal_id",
+        column2="user_id",
         string="Allowed users",
         help="Users that can visualize entries of this journal.",
     )
+
+    # ------------------------------------------------------------
+    # CONSTRAINTS
+    # ------------------------------------------------------------
 
     @api.constrains(
         "type", "default_receivable_account_id", "default_payable_account_id"
@@ -94,23 +101,22 @@ class AccountJournal(models.Model):
                 )
             )
 
-    def _is_bbva_mx(self):
-        return self.bank_id == self.env.ref("l10n_mx.acc_bank_012_BBVA_BANCOMER")
+    # ------------------------------------------------------------
+    # ONCHANGE METHODS
+    # ------------------------------------------------------------
 
-    def _check_bbva_mx_attachment(self, attachment):
-        self.ensure_one()
-        if self._is_bbva_mx():
-            file_content = base64.b64decode(attachment.datas)
-            file_name = attachment.name.lower().strip()
-            if file_name.endswith(".txt"):
-                return self.env["bbva.parser"]._validate_header(
-                    file_content, file_type="txt"
-                )
-            elif file_name.endswith((".xls", ".xlsx")):
-                return self.env["bbva.parser"]._validate_header(
-                    file_content, file_type="xlsx"
-                )
-        return False
+    @api.onchange("x_treatment")
+    def _onchange_x_treatment(self):
+        """Determine if the UUID is required based on the tax treatment of the journal."""
+        for journal in self:
+            journal.l10n_mx_edi_require_uuid = (
+                journal.x_treatment in ["fiscal_simulated", "fiscal_real"]
+                and journal.type == "purchase"
+            )
+
+    # ------------------------------------------------------------
+    # HELPERS
+    # ------------------------------------------------------------
 
     def _import_bbva_mx_bank_statement(self, attachments):
         if any(not a.raw for a in attachments):
@@ -296,11 +302,24 @@ class AccountJournal(models.Model):
             return journal._import_bbva_mx_bank_statement(attachments)
         return super().create_document_from_attachment(attachment_ids)
 
-    @api.onchange("x_treatment")
-    def _onchange_x_treatment(self):
-        """Determine if the UUID is required based on the tax treatment of the journal."""
-        for journal in self:
-            journal.l10n_mx_edi_require_uuid = (
-                journal.x_treatment in ["fiscal_simulated", "fiscal_real"]
-                and journal.type == "purchase"
-            )
+    # ------------------------------------------------------------
+    # VALIDATIONS
+    # ------------------------------------------------------------
+
+    def _is_bbva_mx(self):
+        return self.bank_id == self.env.ref("l10n_mx.acc_bank_012_BBVA_BANCOMER")
+
+    def _check_bbva_mx_attachment(self, attachment):
+        self.ensure_one()
+        if self._is_bbva_mx():
+            file_content = base64.b64decode(attachment.datas)
+            file_name = attachment.name.lower().strip()
+            if file_name.endswith(".txt"):
+                return self.env["bbva.parser"]._validate_header(
+                    file_content, file_type="txt"
+                )
+            elif file_name.endswith((".xls", ".xlsx")):
+                return self.env["bbva.parser"]._validate_header(
+                    file_content, file_type="xlsx"
+                )
+        return False

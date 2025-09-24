@@ -6,4 +6,10 @@ class TagsCategories(models.Model):
 
     _inherit = "documents.tag"
 
-    active = fields.Boolean(default=True)
+    # ------------------------------------------------------------
+    # FIELDS
+    # ------------------------------------------------------------
+
+    active = fields.Boolean(
+        default=True,
+    )

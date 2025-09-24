@@ -46,7 +46,7 @@
                 <!-- TODO: product_updatable field no longer exists in Odoo 18.4
                 <field name="product_updatable" column_invisible="1" />
                 -->
-                <field name="qty_received_method" column_invisible="1" />
+                <field name="qty_transfered_method" column_invisible="1" />
                 <field name="price_tax" column_invisible="1" />
                 <field
                     name="force_company_id"
@@ -115,8 +115,8 @@
                     widget="many2many_tags"
                 />
                 <field
-                    name="qty_received"
-                    readonly="qty_received_method != 'manual'"
+                    name="qty_transfered"
+                    readonly="qty_transfered_method != 'manual'"
                     sum="Delivered"
                     optional="show"
                 />
