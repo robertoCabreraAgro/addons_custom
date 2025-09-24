@@ -26,7 +26,7 @@ class AuthorizeDebt(models.TransientModel):
         store=True,
     )
     credit = fields.Monetary(
-        "company_currency_id",
+        currency_field="company_currency_id",
         related="partner_id.credit",
         string="Total receivable",
     )
@@ -35,18 +35,18 @@ class AuthorizeDebt(models.TransientModel):
         string="Credit limit",
     )
     credit_limit_available = fields.Monetary(
-        "company_currency_id",
+        currency_field="company_currency_id",
         related="partner_id.credit_limit_available",
         string="Credit limit available",
     )
     debt_request = fields.Monetary(
-        "company_currency_id",
+        currency_field="company_currency_id",
         string="Exceeded debit amount",
         compute="_compute_from_record_ids",
         store=True,
     )
     amount_authorize = fields.Monetary(
-        "company_currency_id",
+        currency_field="company_currency_id",
         string="Amount",
         compute="_compute_from_record_ids",
         store=True,
