@@ -54,7 +54,9 @@ class TelegramBot(models.Model):
             )
             return response.json()
         except requests.exceptions.RequestException as e:
-            _logger.error("Failed to send request '%s' for bot '%s': %s", method, self.name, e)
+            _logger.error(
+                "Failed to send request '%s' for bot '%s': %s", method, self.name, e
+            )
             return False
 
     def send_message(self, chat_id, text):
@@ -141,5 +143,11 @@ class TelegramBot(models.Model):
             )
             return response.json()
         except requests.exceptions.RequestException as e:
-            _logger.error("Failed to send document '%s' to chat %s for bot '%s': %s", filename, chat_id, self.name, e)
+            _logger.error(
+                "Failed to send document '%s' to chat %s for bot '%s': %s",
+                filename,
+                chat_id,
+                self.name,
+                e,
+            )
             return False

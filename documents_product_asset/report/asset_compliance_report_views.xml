@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Asset Compliance Report Search View -->
+    <record id="view_asset_compliance_report_search" model="ir.ui.view">
+        <field name="name">asset.compliance.report.search</field>
+        <field name="model">asset.compliance.report</field>
+        <field name="arch" type="xml">
+            <search string="Asset Compliance Search">
+                <field name="asset_name" />
+                <field name="lot_name" />
+                <field name="asset_manager_id" />
+                <filter string="Vehicles" name="vehicles" domain="[('asset_type', '=', 'vehicle')]" />
+                <filter string="Machinery" name="machinery"
+                    domain="[('asset_type', '=', 'machinery')]" />
+                <filter string="Properties" name="properties"
+                    domain="[('asset_type', '=', 'property')]" />
+                <filter string="IT Assets" name="it_assets"
+                    domain="[('asset_type', '=', 'product')]" />
+                <separator />
+                <filter string="Compliant" name="compliant" domain="[('is_compliant', '=', True)]" />
+                <filter string="Non-Compliant" name="non_compliant"
+                    domain="[('is_compliant', '=', False)]" />
+                <filter string="Has Expired Documents" name="has_expired"
+                    domain="[('total_expired', '>', 0)]" />
+                <filter string="Documents Expiring Soon" name="has_expiring"
+                    domain="[('total_expiring', '>', 0)]" />
+                <filter string="Missing Documents" name="has_missing"
+                    domain="[('total_missing', '>', 0)]" />
+                <separator />
+                <filter string="Critical (Below 50%)" name="critical"
+                    domain="[('compliance_percentage', '&lt;', 50)]" />
+                <filter string="Warning (Below 80%)" name="warning"
+                    domain="[('compliance_percentage', '&lt;', 80)]" />
+                <group>
+                    <filter string="Asset Type" name="group_asset_type" domain="[]"
+                        context="{'group_by': 'asset_type'}" />
+                    <filter string="Compliance Status" name="group_status" domain="[]"
+                        context="{'group_by': 'compliance_status'}" />
+                    <filter string="Asset Manager" name="group_manager" domain="[]"
+                        context="{'group_by': 'asset_manager_id'}" />
+                    <filter string="Location" name="group_location" domain="[]"
+                        context="{'group_by': 'location_id'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Asset Compliance Report List View -->
+    <record id="view_asset_compliance_report_list" model="ir.ui.view">
+        <field name="name">asset.compliance.report.list</field>
+        <field name="model">asset.compliance.report</field>
+        <field name="arch" type="xml">
+            <list string="Asset Compliance" create="false" edit="false" delete="false">
+                <field name="asset_name" />
+                <field name="asset_type" />
+                <field name="lot_name" optional="show" />
+                <field name="asset_manager_id" optional="hide" />
+                <field name="location_id" optional="hide" />
+                <field name="total_documents" sum="Total" />
+                <field name="total_required" sum="Total" />
+                <field name="total_valid" sum="Total"
+                    decoration-success="total_valid == total_required and total_required > 0" />
+                <field name="total_expired" sum="Total" decoration-danger="total_expired > 0" />
+                <field name="total_expiring" sum="Total" decoration-warning="total_expiring > 0" />
+                <field name="total_missing" sum="Total" decoration-danger="total_missing > 0" />
+                <field name="compliance_percentage" widget="progressbar" avg="Average" />
+                <field name="compliance_status" widget="badge"
+                    decoration-success="compliance_status == 'compliant'"
+                    decoration-warning="compliance_status == 'partial'"
+                    decoration-danger="compliance_status == 'non_compliant'"
+                    decoration-muted="compliance_status == 'no_requirements'" />
+                <field name="next_expiry_date" optional="show" />
+                <button name="action_view_asset_documents" type="object" string="Documents"
+                    icon="fa-file-text-o" />
+                <button name="action_view_missing_documents" type="object" string="Missing"
+                    icon="fa-exclamation-triangle"
+                    invisible="total_missing == 0" />
+            </list>
+        </field>
+    </record>
+
+    <!-- Asset Compliance Report Kanban View -->
+    <record id="view_asset_compliance_report_kanban" model="ir.ui.view">
+        <field name="name">asset.compliance.report.kanban</field>
+        <field name="model">asset.compliance.report</field>
+        <field name="arch" type="xml">
+            <kanban create="false" class="o_asset_compliance_kanban">
+                <field name="asset_name" />
+                <field name="asset_type" />
+                <field name="compliance_percentage" />
+                <field name="compliance_status" />
+                <field name="total_required" />
+                <field name="total_valid" />
+                <field name="total_expired" />
+                <field name="total_expiring" />
+                <field name="next_expiry_date" />
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="o_kanban_record_top mb8">
+                                <div class="o_kanban_record_headings">
+                                    <strong class="o_kanban_record_title">
+                                        <field name="asset_name" />
+                                    </strong>
+                                </div>
+                                <field name="asset_type" widget="badge" />
+                            </div>
+                            <div class="o_kanban_record_body">
+                                <div class="text-center mb8">
+                                    <field name="compliance_percentage" widget="gauge"
+                                        options="{'max_value': 100, 'label': 'Compliance'}" />
+                                </div>
+                                <div>
+                                    <span class="text-muted">Documents: </span>
+                                    <span
+                                        t-esc="record.total_valid.value" /> / <span
+                                        t-esc="record.total_required.value" />
+                                </div>
+                                <div t-if="record.total_expired.raw_value > 0" class="text-danger">
+                                    <i class="fa fa-exclamation-circle" /> <span
+                                        t-esc="record.total_expired.value" /> Expired </div>
+                                <div t-if="record.total_expiring.raw_value > 0" class="text-warning">
+                                    <i class="fa fa-clock-o" /> <span
+                                        t-esc="record.total_expiring.value" /> Expiring Soon </div>
+                                <div t-if="record.next_expiry_date.value" class="text-muted mt4">
+                                    <small>Next expiry: <field name="next_expiry_date" /></small>
+                                </div>
+                            </div>
+                            <div class="o_kanban_record_bottom">
+                                <field name="compliance_status" widget="badge" />
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Asset Compliance Report Pivot View -->
+    <record id="view_asset_compliance_report_pivot" model="ir.ui.view">
+        <field name="name">asset.compliance.report.pivot</field>
+        <field name="model">asset.compliance.report</field>
+        <field name="arch" type="xml">
+            <pivot string="Asset Compliance Analysis" disable_linking="true">
+                <field name="asset_type" type="row" />
+                <field name="compliance_status" type="col" />
+                <field name="compliance_percentage" type="measure" widget="percentage" />
+                <field name="total_documents" type="measure" />
+                <field name="total_required" type="measure" />
+                <field name="total_valid" type="measure" />
+                <field name="total_expired" type="measure" />
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Asset Compliance Report Graph View -->
+    <record id="view_asset_compliance_report_graph" model="ir.ui.view">
+        <field name="name">asset.compliance.report.graph</field>
+        <field name="model">asset.compliance.report</field>
+        <field name="arch" type="xml">
+            <graph string="Asset Compliance by Type" type="pie">
+                <field name="asset_type" />
+                <field name="compliance_percentage" type="measure" />
+            </graph>
+        </field>
+    </record>
+
+    <!-- Action for Asset Compliance Dashboard -->
+    <record id="action_asset_compliance_dashboard" model="ir.actions.act_window">
+        <field name="name">Asset Compliance</field>
+        <field name="res_model">asset.compliance.report</field>
+        <field name="view_mode">kanban,list,pivot,graph</field>
+        <field name="search_view_id" ref="view_asset_compliance_report_search" />
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Asset Compliance Dashboard
+            </p>
+            <p>
+                Monitor document compliance for all your assets.
+                Track which assets have expired documents, missing requirements, or upcoming
+                renewals.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem
+        id="menu_asset_compliance_dashboard"
+        name="Asset Compliance"
+        parent="documents.menu_root"
+        action="action_asset_compliance_dashboard"
+        sequence="6" />
+
+</odoo>

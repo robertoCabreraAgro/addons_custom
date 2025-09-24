@@ -1,13 +1,13 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* documents_expiry
+# 	* product_asset
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.4alpha1+e\n"
+"Project-Id-Version: Odoo Server saas~18.2+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-25 08:09+0000\n"
-"PO-Revision-Date: 2023-05-25 08:09+0000\n"
+"POT-Creation-Date: 2025-08-23 17:21+0000\n"
+"PO-Revision-Date: 2025-08-23 17:21+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -15,95 +15,1383 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
 
-#. module: documents_expiry
+#. module: product_asset
+#: model:product.attribute.value,name:product_asset.displacement_1
+msgid "1 cilinder"
+msgstr ""
+
+#. module: product_asset
+#: model:product.attribute.value,name:product_asset.displacement_10
+msgid "10 cilinders"
+msgstr ""
+
+#. module: product_asset
+#: model:product.attribute.value,name:product_asset.displacement_2
+msgid "2 cilinders"
+msgstr ""
+
+#. module: product_asset
+#: model:product.attribute.value,name:product_asset.displacement_3
+msgid "3 cilinders"
+msgstr ""
+
+#. module: product_asset
+#: model:product.attribute.value,name:product_asset.displacement_4
+msgid "4 cilinders"
+msgstr ""
+
+#. module: product_asset
+#: model:product.attribute.value,name:product_asset.displacement_6
+msgid "6 cilinders"
+msgstr ""
+
+#. module: product_asset
+#: model:product.attribute.value,name:product_asset.displacement_8
+msgid "8 cilinders"
+msgstr ""
+
+#. module: product_asset
+#: model_terms:ir.ui.view,arch_db:product_asset.view_production_lot_form
+msgid "<span class=\"o_stat_text\">Bills</span>"
+msgstr ""
+
+#. module: product_asset
+#: model_terms:ir.ui.view,arch_db:product_asset.view_production_lot_form
+msgid "Accept Driver Change"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_stock_lot__account_prefix
+msgid "Account Prefix"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_asset_log__message_needaction
+msgid "Action Needed"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_asset_log__active
+msgid "Active"
+msgstr ""
+
+#. module: product_asset
+#: model_terms:ir.ui.view,arch_db:product_asset.search_product_lot_filter
+msgid "Active Contracts"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_asset_log__activity_ids
+msgid "Activities"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_asset_log__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_asset_log__activity_state
+msgid "Activity State"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_asset_log__activity_type_icon
+msgid "Activity Type Icon"
+msgstr ""
+
+#. module: product_asset
+#: model:res.groups,name:product_asset.fleet_group_manager
+msgid "Administrator"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,help:product_asset.field_stock_lot__highway_pass_balance_to_reload
+msgid "Amount needed to reach the monthly toll budget"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,help:product_asset.field_stock_lot__fuel_card_balance_to_reload
+msgid "Amount required to reach the recommended fuel card balance."
+msgstr ""
+
+#. module: product_asset
+#: model_terms:ir.ui.view,arch_db:product_asset.view_production_lot_form
+msgid "Amount to reload"
+msgstr ""
+
+#. module: product_asset
+#: model_terms:ir.ui.view,arch_db:product_asset.view_form_product_asset_log
+#: model_terms:ir.ui.view,arch_db:product_asset.view_search_product_asset_log
+msgid "Archived"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_stock_lot__area
+msgid "Area"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,help:product_asset.field_stock_lot__area
+msgid "Area of the asset in square meters"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_asset_log__asset_id
+#: model_terms:ir.ui.view,arch_db:product_asset.document_view_search
+msgid "Asset"
+msgstr ""
+
+#. module: product_asset
+#: model_terms:ir.ui.view,arch_db:product_asset.product_template_form_view_asset
+msgid "Asset Information"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_asset_log__asset_manager_id
+#: model:ir.model.fields,field_description:product_asset.field_product_asset_log__product_category_id
+msgid "Asset Manager"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_product__asset_type
+#: model:ir.model.fields,field_description:product_asset.field_product_template__asset_type
+#: model:ir.model.fields,field_description:product_asset.field_stock_lot__asset_type
+#: model_terms:ir.ui.view,arch_db:product_asset.product_template_search_view_asset
+msgid "Asset Type"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.actions.act_window,name:product_asset.action_product_template_asset
+#: model:ir.ui.menu,name:product_asset.menu_asset
+#: model:ir.ui.menu,name:product_asset.menu_asset_root
+msgid "Assets"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_stock_lot__date_next_assignation
+msgid "Assignment Date"
+msgstr ""
+
+#. module: product_asset
 #. odoo-python
-#: code:addons/documents_expiry/models/document.py:0
-#, python-format
-msgid "%s (copy)"
-msgstr "%s (copia)"
+#: code:addons/product_asset/models/stock_lot.py:0
+msgid "Assignment Logs"
+msgstr ""
 
-#. module: documents_expiry
-#. odoo-python
-#: code:addons/documents_expiry/models/document.py:0
-#, python-format
-msgid "A document with legal number '%s' already exists."
-msgstr "Ya existe un documento con el número legal '%s'"
+#. module: product_asset
+#: model_terms:ir.ui.view,arch_db:product_asset.view_production_lot_form
+msgid "Assignments"
+msgstr ""
 
-#. module: documents_expiry
-#: model:documents.tag,name:documents_expiry.documents_internal_expiration_current
-msgid "Current"
-msgstr "Vigente"
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_asset_log__message_attachment_count
+msgid "Attachment Count"
+msgstr ""
 
-#. module: documents_expiry
-#: model:ir.model.fields,field_description:documents_expiry.field_documents_document__issued_date
-msgid "Date Issued"
-msgstr "Fecha de emisión"
+#. module: product_asset
+#: model:product.attribute.value,name:product_asset.transmission_automatic
+msgid "Automatic"
+msgstr ""
 
-#. module: documents_expiry
-#: model:ir.model.fields,field_description:documents_expiry.field_documents_document__days_left
-msgid "Days to expiration"
-msgstr "Dias para expirar"
+#. module: product_asset
+#: model_terms:ir.ui.view,arch_db:product_asset.view_list_stock_lot
+msgid "Balance (FC)"
+msgstr ""
 
-#. module: documents_expiry
-#: model:ir.model,name:documents_expiry.model_documents_document
+#. module: product_asset
+#: model_terms:ir.ui.view,arch_db:product_asset.view_list_stock_lot
+msgid "Balance (HWP)"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_stock_lot__brand_new
+msgid "Brand New"
+msgstr ""
+
+#. module: product_asset
+#: model_terms:ir.ui.view,arch_db:product_asset.view_production_lot_form
+msgid "Budget"
+msgstr ""
+
+#. module: product_asset
+#: model_terms:ir.ui.view,arch_db:product_asset.view_list_stock_lot
+msgid "Budget (FC)"
+msgstr ""
+
+#. module: product_asset
+#: model_terms:ir.ui.view,arch_db:product_asset.view_list_stock_lot
+msgid "Budget (HWP)"
+msgstr ""
+
+#. module: product_asset
+#: model:product.attribute.value,name:product_asset.fuel_type_cng
+msgid "CNG"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_product__co2
+#: model:ir.model.fields,field_description:product_asset.field_product_template__co2
+msgid "CO2 Emissions"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,help:product_asset.field_product_product__co2
+#: model:ir.model.fields,help:product_asset.field_product_template__co2
+msgid "CO2 emissions of the vehicle"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_stock_lot__date_write_off
+msgid "Cancellation Date"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields.selection,name:product_asset.selection__product_asset_log__state__cancelled
+msgid "Cancelled"
+msgstr ""
+
+#. module: product_asset
+#: model_terms:ir.ui.view,arch_db:product_asset.product_template_form_view_asset
+msgid "Capacity Specifications"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_stock_lot__value_original
+msgid "Catalog Value (VAT Incl.)"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_stock_lot__vin_sn
+msgid "Chassis SN"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields.selection,name:product_asset.selection__stock_lot__contract_state__closed
+msgid "Closed"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_asset_log__company_id
+msgid "Company"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model,name:product_asset.model_res_config_settings
+msgid "Config Settings"
+msgstr "Ajustes de configuración"
+
+#. module: product_asset
+#: model:ir.ui.menu,name:product_asset.asset_configuration
+#: model:ir.ui.menu,name:product_asset.menu_asset_equipment_configuration
+#: model:ir.ui.menu,name:product_asset.menu_asset_fleet_configuration
+msgid "Configuration"
+msgstr ""
+
+#. module: product_asset
+#: model_terms:ir.ui.view,arch_db:product_asset.view_production_lot_form
+msgid "Contract"
+msgstr ""
+
+#. module: product_asset
+#: model_terms:ir.ui.view,arch_db:product_asset.search_product_lot_filter
+msgid "Contract Due Soon"
+msgstr ""
+
+#. module: product_asset
+#: model_terms:ir.ui.view,arch_db:product_asset.search_product_lot_filter
+msgid "Contract Overdue"
+msgstr ""
+
+#. module: product_asset
+#: model_terms:ir.ui.view,arch_db:product_asset.search_product_lot_filter
+msgid "Contract State"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_stock_lot__contract_count
+#: model_terms:ir.ui.view,arch_db:product_asset.view_production_lot_form
+msgid "Contracts"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_asset_log__amount
+msgid "Cost"
+msgstr ""
+
+#. module: product_asset
+#: model_terms:ir.ui.view,arch_db:product_asset.view_form_product_asset_log
+msgid "Cost that is paid only once at the creation of the contract"
+msgstr ""
+
+#. module: product_asset
+#: model_terms:ir.actions.act_window,help:product_asset.action_product_asset_log
+msgid "Create a new service entry"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_asset_log__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_asset_log__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_asset_log__currency_id
+msgid "Currency"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,help:product_asset.field_stock_lot__highway_pass_balance
+msgid "Current available amount in the toll card"
+msgstr ""
+
+#. module: product_asset
+#: model_terms:ir.ui.view,arch_db:product_asset.view_production_lot_form
+msgid "Current balance"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,help:product_asset.field_stock_lot__fuel_card_balance
+msgid "Current balance available on fuel card"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_stock_lot__highway_pass_balance
+msgid "Current higway pass balance"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_asset_log__date
+#: model_terms:ir.ui.view,arch_db:product_asset.view_form_product_asset_log
+msgid "Date"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,help:product_asset.field_stock_lot__date_acquisition
+msgid "Date of asset registration"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,help:product_asset.field_stock_lot__date_write_off
+msgid "Date when the asset's license plate has been cancelled/removed."
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,help:product_asset.field_product_asset_log__date
+msgid "Date when the cost has been executed"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,help:product_asset.field_product_asset_log__date_start
+msgid "Date when the coverage of the contract begins"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,help:product_asset.field_product_asset_log__date_end
+msgid ""
+"Date when the coverage of the contract expirates (by default, one year after"
+" begin date)"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_res_config_settings__delay_alert_contract
+msgid "Delay alert contract outdated"
+msgstr "Retrasar alerta de contrato desactualizado"
+
+#. module: product_asset
+#: model:product.attribute.value,name:product_asset.fuel_type_diesel
+msgid "Diesel"
+msgstr ""
+
+#. module: product_asset
+#: model:product.attribute.value,name:product_asset.fuel_type_diesel_hybrid
+msgid "Diesel hybrid"
+msgstr ""
+
+#. module: product_asset
+#: model:product.attribute,name:product_asset.product_attribute_displacement
+msgid "Displacement"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_documents_document__display_name
+#: model:ir.model.fields,field_description:product_asset.field_product_asset_log__display_name
+#: model:ir.model.fields,field_description:product_asset.field_product_product__display_name
+#: model:ir.model.fields,field_description:product_asset.field_product_template__display_name
+#: model:ir.model.fields,field_description:product_asset.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:product_asset.field_stock_lot__display_name
+msgid "Display Name"
+msgstr "Nombre en pantalla"
+
+#. module: product_asset
+#: model:ir.model,name:product_asset.model_documents_document
 msgid "Document"
 msgstr "Documento"
 
-#. module: documents_expiry
-#: model:documents.facet,name:documents_expiry.documents_internal_expiration
-msgid "Expiration"
-msgstr "Vencimiento"
+#. module: product_asset
+#: model:ir.model.fields.selection,name:product_asset.selection__product_asset_log__state__done
+msgid "Done"
+msgstr ""
 
-#. module: documents_expiry
-#: model:documents.tag,name:documents_expiry.documents_internal_expiration_expired
-#: model:ir.model.fields,field_description:documents_expiry.field_documents_document__expired
-#: model_terms:ir.ui.view,arch_db:documents_expiry.document_view_search_expiration
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_product__doors
+#: model:ir.model.fields,field_description:product_asset.field_product_template__doors
+msgid "Doors Number"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_stock_lot__operator_id
+msgid "Driver"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_stock_lot__assignment_count
+msgid "Drivers History Count"
+msgstr ""
+
+#. module: product_asset
+#: model:product.attribute.value,name:product_asset.fuel_type_electric
+msgid "Electric"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_stock_lot__engine_sn
+msgid "Engine SN"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.actions.act_window,name:product_asset.action_product_template_equipment
+#: model:ir.model.fields.selection,name:product_asset.selection__product_template__asset_type__equipment
+#: model:ir.ui.menu,name:product_asset.menu_asset_equipment_root
+#: model_terms:ir.ui.view,arch_db:product_asset.product_template_search_view_asset
+msgid "Equipment"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.ui.menu,name:product_asset.menu_asset_equipment
+msgid "Equipments"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,help:product_asset.field_stock_lot__highway_pass_budget
+msgid "Estimated monthly budget for toll usage"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_asset_log__date_end
+msgid "Expiration Date"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields.selection,name:product_asset.selection__stock_lot__contract_state__expired
 msgid "Expired"
-msgstr "Vencido"
-
-#. module: documents_expiry
-#: model:ir.model.fields,field_description:documents_expiry.field_documents_document__expiration_date
-msgid "Expiry"
-msgstr "Vencimiento"
-
-#. module: documents_expiry
-#: model:ir.actions.server,name:documents_expiry.ir_cron_find_and_set_ducuments_expired_ir_actions_server
-msgid "Find and set documents expired"
-msgstr "Encuentra documentos vencidos"
-
-#. module: documents_expiry
-#: model:ir.model.fields,field_description:documents_expiry.field_documents_document__issued_by
-msgid "Issued by"
-msgstr "Emitido por"
-
-#. module: documents_expiry
-#: model:ir.model.fields,field_description:documents_expiry.field_documents_document__legal_number
-msgid "Legal Number"
-msgstr "Número legal"
-
-#. module: documents_expiry
-#: model:documents.tag,name:documents_expiry.documents_internal_expiration_near_expire
-msgid "Near expire"
-msgstr "Proximo a vencer"
-
-#. module: documents_expiry
-#: model:ir.model.fields,help:documents_expiry.field_documents_document__issued_by
-msgid "The authority that issued this licence"
 msgstr ""
 
-#. module: documents_expiry
-#: model:ir.model.fields,help:documents_expiry.field_documents_document__issued_date
-msgid "The date on which this document was issued"
+#. module: product_asset
+#: model_terms:ir.ui.view,arch_db:product_asset.search_product_lot_filter
+msgid "Expired Contracts"
 msgstr ""
 
-#. module: documents_expiry
-#: model:ir.model.fields,help:documents_expiry.field_documents_document__expiration_date
+#. module: product_asset
+#: model_terms:ir.ui.view,arch_db:product_asset.view_production_lot_form
+msgid "Financial Information"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_stock_lot__date_first_contract
+msgid "First Contract Date"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.actions.act_window,name:product_asset.action_stock_lot_fleet
+#: model:ir.module.category,name:product_asset.module_fleet_category
+#: model:ir.ui.menu,name:product_asset.fleet_vehicles_menu
+#: model_terms:ir.ui.view,arch_db:product_asset.search_product_lot_filter
+#: model_terms:ir.ui.view,arch_db:product_asset.view_list_stock_lot
+msgid "Fleet"
+msgstr ""
+
+#. module: product_asset
+#: model_terms:ir.ui.view,arch_db:product_asset.view_search_product_asset_log
+msgid "Fleet Manager"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_asset_log__message_follower_ids
+msgid "Followers"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_asset_log__message_partner_ids
+msgid "Followers (Partners)"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,help:product_asset.field_product_asset_log__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_stock_lot__fuel_card_count
+msgid "Fuel"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_stock_lot__fuel_card_id
+#: model_terms:ir.ui.view,arch_db:product_asset.view_list_stock_lot
+#: model_terms:ir.ui.view,arch_db:product_asset.view_production_lot_form
+msgid "Fuel Card"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_stock_lot__fuel_card_balance
+msgid "Fuel Card Balance"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_stock_lot__fuel_card_balance_to_reload
+msgid "Fuel Card Balance To Reload"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_stock_lot__fuel_card_name
+msgid "Fuel Card Name"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_stock_lot__fuel_card_openning_balance
+msgid "Fuel Card Openning Balance"
+msgstr ""
+
+#. module: product_asset
+#: model_terms:ir.ui.view,arch_db:product_asset.product_template_form_view_asset
+msgid "Fuel Efficiency"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_product__fuel_efficiency_max
+#: model:ir.model.fields,field_description:product_asset.field_product_template__fuel_efficiency_max
+msgid "Fuel Efficiency Max"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_product__fuel_efficiency_min
+#: model:ir.model.fields,field_description:product_asset.field_product_template__fuel_efficiency_min
+msgid "Fuel Efficiency Min"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_product__fuel_efficiency_theoretical
+#: model:ir.model.fields,field_description:product_asset.field_product_template__fuel_efficiency_theoretical
+msgid "Fuel Efficiency Theoretical"
+msgstr ""
+
+#. module: product_asset
+#: model:product.template,name:product_asset.product_product_fuel_credit_product_template
+msgid "Fuel credit"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,help:product_asset.field_product_product__fuel_efficiency_max
+#: model:ir.model.fields,help:product_asset.field_product_product__fuel_efficiency_min
+#: model:ir.model.fields,help:product_asset.field_product_product__fuel_efficiency_theoretical
+#: model:ir.model.fields,help:product_asset.field_product_template__fuel_efficiency_max
+#: model:ir.model.fields,help:product_asset.field_product_template__fuel_efficiency_min
+#: model:ir.model.fields,help:product_asset.field_product_template__fuel_efficiency_theoretical
+msgid "Fuel efficiency in kilometers per liter (km/L)"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_product__fuel_efficiency_uom_name
+#: model:ir.model.fields,field_description:product_asset.field_product_template__fuel_efficiency_uom_name
+msgid "Fuel efficiency unit of measure label"
+msgstr ""
+
+#. module: product_asset
+#: model:product.template,name:product_asset.product_product_fuel_debit_product_template
+msgid "Fuel electronic wallet recharge"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,help:product_asset.field_product_product__fuel_tank_capacity
+#: model:ir.model.fields,help:product_asset.field_product_template__fuel_tank_capacity
+msgid "Fuel tank capacity in liters"
+msgstr ""
+
+#. module: product_asset
+#: model:product.attribute,name:product_asset.product_attribute_fuel_type
+msgid "Fuel type"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_stock_lot__future_operator_id
+msgid "Future Driver"
+msgstr ""
+
+#. module: product_asset
+#: model:product.attribute.value,name:product_asset.fuel_type_gasoline
+msgid "Gasoline"
+msgstr ""
+
+#. module: product_asset
+#: model:product.attribute.value,name:product_asset.fuel_type_gasoline_hybrid
+msgid "Gasoline hybrid"
+msgstr ""
+
+#. module: product_asset
+#: model_terms:ir.ui.view,arch_db:product_asset.product_template_form_view_asset
+msgid "General Asset Info"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_stock_lot__contract_renewal_overdue
+msgid "Has Contracts Overdue"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_stock_lot__contract_renewal_due_soon
+msgid "Has Contracts to renew"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_asset_log__has_message
+msgid "Has Message"
+msgstr ""
+
+#. module: product_asset
+#: model_terms:ir.ui.view,arch_db:product_asset.search_product_lot_filter
+msgid "Has Operator"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_stock_lot__highway_pass_count
+#: model:ir.model.fields,field_description:product_asset.field_stock_lot__highway_pass_id
+#: model_terms:ir.ui.view,arch_db:product_asset.view_list_stock_lot
+#: model_terms:ir.ui.view,arch_db:product_asset.view_production_lot_form
+msgid "Highway Pass"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_stock_lot__highway_pass_name
+msgid "Highway Pass Name"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_stock_lot__highway_pass_openning_balance
+msgid "Highway Pass Openning Balance"
+msgstr ""
+
+#. module: product_asset
+#: model:product.template,name:product_asset.product_product_highway_credit_product_template
+msgid "Highway credit"
+msgstr ""
+
+#. module: product_asset
+#: model:product.template,name:product_asset.product_product_highway_debit_product_template
+msgid "Highway electronic pass recharge"
+msgstr ""
+
+#. module: product_asset
+#: model:product.attribute.value,name:product_asset.fuel_type_hydrogen
+msgid "Hydrogen"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_documents_document__id
+#: model:ir.model.fields,field_description:product_asset.field_product_asset_log__id
+#: model:ir.model.fields,field_description:product_asset.field_product_product__id
+#: model:ir.model.fields,field_description:product_asset.field_product_template__id
+#: model:ir.model.fields,field_description:product_asset.field_res_config_settings__id
+#: model:ir.model.fields,field_description:product_asset.field_stock_lot__id
+msgid "ID"
+msgstr "Identificación"
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_asset_log__activity_exception_icon
+msgid "Icon"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,help:product_asset.field_product_asset_log__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,help:product_asset.field_product_asset_log__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,help:product_asset.field_product_asset_log__message_has_error
+#: model:ir.model.fields,help:product_asset.field_product_asset_log__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields.selection,name:product_asset.selection__stock_lot__contract_state__open
+msgid "In Progress"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields.selection,name:product_asset.selection__stock_lot__contract_state__futur
+msgid "Incoming"
+msgstr ""
+
+#. module: product_asset
+#: model:product.template,name:product_asset.product_product_insurance_product_template
+msgid "Insurance"
+msgstr ""
+
+#. module: product_asset
+#. odoo-python
+#: code:addons/product_asset/models/documents_document.py:0
+msgid "Invalid %s search"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_asset_log__message_is_follower
+msgid "Is Follower"
+msgstr ""
+
+#. module: product_asset
+#: model:product.attribute.value,name:product_asset.fuel_type_lpg
+msgid "LPG"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_stock_lot__contract_state
+msgid "Last Contract State"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_asset_log__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_asset_log__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_stock_lot__license_plate
+msgid "License Plate"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,help:product_asset.field_stock_lot__license_plate
+msgid "License plate number of the asset (eg plate number for a car)"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_stock_lot__location
+msgid "Location"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,help:product_asset.field_stock_lot__location
+msgid "Location of the asset (garage, ...)"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.actions.act_window,name:product_asset.action_product_asset_log
+#: model:ir.model.fields,field_description:product_asset.field_stock_lot__log_ids
+#: model:ir.ui.menu,name:product_asset.product_asset_log_menu
+#: model_terms:ir.ui.view,arch_db:product_asset.view_list_product_asset_log
+#: model_terms:ir.ui.view,arch_db:product_asset.view_production_lot_form
+msgid "Logs"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model,name:product_asset.model_product_asset_log
+msgid "Logs for Assets"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_documents_document__lot_id
+msgid "Lot"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model,name:product_asset.model_stock_lot
+msgid "Lot/Serial"
+msgstr "Número de serie/lote"
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_product__lot_ids
+msgid "Lots"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_product__count_lot_ids
+#: model:ir.model.fields,field_description:product_asset.field_product_template__count_lot_ids
+msgid "Lots Count"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields.selection,name:product_asset.selection__product_template__asset_type__machinery
+#: model_terms:ir.ui.view,arch_db:product_asset.product_template_search_view_asset
+msgid "Machinery"
+msgstr ""
+
+#. module: product_asset
+#: model:product.template,name:product_asset.product_product_maintenance_product_template
+msgid "Maintenance"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_stock_lot__asset_manager_id
+#: model_terms:ir.ui.view,arch_db:product_asset.search_product_lot_filter
+msgid "Manager"
+msgstr ""
+
+#. module: product_asset
+#: model:product.attribute.value,name:product_asset.transmission_manual
+msgid "Manual"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.ui.menu,name:product_asset.menu_fleet_vehicle_manufacturer
+msgid "Manufacturers"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,help:product_asset.field_stock_lot__brand_new
+msgid "Mark as True if this asset was acquired as brand new."
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_product__volume_capacity
+#: model:ir.model.fields,field_description:product_asset.field_product_template__volume_capacity
+msgid "Max Volume"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_product__weight_capacity
+#: model:ir.model.fields,field_description:product_asset.field_product_template__weight_capacity
+msgid "Max Weight"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_asset_log__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_asset_log__message_ids
+msgid "Messages"
+msgstr ""
+
+#. module: product_asset
+#: model_terms:ir.ui.view,arch_db:product_asset.search_product_lot_filter
+#: model_terms:ir.ui.view,arch_db:product_asset.view_list_stock_lot
+#: model_terms:ir.ui.view,arch_db:product_asset.view_production_lot_form
+msgid "Model"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_stock_lot__model_year
+#: model_terms:ir.ui.view,arch_db:product_asset.search_product_lot_filter
+msgid "Model Year"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.actions.act_window,name:product_asset.action_product_template_vehicle
+#: model:ir.ui.menu,name:product_asset.menu_asset_fleet_model
+msgid "Models"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_stock_lot__fuel_card_budget
+msgid "Monthly fuel budget"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_stock_lot__highway_pass_budget
+msgid "Monthly highway pass budget"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_asset_log__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields.selection,name:product_asset.selection__product_asset_log__state__new
+msgid "New"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_asset_log__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_asset_log__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_asset_log__activity_summary
+msgid "Next Activity Summary"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_asset_log__activity_type_id
+msgid "Next Activity Type"
+msgstr ""
+
+#. module: product_asset
+#: model_terms:ir.ui.view,arch_db:product_asset.search_product_lot_filter
+msgid "No Operator"
+msgstr ""
+
+#. module: product_asset
+#. odoo-python
+#: code:addons/product_asset/models/product_product.py:0
+msgid "No Plate"
+msgstr ""
+
+#. module: product_asset
+#: model:product.attribute.value,name:product_asset.displacement_0
+msgid "No cilinders"
+msgstr ""
+
+#. module: product_asset
+#. odoo-python
+#: code:addons/product_asset/models/stock_lot.py:0
+msgid "No plate"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields.selection,name:product_asset.selection__stock_lot__service_activity__none
+msgid "None"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_asset_log__notes
+#: model_terms:ir.ui.view,arch_db:product_asset.view_form_product_asset_log
+msgid "Notes"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_asset_log__message_needaction_counter
+msgid "Number of Actions"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,help:product_asset.field_product_product__doors
+#: model:ir.model.fields,help:product_asset.field_product_template__doors
+msgid "Number of doors of the vehicle"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_asset_log__message_has_error_counter
+msgid "Number of errors"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,help:product_asset.field_product_asset_log__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,help:product_asset.field_product_asset_log__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,help:product_asset.field_product_product__seats
+#: model:ir.model.fields,help:product_asset.field_product_template__seats
+msgid "Number of seats of the vehicle"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_stock_lot__odometer
+msgid "Odometer"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_asset_log__odometer
+msgid "Odometer Value"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,help:product_asset.field_product_asset_log__odometer
+msgid "Odometer measure of the Asset at the moment of this log"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,help:product_asset.field_stock_lot__odometer
+msgid "Odometer measure of the asset"
+msgstr ""
+
+#. module: product_asset
+#: model:res.groups,name:product_asset.fleet_group_user
+msgid "Officer: Manage all vehicles"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,help:product_asset.field_stock_lot__fuel_card_openning_balance
+#: model:ir.model.fields,help:product_asset.field_stock_lot__highway_pass_openning_balance
 msgid ""
-"The date on which this document will be expired. Leave it blank for non-"
-"expiration"
+"Opening balaned used to match the actual balance due differences caused by "
+"missing transactions and legacy data"
 msgstr ""
 
-#. module: documents_expiry
-#: model:ir.model.fields,help:documents_expiry.field_documents_document__days_left
-msgid "The number of days to the expired date"
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_asset_log__operator_id
+#: model_terms:ir.ui.view,arch_db:product_asset.search_product_lot_filter
+msgid "Operator"
+msgstr ""
+
+#. module: product_asset
+#: model:product.template,name:product_asset.product_product_operator_assignment_product_template
+msgid "Operator assignment"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields.selection,name:product_asset.selection__stock_lot__service_activity__overdue
+msgid "Overdue"
+msgstr ""
+
+#. module: product_asset
+#: model_terms:ir.ui.view,arch_db:product_asset.view_production_lot_form
+msgid "Personnel"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_product__power
+#: model:ir.model.fields,field_description:product_asset.field_product_template__power
+msgid "Power"
+msgstr ""
+
+#. module: product_asset
+#: model_terms:ir.ui.view,arch_db:product_asset.product_template_form_view_asset
+msgid "Power Specifications"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,help:product_asset.field_product_product__power
+#: model:ir.model.fields,help:product_asset.field_product_template__power
+msgid "Power in kW of the vehicle"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_product__power_uom_name
+#: model:ir.model.fields,field_description:product_asset.field_product_template__power_uom_name
+msgid "Power unit of measure label"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model,name:product_asset.model_product_template
+#: model:ir.model.fields,field_description:product_asset.field_product_asset_log__product_id
+#: model:ir.model.fields.selection,name:product_asset.selection__product_template__asset_type__product
+#: model_terms:ir.ui.view,arch_db:product_asset.product_template_tree_view_vehicle
+msgid "Product"
+msgstr "Producto"
+
+#. module: product_asset
+#: model:ir.model,name:product_asset.model_product_product
+msgid "Product Variant"
+msgstr "Variante del producto"
+
+#. module: product_asset
+#: model:ir.model.fields.selection,name:product_asset.selection__product_template__asset_type__property
+#: model_terms:ir.ui.view,arch_db:product_asset.product_template_search_view_asset
+msgid "Property"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_product__range
+#: model:ir.model.fields,field_description:product_asset.field_product_template__range
+msgid "Range"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_asset_log__rating_ids
+msgid "Ratings"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,help:product_asset.field_stock_lot__fuel_card_budget
+msgid ""
+"Recommended starting balance for the fuel card at the beginning of the "
+"period"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_stock_lot__date_acquisition
+msgid "Registration Date"
+msgstr ""
+
+#. module: product_asset
+#: model:product.template,name:product_asset.product_product_repair_product_template
+msgid "Repair"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_asset_log__activity_user_id
+msgid "Responsible User"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields.selection,name:product_asset.selection__product_asset_log__state__running
+msgid "Running"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_asset_log__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_product__seats
+#: model:ir.model.fields,field_description:product_asset.field_product_template__seats
+msgid "Seats Number"
+msgstr ""
+
+#. module: product_asset
+#: model_terms:ir.ui.view,arch_db:product_asset.view_search_product_asset_log
+msgid "Service"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_stock_lot__service_activity
+#: model_terms:ir.ui.view,arch_db:product_asset.search_product_lot_filter
+msgid "Service Activity"
+msgstr ""
+
+#. module: product_asset
+#: model_terms:ir.ui.view,arch_db:product_asset.search_product_lot_filter
+msgid "Service Overdue"
+msgstr ""
+
+#. module: product_asset
+#: model_terms:ir.ui.view,arch_db:product_asset.search_product_lot_filter
+msgid "Service Today"
+msgstr ""
+
+#. module: product_asset
+#: model_terms:ir.ui.view,arch_db:product_asset.view_search_product_asset_log
+msgid "Service Type"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_stock_lot__service_count
+#: model_terms:ir.ui.view,arch_db:product_asset.view_activity_product_asset_log
+#: model_terms:ir.ui.view,arch_db:product_asset.view_production_lot_form
+msgid "Services"
+msgstr ""
+
+#. module: product_asset
+#: model_terms:ir.ui.view,arch_db:product_asset.view_graph_product_asset_log
+msgid "Services Costs Per Month"
+msgstr ""
+
+#. module: product_asset
+#: model_terms:ir.ui.view,arch_db:product_asset.view_form_product_asset_log
+#: model_terms:ir.ui.view,arch_db:product_asset.view_search_product_asset_log
+msgid "Services Logs"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_asset_log__date_start
+msgid "Start Date"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_asset_log__state
+msgid "State"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,help:product_asset.field_product_asset_log__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_product__fuel_tank_capacity
+#: model:ir.model.fields,field_description:product_asset.field_product_template__fuel_tank_capacity
+msgid "Tank capacity"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,help:product_asset.field_stock_lot__account_prefix
+msgid "This fields is required by Accounting to group according to its needs."
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,help:product_asset.field_stock_lot__date_next_assignation
+msgid ""
+"This is the date at which the car will be available, if not set it means "
+"available instantly"
+msgstr ""
+
+#. module: product_asset
+#: model_terms:ir.ui.view,arch_db:product_asset.view_list_stock_lot
+msgid "To Reload (FC)"
+msgstr ""
+
+#. module: product_asset
+#: model_terms:ir.ui.view,arch_db:product_asset.view_list_stock_lot
+msgid "To Reload (HWP)"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields.selection,name:product_asset.selection__stock_lot__service_activity__today
+msgid "Today"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_stock_lot__highway_pass_balance_to_reload
+msgid "Toll Balance to Reload"
+msgstr ""
+
+#. module: product_asset
+#: model_terms:ir.ui.view,arch_db:product_asset.view_list_product_asset_log
+msgid "Total"
+msgstr ""
+
+#. module: product_asset
+#: model_terms:ir.ui.view,arch_db:product_asset.view_list_stock_lot
+msgid "Total to reload"
+msgstr ""
+
+#. module: product_asset
+#: model_terms:ir.actions.act_window,help:product_asset.action_product_asset_log
+msgid ""
+"Track all the services done on your vehicle.\n"
+"                Services can be of many types: occasional repair, fixed maintenance, etc."
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_stock_lot__trailer_hook
+msgid "Trailer Hitch"
+msgstr ""
+
+#. module: product_asset
+#: model:product.attribute,name:product_asset.product_attribute_transmission
+msgid "Transmission"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,help:product_asset.field_product_asset_log__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,help:product_asset.field_stock_lot__vin_sn
+msgid "Unique number written on an asset's chassis (VIN/SN number)."
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,help:product_asset.field_stock_lot__engine_sn
+msgid "Unique number written on the asset's engine."
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_stock_lot__value_residual
+msgid "Value Residual"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields.selection,name:product_asset.selection__product_template__asset_type__vehicle
+#: model_terms:ir.ui.view,arch_db:product_asset.search_product_lot_filter
+#: model_terms:ir.ui.view,arch_db:product_asset.view_form_product_asset_log
+msgid "Vehicle"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_product__vehicle_name
+msgid "Vehicle Name"
+msgstr ""
+
+#. module: product_asset
+#: model_terms:ir.ui.view,arch_db:product_asset.product_template_form_view_asset
+msgid "Vehicle Specifications"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.ui.menu,name:product_asset.menu_asset_fleet_root
+#: model_terms:ir.ui.view,arch_db:product_asset.product_template_search_view_asset
+#: model_terms:ir.ui.view,arch_db:product_asset.product_template_tree_view_vehicle
+msgid "Vehicles"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.actions.act_window,name:product_asset.action_stock_lot_contract_renewal
+msgid "Vehicles - Contract Renewals"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.actions.act_window,name:product_asset.action_stock_lot_service_due
+msgid "Vehicles - Service Due"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_asset_log__vendor_id
+#: model_terms:ir.ui.view,arch_db:product_asset.view_form_product_asset_log
+msgid "Vendor"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_asset_log__inv_ref
+msgid "Vendor Reference"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_product__volume_capacity_uom_name
+#: model:ir.model.fields,field_description:product_asset.field_product_template__volume_capacity_uom_name
+msgid "Volume unit of measure label"
+msgstr ""
+
+#. module: product_asset
+#: model_terms:ir.ui.view,arch_db:product_asset.view_production_lot_form
+msgid "Vouchers"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_asset_log__days_left
+msgid "Warning Date"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_asset_log__website_message_ids
+msgid "Website Messages"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,help:product_asset.field_product_asset_log__website_message_ids
+msgid "Website communication history"
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,field_description:product_asset.field_product_product__weight_capacity_uom_name
+#: model:ir.model.fields,field_description:product_asset.field_product_template__weight_capacity_uom_name
+msgid "Weight unit of measure label"
+msgstr ""
+
+#. module: product_asset
+#: model_terms:ir.ui.view,arch_db:product_asset.view_form_product_asset_log
+msgid "Write here any other information related to the service completed."
+msgstr ""
+
+#. module: product_asset
+#: model:ir.model.fields,help:product_asset.field_stock_lot__model_year
+msgid "Year of the model"
+msgstr ""
+
+#. module: product_asset
+#. odoo-python
+#: code:addons/product_asset/models/stock_lot.py:0
+msgid "asset_id"
 msgstr ""

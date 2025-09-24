@@ -15,7 +15,10 @@ class AccountMoveOperationLine(models.Model):
         required=True,
         readonly=True,
     )
-    name = fields.Char(required=True, readonly=True)
+    name = fields.Char(
+        required=True,
+        readonly=True,
+    )
     state = fields.Selection(
         selection=[
             ("waiting", "Waiting"),
@@ -26,22 +29,22 @@ class AccountMoveOperationLine(models.Model):
             # ("waiting_operation", "Waiting another operation"),
         ],
         default="draft",
-        copy=False,
         readonly=True,
+        copy=False,
     )
     orig_line_id = fields.Many2one(
         comodel_name="account.move.operation.line",
-        readonly=True,
         compute="_compute_orig_line",
-        inverse="_inverse_orig_line",
         store=True,
+        readonly=True,
+        inverse="_inverse_orig_line",
     )
     dest_line_id = fields.Many2one(
         comodel_name="account.move.operation.line",
-        readonly=True,
         compute="_compute_dest_line",
-        inverse="_inverse_dest_line",
         store=True,
+        readonly=True,
+        inverse="_inverse_dest_line",
     )
     action = fields.Selection(
         selection=[
@@ -54,15 +57,36 @@ class AccountMoveOperationLine(models.Model):
         required=True,
         index=True,
     )
-    action_id = fields.Many2one("account.move.operation.action", readonly=True)
-    template_id = fields.Many2one(
-        "account.move.template", "Move Template", readonly=True
+    action_id = fields.Many2one(
+        comodel_name="account.move.operation.action",
+        readonly=True,
     )
-    journal_id = fields.Many2one("account.journal", "Journal", readonly=True)
-    move_id = fields.Many2one("account.move", readonly=True)
-    payment_id = fields.Many2one("account.payment", readonly=True)
-    st_line_id = fields.Many2one("account.bank.statement.line", readonly=True)
-    created_operation_id = fields.Many2one("account.move.operation", readonly=True)
+    template_id = fields.Many2one(
+        comodel_name="account.move.template",
+        string="Move Template",
+        readonly=True,
+    )
+    journal_id = fields.Many2one(
+        comodel_name="account.journal",
+        string="Journal",
+        readonly=True,
+    )
+    move_id = fields.Many2one(
+        comodel_name="account.move",
+        readonly=True,
+    )
+    payment_id = fields.Many2one(
+        comodel_name="account.payment",
+        readonly=True,
+    )
+    st_line_id = fields.Many2one(
+        comodel_name="account.bank.statement.line",
+        readonly=True,
+    )
+    created_operation_id = fields.Many2one(
+        comodel_name="account.move.operation",
+        readonly=True,
+    )
     date_last_document = fields.Boolean(
         readonly=True,
         help="When creating an invoice, set the date to be the same of the previous document, "
@@ -73,7 +97,9 @@ class AccountMoveOperationLine(models.Model):
         readonly=True,
         help="Enables use of a different partner than the one set on the operation",
     )
-    multicompany = fields.Boolean(string="Is Multicompany")
+    multicompany = fields.Boolean(
+        string="Is Multicompany",
+    )
 
     @api.depends("orig_line_id.dest_line_id")
     def _compute_orig_line(self):

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.documents.fleet</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="70" />
+        <field name="inherit_id" ref="documents.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='documents']" position="attributes">
+                <attribute name="notApp">0</attribute>
+            </xpath>
+            <xpath expr="//block[@id='files_centralization_section']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+            <xpath expr="//block[@id='files_centralization_section']" position="inside">
+                <setting company_dependent="1"
+                    help="Centralize your Equipment's documents (fines, etc.)">
+                    <field name="documents_settings_equipment" />
+                    <div class="content-group" invisible="not documents_settings_equipment">
+                        <div class="row mt16">
+                            <label class="o_form_label col-lg-3" for="documents_folder_equipment_id"
+                                string="Folder" />
+                            <field name="documents_folder_equipment_id"
+                                required="documents_settings_equipment"
+                                widget="documents_folder_many2one"
+                                options="{'no_create': True, 'no_create_edit': True}" />
+                        </div>
+                        <div class="row">
+                            <label class="o_form_label col-lg-3" for="documents_tags_equipment"
+                                string="Tags" />
+                            <field name="documents_tags_equipment" widget="many2many_tags" />
+                        </div>
+                    </div>
+                </setting>
+                <setting company_dependent="1"
+                    help="Centralize your Fleet's documents (fines, etc.)">
+                    <field name="documents_settings_fleet" />
+                    <div class="content-group" invisible="not documents_settings_fleet">
+                        <div class="row mt16">
+                            <label class="o_form_label col-lg-3" for="documents_folder_fleet_id"
+                                string="Folder" />
+                            <field name="documents_folder_fleet_id"
+                                required="documents_settings_fleet"
+                                widget="documents_folder_many2one"
+                                options="{'no_create': True, 'no_create_edit': True}" />
+                        </div>
+                        <div class="row">
+                            <label class="o_form_label col-lg-3" for="documents_tags_fleet"
+                                string="Tags" />
+                            <field name="documents_tags_fleet" widget="many2many_tags" />
+                        </div>
+                    </div>
+                </setting>
+                <setting company_dependent="1"
+                    help="Centralize your Machinery's documents (fines, etc.)">
+                    <field name="documents_settings_machinery" />
+                    <div class="content-group" invisible="not documents_settings_machinery">
+                        <div class="row mt16">
+                            <label class="o_form_label col-lg-3" for="documents_folder_machinery_id"
+                                string="Folder" />
+                            <field name="documents_folder_machinery_id"
+                                required="documents_settings_machinery"
+                                widget="documents_folder_many2one"
+                                options="{'no_create': True, 'no_create_edit': True}" />
+                        </div>
+                        <div class="row">
+                            <label class="o_form_label col-lg-3" for="documents_tags_machinery"
+                                string="Tags" />
+                            <field name="documents_tags_machinery" widget="many2many_tags" />
+                        </div>
+                    </div>
+                </setting>
+                <setting company_dependent="1"
+                    help="Centralize your Property's documents (fines, etc.)">
+                    <field name="documents_settings_property" />
+                    <div class="content-group" invisible="not documents_settings_property">
+                        <div class="row mt16">
+                            <label class="o_form_label col-lg-3" for="documents_folder_property_id"
+                                string="Folder" />
+                            <field name="documents_folder_property_id"
+                                required="documents_settings_property"
+                                widget="documents_folder_many2one"
+                                options="{'no_create': True, 'no_create_edit': True}" />
+                        </div>
+                        <div class="row">
+                            <label class="o_form_label col-lg-3" for="documents_tags_property"
+                                string="Tags" />
+                            <field name="documents_tags_property" widget="many2many_tags" />
+                        </div>
+                    </div>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

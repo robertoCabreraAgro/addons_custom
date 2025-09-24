@@ -1,39 +1,333 @@
 <?xml version="1.0"?>
 <odoo>
 
-    <record id="module_fleet_category" model="ir.module.category">
-        <field name="name">Fleet</field>
-        <field name="sequence">17</field>
+    <!-- Asset Management Category -->
+    <record id="module_category_asset_management" model="ir.module.category">
+        <field name="name">Asset Management</field>
+        <field name="sequence">15</field>
     </record>
 
-    <record id="fleet_group_user" model="res.groups">
-        <field name="name">Officer: Manage all vehicles</field>
-        <field name="category_id" ref="base.module_category_human_resources_fleet" />
-        <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+    <!-- Privileges for Each Asset Type -->
+    <record id="res_groups_privilege_fleet_assets" model="res.groups.privilege">
+        <field name="name">Fleet Assets</field>
         <field name="sequence">10</field>
+        <field name="category_id" ref="module_category_asset_management" />
+    </record>
+
+    <record id="res_groups_privilege_equipment_assets" model="res.groups.privilege">
+        <field name="name">Equipment Assets</field>
+        <field name="sequence">20</field>
+        <field name="category_id" ref="module_category_asset_management" />
+    </record>
+
+    <record id="res_groups_privilege_property_assets" model="res.groups.privilege">
+        <field name="name">Property Assets</field>
+        <field name="sequence">30</field>
+        <field name="category_id" ref="module_category_asset_management" />
+    </record>
+
+    <record id="res_groups_privilege_machinery_assets" model="res.groups.privilege">
+        <field name="name">Machinery Assets</field>
+        <field name="sequence">25</field>
+        <field name="category_id" ref="module_category_asset_management" />
+    </record>
+
+    <record id="res_groups_privilege_tools_assets" model="res.groups.privilege">
+        <field name="name">Tools</field>
+        <field name="sequence">35</field>
+        <field name="category_id" ref="module_category_asset_management" />
+    </record>
+
+    <record id="res_groups_privilege_it_assets" model="res.groups.privilege">
+        <field name="name">IT Assets</field>
+        <field name="sequence">40</field>
+        <field name="category_id" ref="module_category_asset_management" />
+    </record>
+
+    <!-- Base Groups - View Only -->
+    <record id="asset_group_base_user" model="res.groups">
+        <field name="name">User: View Assets</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+    </record>
+
+    <!-- Vehicle/Fleet Management Groups -->
+    <record id="fleet_group_user" model="res.groups">
+        <field name="name">User: View Fleet Assets</field>
+        <field name="sequence">10</field>
+        <field name="privilege_id" ref="res_groups_privilege_fleet_assets" />
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
     </record>
 
     <record id="fleet_group_manager" model="res.groups">
-        <field name="name">Administrator</field>
-        <field name="implied_ids" eval="[(4, ref('fleet_group_user'))]" />
-        <field name="category_id" ref="base.module_category_human_resources_fleet" />
-        <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]" />
+        <field name="name">Manager: Manage Fleet Assets</field>
         <field name="sequence">20</field>
+        <field name="implied_ids" eval="[(4, ref('fleet_group_user'))]" />
+        <field name="privilege_id" ref="res_groups_privilege_fleet_assets" />
+    </record>
+
+    <!-- Equipment/Maintenance Groups -->
+    <record id="equipment_group_user" model="res.groups">
+        <field name="name">User: View Equipment Assets</field>
+        <field name="sequence">10</field>
+        <field name="privilege_id" ref="res_groups_privilege_equipment_assets" />
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+    </record>
+
+    <record id="equipment_group_manager" model="res.groups">
+        <field name="name">Manager: Manage Equipment Assets</field>
+        <field name="sequence">20</field>
+        <field name="implied_ids" eval="[(4, ref('equipment_group_user'))]" />
+        <field name="privilege_id" ref="res_groups_privilege_equipment_assets" />
+    </record>
+
+    <!-- Property/Real Estate Groups -->
+    <record id="property_group_user" model="res.groups">
+        <field name="name">User: View Property Assets</field>
+        <field name="sequence">10</field>
+        <field name="privilege_id" ref="res_groups_privilege_property_assets" />
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+    </record>
+
+    <record id="property_group_manager" model="res.groups">
+        <field name="name">Manager: Manage Property Assets</field>
+        <field name="sequence">20</field>
+        <field name="implied_ids" eval="[(4, ref('property_group_user'))]" />
+        <field name="privilege_id" ref="res_groups_privilege_property_assets" />
+    </record>
+
+    <!-- Machinery Groups -->
+    <record id="machinery_group_user" model="res.groups">
+        <field name="name">User: View Machinery</field>
+        <field name="sequence">10</field>
+        <field name="privilege_id" ref="res_groups_privilege_machinery_assets" />
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+    </record>
+
+    <record id="machinery_group_manager" model="res.groups">
+        <field name="name">Manager: Manage Machinery</field>
+        <field name="sequence">20</field>
+        <field name="implied_ids" eval="[(4, ref('machinery_group_user'))]" />
+        <field name="privilege_id" ref="res_groups_privilege_machinery_assets" />
+    </record>
+
+    <!-- Tools Groups -->
+    <record id="tools_group_user" model="res.groups">
+        <field name="name">User: View Tools</field>
+        <field name="sequence">10</field>
+        <field name="privilege_id" ref="res_groups_privilege_tools_assets" />
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+    </record>
+
+    <record id="tools_group_manager" model="res.groups">
+        <field name="name">Manager: Manage Tools</field>
+        <field name="sequence">20</field>
+        <field name="implied_ids" eval="[(4, ref('tools_group_user'))]" />
+        <field name="privilege_id" ref="res_groups_privilege_tools_assets" />
+    </record>
+
+    <!-- IT Asset Groups -->
+    <record id="it_asset_group_user" model="res.groups">
+        <field name="name">User: View IT Assets</field>
+        <field name="sequence">10</field>
+        <field name="privilege_id" ref="res_groups_privilege_it_assets" />
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+    </record>
+
+    <record id="it_asset_group_manager" model="res.groups">
+        <field name="name">Manager: Manage IT Assets</field>
+        <field name="sequence">20</field>
+        <field name="implied_ids" eval="[(4, ref('it_asset_group_user'))]" />
+        <field name="privilege_id" ref="res_groups_privilege_it_assets" />
+    </record>
+
+    <!-- Global Asset Administrator - Can see and manage all asset types -->
+    <record id="asset_group_administrator" model="res.groups">
+        <field name="name">Administrator: Full Asset System Access</field>
+        <field name="implied_ids"
+            eval="[
+            (4, ref('fleet_group_manager')),
+            (4, ref('equipment_group_manager')),
+            (4, ref('machinery_group_manager')),
+            (4, ref('tools_group_manager')),
+            (4, ref('property_group_manager')),
+            (4, ref('it_asset_group_manager'))
+        ]" />
+        <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]" />
     </record>
 
     <data noupdate="1">
 
+        <!-- Asset Type-based Access Rules for product.template -->
+
+        <!-- Vehicle/Fleet Access -->
+        <record id="rule_product_template_fleet" model="ir.rule">
+            <field name="name">Fleet: Access only vehicle assets</field>
+            <field name="model_id" ref="product.model_product_template" />
+            <field name="groups" eval="[(4, ref('fleet_group_user'))]" />
+            <field name="domain_force">[('asset_type', '=', 'vehicle')]</field>
+        </record>
+
+        <!-- Equipment Access -->
+        <record id="rule_product_template_equipment" model="ir.rule">
+            <field name="name">Equipment: Access only equipment assets</field>
+            <field name="model_id" ref="product.model_product_template" />
+            <field name="groups" eval="[(4, ref('equipment_group_user'))]" />
+            <field name="domain_force">[('asset_type', '=', 'equipment')]</field>
+        </record>
+
+        <!-- Property Access -->
+        <record id="rule_product_template_property" model="ir.rule">
+            <field name="name">Property: Access only property assets</field>
+            <field name="model_id" ref="product.model_product_template" />
+            <field name="groups" eval="[(4, ref('property_group_user'))]" />
+            <field name="domain_force">[('asset_type', '=', 'property')]</field>
+        </record>
+
+        <!-- Machinery Access -->
+        <record id="rule_product_template_machinery" model="ir.rule">
+            <field name="name">Machinery: Access only machinery assets</field>
+            <field name="model_id" ref="product.model_product_template" />
+            <field name="groups" eval="[(4, ref('machinery_group_user'))]" />
+            <field name="domain_force">[('asset_type', '=', 'machinery')]</field>
+        </record>
+
+        <!-- Tools Access -->
+        <record id="rule_product_template_tools" model="ir.rule">
+            <field name="name">Tools: Access only tools assets</field>
+            <field name="model_id" ref="product.model_product_template" />
+            <field name="groups" eval="[(4, ref('tools_group_user'))]" />
+            <field name="domain_force">[('asset_type', '=', 'tools')]</field>
+        </record>
+
+        <!-- IT Asset Access -->
+        <record id="rule_product_template_it" model="ir.rule">
+            <field name="name">IT: Access only IT assets</field>
+            <field name="model_id" ref="product.model_product_template" />
+            <field name="groups" eval="[(4, ref('it_asset_group_user'))]" />
+            <field name="domain_force">[('asset_type', '=', 'it_asset')]</field>
+        </record>
+
+        <!-- Asset Administrator sees all -->
+        <record id="rule_product_template_admin" model="ir.rule">
+            <field name="name">Administrator has all rights on all assets</field>
+            <field name="model_id" ref="product.model_product_template" />
+            <field name="groups" eval="[(4, ref('asset_group_administrator'))]" />
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+
+        <!-- Asset Type-based Access Rules for Logs -->
+
         <record id="rule_product_asset_log_multicompany" model="ir.rule">
-            <field name="name">Fleet log services: Multi Company</field>
+            <field name="name">Asset log services: Multi Company</field>
             <field name="model_id" ref="model_product_asset_log" />
             <field name="global" eval="True" />
             <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
         </record>
 
-        <record id="rule_product_asset_log_manager" model="ir.rule">
-            <field name="name">Administrator has all rights on vehicle's services</field>
+        <!-- Vehicle Log Access -->
+        <record id="rule_product_asset_log_fleet" model="ir.rule">
+            <field name="name">Fleet: Access only vehicle logs</field>
             <field name="model_id" ref="model_product_asset_log" />
-            <field name="groups" eval="[Command.link(ref('fleet_group_manager'))]" />
+            <field name="groups" eval="[(4, ref('fleet_group_user'))]" />
+            <field name="domain_force">[('asset_id.asset_type', '=', 'vehicle')]</field>
+        </record>
+
+        <!-- Equipment Log Access -->
+        <record id="rule_product_asset_log_equipment" model="ir.rule">
+            <field name="name">Equipment: Access only equipment logs</field>
+            <field name="model_id" ref="model_product_asset_log" />
+            <field name="groups" eval="[(4, ref('equipment_group_user'))]" />
+            <field name="domain_force">[('asset_id.asset_type', '=', 'equipment')]</field>
+        </record>
+
+        <!-- Property Log Access -->
+        <record id="rule_product_asset_log_property" model="ir.rule">
+            <field name="name">Property: Access only property logs</field>
+            <field name="model_id" ref="model_product_asset_log" />
+            <field name="groups" eval="[(4, ref('property_group_user'))]" />
+            <field name="domain_force">[('asset_id.asset_type', '=', 'property')]</field>
+        </record>
+
+        <!-- Machinery Log Access -->
+        <record id="rule_product_asset_log_machinery" model="ir.rule">
+            <field name="name">Machinery: Access only machinery logs</field>
+            <field name="model_id" ref="model_product_asset_log" />
+            <field name="groups" eval="[(4, ref('machinery_group_user'))]" />
+            <field name="domain_force">[('asset_id.asset_type', '=', 'machinery')]</field>
+        </record>
+
+        <!-- Tools Log Access -->
+        <record id="rule_product_asset_log_tools" model="ir.rule">
+            <field name="name">Tools: Access only tools logs</field>
+            <field name="model_id" ref="model_product_asset_log" />
+            <field name="groups" eval="[(4, ref('tools_group_user'))]" />
+            <field name="domain_force">[('asset_id.asset_type', '=', 'tools')]</field>
+        </record>
+
+        <!-- IT Asset Log Access -->
+        <record id="rule_product_asset_log_it" model="ir.rule">
+            <field name="name">IT: Access only IT asset logs</field>
+            <field name="model_id" ref="model_product_asset_log" />
+            <field name="groups" eval="[(4, ref('it_asset_group_user'))]" />
+            <field name="domain_force">[('asset_id.asset_type', '=', 'it_asset')]</field>
+        </record>
+
+        <!-- Administrator Log Access -->
+        <record id="rule_product_asset_log_admin" model="ir.rule">
+            <field name="name">Administrator has all rights on all logs</field>
+            <field name="model_id" ref="model_product_asset_log" />
+            <field name="groups" eval="[(4, ref('asset_group_administrator'))]" />
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+
+        <!-- Stock Lot Access Rules -->
+
+        <!-- Fleet/Vehicle Lots -->
+        <record id="rule_stock_lot_fleet" model="ir.rule">
+            <field name="name">Fleet: Access only vehicle lots</field>
+            <field name="model_id" ref="stock.model_stock_lot" />
+            <field name="groups" eval="[(4, ref('fleet_group_user'))]" />
+            <field name="domain_force">[('product_id.asset_type', '=', 'vehicle')]</field>
+        </record>
+
+        <!-- Equipment Lots -->
+        <record id="rule_stock_lot_equipment" model="ir.rule">
+            <field name="name">Equipment: Access only equipment lots</field>
+            <field name="model_id" ref="stock.model_stock_lot" />
+            <field name="groups" eval="[(4, ref('equipment_group_user'))]" />
+            <field name="domain_force">[('product_id.asset_type', '=', 'equipment')]</field>
+        </record>
+
+        <!-- Property Lots -->
+        <record id="rule_stock_lot_property" model="ir.rule">
+            <field name="name">Property: Access only property lots</field>
+            <field name="model_id" ref="stock.model_stock_lot" />
+            <field name="groups" eval="[(4, ref('property_group_user'))]" />
+            <field name="domain_force">[('product_id.asset_type', '=', 'property')]</field>
+        </record>
+
+        <!-- Machinery Lots -->
+        <record id="rule_stock_lot_machinery" model="ir.rule">
+            <field name="name">Machinery: Access only machinery lots</field>
+            <field name="model_id" ref="stock.model_stock_lot" />
+            <field name="groups" eval="[(4, ref('machinery_group_user'))]" />
+            <field name="domain_force">[('product_id.asset_type', '=', 'machinery')]</field>
+        </record>
+
+        <!-- Tools Lots -->
+        <record id="rule_stock_lot_tools" model="ir.rule">
+            <field name="name">Tools: Access only tools lots</field>
+            <field name="model_id" ref="stock.model_stock_lot" />
+            <field name="groups" eval="[(4, ref('tools_group_user'))]" />
+            <field name="domain_force">[('product_id.asset_type', '=', 'tools')]</field>
+        </record>
+
+        <!-- IT Asset Lots -->
+        <record id="rule_stock_lot_it" model="ir.rule">
+            <field name="name">IT: Access only IT asset lots</field>
+            <field name="model_id" ref="stock.model_stock_lot" />
+            <field name="groups" eval="[(4, ref('it_asset_group_user'))]" />
+            <field name="domain_force">[('product_id.asset_type', '=', 'it_asset')]</field>
         </record>
 
     </data>

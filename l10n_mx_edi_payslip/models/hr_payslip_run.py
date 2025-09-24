@@ -16,22 +16,27 @@ class HrPayslipRun(models.Model):
 
     def generate_payslips(self, version_ids=None, employee_ids=None):
         """Extend payslip generation to include Mexican EDI customizations"""
-        res = super().generate_payslips(version_ids=version_ids, employee_ids=employee_ids)
-        
+        res = super().generate_payslips(
+            version_ids=version_ids, employee_ids=employee_ids
+        )
+
         # Get payslips created in this run
         payslips = self.slip_ids
-        
+
         # Apply payment date from payslip run
         if self.l10n_mx_edi_payment_date:
-            payslips.write({
-                "l10n_mx_edi_payment_date": self.l10n_mx_edi_payment_date,
-            })
+            payslips.write(
+                {
+                    "l10n_mx_edi_payment_date": self.l10n_mx_edi_payment_date,
+                }
+            )
 
         # Handle automatic settlement logic for Mexico
         if self.env.company.l10n_mx_edi_automatic_settlement:
             struct_id = self.env.ref("l10n_mx_edi_payslip.payroll_structure_data_01")
             changed_slips = payslips.filtered(
-                lambda slip, st=struct_id: slip.date_to == slip.version_id.contract_date_end
+                lambda slip, st=struct_id: slip.date_to
+                == slip.version_id.contract_date_end
                 and slip.struct_id == struct_id
             )
             settlement_struct_id = self.env.ref(

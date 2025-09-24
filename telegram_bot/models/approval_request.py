@@ -111,7 +111,9 @@ class ApprovalRequest(models.Model):
         self.ensure_one()
         if not self.bank_statement_line_id or not self.operation_type_id:
             raise UserError(
-                _("Please select a Bank Statement Line and an Operation Type before creating the operation.")
+                _(
+                    "Please select a Bank Statement Line and an Operation Type before creating the operation."
+                )
             )
 
         wizard_model = self.env["account.move.operation.from.entry"]
@@ -144,7 +146,9 @@ class ApprovalRequest(models.Model):
         action_result = wizard.action_create_operation()
 
         # The created record's ID is in the 'res_id' of the returned action.
-        created_op_id = action_result.get("res_id") if isinstance(action_result, dict) else None
+        created_op_id = (
+            action_result.get("res_id") if isinstance(action_result, dict) else None
+        )
 
         if not created_op_id:
             _logger.error(
@@ -152,7 +156,9 @@ class ApprovalRequest(models.Model):
                 self.name,
             )
             raise UserError(
-                _("Operation creation failed. The wizard did not return the created record. Please check the logs.")
+                _(
+                    "Operation creation failed. The wizard did not return the created record. Please check the logs."
+                )
             )
 
         self.account_move_operation_id = created_op_id

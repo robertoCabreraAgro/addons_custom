@@ -6,14 +6,14 @@ class AccountMove(models.Model):
     _inherit = "account.move"
 
     operation_line_ids = fields.One2many(
-        "account.move.operation.line",
-        "move_id",
+        comodel_name="account.move.operation.line",
+        inverse_name="move_id",
         string="Operation Lines",
         readonly=True,
     )
 
     operation_id = fields.Many2one(
-        "account.move.operation",
+        comodel_name="account.move.operation",
         string="Source Operation",
         compute="_compute_operation_id",
         store=True,

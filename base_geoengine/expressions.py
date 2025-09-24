@@ -29,7 +29,13 @@ expression.TERM_OPERATORS = tuple(term_operators_list)
 
 
 def _condition_to_sql(
-    self, field_expr: str, operator: str, value, model: BaseModel, alias: str, query: Query
+    self,
+    field_expr: str,
+    operator: str,
+    value,
+    model: BaseModel,
+    alias: str,
+    query: Query,
 ) -> SQL:
     """
     This method has been monkey patched in order to be able to include
@@ -95,7 +101,9 @@ def _condition_to_sql(
                 )
             return SQL(sql_query, *params)
     # Call the original method from the field itself
-    return super(GeoField, self)._condition_to_sql(field_expr, operator, value, model, alias, query)
+    return super(GeoField, self)._condition_to_sql(
+        field_expr, operator, value, model, alias, query
+    )
 
 
 def get_geo_func(current_operator, operator, left, value, params, table):

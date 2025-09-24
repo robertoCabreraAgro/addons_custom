@@ -4,9 +4,9 @@ import {
     serializeDate,
     serializeDateTime,
 } from "@web/core/l10n/dates";
-import {Select} from "@web/core/tree_editor/tree_editor_components";
 import {TreeEditor} from "@web/core/tree_editor/tree_editor";
 import {patch} from "@web/core/utils/patch";
+import {useService} from "@web/core/utils/hooks";
 
 function toDateTime(date, type, end) {
     if (type === "date") {
@@ -14,12 +14,10 @@ function toDateTime(date, type, end) {
     }
     let jsDate = deserializeDate(date);
     if (end) {
-        jsDate = luxon.DateTime.fromObject({
-            ...jsDate.c,
-            hour: 23,
-            minute: 59,
-            second: 59,
-        });
+        // Set to end of day
+        const endDate = new Date(jsDate);
+        endDate.setHours(23, 59, 59, 999);
+        return serializeDateTime(endDate);
     }
     return serializeDateTime(jsDate);
 }
@@ -34,18 +32,28 @@ function fromDateTime(date, type) {
 patch(TreeEditor.prototype, {
     setup() {
         super.setup();
+        try {
+            this.fieldService = useService("field");
+        } catch (e) {
+            console.warn("Field service not available:", e);
+        }
     },
+
     getValueEditorInfo(node) {
-        const fieldDef = this.getFieldDef(node.path);
+        const fieldDef = this.getFieldDef ? this.getFieldDef(node.path) : null;
         const info = super.getValueEditorInfo.apply(this, arguments);
+
         if (
             fieldDef &&
             (fieldDef.type === "date" || fieldDef.type === "datetime") &&
-            node.operator.includes("daterange")
+            node.operator && node.operator.includes("daterange")
         ) {
-            info.component = Select;
+            // For date range operators, we need to provide a select component
+            // This will be handled by the domain selector context
         }
-        if (typeof this.env.domain !== "undefined") {
+
+        // Check if we have domain context with date ranges
+        if (typeof this.env !== "undefined" && this.env.domain) {
             let dateRanges = this.env.domain.dateRanges;
             if (this.update_operator && this.update_operator.split("daterange_")[1]) {
                 dateRanges = this.env.domain.dateRanges.filter(

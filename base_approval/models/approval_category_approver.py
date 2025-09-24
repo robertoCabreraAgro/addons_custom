@@ -2,8 +2,21 @@ from odoo import api, fields, models
 
 
 class ApprovalCategoryApprover(models.Model):
-    """Intermediate model between approval.category and res.users
-    To know whether an approver for this category is required or not"""
+    """
+    Approval Category Approver Model.
+
+    This model serves as a many-to-many relationship between approval categories
+    and users, with additional attributes for each approver assignment.
+
+    It allows defining:
+    - Which users can approve requests for a specific category
+    - Whether each approver is required or optional
+    - The sequence in which approvers should review (for sequential workflows)
+
+    This design pattern enables flexible approval workflows where some approvers
+    are mandatory while others are optional, and supports both parallel and
+    sequential approval processes.
+    """
 
     _name = "approval.category.approver"
     _description = "Approval Category Approver"
@@ -41,5 +54,15 @@ class ApprovalCategoryApprover(models.Model):
 
     @api.depends("category_id")
     def _compute_existing_user_ids(self):
+        """
+        Compute list of users already assigned as approvers for this category.
+
+        This method prevents duplicate user assignments within the same category
+        by maintaining a list of users who are already approvers. The computed
+        field is used in the domain of the user_id field to exclude already
+        selected users from the selection.
+
+        :return: None (sets existing_user_ids field)
+        """
         for record in self:
             record.existing_user_ids = record.category_id.approver_ids.user_id

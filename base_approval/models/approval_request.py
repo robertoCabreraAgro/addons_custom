@@ -1,10 +1,19 @@
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
-from odoo.tools.translate import _
 
 
 class ApprovalRequest(models.Model):
+    """
+    Approval Request Model.
+
+    This model manages approval requests for various business processes.
+    It supports multi-level approvals, sequential/parallel approval flows,
+    and integration with mail activities for notifications.
+
+    :inherits: mail.thread.main.attachment, mail.activity.mixin
+    """
+
     _name = "approval.request"
     _description = "Approval Request"
     _inherit = ["mail.thread.main.attachment", "mail.activity.mixin"]
@@ -26,6 +35,7 @@ class ApprovalRequest(models.Model):
         comodel_name="approval.category",
         string="Category",
         required=True,
+        index=True,
     )
     category_image = fields.Binary(related="category_id.image")
     request_owner_id = fields.Many2one(
@@ -34,21 +44,36 @@ class ApprovalRequest(models.Model):
         check_company=True,
         domain="[('company_ids', 'in', company_id)]",
         default=lambda self: self.env.user,
+        index=True,
     )
     name = fields.Char(
         string="Approval Subject",
         tracking=True,
     )
+    priority = fields.Selection(
+        selection=[
+            ("0", "Very Low"),
+            ("1", "Low"),
+            ("2", "Normal"),
+            ("3", "High"),
+        ],
+        string="Priority",
+    )
     date = fields.Datetime(string="Date")
     date_start = fields.Datetime(string="Date start")
     date_end = fields.Datetime(string="Date end")
     date_deadline = fields.Datetime(string="Date Deadline")
-    date_confirmed = fields.Datetime(string="Date Confirmed")
+    date_confirmed = fields.Datetime(
+        string="Date Confirmed",
+        index=True,
+    )
+    date_planned = fields.Datetime(string="Date Planned")
     location = fields.Char(string="Location")
     partner_id = fields.Many2one(
         comodel_name="res.partner",
         string="Contact",
         check_company=True,
+        index="btree_not_null",
     )
     reference = fields.Char(string="Reference")
     reason = fields.Html(string="Description")
@@ -71,22 +96,7 @@ class ApprovalRequest(models.Model):
         readonly=True,
     )
     state = fields.Selection(
-        [
-            ("new", "To Submit"),
-            ("pending", "Submitted"),
-            ("approved", "Approved"),
-            ("refused", "Refused"),
-            ("cancel", "Canceled"),
-        ],
-        default="new",
-        # compute="_compute_state",
-        # store=True,
-        # tracking=True,
-        # group_expand=True,
-        # index=True,
-    )
-    request_status = fields.Selection(
-        [
+        selection=[
             ("new", "To Submit"),
             ("pending", "Submitted"),
             ("approved", "Approved"),
@@ -101,7 +111,7 @@ class ApprovalRequest(models.Model):
         index=True,
     )
     user_state = fields.Selection(
-        [
+        selection=[
             ("new", "New"),
             ("pending", "To Approve"),
             ("waiting", "Waiting"),
@@ -115,12 +125,12 @@ class ApprovalRequest(models.Model):
     attachment_ids = fields.One2many(
         comodel_name="ir.attachment",
         inverse_name="res_id",
-        domain=[("res_model", "=", "approval.request")],
         string="Attachments",
+        domain=[("res_model", "=", "approval.request")],
     )
-    attachment_number = fields.Integer(
+    count_attachment = fields.Integer(
         string="Number of Attachments",
-        compute="_compute_attachment_number",
+        compute="_compute_count_attachment",
     )
 
     product_line_ids = fields.One2many(
@@ -137,10 +147,10 @@ class ApprovalRequest(models.Model):
         string="Can Change Request Owner",
         compute="_compute_has_access_to_request",
     )
-
     has_date = fields.Selection(related="category_id.has_date")
     has_date_deadline = fields.Selection(related="category_id.has_date_deadline")
-    has_period = fields.Selection(related="category_id.has_period")
+    has_date_planned = fields.Selection(related="category_id.has_date_planned")
+    has_date_range = fields.Selection(related="category_id.has_date_range")
     has_quantity = fields.Selection(related="category_id.has_quantity")
     has_amount = fields.Selection(related="category_id.has_amount")
     has_reference = fields.Selection(related="category_id.has_reference")
@@ -148,7 +158,7 @@ class ApprovalRequest(models.Model):
     has_payment_method = fields.Selection(related="category_id.has_payment_method")
     has_location = fields.Selection(related="category_id.has_location")
     has_product = fields.Selection(related="category_id.has_product")
-    requirer_document = fields.Selection(related="category_id.requirer_document")
+    has_document = fields.Selection(related="category_id.has_document")
     approval_minimum = fields.Integer(related="category_id.approval_minimum")
     approval_type = fields.Selection(related="category_id.approval_type")
     approve_sequentially = fields.Boolean(related="category_id.approve_sequentially")
@@ -161,13 +171,20 @@ class ApprovalRequest(models.Model):
 
     @api.constrains("date_start", "date_end")
     def _check_dates(self):
+        """
+        Validate that date_end is after date_start.
+
+        :raises ValidationError: If date_end is before or equal to date_start
+        """
         for request in self:
             if (
                 request.date_start
                 and request.date_end
                 and request.date_start > request.date_end
             ):
-                raise ValidationError(_("Start date should precede the end date."))
+                raise ValidationError(
+                    _("Start date should precede the end date."),
+                )
 
     @api.constrains("approver_ids")
     def _check_approver_ids(self):
@@ -177,7 +194,7 @@ class ApprovalRequest(models.Model):
                 raise UserError(
                     _(
                         "You cannot assign the same approver multiple times on the same request."
-                    )
+                    ),
                 )
 
     # ------------------------------------------------------------
@@ -222,12 +239,12 @@ class ApprovalRequest(models.Model):
                 ]
             )
             for approval in to_resequence:
-                if not approval.approver_ids.filtered(lambda a: a.status == "pending"):
+                if not approval.approver_ids.filtered(lambda a: a.state == "pending"):
                     approver = approval.approver_ids.filtered(
-                        lambda a: a.status == "waiting"
+                        lambda a: a.state == "waiting"
                     )
                     if approver:
-                        approver[0].status = "pending"
+                        approver[0].state = "pending"
                         approver[0]._create_activity()
 
         return res
@@ -240,16 +257,33 @@ class ApprovalRequest(models.Model):
         ]
 
     def unlink(self):
+        """
+        Override unlink to cascade delete related product lines.
+
+        Ensures that product lines associated with the approval request
+        are deleted when the request is deleted.
+
+        :return: Result of parent unlink method
+        :rtype: bool
+        """
         self.filtered(lambda a: a.has_product).product_line_ids.unlink()
         return super().unlink()
 
     @api.ondelete(at_uninstall=False)
     def unlink_attachments(self):
+        """
+        Delete related attachments when approval request is deleted.
+
+        This method is called before record deletion to ensure
+        all related attachments are properly cleaned up.
+
+        :note: Not executed during module uninstallation
+        """
         attachment_ids = self.env["ir.attachment"].search(
             [
                 ("res_model", "=", "approval.request"),
                 ("res_id", "in", self.ids),
-            ]
+            ],
         )
         if attachment_ids:
             attachment_ids.unlink()
@@ -265,18 +299,35 @@ class ApprovalRequest(models.Model):
     # COMPUTE METHODS
     # ------------------------------------------------------------
 
-    def _compute_attachment_number(self):
+    def _compute_count_attachment(self):
+        """
+        Compute the number of attachments for each approval request.
+
+        Uses _read_group for efficient counting of attachments
+        across multiple requests.
+        """
         domain = [("res_model", "=", "approval.request"), ("res_id", "in", self.ids)]
         attachment_data = self.env["ir.attachment"]._read_group(
-            domain, ["res_id"], ["__count"]
+            domain,
+            ["res_id"],
+            ["__count"],
         )
         attachment = dict(attachment_data)
         for request in self:
-            request.attachment_number = attachment.get(request.id, 0)
+            request.count_attachment = attachment.get(request.id, 0)
 
     @api.depends_context("uid")
     @api.depends("request_owner_id")
     def _compute_has_access_to_request(self):
+        """
+        Compute access rights for the current user.
+
+        Determines if the current user:
+        - Has access to view/edit the request (owner with approval rights)
+        - Can change the request owner (approval user group)
+
+        :context uid: Current user ID used for access computation
+        """
         is_approval_user = self.env.user.has_group("base_approval.group_approval_user")
         self.can_change_request_owner = is_approval_user
         for request in self:
@@ -286,6 +337,20 @@ class ApprovalRequest(models.Model):
 
     @api.depends("category_id", "request_owner_id")
     def _compute_approver_ids(self):
+        """
+        Compute the list of approvers based on category configuration.
+
+        This method:
+        1. Adds manager as approver if configured
+        2. Adds category-defined approvers
+        3. Preserves manually added approvers
+        4. Sets approval sequence (manager first, then category approvers)
+
+        The sequence is:
+        - Manager: 9 (lowest, appears first)
+        - Category approvers: as defined
+        - Manual approvers: 1000 (highest, appears last)
+        """
         for request in self:
             users_to_approver = {}
             for approver in request.approver_ids:
@@ -299,7 +364,8 @@ class ApprovalRequest(models.Model):
 
             if request.manager_approval:
                 employee = self.env["hr.employee"].search(
-                    [("user_id", "=", request.request_owner_id.id)], limit=1
+                    [("user_id", "=", request.request_owner_id.id)],
+                    limit=1,
                 )
                 if employee.parent_id.user_id:
                     manager_user_id = employee.parent_id.user_id.id
@@ -328,7 +394,10 @@ class ApprovalRequest(models.Model):
                 # Reset sequence and required for the remaining approvers that are no (longer) part of the category approvers or managers.
                 # Set the sequence of these manually added approvers to 1000, so that they always appear after the category approvers.
                 self._update_approver_vals(
-                    current_approver, approver_id_vals, False, 1000
+                    current_approver,
+                    approver_id_vals,
+                    False,
+                    1000,
                 )
 
             request.update({"approver_ids": approver_id_vals})
@@ -339,43 +408,63 @@ class ApprovalRequest(models.Model):
             request.user_ids = request.approver_ids.user_id
 
     @api.depends_context("uid")
-    @api.depends("approver_ids.status")
+    @api.depends("approver_ids.state")
     def _compute_user_state(self):
+        """
+        Compute the current user's approval status for this request.
+
+        Filters approvers to find the current user's entry and
+        returns their approval state (pending/approved/refused).
+
+        :context uid: Current user ID for filtering
+        """
         for approval in self:
             approval.user_state = approval.approver_ids.filtered(
                 lambda approver: approver.user_id == self.env.user
-            ).status
+            ).state
 
-    @api.depends("approver_ids.status", "approver_ids.required")
+    @api.depends("approver_ids.state", "approver_ids.required")
     def _compute_state(self):
+        """
+        Compute the overall request state based on approver states.
+
+        State logic:
+        - 'cancel': Any approver canceled
+        - 'refused': Any approver refused
+        - 'pending': Awaiting approvals
+        - 'approved': All required approvers approved AND minimum approvals met
+        - 'new': No approvers defined
+
+        :depends approver_ids.state: Individual approver states
+        :depends approver_ids.required: Whether approver is mandatory
+        """
         for request in self:
-            status_lst = request.mapped("approver_ids.status")
+            state_lst = request.mapped("approver_ids.state")
             required_approved = all(
-                a.status == "approved"
-                for a in request.approver_ids.filtered("required")
+                a.state == "approved" for a in request.approver_ids.filtered("required")
             )
             minimal_approver = (
                 request.approval_minimum
-                if len(status_lst) >= request.approval_minimum
-                else len(status_lst)
+                if len(state_lst) >= request.approval_minimum
+                else len(state_lst)
             )
-            if status_lst:
-                if status_lst.count("cancel"):
-                    status = "cancel"
-                elif status_lst.count("refused"):
-                    status = "refused"
-                elif status_lst.count("new"):
-                    status = "new"
+            if state_lst:
+                if state_lst.count("cancel"):
+                    state = "cancel"
+                elif state_lst.count("refused"):
+                    state = "refused"
+                elif state_lst.count("new"):
+                    state = "new"
                 elif (
-                    status_lst.count("approved") >= minimal_approver
+                    state_lst.count("approved") >= minimal_approver
                     and required_approved
                 ):
-                    status = "approved"
+                    state = "approved"
                 else:
-                    status = "pending"
+                    state = "pending"
             else:
-                status = "new"
-            request.state = status
+                state = "new"
+            request.state = state
 
         self.filtered_domain(
             [("state", "in", ["approved", "refused", "cancel"])]
@@ -402,22 +491,22 @@ class ApprovalRequest(models.Model):
         self.ensure_one()
         self._check_manager_approval_constraints()
         self._check_enough_approvers()
-        self._check_requirer_document_has_attachment()
+        self._check_has_document_has_attachment()
         approvers = self.approver_ids
         if self.approve_sequentially:
             approvers = approvers.filtered(
-                lambda a: a.status in ["new", "pending", "waiting"]
+                lambda a: a.state in ["new", "pending", "waiting"]
             )
-            approvers[1:].sudo().write({"status": "waiting"})
+            approvers[1:].sudo().write({"state": "waiting"})
             approvers = (
                 approvers[0]
-                if approvers and approvers[0].status != "pending"
+                if approvers and approvers[0].state != "pending"
                 else self.env["approval.approver"]
             )
         else:
-            approvers = approvers.filtered(lambda a: a.status == "new")
+            approvers = approvers.filtered(lambda a: a.state == "new")
         approvers._create_activity()
-        approvers.sudo().write({"status": "pending"})
+        approvers.sudo().write({"state": "pending"})
         self.sudo().write({"date_confirmed": fields.Datetime.now()})
 
     def action_approve(self, approver=None):
@@ -426,7 +515,7 @@ class ApprovalRequest(models.Model):
             approver = self.mapped("approver_ids").filtered(
                 lambda approver: approver.user_id == self.env.user
             )
-        approver.write({"status": "approved"})
+        approver.write({"state": "approved"})
         # Send approval accepted message
         for approval in self:
             if approval.request_owner_id.partner_id:
@@ -445,7 +534,7 @@ class ApprovalRequest(models.Model):
                     subject=subject,
                     partner_ids=approval.request_owner_id.partner_id.ids,
                 )
-        self.sudo()._update_next_approvers_status(
+        self.sudo()._update_next_approvers_state(
             approver,
             "pending",
             only_next_approver=True,
@@ -457,7 +546,7 @@ class ApprovalRequest(models.Model):
             approver = self.mapped("approver_ids").filtered(
                 lambda approver: approver.user_id == self.env.user
             )
-        approver.write({"status": "refused"})
+        approver.write({"state": "refused"})
         # Send approval refused message
         for approval in self:
             if approval.request_owner_id.partner_id:
@@ -476,7 +565,7 @@ class ApprovalRequest(models.Model):
                     subject=subject,
                     partner_ids=approval.request_owner_id.partner_id.ids,
                 )
-        self.sudo()._update_next_approvers_status(
+        self.sudo()._update_next_approvers_state(
             approver, "refused", only_next_approver=False, cancel_activities=True
         )
         self.sudo()._get_user_approval_activities(user=self.env.user).action_feedback()
@@ -486,17 +575,17 @@ class ApprovalRequest(models.Model):
             approver = self.mapped("approver_ids").filtered(
                 lambda approver: approver.user_id == self.env.user
             )
-        self.sudo()._update_next_approvers_status(
+        self.sudo()._update_next_approvers_state(
             approver, "waiting", only_next_approver=False, cancel_activities=True
         )
-        approver.write({"status": "pending"})
+        approver.write({"state": "pending"})
 
     def action_draft(self):
-        self.mapped("approver_ids").write({"status": "new"})
+        self.mapped("approver_ids").write({"state": "new"})
 
     def action_cancel(self):
         self.sudo()._get_user_approval_activities(user=self.env.user).unlink()
-        self.mapped("approver_ids").write({"status": "cancel"})
+        self.mapped("approver_ids").write({"state": "cancel"})
 
     # ------------------------------------------------------------
     # HELPERS
@@ -518,50 +607,58 @@ class ApprovalRequest(models.Model):
                 Command.create(
                     {
                         "user_id": user_id,
-                        "status": "new",
+                        "state": "new",
                         "required": required,
                         "sequence": sequence,
-                    }
-                )
+                    },
+                ),
             )
         else:
             current_approver = users_to_approver.pop(user_id)
             self._update_approver_vals(
-                current_approver, approver_id_vals, required, sequence
+                current_approver,
+                approver_id_vals,
+                required,
+                sequence,
             )
 
     @api.model
     def _update_approver_vals(
-        self, approver, approver_id_vals, new_required, new_sequence
+        self,
+        approver,
+        approver_id_vals,
+        new_required,
+        new_sequence,
     ):
         if approver.required != new_required or approver.sequence != new_sequence:
             approver_id_vals.append(
                 Command.update(
-                    approver.id, {"required": new_required, "sequence": new_sequence}
-                )
+                    approver.id,
+                    {"required": new_required, "sequence": new_sequence},
+                ),
             )
 
-    def _update_next_approvers_status(
-        self, approver, new_status, only_next_approver, cancel_activities=False
+    def _update_next_approvers_state(
+        self, approver, new_state, only_next_approver, cancel_activities=False
     ):
         approvers_updated = self.env["approval.approver"]
         for approval in self.filtered("approve_sequentially"):
             current_approver = approval.approver_ids & approver
             approvers_to_update = approval.approver_ids.filtered(
-                lambda a: a.status not in ["approved", "refused"]
+                lambda a: a.state not in ["approved", "refused"]
                 and (
                     a.sequence > current_approver.sequence
                     or (
                         a.sequence == current_approver.sequence
                         and a.id > current_approver.id
                     )
-                )
+                ),
             )
             if only_next_approver and approvers_to_update:
                 approvers_to_update = approvers_to_update[0]
             approvers_updated |= approvers_to_update
-        approvers_updated.sudo().status = new_status
-        if new_status == "pending":
+        approvers_updated.sudo().state = new_state
+        if new_state == "pending":
             approvers_updated._create_activity()
         if cancel_activities:
             approvers_updated.request_id._cancel_activities()
@@ -577,8 +674,7 @@ class ApprovalRequest(models.Model):
             ),
             ("user_id", "=", user.id),
         ]
-        activities = self.env["mail.activity"].search(domain)
-        return activities
+        return self.env["mail.activity"].search(domain)
 
     # ------------------------------------------------------------
     # VALIDATIONS
@@ -590,11 +686,11 @@ class ApprovalRequest(models.Model):
                 _(
                     "You have to add at least %s approvers to confirm your request.",
                     self.approval_minimum,
-                )
+                ),
             )
 
-    def _check_requirer_document_has_attachment(self):
-        if self.requirer_document == "required" and not self.attachment_number:
+    def _check_has_document_has_attachment(self):
+        if self.has_document == "required" and not self.count_attachment:
             raise UserError(_("You have to attach at least one document."))
 
     def _check_manager_approval_constraints(self):
@@ -612,7 +708,7 @@ class ApprovalRequest(models.Model):
                     _(
                         "This request needs to be approved by your manager. There is no manager "
                         "linked to your employee profile."
-                    )
+                    ),
                 )
 
             if not employee.parent_id.user_id:
@@ -620,7 +716,7 @@ class ApprovalRequest(models.Model):
                     _(
                         "This request needs to be approved by your manager. There is no user "
                         "linked to your manager."
-                    )
+                    ),
                 )
 
             if not self.approver_ids.filtered(
@@ -630,7 +726,7 @@ class ApprovalRequest(models.Model):
                     _(
                         "This request needs to be approved by your manager. "
                         "Your manager is not in the approvers list."
-                    )
+                    ),
                 )
 
     def _check_approve_sequentially_can_approve(self):

@@ -1,399 +1,472 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo>
+<odoo noupdate="1">
+
     <record id="manufacturer_abarth" model="res.partner">
         <field name="name">Abarth</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_abarth-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_abarth-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_acura" model="res.partner">
         <field name="name">Acura</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_acura-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_acura-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_alfa" model="res.partner">
         <field name="name">Alfa</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_alfa-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_alfa-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_audi" model="res.partner">
         <field name="name">Audi</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_audi-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_audi-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_austin" model="res.partner">
         <field name="name">Austin</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_austin-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_austin-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_bentley" model="res.partner">
         <field name="name">Bentley</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_bentley-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_bentley-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_bmw" model="res.partner">
-        <field name="name">Bmw</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_bmw-image.png" />
+        <field name="name">BMW</field>
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_bmw-image.png" />
+        <field name="manufacturer" eval="True" />
+    </record>
+
+    <record id="manufacturer_brp" model="res.partner">
+        <field name="name">BRP</field>
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_brp-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_bugatti" model="res.partner">
         <field name="name">Bugatti</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_bugatti-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_bugatti-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_buick" model="res.partner">
         <field name="name">Buick</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_buick-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_buick-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_byd" model="res.partner">
-        <field name="name">Byd</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_byd-image.png" />
+        <field name="name">BYD</field>
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_byd-image.png" />
+        <field name="manufacturer" eval="True" />
+    </record>
+
+    <record id="manufacturer_case" model="res.partner">
+        <field name="name">Case</field>
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_case-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_cadillac" model="res.partner">
         <field name="name">Cadillac</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_cadillac-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_cadillac-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_chevrolet" model="res.partner">
         <field name="name">Chevrolet</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_chevrolet-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_chevrolet-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_chrysler" model="res.partner">
         <field name="name">Chrysler</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_chrysler-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_chrysler-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_citroen" model="res.partner">
         <field name="name">Citroen</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_citroen-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_citroen-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_corre_la_licorne" model="res.partner">
         <field name="name">Corre La Licorne</field>
-        <field name="image_128" type="base64"
-            file="fleet/static/img/brand_corre-la-licorne-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_corre-la-licorne-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_daewoo" model="res.partner">
         <field name="name">Daewoo</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_daewoo-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_daewoo-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_dodge" model="res.partner">
         <field name="name">Dodge</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_dodge-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_dodge-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_ferrari" model="res.partner">
         <field name="name">Ferrari</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_ferrari-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_ferrari-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_fiat" model="res.partner">
         <field name="name">Fiat</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_fiat-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_fiat-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_ford" model="res.partner">
         <field name="name">Ford</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_ford-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_ford-image.png" />
+        <field name="manufacturer" eval="True" />
+    </record>
+
+    <record id="manufacturer_freightliner" model="res.partner">
+        <field name="name">Freightliner</field>
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_freightliner-image.png" />
+        <field name="manufacturer" eval="True" />
+    </record>
+
+    <record id="manufacturer_gmc" model="res.partner">
+        <field name="name">GMC</field>
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_gmc-image.png" />
+        <field name="manufacturer" eval="True" />
+    </record>
+
+    <record id="manufacturer_hino" model="res.partner">
+        <field name="name">Hino</field>
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_hino-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_holden" model="res.partner">
         <field name="name">Holden</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_holden-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_holden-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_honda" model="res.partner">
         <field name="name">Honda</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_honda-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_honda-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_hyundai" model="res.partner">
         <field name="name">Hyundai</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_hyundai-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_hyundai-image.png" />
+        <field name="manufacturer" eval="True" />
+    </record>
+
+    <record id="manufacturer_hyster_yale" model="res.partner">
+        <field name="name">Hyster Yale</field>
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_hyster_yale-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_infiniti" model="res.partner">
         <field name="name">Infiniti</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_infiniti-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_infiniti-image.png" />
+        <field name="manufacturer" eval="True" />
+    </record>
+
+    <record id="manufacturer_international" model="res.partner">
+        <field name="name">International</field>
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_international-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_isuzu" model="res.partner">
         <field name="name">Isuzu</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_isuzu-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_isuzu-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_jaguar" model="res.partner">
         <field name="name">Jaguar</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_jaguar-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_jaguar-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_jeep" model="res.partner">
         <field name="name">Jeep</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_jeep-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_jeep-image.png" />
+        <field name="manufacturer" eval="True" />
+    </record>
+
+    <record id="manufacturer_john_deere" model="res.partner">
+        <field name="name">John Deere</field>
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_john_deere-image.png" />
+        <field name="manufacturer" eval="True" />
+    </record>
+
+    <record id="manufacturer_kenworth" model="res.partner">
+        <field name="name">Kenworth</field>
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_kenworth-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_kia" model="res.partner">
         <field name="name">Kia</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_kia-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_kia-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_koenigsegg" model="res.partner">
         <field name="name">Koenigsegg</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_koenigsegg-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_koenigsegg-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_lagonda" model="res.partner">
         <field name="name">Lagonda</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_lagonda-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_lagonda-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_lamborghini" model="res.partner">
         <field name="name">Lamborghini</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_lamborghini-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_lamborghini-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_lancia" model="res.partner">
         <field name="name">Lancia</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_lancia-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_lancia-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_land_rover" model="res.partner">
         <field name="name">Land Rover</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_land-rover-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_land-rover-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_lexus" model="res.partner">
         <field name="name">Lexus</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_lexus-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_lexus-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_lincoln" model="res.partner">
         <field name="name">Lincoln</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_lincoln-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_lincoln-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_lotus" model="res.partner">
         <field name="name">Lotus</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_lotus-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_lotus-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_maserati" model="res.partner">
         <field name="name">Maserati</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_maserati-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_maserati-image.png" />
+        <field name="manufacturer" eval="True" />
+    </record>
+
+    <record id="manufacturer_massey_ferguson" model="res.partner">
+        <field name="name">Massey Ferguson</field>
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_massey_ferguson-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_maybach" model="res.partner">
         <field name="name">Maybach</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_maybach-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_maybach-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_mazda" model="res.partner">
         <field name="name">Mazda</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_mazda-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_mazda-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_mercedes" model="res.partner">
-        <field name="name">Mercedes</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_mercedes-image.png" />
+        <field name="name">Mercedes Benz</field>
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_mercedes-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_mg" model="res.partner">
         <field name="name">Mg</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_mg-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_mg-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_mini" model="res.partner">
         <field name="name">Mini</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_mini-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_mini-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_mitsubishi" model="res.partner">
         <field name="name">Mitsubishi</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_mitsubishi-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_mitsubishi-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_morgan" model="res.partner">
         <field name="name">Morgan</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_morgan-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_morgan-image.png" />
+        <field name="manufacturer" eval="True" />
+    </record>
+
+    <record id="manufacturer_new_holland" model="res.partner">
+        <field name="name">New Holland</field>
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_new_holland-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_nissan" model="res.partner">
         <field name="name">Nissan</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_nissan-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_nissan-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_oldsmobile" model="res.partner">
         <field name="name">Oldsmobile</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_oldsmobile-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_oldsmobile-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_opel" model="res.partner">
         <field name="name">Opel</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_opel-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_opel-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_peugeot" model="res.partner">
         <field name="name">Peugeot</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_peugeot-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_peugeot-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_pontiac" model="res.partner">
         <field name="name">Pontiac</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_pontiac-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_pontiac-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_porsche" model="res.partner">
         <field name="name">Porsche</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_porsche-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_porsche-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_rambler" model="res.partner">
         <field name="name">Rambler</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_rambler-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_rambler-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_renault" model="res.partner">
         <field name="name">Renault</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_renault-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_renault-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_rolls-royce" model="res.partner">
         <field name="name">Rolls-Royce</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_rolls-royce-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_rolls-royce-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_saab" model="res.partner">
         <field name="name">Saab</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_saab-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_saab-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_scion" model="res.partner">
         <field name="name">Scion</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_scion-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_scion-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_skoda" model="res.partner">
         <field name="name">Skoda</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_skoda-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_skoda-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_smart" model="res.partner">
         <field name="name">Smart</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_smart-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_smart-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_steyr" model="res.partner">
         <field name="name">Steyr</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_steyr-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_steyr-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_subaru" model="res.partner">
         <field name="name">Subaru</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_subaru-image.png" />
-        <field name="manufacturer" eval="True" />
-    </record>
-
-    <record id="manufacturer_tesla_motors" model="res.partner">
-        <field name="name">Tesla Motors</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_tesla-motors-image.png" />
-        <field name="manufacturer" eval="True" />
-    </record>
-
-    <record id="manufacturer_toyota" model="res.partner">
-        <field name="name">Toyota</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_toyota-image.png" />
-        <field name="manufacturer" eval="True" />
-    </record>
-
-    <record id="manufacturer_trabant" model="res.partner">
-        <field name="name">Trabant</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_trabant-image.png" />
-        <field name="manufacturer" eval="True" />
-    </record>
-
-    <record id="manufacturer_volkswagen" model="res.partner">
-        <field name="name">Volkswagen</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_volkswagen-image.png" />
-        <field name="manufacturer" eval="True" />
-    </record>
-
-    <record id="manufacturer_volvo" model="res.partner">
-        <field name="name">Volvo</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_volvo-image.png" />
-        <field name="manufacturer" eval="True" />
-    </record>
-
-    <record id="manufacturer_willys" model="res.partner">
-        <field name="name">Willys</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_willys-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_subaru-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
 
     <record id="manufacturer_suzuki" model="res.partner">
         <field name="name">Suzuki</field>
-        <field name="image_128" type="base64" file="fleet/static/img/brand_suzuki-image.png" />
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_suzuki-image.png" />
         <field name="manufacturer" eval="True" />
     </record>
+
+    <record id="manufacturer_tesla_motors" model="res.partner">
+        <field name="name">Tesla Motors</field>
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_tesla-motors-image.png" />
+        <field name="manufacturer" eval="True" />
+    </record>
+
+    <record id="manufacturer_toyota" model="res.partner">
+        <field name="name">Toyota</field>
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_toyota-image.png" />
+        <field name="manufacturer" eval="True" />
+    </record>
+
+    <record id="manufacturer_trabant" model="res.partner">
+        <field name="name">Trabant</field>
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_trabant-image.png" />
+        <field name="manufacturer" eval="True" />
+    </record>
+
+    <record id="manufacturer_volkswagen" model="res.partner">
+        <field name="name">Volkswagen</field>
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_volkswagen-image.png" />
+        <field name="manufacturer" eval="True" />
+    </record>
+
+    <record id="manufacturer_volvo" model="res.partner">
+        <field name="name">Volvo</field>
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_volvo-image.png" />
+        <field name="manufacturer" eval="True" />
+    </record>
+
+    <record id="manufacturer_willys" model="res.partner">
+        <field name="name">Willys</field>
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_willys-image.png" />
+        <field name="manufacturer" eval="True" />
+    </record>
+
+    <record id="manufacturer_yamaha" model="res.partner">
+        <field name="name">Yamaha</field>
+        <field name="image_1920" type="base64" file="product_asset/static/img/brand_yamaha-image.png" />
+        <field name="manufacturer" eval="True" />
+    </record>
+
 </odoo>

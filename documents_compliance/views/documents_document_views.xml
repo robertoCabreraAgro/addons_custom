@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Search View Inheritance -->
+    <record id="document_view_search" model="ir.ui.view">
+        <field name="name">documents.document.search.compliance</field>
+        <field name="model">documents.document</field>
+        <field name="inherit_id" ref="documents.document_view_search" />
+        <field name="arch" type="xml">
+            <!-- Add document type search field -->
+            <field name="name" position="after">
+                <field name="document_type_id" />
+            </field>
+
+            <!-- Add filters after requested_filter -->
+            <xpath expr="//filter[@name='requested_filter']" position="after">
+                <separator />
+                <!-- Basic expiration filters -->
+                <filter string="Has Expiration" name="has_expiration_filter"
+                    domain="[('date_expiration', '!=', False)]" />
+                <filter string="Expired" name="expired_filter"
+                    domain="[('expired', '=', True)]" />
+                <filter string="Current" name="current_filter"
+                    domain="[('expired', '=', False), ('date_expiration', '!=', False)]" />
+
+                <!-- Compliance filters - only for documents with types -->
+                <separator />
+                <filter string="Compliance Documents" name="has_compliance"
+                    domain="[('document_type_id', '!=', False)]" />
+                <filter string="Mandatory Documents" name="mandatory"
+                    domain="[('is_mandatory', '=', True)]" />
+                <filter string="Valid" name="valid"
+                    domain="[('compliance_status', '=', 'valid'), ('document_type_id', '!=', False)]" />
+                <filter string="Expiring Soon" name="expiring_soon"
+                    domain="[('compliance_status', '=', 'expiring_soon')]" />
+                <filter string="Expired (Compliance)" name="expired_compliance"
+                    domain="[('compliance_status', '=', 'expired')]" />
+
+                <!-- Verification filters -->
+                <separator />
+                <filter string="Verified" name="verified"
+                    domain="[('verification_date', '!=', False)]" />
+                <filter string="Not Verified" name="not_verified"
+                    domain="[('verification_date', '=', False), ('document_type_id', '!=', False)]" />
+            </xpath>
+
+            <!-- Add grouping options -->
+            <xpath expr="//group" position="inside">
+                <filter string="Document Type" name="group_document_type"
+                    domain="[]"
+                    context="{'group_by': 'document_type_id'}" />
+                <filter string="Compliance Status" name="group_compliance_status" domain="[]"
+                    context="{'group_by': 'compliance_status'}" />
+                <filter string="Mandatory" name="group_mandatory"
+                    domain="[]"
+                    context="{'group_by': 'is_mandatory'}" />
+            </xpath>
+        </field>
+    </record>
+
+    <!-- List View Inheritance -->
+    <record id="documents_view_list" model="ir.ui.view">
+        <field name="name">documents.document.list.compliance</field>
+        <field name="model">documents.document</field>
+        <field name="inherit_id" ref="documents.documents_view_list" />
+        <field name="arch" type="xml">
+            <!-- Add document type column after name -->
+            <field name="name" position="after">
+                <field name="document_type_id" optional="show" />
+            </field>
+
+            <!-- Add compliance fields after create_date - only show when relevant -->
+            <xpath expr="//field[@name='create_date']" position="after">
+                <!-- Document Type (primary field that triggers others) -->
+                <field name="document_type_id" optional="show" />
+
+                <!-- Issuer information - only show if issuer is set -->
+                <field name="issuer_id" optional="hide" />
+                <field name="issued_date" widget="date" optional="hide"
+                    invisible="not issuer_id" />
+
+                <!-- Expiration fields - only show if document has expiration -->
+                <field name="date_expiration" widget="date" optional="hide" />
+                <field name="days_left" optional="hide"
+                    invisible="not date_expiration" />
+                <field name="expired" string="Expired" widget="boolean_toggle" readonly="1"
+                    optional="hide"
+                    invisible="not date_expiration" />
+
+                <!-- Compliance fields - only show if document type is set -->
+                <field name="compliance_status"
+                    decoration-success="compliance_status == 'valid'"
+                    decoration-warning="compliance_status == 'expiring_soon'"
+                    decoration-danger="compliance_status == 'expired'"
+                    widget="badge"
+                    optional="hide"
+                    invisible="not document_type_id" />
+                <field name="is_mandatory" string="Required" widget="boolean_toggle" readonly="1"
+                    optional="hide"
+                    invisible="not document_type_id" />
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit Kanban View to add compliance fields -->
+    <record id="document_view_kanban_compliance" model="ir.ui.view">
+        <field name="name">documents.document.kanban.compliance</field>
+        <field name="model">documents.document</field>
+        <field name="inherit_id" ref="documents.document_view_kanban" />
+        <field name="arch" type="xml">
+            <!-- Add compliance fields to kanban -->
+            <field name="access_token" position="after">
+                <field name="document_type_id" />
+                <field name="date_expiration" />
+                <field name="expired" />
+                <field name="compliance_status" />
+                <field name="is_mandatory" />
+                <field name="days_left" />
+                <field name="issuer_id" />
+                <field name="issued_date" />
+            </field>
+        </field>
+    </record>
+
+</odoo>

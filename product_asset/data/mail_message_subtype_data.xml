@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Mail Message Subtypes for Asset Management -->
+    <record id="mt_asset_driver_updated" model="mail.message.subtype">
+        <field name="name">Driver Updated</field>
+        <field name="sequence">1</field>
+        <field name="res_model">stock.lot</field>
+        <field name="default" eval="True"/>
+        <field name="description">Asset operator/driver has been updated</field>
+    </record>
+</odoo>

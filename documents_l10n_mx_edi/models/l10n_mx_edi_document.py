@@ -629,7 +629,9 @@ class L10nMxEdiDocument(models.Model):
         created_logs = []
 
         # Process each fuel concept line
-        for line in ecc12_node.findall("{*}Conceptos/{*}ConceptoEstadoDeCuentaCombustible", namespaces=ns):
+        for line in ecc12_node.findall(
+            "{*}Conceptos/{*}ConceptoEstadoDeCuentaCombustible", namespaces=ns
+        ):
             # Extract data from ECC12 line
             partner = self._search_partner_ecc12(line)
             vehicle = self._search_vehicle_ecc12(line)
@@ -668,21 +670,24 @@ class L10nMxEdiDocument(models.Model):
                 "state": "new",
                 "notes": f"ECC12 - Station: {line.get('ClaveEstacion')} - Operation: {line.get('FolioOperacion')}",
                 "qty_fuel": quantity,
-                "efficiency": 0.0,  # ECC12 doesn't provide efficiency  
+                "efficiency": 0.0,  # ECC12 doesn't provide efficiency
                 "product_category_id": fuel_category.id,
                 "product_id": fuel_product.id,
                 "vendor_id": partner.id if partner else False,
             }
 
             # Check for duplicate records (without notes to avoid conflicts between Efectivale and ECC12)
-            existing_record = fleet_vehicle_log.search([
-                ("vehicle_id", "=", log_vals["vehicle_id"]),
-                ("date", "=", log_vals["date"]),
-                ("amount", "=", log_vals["amount"]),
-                ("qty_fuel", "=", log_vals["qty_fuel"]),
-                ("product_category_id", "=", fuel_category.id),
-                ("product_id", "=", fuel_product.id),
-            ], limit=1)
+            existing_record = fleet_vehicle_log.search(
+                [
+                    ("vehicle_id", "=", log_vals["vehicle_id"]),
+                    ("date", "=", log_vals["date"]),
+                    ("amount", "=", log_vals["amount"]),
+                    ("qty_fuel", "=", log_vals["qty_fuel"]),
+                    ("product_category_id", "=", fuel_category.id),
+                    ("product_id", "=", fuel_product.id),
+                ],
+                limit=1,
+            )
 
             if not existing_record:
                 # Create the vehicle log record
@@ -690,12 +695,15 @@ class L10nMxEdiDocument(models.Model):
                 created_logs.append(created_log)
                 _logger.info(
                     "Created vehicle log for vehicle %s: %s liters on %s",
-                    vehicle.name, quantity, log_date
+                    vehicle.name,
+                    quantity,
+                    log_date,
                 )
             else:
                 _logger.info(
                     "Skipped duplicate vehicle log for vehicle %s on %s",
-                    vehicle.name, log_date
+                    vehicle.name,
+                    log_date,
                 )
 
         return created_logs

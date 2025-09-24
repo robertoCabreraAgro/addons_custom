@@ -1,12 +1,12 @@
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, _, fields, models
+from odoo import api, fields, models
 
 
 class ProductAssetLog(models.Model):
     _name = "product.asset.log"
     _inherit = ["mail.thread", "mail.activity.mixin"]
-    _description = "Logs for vehicles"
+    _description = "Logs for Assets"
 
     # ------------------------------------------------------------
     # FIELDS
@@ -20,23 +20,20 @@ class ProductAssetLog(models.Model):
     currency_id = fields.Many2one(
         related="company_id.currency_id",
     )
-    vehicle_id = fields.Many2one(
-        comodel_name="product.template",
-        string="Vehicle",
+    asset_id = fields.Many2one(
+        comodel_name="stock.lot",
+        string="Asset",
         required=True,
     )
     operator_id = fields.Many2one(
-        related="vehicle_id.operator_id",
-        string="Driver",
+        related="asset_id.operator_id",
+        store=True,
+        string="Operator",
     )
-    fleet_manager_id = fields.Many2one(
-        related="vehicle_id.fleet_manager_id",
-        string="Fleet Manager",
-    )
-    odometer_uom_id = fields.Many2one(
-        related="vehicle_id.odometer_uom_id",
-        string="Unit",
-        readonly=True,
+    asset_manager_id = fields.Many2one(
+        related="asset_id.asset_manager_id",
+        store=True,
+        string="Asset Manager",
     )
     vendor_id = fields.Many2one(
         comodel_name="res.partner",
@@ -47,23 +44,12 @@ class ProductAssetLog(models.Model):
         string="Product",
         ondelete="restrict",
     )
-    service_ids = fields.Many2many(
-        comodel_name="product.product",
-        string="Included Services",
-        help='When the log is of type "Contract" here the included services can be specified',
+    product_category_id = fields.Many2one(
+        related="product_id.categ_id",
+        store=True,
+        string="Product Category",
     )
     active = fields.Boolean(default=True)
-    type = fields.Selection(
-        selection=[
-            ("service", "Service"),
-            ("contract", "Contract"),
-            ("driver", "driver change"),
-        ],
-        string="Type",
-        default="service",
-        tracking=True,
-        help="Technical name used to classify the log types",
-    )
     state = fields.Selection(
         selection=[
             ("new", "New"),
@@ -100,11 +86,20 @@ class ProductAssetLog(models.Model):
         # TODO improve logic for account.move.line to set odometer
         # or to inforce only on the view
         # required=True,
-        help="Odometer measure of the vehicle at the moment of this log",
+        help="Odometer measure of the Asset at the moment of this log",
     )
     amount = fields.Monetary(
         string="Cost",
         tracking=True,
+    )
+    qty_fuel = fields.Float(
+        string="Fuel Quantity (Liters)",
+        help="Quantity of fuel added to the vehicle",
+    )
+    efficiency = fields.Float(
+        string="Efficiency (km/L)",
+        aggregator="avg",
+        help="Fuel efficiency in kilometers per liter",
     )
     inv_ref = fields.Char("Vendor Reference")
     notes = fields.Text()
@@ -112,6 +107,10 @@ class ProductAssetLog(models.Model):
         string="Warning Date",
         compute="_compute_days_left",
     )
+
+    # ------------------------------------------------------------
+    # COMPUTE METHODS
+    # ------------------------------------------------------------
 
     def compute_next_year_date(self, strdate):
         start_date = fields.Date.from_string(strdate)

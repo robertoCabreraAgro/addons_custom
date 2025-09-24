@@ -1,46 +1,80 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+
+    <!-- Assets -->
     <menuitem
-        id="fleet_root"
+        id="menu_asset_root"
+        name="Assets"
+        sequence="220" />
+
+    <menuitem
+        id="menu_asset"
+        name="Assets"
+        parent="menu_asset_root"
+        action="action_product_template_asset"
+        sequence="100" />
+
+    <menuitem
+        id="asset_configuration"
+        name="Configuration"
+        parent="menu_asset_root"
+        sequence="1000" />
+
+    <!-- Fleet -->
+    <menuitem
+        id="menu_asset_fleet_root"
         name="Fleet"
         web_icon="product_asset,static/description/icon.png"
-        sequence="220"
-         />
-
-    <!-- Main menus -->
+        sequence="221" />
 
     <menuitem
-        id="fleet_vehicle_menu"
-        parent="fleet_root"
-        sequence="100"
-        action="product_vehicle_action"
-         />
+        id="fleet_vehicles_menu"
+        name="Fleet"
+        parent="menu_asset_fleet_root"
+        action="action_stock_lot_fleet"
+        sequence="10" />
 
     <menuitem
         id="product_asset_log_menu"
-        parent="fleet_root"
-        sequence="200"
-        action="action_product_asset_log"
-         />
+        parent="menu_asset_fleet_root"
+        sequence="100"
+        action="action_product_asset_log" />
 
     <menuitem
-        id="fleet_configuration"
+        id="menu_asset_fleet_configuration"
         name="Configuration"
-        parent="fleet_root"
-        sequence="1000"
-         />
+        parent="menu_asset_fleet_root"
+        sequence="1000" />
 
-    <!-- fleet_configuration subitems -->
     <menuitem
-        id="fleet_vehicle_brand_menu"
-        parent="fleet_configuration"
+        id="menu_fleet_vehicle_manufacturer"
+        parent="menu_asset_fleet_configuration"
         sequence="1"
         action="product_manufacturer.manufacturer_action" />
 
     <menuitem
-        id="fleet_vehicle_model_menu"
-        parent="fleet_configuration"
+        id="menu_asset_fleet_model"
+        parent="menu_asset_fleet_configuration"
         sequence="1"
-        action="product_asset.product_model_action" />
+        action="action_product_template_vehicle" />
+
+    <!-- Equipment -->
+    <menuitem
+        id="menu_asset_equipment_root"
+        name="Equipment"
+        sequence="222" />
+
+    <menuitem
+        id="menu_asset_equipment"
+        name="Equipments"
+        parent="menu_asset_equipment_root"
+        action="action_product_template_equipment"
+        sequence="30" />
+
+    <menuitem
+        id="menu_asset_equipment_configuration"
+        name="Configuration"
+        parent="menu_asset_equipment_root"
+        sequence="1000" />
 
 </odoo>

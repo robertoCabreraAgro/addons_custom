@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="base.main_company" model="res.company">
+        <field name="documents_folder_fleet_id" ref="document_folder_fleet" />
+    </record>
+
+</odoo>

@@ -2,7 +2,7 @@
 
 {
     "name": "Avoid Reversal Entries",
-    "version": "1.1",
+    "version": "19.0.1.0.0",
     "author": "Vauxoo",
     "category": "Accounting",
     "license": "LGPL-3",

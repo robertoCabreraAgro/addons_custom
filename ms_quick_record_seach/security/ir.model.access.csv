@@ -1,2 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_quick_record_search,ms_quick_record_seach.quick.record.search,model_quick_record_search,base.group_user,1,1,1,1

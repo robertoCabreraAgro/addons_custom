@@ -1,8 +1,7 @@
 import base64
 
-from odoo import api, fields, models, tools
+from odoo import _, api, fields, models, tools
 from odoo.exceptions import ValidationError
-from odoo.tools.translate import _
 
 
 CATEGORY_SELECTION = [
@@ -15,6 +14,7 @@ CATEGORY_SELECTION = [
 class ApprovalCategory(models.Model):
     _name = "approval.category"
     _description = "Approval Category"
+    _inherit = ["mail.thread"]
     _check_company_auto = True
     _order = "sequence, id"
 
@@ -27,6 +27,7 @@ class ApprovalCategory(models.Model):
         string="Company",
         default=lambda self: self.env.company,
         copy=False,
+        tracking=True,
         index=True,
     )
     name = fields.Char(
@@ -34,7 +35,10 @@ class ApprovalCategory(models.Model):
         translate=True,
         required=True,
     )
-    active = fields.Boolean(default=True)
+    active = fields.Boolean(
+        default=True,
+        tracking=True,
+    )
     sequence = fields.Integer(string="Sequence")
     automated_sequence = fields.Boolean(
         string="Automated Sequence?",
@@ -59,36 +63,49 @@ class ApprovalCategory(models.Model):
         string="Has Date",
         required=True,
         default="no",
+        tracking=True,
     )
     has_date_deadline = fields.Selection(
         CATEGORY_SELECTION,
         string="Has Date Deadline",
         required=True,
         default="no",
+        tracking=True,
     )
-    has_period = fields.Selection(
+    has_date_planned = fields.Selection(
         CATEGORY_SELECTION,
-        string="Has Period",
+        string="Has Date Planned",
         required=True,
         default="no",
+        tracking=True,
+    )
+    has_date_range = fields.Selection(
+        CATEGORY_SELECTION,
+        string="Has Date Range",
+        required=True,
+        default="no",
+        tracking=True,
     )
     has_partner = fields.Selection(
         CATEGORY_SELECTION,
         string="Has Contact",
         required=True,
         default="no",
+        tracking=True,
     )
     has_payment_method = fields.Selection(
         CATEGORY_SELECTION,
         string="Has Payment",
         required=True,
         default="no",
+        tracking=True,
     )
     has_product = fields.Selection(
         CATEGORY_SELECTION,
         string="Has Product",
         required=True,
         default="no",
+        tracking=True,
         help="Additional products that should be specified on the request.",
     )
     has_quantity = fields.Selection(
@@ -96,18 +113,21 @@ class ApprovalCategory(models.Model):
         string="Has Quantity",
         required=True,
         default="no",
+        tracking=True,
     )
     has_amount = fields.Selection(
         CATEGORY_SELECTION,
         string="Has Amount",
         required=True,
         default="no",
+        tracking=True,
     )
     has_reference = fields.Selection(
         CATEGORY_SELECTION,
         string="Has Reference",
         required=True,
         default="no",
+        tracking=True,
         help="An additional reference that should be specified on the request.",
     )
     has_location = fields.Selection(
@@ -115,21 +135,31 @@ class ApprovalCategory(models.Model):
         string="Has Location",
         required=True,
         default="no",
+        tracking=True,
     )
-    requirer_document = fields.Selection(
-        [("required", "Required"), ("optional", "Optional")],
+    has_document = fields.Selection(
+        selection=[
+            ("required", "Required"),
+            ("optional", "Optional"),
+        ],
         string="Documents",
         required=True,
         default="optional",
+        tracking=True,
     )
     approval_minimum = fields.Integer(
         string="Minimum Approval",
         required=True,
         default="1",
+        tracking=True,
     )
     manager_approval = fields.Selection(
-        [("approver", "Is Approver"), ("required", "Is Required Approver")],
+        selection=[
+            ("approver", "Is Approver"),
+            ("required", "Is Required Approver"),
+        ],
         string="Employee's Manager",
+        tracking=True,
         help="""How the employee's manager interacts with this type of approval.
 
         Empty: do nothing
@@ -140,11 +170,13 @@ class ApprovalCategory(models.Model):
     approval_type = fields.Selection(
         string="Approval Type",
         selection=[],
+        tracking=True,
         help="Allows you to define which documents you would like "
         "to create once the request has been approved",
     )
     approve_sequentially = fields.Boolean(
         string="Approvers Sequence?",
+        tracking=True,
         help="If checked, the approvers have to approve in sequence (one after the other). "
         "If Employee's Manager is selected as approver, they will be the first in line.",
     )
@@ -152,10 +184,6 @@ class ApprovalCategory(models.Model):
         comodel_name="approval.category.approver",
         inverse_name="category_id",
         string="Approvers",
-    )
-    group_ids = fields.Many2many(
-        comodel_name="res.groups",
-        string="Groups",
     )
     invalid_minimum = fields.Boolean(compute="_compute_invalid_minimum")
     invalid_minimum_warning = fields.Char(compute="_compute_invalid_minimum")
@@ -177,7 +205,7 @@ class ApprovalCategory(models.Model):
                 raise ValidationError(
                     _(
                         "Minimum Approval must be equal or superior to the sum of required Approvers."
-                    )
+                    ),
                 )
 
     @api.constrains("approver_ids")
@@ -189,7 +217,7 @@ class ApprovalCategory(models.Model):
         for category in self:
             if len(category.approver_ids) != len(category.approver_ids.user_id):
                 raise ValidationError(
-                    _("An user may not be in the approver list multiple times.")
+                    _("An user may not be in the approver list multiple times."),
                 )
 
     @api.constrains("approve_sequentially", "approval_minimum")
@@ -198,7 +226,7 @@ class ApprovalCategory(models.Model):
             raise ValidationError(
                 _(
                     "Approver Sequence can only be activated with at least 1 minimum approver."
-                )
+                ),
             )
 
     # ------------------------------------------------------------
@@ -215,7 +243,7 @@ class ApprovalCategory(models.Model):
                         "padding": 5,
                         "prefix": vals["sequence_code"],
                         "company_id": vals.get("company_id"),
-                    }
+                    },
                 )
                 vals["sequence_id"] = sequence.id
         return super().create(vals_list)
@@ -297,5 +325,5 @@ class ApprovalCategory(models.Model):
         }
 
     def _get_default_image(self):
-        default_image_path = "base_approval/static/src/img/Folder.png"
-        return base64.b64encode(tools.misc.file_open(default_image_path, "rb").read())
+        with tools.file_open("base_approvals/static/src/img/Folder.png", "rb") as f:
+            return base64.b64encode(f.read())

@@ -21,17 +21,21 @@ class AccountMoveOperationActions(models.Model):
         ondelete="cascade",
         index=True,
     )
-    name = fields.Char(required=True, translate=True)
+    name = fields.Char(
+        required=True,
+        translate=True,
+    )
     active = fields.Boolean(
         default=True,
         help="If unchecked, it will allow you to hide the action without removing it.",
     )
-    sequence = fields.Integer(default=10)
+    sequence = fields.Integer(
+        default=10,
+    )
     company_id = fields.Many2one(
         comodel_name="res.company",
         string="Company",
         default=lambda self: self.env.company,
-        # domain="[('id', '=?', type_company_id)]"
     )
     action = fields.Selection(
         selection=[
@@ -48,10 +52,12 @@ class AccountMoveOperationActions(models.Model):
         comodel_name="account.move.template",
         string="Move Template",
     )
-    operation_type_ids = fields.Many2many("account.move.operation.type")
+    operation_type_ids = fields.Many2many(
+        comodel_name="account.move.operation.type",
+    )
     date_last_document = fields.Boolean(
         help="When creating an invoice, set the date to be the same of the previous document, "
-        "being it a payment or invoice."
+        "being it a payment or invoice.",
     )
     diff_partner = fields.Boolean(
         string="Different Partner",
@@ -62,10 +68,11 @@ class AccountMoveOperationActions(models.Model):
         help="Enables use of a different company than the one set on the operation",
     )
     reconcile = fields.Boolean(
-        help="Enable autoreconcile the created move with the selected bank statement."
+        help="Enable autoreconcile the created move with the selected bank statement.",
     )
     auto = fields.Boolean(
-        default=True, help="Help simplify process avoiding using intermediary wizards."
+        default=True,
+        help="Help simplify process avoiding using intermediary wizards.",
     )
 
     @api.onchange("operation_type_id", "company_id")

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Compliance Report Search View -->
+    <record id="view_document_compliance_report_search" model="ir.ui.view">
+        <field name="name">document.compliance.report.search</field>
+        <field name="model">document.compliance.report</field>
+        <field name="arch" type="xml">
+            <search string="Compliance Search">
+                <field name="name" />
+                <field name="document_type_id" />
+                <filter string="Mandatory Only" name="mandatory"
+                    domain="[('is_mandatory', '=', True)]" />
+                <filter string="Compliant" name="compliant"
+                    domain="[('compliance_status', '=', 'compliant')]" />
+                <filter string="Non-Compliant" name="non_compliant"
+                    domain="[('compliance_status', '=', 'non_compliant')]" />
+                <filter string="Has Expired" name="has_expired" domain="[('total_expired', '>', 0)]" />
+                <filter string="Has Expiring" name="has_expiring"
+                    domain="[('total_expiring', '>', 0)]" />
+                <separator />
+                <filter string="Below 50% Compliance" name="low_compliance"
+                    domain="[('compliance_percentage', '&lt;', 50)]" />
+                <filter string="Below 80% Compliance" name="medium_compliance"
+                    domain="[('compliance_percentage', '&lt;', 80)]" />
+                <group>
+                    <filter string="Entity Type" name="group_entity_type" domain="[]"
+                        context="{'group_by': 'entity_type'}" />
+                    <filter string="Compliance Status" name="group_status" domain="[]"
+                        context="{'group_by': 'compliance_status'}" />
+                    <filter string="Document Type" name="group_document_type" domain="[]"
+                        context="{'group_by': 'document_type_id'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Compliance Report List View -->
+    <record id="view_document_compliance_report_list" model="ir.ui.view">
+        <field name="name">document.compliance.report.list</field>
+        <field name="model">document.compliance.report</field>
+        <field name="arch" type="xml">
+            <list string="Document Compliance" create="false" edit="false" delete="false">
+                <field name="name" />
+                <field name="entity_type" />
+                <field name="document_type_id" />
+                <field name="total_required" sum="Total" />
+                <field name="total_present" sum="Total" />
+                <field name="total_valid" sum="Total"
+                    decoration-success="total_valid == total_required" />
+                <field name="total_expired" sum="Total" decoration-danger="total_expired > 0" />
+                <field name="total_expiring" sum="Total" decoration-warning="total_expiring > 0" />
+                <field name="total_missing" sum="Total" decoration-danger="total_missing > 0" />
+                <field name="compliance_percentage" widget="progressbar" avg="Average" />
+                <field name="compliance_status" widget="badge"
+                    decoration-success="compliance_status == 'compliant'"
+                    decoration-warning="compliance_status == 'partial'"
+                    decoration-danger="compliance_status == 'non_compliant'" />
+                <button name="action_view_documents" type="object" string="View Documents"
+                    icon="fa-file-text-o" />
+            </list>
+        </field>
+    </record>
+
+    <!-- Compliance Report Pivot View -->
+    <record id="view_document_compliance_report_pivot" model="ir.ui.view">
+        <field name="name">document.compliance.report.pivot</field>
+        <field name="model">document.compliance.report</field>
+        <field name="arch" type="xml">
+            <pivot string="Compliance Analysis" disable_linking="true">
+                <field name="entity_type" type="row" />
+                <field name="compliance_status" type="col" />
+                <field name="compliance_percentage" type="measure" widget="percentage" />
+                <field name="total_required" type="measure" />
+                <field name="total_valid" type="measure" />
+                <field name="total_expired" type="measure" />
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Compliance Report Graph View -->
+    <record id="view_document_compliance_report_graph" model="ir.ui.view">
+        <field name="name">document.compliance.report.graph</field>
+        <field name="model">document.compliance.report</field>
+        <field name="arch" type="xml">
+            <graph string="Compliance Overview" type="bar" stacked="false">
+                <field name="document_type_id" />
+                <field name="compliance_percentage" type="measure" />
+            </graph>
+        </field>
+    </record>
+
+    <!-- Action for Compliance Dashboard -->
+    <record id="action_document_compliance_dashboard" model="ir.actions.act_window">
+        <field name="name">Compliance Dashboard</field>
+        <field name="res_model">document.compliance.report</field>
+        <field name="view_mode">list,pivot,graph</field>
+        <field name="search_view_id" ref="view_document_compliance_report_search" />
+        <field name="context">{'search_default_mandatory': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Document Compliance Dashboard
+            </p>
+            <p>
+                Monitor document compliance across your organization.
+                Track expired documents, upcoming expirations, and missing required documents.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem
+        id="menu_document_compliance_dashboard"
+        name="Compliance Dashboard"
+        parent="documents.menu_root"
+        action="action_document_compliance_dashboard"
+        sequence="5" />
+
+</odoo>

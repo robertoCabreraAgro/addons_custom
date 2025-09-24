@@ -24,7 +24,9 @@ class AccountFullReconcile(models.Model):
             .filtered(lambda r: r.company_id.country_id == self.env.ref("base.mx"))
             .mapped("full_reconcile_id")
         )
-        mxn_moves.write({"exchange_move_id": False})
+        # In Odoo 19, exchange_move_id is on partial reconciles, not full reconciles
+        partial_reconciles = mxn_moves.mapped("partial_reconcile_ids")
+        partial_reconciles.filtered(lambda r: r.exchange_move_id).write({"exchange_move_id": False})
         return super().unlink()
 
 
@@ -50,7 +52,8 @@ class AccountPartialReconcile(models.Model):
         # let us fetch the full reconciliation from the partial reconciliation
         afr_ids = mxn_moves.mapped("full_reconcile_id")
         # include deletion of exchange rate journal entries
-        fx_move_ids = afr_ids.exchange_move_id | self.exchange_move_id
+        # In Odoo 19, exchange_move_id is on partial reconciles
+        fx_move_ids = afr_ids.mapped('partial_reconcile_ids.exchange_move_id') | self.exchange_move_id
         fx_apr_ids = fx_move_ids.mapped("line_ids.matched_debit_ids")
         fx_apr_ids |= fx_move_ids.mapped("line_ids.matched_credit_ids")
         # delete the tax basis move created at the reconciliation time by the FX moves
@@ -61,7 +64,7 @@ class AccountPartialReconcile(models.Model):
         caba_fx_apr_ids |= caba_fx_move_ids.mapped("line_ids.matched_credit_ids")
         caba_fx_afr_ids = caba_fx_move_ids.mapped("line_ids.full_reconcile_id")
         fx_caba_fx_move_ids = (
-            caba_fx_afr_ids.exchange_move_id | caba_fx_apr_ids.exchange_move_id
+            caba_fx_afr_ids.mapped('partial_reconcile_ids.exchange_move_id') | caba_fx_apr_ids.exchange_move_id
         )
         fx_caba_fx_apr_ids = fx_caba_fx_move_ids.mapped("line_ids.matched_debit_ids")
         fx_caba_fx_apr_ids |= fx_caba_fx_move_ids.mapped("line_ids.matched_credit_ids")
@@ -75,7 +78,7 @@ class AccountPartialReconcile(models.Model):
         caba_apr_ids = caba_move_ids.mapped("line_ids.matched_debit_ids")
         caba_apr_ids |= caba_move_ids.mapped("line_ids.matched_credit_ids")
 
-        fx_caba_move_ids = caba_afr_ids.mapped("exchange_move_id")
+        fx_caba_move_ids = caba_afr_ids.mapped("partial_reconcile_ids.exchange_move_id")
         fx_caba_apr_ids = fx_caba_move_ids.mapped("line_ids.matched_debit_ids")
         fx_caba_apr_ids |= fx_caba_move_ids.mapped("line_ids.matched_credit_ids")
 

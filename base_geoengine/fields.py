@@ -350,4 +350,5 @@ fields.GeoMultiPolygon = GeoMultiPolygon
 
 # Monkey patch _condition_to_sql for GeoField to support geo operators
 from .expressions import _condition_to_sql
+
 GeoField._condition_to_sql = _condition_to_sql

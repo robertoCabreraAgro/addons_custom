@@ -1,21 +1,21 @@
-# Copyright 2016 ACSONE SA/NV (<http://acsone.eu>)
-# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 {
     "name": "Date Range",
     "summary": "Manage all kind of date range",
-    "version": "1.1",
+    "version": "19.0.0.0.1",
     "category": "Uncategorized",
     "website": "https://github.com/OCA/server-ux",
     "author": "ACSONE SA/NV, Odoo Community Association (OCA)",
     "license": "LGPL-3",
     "installable": True,
-    "depends": ["web"],
+    "depends": ["web", "resource"],
     "data": [
-        "data/ir_cron_data.xml",
         "security/ir.model.access.csv",
         "security/date_range_security.xml",
-        "views/date_range_view.xml",
+        "data/ir_cron_data.xml",
+        "views/date_range_type_views.xml",
+        "views/date_range_views.xml",
         "wizard/date_range_generator.xml",
+        "views/date_range_menu.xml",
     ],
     "assets": {
         "web.assets_backend": [

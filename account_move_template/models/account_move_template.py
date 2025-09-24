@@ -75,7 +75,7 @@ class AccountMoveTemplate(models.Model):
     )
 
     _unique_name_company = models.UniqueIndex(
-        "UNIQUE(name, company_id)",
+        "(name, company_id)",
         "This name is already used by another template!",
     )
 

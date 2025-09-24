@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_document_type_user,Document Type User,model_document_type,base.group_user,1,0,0,0
+access_document_type_system,Document Type System,model_document_type,base.group_system,1,1,1,1
+access_document_type_document_user,Document Type Document User,model_document_type,documents.group_documents_user,1,0,0,0
+access_document_type_document_manager,Document Type Document Manager,model_document_type,documents.group_documents_manager,1,1,1,1
+access_document_compliance_report_user,Document Compliance Report User,model_document_compliance_report,base.group_user,1,0,0,0
+access_document_compliance_report_manager,Document Compliance Report Manager,model_document_compliance_report,documents.group_documents_manager,1,0,0,0

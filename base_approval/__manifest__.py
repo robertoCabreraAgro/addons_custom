@@ -1,6 +1,6 @@
 {
     "name": "Base Approval",
-    "version": "1.1",
+    "version": "1.0",
     "category": "Human Resources/Approvals",
     "sequence": 190,
     "summary": "Create and validate approvals requests",

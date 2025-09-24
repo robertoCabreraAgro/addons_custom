@@ -17,7 +17,7 @@
                         <div>
                             <h6 t-foreach="o.approver_ids" t-as="approver_id" class="mb-2">
                                 <span t-field="approver_id.user_id.name">Mitchell Admin</span>
-                                <span t-if="approver_id.status == 'approved'">(&#10004;)</span>
+                                <span t-if="approver_id.state == 'approved'">(&#10004;)</span>
                             </h6>
                         </div>
                     </div>
