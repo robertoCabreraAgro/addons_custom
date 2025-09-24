@@ -8,14 +8,14 @@ class ResConfigSettings(models.TransientModel):
     # FIELDS
     # ------------------------------------------------------------
 
-    product_lenght_in_yd = fields.Selection(
+    product_length_in_yd = fields.Selection(
         selection=[
             ("0", "Meters"),
             ("1", "Yards"),
         ],
-        string="Lenght unit of measure",
+        string="Length unit of measure",
         default="0",
-        config_parameter="product.lenght_in_yd",
+        config_parameter="product.length_in_yd",
     )
     product_odometer_in_mi = fields.Selection(
         selection=[

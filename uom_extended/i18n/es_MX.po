@@ -1,0 +1,176 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* uom_extended
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-09-24 22:24+0000\n"
+"PO-Revision-Date: 2025-09-24 22:24+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: uom_extended
+#: model_terms:ir.ui.view,arch_db:uom_extended.res_config_settings_view_form
+msgid "Area"
+msgstr "Área"
+
+#. module: uom_extended
+#: model:ir.model.fields,field_description:uom_extended.field_res_config_settings__product_area_in_square_ft
+msgid "Area unit of measure"
+msgstr "Unidad de medida de área"
+
+#. module: uom_extended
+#: model:ir.model,name:uom_extended.model_res_config_settings
+msgid "Config Settings"
+msgstr "Ajustes de configuración"
+
+#. module: uom_extended
+#: model_terms:ir.ui.view,arch_db:uom_extended.res_config_settings_view_form
+msgid "Define your area unit of measure"
+msgstr "Define tu unidad de medida de área"
+
+#. module: uom_extended
+#: model_terms:ir.ui.view,arch_db:uom_extended.res_config_settings_view_form
+msgid "Define your fuel efficiency unit of measure"
+msgstr "Define tu unidad de medida de eficiencia de combustible"
+
+#. module: uom_extended
+#: model_terms:ir.ui.view,arch_db:uom_extended.res_config_settings_view_form
+msgid "Define your length unit of measure"
+msgstr "Define tu unidad de medida de longitud"
+
+#. module: uom_extended
+#: model_terms:ir.ui.view,arch_db:uom_extended.res_config_settings_view_form
+msgid "Define your odometer unit of measure"
+msgstr "Define tu unidad de medida de odómetro"
+
+#. module: uom_extended
+#: model_terms:ir.ui.view,arch_db:uom_extended.res_config_settings_view_form
+msgid "Define your power unit of measure"
+msgstr "Define tu unidad de medida de potencia"
+
+#. module: uom_extended
+#: model:ir.model.fields,field_description:uom_extended.field_product_template__display_name
+#: model:ir.model.fields,field_description:uom_extended.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr "Nombre en pantalla"
+
+#. module: uom_extended
+#: model_terms:ir.ui.view,arch_db:uom_extended.res_config_settings_view_form
+msgid "Fuel Efficiency"
+msgstr "Eficiencia de Combustible"
+
+#. module: uom_extended
+#: model:ir.model.fields,field_description:uom_extended.field_res_config_settings__product_fuel_efficiency_in_mpg
+msgid "Fuel efficiency unit of measure"
+msgstr "Unidad de medida de eficiencia de combustible"
+
+#. module: uom_extended
+#: model:ir.model.fields.selection,name:uom_extended.selection__res_config_settings__product_power_in_hp__1
+#: model:uom.uom,name:uom_extended.product_uom_hp
+msgid "HP"
+msgstr ""
+
+#. module: uom_extended
+#: model:ir.model.fields,field_description:uom_extended.field_product_template__id
+#: model:ir.model.fields,field_description:uom_extended.field_res_config_settings__id
+msgid "ID"
+msgstr ""
+
+#. module: uom_extended
+#: model:ir.model.fields.selection,name:uom_extended.selection__res_config_settings__product_odometer_in_mi__0
+msgid "Kilometers"
+msgstr "Kilómetros"
+
+#. module: uom_extended
+#: model:ir.model.fields.selection,name:uom_extended.selection__res_config_settings__product_fuel_efficiency_in_mpg__0
+msgid "Km/L"
+msgstr ""
+
+#. module: uom_extended
+#: model:uom.uom,name:uom_extended.product_uom_km_per_liter
+msgid "Km/l"
+msgstr ""
+
+#. module: uom_extended
+#: model:ir.model.fields.selection,name:uom_extended.selection__res_config_settings__product_power_in_hp__0
+#: model:uom.uom,name:uom_extended.product_uom_kw
+msgid "Kw"
+msgstr ""
+
+#. module: uom_extended
+#: model_terms:ir.ui.view,arch_db:uom_extended.res_config_settings_view_form
+msgid "Length"
+msgstr "Longitud"
+
+#. module: uom_extended
+#: model:ir.model.fields,field_description:uom_extended.field_res_config_settings__product_length_in_yd
+msgid "Length unit of measure"
+msgstr "Unidad de medida de longitud"
+
+#. module: uom_extended
+#: model:ir.model.fields.selection,name:uom_extended.selection__res_config_settings__product_fuel_efficiency_in_mpg__1
+#: model:uom.uom,name:uom_extended.product_uom_miles_per_galon
+msgid "MPG"
+msgstr ""
+
+#. module: uom_extended
+#: model:ir.model.fields.selection,name:uom_extended.selection__res_config_settings__product_length_in_yd__0
+msgid "Meters"
+msgstr "Metros"
+
+#. module: uom_extended
+#: model:ir.model.fields.selection,name:uom_extended.selection__res_config_settings__product_odometer_in_mi__1
+msgid "Miles"
+msgstr "Millas"
+
+#. module: uom_extended
+#: model:uom.uom,name:uom_extended.product_uom_mw
+msgid "Mw"
+msgstr ""
+
+#. module: uom_extended
+#: model_terms:ir.ui.view,arch_db:uom_extended.res_config_settings_view_form
+msgid "Odometer"
+msgstr "Odómetro"
+
+#. module: uom_extended
+#: model:ir.model.fields,field_description:uom_extended.field_res_config_settings__product_odometer_in_mi
+msgid "Odometer unit of measure"
+msgstr "Unidad de medida de odómetro"
+
+#. module: uom_extended
+#: model_terms:ir.ui.view,arch_db:uom_extended.res_config_settings_view_form
+msgid "Power"
+msgstr "Potencia"
+
+#. module: uom_extended
+#: model:ir.model.fields,field_description:uom_extended.field_res_config_settings__product_power_in_hp
+msgid "Power unit of measure"
+msgstr "Unidad de medida de potencia"
+
+#. module: uom_extended
+#: model:ir.model,name:uom_extended.model_product_template
+msgid "Product"
+msgstr "Producto"
+
+#. module: uom_extended
+#: model:ir.model.fields.selection,name:uom_extended.selection__res_config_settings__product_area_in_square_ft__1
+msgid "Square Feet"
+msgstr "Pies Cuadrados"
+
+#. module: uom_extended
+#: model:ir.model.fields.selection,name:uom_extended.selection__res_config_settings__product_area_in_square_ft__0
+msgid "Square Meters"
+msgstr "Metros Cuadrados"
+
+#. module: uom_extended
+#: model:ir.model.fields.selection,name:uom_extended.selection__res_config_settings__product_length_in_yd__1
+msgid "Yards"
+msgstr "Yardas"

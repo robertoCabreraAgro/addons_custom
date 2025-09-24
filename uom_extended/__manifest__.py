@@ -1,12 +1,10 @@
-# -*- coding: utf-8 -*-
-
 {
     "name": "Units of measure extended",
     "description": """
         This is the base module for managing Units of measure.
         ========================================================================
     """,
-    "version": "1.0",
+    "version": "19.0.1.0.0",
     "category": "Sales/Sales",
     "author": "Luis Marin",
     "website": "https://agromarin.mx",
@@ -19,4 +17,5 @@
     ],
     "installable": True,
     "license": "AGPL-3",
+    "post_init_hook": "post_init_hook",
 }
