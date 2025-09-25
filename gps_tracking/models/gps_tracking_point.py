@@ -93,9 +93,7 @@ class GpsTrackingPoint(models.Model):
     @api.depends("device_id")
     def _compute_asset_id(self):
         for point in self:
-            point.asset_id = (
-                point.device_id.asset_ids[0] if point.device_id.asset_ids else False
-            )
+            point.asset_id = point.device_id.asset_id if point.device_id else False
 
     @api.depends("device_id")
     def _compute_real_odometer(self):
