@@ -11,11 +11,9 @@
                 <filter name="inactive" string="Archived"
                     domain="[('active','=',False)]" />
                 <separator />
-                <group expand="0" string="Group By">
                     <filter name="company_groupby" string="Company"
                         domain="[]"
                         context="{'group_by': 'company_id'}" />
-                </group>
             </search>
         </field>
     </record>
