@@ -1,147 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="account_move_template_search" model="ir.ui.view">
-        <field name="name">account.move.template.search</field>
-        <field name="model">account.move.template</field>
+    <record id="account_move_operation_line_list" model="ir.ui.view">
+        <field name="name">account.move.operation.line.list</field>
+        <field name="model">account.move.operation.line</field>
         <field name="arch" type="xml">
-            <search string="Journal Entry Template">
+            <list
+                decoration-info="state == 'ready'"
+                decoration-success="state == 'done'"
+                decoration-muted="state == 'cancel'"
+                decoration-warning="state == 'in_progress'"
+            >
                 <field name="name" />
-                <field name="company_id" groups="base.group_multi_company" />
-                <filter name="inactive" string="Archived"
-                    domain="[('active','=',False)]" />
-                <separator />
-                    <filter name="company_groupby" string="Company"
-                        domain="[]"
-                        context="{'group_by': 'company_id'}" />
-            </search>
-        </field>
-    </record>
-
-    <record id="account_move_template_list" model="ir.ui.view">
-        <field name="name">account.move.template.list</field>
-        <field name="model">account.move.template</field>
-        <field name="arch" type="xml">
-            <list>
-                <field name="name" />
-                <field name="company_id"
-                    groups="base.group_multi_company" />
+                <field name="action" />
+                <field name="operation_id" column_invisible="1" />
+                <field name="template_id" column_invisible="1" />
+                <field name="move_id" column_invisible="1" />
+                <field name="st_line_id" column_invisible="1" />
+                <field name="payment_id" column_invisible="1" />
+                <field name="created_operation_id" column_invisible="1" />
+                <field name="state" widget="badge" />
+                <button
+                    name="action_view_document"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-file-text-o"
+                    title="View Document"
+                    invisible="state != 'done' or not move_id"
+                />
+                <button
+                    name="action_view_document_pay"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-money"
+                    title="View Payment Document"
+                    invisible="state != 'done' or not payment_id"
+                />
             </list>
         </field>
     </record>
 
-    <record id="account_move_template_form" model="ir.ui.view">
-        <field name="name">account.move.template.form</field>
-        <field name="model">account.move.template</field>
+    <record id="account_move_operation_line_form" model="ir.ui.view">
+        <field name="name">account.move.operation.line.form</field>
+        <field name="model">account.move.operation.line</field>
         <field name="arch" type="xml">
-            <form string="Journal Entry Template">
+            <form string="Account Operation Line">
                 <header>
-                    <button name="action_move_template_run"
-                        string="Generate Journal Entry"
-                        class="btn-primary"
-                        type="object" />
+                    <field name="state" widget="statusbar" />
                 </header>
                 <sheet>
-                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger"
-                        invisible="active" />
-                    <div class="oe_title">
-                        <label for="name" class="oe_edit_only" />
-                        <h1>
-                            <field name="name" />
-                        </h1>
-                    </div>
                     <group name="main">
                         <group name="main-left">
-                            <field name="is_payment" widget="boolean_button"
-                                options="{'terminology': 'payment'}" />
-                            <field name="partner_id" options="{'no_open': True, 'no_create': True}" />
-                            <field name="ref" />
-                            <field name="active" invisible="1" />
-                            <field name="payment_type" invisible="not is_payment"
-                                required="is_payment" />
-                            <field name="partner_type" invisible="not is_payment"
-                                required="is_payment" />
+                            <field name="name" />
+                            <field name="action" />
+                            <field name="operation_id" />
+                            <field name="template_id" invisible="not template_id" />
                         </group>
                         <group name="main-right">
-                            <field name="journal_id" />
-                            <field name="journal_code" />
-                            <field name="move_type" />
-                            <field name="invoice_payment_term_id"
-                                invisible="is_payment" />
+                            <field name="orig_line_id" invisible="not orig_line_id" />
+                            <field name="dest_line_id" invisible="not dest_line_id" />
+                            <field name="st_line_id" invisible="not st_line_id" />
+                            <field name="move_id" invisible="not move_id" />
+                            <field name="payment_id" invisible="not payment_id" />
+                            <field name="created_operation_id" invisible="not created_operation_id" />
                         </group>
                     </group>
-                    <notebook>
-                        <page id="line_tab" name="line_tab" string="Template Lines"
-                            invisible="is_payment">
-                            <field name="line_ids"
-                                widget="product_label_section_and_note_field_o2m">
-                                <list string="Journal Items" editable="bottom"
-                                    default_order="sequence, id">
-                                    <control>
-                                        <create name="add_line_control" string="Add a line" />
-                                        <create name="add_section_control" string="Add a section"
-                                            context="{'default_display_type': 'line_section'}" />
-                                        <create name="add_note_control" string="Add a note"
-                                            context="{'default_display_type': 'line_note'}" />
-                                    </control>
-                                    <field name="sequence" widget="handle" />
-                                    <field name="partner_id"
-                                        column_invisible="parent.partner_id or parent.move_type != 'entry'" />
-                                    <field name="product_id"
-                                        widget="product_label_section_and_note_field"
-                                        column_invisible="parent.move_type == 'entry'" />
-                                    <field name="product_category_id"
-                                        column_invisible="parent.move_type == 'entry'"
-                                        string="Random Product Category" />
-                                    <field name="name" widget="section_and_note_text" />
-                                    <field name="account_id" />
-                                    <field name="account_code" />
-                                    <field name="analytic_distribution"
-                                        widget="analytic_distribution"
-                                        string="Analytic"
-                                        groups="analytic.group_analytic_accounting" />
-                                    <field name="quantity" string="Qty"
-                                        column_invisible="parent.move_type == 'entry'" />
-                                    <field name="product_uom_id" string="UoM"
-                                        column_invisible="parent.move_type == 'entry'" />
-                                    <field name="price_unit" string="Price"
-                                        column_invisible="parent.move_type == 'entry'" />
-                                    <field name="tax_ids" widget="many2many_tags"
-                                        column_invisible="parent.move_type == 'entry'"/>
-                                    <field name="discount" width="50px" string="Disc.%"
-                                        optional="hide"
-                                        column_invisible="parent.move_type == 'entry'" />
-                                    <field name="balance"
-                                        column_invisible="parent.move_type != 'entry'" />
-                                </list>
-                            </field>
-                        </page>
-                        <page name="other_info" string="Other Information"> 
-                            <group>
-                                <group>
-                                </group>
-                                <group>
-                                    <field name="company_id" options="{'no_create': True}"
-                                        groups="base.group_multi_company" />
-                                </group>
-                            </group>
-                        </page>
-                    </notebook>
                 </sheet>
             </form>
         </field>
     </record>
-
-    <record id="account_move_template_action" model="ir.actions.act_window">
-        <field name="name">Journal Entry Templates</field>
-        <field name="res_model">account.move.template</field>
-        <field name="view_mode">list,form</field>
-    </record>
-
-    <menuitem
-        id="account_move_template_menu"
-        parent="account.account_account_menu"
-        action="account_move_template_action"
-        sequence="300" />
 
 </odoo>
