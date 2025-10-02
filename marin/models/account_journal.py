@@ -13,6 +13,14 @@ class AccountJournal(models.Model):
     # FIELDS
     # ------------------------------------------------------------
 
+    # Override company_id to make it exportable
+    # Note: In Odoo, readonly fields are excluded from import-compatible exports
+    # We remove readonly=True to make it exportable for data migration/backup
+    # Security is maintained through model access rights and company switching logic
+    company_id = fields.Many2one(
+        readonly=False,
+    )
+
     default_receivable_account_id = fields.Many2one(
         comodel_name="account.account",
         string="Default Receivable Account",
