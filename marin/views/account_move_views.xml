@@ -108,7 +108,16 @@
                 <attribute name="groups">marin.group_account_move_cancel</attribute>
             </xpath>
             <xpath expr="//button[@name='button_draft']" position="attributes">
-                <attribute name="groups">marin.group_account_move_draft</attribute>
+                <attribute name="groups">marin.group_account_move_draft,marin.group_account_customer_invoice</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_invoice_sent'][1]" position="attributes">
+                <attribute name="groups" separator="," add="marin.group_account_customer_invoice" />
+            </xpath>
+            <xpath expr="//button[@name='action_invoice_sent'][2]" position="attributes">
+                <attribute name="groups" separator="," add="marin.group_account_customer_invoice" />
+            </xpath>
+            <xpath expr="//button[@name='action_create_operation']" position="attributes">
+                <attribute name="groups" separator="," add="marin.group_account_customer_invoice" />
             </xpath>
             <xpath expr="//button[@name='button_set_checked']" position="after">
                 <button

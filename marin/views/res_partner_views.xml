@@ -161,7 +161,7 @@
         <field name="priority" eval="100" />
         <field name="arch" type="xml">
             <xpath expr="//group[@name='credit_limits']" position="attributes">
-                <attribute name="groups">account.group_account_readonly,marin.group_account_debt_manager</attribute>
+                <attribute name="groups">account.group_account_readonly,marin.group_account_debt_manager,sales_team.group_sale_salesman_all_leads</attribute>
             </xpath>
             <xpath expr="//field[@name='use_partner_credit_limit']" position="attributes">
                 <attribute name="readonly">not user_debt_manager</attribute>
@@ -323,6 +323,17 @@
         <field name="name">Profile History</field>
         <field name="res_model">res.partner.profile.history</field>
         <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="partner_view_buttons_marin" model="ir.ui.view">
+        <field name="name">res.partner.form.buttons.marin</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.partner_view_buttons" />
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_view_partner_invoices']" position="attributes">
+                <attribute name="groups" separator="," add="sales_team.group_sale_salesman_all_leads" />
+            </xpath>
+        </field>
     </record>
 
 </odoo>

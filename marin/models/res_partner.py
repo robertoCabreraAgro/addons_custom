@@ -51,6 +51,15 @@ class ResPartner(models.Model):
     )
 
     # Accounting
+    credit_limit = fields.Float(
+        groups="account.group_account_invoice,account.group_account_readonly,sales_team.group_sale_salesman_all_leads",
+    )
+    use_partner_credit_limit = fields.Boolean(
+        groups="account.group_account_invoice,account.group_account_readonly,sales_team.group_sale_salesman_all_leads",
+    )
+    show_credit_limit = fields.Boolean(
+        groups="account.group_account_invoice,account.group_account_readonly,sales_team.group_sale_salesman_all_leads",
+    )
     credit_limit_available = fields.Monetary(
         string="Available Receivable Limit",
         compute="_compute_credit_limit_available",
