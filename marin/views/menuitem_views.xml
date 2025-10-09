@@ -249,6 +249,17 @@
         />
     </record>
 
+    <!-- Accounting > Reporting -->
+    <record id="account.menu_finance_reports" model="ir.ui.menu">
+        <field name="sequence" eval="10" />
+        <field
+            name="group_ids"
+            eval="[
+		Command.set([ref('group_account_reports')])
+            ]"
+        />
+    </record>
+
     <menuitem
         id="menu_finance_bank_statement"
         name="Bank Statements"
