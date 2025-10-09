@@ -35,6 +35,13 @@
         <field name="name">Vendor payments</field>
         <field name="category_id" ref="base.module_category_usability" />
     </record>
+    <record id="account.group_account_user" model="res.groups">
+        <field name="implied_ids" eval="[
+            Command.link(ref('group_account_supplier_bill')),
+            Command.link(ref('group_account_supplier_refund')),
+            Command.link(ref('group_account_supplier_payment')),
+        ]" />
+    </record>
     <record id="group_account_bank_statement" model="res.groups">
         <field name="name">Bank statements</field>
         <field name="category_id" ref="base.module_category_usability" />

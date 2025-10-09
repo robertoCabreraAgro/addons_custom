@@ -102,7 +102,7 @@
     </menuitem>
 
     <!-- Accounting -->
-    <!-- Customers -->
+    <!-- Accounting > Customers -->
     <record id="account.menu_action_move_out_invoice_type" model="ir.ui.menu">
         <field name="sequence" eval="10" />
         <field
@@ -147,15 +147,29 @@
         <field name="active" eval="False" />
     </record>
 
-    <!-- Suppliers -->
+    <!-- Accounting > Suppliers -->
+    <record id="account.menu_finance_payables" model="ir.ui.menu">
+        <field name="sequence" eval="10" />
+        <field
+            name="group_ids"
+            eval="[
+                Command.set([
+                    ref('marin.group_account_supplier_refund'),
+                    ref('marin.group_account_supplier_bill'),
+                    ref('marin.group_account_supplier_payment'),
+                ])
+            ]"
+        />
+    </record>
+
     <record id="account.menu_action_move_in_invoice_type" model="ir.ui.menu">
         <field name="sequence" eval="10" />
         <field
             name="group_ids"
             eval="[
-                Command.link(ref('account.group_account_readonly')),
-                Command.link(ref('account.group_account_user')),
-                Command.link(ref('marin.group_account_supplier_bill'))
+                Command.set([
+                    ref('marin.group_account_supplier_bill'),
+                ])
             ]"
         />
     </record>
@@ -165,9 +179,9 @@
         <field
             name="group_ids"
             eval="[
-                Command.link(ref('account.group_account_readonly')),
-                Command.link(ref('account.group_account_user')),
-                Command.link(ref('marin.group_account_supplier_refund'))
+                Command.set([
+                    ref('marin.group_account_supplier_refund'),
+                ])
             ]"
         />
     </record>
@@ -177,9 +191,9 @@
         <field
             name="group_ids"
             eval="[
-                Command.link(ref('account.group_account_readonly')),
-                Command.link(ref('account.group_account_user')),
-                Command.link(ref('marin.group_account_supplier_payment'))
+                Command.set([
+                    ref('marin.group_account_supplier_payment'),
+                ])
             ]"
         />
     </record>
@@ -206,7 +220,7 @@
         <field name="active" eval="False" />
     </record>
 
-    <!-- Accounting2 -->
+    <!-- Accounting > Accounting -->
     <record id="account.menu_finance_entries" model="ir.ui.menu">
         <field name="sequence" eval="10" />
         <field
