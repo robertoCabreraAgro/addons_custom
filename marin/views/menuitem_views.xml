@@ -85,11 +85,7 @@
                     groups="stock.group_production_lot"
                 />
             </menuitem>
-            <menuitem
-                id="menu_configuration_logistics"
-                name="Logistics"
-                sequence="30"
-                groups="uom.group_uom">
+            <menuitem id="menu_configuration_logistics" name="Logistics" sequence="30" groups="uom.group_uom">
                 <menuitem
                     id="menu_uom_uom"
                     name="Units of measure"
@@ -103,14 +99,28 @@
 
     <!-- Accounting -->
     <!-- Accounting > Customers -->
+    <record id="account.menu_finance_receivables" model="ir.ui.menu">
+        <field name="sequence" eval="10" />
+        <field
+            name="group_ids"
+            eval="[
+                Command.set([
+                    ref('marin.group_account_customer_invoice'),
+                    ref('marin.group_account_customer_refund'),
+                    ref('marin.group_account_customer_payment'),
+                ])
+            ]"
+        />
+    </record>
+
     <record id="account.menu_action_move_out_invoice_type" model="ir.ui.menu">
         <field name="sequence" eval="10" />
         <field
             name="group_ids"
             eval="[
-                Command.link(ref('account.group_account_readonly')),
-                Command.link(ref('account.group_account_user')),
-                Command.link(ref('marin.group_account_customer_invoice'))
+                Command.set([
+                    ref('marin.group_account_customer_invoice'),
+                ])
             ]"
         />
     </record>
@@ -120,9 +130,9 @@
         <field
             name="group_ids"
             eval="[
-                Command.link(ref('account.group_account_readonly')),
-                Command.link(ref('account.group_account_user')),
-                Command.link(ref('marin.group_account_customer_refund'))
+                Command.set([
+                    ref('marin.group_account_customer_refund'),
+                ])
             ]"
         />
     </record>
@@ -132,9 +142,9 @@
         <field
             name="group_ids"
             eval="[
-                Command.link(ref('account.group_account_readonly')),
-                Command.link(ref('account.group_account_user')),
-                Command.link(ref('marin.group_account_customer_payment'))
+                Command.set([
+                    ref('marin.group_account_customer_payment'),
+                ])
             ]"
         />
     </record>
@@ -223,41 +233,29 @@
     <!-- Accounting > Accounting -->
     <record id="account.menu_finance_entries" model="ir.ui.menu">
         <field name="sequence" eval="10" />
-        <field
-            name="group_ids"
-            eval="[
-		Command.set([ref('group_account_finance_entries')])
-            ]"
-        />
+        <field name="group_ids" eval="[
+        Command.set([ref('group_account_finance_entries')])
+            ]" />
     </record>
 
     <record id="account.menu_action_account_moves_all" model="ir.ui.menu">
-        <field
-            name="group_ids"
-            eval="[
-		Command.set([ref('group_account_finance_entries')])
-            ]"
-        />
+        <field name="group_ids" eval="[
+        Command.set([ref('group_account_finance_entries')])
+            ]" />
     </record>
 
     <record id="account.menu_action_move_journal_line_form" model="ir.ui.menu">
-        <field
-            name="group_ids"
-            eval="[
-		Command.set([ref('group_account_finance_entries')])
-            ]"
-        />
+        <field name="group_ids" eval="[
+        Command.set([ref('group_account_finance_entries')])
+            ]" />
     </record>
 
     <!-- Accounting > Reporting -->
     <record id="account.menu_finance_reports" model="ir.ui.menu">
         <field name="sequence" eval="10" />
-        <field
-            name="group_ids"
-            eval="[
-		Command.set([ref('group_account_reports')])
-            ]"
-        />
+        <field name="group_ids" eval="[
+        Command.set([ref('group_account_reports')])
+            ]" />
     </record>
 
     <menuitem
@@ -612,19 +610,23 @@
             Command.link(ref('sales_team.group_sale_salesman'))]" />
     </record>
 
-    <menuitem id="menu_sales_analysis_report"
-              name="Sales Master"
-              parent="sale.menu_sale_report"
-              action="action_sales_master_report"
-              groups="base.group_system"
-              sequence="10"/>
- 
-    <menuitem id="menu_sale_target"
-              name="Sales Targets"
-              parent="sale.menu_sale_report"
-              action="action_sale_target_line"
-              sequence="60"
-              groups="sales_team.group_sale_manager"/>
+    <menuitem
+        id="menu_sales_analysis_report"
+        name="Sales Master"
+        parent="sale.menu_sale_report"
+        action="action_sales_master_report"
+        groups="base.group_system"
+        sequence="10"
+    />
+
+    <menuitem
+        id="menu_sale_target"
+        name="Sales Targets"
+        parent="sale.menu_sale_report"
+        action="action_sale_target_line"
+        sequence="60"
+        groups="sales_team.group_sale_manager"
+    />
 
     <menuitem
         id="menu_customer_management"
@@ -640,7 +642,8 @@
         parent="menu_customer_management"
         action="action_res_partner_profile"
         sequence="20"
-        groups="sales_team.group_sale_manager"/>
+        groups="sales_team.group_sale_manager"
+    />
 
     <menuitem
         id="menu_hectares_ranges"
@@ -650,7 +653,7 @@
         sequence="30"
         groups="sales_team.group_sale_manager"
     />
-    
+
     <menuitem
         id="menu_profile_history"
         name="Profile History"
@@ -674,114 +677,180 @@
     <!-- Stock/Inventory Menu Updates for Readonly Group -->
     <!-- Actualizar grupos de menús principales para incluir readonly -->
     <record id="stock.menu_stock_root" model="ir.ui.menu">
-        <field name="group_ids" eval="[(4, ref('stock.group_stock_manager')), (4, ref('stock.group_stock_user')), (4, ref('group_stock_readonly'))]"/>
+        <field
+            name="group_ids"
+            eval="[(4, ref('stock.group_stock_manager')), (4, ref('stock.group_stock_user')), (4, ref('group_stock_readonly'))]"
+        />
     </record>
 
     <record id="stock.menu_stock_warehouse_mgmt" model="ir.ui.menu">
-        <field name="group_ids" eval="[(4, ref('stock.group_stock_manager')), (4, ref('stock.group_stock_user')), (4, ref('group_stock_readonly'))]"/>
+        <field
+            name="group_ids"
+            eval="[(4, ref('stock.group_stock_manager')), (4, ref('stock.group_stock_user')), (4, ref('group_stock_readonly'))]"
+        />
     </record>
 
     <record id="stock.menu_stock_transfers" model="ir.ui.menu">
-        <field name="group_ids" eval="[(4, ref('stock.group_stock_manager')), (4, ref('stock.group_stock_user')), (4, ref('group_stock_readonly'))]"/>
+        <field
+            name="group_ids"
+            eval="[(4, ref('stock.group_stock_manager')), (4, ref('stock.group_stock_user')), (4, ref('group_stock_readonly'))]"
+        />
     </record>
 
     <record id="stock.menu_stock_adjustments" model="ir.ui.menu">
-        <field name="group_ids" eval="[(4, ref('stock.group_stock_manager')), (4, ref('stock.group_stock_user')), (4, ref('group_stock_readonly'))]"/>
+        <field
+            name="group_ids"
+            eval="[(4, ref('stock.group_stock_manager')), (4, ref('stock.group_stock_user')), (4, ref('group_stock_readonly'))]"
+        />
     </record>
 
     <record id="stock.menu_stock_procurement" model="ir.ui.menu">
-        <field name="group_ids" eval="[(4, ref('stock.group_stock_manager')), (4, ref('stock.group_stock_user')), (4, ref('group_stock_readonly'))]"/>
+        <field
+            name="group_ids"
+            eval="[(4, ref('stock.group_stock_manager')), (4, ref('stock.group_stock_user')), (4, ref('group_stock_readonly'))]"
+        />
     </record>
 
     <record id="stock.menu_stock_inventory_control" model="ir.ui.menu">
-        <field name="group_ids" eval="[(4, ref('stock.group_stock_manager')), (4, ref('stock.group_stock_user')), (4, ref('group_stock_readonly'))]"/>
+        <field
+            name="group_ids"
+            eval="[(4, ref('stock.group_stock_manager')), (4, ref('stock.group_stock_user')), (4, ref('group_stock_readonly'))]"
+        />
     </record>
 
     <record id="stock.menu_warehouse_report" model="ir.ui.menu">
-        <field name="group_ids" eval="[(4, ref('stock.group_stock_manager')), (4, ref('stock.group_stock_user')), (4, ref('group_stock_readonly'))]"/>
+        <field
+            name="group_ids"
+            eval="[(4, ref('stock.group_stock_manager')), (4, ref('stock.group_stock_user')), (4, ref('group_stock_readonly'))]"
+        />
     </record>
 
     <!-- Menús específicos de transferencias -->
     <record id="stock.in_picking" model="ir.ui.menu">
-        <field name="group_ids" eval="[(4, ref('stock.group_stock_manager')), (4, ref('stock.group_stock_user')), (4, ref('group_stock_readonly'))]"/>
+        <field
+            name="group_ids"
+            eval="[(4, ref('stock.group_stock_manager')), (4, ref('stock.group_stock_user')), (4, ref('group_stock_readonly'))]"
+        />
     </record>
 
     <record id="stock.out_picking" model="ir.ui.menu">
-        <field name="group_ids" eval="[(4, ref('stock.group_stock_manager')), (4, ref('stock.group_stock_user')), (4, ref('group_stock_readonly'))]"/>
+        <field
+            name="group_ids"
+            eval="[(4, ref('stock.group_stock_manager')), (4, ref('stock.group_stock_user')), (4, ref('group_stock_readonly'))]"
+        />
     </record>
 
     <record id="stock.in_picking" model="ir.ui.menu">
-        <field name="group_ids" eval="[(4, ref('stock.group_stock_manager')), (4, ref('stock.group_stock_user')), (4, ref('group_stock_readonly'))]"/>
+        <field
+            name="group_ids"
+            eval="[(4, ref('stock.group_stock_manager')), (4, ref('stock.group_stock_user')), (4, ref('group_stock_readonly'))]"
+        />
     </record>
 
     <record id="mrp.mrp_operation_picking" model="ir.ui.menu">
-        <field name="group_ids" eval="[(4, ref('stock.group_stock_user')), (4, ref('group_stock_readonly'))]"/>
+        <field name="group_ids" eval="[(4, ref('stock.group_stock_user')), (4, ref('group_stock_readonly'))]" />
     </record>
 
     <!-- Menús de productos e inventario -->
     <record id="stock.menu_product_variant_config_stock" model="ir.ui.menu">
-        <field name="group_ids" eval="[(4, ref('stock.group_stock_manager')), (4, ref('stock.group_stock_user')), (4, ref('group_stock_readonly'))]"/>
+        <field
+            name="group_ids"
+            eval="[(4, ref('stock.group_stock_manager')), (4, ref('stock.group_stock_user')), (4, ref('group_stock_readonly'))]"
+        />
     </record>
 
     <record id="stock.product_product_menu" model="ir.ui.menu">
-        <field name="group_ids" eval="[(4, ref('stock.group_stock_manager')), (4, ref('stock.group_stock_user')), (4, ref('group_stock_readonly'))]"/>
+        <field
+            name="group_ids"
+            eval="[(4, ref('stock.group_stock_manager')), (4, ref('stock.group_stock_user')), (4, ref('group_stock_readonly'))]"
+        />
     </record>
 
     <record id="stock.menu_action_production_lot_form" model="ir.ui.menu">
-        <field name="group_ids" eval="[(4, ref('stock.group_stock_manager')), (4, ref('stock.group_stock_user')), (4, ref('group_stock_readonly'))]"/>
+        <field
+            name="group_ids"
+            eval="[(4, ref('stock.group_stock_manager')), (4, ref('stock.group_stock_user')), (4, ref('group_stock_readonly'))]"
+        />
     </record>
 
     <record id="stock.menu_action_inventory_tree" model="ir.ui.menu">
-        <field name="group_ids" eval="[(4, ref('stock.group_stock_manager')), (4, ref('stock.group_stock_user')), (4, ref('group_stock_readonly'))]"/>
+        <field
+            name="group_ids"
+            eval="[(4, ref('stock.group_stock_manager')), (4, ref('stock.group_stock_user')), (4, ref('group_stock_readonly'))]"
+        />
     </record>
 
     <record id="stock.menu_package" model="ir.ui.menu">
-        <field name="group_ids" eval="[(4, ref('stock.group_stock_manager')), (4, ref('stock.group_stock_user')), (4, ref('group_stock_readonly'))]"/>
+        <field
+            name="group_ids"
+            eval="[(4, ref('stock.group_stock_manager')), (4, ref('stock.group_stock_user')), (4, ref('group_stock_readonly'))]"
+        />
     </record>
 
     <record id="stock.menu_product_stock" model="ir.ui.menu">
-        <field name="group_ids" eval="[(4, ref('stock.group_stock_manager')), (4, ref('stock.group_stock_user')), (4, ref('group_stock_readonly'))]"/>
+        <field
+            name="group_ids"
+            eval="[(4, ref('stock.group_stock_manager')), (4, ref('stock.group_stock_user')), (4, ref('group_stock_readonly'))]"
+        />
     </record>
 
     <!-- Menús de reportes -->
     <record id="stock.stock_move_line_menu" model="ir.ui.menu">
-        <field name="group_ids" eval="[(4, ref('stock.group_stock_manager')), (4, ref('stock.group_stock_user')), (4, ref('group_stock_readonly'))]"/>
+        <field
+            name="group_ids"
+            eval="[(4, ref('stock.group_stock_manager')), (4, ref('stock.group_stock_user')), (4, ref('group_stock_readonly'))]"
+        />
     </record>
 
     <record id="stock.stock_move_menu" model="ir.ui.menu">
-        <field name="group_ids" eval="[(4, ref('stock.group_stock_manager')), (4, ref('stock.group_stock_user')), (4, ref('group_stock_readonly'))]"/>
+        <field
+            name="group_ids"
+            eval="[(4, ref('stock.group_stock_manager')), (4, ref('stock.group_stock_user')), (4, ref('group_stock_readonly'))]"
+        />
     </record>
 
     <record id="stock.menu_valuation" model="ir.ui.menu">
-        <field name="group_ids" eval="[(4, ref('stock.group_stock_manager')), (4, ref('stock.group_stock_user')), (4, ref('group_stock_readonly'))]"/>
+        <field
+            name="group_ids"
+            eval="[(4, ref('stock.group_stock_manager')), (4, ref('stock.group_stock_user')), (4, ref('group_stock_readonly'))]"
+        />
     </record>
 
     <!-- Reabastecimiento -->
     <record id="stock.menu_reordering_rules_replenish" model="ir.ui.menu">
-        <field name="group_ids" eval="[(4, ref('stock.group_stock_manager')), (4, ref('stock.group_stock_user')), (4, ref('group_stock_readonly'))]"/>
+        <field
+            name="group_ids"
+            eval="[(4, ref('stock.group_stock_manager')), (4, ref('stock.group_stock_user')), (4, ref('group_stock_readonly'))]"
+        />
     </record>
 
     <!-- Chatarra/Scrap -->
     <record id="stock.menu_stock_scrap" model="ir.ui.menu">
-        <field name="group_ids" eval="[(4, ref('stock.group_stock_manager')), (4, ref('stock.group_stock_user')), (4, ref('group_stock_readonly'))]"/>
+        <field
+            name="group_ids"
+            eval="[(4, ref('stock.group_stock_manager')), (4, ref('stock.group_stock_user')), (4, ref('group_stock_readonly'))]"
+        />
     </record>
 
     <!-- Overview -->
     <record id="stock.stock_picking_type_menu" model="ir.ui.menu">
-        <field name="group_ids" eval="[(4, ref('stock.group_stock_manager')), (4, ref('stock.group_stock_user')), (4, ref('group_stock_readonly'))]"/>
+        <field
+            name="group_ids"
+            eval="[(4, ref('stock.group_stock_manager')), (4, ref('stock.group_stock_user')), (4, ref('group_stock_readonly'))]"
+        />
     </record>
 
     <!-- Override original menus to use readonly window actions -->
     <record id="stock.in_picking" model="ir.ui.menu">
-        <field name="action" ref="action_picking_tree_incoming_readonly"/>
+        <field name="action" ref="action_picking_tree_incoming_readonly" />
     </record>
 
     <record id="stock.out_picking" model="ir.ui.menu">
-        <field name="action" ref="action_picking_tree_outgoing_readonly"/>
+        <field name="action" ref="action_picking_tree_outgoing_readonly" />
     </record>
 
     <record id="stock.int_picking" model="ir.ui.menu">
-        <field name="action" ref="action_picking_tree_internal_readonly"/>
+        <field name="action" ref="action_picking_tree_internal_readonly" />
     </record>
 
 </odoo>

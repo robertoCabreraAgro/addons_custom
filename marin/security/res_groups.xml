@@ -44,13 +44,19 @@
         <field name="category_id" ref="base.module_category_usability" />
     </record>
     <record id="account.group_account_user" model="res.groups">
-        <field name="implied_ids" eval="[
+        <field
+            name="implied_ids"
+            eval="[
+            Command.link(ref('group_account_customer_invoice')),
+            Command.link(ref('group_account_customer_refund')),
+            Command.link(ref('group_account_customer_payment')),
             Command.link(ref('group_account_supplier_bill')),
             Command.link(ref('group_account_supplier_refund')),
             Command.link(ref('group_account_supplier_payment')),
             Command.link(ref('group_account_finance_entries')),
             Command.link(ref('group_account_reports')),
-        ]" />
+        ]"
+        />
     </record>
     <record id="group_account_bank_statement" model="res.groups">
         <field name="name">Bank statements</field>
@@ -157,7 +163,7 @@
         />
     </record>
     <!-- Stock -->
-    <!-- Override stock groups to meet task requirements -->    
+    <!-- Override stock groups to meet task requirements -->
     <record id="group_stock_readonly" model="res.groups">
         <field name="name">User: readonly</field>
         <field name="category_id" ref="base.module_category_inventory_inventory" />
@@ -168,14 +174,17 @@
         <field name="name">User: create &amp; edit</field>
         <field name="category_id" ref="base.module_category_inventory_inventory" />
     </record>
-    
+
     <record id="stock.group_stock_manager" model="res.groups">
         <field name="name">Administrator</field>
         <field name="category_id" ref="base.module_category_inventory_inventory" />
-        <field name="implied_ids" eval="[
+        <field
+            name="implied_ids"
+            eval="[
             Command.link(ref('stock.group_stock_user')),
             Command.link(ref('group_stock_readonly'))
-        ]" />
+        ]"
+        />
     </record>
     <record id="group_stock_inventory_adjustment" model="res.groups">
         <field name="name">Inventory adjustments</field>
@@ -239,7 +248,7 @@
     <!-- Project -->
     <record id="group_project_kpi" model="res.groups">
         <field name="name">Track Project KPIs</field>
-        <field name="category_id" ref="base.module_category_hidden"/>
+        <field name="category_id" ref="base.module_category_hidden" />
     </record>
     <!-- Misc -->
     <record id="group_security_compliance" model="res.groups">
