@@ -226,8 +226,7 @@
         <field
             name="group_ids"
             eval="[
-                Command.link(ref('account.group_account_readonly')),
-                Command.link(ref('account.group_account_user')),
+		Command.set([ref('group_account_finance_entries')])
             ]"
         />
     </record>
@@ -236,8 +235,7 @@
         <field
             name="group_ids"
             eval="[
-                Command.link(ref('account.group_account_readonly')),
-                Command.link(ref('account.group_account_user')),
+		Command.set([ref('group_account_finance_entries')])
             ]"
         />
     </record>
@@ -246,8 +244,7 @@
         <field
             name="group_ids"
             eval="[
-                Command.link(ref('account.group_account_readonly')),
-                Command.link(ref('account.group_account_user')),
+		Command.set([ref('group_account_finance_entries')])
             ]"
         />
     </record>
