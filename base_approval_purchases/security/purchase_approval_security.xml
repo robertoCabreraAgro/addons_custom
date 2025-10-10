@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Security Groups -->
+    <record id="group_purchase_requester" model="res.groups">
+        <field name="name">Purchase Requester</field>
+        <field name="category_id" ref="base.module_category_human_resources"/>
+        <field name="comment">Users can create and submit purchase approval requests</field>
+    </record>
+
+    <record id="group_purchase_approver" model="res.groups">
+        <field name="name">Purchase Approver</field>
+        <field name="category_id" ref="base.module_category_human_resources"/>
+        <field name="implied_ids" eval="[(4, ref('group_purchase_requester'))]"/>
+        <field name="comment">Users can approve/refuse purchase approval requests</field>
+    </record>
+
+    <record id="group_purchase_user" model="res.groups">
+        <field name="name">Purchase User</field>
+        <field name="category_id" ref="base.module_category_human_resources"/>
+        <field name="implied_ids" eval="[(4, ref('group_purchase_approver'))]"/>
+        <field name="comment">Users can view all purchase approval requests and create purchase orders</field>
+    </record>
+
+    <record id="group_purchase_manager" model="res.groups">
+        <field name="name">Purchase Manager</field>
+        <field name="category_id" ref="base.module_category_human_resources"/>
+        <field name="implied_ids" eval="[(4, ref('group_purchase_user'))]"/>
+        <field name="comment">Users can configure approval categories and manage all purchase approval workflows</field>
+    </record>
+
+    <!-- Record Rules for approval.request.purchase -->
+    <record id="approval_request_purchase_rule_requester" model="ir.rule">
+        <field name="name">Purchase Approval Request: Requester Access</field>
+        <field name="model_id" ref="model_approval_request_purchase"/>
+        <field name="domain_force">[('requested_by', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('group_purchase_requester'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="approval_request_purchase_rule_approver" model="ir.rule">
+        <field name="name">Purchase Approval Request: Approver Access</field>
+        <field name="model_id" ref="model_approval_request_purchase"/>
+        <field name="domain_force">['|', ('requested_by', '=', user.id), ('approver_ids.user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('group_purchase_approver'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="approval_request_purchase_rule_user" model="ir.rule">
+        <field name="name">Purchase Approval Request: User Access</field>
+        <field name="model_id" ref="model_approval_request_purchase"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_purchase_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="approval_request_purchase_rule_manager" model="ir.rule">
+        <field name="name">Purchase Approval Request: Manager Access</field>
+        <field name="model_id" ref="model_approval_request_purchase"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_purchase_manager'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <!-- Record Rules for approval.purchase.product.line -->
+    <record id="approval_purchase_product_line_rule_requester" model="ir.rule">
+        <field name="name">Purchase Product Line: Requester Access</field>
+        <field name="model_id" ref="model_approval_purchase_product_line"/>
+        <field name="domain_force">[('approval_request_purchase_id.requested_by', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('group_purchase_requester'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="approval_purchase_product_line_rule_approver" model="ir.rule">
+        <field name="name">Purchase Product Line: Approver Access</field>
+        <field name="model_id" ref="model_approval_purchase_product_line"/>
+        <field name="domain_force">['|', ('approval_request_purchase_id.requested_by', '=', user.id), ('approval_request_purchase_id.approver_ids.user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('group_purchase_approver'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="approval_purchase_product_line_rule_user" model="ir.rule">
+        <field name="name">Purchase Product Line: User Access</field>
+        <field name="model_id" ref="model_approval_purchase_product_line"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_purchase_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="approval_purchase_product_line_rule_manager" model="ir.rule">
+        <field name="name">Purchase Product Line: Manager Access</field>
+        <field name="model_id" ref="model_approval_purchase_product_line"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_purchase_manager'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <!-- Record Rules for approval.category.purchase -->
+    <record id="approval_category_purchase_rule_company" model="ir.rule">
+        <field name="name">Purchase Category: Multi-Company</field>
+        <field name="model_id" ref="model_approval_category_purchase"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <!-- Field-Level Security for Sensitive Operations -->
+    <record id="approval_request_purchase_field_security_state" model="ir.model.fields">
+        <field name="model_id" ref="model_approval_request_purchase"/>
+        <field name="name">state</field>
+        <field name="groups" eval="[(4, ref('group_purchase_approver'))]"/>
+    </record>
+
+    <!-- Server Actions Security -->
+    <record id="server_action_approve_security" model="ir.actions.server">
+        <field name="name">Approve Purchase Request Security Check</field>
+        <field name="model_id" ref="model_approval_request_purchase"/>
+        <field name="state">code</field>
+        <field name="code">
+if not env.user.has_group('base_approval_purchases.group_purchase_approver'):
+    raise AccessError(_('You do not have permission to approve purchase requests.'))
+
+# Additional business logic checks
+for record in records:
+    if not record.can_approve:
+        raise UserError(_('You cannot approve this request at this time.'))
+        </field>
+    </record>
+
+    <!-- Data Security Rules -->
+
+    <!-- Prevent unauthorized access to financial data -->
+    <record id="approval_request_purchase_financial_rule" model="ir.rule">
+        <field name="name">Purchase Request: Financial Data Access</field>
+        <field name="model_id" ref="model_approval_request_purchase"/>
+        <field name="domain_force">[('amount_total', '&lt;=', 10000)]</field>
+        <field name="groups" eval="[(4, ref('group_purchase_requester'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- Manager can access all amounts -->
+    <record id="approval_request_purchase_manager_financial_rule" model="ir.rule">
+        <field name="name">Purchase Request: Manager Financial Access</field>
+        <field name="model_id" ref="model_approval_request_purchase"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_purchase_manager'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <!-- Company-specific access for categories -->
+    <record id="approval_category_purchase_company_rule" model="ir.rule">
+        <field name="name">Purchase Category: Company Access</field>
+        <field name="model_id" ref="model_approval_category_purchase"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <!-- Audit Trail Security -->
+    <record id="approval_history_rule_read_only" model="ir.rule">
+        <field name="name">Approval History: Read Only</field>
+        <field name="model_id" ref="model_approval_request_purchase_history"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_purchase_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- System Administrator Override -->
+    <record id="approval_request_purchase_rule_admin" model="ir.rule">
+        <field name="name">Purchase Approval Request: Admin Override</field>
+        <field name="model_id" ref="model_approval_request_purchase"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+</odoo>

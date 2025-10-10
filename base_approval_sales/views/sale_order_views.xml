@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Sale Order Form View - Odoo 18 Compatible -->
+    <record id="view_order_form_approval" model="ir.ui.view">
+        <field name="name">sale.order.form.approval</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Add approval fields -->
+            <field name="state" position="before">
+                <field name="approval_request_ref" invisible="1"/>
+                <field name="approval_state_display" invisible="1"/>
+                <field name="require_approval" invisible="1"/>
+                <field name="can_approve" invisible="1"/>
+                <field name="can_reject" invisible="1"/>
+            </field>
+
+            <!-- Update statusbar to include approval states -->
+            <field name="state" position="attributes">
+                <attribute name="statusbar_visible">draft,sent,pending_approval,approved,sale,done</attribute>
+                <attribute name="statusbar_colors">{"pending_approval": "warning", "approved": "success"}</attribute>
+            </field>
+
+            <!-- Approval Status Display -->
+            <field name="state" position="after">
+                <div class="approval_status_container" invisible="not require_approval">
+
+                    <div class="alert alert-info" invisible="state not in ('pending_approval', 'draft', 'approved') or not approval_request_ref">
+                        <strong>Estado de Aprobación: </strong>
+                        <field name="approval_state_display" readonly="1"/>
+
+                        <!-- Quick actions for approvers - Commented per requirements: belongs in base_approval, not sale.order -->
+                        <!--
+                        <div class="float-end" invisible="not can_approve and not can_reject">
+                            <button name="action_approve" type="object" string="Aprobar"
+                                    class="btn btn-sm btn-success" invisible="not can_approve"/>
+                            <button name="action_reject" type="object" string="Rechazar"
+                                    class="btn btn-sm btn-danger" invisible="not can_reject"/>
+                        </div>
+                        -->
+                    </div>
+
+                    <div class="alert alert-warning" invisible="state != 'pending_approval'">
+                        <i class="fa fa-clock-o me-2"/>
+                        <strong>Esta cotización está pendiente de aprobación y no puede ser confirmada hasta ser aprobada.</strong>
+                    </div>
+                </div>
+            </field>
+
+            <!-- Buttons adjustments -->
+            <button name="action_confirm" position="before">
+                <button name="action_request_approval" string="Solicitar Aprobación"
+                        type="object" class="btn-primary"
+                        invisible="not require_approval or state not in ('draft', 'sent') or approval_request_ref or state == 'pending_approval'"
+                        groups="sales_team.group_sale_salesman"/>
+            </button>
+
+            <button name="action_confirm" position="attributes">
+                <attribute name="invisible">state != 'approved' or (require_approval and state == 'pending_approval')</attribute>
+            </button>
+
+            <!-- Approval tab -->
+            <page name="other_information" position="after">
+                <page name="approval_info" string="Información de Aprobación" invisible="not require_approval">
+
+                    <group>
+                        <group string="Estado de Aprobación">
+                            <field name="approval_state_display" readonly="1"/>
+                            <field name="approval_request_ref" readonly="1" invisible="not approval_request_ref" string="Approval Request"/>
+                            <field name="state" readonly="1" string="Sale Order State"/>
+                        </group>
+
+                        <group string="Acciones Disponibles">
+                            <field name="can_approve" readonly="1"/>
+                            <field name="can_reject" readonly="1"/>
+                            <field name="require_approval" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <group class="mt-3">
+                        <button name="action_request_approval" string="Solicitar Aprobación" type="object"
+                                class="btn btn-primary me-2" invisible="approval_request_ref or state not in ('draft', 'sent')"/>
+                        <!-- Approve/Reject buttons commented per requirements: belong in base_approval, not sale.order -->
+                        <!--
+                        <button name="action_approve" string="Aprobar Cotización" type="object"
+                                class="btn btn-success me-2" invisible="not can_approve"/>
+                        <button name="action_reject" string="Rechazar Cotización" type="object"
+                                class="btn btn-danger me-2" invisible="not can_reject"/>
+                        -->
+                        <button name="action_view_approval_request" string="Ver Solicitud de Aprobación"
+                                type="object" class="btn btn-secondary" invisible="not approval_request_ref"/>
+                    </group>
+
+                </page>
+            </page>
+
+        </field>
+    </record>
+
+    <!-- Sale Order Tree View -->
+    <record id="view_order_tree_approval" model="ir.ui.view">
+        <field name="name">sale.order.tree.approval</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_tree"/>
+        <field name="arch" type="xml">
+
+            <field name="state" position="before">
+                <field name="approval_state_display" string="Estado Aprobación" widget="badge"
+                       decoration-warning="state == 'pending_approval'"
+                       decoration-success="approval_state_display == 'Aprobado'"
+                       decoration-danger="approval_state_display == 'Rechazado'"/>
+            </field>
+
+            <field name="state" position="attributes">
+                <attribute name="decoration-warning">state == 'pending_approval'</attribute>
+                <attribute name="decoration-success">state == 'approved'</attribute>
+            </field>
+
+        </field>
+    </record>
+
+    <!-- Sale Order Kanban View - Odoo 18 Compatible -->
+    <!-- Commented due to ParseError with oe_kanban_bottom_left/right in Odoo 18 -->
+    <!--
+    <record id="view_order_kanban_approval" model="ir.ui.view">
+        <field name="name">sale.order.kanban.approval</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sale_order_kanban"/>
+        <field name="arch" type="xml">
+
+            <field name="partner_id" position="after">
+                <field name="approval_state_display"/>
+                <field name="require_approval"/>
+            </field>
+
+        </field>
+    </record>
+    -->
+
+    <!-- Sale Order Search Filters - Removed per requirements -->
+    <!-- Search view: not to be touched, no custom filters added -->
+    <!--
+    <record id="view_sales_order_filter_approval" model="ir.ui.view">
+        <field name="name">sale.order.search.approval</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+        <field name="arch" type="xml">
+        </field>
+    </record>
+    -->
+
+</odoo>

@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form View for approval.purchase.product.line -->
+    <record id="approval_purchase_product_line_view_form" model="ir.ui.view">
+        <field name="name">approval.purchase.product.line.form</field>
+        <field name="model">approval.purchase.product.line</field>
+        <field name="arch" type="xml">
+            <form string="Purchase Approval Product Line">
+                <sheet>
+                    <group>
+                        <group name="product_info">
+                            <field name="display_type" invisible="1"/>
+                            <field name="approval_request_purchase_id"
+                                   readonly="1"
+                                   invisible="context.get('default_approval_request_purchase_id')"/>
+
+                            <field name="product_id"
+                                   required="not display_type"
+                                   context="{'partner_id': parent.partner_id}"
+                                   domain="[('purchase_ok', '=', True)]"
+                                   invisible="display_type"/>
+
+                            <field name="name"
+                                   required="display_type"
+                                   invisible="not display_type"/>
+
+                            <field name="product_code" readonly="1" invisible="display_type"/>
+
+                            <field name="product_template_id" invisible="1"/>
+                        </group>
+
+                        <group name="quantity_info" invisible="display_type">
+                            <field name="product_qty"/>
+                            <field name="product_uom"
+                                   groups="uom.group_uom"
+                                   options="{'no_open': True, 'no_create': True}"/>
+                            <field name="qty_received" readonly="1"/>
+                            <field name="qty_invoiced" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <group invisible="display_type">
+                        <group name="pricing">
+                            <field name="price_unit"/>
+                            <field name="discount" optional="show"/>
+                            <field name="taxes_id"
+                                   widget="many2many_tags"
+                                   domain="[('type_tax_use', '=', 'purchase'), ('company_id', '=', parent.company_id)]"
+                                   options="{'no_create': True}"/>
+                        </group>
+
+                        <group name="totals">
+                            <field name="price_subtotal" widget="monetary" readonly="1"/>
+                            <field name="price_total" widget="monetary" readonly="1"/>
+                            <field name="price_tax" readonly="1"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+
+                    <group invisible="display_type">
+                        <group name="schedule_info">
+                            <field name="date_planned"/>
+                        </group>
+
+                        <group name="analytic_info" groups="analytic.group_analytic_accounting">
+                            <field name="analytic_distribution"
+                                   widget="analytic_distribution"
+                                   options="{'product_field': 'product_id', 'business_domain': 'purchase'}"/>
+                            <field name="account_analytic_id" optional="show"/>
+                        </group>
+                    </group>
+
+                    <notebook invisible="display_type">
+                        <page string="Notes" name="notes">
+                            <field name="note" placeholder="Additional notes for this line..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree View for approval.purchase.product.line -->
+    <record id="approval_purchase_product_line_view_tree" model="ir.ui.view">
+        <field name="name">approval.purchase.product.line.tree</field>
+        <field name="model">approval.purchase.product.line</field>
+        <field name="arch" type="xml">
+            <list string="Purchase Approval Product Lines" editable="bottom">
+                <field name="display_type" invisible="1"/>
+                <field name="sequence" widget="handle"/>
+
+                <field name="approval_request_purchase_id" optional="show"/>
+
+                <field name="product_id"
+                       required="not display_type"
+                       domain="[('purchase_ok', '=', True)]"
+                       invisible="display_type"/>
+
+                <field name="name"
+                       widget="section_and_note_text"
+                       required="display_type"/>
+
+                <field name="product_code" optional="show" invisible="display_type"/>
+
+                <field name="date_planned"
+                       required="not display_type"
+                       invisible="display_type"/>
+
+                <field name="product_qty" invisible="display_type"/>
+
+                <field name="qty_received"
+                       optional="show"
+                       readonly="1"
+                       invisible="display_type"/>
+
+                <field name="qty_invoiced"
+                       optional="show"
+                       readonly="1"
+                       invisible="display_type"/>
+
+                <field name="product_uom"
+                       groups="uom.group_uom"
+                       options="{'no_open': True, 'no_create': True}"
+                       invisible="display_type"/>
+
+                <field name="price_unit" invisible="display_type"/>
+
+                <field name="discount"
+                       optional="show"
+                       invisible="display_type"/>
+
+                <field name="taxes_id"
+                       widget="many2many_tags"
+                       optional="show"
+                       domain="[('type_tax_use', '=', 'purchase')]"
+                       options="{'no_create': True}"
+                       invisible="display_type"/>
+
+                <field name="analytic_distribution"
+                       widget="analytic_distribution"
+                       groups="analytic.group_analytic_accounting"
+                       optional="show"
+                       options="{'product_field': 'product_id', 'business_domain': 'purchase'}"
+                       invisible="display_type"/>
+
+                <field name="price_subtotal"
+                       widget="monetary"
+                       readonly="1"
+                       invisible="display_type"/>
+
+                <field name="price_total"
+                       widget="monetary"
+                       readonly="1"
+                       invisible="1"/>
+
+                <field name="price_tax" invisible="1"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="company_id" invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Search View for approval.purchase.product.line -->
+    <record id="approval_purchase_product_line_view_search" model="ir.ui.view">
+        <field name="name">approval.purchase.product.line.search</field>
+        <field name="model">approval.purchase.product.line</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="product_id"/>
+                <field name="approval_request_purchase_id"/>
+                <field name="product_code"/>
+                <field name="name"/>
+
+                <filter string="Products Only"
+                        name="products_only"
+                        domain="[('display_type', '=', False)]"/>
+                <filter string="Sections &amp; Notes"
+                        name="sections_notes"
+                        domain="[('display_type', '!=', False)]"/>
+
+                <separator/>
+
+                <filter string="Received"
+                        name="received"
+                        domain="[('qty_received', '>', 0)]"/>
+                <filter string="To Receive"
+                        name="to_receive"
+                        domain="[('qty_received', '&lt;', 'product_qty')]"/>
+                <filter string="Invoiced"
+                        name="invoiced"
+                        domain="[('qty_invoiced', '>', 0)]"/>
+
+                <group expand="0" string="Group By">
+                    <filter string="Product" name="product" domain="[]" context="{'group_by': 'product_id'}"/>
+                    <filter string="Request" name="request" domain="[]" context="{'group_by': 'approval_request_purchase_id'}"/>
+                    <filter string="Planned Date" name="planned_date" domain="[]" context="{'group_by': 'date_planned'}"/>
+                    <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action for approval.purchase.product.line -->
+    <record id="action_approval_purchase_product_line" model="ir.actions.act_window">
+        <field name="name">Purchase Approval Product Lines</field>
+        <field name="res_model">approval.purchase.product.line</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_products_only': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No product lines found
+            </p>
+            <p>
+                Product lines are created automatically when adding products
+                to purchase approval requests.
+            </p>
+        </field>
+    </record>
+</odoo>

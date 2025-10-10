@@ -70,9 +70,7 @@ class ApprovalProductLine(models.Model):
     @api.depends("product_id")
     def _compute_description(self):
         for line in self:
-            line.description = (
-                line.product_id.description_purchase or line.product_id.display_name
-            )
+            line.description = line.product_id.display_name
 
     @api.depends("product_id")
     def _compute_product_uom_id(self):

@@ -1,0 +1,163 @@
+/* Approval Status Styles for base_approval_sales */
+
+/* Enhanced statusbar container */
+.o_statusbar_container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+/* New Approval Statusbar Container */
+.o_approval_statusbar_container {
+    width: 100%;
+    border-top: 1px solid #e9ecef;
+    background-color: #fafbfc;
+    border-radius: 0 0 6px 6px;
+    padding: 8px 12px;
+}
+
+/* Approval Status Steps Styling */
+.approval_status_step {
+    position: relative;
+    font-weight: 500;
+    min-width: 90px;
+    text-align: center;
+    cursor: default;
+}
+
+.approval_status_step.active {
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transform: translateY(-1px);
+}
+
+.approval_status_step:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+/* Quick Actions Buttons */
+.approval_quick_actions .btn {
+    min-width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-weight: bold;
+}
+
+.approval_quick_actions .btn:hover {
+    transform: scale(1.1);
+}
+
+/* Approval status sub-indicator (legacy) */
+.o_approval_substatus {
+    margin-top: 8px;
+    padding: 4px 8px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    border-left: 3px solid #6c757d;
+}
+
+.o_approval_substatus.approval-pending {
+    border-left-color: #ffc107;
+    background-color: #fff3cd;
+}
+
+.o_approval_substatus.approval-approved {
+    border-left-color: #28a745;
+    background-color: #d4edda;
+}
+
+.o_approval_substatus.approval-refused {
+    border-left-color: #dc3545;
+    background-color: #f8d7da;
+}
+
+/* Approval status badge enhancements */
+.badge.approval-status {
+    font-size: 0.75rem;
+    padding: 0.375rem 0.75rem;
+    font-weight: 500;
+    text-transform: none;
+}
+
+/* Form view approval indicator */
+.o_form_view .o_approval_status_indicator {
+    margin-top: 10px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+}
+
+.o_form_view .o_approval_status_indicator small {
+    color: #6c757d;
+    font-weight: 500;
+    margin-right: 8px;
+}
+
+/* Tree view approval status */
+.o_list_view .o_approval_state_display {
+    font-weight: 500;
+}
+
+/* Kanban view approval status */
+.o_kanban_view .badge.approval-indicator {
+    margin-top: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.o_kanban_view .badge.approval-indicator i {
+    font-size: 0.875rem;
+}
+
+/* Status-specific colors */
+.badge-approval-new {
+    background-color: #6c757d;
+    color: white;
+}
+
+.badge-approval-pending {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.badge-approval-approved {
+    background-color: #28a745;
+    color: white;
+}
+
+.badge-approval-refused {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .o_approval_status_indicator {
+        margin-top: 5px;
+        padding: 6px 10px;
+    }
+
+    .o_approval_status_indicator small {
+        font-size: 0.75rem;
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .o_approval_substatus {
+        background-color: #343a40;
+        color: #ffffff;
+    }
+
+    .o_form_view .o_approval_status_indicator {
+        background-color: #495057;
+        border-color: #6c757d;
+        color: #ffffff;
+    }
+}

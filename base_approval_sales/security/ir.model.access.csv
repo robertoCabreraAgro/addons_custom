@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_sale_order_approval_sales_user,sale.order.approval.sales.user,sale.model_sale_order,sales_team.group_sale_salesman,1,1,1,0
+access_sale_order_approval_sales_manager,sale.order.approval.sales.manager,sale.model_sale_order,sales_team.group_sale_manager,1,1,1,1
+access_approval_request_user,approval.request.user,base_approval.model_approval_request,sales_team.group_sale_salesman,1,1,1,0
+access_approval_request_manager,approval.request.manager,base_approval.model_approval_request,sales_team.group_sale_manager,1,1,1,1
+access_approval_approver_user,approval.approver.user,base_approval.model_approval_approver,sales_team.group_sale_salesman,1,1,1,0
+access_approval_approver_manager,approval.approver.manager,base_approval.model_approval_approver,sales_team.group_sale_manager,1,1,1,1
+access_approval_category_user,approval.category.user,base_approval.model_approval_category,sales_team.group_sale_salesman,1,0,0,0
+access_approval_category_manager,approval.category.manager,base_approval.model_approval_category,sales_team.group_sale_manager,1,1,1,1
+access_approval_category_approver_user,approval.category.approver.user,base_approval.model_approval_category_approver,sales_team.group_sale_salesman,1,0,0,0
+access_approval_category_approver_manager,approval.category.approver.manager,base_approval.model_approval_category_approver,sales_team.group_sale_manager,1,1,1,1

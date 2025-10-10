@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Main Menu Item -->
+    <menuitem id="menu_purchase_approvals_main"
+              name="Purchase Approvals"
+              sequence="25"
+              web_icon="base_approval_purchases,static/description/icon.png"/>
+
+    <!-- Requests Menu Section -->
+    <menuitem id="menu_purchase_approvals_requests"
+              name="Approval Requests"
+              parent="menu_purchase_approvals_main"
+              sequence="10"/>
+
+    <!-- All Purchase Approval Requests -->
+    <menuitem id="menu_approval_request_purchase_all"
+              name="All Requests"
+              parent="menu_purchase_approvals_requests"
+              action="action_approval_request_purchase"
+              sequence="10"
+              groups="base_approval_purchases.group_purchase_user"/>
+
+    <!-- My Purchase Approval Requests -->
+    <menuitem id="menu_approval_request_purchase_my"
+              name="My Requests"
+              parent="menu_purchase_approvals_requests"
+              action="action_my_approval_request_purchase"
+              sequence="20"
+              groups="base_approval_purchases.group_purchase_requester"/>
+
+    <!-- Requests to Approve -->
+    <menuitem id="menu_approval_request_purchase_to_approve"
+              name="To Approve"
+              parent="menu_purchase_approvals_requests"
+              action="action_approval_request_purchase_to_approve"
+              sequence="30"
+              groups="base_approval_purchases.group_purchase_approver"/>
+
+    <!-- Product Lines (hidden by default, available via developer mode) -->
+    <menuitem id="menu_approval_purchase_product_line"
+              name="Product Lines"
+              parent="menu_purchase_approvals_requests"
+              action="action_approval_purchase_product_line"
+              sequence="40"
+              groups="base.group_no_one"/>
+
+    <!-- Configuration Menu Section -->
+    <menuitem id="menu_purchase_approvals_config"
+              name="Configuration"
+              parent="menu_purchase_approvals_main"
+              sequence="90"
+              groups="base_approval_purchases.group_purchase_manager"/>
+
+    <!-- Approval Categories -->
+    <menuitem id="menu_approval_category_purchase"
+              name="Approval Categories"
+              parent="menu_purchase_approvals_config"
+              action="action_approval_category_purchase"
+              sequence="10"
+              groups="base_approval_purchases.group_purchase_manager"/>
+
+    <!-- Reporting Menu Section -->
+    <menuitem id="menu_purchase_approvals_reporting"
+              name="Reporting"
+              parent="menu_purchase_approvals_main"
+              sequence="80"
+              groups="base_approval_purchases.group_purchase_user"/>
+
+    <!-- Dashboard Action (placeholder for future implementation) -->
+    <record id="action_purchase_approval_dashboard" model="ir.actions.act_window">
+        <field name="name">Purchase Approval Dashboard</field>
+        <field name="res_model">approval.request.purchase</field>
+        <field name="view_mode">kanban,graph,pivot</field>
+        <field name="context">{
+            'search_default_my_requests': 1,
+            'search_default_to_approve': 1
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Welcome to Purchase Approvals Dashboard
+            </p>
+            <p>
+                Track your approval requests and monitor approval workflows.
+            </p>
+        </field>
+    </record>
+
+    <!-- Dashboard Menu -->
+    <menuitem id="menu_purchase_approval_dashboard"
+              name="Dashboard"
+              parent="menu_purchase_approvals_main"
+              action="action_purchase_approval_dashboard"
+              sequence="5"
+              groups="base_approval_purchases.group_purchase_user"/>
+
+    <!-- Quick Actions -->
+    <record id="action_create_purchase_approval_request" model="ir.actions.act_window">
+        <field name="name">New Purchase Request</field>
+        <field name="res_model">approval.request.purchase</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+        <field name="context">{'default_state': 'draft'}</field>
+    </record>
+
+    <!-- Server Action for Quick Create -->
+    <record id="action_server_create_purchase_approval" model="ir.actions.server">
+        <field name="name">Create Purchase Approval Request</field>
+        <field name="model_id" ref="model_approval_request_purchase"/>
+        <field name="state">code</field>
+        <field name="code">
+action = {
+    'type': 'ir.actions.act_window',
+    'name': 'New Purchase Approval Request',
+    'res_model': 'approval.request.purchase',
+    'view_mode': 'form',
+    'target': 'current',
+    'context': {
+        'default_state': 'draft',
+        'default_requested_by': env.user.id,
+    }
+}
+        </field>
+    </record>
+
+    <!-- Additional Context Actions -->
+
+    <!-- Action to view related Purchase Orders from Approval Request -->
+    <record id="action_view_purchase_orders_from_approval" model="ir.actions.act_window">
+        <field name="name">Related Purchase Orders</field>
+        <field name="res_model">purchase.order</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('approval_request_purchase_id', '=', active_id)]</field>
+        <field name="context">{'create': False}</field>
+    </record>
+
+    <!-- Action to view Approval History -->
+    <record id="action_view_approval_history" model="ir.actions.act_window">
+        <field name="name">Approval History</field>
+        <field name="res_model">approval.request.purchase.history</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('approval_request_purchase_id', '=', active_id)]</field>
+        <field name="context">{'create': False}</field>
+    </record>
+
+    <!-- Automated Actions for Approval Workflow -->
+
+    <!-- Cron Job for Escalation (placeholder) -->
+    <record id="ir_cron_approval_escalation" model="ir.cron">
+        <field name="name">Purchase Approval Escalation</field>
+        <field name="model_id" ref="model_approval_category_purchase"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_escalate_approvals()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="active" eval="False"/>
+        <field name="doall" eval="False"/>
+    </record>
+
+    <!-- Email Templates -->
+
+    <!-- Approval Request Notification Template -->
+    <record id="email_template_approval_request" model="mail.template">
+        <field name="name">Purchase Approval Request</field>
+        <field name="model_id" ref="model_approval_request_purchase"/>
+        <field name="subject">Purchase Approval Required: ${object.name}</field>
+        <field name="email_from">${(object.company_id.email and '%s &lt;%s&gt;' % (object.company_id.name, object.company_id.email) or '')|safe}</field>
+        <field name="email_to">${object.current_approver_id.email}</field>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+                <p>Hello ${object.current_approver_id.name},</p>
+                <p>A new purchase approval request requires your attention:</p>
+                <p><strong>Request:</strong> ${object.name}<br/>
+                   <strong>Vendor:</strong> ${object.partner_id.name}<br/>
+                   <strong>Amount:</strong> ${object.amount_total} ${object.currency_id.name}<br/>
+                   <strong>Requested by:</strong> ${object.requested_by.name}</p>
+
+                <p>Please review and approve this request in the system.</p>
+
+                <div style="margin: 16px 0px 16px 0px;">
+                    <a href="/web#id=${object.id}&amp;model=approval.request.purchase&amp;view_type=form"
+                       style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;">
+                        View Request
+                    </a>
+                </div>
+
+                <p>Thank you,<br/>${object.company_id.name}</p>
+            </div>
+        </field>
+    </record>
+
+    <!-- Approval Confirmation Template -->
+    <record id="email_template_approval_confirmed" model="mail.template">
+        <field name="name">Purchase Approval Confirmed</field>
+        <field name="model_id" ref="model_approval_request_purchase"/>
+        <field name="subject">Purchase Request Approved: ${object.name}</field>
+        <field name="email_from">${(object.company_id.email and '%s &lt;%s&gt;' % (object.company_id.name, object.company_id.email) or '')|safe}</field>
+        <field name="email_to">${object.requested_by.email}</field>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+                <p>Hello ${object.requested_by.name},</p>
+                <p>Your purchase approval request has been approved:</p>
+                <p><strong>Request:</strong> ${object.name}<br/>
+                   <strong>Vendor:</strong> ${object.partner_id.name}<br/>
+                   <strong>Amount:</strong> ${object.amount_total} ${object.currency_id.name}</p>
+
+                <p>You can now proceed with creating the purchase order.</p>
+
+                <div style="margin: 16px 0px 16px 0px;">
+                    <a href="/web#id=${object.id}&amp;model=approval.request.purchase&amp;view_type=form"
+                       style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;">
+                        View Request
+                    </a>
+                </div>
+
+                <p>Thank you,<br/>${object.company_id.name}</p>
+            </div>
+        </field>
+    </record>
+</odoo>

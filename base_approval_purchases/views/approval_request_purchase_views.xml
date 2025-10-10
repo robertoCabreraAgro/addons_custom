@@ -1,0 +1,476 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form View for approval.request.purchase -->
+    <record id="approval_request_purchase_view_form" model="ir.ui.view">
+        <field name="name">approval.request.purchase.form</field>
+        <field name="model">approval.request.purchase</field>
+        <field name="arch" type="xml">
+            <form string="Purchase Approval Request">
+                <header>
+                    <!-- Action buttons based on state -->
+                    <button name="action_submit" string="Submit for Approval"
+                            type="object" class="oe_highlight"
+                            invisible="state != 'draft'"
+                            groups="base_approval_purchases.group_purchase_requester"/>
+
+                    <button name="action_approve" string="Approve"
+                            type="object" class="oe_highlight"
+                            invisible="state != 'to_approve' or not can_approve"
+                            groups="base_approval_purchases.group_purchase_approver"/>
+
+                    <button name="action_refuse" string="Refuse"
+                            type="object" class="btn-danger"
+                            invisible="state != 'to_approve' or not can_approve"
+                            groups="base_approval_purchases.group_purchase_approver"/>
+
+                    <button name="action_cancel" string="Cancel"
+                            type="object"
+                            invisible="state not in ('draft', 'to_approve')"
+                            groups="base_approval_purchases.group_purchase_requester"/>
+
+                    <button name="action_draft" string="Set to Draft"
+                            type="object"
+                            invisible="state != 'cancelled'"
+                            groups="base_approval_purchases.group_purchase_manager"/>
+
+                    <button name="action_create_po" string="Create Purchase Order"
+                            type="object" class="oe_highlight"
+                            invisible="state != 'approved' or purchase_order_id"
+                            groups="purchase.group_purchase_user"/>
+
+                    <!-- State widget -->
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,to_approve,approved"/>
+                </header>
+
+                <sheet>
+                    <!-- Title and badges -->
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_purchase_order" type="object"
+                                class="oe_stat_button" icon="fa-file-text-o"
+                                invisible="not purchase_order_id">
+                            <field name="purchase_order_count" widget="statinfo" string="Purchase Order"/>
+                        </button>
+                        <button name="action_view_approvals" type="object"
+                                class="oe_stat_button" icon="fa-thumbs-up">
+                            <field name="approval_count" widget="statinfo" string="Approvals"/>
+                        </button>
+                    </div>
+
+                    <widget name="web_ribbon" title="Approved"
+                            bg_color="bg-success"
+                            invisible="state != 'approved'"/>
+                    <widget name="web_ribbon" title="Refused"
+                            bg_color="bg-danger"
+                            invisible="state != 'refused'"/>
+                    <widget name="web_ribbon" title="Cancelled"
+                            bg_color="bg-warning"
+                            invisible="state != 'cancelled'"/>
+
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+
+                    <!-- Main Information -->
+                    <group>
+                        <group name="main_info">
+                            <field name="category_purchase_id"
+                                   required="1"
+                                   readonly="state != 'draft'"
+                                   options="{'no_create': True}"/>
+                            <field name="partner_id"
+                                   required="1"
+                                   readonly="state not in ('draft', 'to_approve') or not is_editable"
+                                   context="{'res_partner_search_mode': 'supplier', 'show_vat': True}"/>
+                            <field name="partner_ref"
+                                   readonly="state not in ('draft', 'to_approve') or not is_editable"/>
+                            <field name="currency_id"
+                                   groups="base.group_multi_currency"
+                                   readonly="state != 'draft'"/>
+                        </group>
+
+                        <group name="dates_info">
+                            <field name="date_order"
+                                   readonly="state not in ('draft', 'to_approve') or not is_editable"/>
+                            <field name="date_planned"
+                                   readonly="state not in ('draft', 'to_approve') or not is_editable"/>
+                            <field name="payment_term_id"
+                                   readonly="state not in ('draft', 'to_approve') or not is_editable"
+                                   options="{'no_create': True}"/>
+                            <field name="fiscal_position_id"
+                                   readonly="state not in ('draft', 'to_approve') or not is_editable"
+                                   options="{'no_create': True}"/>
+                        </group>
+                    </group>
+
+                    <!-- Product Lines -->
+                    <notebook>
+                        <page string="Products" name="products">
+                            <field name="product_line_ids"
+                                   readonly="state not in ('draft', 'to_approve') or not is_editable"
+                                   context="{'default_approval_request_purchase_id': active_id}">
+                                <list editable="bottom">
+                                    <control>
+                                        <create name="add_product_line" string="Add a product"/>
+                                        <create name="add_section" string="Add a section"
+                                                context="{'default_display_type': 'line_section'}"/>
+                                        <create name="add_note" string="Add a note"
+                                                context="{'default_display_type': 'line_note'}"/>
+                                    </control>
+
+                                    <field name="display_type" invisible="1"/>
+                                    <field name="sequence" widget="handle"/>
+
+                                    <field name="product_id"
+                                           required="not display_type"
+                                           context="{'partner_id': parent.partner_id}"
+                                           domain="[('purchase_ok', '=', True)]"/>
+
+                                    <field name="name" widget="section_and_note_text"
+                                           optional="show"/>
+
+                                    <field name="date_planned"
+                                           required="not display_type"
+                                           optional="hide"/>
+
+                                    <field name="analytic_distribution"
+                                           widget="analytic_distribution"
+                                           optional="show"
+                                           groups="analytic.group_analytic_accounting"
+                                           options="{'product_field': 'product_id', 'business_domain': 'purchase'}"/>
+
+                                    <field name="product_qty"
+                                           invisible="display_type"/>
+
+                                    <field name="qty_received"
+                                           invisible="state not in ('approved', 'done')"
+                                           optional="show"/>
+
+                                    <field name="qty_invoiced"
+                                           invisible="state not in ('approved', 'done')"
+                                           optional="show"/>
+
+                                    <field name="product_uom"
+                                           invisible="display_type"
+                                           groups="uom.group_uom"
+                                           options="{'no_open': True, 'no_create': True}"/>
+
+                                    <field name="price_unit"
+                                           invisible="display_type"/>
+
+                                    <field name="discount"
+                                           invisible="display_type"
+                                           optional="show"/>
+
+                                    <field name="taxes_id"
+                                           widget="many2many_tags"
+                                           invisible="display_type"
+                                           optional="show"
+                                           domain="[('type_tax_use', '=', 'purchase'), ('company_id', '=', parent.company_id)]"
+                                           options="{'no_create': True}"/>
+
+                                    <field name="price_subtotal"
+                                           widget="monetary"
+                                           invisible="display_type"/>
+
+                                    <field name="price_total"
+                                           widget="monetary"
+                                           invisible="1"/>
+
+                                    <field name="price_tax"
+                                           invisible="1"/>
+                                </list>
+                            </field>
+
+                            <!-- Totals Section -->
+                            <group class="oe_subtotal_footer">
+                                <group>
+                                    <field name="tax_totals" widget="account-tax-totals-field" nolabel="1" colspan="2" readonly="1"/>
+                                </group>
+                            </group>
+
+                            <div class="clearfix"/>
+                        </page>
+
+                        <page string="Approval Information" name="approval_info">
+                            <group>
+                                <group name="approval_status">
+                                    <field name="approval_status"/>
+                                    <field name="approval_request_id" readonly="1"/>
+                                    <field name="purchase_order_id" readonly="1"/>
+                                    <field name="requested_by" readonly="1"/>
+                                    <field name="date_confirmed" readonly="1"/>
+                                </group>
+
+                                <group name="approval_config">
+                                    <field name="require_validation"/>
+                                    <field name="is_editable" invisible="1"/>
+                                    <field name="can_approve" invisible="1"/>
+                                    <field name="current_approver_id" readonly="1"/>
+                                    <field name="next_approver_id" readonly="1"/>
+                                </group>
+                            </group>
+
+                            <!-- Approvers Section -->
+                            <separator string="Approvers"/>
+                            <field name="approver_ids" readonly="1">
+                                <list>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="user_id"/>
+                                    <field name="role"/>
+                                    <field name="status"/>
+                                    <field name="approved_date"/>
+                                    <field name="comment"/>
+                                </list>
+                            </field>
+
+                            <!-- Approval History -->
+                            <separator string="Approval History"/>
+                            <field name="approval_history_ids" readonly="1">
+                                <list>
+                                    <field name="date"/>
+                                    <field name="user_id"/>
+                                    <field name="action"/>
+                                    <field name="comment"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <page string="Other Information" name="other_info">
+                            <group>
+                                <group name="purchase_info">
+                                    <field name="incoterm_id"/>
+                                    <field name="dest_address_id"
+                                           groups="stock.group_stock_multi_locations"/>
+                                    <field name="picking_type_id"
+                                           groups="stock.group_stock_multi_locations"/>
+                                </group>
+
+                                <group name="company_info">
+                                    <field name="company_id"
+                                           options="{'no_create': True}"
+                                           groups="base.group_multi_company"/>
+                                    <field name="user_id"
+                                           domain="[('share', '=', False)]"/>
+                                </group>
+                            </group>
+
+                            <field name="notes"
+                                   placeholder="Define your terms and conditions..."
+                                   readonly="state not in ('draft', 'to_approve') or not is_editable"/>
+                        </page>
+                    </notebook>
+                </sheet>
+
+                <!-- Chatter -->
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree View for approval.request.purchase -->
+    <record id="approval_request_purchase_view_tree" model="ir.ui.view">
+        <field name="name">approval.request.purchase.tree</field>
+        <field name="model">approval.request.purchase</field>
+        <field name="arch" type="xml">
+            <list string="Purchase Approval Requests"
+                  decoration-success="state == 'approved'"
+                  decoration-danger="state == 'refused'"
+                  decoration-muted="state == 'cancelled'"
+                  decoration-info="state == 'to_approve'">
+
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="date_order"/>
+                <field name="date_planned" optional="show"/>
+                <field name="requested_by"/>
+                <field name="category_purchase_id" optional="hide"/>
+                <field name="amount_untaxed" widget="monetary" optional="show"/>
+                <field name="amount_total" widget="monetary" decoration-bf="1"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="approval_status"
+                       widget="badge"
+                       decoration-success="approval_status == 'approved'"
+                       decoration-danger="approval_status == 'refused'"
+                       decoration-warning="approval_status == 'pending'"/>
+                <field name="purchase_order_id" optional="show"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show"/>
+                <field name="state"
+                       widget="badge"
+                       decoration-success="state == 'approved'"
+                       decoration-danger="state == 'refused'"
+                       decoration-info="state == 'to_approve'"/>
+
+                <button name="action_approve" string="Approve"
+                        type="object" icon="fa-check"
+                        invisible="state != 'to_approve'"
+                        groups="base_approval_purchases.group_purchase_approver"/>
+
+                <button name="action_refuse" string="Refuse"
+                        type="object" icon="fa-times"
+                        invisible="state != 'to_approve'"
+                        groups="base_approval_purchases.group_purchase_approver"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Kanban View for approval.request.purchase -->
+    <record id="approval_request_purchase_view_kanban" model="ir.ui.view">
+        <field name="name">approval.request.purchase.kanban</field>
+        <field name="model">approval.request.purchase</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" class="o_kanban_mobile" quick_create="false">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="amount_total"/>
+                <field name="currency_id"/>
+                <field name="state"/>
+                <field name="approval_status"/>
+                <field name="date_order"/>
+                <field name="requested_by"/>
+                <field name="color"/>
+                <field name="can_approve"/>
+
+                <progressbar field="approval_status"
+                            colors='{"approved": "success", "refused": "danger", "pending": "warning"}'/>
+
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div class="o_kanban_record_top mb-0">
+                                <div class="o_kanban_record_headings">
+                                    <strong class="o_kanban_record_title">
+                                        <field name="name"/>
+                                    </strong>
+                                </div>
+                                <field name="state"
+                                       widget="label_selection"
+                                       options="{'classes': {'draft': 'default',
+                                                            'to_approve': 'info',
+                                                            'approved': 'success',
+                                                            'refused': 'danger',
+                                                            'cancelled': 'warning'}}"/>
+                            </div>
+
+                            <div class="o_kanban_record_body">
+                                <field name="partner_id" widget="res_partner_many2one"/>
+                                <div class="text-muted">
+                                    <field name="date_order" widget="date"/>
+                                </div>
+                            </div>
+
+                            <div class="o_kanban_record_bottom">
+                                <div class="oe_kanban_bottom_left">
+                                    <button name="action_approve"
+                                            type="object"
+                                            class="btn btn-sm btn-success"
+                                            t-if="record.state.raw_value == 'to_approve' and record.can_approve.raw_value"
+                                            groups="base_approval_purchases.group_purchase_approver">
+                                        <i class="fa fa-check"/> Approve
+                                    </button>
+                                    <button name="action_refuse"
+                                            type="object"
+                                            class="btn btn-sm btn-danger"
+                                            t-if="record.state.raw_value == 'to_approve' and record.can_approve.raw_value"
+                                            groups="base_approval_purchases.group_purchase_approver">
+                                        <i class="fa fa-times"/> Refuse
+                                    </button>
+                                </div>
+                                <div class="oe_kanban_bottom_right">
+                                    <strong>
+                                        <field name="amount_total" widget="monetary"/>
+                                    </strong>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="approval_request_purchase_view_search" model="ir.ui.view">
+        <field name="name">approval.request.purchase.search</field>
+        <field name="model">approval.request.purchase</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="partner_id" operator="child_of"/>
+                <field name="requested_by"/>
+                <field name="purchase_order_id"/>
+
+                <filter string="My Requests"
+                        name="my_requests"
+                        domain="[('requested_by', '=', uid)]"/>
+                <filter string="To Approve"
+                        name="to_approve"
+                        domain="[('state', '=', 'to_approve')]"/>
+                <filter string="Approved"
+                        name="approved"
+                        domain="[('state', '=', 'approved')]"/>
+                <filter string="Refused"
+                        name="refused"
+                        domain="[('state', '=', 'refused')]"/>
+
+                <separator/>
+
+                <filter string="Waiting My Approval"
+                        name="waiting_my_approval"
+                        domain="[('approver_ids.user_id', '=', uid), ('approver_ids.status', '=', 'pending'), ('state', '=', 'to_approve')]"/>
+
+                <separator/>
+
+                <filter string="Late"
+                        name="late"
+                        domain="[('date_planned', '&lt;', context_today().strftime('%Y-%m-%d')), ('state', 'in', ['draft', 'to_approve'])]"/>
+
+                <group expand="0" string="Group By">
+                    <filter string="Vendor" name="vendor" domain="[]" context="{'group_by': 'partner_id'}"/>
+                    <filter string="Category" name="category" domain="[]" context="{'group_by': 'category_purchase_id'}"/>
+                    <filter string="Requester" name="requester" domain="[]" context="{'group_by': 'requested_by'}"/>
+                    <filter string="State" name="state" domain="[]" context="{'group_by': 'state'}"/>
+                    <filter string="Order Date" name="order_date" domain="[]" context="{'group_by': 'date_order'}"/>
+                    <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Main Action -->
+    <record id="action_approval_request_purchase" model="ir.actions.act_window">
+        <field name="name">Purchase Approval Requests</field>
+        <field name="res_model">approval.request.purchase</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="context">{'default_state': 'draft'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Purchase Approval Request
+            </p>
+            <p>
+                Start the approval workflow for purchase orders here.
+                Once approved, you can create the actual purchase order.
+            </p>
+        </field>
+    </record>
+
+    <!-- Action for My Approval Requests -->
+    <record id="action_my_approval_request_purchase" model="ir.actions.act_window">
+        <field name="name">My Purchase Requests</field>
+        <field name="res_model">approval.request.purchase</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="domain">[('requested_by', '=', uid)]</field>
+        <field name="context">{'default_state': 'draft', 'search_default_to_approve': 1}</field>
+    </record>
+
+    <!-- Action for Requests to Approve -->
+    <record id="action_approval_request_purchase_to_approve" model="ir.actions.act_window">
+        <field name="name">To Approve</field>
+        <field name="res_model">approval.request.purchase</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="domain">[('approver_ids.user_id', '=', uid), ('approver_ids.status', '=', 'pending'), ('state', '=', 'to_approve')]</field>
+        <field name="context">{'search_default_waiting_my_approval': 1}</field>
+    </record>
+</odoo>

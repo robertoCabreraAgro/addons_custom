@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form View for approval.category.purchase -->
+    <record id="approval_category_purchase_view_form" model="ir.ui.view">
+        <field name="name">approval.category.purchase.form</field>
+        <field name="model">approval.category.purchase</field>
+        <field name="arch" type="xml">
+            <form string="Purchase Approval Category">
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" invisible="active"/>
+
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_requests" type="object"
+                                class="oe_stat_button" icon="fa-list">
+                            <field name="request_count" widget="statinfo" string="Requests"/>
+                        </button>
+                    </div>
+
+                    <div class="oe_title">
+                        <label for="name" string="Category Name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Office Supplies"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group name="main_info">
+                            <field name="active" invisible="1"/>
+                            <field name="code"/>
+                            <field name="sequence"/>
+                            <field name="company_id"
+                                   options="{'no_create': True}"
+                                   groups="base.group_multi_company"/>
+                        </group>
+
+                        <group name="currency_info">
+                            <field name="currency_id" groups="base.group_multi_currency"/>
+                        </group>
+                    </group>
+
+                    <field name="description" placeholder="Category description..."/>
+
+                    <notebook>
+                        <page string="Amount Limits" name="amount_limits">
+                            <group>
+                                <group name="limits">
+                                    <field name="minimum_amount" widget="monetary"/>
+                                    <field name="maximum_amount" widget="monetary"/>
+                                    <field name="auto_approve_below" widget="monetary"/>
+                                </group>
+
+                                <group name="validation_rules">
+                                    <field name="require_rfq_validation"/>
+                                    <field name="require_budget_check"/>
+                                    <field name="require_invoice_match"/>
+                                </group>
+                            </group>
+
+                            <separator string="Category Rules"/>
+                            <group>
+                                <group name="product_rules">
+                                    <field name="allowed_product_categ_ids"
+                                           widget="many2many_tags"
+                                           options="{'no_create': True}"
+                                           placeholder="If empty, all product categories are allowed"/>
+                                </group>
+
+                                <group name="partner_rules">
+                                    <field name="allowed_partner_ids"
+                                           widget="many2many_tags"
+                                           options="{'no_create': True}"
+                                           placeholder="If empty, all vendors are allowed"/>
+                                    <field name="forbidden_partner_ids"
+                                           widget="many2many_tags"
+                                           options="{'no_create': True}"
+                                           placeholder="Vendors that are specifically forbidden"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <page string="Approval Rules" name="approval_rules">
+                            <group>
+                                <group name="approval_config">
+                                    <field name="approval_type"/>
+                                    <field name="approval_minimum"/>
+                                    <field name="approval_sequence"/>
+                                    <field name="escalation_days"/>
+                                </group>
+
+                                <group name="manager_approval">
+                                    <field name="manager_approval"/>
+                                    <field name="require_manager_first" invisible="not manager_approval"/>
+                                </group>
+                            </group>
+
+                            <!-- Approvers Section -->
+                            <separator string="Approvers"/>
+                            <field name="approver_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="user_id"
+                                           domain="[('share', '=', False)]"
+                                           options="{'no_create': True}"/>
+                                    <field name="group_id"
+                                           options="{'no_create': True}"/>
+                                    <field name="role"/>
+                                    <field name="required"/>
+                                    <field name="min_amount" widget="monetary" optional="show"/>
+                                    <field name="max_amount" widget="monetary" optional="show"/>
+                                    <field name="condition" optional="show"/>
+                                </list>
+                            </field>
+
+                            <div class="alert alert-info" role="alert" invisible="not approval_sequence">
+                                <strong>Sequential Approval:</strong> Approvers will need to approve in the order defined above.
+                            </div>
+                        </page>
+
+                        <page string="Automation" name="automation">
+                            <group>
+                                <group name="po_creation">
+                                    <field name="create_po_on_approval"/>
+                                    <field name="auto_send_po" invisible="not create_po_on_approval"/>
+                                    <field name="po_approval_method" invisible="not create_po_on_approval"/>
+                                </group>
+
+                                <group name="notifications">
+                                    <field name="email_template_id"
+                                           domain="[('model_id.model', '=', 'approval.request.purchase')]"
+                                           options="{'no_create': True}"/>
+                                    <field name="notify_on_approval"/>
+                                    <field name="notify_on_refusal"/>
+                                </group>
+                            </group>
+
+                            <separator string="Notification Configuration"/>
+                            <field name="notification_config" widget="ace" options="{'mode': 'json'}"/>
+                        </page>
+
+                        <page string="Statistics" name="statistics">
+                            <group>
+                                <group name="request_stats">
+                                    <field name="total_requests" readonly="1"/>
+                                    <field name="approved_requests" readonly="1"/>
+                                    <field name="refused_requests" readonly="1"/>
+                                    <field name="pending_requests" readonly="1"/>
+                                </group>
+
+                                <group name="amount_stats">
+                                    <field name="total_amount_approved" widget="monetary" readonly="1"/>
+                                    <field name="avg_approval_time" readonly="1"/>
+                                    <field name="last_request_date" readonly="1"/>
+                                </group>
+                            </group>
+
+                            <!-- Chart placeholder for future implementation -->
+                            <div class="alert alert-info" role="alert">
+                                <strong>Charts:</strong> Visual analytics will be available in future versions.
+                            </div>
+                        </page>
+                    </notebook>
+                </sheet>
+
+                <!-- Chatter -->
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree View for approval.category.purchase -->
+    <record id="approval_category_purchase_view_tree" model="ir.ui.view">
+        <field name="name">approval.category.purchase.tree</field>
+        <field name="model">approval.category.purchase</field>
+        <field name="arch" type="xml">
+            <list string="Purchase Approval Categories"
+                  decoration-muted="not active"
+                  default_order="sequence, name">
+
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="minimum_amount" widget="monetary" optional="show"/>
+                <field name="maximum_amount" widget="monetary" optional="show"/>
+                <field name="auto_approve_below" widget="monetary" optional="show"/>
+                <field name="approval_type" optional="show"/>
+                <field name="approval_minimum"/>
+                <field name="approval_sequence" widget="boolean_toggle"/>
+                <field name="total_requests" optional="show"/>
+                <field name="pending_requests" optional="show"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show"/>
+                <field name="active" widget="boolean_toggle"/>
+
+                <button name="action_view_requests" string="View Requests"
+                        type="object" icon="fa-list"
+                        invisible="not total_requests"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Kanban View for approval.category.purchase -->
+    <record id="approval_category_purchase_view_kanban" model="ir.ui.view">
+        <field name="name">approval.category.purchase.kanban</field>
+        <field name="model">approval.category.purchase</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" quick_create="false">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="minimum_amount"/>
+                <field name="maximum_amount"/>
+                <field name="total_requests"/>
+                <field name="pending_requests"/>
+                <field name="approved_requests"/>
+                <field name="currency_id"/>
+                <field name="color"/>
+
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div class="o_kanban_record_top">
+                                <div class="o_kanban_record_headings">
+                                    <strong class="o_kanban_record_title">
+                                        <field name="name"/>
+                                    </strong>
+                                    <small class="text-muted">
+                                        <field name="code"/>
+                                    </small>
+                                </div>
+                            </div>
+
+                            <div class="o_kanban_record_body">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <strong>Min Amount:</strong><br/>
+                                        <field name="minimum_amount" widget="monetary"/>
+                                    </div>
+                                    <div class="col-6">
+                                        <strong>Max Amount:</strong><br/>
+                                        <field name="maximum_amount" widget="monetary"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="o_kanban_record_bottom">
+                                <div class="oe_kanban_bottom_left">
+                                    <span class="badge badge-pill badge-info">
+                                        <field name="total_requests"/> Total
+                                    </span>
+                                    <span class="badge badge-pill badge-warning" t-if="record.pending_requests.raw_value > 0">
+                                        <field name="pending_requests"/> Pending
+                                    </span>
+                                </div>
+                                <div class="oe_kanban_bottom_right">
+                                    <button name="action_view_requests"
+                                            type="object"
+                                            class="btn btn-sm btn-secondary"
+                                            t-if="record.total_requests.raw_value > 0">
+                                        <i class="fa fa-list"/> View
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="approval_category_purchase_view_search" model="ir.ui.view">
+        <field name="name">approval.category.purchase.search</field>
+        <field name="model">approval.category.purchase</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="code"/>
+
+                <filter string="Active"
+                        name="active"
+                        domain="[('active', '=', True)]"/>
+                <filter string="Archived"
+                        name="archived"
+                        domain="[('active', '=', False)]"/>
+
+                <separator/>
+
+                <filter string="Auto Approve"
+                        name="auto_approve"
+                        domain="[('auto_approve_below', '>', 0)]"/>
+                <filter string="Sequential Approval"
+                        name="sequential"
+                        domain="[('approval_sequence', '=', True)]"/>
+
+                <separator/>
+
+                <filter string="Has Pending Requests"
+                        name="has_pending"
+                        domain="[('pending_requests', '>', 0)]"/>
+
+                <group expand="0" string="Group By">
+                    <filter string="Approval Type" name="approval_type" domain="[]" context="{'group_by': 'approval_type'}"/>
+                    <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action for approval.category.purchase -->
+    <record id="action_approval_category_purchase" model="ir.actions.act_window">
+        <field name="name">Purchase Approval Categories</field>
+        <field name="res_model">approval.category.purchase</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="context">{'search_default_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Purchase Approval Category
+            </p>
+            <p>
+                Define approval rules and workflows for different types
+                of purchase orders based on amount thresholds, product
+                categories, or vendors.
+            </p>
+        </field>
+    </record>
+</odoo>
