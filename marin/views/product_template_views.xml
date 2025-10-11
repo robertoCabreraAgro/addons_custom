@@ -140,6 +140,47 @@
                     <field name="x_dose" invisible="not use_dose" />
                 </div>
             </xpath>
+            <!-- inicio creación de nueva sección en ventas para mis pruebas-->
+
+            <xpath expr="//page[@name='sales']" position="inside">
+                <group>
+                    <div style="background:#fff;border-radius:12px;padding:24px;box-shadow:0 4px 16px #e0e0e0;">
+                        <h3 style="margin:0 0 16px 0;color:#222;font-weight:600;letter-spacing:1px;">Panel de JEM -VENTAS</h3>
+                        <div style="display:flex;gap:32px;align-items:center;justify-content:space-between;">
+                            <div style="background:#fff;border-radius:8px;padding:16px;min-width:180px;box-shadow:0 2px 8px #eee;">
+                                <span style="font-size:14px;color:#888;font-weight:500;">Precio de venta</span><br/>
+                                <span style="font-size:22px;color:#222;font-weight:600;">
+                                    <field name="list_price" class="oe_inline"/>
+                                </span>
+                            </div>
+                            <div style="background:#fff;border-radius:8px;padding:16px;min-width:180px;box-shadow:0 2px 8px #eee;">
+                                <span style="font-size:14px;color:#888;font-weight:500;">¿Se puede vender?</span><br/>
+                                <span style="font-size:22px;color:#222;font-weight:600;">
+                                    <field name="sale_ok" class="oe_inline"/>
+                                </span>
+                            </div>
+                            <div style="background:#fff;border-radius:8px;padding:16px;min-width:180px;box-shadow:0 2px 8px #eee;">
+                                <span style="font-size:14px;color:#888;font-weight:500;">Disponible en POS</span><br/>
+                                <span style="font-size:22px;color:#222;font-weight:600;">
+                                    <field name="available_in_pos" class="oe_inline"/>
+                                </span>
+                            </div>
+                        </div>
+                        <div style="margin-top:24px;display:flex;gap:32px;align-items:center;">
+                            <div style="background:#fff;border-radius:8px;padding:16px;min-width:220px;box-shadow:0 2px 8px #eee;">
+                                <span style="font-size:14px;color:#888;">Vendedores</span><br/>
+                                <field name="seller_ids" widget="many2many_tags" class="oe_inline"/>
+                            </div>
+                            <div style="background:#fff;border-radius:8px;padding:16px;min-width:220px;box-shadow:0 2px 8px #eee;">
+                                <span style="font-size:14px;color:#888;">Etiquetas de producto</span><br/>
+                                <field name="product_tag_ids" widget="many2many_tags" class="oe_inline"/>
+                            </div>
+                        </div>
+                    </div>
+                </group>
+            </xpath>
+            <!-- fin creación de nueva sección en ventas para mis pruebas-->
+
             <xpath expr="//field[@name='seller_ids']" position="attributes">
                 <!-- removed standard_price from context since it's in marin.group_product_cost_readonly causing 'Access Rights Inconsistency' (Task #5664) -->
                 <attribute name="context">{'default_product_tmpl_id': id, 'product_template_invisible_variant': True, 'list_view_ref':'purchase.product_supplierinfo_tree_view2'}</attribute>

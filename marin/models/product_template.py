@@ -40,6 +40,15 @@ class ProductTemplate(models.Model):
         help="Used as default value on the vendor refunds lines. "
         "Leave empty to use the account from the product category.",
     )
+
+    #inicio creación de atributos
+
+    property_account_jem = fields.Char(
+        string="Nombre:",
+        help="Este es un campo de prueba para el Jem",
+    )
+    #fin creación de atributos
+
     use_dose = fields.Boolean(
         compute="_compute_use_expiration_date",
         store=True,
