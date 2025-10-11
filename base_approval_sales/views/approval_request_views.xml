@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Extend Approval Request Form View to add UI context for auto-refresh -->
+    <record id="view_approval_request_form_sales_integration" model="ir.ui.view">
+        <field name="name">approval.request.form.sales.integration</field>
+        <field name="model">approval.request</field>
+        <field name="inherit_id" ref="base_approval.view_approval_request_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Add context to Approve buttons for UI auto-refresh -->
+            <button name="action_approve" position="attributes">
+                <attribute name="context">{'from_ui': True}</attribute>
+            </button>
+
+            <!-- Add context to Refuse buttons for UI auto-refresh -->
+            <button name="action_refuse" position="attributes">
+                <attribute name="context">{'from_ui': True}</attribute>
+            </button>
+
+        </field>
+    </record>
+
+    <!-- Extend Approval Request Kanban View to add UI context -->
+    <record id="view_approval_request_kanban_sales_integration" model="ir.ui.view">
+        <field name="name">approval.request.kanban.sales.integration</field>
+        <field name="model">approval.request</field>
+        <field name="inherit_id" ref="base_approval.view_approval_request_kanban"/>
+        <field name="arch" type="xml">
+
+            <!-- Add context to Approve actions in kanban dropdown -->
+            <a name="action_approve" position="attributes">
+                <attribute name="context">{'from_ui': True}</attribute>
+            </a>
+
+            <!-- Add context to Refuse actions in kanban dropdown -->
+            <a name="action_refuse" position="attributes">
+                <attribute name="context">{'from_ui': True}</attribute>
+            </a>
+
+        </field>
+    </record>
+
+</odoo>

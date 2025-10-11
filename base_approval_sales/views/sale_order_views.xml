@@ -10,7 +10,7 @@
 
             <!-- Add approval fields -->
             <field name="state" position="before">
-                <field name="approval_request_ref" invisible="1"/>
+                <field name="approval_request_id" invisible="1"/>
                 <field name="approval_state_display" invisible="1"/>
                 <field name="require_approval" invisible="1"/>
                 <field name="can_approve" invisible="1"/>
@@ -27,7 +27,7 @@
             <field name="state" position="after">
                 <div class="approval_status_container" invisible="not require_approval">
 
-                    <div class="alert alert-info" invisible="state not in ('pending_approval', 'draft', 'approved') or not approval_request_ref">
+                    <div class="alert alert-info" invisible="state not in ('pending_approval', 'draft', 'approved') or not approval_request_id">
                         <strong>Estado de Aprobación: </strong>
                         <field name="approval_state_display" readonly="1"/>
 
@@ -53,7 +53,7 @@
             <button name="action_confirm" position="before">
                 <button name="action_request_approval" string="Solicitar Aprobación"
                         type="object" class="btn-primary"
-                        invisible="not require_approval or state not in ('draft', 'sent') or approval_request_ref or state == 'pending_approval'"
+                        invisible="not require_approval or state not in ('draft', 'sent') or approval_request_id or state == 'pending_approval'"
                         groups="sales_team.group_sale_salesman"/>
             </button>
 
@@ -68,7 +68,7 @@
                     <group>
                         <group string="Estado de Aprobación">
                             <field name="approval_state_display" readonly="1"/>
-                            <field name="approval_request_ref" readonly="1" invisible="not approval_request_ref" string="Approval Request"/>
+                            <field name="approval_request_id" readonly="1" invisible="not approval_request_id" string="Approval Request"/>
                             <field name="state" readonly="1" string="Sale Order State"/>
                         </group>
 
@@ -81,7 +81,7 @@
 
                     <group class="mt-3">
                         <button name="action_request_approval" string="Solicitar Aprobación" type="object"
-                                class="btn btn-primary me-2" invisible="approval_request_ref or state not in ('draft', 'sent')"/>
+                                class="btn btn-primary me-2" invisible="approval_request_id or state not in ('draft', 'sent')"/>
                         <!-- Approve/Reject buttons commented per requirements: belong in base_approval, not sale.order -->
                         <!--
                         <button name="action_approve" string="Aprobar Cotización" type="object"
@@ -90,7 +90,7 @@
                                 class="btn btn-danger me-2" invisible="not can_reject"/>
                         -->
                         <button name="action_view_approval_request" string="Ver Solicitud de Aprobación"
-                                type="object" class="btn btn-secondary" invisible="not approval_request_ref"/>
+                                type="object" class="btn btn-secondary" invisible="not approval_request_id"/>
                     </group>
 
                 </page>

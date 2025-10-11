@@ -208,10 +208,10 @@ def uninstall_hook(env):
             pending_orders.write({'state': 'draft'})
             _logger.info(f"Reset {len(pending_orders)} orders from pending_approval to draft")
 
-        # Clear approval_request_ref fields to avoid orphaned references
-        orders_with_refs = env['sale.order'].search([('approval_request_ref', '!=', False)])
+        # Clear approval_request_id fields to avoid orphaned references
+        orders_with_refs = env['sale.order'].search([('approval_request_id', '!=', False)])
         if orders_with_refs:
-            orders_with_refs.write({'approval_request_ref': False})
+            orders_with_refs.write({'approval_request_id': False})
             _logger.info(f"Cleared approval references from {len(orders_with_refs)} orders")
 
         _logger.info("base_approval_sales: Uninstallation cleanup completed successfully")

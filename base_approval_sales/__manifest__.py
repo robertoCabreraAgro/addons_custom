@@ -1,6 +1,6 @@
 {
     "name": "Base Approval Sales",
-    "version": "saas~18.2.3.0.0",
+    "version": "saas~18.2.3.0.1",
     "category": "Sales/Sales",
     "sequence": 95,
     "summary": "Centralized approval workflow for sales orders",
@@ -37,6 +37,7 @@
         "security/ir.model.access.csv",
         "data/approval_category_data.xml",
         "views/sale_order_views.xml",
+        "views/approval_request_views.xml",
     ],
     "assets": {
         "web.assets_backend": [

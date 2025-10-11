@@ -2,14 +2,14 @@
 <odoo>
     <data noupdate="1">
 
-        <!-- Default Sales Order Approval Category -->
+        <!-- Default Sale Quotation Approval Category -->
         <record id="approval_category_sales_order" model="approval.category">
-            <field name="name">Sales Order Approval</field>
+            <field name="name">Sale Quotation</field>
             <field name="sequence">10</field>
             <field name="active" eval="True"/>
             <field name="automated_sequence" eval="True"/>
             <field name="sequence_code">SO-APPR-</field>
-            <field name="description">Approval category for all sales orders</field>
+            <field name="description">Approval category for all sale quotations</field>
 
             <!-- CORE REQUIRED FIELDS - Features we need for sales orders -->
             <field name="has_amount">required</field>
@@ -41,7 +41,7 @@
             <field name="approve_sequentially" eval="False"/>
         </record>
 
-        <!-- Default approvers for Sales Order Approval Category -->
+        <!-- Default approvers for Sale Quotation Approval Category -->
         <!-- Sales Manager Group as default approver -->
         <record id="approval_category_approver_sales_manager" model="approval.category.approver">
             <field name="category_id" ref="approval_category_sales_order"/>
