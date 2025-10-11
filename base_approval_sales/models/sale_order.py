@@ -68,32 +68,39 @@ class SaleOrder(models.Model):
     )
 
     # ============================================================
-    # HELPER METHODS - SAFE ACCESS TO APPROVAL SYSTEM
+    # APPROVAL CATEGORY MANAGEMENT - USES EXISTING "Sale Quotation" CATEGORY
     # ============================================================
 
-    def _approval_system_available(self):
-        """Check if approval system is available safely for Odoo 18."""
-        try:
-            return ('approval.request' in self.env and
-                    'approval.category' in self.env)
-        except Exception:
-            return False
+    def _get_approval_category(self):
+        """Get the existing 'Sale Quotation' approval category.
 
-    def _get_approval_request(self):
-        """Get the related approval request safely."""
-        if not self._approval_system_available() or not self.approval_request_ref:
-            return None
-        return self.approval_request_ref
+        Returns:
+            approval.category: The existing 'Sale Quotation' category
 
-    def _set_approval_request(self, approval_request):
-        """Set the approval request reference safely."""
-        self.approval_request_ref = approval_request.id if approval_request else False
+        Raises:
+            UserError: If the 'Sale Quotation' category does not exist
+        """
+        self.ensure_one()
 
-    def _get_approval_state(self):
-        """Get current approval state safely."""
-        if self.approval_request_ref and self.approval_request_ref.exists():
-            return self.approval_request_ref.state
-        return None
+        # Search for the existing 'Sale Quotation' category
+        # NOTE: We do NOT create categories - only use existing ones
+        category = self.env['approval.category'].search([
+            ('name', '=', 'Sale Quotation'),
+            ('company_id', 'in', [self.company_id.id, False])
+        ], limit=1)
+
+        if not category:
+            raise UserError(_(
+                "No se encontró la categoría de aprobación 'Sale Quotation'.\n\n"
+                "Para usar el sistema de aprobaciones, debe existir una categoría "
+                "llamada 'Sale Quotation' configurada correctamente.\n\n"
+                "Contacte al administrador para crear esta categoría en:\n"
+                "Aplicaciones → Aprobaciones → Configuración → Categorías de Aprobación"
+            ))
+
+        _logger.info("Found existing approval category 'Sale Quotation' (ID: %s) for sale order %s",
+                    category.id, self.name)
+        return category
 
     # ============================================================
     # COMPUTE METHODS
@@ -101,136 +108,84 @@ class SaleOrder(models.Model):
 
     @api.depends('approval_request_ref', 'approval_request_ref.state')
     def _compute_approval_state(self):
-        """Compute approval state directly from approval request state.
-
-        ODOO 18 COMPATIBLE: Ensures ALL records receive a value assignment.
-        """
+        """Compute approval state directly from linked approval request."""
         for order in self:
-            # Initialize with default value - GUARANTEED assignment
+            # Default state if no approval request exists
             approval_state = 'new'
 
             try:
-                # Check if approval system is available and approval request exists
-                if (order._approval_system_available() and
-                    order.approval_request_ref and
-                    hasattr(order.approval_request_ref, 'exists') and
-                    order.approval_request_ref.exists()):
-                    # Get state from approval request
-                    approval_state = getattr(order.approval_request_ref, 'state', 'new')
-                else:
-                    # No approval request exists or system unavailable
-                    approval_state = 'new'
-
+                # Get state from approval request if it exists
+                if order.approval_request_ref and order.approval_request_ref.exists():
+                    approval_state = order.approval_request_ref.state or 'new'
             except Exception:
-                # Exception fallback - still assigns value
                 approval_state = 'new'
 
-            # GUARANTEED assignment for every record - CRITICAL FOR ODOO 18
             order.approval_state = approval_state
 
     @api.depends('approval_request_ref', 'approval_request_ref.state', 'state')
     def _compute_approval_state_display(self):
-        """Compute readable approval state based on sale order and approval request state.
-
-        ODOO 18 COMPATIBLE: Ensures ALL records receive a value assignment.
-        """
+        """Compute readable approval state in Spanish based on current states."""
         for order in self:
-            # Initialize with default value - GUARANTEED assignment
-            approval_state_display = 'Sin Definir'
-
-            try:
-                # Check if approval system is available
-                if not order._approval_system_available():
-                    approval_state_display = 'Sistema no disponible'
-
-                # Priority 1: Check sale order state first (most reliable)
-                elif order.state == 'pending_approval':
-                    approval_state_display = 'En Espera de Aprobación'
-                elif order.state == 'approved':
-                    approval_state_display = 'Aprobado'
-                elif order.state == 'cancel':
-                    approval_state_display = 'Cancelado'
-                elif order.state in ('draft', 'sent'):
-                    # Check if there's an approval request
-                    if order.approval_request_ref:
-                        # There is a request, check its state
-                        try:
-                            if (hasattr(order.approval_request_ref, 'exists') and
-                                order.approval_request_ref.exists()):
-                                approval_state = getattr(order.approval_request_ref, 'state', None)
-                                if approval_state == 'refused':
-                                    approval_state_display = 'Rechazado'
-                                elif approval_state == 'approved':
-                                    approval_state_display = 'Aprobado'
-                                elif approval_state == 'pending':
-                                    approval_state_display = 'En Espera de Aprobación'
-                                else:
-                                    approval_state_display = 'Sin Solicitar'
-                            else:
-                                approval_state_display = 'Sin Solicitar'
-                        except Exception:
-                            approval_state_display = 'Sin Solicitar'
+            # Determine display text based on sale order and approval request states
+            if order.state == 'pending_approval':
+                approval_state_display = 'En Espera de Aprobación'
+            elif order.state == 'approved':
+                approval_state_display = 'Aprobado'
+            elif order.state == 'cancel':
+                approval_state_display = 'Cancelado'
+            elif order.state in ('sale', 'done'):
+                approval_state_display = 'Confirmado'
+            elif order.state in ('draft', 'sent'):
+                # Check approval request state for draft/sent orders
+                if order.approval_request_ref and order.approval_request_ref.exists():
+                    approval_state = order.approval_request_ref.state
+                    if approval_state == 'refused':
+                        approval_state_display = 'Rechazado'
+                    elif approval_state == 'approved':
+                        approval_state_display = 'Aprobado'
+                    elif approval_state == 'pending':
+                        approval_state_display = 'En Espera de Aprobación'
                     else:
-                        # No approval request exists
                         approval_state_display = 'Sin Solicitar'
-
-                # Priority 2: Check other sale order states
-                elif order.state in ('sale', 'done'):
-                    approval_state_display = 'Confirmado'
                 else:
-                    # Any other state
-                    approval_state_display = 'Sin Definir'
+                    approval_state_display = 'Sin Solicitar'
+            else:
+                approval_state_display = 'Sin Definir'
 
-            except Exception:
-                # Exception fallback - still assigns value
-                approval_state_display = 'Error'
-
-            # GUARANTEED assignment for every record - CRITICAL FOR ODOO 18
             order.approval_state_display = approval_state_display
 
 
     @api.depends_context('uid')
     @api.depends('approval_request_ref', 'approval_request_ref.approver_ids', 'state')
     def _compute_approval_permissions(self):
-        """Compute approval permissions for current user.
+        """Compute approval permissions for current user based on approval request.
 
-        ODOO 18 COMPATIBLE: Ensures ALL records receive value assignment.
+        Determines if the current user can approve or reject the quotation
+        based on their role as an approver in the linked approval request.
         """
         for order in self:
-            # Initialize with default values - GUARANTEED assignment
+            # Initialize with default values
             can_approve = False
             can_reject = False
 
             try:
-                # Check all conditions safely with proper attribute checking
-                if (order._approval_system_available() and
-                    order.state == 'pending_approval' and
+                # Check if order is in pending approval state with valid approval request
+                if (order.state == 'pending_approval' and
                     order.approval_request_ref and
-                    hasattr(order.approval_request_ref, 'exists') and
                     order.approval_request_ref.exists() and
-                    hasattr(order.approval_request_ref, 'state') and
-                    getattr(order.approval_request_ref, 'state', None) == 'pending'):
+                    order.approval_request_ref.state == 'pending'):
 
-                    # Safely check approver_ids with defensive programming
-                    approver_ids = getattr(order.approval_request_ref, 'approver_ids', None)
-                    if approver_ids:
-                        try:
-                            user_approver = approver_ids.filtered(
-                                lambda a: (hasattr(a, 'user_id') and
-                                         hasattr(a, 'status') and
-                                         getattr(a, 'user_id', None) == self.env.user and
-                                         getattr(a, 'status', None) == 'pending')
-                            )
-                            can_approve = can_reject = bool(user_approver)
-                        except Exception:
-                            # Filtered operation failed - keep defaults
-                            pass
+                    # Check if current user is a pending approver
+                    user_approver = order.approval_request_ref.approver_ids.filtered(
+                        lambda a: a.user_id == self.env.user and a.status == 'pending'
+                    )
+                    can_approve = can_reject = bool(user_approver)
 
             except Exception:
-                # Exception fallback - still assigns default values
+                # Exception fallback - keep defaults
                 can_approve = can_reject = False
 
-            # GUARANTEED assignment for every record
+            # Assign computed values
             order.can_approve = can_approve
             order.can_reject = can_reject
 
@@ -240,21 +195,40 @@ class SaleOrder(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        """CRITICAL FIX: Auto-create approval requests."""
+        """Create sale orders and automatically generate approval requests.
+
+        For each sale order that requires approval (require_approval=True),
+        this method automatically creates an approval.request linked to the
+        existing 'Sale Quotation' category.
+
+        NOTE: This uses existing approval categories only - no dynamic creation.
+        """
         orders = super().create(vals_list)
 
         for order in orders:
             if order.require_approval and not order.approval_request_ref:
                 try:
-                    order._create_approval_request_auto()
-                except Exception:
-                    # Defensive: don't break order creation if approval fails
-                    pass
+                    # Create approval request using existing 'Sale Quotation' category
+                    order._create_approval_request()
+                    _logger.info("Auto-created approval request for sale order %s", order.name)
+                except UserError as e:
+                    # Log the specific error but don't break sale order creation
+                    _logger.warning("Failed to auto-create approval request for sale order %s: %s",
+                                  order.name, str(e))
+                except Exception as e:
+                    # Log unexpected errors but don't break sale order creation
+                    _logger.error("Unexpected error auto-creating approval request for sale order %s: %s",
+                                order.name, str(e), exc_info=True)
 
         return orders
 
     def write(self, vals):
-        """CRITICAL FIX: Handle approval workflow changes."""
+        """Handle approval workflow when order changes occur.
+
+        If approval-relevant fields change (order lines, amounts, partner),
+        and the order requires approval but doesn't have an approval request,
+        automatically create one using the existing 'Sale Quotation' category.
+        """
         result = super().write(vals)
 
         # Check if order lines or amounts change requiring re-approval
@@ -268,10 +242,17 @@ class SaleOrder(models.Model):
                     not order.approval_request_ref and
                     order.state in ('draft', 'sent')):
                     try:
-                        order._create_approval_request_auto()
-                    except Exception:
-                        # Defensive: don't break updates
-                        pass
+                        # Create approval request using existing 'Sale Quotation' category
+                        order._create_approval_request()
+                        _logger.info("Auto-created approval request for modified sale order %s", order.name)
+                    except UserError as e:
+                        # Log the specific error but don't break order updates
+                        _logger.warning("Failed to auto-create approval request for modified sale order %s: %s",
+                                      order.name, str(e))
+                    except Exception as e:
+                        # Log unexpected errors but don't break order updates
+                        _logger.error("Unexpected error auto-creating approval request for modified sale order %s: %s",
+                                    order.name, str(e), exc_info=True)
 
         return result
 
@@ -307,11 +288,8 @@ class SaleOrder(models.Model):
     # ============================================================
 
     def action_request_approval(self):
-        """Create and submit approval request for this order."""
+        """Create and submit approval request using existing 'Sale Quotation' category."""
         self.ensure_one()
-
-        if not self._approval_system_available():
-            raise UserError(_("Sistema de aprobaciones no disponible."))
 
         if not self.require_approval:
             raise UserError(_("Esta cotización no requiere aprobación."))
@@ -323,11 +301,9 @@ class SaleOrder(models.Model):
             elif approval_state == "approved":
                 raise UserError(_("Esta cotización ya está aprobada."))
 
-        # Create approval request
-        self._create_approval_request_auto()
-
-        # Update real state
-        self.write({'state': 'pending_approval'})
+        # Create approval request using existing 'Sale Quotation' category
+        # This will raise UserError if category doesn't exist
+        self._create_approval_request()
 
         return {
             "type": "ir.actions.client",
@@ -341,11 +317,8 @@ class SaleOrder(models.Model):
         }
 
     def action_approve(self):
-        """CRITICAL FIX: Approve with real state transition."""
+        """Approve the quotation through the approval request system."""
         self.ensure_one()
-
-        if not self._approval_system_available():
-            raise UserError(_("Sistema de aprobaciones no disponible."))
 
         if not self.can_approve:
             raise UserError(_("No tiene permisos para aprobar esta cotización."))
@@ -364,9 +337,9 @@ class SaleOrder(models.Model):
 
             user_approver.action_approve()
 
-            # Update real state when fully approved
+            # Update sale order state when fully approved
             if self.approval_request_ref.state == "approved":
-                self.write({'state': 'approved'})  # Ready for confirmation
+                self.state = 'approved'  # Ready for confirmation
 
             return {
                 "type": "ir.actions.client",
@@ -382,11 +355,8 @@ class SaleOrder(models.Model):
             raise UserError(_("Error al aprobar: %s") % str(e))
 
     def action_reject(self):
-        """CRITICAL FIX: Reject with real state transition."""
+        """Reject the quotation through the approval request system."""
         self.ensure_one()
-
-        if not self._approval_system_available():
-            raise UserError(_("Sistema de aprobaciones no disponible."))
 
         if not self.can_reject:
             raise UserError(_("No tiene permisos para rechazar esta cotización."))
@@ -405,8 +375,8 @@ class SaleOrder(models.Model):
 
             user_approver.action_refuse()
 
-            # Update real state when rejected
-            self.write({'state': 'draft'})  # Back to draft for modification
+            # Update sale order state when rejected
+            self.state = 'draft'  # Back to draft for modification
 
             return {
                 "type": "ir.actions.client",
@@ -425,9 +395,6 @@ class SaleOrder(models.Model):
         """Open the related approval request."""
         self.ensure_one()
 
-        if not self._approval_system_available():
-            raise UserError(_("Sistema de aprobaciones no disponible."))
-
         if not self.approval_request_ref:
             raise UserError(_("No hay solicitud de aprobación asociada."))
 
@@ -442,138 +409,73 @@ class SaleOrder(models.Model):
         }
 
     # ============================================================
-    # HELPER METHODS - AUTO-CREATION LOGIC
+    # APPROVAL REQUEST CREATION - USES EXISTING "Sale Quotation" CATEGORY
     # ============================================================
 
     def _create_approval_request(self):
-        """Create approval request for this order (method expected by tests)."""
-        return self._create_approval_request_auto()
+        """Create approval request linked to existing 'Sale Quotation' category.
 
-    def _create_approval_request_auto(self):
-        """CRITICAL FIX: Auto-create approval request."""
+        This method creates an approval.request record for the current sale order
+        using the existing 'Sale Quotation' approval category. It does NOT create
+        new categories - only uses pre-configured ones.
+
+        Returns:
+            approval.request: The created approval request record
+
+        Raises:
+            UserError: If 'Sale Quotation' category doesn't exist or creation fails
+        """
         self.ensure_one()
 
+        # Check if approval request already exists
         if self.approval_request_ref:
+            _logger.debug("Approval request already exists for sale order %s", self.name)
             return self.approval_request_ref
 
-        # Get or create approval category
+        # Get the existing 'Sale Quotation' category (raises UserError if not found)
         category = self._get_approval_category()
-        if not category:
-            raise UserError(_(
-                "No se pudo crear la categoría de aprobación.\n\n"
-                "Posibles causas:\n"
-                "• Permisos insuficientes para crear categorías de aprobación\n"
-                "• Error en la configuración del sistema de aprobaciones\n"
-                "• Faltan campos obligatorios en la categoría\n\n"
-                "Contacte al administrador del sistema para revisar los logs."
-            ))
 
-        # Create approval request
+        # Prepare approval request values
         approval_vals = {
             "name": _("Aprobación de Cotización: %s") % self.name,
             "category_id": category.id,
             "request_owner_id": self.user_id.id or self.env.user.id,
             "partner_id": self.partner_id.id if self.partner_id else False,
-            "amount": self.amount_total,
+            "amount": self.amount_total or 0.0,
             "reference": self.name,
             "reason": _("Solicitud de aprobación para la cotización %s por un monto de $%.2f") % (
-                self.name, self.amount_total
+                self.name, self.amount_total or 0.0
             ),
             "date": fields.Datetime.now(),
             "company_id": self.company_id.id,
         }
 
-        approval_request = self.env["approval.request"].create(approval_vals)
-
-        # Link to sale order
-        self.approval_request_ref = approval_request.id
-
-        return approval_request
-
-    def _should_auto_request_approval(self):
-        """All orders should auto-request approval - no configuration needed."""
-        # Always return True - all orders require approval without exception
-        return True
-
-    def _get_approval_category(self):
-        """Get or create the sales order approval category."""
-        if not self._approval_system_available():
-            _logger.warning("Approval system not available for sale order %s", self.name)
-            return None
+        _logger.info("Creating approval request for sale order %s using category 'Sale Quotation' (ID: %s)",
+                    self.name, category.id)
 
         try:
-            category = self.env["approval.category"].search([
-                ("name", "=", "Sales Order Approval"),
-                ("company_id", "=", self.company_id.id),
-            ], limit=1)
+            # Create approval request - NO sudo() used, respects user permissions
+            approval_request = self.env["approval.request"].create(approval_vals)
 
-            if not category:
-                _logger.info("Creating new approval category for company %s", self.company_id.name)
-                category = self._create_default_approval_category()
-                if category:
-                    _logger.info("Successfully created approval category ID %s", category.id)
+            # Link approval request to sale order
+            self.approval_request_ref = approval_request.id
 
-            return category
+            # Update sale order state to pending approval
+            self.state = 'pending_approval'
+
+            _logger.info("Successfully created approval request ID %s for sale order %s",
+                        approval_request.id, self.name)
+
+            return approval_request
+
         except Exception as e:
-            _logger.error(
-                "Error in _get_approval_category for sale order %s: %s",
-                self.name, str(e)
-            )
-            return None
+            error_message = _(
+                "Error al crear la solicitud de aprobación.\n\n"
+                "Detalle: %s\n\n"
+                "Verifique que tenga permisos para crear solicitudes de aprobación."
+            ) % str(e)
+            _logger.error("Error creating approval request for sale order %s: %s",
+                         self.name, str(e), exc_info=True)
+            raise UserError(error_message)
 
-    def _create_default_approval_category(self):
-        """Create default approval category for sales orders."""
-        try:
-            # Find sales managers to assign as default approvers
-            try:
-                sales_managers = self.env.ref("sales_team.group_sale_manager").users
-            except ValueError:
-                sales_managers = self.env.ref("base.user_admin")
-
-            if not sales_managers:
-                sales_managers = self.env.ref("base.user_admin")
-
-            # Complete category_vals with ALL required fields to avoid ValidationError
-            category_vals = {
-                "name": "Sales Order Approval",
-                "company_id": self.company_id.id,
-                # Required fields for amounts and references (what we need)
-                "has_amount": "required",
-                "has_partner": "required",
-                "has_reference": "required",
-                # All other required fields set to "no" (not needed for sales orders)
-                "has_date": "no",
-                "has_date_deadline": "no",
-                "has_date_planned": "no",
-                "has_date_range": "no",
-                "has_payment_method": "no",
-                "has_product": "no",
-                "has_quantity": "no",
-                "has_location": "no",
-                "has_document": "optional",
-                "approval_minimum": 1,
-                "automated_sequence": True,
-                "sequence_code": "SO-APPR-",
-                "description": "Categoría de aprobación para todas las órdenes de venta",
-            }
-
-            # Use sudo() to bypass permission restrictions for category creation
-            category = self.env["approval.category"].sudo().create(category_vals)
-
-            # Create default approver (also with sudo for approver creation)
-            for i, manager in enumerate(sales_managers[:3]):  # Max 3 approvers
-                self.env["approval.category.approver"].sudo().create({
-                    "category_id": category.id,
-                    "user_id": manager.id,
-                    "required": i == 0,  # First one is required
-                    "sequence": (i + 1) * 10,
-                })
-
-            return category
-        except Exception as e:
-            _logger.error(
-                "Error creating approval category for sale order %s: %s",
-                self.name, str(e)
-            )
-            return None
 

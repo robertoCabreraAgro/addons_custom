@@ -6,14 +6,17 @@
         <record id="approval_category_sales_order" model="approval.category">
             <field name="name">Sales Order Approval</field>
             <field name="sequence">10</field>
+            <field name="active" eval="True"/>
             <field name="automated_sequence" eval="True"/>
             <field name="sequence_code">SO-APPR-</field>
             <field name="description">Approval category for all sales orders</field>
 
-            <!-- Configure required fields -->
+            <!-- CORE REQUIRED FIELDS - Features we need for sales orders -->
             <field name="has_amount">required</field>
             <field name="has_partner">required</field>
             <field name="has_reference">required</field>
+
+            <!-- ALL OTHER REQUIRED FIELDS - Set to "no" (not needed for sales orders) -->
             <field name="has_date">no</field>
             <field name="has_date_deadline">no</field>
             <field name="has_date_planned">no</field>
@@ -24,7 +27,15 @@
             <field name="has_payment_method">no</field>
             <field name="has_document">optional</field>
 
-            <!-- Approval configuration -->
+            <!-- EXTENDED REQUIRED FIELDS from inheriting modules (conditional) -->
+            <!-- These fields might not exist in all installations, so we use try/except in code -->
+            <!-- <field name="has_bsl">no</field> -->  <!-- from telegram_bot module -->
+            <!-- <field name="has_operation_type">no</field> -->  <!-- from telegram_bot module -->
+            <!-- <field name="has_journal">no</field> -->  <!-- from marin module -->
+            <!-- <field name="has_vehicle">no</field> -->  <!-- from marin module -->
+            <!-- <field name="has_odometer">no</field> -->  <!-- from marin module -->
+
+            <!-- APPROVAL CONFIGURATION -->
             <field name="approval_minimum">1</field>
             <field name="manager_approval">required</field>
             <field name="approve_sequentially" eval="False"/>
