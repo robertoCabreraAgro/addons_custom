@@ -19,15 +19,15 @@
 
             <!-- Update statusbar to include approval states -->
             <field name="state" position="attributes">
-                <attribute name="statusbar_visible">draft,sent,pending_approval,approved,sale,done</attribute>
-                <attribute name="statusbar_colors">{"pending_approval": "warning", "approved": "success"}</attribute>
+                <attribute name="statusbar_visible">draft,sent,pending_approval,approved,refused,sale,done</attribute>
+                <attribute name="statusbar_colors">{"pending_approval": "warning", "approved": "success", "refused": "danger"}</attribute>
             </field>
 
             <!-- Approval Status Display -->
             <field name="state" position="after">
                 <div class="approval_status_container" invisible="not require_approval">
 
-                    <div class="alert alert-info" invisible="state not in ('pending_approval', 'draft', 'approved') or not approval_request_id">
+                    <div class="alert alert-info" invisible="state not in ('pending_approval', 'draft', 'approved', 'refused') or not approval_request_id">
                         <strong>Estado de Aprobación: </strong>
                         <field name="approval_state_display" readonly="1"/>
 
@@ -58,7 +58,7 @@
             </button>
 
             <button name="action_confirm" position="attributes">
-                <attribute name="invisible">state != 'approved' or (require_approval and state == 'pending_approval')</attribute>
+                <attribute name="invisible">state not in ('approved', 'draft', 'sent') or (require_approval and state in ('pending_approval', 'refused'))</attribute>
             </button>
 
             <!-- Approval tab -->
@@ -116,28 +116,75 @@
             <field name="state" position="attributes">
                 <attribute name="decoration-warning">state == 'pending_approval'</attribute>
                 <attribute name="decoration-success">state == 'approved'</attribute>
+                <attribute name="decoration-danger">state == 'refused'</attribute>
             </field>
 
         </field>
     </record>
 
     <!-- Sale Order Kanban View - Odoo 18 Compatible -->
-    <!-- Commented due to ParseError with oe_kanban_bottom_left/right in Odoo 18 -->
-    <!--
     <record id="view_order_kanban_approval" model="ir.ui.view">
         <field name="name">sale.order.kanban.approval</field>
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_sale_order_kanban"/>
         <field name="arch" type="xml">
 
-            <field name="partner_id" position="after">
+            <!-- Add required fields for approval display -->
+            <field name="currency_id" position="after">
                 <field name="approval_state_display"/>
                 <field name="require_approval"/>
             </field>
 
+            <!-- Replace the state field in the kanban card template -->
+            <xpath expr="//t[@t-name='card']//field[@name='state']" position="replace">
+                <div class="d-flex gap-2 ms-auto align-items-center">
+                    <!-- Approval Badge - Only show for orders requiring approval -->
+                    <span t-if="record.require_approval.raw_value and record.state.raw_value in ['pending_approval', 'approved', 'refused']"
+                          t-attf-class="badge #{
+                              record.state.raw_value == 'pending_approval' ? 'bg-warning text-dark' :
+                              record.state.raw_value == 'approved' ? 'bg-success' :
+                              record.state.raw_value == 'refused' ? 'bg-danger' :
+                              'bg-secondary'
+                          }">
+                        <i t-attf-class="fa #{
+                            record.state.raw_value == 'pending_approval' ? 'fa-clock-o' :
+                            record.state.raw_value == 'approved' ? 'fa-check' :
+                            record.state.raw_value == 'refused' ? 'fa-times' :
+                            'fa-question'
+                        } me-1"/>
+                        <t t-if="record.state.raw_value == 'pending_approval'">En Espera</t>
+                        <t t-elif="record.state.raw_value == 'approved'">Aprobado</t>
+                        <t t-elif="record.state.raw_value == 'refused'">Rechazado</t>
+                    </span>
+
+                    <!-- Original State Badge -->
+                    <field name="state"
+                           widget="label_selection"
+                           options="{'classes': {
+                               'draft': 'info',
+                               'sent': 'primary',
+                               'cancel': 'default',
+                               'sale': 'success',
+                               'done': 'success',
+                               'pending_approval': 'warning',
+                               'approved': 'success',
+                               'refused': 'danger'
+                           }}"/>
+                </div>
+            </xpath>
+
+            <!-- Add visual decoration to the kanban card based on approval state -->
+            <xpath expr="//t[@t-name='card']" position="attributes">
+                <attribute name="t-attf-class">
+                    #{record.state.raw_value == 'pending_approval' ? 'border-warning' :
+                      record.state.raw_value == 'approved' ? 'border-success' :
+                      record.state.raw_value == 'refused' ? 'border-danger' : ''}
+                    #{' ' + (attrs and attrs.class ? attrs.class : '')}
+                </attribute>
+            </xpath>
+
         </field>
     </record>
-    -->
 
     <!-- Sale Order Search Filters - Removed per requirements -->
     <!-- Search view: not to be touched, no custom filters added -->

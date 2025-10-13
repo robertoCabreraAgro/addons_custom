@@ -27,8 +27,14 @@ class SaleOrder(models.Model):
     state = fields.Selection(
         selection_add=[
             ('pending_approval', 'En Espera de Aprobación'),
+            ('approved', 'Aprobado'),
+            ('refused', 'Rechazado'),
         ],
-        ondelete={'pending_approval': 'set draft'},
+        ondelete={
+            'pending_approval': 'set draft',
+            'approved': 'set draft',
+            'refused': 'set draft',
+        },
     )
 
     approval_state_display = fields.Char(
@@ -106,6 +112,10 @@ class SaleOrder(models.Model):
             # Sync with real state
             if order.state == 'pending_approval':
                 approval_state = order._get_approval_state() or 'pending'
+            elif order.state == 'approved':
+                approval_state = 'approved'
+            elif order.state == 'refused':
+                approval_state = 'refused'
             else:
                 approval_state = order._get_approval_state() or 'new'
 
@@ -198,11 +208,16 @@ class SaleOrder(models.Model):
             if order.require_approval:
                 # Real state validation
                 if order.state == 'pending_approval':
-                    if order._get_approval_state() != "approved":
-                        raise UserError(_(
-                            "Esta cotización está pendiente de aprobación.\n"
-                            "Estado actual: %s"
-                        ) % (order.approval_state_display or "Pendiente"))
+                    raise UserError(_(
+                        "Esta cotización está pendiente de aprobación.\n"
+                        "Estado actual: %s"
+                    ) % (order.approval_state_display or "Pendiente"))
+
+                elif order.state == 'refused':
+                    raise UserError(_(
+                        "Esta cotización ha sido rechazada.\n"
+                        "Debe solicitar una nueva aprobación para continuar."
+                    ))
 
                 elif not order.approval_request_id:
                     raise UserError(_(
@@ -210,9 +225,9 @@ class SaleOrder(models.Model):
                         "Por favor, solicite la aprobación antes de confirmar."
                     ))
 
-                elif order._get_approval_state() != "approved":
+                elif order.state != 'approved':
                     raise UserError(_(
-                        "No puede confirmar esta cotización hasta que sea aprobada.\n"
+                        "Solo las cotizaciones aprobadas pueden ser confirmadas.\n"
                         "Estado actual: %s"
                     ) % (order.approval_state_display or "Sin aprobar"))
 
@@ -284,7 +299,7 @@ class SaleOrder(models.Model):
 
             # CRITICAL FIX: Update real state when fully approved
             if request.state == "approved":
-                self.write({'state': 'draft'})  # Ready for confirmation
+                self.write({'state': 'approved'})  # Ready for confirmation
 
             return {
                 "type": "ir.actions.client",
@@ -325,7 +340,7 @@ class SaleOrder(models.Model):
             user_approver.action_refuse()
 
             # CRITICAL FIX: Update real state when rejected
-            self.write({'state': 'draft'})  # Back to draft for modification
+            self.write({'state': 'refused'})  # Mark as refused
 
             return {
                 "type": "ir.actions.client",

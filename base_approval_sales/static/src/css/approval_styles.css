@@ -115,6 +115,35 @@
     font-size: 0.875rem;
 }
 
+/* Kanban card border decorations for approval states */
+.o_kanban_view .o_kanban_record.border-warning {
+    border: 2px solid #ffc107 !important;
+    box-shadow: 0 2px 4px rgba(255, 193, 7, 0.2);
+}
+
+.o_kanban_view .o_kanban_record.border-success {
+    border: 2px solid #28a745 !important;
+    box-shadow: 0 2px 4px rgba(40, 167, 69, 0.2);
+}
+
+.o_kanban_view .o_kanban_record.border-danger {
+    border: 2px solid #dc3545 !important;
+    box-shadow: 0 2px 4px rgba(220, 53, 69, 0.2);
+}
+
+/* Hover effect for approval cards */
+.o_kanban_view .o_kanban_record.border-warning:hover {
+    box-shadow: 0 4px 8px rgba(255, 193, 7, 0.3);
+}
+
+.o_kanban_view .o_kanban_record.border-success:hover {
+    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+}
+
+.o_kanban_view .o_kanban_record.border-danger:hover {
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+}
+
 /* Status-specific colors */
 .badge-approval-new {
     background-color: #6c757d;
