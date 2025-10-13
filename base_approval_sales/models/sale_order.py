@@ -123,9 +123,9 @@ class SaleOrder(models.Model):
                 approval_state, 'Sin Definir'
             )
 
-    @api.depends("amount_total", "partner_id")
+    @api.depends()
     def _compute_require_approval(self):
-        """Determine if order requires approval - ALL orders require approval."""
+        """ALL orders require approval without exceptions."""
         for order in self:
             # Force all orders to require approval without exception
             order.require_approval = order._approval_system_available()
@@ -181,9 +181,9 @@ class SaleOrder(models.Model):
         """CRITICAL FIX: Handle approval workflow changes."""
         result = super().write(vals)
 
-        # Check if order lines or amounts change requiring re-approval
+        # Check if order lines or partner change requiring re-approval
         approval_relevant_fields = [
-            "order_line", "amount_total", "amount_untaxed", "partner_id"
+            "order_line", "partner_id"
         ]
 
         if any(field in vals for field in approval_relevant_fields):
@@ -436,8 +436,8 @@ class SaleOrder(models.Model):
             ) % (str(e), category.name, category.id))
 
     def _should_auto_request_approval(self):
-        """All orders should auto-request approval - no configuration needed."""
-        # Always return True - all orders require approval without exception
+        """ALL orders must auto-request approval."""
+        # Always return True - no conditions of amount
         return True
 
     def _get_approval_category(self):

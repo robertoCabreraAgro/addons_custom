@@ -1,34 +1,9 @@
 {
     "name": "Base Approval Sales",
-    "version": "saas~18.2.3.0.1",
+    "version": "saas~18.2.3.0.2",
     "category": "Sales/Sales",
     "sequence": 95,
     "summary": "Centralized approval workflow for sales orders",
-    "description": """
-        Sales Order Approval Integration
-        ================================
-
-        This module extends the sale order workflow with mandatory approval states
-        integrated directly into the statusbar.
-
-        Features:
-        • Universal mandatory approval for ALL sales orders
-        • Sales-only integration (no purchase dependencies)
-        • Extended state field with pending_approval and approved states
-        • Statusbar integration with approval workflow
-        • Many2one relationship with approval.request
-        • Smart button visibility using attrs syntax
-        • Permission-based approval actions
-        • Complete view integration (form, tree, kanban, search)
-
-        Technical:
-        • Clean architecture with minimal dependencies (sale + base_approval only)
-        • Many2one direct relationship instead of string references
-        • Compatible attrs syntax with | and & operators
-        • Native widget integration without OWL dependencies
-        • Extended statusbar with approval states integration
-        • State-based workflow validation with proper transitions
-    """,
     "depends": [
         "sale",
         "base_approval",
